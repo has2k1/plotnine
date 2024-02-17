@@ -212,29 +212,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="custom-sorting-of-plot-series" class="level1">
 <h1>Custom sorting of plot series</h1>
-<div id="cell-1" class="cell" data-attributes="{&quot;classes&quot;:[],&quot;id&quot;:&quot;&quot;,&quot;n&quot;:&quot;1&quot;}" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:37.712912Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:37.712573Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:38.545297Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:38.544602Z&quot;}" data-execution_count="1">
+<div id="cell-1" class="cell" data-attributes="{&quot;classes&quot;:[],&quot;id&quot;:&quot;&quot;,&quot;n&quot;:&quot;1&quot;}" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:47:55.651673Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:47:55.651291Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:47:56.473147Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:47:56.472509Z&quot;}" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pandas.api.types <span class="im">import</span> CategoricalDtype</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> (</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    ggplot,</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    aes,</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    geom_bar,</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    coord_flip,</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    labs,</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    scale_x_discrete</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine.data <span class="im">import</span> mpg</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> ggplot, aes, geom_bar, coord_flip, labs, scale_x_discrete</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine.data <span class="im">import</span> mpg</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="bar-plot-of-manufacturer---default-output" class="level2">
 <h2 class="anchored" data-anchor-id="bar-plot-of-manufacturer---default-output">Bar plot of manufacturer - Default Output</h2>
-<div id="cell-3" class="cell" data-attributes="{&quot;classes&quot;:[],&quot;id&quot;:&quot;&quot;,&quot;n&quot;:&quot;2&quot;}" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:38.549082Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:38.548793Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:40.195403Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:40.194269Z&quot;}" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(ggplot(mpg)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> aes(x<span class="op">=</span><span class="st">'manufacturer'</span>) </span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_bar(size<span class="op">=</span><span class="dv">20</span>)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> coord_flip()</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> labs(y<span class="op">=</span><span class="st">'Count'</span>, x<span class="op">=</span><span class="st">'Manufacturer'</span>, title<span class="op">=</span><span class="st">'Number of Cars by Make'</span>)</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-3" class="cell" data-attributes="{&quot;classes&quot;:[],&quot;id&quot;:&quot;&quot;,&quot;n&quot;:&quot;2&quot;}" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:47:56.476422Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:47:56.476177Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:47:57.940225Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:47:57.939544Z&quot;}" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    ggplot(mpg)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> aes(x<span class="op">=</span><span class="st">"manufacturer"</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_bar(size<span class="op">=</span><span class="dv">20</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> coord_flip()</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> labs(y<span class="op">=</span><span class="st">"Count"</span>, x<span class="op">=</span><span class="st">"Manufacturer"</span>, title<span class="op">=</span><span class="st">"Number of Cars by Make"</span>)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -247,21 +239,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="bar-plot-of-manufacturer---ordered-by-count-categorical" class="level2">
 <h2 class="anchored" data-anchor-id="bar-plot-of-manufacturer---ordered-by-count-categorical">Bar plot of manufacturer - Ordered by count (Categorical)</h2>
 <p>By default the discrete values along axis are ordered alphabetically. If we want a specific ordering we use a pandas.Categorical variable with categories ordered to our preference.</p>
-<div id="cell-5" class="cell" data-attributes="{&quot;classes&quot;:[],&quot;id&quot;:&quot;&quot;,&quot;n&quot;:&quot;3&quot;}" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:40.248565Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:40.248087Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:40.706768Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:40.705946Z&quot;}" data-execution_count="3">
+<div id="cell-5" class="cell" data-attributes="{&quot;classes&quot;:[],&quot;id&quot;:&quot;&quot;,&quot;n&quot;:&quot;3&quot;}" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:47:57.994559Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:47:57.993866Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:47:58.433514Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:47:58.432705Z&quot;}" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Determine order and create a categorical type</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Note that value_counts() is already sorted</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>manufacturer_list <span class="op">=</span> mpg[<span class="st">'manufacturer'</span>].value_counts().index.tolist()</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>manufacturer_cat <span class="op">=</span> pd.Categorical(mpg[<span class="st">'manufacturer'</span>], categories<span class="op">=</span>manufacturer_list)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>manufacturer_list <span class="op">=</span> mpg[<span class="st">"manufacturer"</span>].value_counts().index.tolist()</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>manufacturer_cat <span class="op">=</span> pd.Categorical(mpg[<span class="st">"manufacturer"</span>], categories<span class="op">=</span>manufacturer_list)</span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co"># assign to a new column in the DataFrame</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>mpg <span class="op">=</span> mpg.assign(manufacturer_cat <span class="op">=</span> manufacturer_cat)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>mpg <span class="op">=</span> mpg.assign(manufacturer_cat<span class="op">=</span>manufacturer_cat)</span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>(ggplot(mpg)</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> aes(x<span class="op">=</span><span class="st">'manufacturer_cat'</span>)</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_bar(size<span class="op">=</span><span class="dv">20</span>)</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> coord_flip()</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> labs(y<span class="op">=</span><span class="st">'Count'</span>, x<span class="op">=</span><span class="st">'Manufacturer'</span>, title<span class="op">=</span><span class="st">'Number of Cars by Make'</span>)</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    ggplot(mpg)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> aes(x<span class="op">=</span><span class="st">"manufacturer_cat"</span>)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_bar(size<span class="op">=</span><span class="dv">20</span>)</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> coord_flip()</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> labs(y<span class="op">=</span><span class="st">"Count"</span>, x<span class="op">=</span><span class="st">"Manufacturer"</span>, title<span class="op">=</span><span class="st">"Number of Cars by Make"</span>)</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -271,26 +264,28 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>We could also modify the <strong>existing manufacturer category</strong> to set it as ordered instead of having to create a new CategoricalDtype and apply that to the data.</p>
-<div id="cell-7" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:40.710331Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:40.710042Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:40.714568Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:40.713933Z&quot;}" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>mpg <span class="op">=</span> mpg.assign(manufacturer_cat <span class="op">=</span> </span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  mpg[<span class="st">'manufacturer'</span>].cat.reorder_categories(manufacturer_list))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-7" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:47:58.437644Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:47:58.437195Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:47:58.441909Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:47:58.441251Z&quot;}" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>mpg <span class="op">=</span> mpg.assign(</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    manufacturer_cat<span class="op">=</span>mpg[<span class="st">"manufacturer"</span>].cat.reorder_categories(manufacturer_list)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="bar-plot-of-manufacturer---ordered-by-count-limits" class="level2">
 <h2 class="anchored" data-anchor-id="bar-plot-of-manufacturer---ordered-by-count-limits">Bar plot of manufacturer - Ordered by count (limits)</h2>
 <p>Another method to quickly reorder a discrete axis without changing the data is to change it’s limits</p>
-<div id="cell-9" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:40.717952Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:40.717650Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:41.133866Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:41.133204Z&quot;}" data-execution_count="5">
+<div id="cell-9" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:47:58.445777Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:47:58.445493Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:47:58.936798Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:47:58.936193Z&quot;}" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Determine order and create a categorical type</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Note that value_counts() is already sorted</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>manufacturer_list <span class="op">=</span> mpg[<span class="st">'manufacturer'</span>].value_counts().index.tolist()</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>manufacturer_list <span class="op">=</span> mpg[<span class="st">"manufacturer"</span>].value_counts().index.tolist()</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>(ggplot(mpg)</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> aes(x<span class="op">=</span><span class="st">'manufacturer_cat'</span>)</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_bar(size<span class="op">=</span><span class="dv">20</span>)</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> scale_x_discrete(limits<span class="op">=</span>manufacturer_list)</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> coord_flip()</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> labs(y<span class="op">=</span><span class="st">'Count'</span>, x<span class="op">=</span><span class="st">'Manufacturer'</span>, title<span class="op">=</span><span class="st">'Number of Cars by Make'</span>)</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    ggplot(mpg)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> aes(x<span class="op">=</span><span class="st">"manufacturer_cat"</span>)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_bar(size<span class="op">=</span><span class="dv">20</span>)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> scale_x_discrete(limits<span class="op">=</span>manufacturer_list)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> coord_flip()</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> labs(y<span class="op">=</span><span class="st">"Count"</span>, x<span class="op">=</span><span class="st">"Manufacturer"</span>, title<span class="op">=</span><span class="st">"Number of Cars by Make"</span>)</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -300,18 +295,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>You can ‘flip’ an axis (independent of limits) by reversing the order of the limits.</p>
-<div id="cell-11" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:41.138047Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:41.137774Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:41.545120Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:41.544443Z&quot;}" data-execution_count="6">
+<div id="cell-11" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:47:58.939844Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:47:58.939587Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:47:59.360878Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:47:59.360289Z&quot;}" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Determine order and create a categorical type</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Note that value_counts() is already sorted</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>manufacturer_list <span class="op">=</span> mpg[<span class="st">'manufacturer'</span>].value_counts().index.tolist()[::<span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>manufacturer_list <span class="op">=</span> mpg[<span class="st">"manufacturer"</span>].value_counts().index.tolist()[::<span class="op">-</span><span class="dv">1</span>]</span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>(ggplot(mpg)</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> aes(x<span class="op">=</span><span class="st">'manufacturer_cat'</span>)</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_bar(size<span class="op">=</span><span class="dv">20</span>)</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> scale_x_discrete(limits<span class="op">=</span>manufacturer_list)</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> coord_flip()</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> labs(y<span class="op">=</span><span class="st">'Count'</span>, x<span class="op">=</span><span class="st">'Manufacturer'</span>, title<span class="op">=</span><span class="st">'Number of Cars by Make'</span>)</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    ggplot(mpg)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> aes(x<span class="op">=</span><span class="st">"manufacturer_cat"</span>)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_bar(size<span class="op">=</span><span class="dv">20</span>)</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> scale_x_discrete(limits<span class="op">=</span>manufacturer_list)</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> coord_flip()</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> labs(y<span class="op">=</span><span class="st">"Count"</span>, x<span class="op">=</span><span class="st">"Manufacturer"</span>, title<span class="op">=</span><span class="st">"Number of Cars by Make"</span>)</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">

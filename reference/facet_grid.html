@@ -260,24 +260,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="examples" class="level2">
 <h2 class="anchored" data-anchor-id="examples">Examples</h2>
 <div class="quarto-embed-nb-cell">
-<div id="cell-0" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:45:32.127825Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:45:32.127510Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:45:32.930889Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:45:32.930028Z&quot;}" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> (</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    ggplot,</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    aes,</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    geom_point,</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    labs,</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    facet_grid,</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    theme,</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    element_text</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine.data <span class="im">import</span> mpg</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-0" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:43:50.765862Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:43:50.765471Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:43:51.570381Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:43:51.569535Z&quot;}" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> ggplot, aes, geom_point, labs, facet_grid, theme, element_text, element_rect</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine.data <span class="im">import</span> mpg</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="facet-grid" class="level3">
 <h3 class="anchored" data-anchor-id="facet-grid">Facet grid</h3>
 <p><code>facet_grid()</code> is used to form a grid of plots, where the rows and columns of the grid are set by the faceting variables. It is useful for visualising two discrete variables.</p>
-<div id="cell-2" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:45:32.934968Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:45:32.934681Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:45:32.952115Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:45:32.951502Z&quot;}" data-execution_count="2">
+<div id="cell-2" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:43:51.573944Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:43:51.573668Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:43:51.591174Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:43:51.590487Z&quot;}" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>mpg.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
 <div>
@@ -380,11 +371,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Basic scatter plot:</p>
-<div id="cell-4" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:45:32.997272Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:45:32.996989Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:45:34.285002Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:45:34.284241Z&quot;}" data-execution_count="3">
+<div id="cell-4" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:43:51.639536Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:43:51.639202Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:43:52.893928Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:43:52.893165Z&quot;}" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    ggplot(mpg, aes(x<span class="op">=</span><span class="st">'displ'</span>, y<span class="op">=</span><span class="st">'hwy'</span>)) </span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    ggplot(mpg, aes(x<span class="op">=</span><span class="st">"displ"</span>, y<span class="op">=</span><span class="st">"hwy"</span>))</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_point()</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> labs(x<span class="op">=</span><span class="st">'displacement'</span>, y<span class="op">=</span><span class="st">'horsepower'</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> labs(x<span class="op">=</span><span class="st">"displacement"</span>, y<span class="op">=</span><span class="st">"horsepower"</span>)</span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
@@ -395,12 +386,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Facet a discrete variable into rows:</p>
-<div id="cell-6" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:45:34.289418Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:45:34.289064Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:45:34.728847Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:45:34.728304Z&quot;}" data-execution_count="4">
+<div id="cell-6" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:43:52.897888Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:43:52.897520Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:43:53.338758Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:43:53.338171Z&quot;}" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    ggplot(mpg, aes(x<span class="op">=</span><span class="st">'displ'</span>, y<span class="op">=</span><span class="st">'hwy'</span>)) </span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    ggplot(mpg, aes(x<span class="op">=</span><span class="st">"displ"</span>, y<span class="op">=</span><span class="st">"hwy"</span>))</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_point()</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> facet_grid(<span class="st">'drv ~ .'</span>)</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> labs(x<span class="op">=</span><span class="st">'displacement'</span>, y<span class="op">=</span><span class="st">'horsepower'</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> facet_grid(<span class="st">"drv"</span>)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> labs(x<span class="op">=</span><span class="st">"displacement"</span>, y<span class="op">=</span><span class="st">"horsepower"</span>)</span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
@@ -411,12 +402,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Facet a discrete variable into columns:</p>
-<div id="cell-8" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:45:34.731562Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:45:34.731322Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:45:35.307759Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:45:35.307235Z&quot;}" data-execution_count="5">
+<div id="cell-8" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:43:53.341517Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:43:53.341303Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:43:53.891047Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:43:53.890386Z&quot;}" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    ggplot(mpg, aes(x<span class="op">=</span><span class="st">'displ'</span>, y<span class="op">=</span><span class="st">'hwy'</span>)) </span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    ggplot(mpg, aes(x<span class="op">=</span><span class="st">"displ"</span>, y<span class="op">=</span><span class="st">"hwy"</span>))</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_point()</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> facet_grid(<span class="st">'. ~ cyl'</span>)</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> labs(x<span class="op">=</span><span class="st">'displacement'</span>, y<span class="op">=</span><span class="st">'horsepower'</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> facet_grid(cols<span class="op">=</span><span class="st">"cyl"</span>)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> labs(x<span class="op">=</span><span class="st">"displacement"</span>, y<span class="op">=</span><span class="st">"horsepower"</span>)</span>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
@@ -427,12 +418,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Facet two discrete variables into rows and columns:</p>
-<div id="cell-10" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:45:35.310498Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:45:35.310265Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:45:36.481935Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:45:36.481156Z&quot;}" data-execution_count="6">
+<div id="cell-10" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:43:53.893779Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:43:53.893558Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:43:55.042927Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:43:55.042378Z&quot;}" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    ggplot(mpg, aes(x<span class="op">=</span><span class="st">'displ'</span>, y<span class="op">=</span><span class="st">'hwy'</span>)) </span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    ggplot(mpg, aes(x<span class="op">=</span><span class="st">"displ"</span>, y<span class="op">=</span><span class="st">"hwy"</span>))</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_point()</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> facet_grid(<span class="st">'drv ~ cyl'</span>)</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> labs(x<span class="op">=</span><span class="st">'displacement'</span>, y<span class="op">=</span><span class="st">'horsepower'</span>)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> facet_grid(<span class="st">"drv"</span>, <span class="st">"cyl"</span>)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> labs(x<span class="op">=</span><span class="st">"displacement"</span>, y<span class="op">=</span><span class="st">"horsepower"</span>)</span>
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
@@ -443,17 +434,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>To change the plot order of the rows or columns in the facet grid, reorder the levels of the faceting variable in the data.</p>
-<div id="cell-12" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:45:36.484921Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:45:36.484661Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:45:36.489671Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:45:36.489115Z&quot;}" data-execution_count="7">
+<div id="cell-12" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:43:55.045934Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:43:55.045696Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:43:55.050586Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:43:55.049983Z&quot;}" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># re-order categories</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>mpg[<span class="st">'drv'</span>] <span class="op">=</span> mpg[<span class="st">'drv'</span>].cat.reorder_categories([<span class="st">'f'</span>, <span class="st">'r'</span>,<span class="st">'4'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>mpg[<span class="st">"drv"</span>] <span class="op">=</span> mpg[<span class="st">"drv"</span>].cat.reorder_categories([<span class="st">"f"</span>, <span class="st">"r"</span>, <span class="st">"4"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-13" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:45:36.492563Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:45:36.492328Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:45:37.613973Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:45:37.613233Z&quot;}" data-execution_count="8">
+<div id="cell-13" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:43:55.053505Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:43:55.053230Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:43:56.145188Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:43:56.144538Z&quot;}" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># facet plot with reorded drv category</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    ggplot(mpg, aes(x<span class="op">=</span><span class="st">'displ'</span>, y<span class="op">=</span><span class="st">'hwy'</span>)) </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    ggplot(mpg, aes(x<span class="op">=</span><span class="st">"displ"</span>, y<span class="op">=</span><span class="st">"hwy"</span>))</span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_point()</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> facet_grid(<span class="st">'drv ~ cyl'</span>)</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> labs(x<span class="op">=</span><span class="st">'displacement'</span>, y<span class="op">=</span><span class="st">'horsepower'</span>)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> facet_grid(<span class="st">"drv"</span>, <span class="st">"cyl"</span>)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> labs(x<span class="op">=</span><span class="st">"displacement"</span>, y<span class="op">=</span><span class="st">"horsepower"</span>)</span>
 <span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
@@ -464,12 +455,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>You can choose if the scale of x- and y-axes are fixed or variable by using the <code>scales</code> argument within the <code>facet_grid()</code> command:</p>
-<div id="cell-15" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:45:37.616760Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:45:37.616417Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:45:38.224160Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:45:38.223577Z&quot;}" data-execution_count="9">
+<div id="cell-15" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:43:56.150322Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:43:56.150065Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:43:56.755162Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:43:56.754505Z&quot;}" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    ggplot(mpg, aes(x<span class="op">=</span><span class="st">'displ'</span>, y<span class="op">=</span><span class="st">'hwy'</span>)) </span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    ggplot(mpg, aes(x<span class="op">=</span><span class="st">"displ"</span>, y<span class="op">=</span><span class="st">"hwy"</span>))</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_point()</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> facet_grid(<span class="st">'drv ~ .'</span>, scales <span class="op">=</span> <span class="st">'free'</span>)</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> labs(x<span class="op">=</span><span class="st">'displacement'</span>, y<span class="op">=</span><span class="st">'horsepower'</span>)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> facet_grid(<span class="st">"drv"</span>, scales<span class="op">=</span><span class="st">"free"</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> labs(x<span class="op">=</span><span class="st">"displacement"</span>, y<span class="op">=</span><span class="st">"horsepower"</span>)</span>
 <span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
@@ -480,12 +471,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>You can add additional information to your facet labels, by using the <code>labeller</code> argument within the <code>facet_grid()</code> command. Below we use <code>labeller = 'label_both'</code> to include the column name in the facet label.</p>
-<div id="cell-17" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:45:38.227198Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:45:38.226952Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:45:38.690662Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:45:38.690060Z&quot;}" data-execution_count="10">
+<div id="cell-17" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:43:56.757997Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:43:56.757758Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:43:57.186818Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:43:57.186198Z&quot;}" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    ggplot(mpg, aes(x<span class="op">=</span><span class="st">'displ'</span>, y<span class="op">=</span><span class="st">'hwy'</span>)) </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    ggplot(mpg, aes(x<span class="op">=</span><span class="st">"displ"</span>, y<span class="op">=</span><span class="st">"hwy"</span>))</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_point()</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> facet_grid(<span class="st">'drv ~ .'</span>, labeller <span class="op">=</span> <span class="st">'label_both'</span>)</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> labs(x<span class="op">=</span><span class="st">'displacement'</span>, y<span class="op">=</span><span class="st">'horsepower'</span>)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> facet_grid(<span class="st">"drv"</span>, labeller<span class="op">=</span><span class="st">"label_both"</span>)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> labs(x<span class="op">=</span><span class="st">"displacement"</span>, y<span class="op">=</span><span class="st">"horsepower"</span>)</span>
 <span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
@@ -496,11 +487,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>You can add two discrete variables to a facet:</p>
-<div id="cell-19" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:45:38.693875Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:45:38.693615Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:45:38.697897Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:45:38.697232Z&quot;}" data-execution_count="11">
+<div id="cell-19" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:43:57.189646Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:43:57.189426Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:43:57.193008Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:43:57.192542Z&quot;}" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># add additional column for plotting exercise</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>mpg[<span class="st">"transmission"</span>] <span class="op">=</span> mpg[<span class="st">'trans'</span>].<span class="bu">map</span>(<span class="kw">lambda</span> x: <span class="st">"auto"</span> <span class="cf">if</span> <span class="st">"auto"</span> <span class="kw">in</span> x <span class="cf">else</span> <span class="st">"man"</span> <span class="cf">if</span> <span class="st">"man"</span> <span class="kw">in</span> x <span class="cf">else</span> <span class="st">""</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>mpg[<span class="st">"transmission"</span>] <span class="op">=</span> mpg[<span class="st">"trans"</span>].<span class="bu">map</span>(</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">lambda</span> x: <span class="st">"auto"</span> <span class="cf">if</span> <span class="st">"auto"</span> <span class="kw">in</span> x <span class="cf">else</span> <span class="st">"man"</span> <span class="cf">if</span> <span class="st">"man"</span> <span class="kw">in</span> x <span class="cf">else</span> <span class="st">""</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-20" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:45:38.700915Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:45:38.700532Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:45:38.713084Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:45:38.712482Z&quot;}" data-execution_count="12">
+<div id="cell-20" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:43:57.195691Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:43:57.195480Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:43:57.206714Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:43:57.206171Z&quot;}" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># inspect new column transmission which identifies cars as having an automatic or manual transmission</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>mpg.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="12">
@@ -609,13 +602,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div id="cell-21" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:45:38.717589Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:45:38.717330Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:45:39.393467Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:45:39.392934Z&quot;}" data-execution_count="13">
+<div id="cell-21" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:43:57.209590Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:43:57.209349Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:43:57.866192Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:43:57.865487Z&quot;}" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># facet plot with two variables on one facet</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    ggplot(mpg, aes(x<span class="op">=</span><span class="st">'displ'</span>, y<span class="op">=</span><span class="st">'hwy'</span>)) </span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    ggplot(mpg, aes(x<span class="op">=</span><span class="st">"displ"</span>, y<span class="op">=</span><span class="st">"hwy"</span>))</span>
 <span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_point()</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> facet_grid(<span class="st">'drv + transmission ~ .'</span>) <span class="co"># use + to add additional faceting variables</span></span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> labs(x<span class="op">=</span><span class="st">'displacement'</span>, y<span class="op">=</span><span class="st">'horsepower'</span>)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> facet_grid([<span class="st">"drv"</span>, <span class="st">"transmission"</span>])  <span class="co"># use a list to add additional faceting variables</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> labs(x<span class="op">=</span><span class="st">"displacement"</span>, y<span class="op">=</span><span class="st">"horsepower"</span>)</span>
 <span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
@@ -628,21 +621,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Facet labels can be rotated to make them easier to read using <code>strip_text_y = element_text(angle = 0)</code> for row labels within the <code>theme()</code> command (use <code>strip_text_x = element_text(angle = 0)</code> for column labels).</p>
 <p>If the labels do not fit in the strip, adjust the width of the strip using <code>strip_background_y</code> for rows (use <code>strip_background_x</code> for columns). You may also need to adjust the text position so it fits in the strip: adjust the horizontal text position in the strip by specifying <code>ha</code> in <code>element_text()</code>(specify <code>va</code> in <code>element_text()</code> to adjust the vertical text position).</p>
 <p>You can also change the colour of the strip by specifying <code>color</code> in <code>element_text()</code> .</p>
-<div id="cell-23" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:45:39.396357Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:45:39.396014Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:45:40.629007Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:45:40.628491Z&quot;}" data-execution_count="14">
+<div id="cell-23" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:43:57.868879Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:43:57.868673Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:43:59.065200Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:43:59.064582Z&quot;}" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    ggplot(mpg, aes(x<span class="op">=</span><span class="st">'drv'</span>, y<span class="op">=</span><span class="st">'model'</span>))</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    ggplot(mpg, aes(x<span class="op">=</span><span class="st">"drv"</span>, y<span class="op">=</span><span class="st">"model"</span>))</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_point()</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> facet_grid(<span class="st">'manufacturer ~ .'</span>, scales <span class="op">=</span> <span class="st">'free'</span>)</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> theme(strip_text_y <span class="op">=</span> element_text(angle <span class="op">=</span> <span class="dv">0</span>,              <span class="co"># change facet text angle</span></span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>                                        ha <span class="op">=</span> <span class="st">'left'</span>             <span class="co"># change text alignment</span></span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>                                       ),</span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>            strip_background_y <span class="op">=</span> element_text(color <span class="op">=</span> <span class="st">'#969dff'</span> <span class="co"># change background colour of facet background</span></span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>                                              , width <span class="op">=</span> <span class="fl">0.2</span>     <span class="co"># adjust width of facet background to fit facet text</span></span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>                                             ),</span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>            figure_size<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">15</span>)                                 <span class="co"># adjust width &amp; height of figure to fit y-axis</span></span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>           )</span>
-<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> labs(x<span class="op">=</span><span class="st">'displacement'</span>, y<span class="op">=</span><span class="st">''</span>)</span>
-<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> facet_grid(<span class="st">"manufacturer"</span>, scales<span class="op">=</span><span class="st">"free"</span>)</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> theme(</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>        strip_text_y<span class="op">=</span>element_text(angle<span class="op">=</span><span class="dv">0</span>),   <span class="co"># change facet text angle</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>        strip_background_y<span class="op">=</span>element_rect(fill<span class="op">=</span><span class="st">"#969dff"</span>),   <span class="co"># change background colour of facet background</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>        figure_size<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">15</span>),  <span class="co"># adjust width &amp; height of figure to fit y-axis</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> labs(x<span class="op">=</span><span class="st">"displacement"</span>, y<span class="op">=</span><span class="st">""</span>)</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">

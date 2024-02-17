@@ -204,36 +204,40 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="using-slightly-altered-colors-to-make-a-distinction-between-related-data" class="level1">
 <h1>Using slightly altered colors to make a distinction between related data</h1>
-<div id="cell-1" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:13.722421Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:13.722164Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:14.320596Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:14.319923Z&quot;}" data-execution_count="1">
+<div id="cell-1" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:47:32.670228Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:47:32.669922Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:47:33.326021Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:47:33.325268Z&quot;}" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> (</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    ggplot,</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    aes,</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    geom_col,</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    geom_path,</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    geom_point,</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    geom_col,</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    scale_color_discrete,</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    guides,</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    guide_legend</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    geom_path,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    geom_point,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    geom_col,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    scale_color_discrete,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    guides,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    guide_legend,</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>First, we make up some data. The data we create has <code>y</code> for actual data value and <code>yfit</code> for a hypothetical fitted model. It also has a category column <code>cat</code>.</p>
-<div id="cell-3" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:14.323817Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:14.323494Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:14.328040Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:14.327487Z&quot;}" data-execution_count="2">
+<div id="cell-3" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:47:33.329408Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:47:33.329087Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:47:33.334167Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:47:33.333557Z&quot;}" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="dv">10</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({<span class="st">'x'</span>: np.arange(n),</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'y'</span>: np.arange(n),</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'yfit'</span>: np.arange(n) <span class="op">+</span> np.tile([<span class="op">-</span><span class="fl">.2</span>, <span class="fl">.2</span>], n<span class="op">//</span><span class="dv">2</span>),</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'cat'</span>: [<span class="st">'a'</span>, <span class="st">'b'</span>]<span class="op">*</span>(n<span class="op">//</span><span class="dv">2</span>)})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>        <span class="st">"x"</span>: np.arange(n),</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">"y"</span>: np.arange(n),</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">"yfit"</span>: np.arange(n) <span class="op">+</span> np.tile([<span class="op">-</span><span class="fl">0.2</span>, <span class="fl">0.2</span>], n <span class="op">//</span> <span class="dv">2</span>),</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">"cat"</span>: [<span class="st">"a"</span>, <span class="st">"b"</span>] <span class="op">*</span> (n <span class="op">//</span> <span class="dv">2</span>),</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Initial plot</p>
-<div id="cell-5" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:14.330899Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:14.330668Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:15.841293Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:15.840525Z&quot;}" data-scrolled="false" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(ggplot(df)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_col(aes(<span class="st">'x'</span>, <span class="st">'y'</span>, fill<span class="op">=</span><span class="st">'cat'</span>))</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_point(aes(<span class="st">'x'</span>, y<span class="op">=</span><span class="st">'yfit'</span>, color<span class="op">=</span><span class="st">'cat'</span>))</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_path(aes(<span class="st">'x'</span>, y<span class="op">=</span><span class="st">'yfit'</span>, color<span class="op">=</span><span class="st">'cat'</span>))</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-5" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:47:33.337435Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:47:33.337188Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:47:34.709730Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:47:34.709152Z&quot;}" data-scrolled="false" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    ggplot(df)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_col(aes(<span class="st">"x"</span>, <span class="st">"y"</span>, fill<span class="op">=</span><span class="st">"cat"</span>))</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_point(aes(<span class="st">"x"</span>, y<span class="op">=</span><span class="st">"yfit"</span>, color<span class="op">=</span><span class="st">"cat"</span>))</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_path(aes(<span class="st">"x"</span>, y<span class="op">=</span><span class="st">"yfit"</span>, color<span class="op">=</span><span class="st">"cat"</span>))</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -243,13 +247,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>There is a clash of colors between the actual data (the bars) and the fitted model (the points and lines). A simple solution is to adjust the colors of the fitted data slightly. We do that by varying the <em>lightness</em> of the default color scale, make them a little darker.</p>
-<div id="cell-7" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:15.888672Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:15.888245Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:16.277250Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:16.276600Z&quot;}" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(ggplot(df)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_col(aes(<span class="st">'x'</span>, <span class="st">'y'</span>, fill<span class="op">=</span><span class="st">'cat'</span>))</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_point(aes(<span class="st">'x'</span>, y<span class="op">=</span><span class="st">'yfit'</span>, color<span class="op">=</span><span class="st">'cat'</span>))</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_path(aes(<span class="st">'x'</span>, y<span class="op">=</span><span class="st">'yfit'</span>, color<span class="op">=</span><span class="st">'cat'</span>))</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> scale_color_discrete(l<span class="op">=</span><span class="fl">.4</span>)                                     <span class="co"># new</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-7" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:47:34.754178Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:47:34.753777Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:47:35.160270Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:47:35.159652Z&quot;}" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    ggplot(df)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_col(aes(<span class="st">"x"</span>, <span class="st">"y"</span>, fill<span class="op">=</span><span class="st">"cat"</span>))</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_point(aes(<span class="st">"x"</span>, y<span class="op">=</span><span class="st">"yfit"</span>, color<span class="op">=</span><span class="st">"cat"</span>))</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_path(aes(<span class="st">"x"</span>, y<span class="op">=</span><span class="st">"yfit"</span>, color<span class="op">=</span><span class="st">"cat"</span>))</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> scale_color_discrete(l<span class="op">=</span><span class="fl">0.4</span>)  <span class="co"># new</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -260,16 +265,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>There are two main pieces of information in the plot, but we a single combined legend. Since we use separate aesthetics for the actual data and fitted model, we can have distinct legends for both.</p>
 <p>We manually define the legend for the <code>fill</code> and <code>color</code> aesthetics, this overrides the automatic legend creation.</p>
-<div id="cell-9" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:16.280229Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:16.280004Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:16.854293Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:16.853467Z&quot;}" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(ggplot(df)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_col(aes(<span class="st">'x'</span>, <span class="st">'y'</span>, fill<span class="op">=</span><span class="st">'cat'</span>))</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_point(aes(<span class="st">'x'</span>, y<span class="op">=</span><span class="st">'yfit'</span>, color<span class="op">=</span><span class="st">'cat'</span>))</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_path(aes(<span class="st">'x'</span>, y<span class="op">=</span><span class="st">'yfit'</span>, color<span class="op">=</span><span class="st">'cat'</span>))</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> scale_color_discrete(l<span class="op">=</span><span class="fl">.4</span>)</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> guides(                                                        <span class="co"># new</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>     fill<span class="op">=</span>guide_legend(title<span class="op">=</span><span class="st">'Data'</span>),</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>     color<span class="op">=</span>guide_legend(title<span class="op">=</span><span class="st">'Model'</span>))</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-9" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:47:35.164632Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:47:35.163886Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:47:35.611861Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:47:35.611167Z&quot;}" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    ggplot(df)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_col(aes(<span class="st">"x"</span>, <span class="st">"y"</span>, fill<span class="op">=</span><span class="st">"cat"</span>))</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_point(aes(<span class="st">"x"</span>, y<span class="op">=</span><span class="st">"yfit"</span>, color<span class="op">=</span><span class="st">"cat"</span>))</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_path(aes(<span class="st">"x"</span>, y<span class="op">=</span><span class="st">"yfit"</span>, color<span class="op">=</span><span class="st">"cat"</span>))</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> scale_color_discrete(l<span class="op">=</span><span class="fl">0.4</span>)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> guides(  <span class="co"># new</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>        fill<span class="op">=</span>guide_legend(title<span class="op">=</span><span class="st">"Data"</span>), color<span class="op">=</span>guide_legend(title<span class="op">=</span><span class="st">"Model"</span>)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">

@@ -207,7 +207,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="show-counts-and-percentages-for-bar-plots" class="level1">
 <h1>Show counts and percentages for bar plots</h1>
-<div id="cell-1" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:45.613060Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:45.612415Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:46.387335Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:46.385519Z&quot;}" data-execution_count="1">
+<div id="cell-1" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:48:04.058268Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:48:04.057863Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:48:04.928497Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:48:04.927648Z&quot;}" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> (</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    ggplot,</span>
@@ -218,21 +218,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    geom_text,</span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    geom_label,</span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    position_dodge2,</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    facet_wrap</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    facet_wrap,</span>
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine.data <span class="im">import</span> mtcars</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We can plot a bar graph and easily show the counts for each bar</p>
-<div id="cell-3" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:46.391457Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:46.391160Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:47.720929Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:47.720349Z&quot;}" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(ggplot(mtcars, aes(<span class="st">'factor(cyl)'</span>, fill<span class="op">=</span><span class="st">'factor(cyl)'</span>))</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_bar()</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_text(</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>     aes(label<span class="op">=</span>after_stat(<span class="st">'count'</span>)),</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>     stat<span class="op">=</span><span class="st">'count'</span>,</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>     nudge_y<span class="op">=</span><span class="fl">0.125</span>,</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>     va<span class="op">=</span><span class="st">'bottom'</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a> )</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-3" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:48:04.933108Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:48:04.932723Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:48:06.379392Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:48:06.378599Z&quot;}" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    ggplot(mtcars, aes(<span class="st">"factor(cyl)"</span>, fill<span class="op">=</span><span class="st">"factor(cyl)"</span>))</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_bar()</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_text(</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>        aes(label<span class="op">=</span>after_stat(<span class="st">"count"</span>)), stat<span class="op">=</span><span class="st">"count"</span>, nudge_y<span class="op">=</span><span class="fl">0.125</span>, va<span class="op">=</span><span class="st">"bottom"</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -242,17 +240,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p><code>stat_count</code> also calculates proportions (as <code>prop</code>) and a proportion can be converted to a percentage.</p>
-<div id="cell-5" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:47.763094Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:47.762710Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:48.078161Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:48.077361Z&quot;}" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(ggplot(mtcars, aes(<span class="st">'factor(cyl)'</span>, fill<span class="op">=</span><span class="st">'factor(cyl)'</span>))</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_bar()</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_text(</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>     aes(label<span class="op">=</span>after_stat(<span class="st">'prop*100'</span>)),</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>     stat<span class="op">=</span><span class="st">'count'</span>,</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>     nudge_y<span class="op">=</span><span class="fl">0.125</span>,</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>     va<span class="op">=</span><span class="st">'bottom'</span>,</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>     format_string<span class="op">=</span><span class="st">'</span><span class="sc">{:.1f}</span><span class="st">% '</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a> )</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-5" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:48:06.427746Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:48:06.427351Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:48:06.786666Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:48:06.786005Z&quot;}" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    ggplot(mtcars, aes(<span class="st">"factor(cyl)"</span>, fill<span class="op">=</span><span class="st">"factor(cyl)"</span>))</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_bar()</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_text(</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>        aes(label<span class="op">=</span>after_stat(<span class="st">"prop*100"</span>)),</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>        stat<span class="op">=</span><span class="st">"count"</span>,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>        nudge_y<span class="op">=</span><span class="fl">0.125</span>,</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>        va<span class="op">=</span><span class="st">"bottom"</span>,</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>        format_string<span class="op">=</span><span class="st">"</span><span class="sc">{:.1f}</span><span class="st">% "</span>,</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -262,17 +261,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>These are clearly wrong percentages. The system puts each bar in a separate group. We need to tell it to put all bars in the panel in single group, so that the percentage are what we expect.</p>
-<div id="cell-7" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:48.081009Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:48.080773Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:48.381783Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:48.381180Z&quot;}" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(ggplot(mtcars, aes(<span class="st">'factor(cyl)'</span>, fill<span class="op">=</span><span class="st">'factor(cyl)'</span>))</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_bar()</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_text(</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>     aes(label<span class="op">=</span>after_stat(<span class="st">'prop*100'</span>), group<span class="op">=</span><span class="dv">1</span>),</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>     stat<span class="op">=</span><span class="st">'count'</span>,</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>     nudge_y<span class="op">=</span><span class="fl">0.125</span>,</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>     va<span class="op">=</span><span class="st">'bottom'</span>,</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>     format_string<span class="op">=</span><span class="st">'</span><span class="sc">{:.1f}</span><span class="st">%'</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a> )</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-7" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:48:06.789676Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:48:06.789435Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:48:07.117569Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:48:07.116795Z&quot;}" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    ggplot(mtcars, aes(<span class="st">"factor(cyl)"</span>, fill<span class="op">=</span><span class="st">"factor(cyl)"</span>))</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_bar()</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_text(</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>        aes(label<span class="op">=</span>after_stat(<span class="st">"prop*100"</span>), group<span class="op">=</span><span class="dv">1</span>),</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>        stat<span class="op">=</span><span class="st">"count"</span>,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>        nudge_y<span class="op">=</span><span class="fl">0.125</span>,</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>        va<span class="op">=</span><span class="st">"bottom"</span>,</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>        format_string<span class="op">=</span><span class="st">"</span><span class="sc">{:.1f}</span><span class="st">%"</span>,</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -282,17 +282,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Without <code>group=1</code>, you can calculate the proportion / percentage after statistics have been calculated. This works because mapping expressions are evaluated across the whole panel. It can work when you have more than 1 categorical.</p>
-<div id="cell-9" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:48.384700Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:48.384470Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:48.707457Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:48.706943Z&quot;}" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(ggplot(mtcars, aes(<span class="st">'factor(cyl)'</span>, fill<span class="op">=</span><span class="st">'factor(cyl)'</span>))</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_bar()</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_text(</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>     aes(label<span class="op">=</span>after_stat(<span class="st">'count / sum(count) * 100'</span>)),</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>     stat<span class="op">=</span><span class="st">'count'</span>,</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>     nudge_y<span class="op">=</span><span class="fl">0.125</span>,</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>     va<span class="op">=</span><span class="st">'bottom'</span>,</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>     format_string<span class="op">=</span><span class="st">'</span><span class="sc">{:.1f}</span><span class="st">%'</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a> )</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-9" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:48:07.120948Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:48:07.120682Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:48:07.464793Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:48:07.463844Z&quot;}" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    ggplot(mtcars, aes(<span class="st">"factor(cyl)"</span>, fill<span class="op">=</span><span class="st">"factor(cyl)"</span>))</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_bar()</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_text(</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>        aes(label<span class="op">=</span>after_stat(<span class="st">"count / sum(count) * 100"</span>)),</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>        stat<span class="op">=</span><span class="st">"count"</span>,</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>        nudge_y<span class="op">=</span><span class="fl">0.125</span>,</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>        va<span class="op">=</span><span class="st">"bottom"</span>,</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>        format_string<span class="op">=</span><span class="st">"</span><span class="sc">{:.1f}</span><span class="st">%"</span>,</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -306,25 +307,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ol type="1">
 <li>Using two <code>geom_text</code> layers.</li>
 </ol>
-<div id="cell-11" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:48.710498Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:48.710222Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:49.059108Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:49.058550Z&quot;}" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(ggplot(mtcars, aes(<span class="st">'factor(cyl)'</span>, fill<span class="op">=</span><span class="st">'factor(cyl)'</span>))</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_bar()</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_text(</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>     aes(label<span class="op">=</span>after_stat(<span class="st">'count'</span>)),</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>     stat<span class="op">=</span><span class="st">'count'</span>,</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>     nudge_x<span class="op">=-</span><span class="fl">0.14</span>,</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>     nudge_y<span class="op">=</span><span class="fl">0.125</span>,</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>     va<span class="op">=</span><span class="st">'bottom'</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a> )</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_text(</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>     aes(label<span class="op">=</span>after_stat(<span class="st">'prop*100'</span>), group<span class="op">=</span><span class="dv">1</span>),</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>     stat<span class="op">=</span><span class="st">'count'</span>,</span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>     nudge_x<span class="op">=</span><span class="fl">0.14</span>,</span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>     nudge_y<span class="op">=</span><span class="fl">0.125</span>,</span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>     va<span class="op">=</span><span class="st">'bottom'</span>,</span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>     format_string<span class="op">=</span><span class="st">'(</span><span class="sc">{:.1f}</span><span class="st">%)'</span></span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a> )</span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-11" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:48:07.468202Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:48:07.467923Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:48:07.902901Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:48:07.902158Z&quot;}" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    ggplot(mtcars, aes(<span class="st">"factor(cyl)"</span>, fill<span class="op">=</span><span class="st">"factor(cyl)"</span>))</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_bar()</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_text(</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>        aes(label<span class="op">=</span>after_stat(<span class="st">"count"</span>)),</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>        stat<span class="op">=</span><span class="st">"count"</span>,</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>        nudge_x<span class="op">=-</span><span class="fl">0.14</span>,</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>        nudge_y<span class="op">=</span><span class="fl">0.125</span>,</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>        va<span class="op">=</span><span class="st">"bottom"</span>,</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_text(</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>        aes(label<span class="op">=</span>after_stat(<span class="st">"prop*100"</span>), group<span class="op">=</span><span class="dv">1</span>),</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>        stat<span class="op">=</span><span class="st">"count"</span>,</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>        nudge_x<span class="op">=</span><span class="fl">0.14</span>,</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>        nudge_y<span class="op">=</span><span class="fl">0.125</span>,</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>        va<span class="op">=</span><span class="st">"bottom"</span>,</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>        format_string<span class="op">=</span><span class="st">"(</span><span class="sc">{:.1f}</span><span class="st">%)"</span>,</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -336,21 +338,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ol start="2" type="1">
 <li>Using a function to combine the counts and percentages</li>
 </ol>
-<div id="cell-13" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:49.061923Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:49.061697Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:49.360989Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:49.360318Z&quot;}" data-execution_count="7">
+<div id="cell-13" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:48:07.906245Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:48:07.905989Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:48:08.238560Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:48:08.237780Z&quot;}" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> combine(counts, percentages):</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    fmt <span class="op">=</span> <span class="st">'</span><span class="sc">{}</span><span class="st"> (</span><span class="sc">{:.1f}</span><span class="st">%)'</span>.<span class="bu">format</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    fmt <span class="op">=</span> <span class="st">"</span><span class="sc">{}</span><span class="st"> (</span><span class="sc">{:.1f}</span><span class="st">%)"</span>.<span class="bu">format</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> [fmt(c, p) <span class="cf">for</span> c, p <span class="kw">in</span> <span class="bu">zip</span>(counts, percentages)]</span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>(ggplot(mtcars, aes(<span class="st">'factor(cyl)'</span>, fill<span class="op">=</span><span class="st">'factor(cyl)'</span>))</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_bar()</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_text(</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>     aes(label<span class="op">=</span>after_stat(<span class="st">'combine(count, prop*100)'</span>), group<span class="op">=</span><span class="dv">1</span>),</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>     stat<span class="op">=</span><span class="st">'count'</span>,</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>     nudge_y<span class="op">=</span><span class="fl">0.125</span>,</span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>     va<span class="op">=</span><span class="st">'bottom'</span></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a> )</span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    ggplot(mtcars, aes(<span class="st">"factor(cyl)"</span>, fill<span class="op">=</span><span class="st">"factor(cyl)"</span>))</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_bar()</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_text(</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>        aes(label<span class="op">=</span>after_stat(<span class="st">"combine(count, prop*100)"</span>), group<span class="op">=</span><span class="dv">1</span>),</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>        stat<span class="op">=</span><span class="st">"count"</span>,</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>        nudge_y<span class="op">=</span><span class="fl">0.125</span>,</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>        va<span class="op">=</span><span class="st">"bottom"</span>,</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -360,18 +363,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>It works with facetting.</p>
-<div id="cell-15" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:49.363645Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:49.363418Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:49.869665Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:49.868481Z&quot;}" data-scrolled="false" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>(ggplot(mtcars, aes(<span class="st">'factor(cyl)'</span>, fill<span class="op">=</span><span class="st">'factor(cyl)'</span>))</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_bar()</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_text(</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>     aes(label<span class="op">=</span>after_stat(<span class="st">'combine(count, prop*100)'</span>), group<span class="op">=</span><span class="dv">1</span>),</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>     stat<span class="op">=</span><span class="st">'count'</span>,</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>     nudge_y<span class="op">=</span><span class="fl">0.125</span>,</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>     va<span class="op">=</span><span class="st">'bottom'</span>,</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>     size<span class="op">=</span><span class="dv">9</span></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a> )</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> facet_wrap(<span class="st">'am'</span>)</span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-15" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:48:08.241467Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:48:08.241220Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:48:08.806122Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:48:08.805406Z&quot;}" data-scrolled="false" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    ggplot(mtcars, aes(<span class="st">"factor(cyl)"</span>, fill<span class="op">=</span><span class="st">"factor(cyl)"</span>))</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_bar()</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_text(</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>        aes(label<span class="op">=</span>after_stat(<span class="st">"combine(count, prop*100)"</span>), group<span class="op">=</span><span class="dv">1</span>),</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>        stat<span class="op">=</span><span class="st">"count"</span>,</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>        nudge_y<span class="op">=</span><span class="fl">0.125</span>,</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>        va<span class="op">=</span><span class="st">"bottom"</span>,</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>        size<span class="op">=</span><span class="dv">9</span>,</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> facet_wrap(<span class="st">"am"</span>)</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -384,20 +388,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="percentages-when-you-have-more-than-one-categorical." class="level3">
 <h3 class="anchored" data-anchor-id="percentages-when-you-have-more-than-one-categorical.">Percentages when you have more than one categorical.</h3>
 <p><code>group = 1</code> does not work when you have more than one categories per <code>x</code> location.</p>
-<div id="cell-19" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:49.873018Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:49.872776Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:50.207436Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:50.206898Z&quot;}" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>(ggplot(mtcars, aes(<span class="st">'factor(cyl)'</span>, fill<span class="op">=</span><span class="st">'factor(am)'</span>))</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_bar(position<span class="op">=</span><span class="st">'dodge2'</span>)</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_text(</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>     aes(</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>         label<span class="op">=</span>after_stat(<span class="st">'prop * 100'</span>),</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>         group<span class="op">=</span><span class="dv">1</span></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>     ),</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>     stat<span class="op">=</span><span class="st">'count'</span>,</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>     position<span class="op">=</span>position_dodge2(width<span class="op">=</span><span class="fl">0.9</span>),</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>     format_string<span class="op">=</span><span class="st">'</span><span class="sc">{:.1f}</span><span class="st">%'</span>,</span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>     size<span class="op">=</span><span class="dv">9</span>,</span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a> )</span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-19" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:48:08.809441Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:48:08.809183Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:48:09.184946Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:48:09.184397Z&quot;}" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    ggplot(mtcars, aes(<span class="st">"factor(cyl)"</span>, fill<span class="op">=</span><span class="st">"factor(am)"</span>))</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_bar(position<span class="op">=</span><span class="st">"dodge2"</span>)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_text(</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>        aes(label<span class="op">=</span>after_stat(<span class="st">"prop * 100"</span>), group<span class="op">=</span><span class="dv">1</span>),</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>        stat<span class="op">=</span><span class="st">"count"</span>,</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>        position<span class="op">=</span>position_dodge2(width<span class="op">=</span><span class="fl">0.9</span>),</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>        format_string<span class="op">=</span><span class="st">"</span><span class="sc">{:.1f}</span><span class="st">%"</span>,</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>        size<span class="op">=</span><span class="dv">9</span>,</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -407,20 +409,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>You have to calculate the percentages after statistics for the panel have been calculated.</p>
-<div id="cell-21" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:50.210409Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:50.210187Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:50.762798Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:50.762296Z&quot;}" data-execution_count="10">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>(ggplot(mtcars, aes(<span class="st">'factor(cyl)'</span>, fill<span class="op">=</span><span class="st">'factor(am)'</span>))</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_bar(position<span class="op">=</span><span class="st">'dodge2'</span>)</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_text(</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>     aes(</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>         label<span class="op">=</span>after_stat(<span class="st">'count / sum(count) * 100'</span>),</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>         y<span class="op">=</span>stage(after_stat<span class="op">=</span><span class="st">'count'</span>, after_scale<span class="op">=</span><span class="st">'y + 0.25'</span>),</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>     ),</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>     stat<span class="op">=</span><span class="st">'count'</span>,</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>     position<span class="op">=</span>position_dodge2(width<span class="op">=</span><span class="fl">0.9</span>),</span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>     format_string<span class="op">=</span><span class="st">'</span><span class="sc">{:.1f}</span><span class="st">%'</span>,</span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>     size<span class="op">=</span><span class="dv">9</span>,</span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a> )</span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-21" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:48:09.187973Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:48:09.187711Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:48:09.775190Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:48:09.774430Z&quot;}" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    ggplot(mtcars, aes(<span class="st">"factor(cyl)"</span>, fill<span class="op">=</span><span class="st">"factor(am)"</span>))</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_bar(position<span class="op">=</span><span class="st">"dodge2"</span>)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_text(</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>        aes(</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>            label<span class="op">=</span>after_stat(<span class="st">"count / sum(count) * 100"</span>),</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>            y<span class="op">=</span>stage(after_stat<span class="op">=</span><span class="st">"count"</span>, after_scale<span class="op">=</span><span class="st">"y + 0.25"</span>),</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>        ),</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>        stat<span class="op">=</span><span class="st">"count"</span>,</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>        position<span class="op">=</span>position_dodge2(width<span class="op">=</span><span class="fl">0.9</span>),</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>        format_string<span class="op">=</span><span class="st">"</span><span class="sc">{:.1f}</span><span class="st">%"</span>,</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>        size<span class="op">=</span><span class="dv">9</span>,</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -430,31 +433,30 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>For percentages per bar at each <code>x</code> location, you have to group the counts per location can compute the proportions.</p>
-<div id="cell-23" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:50.765616Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:50.765361Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:51.241640Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:51.241029Z&quot;}" data-execution_count="11">
+<div id="cell-23" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:48:09.778589Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:48:09.778330Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:48:10.411324Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:48:10.410216Z&quot;}" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> prop_per_x(x, count):</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Compute the proportion of the counts for each value of x</span></span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    df <span class="op">=</span> pd.DataFrame({</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">'x'</span>: x,</span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">'count'</span>: count</span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    })</span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    prop <span class="op">=</span> df[<span class="st">'count'</span>]<span class="op">/</span>df.groupby(<span class="st">'x'</span>)[<span class="st">'count'</span>].transform(<span class="st">'sum'</span>)</span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> prop</span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>(ggplot(mtcars, aes(<span class="st">'factor(cyl)'</span>, fill<span class="op">=</span><span class="st">'factor(am)'</span>))</span>
-<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_bar(position<span class="op">=</span><span class="st">'dodge2'</span>)</span>
-<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_text(</span>
-<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>     aes(</span>
-<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>         label<span class="op">=</span>after_stat(<span class="st">'prop_per_x(x, count) * 100'</span>),</span>
-<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>         y<span class="op">=</span>stage(after_stat<span class="op">=</span><span class="st">'count'</span>, after_scale<span class="op">=</span><span class="st">'y+.25'</span>)</span>
-<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>     ),</span>
-<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>     stat<span class="op">=</span><span class="st">'count'</span>,</span>
-<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>     position<span class="op">=</span>position_dodge2(width<span class="op">=</span><span class="fl">0.9</span>),</span>
-<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>     format_string<span class="op">=</span><span class="st">'</span><span class="sc">{:.1f}</span><span class="st">%'</span>,</span>
-<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>     size<span class="op">=</span><span class="dv">9</span>,</span>
-<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a> )</span>
-<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    df <span class="op">=</span> pd.DataFrame({<span class="st">"x"</span>: x, <span class="st">"count"</span>: count})</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    prop <span class="op">=</span> df[<span class="st">"count"</span>] <span class="op">/</span> df.groupby(<span class="st">"x"</span>)[<span class="st">"count"</span>].transform(<span class="st">"sum"</span>)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> prop</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>    ggplot(mtcars, aes(<span class="st">"factor(cyl)"</span>, fill<span class="op">=</span><span class="st">"factor(am)"</span>))</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_bar(position<span class="op">=</span><span class="st">"dodge2"</span>)</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_text(</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>        aes(</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>            label<span class="op">=</span>after_stat(<span class="st">"prop_per_x(x, count) * 100"</span>),</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>            y<span class="op">=</span>stage(after_stat<span class="op">=</span><span class="st">"count"</span>, after_scale<span class="op">=</span><span class="st">"y+.25"</span>),</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>        ),</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>        stat<span class="op">=</span><span class="st">"count"</span>,</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>        position<span class="op">=</span>position_dodge2(width<span class="op">=</span><span class="fl">0.9</span>),</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>        format_string<span class="op">=</span><span class="st">"</span><span class="sc">{:.1f}</span><span class="st">%"</span>,</span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>        size<span class="op">=</span><span class="dv">9</span>,</span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -463,17 +465,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div id="cell-24" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:51.244232Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:51.244025Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:51.643440Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:51.642851Z&quot;}" data-execution_count="12">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>(ggplot(mtcars, aes(<span class="st">'factor(cyl)'</span>, fill<span class="op">=</span><span class="st">'factor(am)'</span>))</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_bar(position<span class="op">=</span><span class="st">'fill'</span>)</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_label(</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>     aes(label<span class="op">=</span>after_stat(<span class="st">'prop_per_x(x, count) * 100'</span>)),</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>     stat<span class="op">=</span><span class="st">'count'</span>,</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>     position<span class="op">=</span><span class="st">'fill'</span>,</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>     format_string<span class="op">=</span><span class="st">'</span><span class="sc">{:.1f}</span><span class="st">%'</span>,</span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>     size<span class="op">=</span><span class="dv">9</span>,</span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a> )</span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-24" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:48:10.417611Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:48:10.417186Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:48:11.016683Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:48:11.015916Z&quot;}" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    ggplot(mtcars, aes(<span class="st">"factor(cyl)"</span>, fill<span class="op">=</span><span class="st">"factor(am)"</span>))</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_bar(position<span class="op">=</span><span class="st">"fill"</span>)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_label(</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>        aes(label<span class="op">=</span>after_stat(<span class="st">"prop_per_x(x, count) * 100"</span>)),</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>        stat<span class="op">=</span><span class="st">"count"</span>,</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>        position<span class="op">=</span><span class="st">"fill"</span>,</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>        format_string<span class="op">=</span><span class="st">"</span><span class="sc">{:.1f}</span><span class="st">%"</span>,</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>        size<span class="op">=</span><span class="dv">9</span>,</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">

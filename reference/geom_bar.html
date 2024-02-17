@@ -316,23 +316,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="examples" class="level2">
 <h2 class="anchored" data-anchor-id="examples">Examples</h2>
 <div class="quarto-embed-nb-cell">
-<div id="cell-0" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:46:06.732442Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:46:06.732103Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:46:07.494694Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:46:07.493784Z&quot;}" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> (</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    ggplot,</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    aes,</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    geom_bar,</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    coord_flip,</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    theme_classic</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine.data <span class="im">import</span> mpg</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-0" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:44:25.502759Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:44:25.502448Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:44:26.310296Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:44:26.309368Z&quot;}" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> ggplot, aes, geom_bar, coord_flip, theme_classic</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine.data <span class="im">import</span> mpg</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="bar-chart" class="level3">
 <h3 class="anchored" data-anchor-id="bar-chart">Bar chart</h3>
 <p><em>geom_bar() makes the height of the bar proportional to the number of cases in each group</em></p>
-<div id="cell-2" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:46:07.498406Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:46:07.498124Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:46:07.513960Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:46:07.513343Z&quot;}" data-execution_count="2">
+<div id="cell-2" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:44:26.315322Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:44:26.314992Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:44:26.331649Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:44:26.330940Z&quot;}" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>mpg.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
 <div>
@@ -434,8 +426,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div id="cell-3" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:46:07.558127Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:46:07.557855Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:46:08.844010Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:46:08.843414Z&quot;}" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>ggplot(mpg) <span class="op">+</span> geom_bar(aes(x<span class="op">=</span><span class="st">'class'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-3" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:44:26.377175Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:44:26.376900Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:44:27.692447Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:44:27.691805Z&quot;}" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>ggplot(mpg) <span class="op">+</span> geom_bar(aes(x<span class="op">=</span><span class="st">"class"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -444,8 +436,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div id="cell-4" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:46:08.847215Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:46:08.846872Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:46:09.225207Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:46:09.224576Z&quot;}" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>ggplot(mpg) <span class="op">+</span> geom_bar(aes(x<span class="op">=</span><span class="st">'class'</span>, fill<span class="op">=</span><span class="st">'drv'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-4" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:44:27.695596Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:44:27.695235Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:44:28.075385Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:44:28.074704Z&quot;}" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    ggplot(mpg)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_bar(aes(x<span class="op">=</span><span class="st">"class"</span>, fill<span class="op">=</span><span class="st">"drv"</span>))</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -454,10 +449,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div id="cell-5" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:46:09.227962Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:46:09.227720Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:46:09.597958Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:46:09.597371Z&quot;}" data-execution_count="5">
+<div id="cell-5" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:44:28.078417Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:44:28.078045Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:44:28.442134Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:44:28.441452Z&quot;}" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    ggplot(mpg) </span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_bar(aes(x<span class="op">=</span><span class="st">'class'</span>, fill<span class="op">=</span><span class="st">'drv'</span>))</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_bar(aes(x<span class="op">=</span><span class="st">"class"</span>, fill<span class="op">=</span><span class="st">"drv"</span>))</span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> coord_flip()</span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> theme_classic()</span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>

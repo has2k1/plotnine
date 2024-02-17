@@ -207,26 +207,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="when-the-automatic-groups-are-not-sufficient" class="level1">
 <h1>When the automatic groups are not sufficient</h1>
-<div id="cell-1" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:21.474856Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:21.474603Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:22.169369Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:22.167794Z&quot;}" data-execution_count="1">
+<div id="cell-1" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:47:39.909453Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:47:39.909143Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:47:40.583139Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:47:40.582463Z&quot;}" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> (</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    ggplot,</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    aes,</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    geom_col,</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    geom_line,</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    labs,</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    scale_color_hue</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> ggplot, aes, geom_col, geom_line, labs, scale_color_hue</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Some data to plot</p>
-<div id="cell-3" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:22.173514Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:22.173165Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:22.184411Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:22.183877Z&quot;}" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'letter'</span>: [<span class="st">'Alpha'</span>, <span class="st">'Beta'</span>, <span class="st">'Delta'</span>, <span class="st">'Gamma'</span>],</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'pos'</span>: [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>],</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'num_of_letters'</span>: [<span class="dv">5</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">5</span>]</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-3" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:47:40.586806Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:47:40.586454Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:47:40.598810Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:47:40.597853Z&quot;}" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>        <span class="st">"letter"</span>: [<span class="st">"Alpha"</span>, <span class="st">"Beta"</span>, <span class="st">"Delta"</span>, <span class="st">"Gamma"</span>],</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>        <span class="st">"pos"</span>: [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>],</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">"num_of_letters"</span>: [<span class="dv">5</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">5</span>],</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
 <div>
 <div>
@@ -273,12 +268,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div id="cell-4" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:22.232009Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:22.231716Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:23.519643Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:23.517906Z&quot;}" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(ggplot(df)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_col(aes(x<span class="op">=</span><span class="st">'letter'</span>, y<span class="op">=</span><span class="st">'pos'</span>))</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_line(aes(x<span class="op">=</span><span class="st">'letter'</span>, y<span class="op">=</span><span class="st">'num_of_letters'</span>))</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> labs(title<span class="op">=</span><span class="st">'Greek Letter Analysis'</span>)</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-4" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:47:40.643082Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:47:40.642792Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:47:41.924865Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:47:41.924201Z&quot;}" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    ggplot(df)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_col(aes(x<span class="op">=</span><span class="st">"letter"</span>, y<span class="op">=</span><span class="st">"pos"</span>))</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_line(aes(x<span class="op">=</span><span class="st">"letter"</span>, y<span class="op">=</span><span class="st">"num_of_letters"</span>))</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> labs(title<span class="op">=</span><span class="st">"Greek Letter Analysis"</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>/Users/hassan/scm/python/plotnine/plotnine/geoms/geom_path.py:113: PlotnineWarning: geom_path: Each group consist of only one observation. Do you need to adjust the group aesthetic?</code></pre>
 </div>
@@ -292,12 +288,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>We get a plot with a warning and no line(s). This is not what we expected.</p>
 <p>The issue is we have 4 groups (Alpha, Beta, …) and each of those groups has a single point. This is a case where the automatic grouping is not sufficient (or just not what you expect). The solution is to manually set the group for <code>geom_line</code> so that all points belong to one group.</p>
-<div id="cell-6" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:23.524746Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:23.524297Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:23.827148Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:23.826368Z&quot;}" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(ggplot(df)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_col(aes(x<span class="op">=</span><span class="st">'letter'</span>, y<span class="op">=</span><span class="st">'pos'</span>))</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_line(aes(x<span class="op">=</span><span class="st">'letter'</span>, y<span class="op">=</span><span class="st">'num_of_letters'</span>), group<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> labs(title<span class="op">=</span><span class="st">'Greek Letter Analysis'</span>)</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-6" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:47:41.928193Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:47:41.927831Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:47:42.205169Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:47:42.204493Z&quot;}" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    ggplot(df)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_col(aes(x<span class="op">=</span><span class="st">"letter"</span>, y<span class="op">=</span><span class="st">"pos"</span>))</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_line(aes(x<span class="op">=</span><span class="st">"letter"</span>, y<span class="op">=</span><span class="st">"num_of_letters"</span>), group<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> labs(title<span class="op">=</span><span class="st">"Greek Letter Analysis"</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -308,20 +305,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>That looks like it.</p>
 <p>To understand why the behaviour behind the warning is not wrong, let us try a dataframe with 2 points per group.</p>
-<div id="cell-8" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:23.830268Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:23.830036Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:24.146222Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:24.145603Z&quot;}" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>df2 <span class="op">=</span> pd.DataFrame({</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'letter'</span>: [<span class="st">'Alpha'</span>, <span class="st">'Beta'</span>, <span class="st">'Delta'</span>, <span class="st">'Gamma'</span>] <span class="op">*</span> <span class="dv">2</span>,</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'pos'</span>: [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>] <span class="op">*</span> <span class="dv">2</span>,</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'num_of_letters'</span>: [<span class="dv">5</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">5</span>] <span class="op">*</span> <span class="dv">2</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>df2.loc[<span class="dv">4</span>:, <span class="st">'num_of_letters'</span>] <span class="op">+=</span> <span class="fl">0.8</span></span>
+<div id="cell-8" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:47:42.208091Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:47:42.207854Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:47:42.474046Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:47:42.473387Z&quot;}" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>df2 <span class="op">=</span> pd.DataFrame(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>        <span class="st">"letter"</span>: [<span class="st">"Alpha"</span>, <span class="st">"Beta"</span>, <span class="st">"Delta"</span>, <span class="st">"Gamma"</span>] <span class="op">*</span> <span class="dv">2</span>,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>        <span class="st">"pos"</span>: [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>] <span class="op">*</span> <span class="dv">2</span>,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">"num_of_letters"</span>: [<span class="dv">5</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">5</span>] <span class="op">*</span> <span class="dv">2</span>,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>(ggplot(df2)</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_col(aes(x<span class="op">=</span><span class="st">'letter'</span>, y<span class="op">=</span><span class="st">'pos'</span>))</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_line(aes(x<span class="op">=</span><span class="st">'letter'</span>, y<span class="op">=</span><span class="st">'num_of_letters'</span>))</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> labs(title<span class="op">=</span><span class="st">'Greek Letter Analysis'</span>)</span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>df2.loc[<span class="dv">4</span>:, <span class="st">"num_of_letters"</span>] <span class="op">+=</span> <span class="fl">0.8</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    ggplot(df2)</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_col(aes(x<span class="op">=</span><span class="st">"letter"</span>, y<span class="op">=</span><span class="st">"pos"</span>))</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_line(aes(x<span class="op">=</span><span class="st">"letter"</span>, y<span class="op">=</span><span class="st">"num_of_letters"</span>))</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> labs(title<span class="op">=</span><span class="st">"Greek Letter Analysis"</span>)</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -332,13 +332,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>We get no warning and we get lines.</p>
 <p>We can add some color to such a plot.</p>
-<div id="cell-10" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:24.149846Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:24.149547Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:24.599233Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:24.598485Z&quot;}" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>(ggplot(df2)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_col(aes(x<span class="op">=</span><span class="st">'letter'</span>,y<span class="op">=</span><span class="st">'pos'</span>, fill<span class="op">=</span><span class="st">'letter'</span>))</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_line(aes(x<span class="op">=</span><span class="st">'letter'</span>, y<span class="op">=</span><span class="st">'num_of_letters'</span>, color<span class="op">=</span><span class="st">'letter'</span>), size<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> scale_color_hue(l<span class="op">=</span><span class="fl">0.45</span>)                                  <span class="co"># some contrast to make the lines stick out</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> labs(title<span class="op">=</span><span class="st">'Greek Letter Analysis'</span>)</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-10" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:47:42.477129Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:47:42.476899Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:47:42.810906Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:47:42.810287Z&quot;}" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    ggplot(df2)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_col(aes(x<span class="op">=</span><span class="st">"letter"</span>, y<span class="op">=</span><span class="st">"pos"</span>, fill<span class="op">=</span><span class="st">"letter"</span>))</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_line(aes(x<span class="op">=</span><span class="st">"letter"</span>, y<span class="op">=</span><span class="st">"num_of_letters"</span>, color<span class="op">=</span><span class="st">"letter"</span>), size<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> scale_color_hue(l<span class="op">=</span><span class="fl">0.45</span>)  <span class="co"># some contrast to make the lines stick out</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> labs(title<span class="op">=</span><span class="st">"Greek Letter Analysis"</span>)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">

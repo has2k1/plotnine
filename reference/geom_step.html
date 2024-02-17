@@ -312,25 +312,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="examples" class="level2">
 <h2 class="anchored" data-anchor-id="examples">Examples</h2>
 <div class="quarto-embed-nb-cell">
-<div id="cell-0" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:48:01.461719Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:48:01.461420Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:48:02.325088Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:48:02.324232Z&quot;}" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> (</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    ggplot,</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    aes,</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    geom_step,</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    geom_line,</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    labs,</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    theme,</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    element_text</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine.data <span class="im">import</span> economics</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-0" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:46:21.800883Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:46:21.800577Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:46:22.575281Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:46:22.574424Z&quot;}" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> ggplot, aes, geom_step, geom_line, labs, theme, element_text</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine.data <span class="im">import</span> economics</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="step-plots" class="level3">
 <h3 class="anchored" data-anchor-id="step-plots">Step plots</h3>
 <p><code>geom_step()</code> connects points using ‘steps’ instead of a line.</p>
-<div id="cell-2" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:48:02.328903Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:48:02.328637Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:48:02.342802Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:48:02.342083Z&quot;}" data-execution_count="2">
+<div id="cell-2" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:46:22.578894Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:46:22.578624Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:46:22.592999Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:46:22.592366Z&quot;}" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># inspect the data</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>economics.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
@@ -404,14 +394,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Plot a step plot using <code>geom_plot()</code>. Notice from the first point the line travels vertically then horizontally:</p>
-<div id="cell-4" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:48:02.388082Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:48:02.387804Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:48:03.784758Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:48:03.783958Z&quot;}" data-execution_count="3">
+<div id="cell-4" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:46:22.638859Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:46:22.638587Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:46:24.058829Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:46:24.058252Z&quot;}" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    ggplot(economics.iloc[:<span class="dv">20</span>],                 <span class="co"># filter for first twenty rows (dates) to make steps more visible</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>           aes(<span class="st">'date'</span>, <span class="st">'unemploy'</span>)) </span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_step()                               <span class="co"># step plot</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> labs(x<span class="op">=</span><span class="st">'date'</span>, y<span class="op">=</span><span class="st">'unemployment (,000)'</span>)   <span class="co"># label x &amp; y-axis</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> theme(axis_text_x<span class="op">=</span>element_text(angle<span class="op">=</span><span class="dv">45</span>)) <span class="co"># rotate x-axis text for readability</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    ggplot(</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>        economics.iloc[:<span class="dv">20</span>],  <span class="co"># filter for first twenty rows (dates) to make steps more visible</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>        aes(<span class="st">"date"</span>, <span class="st">"unemploy"</span>),</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_step()  <span class="co"># step plot</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> labs(x<span class="op">=</span><span class="st">"date"</span>, y<span class="op">=</span><span class="st">"unemployment (,000)"</span>)  <span class="co"># label x &amp; y-axis</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> theme(axis_text_x<span class="op">=</span>element_text(angle<span class="op">=</span><span class="dv">45</span>))  <span class="co"># rotate x-axis text for readability</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -421,17 +413,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>You can see how <code>geom_path()</code> (shown in pink) differs from <code>geom_line()</code> (black):</p>
-<div id="cell-6" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:48:03.789502Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:48:03.789100Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:48:04.236611Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:48:04.235594Z&quot;}" data-execution_count="4">
+<div id="cell-6" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:46:24.062033Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:46:24.061691Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:46:24.541073Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:46:24.540400Z&quot;}" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    ggplot(economics.iloc[:<span class="dv">20</span>], </span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>           aes(<span class="st">'date'</span>, <span class="st">'unemploy'</span>)) </span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_step(colour<span class="op">=</span><span class="st">'#ff69b4'</span>,              <span class="co"># plot geom_step as the first layer - colour pink</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>                alpha<span class="op">=</span><span class="fl">0.5</span>,                     <span class="co"># line transparency</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>                size<span class="op">=</span><span class="fl">2.5</span>)                      <span class="co"># line thickness</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_line()                              <span class="co"># plot geom_line as the second layer</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> labs(x<span class="op">=</span><span class="st">'date'</span>, y<span class="op">=</span><span class="st">'unemployment (,000)'</span>)</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> theme(axis_text_x<span class="op">=</span>element_text(angle<span class="op">=</span><span class="dv">45</span>))</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    ggplot(economics.iloc[:<span class="dv">20</span>], aes(<span class="st">"date"</span>, <span class="st">"unemploy"</span>))</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_step(</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>        colour<span class="op">=</span><span class="st">"#ff69b4"</span>,  <span class="co"># plot geom_step as the first layer - colour pink</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>        alpha<span class="op">=</span><span class="fl">0.5</span>,  <span class="co"># line transparency</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>        size<span class="op">=</span><span class="fl">2.5</span>,</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    )  <span class="co"># line thickness</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_line()  <span class="co"># plot geom_line as the second layer</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> labs(x<span class="op">=</span><span class="st">"date"</span>, y<span class="op">=</span><span class="st">"unemployment (,000)"</span>)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> theme(axis_text_x<span class="op">=</span>element_text(angle<span class="op">=</span><span class="dv">45</span>))</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -441,18 +434,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Rather than a line that travels vertically then horizontally, this order can be switched by specifying <code>direction='vh'</code> within <code>geom_step()</code>. Below <code>direction='vh'</code> is shown in black with the default <code>direction='hv'</code> shown in pink:</p>
-<div id="cell-8" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:48:04.239811Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:48:04.239556Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:48:04.660115Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:48:04.659577Z&quot;}" data-execution_count="5">
+<div id="cell-8" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:46:24.544253Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:46:24.544010Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:46:24.985389Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:46:24.984801Z&quot;}" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    ggplot(economics.iloc[:<span class="dv">20</span>], </span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>           aes(<span class="st">'date'</span>, <span class="st">'unemploy'</span>)) </span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_step(colour<span class="op">=</span><span class="st">'#ff69b4'</span>, <span class="co"># plot geom_path with default direction as the first layer - colour pink</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>                linetype<span class="op">=</span><span class="st">'dashed'</span>,<span class="co"># line type</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>                size<span class="op">=</span><span class="dv">2</span>,           <span class="co"># line thickness</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>                alpha<span class="op">=</span><span class="fl">0.5</span>)        <span class="co"># line transparency        </span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_step(direction<span class="op">=</span><span class="st">'vh'</span>)   <span class="co"># plot geom_path with step order reversed</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> labs(x<span class="op">=</span><span class="st">'date'</span>, y<span class="op">=</span><span class="st">'unemployment (,000)'</span>)</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> theme(axis_text_x<span class="op">=</span>element_text(angle<span class="op">=</span><span class="dv">45</span>))</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    ggplot(economics.iloc[:<span class="dv">20</span>], aes(<span class="st">"date"</span>, <span class="st">"unemploy"</span>))</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_step(</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>        colour<span class="op">=</span><span class="st">"#ff69b4"</span>,  <span class="co"># plot geom_path with default direction as the first layer - colour pink</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>        linetype<span class="op">=</span><span class="st">"dashed"</span>,  <span class="co"># line type</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>        size<span class="op">=</span><span class="dv">2</span>,  <span class="co"># line thickness</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>        alpha<span class="op">=</span><span class="fl">0.5</span>,</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    )  <span class="co"># line transparency</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_step(direction<span class="op">=</span><span class="st">"vh"</span>)  <span class="co"># plot geom_path with step order reversed</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> labs(x<span class="op">=</span><span class="st">"date"</span>, y<span class="op">=</span><span class="st">"unemployment (,000)"</span>)</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> theme(axis_text_x<span class="op">=</span>element_text(angle<span class="op">=</span><span class="dv">45</span>))</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">

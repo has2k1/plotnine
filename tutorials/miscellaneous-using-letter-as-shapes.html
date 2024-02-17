@@ -233,31 +233,31 @@ window.Quarto = {
 
 <section id="using-letters-as-shapes" class="level1">
 <h1>Using letters as shapes</h1>
-<div id="cell-1" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:50:03.343147Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:50:03.342837Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:50:04.316821Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:50:04.315254Z&quot;}" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> (</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    ggplot,</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    aes,</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    geom_point,</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    scale_shape_manual,</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine.data <span class="im">import</span> mtcars</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-1" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:48:23.478671Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:48:23.470900Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:48:24.461417Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:48:24.460737Z&quot;}" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> (</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    ggplot,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    aes,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    geom_point,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    scale_shape_manual,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine.data <span class="im">import</span> mtcars</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>You can create shape symbols using <span class="math inline">\(\TeX\)</span>. For example</p>
-<div id="cell-3" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:50:04.325269Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:50:04.323696Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:50:06.249005Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:50:06.247714Z&quot;}" data-scrolled="false" data-execution_count="2">
+<div id="cell-3" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:48:24.466596Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:48:24.465908Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:48:26.188330Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:48:26.187506Z&quot;}" data-scrolled="false" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>mixed_shapes <span class="op">=</span> (</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="vs">r'$\mathrm</span><span class="sc">{A}</span><span class="vs">$'</span>, </span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="vs">r'$\mathrm</span><span class="sc">{B}</span><span class="vs">$'</span>,  </span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="vs">r'$\mathrm</span><span class="sc">{C}</span><span class="vs">$'</span>,  </span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="vs">r'$\mathrm</span><span class="sc">{D}</span><span class="vs">$'</span>,</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="vs">r"$\mathrm</span><span class="sc">{A}</span><span class="vs">$"</span>,</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="vs">r"$\mathrm</span><span class="sc">{B}</span><span class="vs">$"</span>,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="vs">r"$\mathrm</span><span class="sc">{C}</span><span class="vs">$"</span>,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="vs">r"$\mathrm</span><span class="sc">{D}</span><span class="vs">$"</span>,</span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>(ggplot(mtcars, aes(<span class="st">'wt'</span>, <span class="st">'mpg'</span>, shape<span class="op">=</span><span class="st">'factor(gear)'</span>, colour<span class="op">=</span><span class="st">'factor(gear)'</span>))</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_point(size<span class="op">=</span><span class="dv">6</span>)</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> scale_shape_manual(values<span class="op">=</span>mixed_shapes)</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    ggplot(mtcars, aes(<span class="st">"wt"</span>, <span class="st">"mpg"</span>, shape<span class="op">=</span><span class="st">"factor(gear)"</span>, colour<span class="op">=</span><span class="st">"factor(gear)"</span>))</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_point(size<span class="op">=</span><span class="dv">6</span>)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> scale_shape_manual(values<span class="op">=</span>mixed_shapes)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">

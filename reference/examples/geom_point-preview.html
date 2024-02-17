@@ -273,19 +273,12 @@
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">    <div class="cell-container"><div class="cell-decorator"><pre>In [1]:</pre></div><div id="cell-0" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:47:35.268033Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:47:35.267669Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:47:36.035731Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:47:36.034370Z&quot;}" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> (</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    ggplot,</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    aes,</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    geom_point,</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    scale_color_gradient</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine.data <span class="im">import</span> mpg</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<main class="content" id="quarto-document-content">    <div class="cell-container"><div class="cell-decorator"><pre>In [1]:</pre></div><div id="cell-0" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:45:54.462054Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:45:54.461496Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:45:55.220202Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:45:55.219276Z&quot;}" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> ggplot, aes, geom_point, scale_color_gradient</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine.data <span class="im">import</span> mpg</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [2]:</pre></div><div id="cell-1" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:47:36.039460Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:47:36.039177Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:47:36.054750Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:47:36.054017Z&quot;}" data-execution_count="2">
+<div class="cell-container"><div class="cell-decorator"><pre>In [2]:</pre></div><div id="cell-1" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:45:55.223766Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:45:55.223506Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:45:55.239118Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:45:55.238465Z&quot;}" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>mpg.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
 <div>
@@ -390,8 +383,8 @@
 <div id="cell-2" class="cell markdown">
 <p>Basic scatter plot</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [3]:</pre></div><div id="cell-3" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:47:36.097527Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:47:36.097234Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:47:37.331562Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:47:37.330785Z&quot;}" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> ggplot(aes(x<span class="op">=</span><span class="st">'displ'</span>, y<span class="op">=</span><span class="st">'cty'</span>), mpg)</span>
+<div class="cell-container"><div class="cell-decorator"><pre>In [3]:</pre></div><div id="cell-3" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:45:55.284600Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:45:55.284332Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:45:56.555465Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:45:56.554854Z&quot;}" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> ggplot(aes(x<span class="op">=</span><span class="st">"displ"</span>, y<span class="op">=</span><span class="st">"cty"</span>), mpg)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>p <span class="op">+</span> geom_point()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div class="">
@@ -404,8 +397,8 @@
 <div id="cell-4" class="cell markdown">
 <p>Aesthetic mappings</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [4]:</pre></div><div id="cell-5" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:47:37.334882Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:47:37.334502Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:47:37.675721Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:47:37.675053Z&quot;}" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">+</span> geom_point(aes(color<span class="op">=</span><span class="st">'factor(cyl)'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [4]:</pre></div><div id="cell-5" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:45:56.558775Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:45:56.558457Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:45:56.916970Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:45:56.916372Z&quot;}" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">+</span> geom_point(aes(color<span class="op">=</span><span class="st">"factor(cyl)"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div class="">
 <figure class="figure">
@@ -414,8 +407,8 @@
 </div>
 </div>
 </div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [5]:</pre></div><div id="cell-6" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:47:37.678335Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:47:37.678136Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:47:38.026046Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:47:38.025417Z&quot;}" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">+</span> geom_point(aes(shape<span class="op">=</span><span class="st">'factor(cyl)'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [5]:</pre></div><div id="cell-6" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:45:56.920095Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:45:56.919792Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:45:57.275850Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:45:57.275339Z&quot;}" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">+</span> geom_point(aes(shape<span class="op">=</span><span class="st">"factor(cyl)"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div class="">
 <figure class="figure">
@@ -424,8 +417,8 @@
 </div>
 </div>
 </div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [6]:</pre></div><div id="cell-7" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:47:38.028763Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:47:38.028551Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:47:38.378252Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:47:38.377649Z&quot;}" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">+</span> geom_point(aes(color<span class="op">=</span><span class="st">'hwy'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [6]:</pre></div><div id="cell-7" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:45:57.278578Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:45:57.278356Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:45:57.629759Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:45:57.629153Z&quot;}" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">+</span> geom_point(aes(color<span class="op">=</span><span class="st">"hwy"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div class="">
 <figure class="figure">
@@ -437,8 +430,8 @@
 <div id="cell-8" class="cell markdown">
 <p>Modify the color scale</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [7]:</pre></div><div id="cell-9" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:47:38.381242Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:47:38.380994Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:47:38.721876Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:47:38.721261Z&quot;}" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">+</span> geom_point(aes(color<span class="op">=</span><span class="st">'hwy'</span>)) <span class="op">+</span> scale_color_gradient(low<span class="op">=</span><span class="st">'blue'</span>, high<span class="op">=</span><span class="st">'red'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [7]:</pre></div><div id="cell-9" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:45:57.633700Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:45:57.633404Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:45:57.981438Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:45:57.980244Z&quot;}" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">+</span> geom_point(aes(color<span class="op">=</span><span class="st">"hwy"</span>)) <span class="op">+</span> scale_color_gradient(low<span class="op">=</span><span class="st">"blue"</span>, high<span class="op">=</span><span class="st">"red"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div class="">
 <figure class="figure">
@@ -447,8 +440,8 @@
 </div>
 </div>
 </div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [8]:</pre></div><div id="cell-10" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:47:38.724523Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:47:38.724284Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:47:39.094003Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:47:39.093365Z&quot;}" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">+</span> geom_point(aes(size<span class="op">=</span><span class="st">'hwy'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [8]:</pre></div><div id="cell-10" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:45:57.984800Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:45:57.984386Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:45:58.347251Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:45:58.346526Z&quot;}" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">+</span> geom_point(aes(size<span class="op">=</span><span class="st">"hwy"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div class="">
 <figure class="figure">

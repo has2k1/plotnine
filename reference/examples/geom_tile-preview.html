@@ -296,7 +296,7 @@
   
 
 
-</header>     <div class="cell-container"><div class="cell-decorator"><pre>In [1]:</pre></div><div id="cell-0" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:48:08.820245Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:48:08.819916Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:48:09.456568Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:48:09.455785Z&quot;}" data-execution_count="1">
+</header>     <div class="cell-container"><div class="cell-decorator"><pre>In [1]:</pre></div><div id="cell-0" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:46:29.335794Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:46:29.335472Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:46:30.029343Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:46:30.028554Z&quot;}" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -326,8 +326,8 @@
 <div id="cell-2" class="cell markdown">
 <p>Read the data.</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [2]:</pre></div><div id="cell-3" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:48:09.460405Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:48:09.460072Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:48:09.484516Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:48:09.483971Z&quot;}" data-scrolled="true" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>elements <span class="op">=</span> pd.read_csv(<span class="st">'data/elements.csv'</span>)</span>
+<div class="cell-container"><div class="cell-decorator"><pre>In [2]:</pre></div><div id="cell-3" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:46:30.033954Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:46:30.033598Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:46:30.059852Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:46:30.059248Z&quot;}" data-scrolled="true" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>elements <span class="op">=</span> pd.read_csv(<span class="st">"data/elements.csv"</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>elements.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
 <div>
@@ -493,51 +493,52 @@
 <div id="cell-4" class="cell markdown">
 <p>Alter the data types of the information that will be plotted. This makes it convenient to work with.</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [3]:</pre></div><div id="cell-5" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:48:09.528406Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:48:09.528131Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:48:09.534067Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:48:09.533537Z&quot;}" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>elements[<span class="st">'group'</span>] <span class="op">=</span> [<span class="op">-</span><span class="dv">1</span> <span class="cf">if</span> g <span class="op">==</span> <span class="st">'-'</span> <span class="cf">else</span> <span class="bu">int</span>(g) <span class="cf">for</span> g <span class="kw">in</span> elements.group]</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>elements[<span class="st">'bonding type'</span>] <span class="op">=</span> elements[<span class="st">'bonding type'</span>].astype(<span class="st">'category'</span>)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>elements[<span class="st">'metal'</span>] <span class="op">=</span> elements[<span class="st">'metal'</span>].astype(<span class="st">'category'</span>)</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>elements[<span class="st">'atomic_number'</span>] <span class="op">=</span> elements[<span class="st">'atomic number'</span>].astype(<span class="bu">str</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [3]:</pre></div><div id="cell-5" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:46:30.104685Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:46:30.104416Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:46:30.110968Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:46:30.110322Z&quot;}" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>elements[<span class="st">"group"</span>] <span class="op">=</span> [<span class="op">-</span><span class="dv">1</span> <span class="cf">if</span> g <span class="op">==</span> <span class="st">"-"</span> <span class="cf">else</span> <span class="bu">int</span>(g) <span class="cf">for</span> g <span class="kw">in</span> elements.group]</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>elements[<span class="st">"bonding type"</span>] <span class="op">=</span> elements[<span class="st">"bonding type"</span>].astype(<span class="st">"category"</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>elements[<span class="st">"metal"</span>] <span class="op">=</span> elements[<span class="st">"metal"</span>].astype(<span class="st">"category"</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>elements[<span class="st">"atomic_number"</span>] <span class="op">=</span> elements[<span class="st">"atomic number"</span>].astype(<span class="bu">str</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div>
 <div id="cell-6" class="cell markdown">
 <p>The periodic table has two tables, a <code>top</code> and <code>bottom</code>. The elements in the <code>top</code> have groups, and those in the <code>bottom</code> have no groups. We make separate dataframes for both – they have different alignments.</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [4]:</pre></div><div id="cell-7" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:48:09.537862Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:48:09.537602Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:48:09.546773Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:48:09.546076Z&quot;}" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>top <span class="op">=</span> elements.query(<span class="st">'group != -1'</span>).copy()</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>bottom <span class="op">=</span> elements.query(<span class="st">'group == -1'</span>).copy()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [4]:</pre></div><div id="cell-7" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:46:30.114582Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:46:30.114288Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:46:30.123883Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:46:30.123280Z&quot;}" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>top <span class="op">=</span> elements.query(<span class="st">"group != -1"</span>).copy()</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>bottom <span class="op">=</span> elements.query(<span class="st">"group == -1"</span>).copy()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div>
 <div id="cell-8" class="cell markdown">
 <p>The <code>top</code> table is nice and well behaving. The <code>x</code> location of the elements indicate the group and the <code>y</code> locations the period.</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [5]:</pre></div><div id="cell-9" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:48:09.549768Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:48:09.549524Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:48:09.553938Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:48:09.553161Z&quot;}" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>top[<span class="st">'x'</span>] <span class="op">=</span> top.group</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>top[<span class="st">'y'</span>] <span class="op">=</span> top.period</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [5]:</pre></div><div id="cell-9" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:46:30.127048Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:46:30.126784Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:46:30.131196Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:46:30.129976Z&quot;}" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>top[<span class="st">"x"</span>] <span class="op">=</span> top.group</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>top[<span class="st">"y"</span>] <span class="op">=</span> top.period</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div>
 <div id="cell-10" class="cell markdown">
 <p>The <code>bottom</code> table has 2 rows, with the <code>atomic number</code> increasing to the right. We create an <code>x</code> based on the <code>atomic number</code> and add a <code>horizontal shift</code>. As the dataframe is ordered by <code>atomic number</code>, the operation is easier. The <code>bottom</code> elements are labelled with a “period”. We add a vertical shift to give us a good <code>y</code> location that gives the appearance of two tables.</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [6]:</pre></div><div id="cell-11" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:48:09.557030Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:48:09.556767Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:48:09.561303Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:48:09.560729Z&quot;}" data-execution_count="6">
+<div class="cell-container"><div class="cell-decorator"><pre>In [6]:</pre></div><div id="cell-11" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:46:30.134783Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:46:30.134356Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:46:30.139205Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:46:30.138596Z&quot;}" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>nrows <span class="op">=</span> <span class="dv">2</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>hshift <span class="op">=</span> <span class="fl">3.5</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>vshift <span class="op">=</span> <span class="dv">3</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>bottom[<span class="st">'x'</span>] <span class="op">=</span> np.tile(np.arange(<span class="bu">len</span>(bottom)<span class="op">//</span>nrows), nrows) <span class="op">+</span> hshift</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>bottom[<span class="st">'y'</span>] <span class="op">=</span> bottom.period <span class="op">+</span> vshift</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>bottom[<span class="st">"x"</span>] <span class="op">=</span> np.tile(np.arange(<span class="bu">len</span>(bottom) <span class="op">//</span> nrows), nrows) <span class="op">+</span> hshift</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>bottom[<span class="st">"y"</span>] <span class="op">=</span> bottom.period <span class="op">+</span> vshift</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div>
 <div id="cell-12" class="cell markdown">
 <p>We will be plotting using tiles and we want to have some space between the tiles. We have set the <code>x</code> and <code>y</code> locations above to take up a unit of space. To get a good effect, the tile dimensions should be less than 1.</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [7]:</pre></div><div id="cell-13" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:48:09.564142Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:48:09.563923Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:48:09.566767Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:48:09.566223Z&quot;}" data-execution_count="7">
+<div class="cell-container"><div class="cell-decorator"><pre>In [7]:</pre></div><div id="cell-13" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:46:30.142426Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:46:30.142017Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:46:30.145372Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:46:30.144748Z&quot;}" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>tile_width <span class="op">=</span> <span class="fl">0.95</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>tile_height <span class="op">=</span> <span class="fl">0.95</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div>
 <div id="cell-14" class="cell markdown">
 <p>First peak</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [8]:</pre></div><div id="cell-15" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:48:09.570508Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:48:09.570241Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:48:10.827413Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:48:10.826796Z&quot;}" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>(ggplot(aes(<span class="st">'x'</span>, <span class="st">'y'</span>))</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_tile(top, aes(width<span class="op">=</span>tile_width, height<span class="op">=</span>tile_height))</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_tile(bottom, aes(width<span class="op">=</span>tile_width, height<span class="op">=</span>tile_height))</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [8]:</pre></div><div id="cell-15" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:46:30.148837Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:46:30.148571Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:46:31.398847Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:46:31.398271Z&quot;}" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    ggplot(aes(<span class="st">"x"</span>, <span class="st">"y"</span>))</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_tile(top, aes(width<span class="op">=</span>tile_width, height<span class="op">=</span>tile_height))</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_tile(bottom, aes(width<span class="op">=</span>tile_width, height<span class="op">=</span>tile_height))</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div class="">
 <figure class="figure">
@@ -549,12 +550,13 @@
 <div id="cell-16" class="cell markdown">
 <p>The table upside down. We could have been more careful when creating the <code>y</code> locations since the periods are drawn in descending order. But, we can fix that with a <code>reverse</code> scale.</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [9]:</pre></div><div id="cell-17" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:48:10.830538Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:48:10.830235Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:48:11.106899Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:48:11.106347Z&quot;}" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>(ggplot(aes(<span class="st">'x'</span>, <span class="st">'y'</span>))</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_tile(top, aes(width<span class="op">=</span>tile_width, height<span class="op">=</span>tile_height))</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_tile(bottom, aes(width<span class="op">=</span>tile_width, height<span class="op">=</span>tile_height))</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> scale_y_reverse() <span class="co"># new</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [9]:</pre></div><div id="cell-17" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:46:31.402088Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:46:31.401732Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:46:31.670306Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:46:31.669706Z&quot;}" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    ggplot(aes(<span class="st">"x"</span>, <span class="st">"y"</span>))</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_tile(top, aes(width<span class="op">=</span>tile_width, height<span class="op">=</span>tile_height))</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_tile(bottom, aes(width<span class="op">=</span>tile_width, height<span class="op">=</span>tile_height))</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> scale_y_reverse()  <span class="co"># new</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div class="">
 <figure class="figure">
@@ -566,13 +568,14 @@
 <div id="cell-18" class="cell markdown">
 <p>Let us apply some color to it.</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [10]:</pre></div><div id="cell-19" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:48:11.109498Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:48:11.109294Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:48:11.506884Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:48:11.506174Z&quot;}" data-execution_count="10">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>(ggplot(aes(<span class="st">'x'</span>, <span class="st">'y'</span>))</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> aes(fill<span class="op">=</span><span class="st">'metal'</span>)  <span class="co"># new</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_tile(top, aes(width<span class="op">=</span>tile_width, height<span class="op">=</span>tile_height))</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_tile(bottom, aes(width<span class="op">=</span>tile_width, height<span class="op">=</span>tile_height))</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> scale_y_reverse()</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [10]:</pre></div><div id="cell-19" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:46:31.672955Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:46:31.672729Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:46:32.063433Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:46:32.062371Z&quot;}" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    ggplot(aes(<span class="st">"x"</span>, <span class="st">"y"</span>))</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> aes(fill<span class="op">=</span><span class="st">"metal"</span>)  <span class="co"># new</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_tile(top, aes(width<span class="op">=</span>tile_width, height<span class="op">=</span>tile_height))</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_tile(bottom, aes(width<span class="op">=</span>tile_width, height<span class="op">=</span>tile_height))</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> scale_y_reverse()</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div class="">
 <figure class="figure">
@@ -591,24 +594,39 @@
 <p>There are four pieces of text that we shall add to the tiles, that is 4 <code>geom_text</code> additions. As we have two tables, that comes to 8 <code>geom_text</code> additions. When any <code>geom</code> is added to a <code>ggplot</code> object, behind the scenes a layer is created and added. We can create a group of layers that can be added to a <code>ggplot</code> object in one go using a list.</p>
 <p>We use a function that accepts a dataframe, and returns a list of geoms.</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [11]:</pre></div><div id="cell-22" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:48:11.510013Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:48:11.509746Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:48:11.514361Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:48:11.513744Z&quot;}" data-execution_count="11">
+<div class="cell-container"><div class="cell-decorator"><pre>In [11]:</pre></div><div id="cell-22" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:46:32.067180Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:46:32.066896Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:46:32.071860Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:46:32.071151Z&quot;}" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> inner_text(data):</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    layers <span class="op">=</span> [geom_text(data, aes(label<span class="op">=</span><span class="st">'atomic_number'</span>), nudge_x<span class="op">=-</span><span class="fl">0.40</span>, nudge_y<span class="op">=</span><span class="fl">0.40</span>,</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>                        ha<span class="op">=</span><span class="st">'left'</span>, va<span class="op">=</span><span class="st">'top'</span>, fontweight<span class="op">=</span><span class="st">'normal'</span>, size<span class="op">=</span><span class="dv">6</span>),</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>              geom_text(data, aes(label<span class="op">=</span><span class="st">'symbol'</span>), nudge_y<span class="op">=</span><span class="fl">.1</span>, size<span class="op">=</span><span class="dv">9</span>),</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>              geom_text(data, aes(label<span class="op">=</span><span class="st">'name'</span>), nudge_y<span class="op">=-</span><span class="fl">0.125</span>, fontweight<span class="op">=</span><span class="st">'normal'</span>, size<span class="op">=</span><span class="fl">4.5</span>),</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>              geom_text(data, aes(label<span class="op">=</span><span class="st">'atomic mass'</span>), nudge_y<span class="op">=-</span><span class="fl">.3</span>, fontweight<span class="op">=</span><span class="st">'normal'</span>, size<span class="op">=</span><span class="fl">4.5</span>)]</span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> layers</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    layers <span class="op">=</span> [</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>        geom_text(</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>            data,</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>            aes(label<span class="op">=</span><span class="st">"atomic_number"</span>),</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>            nudge_x<span class="op">=-</span><span class="fl">0.40</span>,</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>            nudge_y<span class="op">=</span><span class="fl">0.40</span>,</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>            ha<span class="op">=</span><span class="st">"left"</span>,</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>            va<span class="op">=</span><span class="st">"top"</span>,</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>            fontweight<span class="op">=</span><span class="st">"normal"</span>,</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>            size<span class="op">=</span><span class="dv">6</span>,</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>        ),</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>        geom_text(data, aes(label<span class="op">=</span><span class="st">"symbol"</span>), nudge_y<span class="op">=</span><span class="fl">0.1</span>, size<span class="op">=</span><span class="dv">9</span>),</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>        geom_text(</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>            data, aes(label<span class="op">=</span><span class="st">"name"</span>), nudge_y<span class="op">=-</span><span class="fl">0.125</span>, fontweight<span class="op">=</span><span class="st">"normal"</span>, size<span class="op">=</span><span class="fl">4.5</span></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>        ),</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>        geom_text(</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>            data, aes(label<span class="op">=</span><span class="st">"atomic mass"</span>), nudge_y<span class="op">=-</span><span class="fl">0.3</span>, fontweight<span class="op">=</span><span class="st">"normal"</span>, size<span class="op">=</span><span class="fl">4.5</span></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>        ),</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>    ]</span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> layers</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [12]:</pre></div><div id="cell-23" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:48:11.517173Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:48:11.516936Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:48:12.814910Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:48:12.814217Z&quot;}" data-execution_count="12">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>(ggplot(aes(<span class="st">'x'</span>, <span class="st">'y'</span>))</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> aes(fill<span class="op">=</span><span class="st">'metal'</span>)</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_tile(top, aes(width<span class="op">=</span>tile_width, height<span class="op">=</span>tile_height))</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_tile(bottom, aes(width<span class="op">=</span>tile_width, height<span class="op">=</span>tile_height))</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> inner_text(top)    <span class="co"># new</span></span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> inner_text(bottom) <span class="co"># new</span></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> scale_y_reverse()</span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [12]:</pre></div><div id="cell-23" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:46:32.074848Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:46:32.074585Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:46:33.411354Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:46:33.410720Z&quot;}" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    ggplot(aes(<span class="st">"x"</span>, <span class="st">"y"</span>))</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> aes(fill<span class="op">=</span><span class="st">"metal"</span>)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_tile(top, aes(width<span class="op">=</span>tile_width, height<span class="op">=</span>tile_height))</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_tile(bottom, aes(width<span class="op">=</span>tile_width, height<span class="op">=</span>tile_height))</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> inner_text(top)  <span class="co"># new</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> inner_text(bottom)  <span class="co"># new</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> scale_y_reverse()</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div class="">
 <figure class="figure">
@@ -620,17 +638,18 @@
 <div id="cell-24" class="cell markdown">
 <p>It is crowded in there and the tiles do not have equal dimentions. Use the <code>theme</code> create a larger figure. <code>coord_equal</code> give us equal units along the axes, this makes the tiles square.</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [13]:</pre></div><div id="cell-25" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:48:12.820453Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:48:12.820205Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:48:14.465178Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:48:14.464586Z&quot;}" data-execution_count="13">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>(ggplot(aes(<span class="st">'x'</span>, <span class="st">'y'</span>))</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> aes(fill<span class="op">=</span><span class="st">'metal'</span>)</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_tile(top, aes(width<span class="op">=</span>tile_width, height<span class="op">=</span>tile_height))</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_tile(bottom, aes(width<span class="op">=</span>tile_width, height<span class="op">=</span>tile_height))</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> inner_text(top)</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> inner_text(bottom)</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> scale_y_reverse()</span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> coord_equal(expand<span class="op">=</span><span class="va">False</span>)   <span class="co"># new</span></span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> theme(figure_size<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">6</span>))  <span class="co"># new</span></span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [13]:</pre></div><div id="cell-25" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:46:33.417808Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:46:33.417529Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:46:35.170594Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:46:35.169969Z&quot;}" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    ggplot(aes(<span class="st">"x"</span>, <span class="st">"y"</span>))</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> aes(fill<span class="op">=</span><span class="st">"metal"</span>)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_tile(top, aes(width<span class="op">=</span>tile_width, height<span class="op">=</span>tile_height))</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_tile(bottom, aes(width<span class="op">=</span>tile_width, height<span class="op">=</span>tile_height))</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> inner_text(top)</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> inner_text(bottom)</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> scale_y_reverse()</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> coord_equal(expand<span class="op">=</span><span class="va">False</span>)  <span class="co"># new</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> theme(figure_size<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">6</span>))  <span class="co"># new</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div class="">
 <figure class="figure">
@@ -643,25 +662,28 @@
 <p>It is has all the information we want, except one for complication. Elements <code>Lu</code> and <code>Lr</code> also belong in the bottom table. One way to show this duality is to have tiles with two colors split horizontally.</p>
 <p>The colors are determined by the <code>metal</code> field, and we know the <code>x</code> and <code>y</code> locations. We create a dataframe with this information to create a half-tile. A half-tile is centered at the quarter mark.</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [14]:</pre></div><div id="cell-27" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:48:14.472159Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:48:14.471900Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:48:14.476481Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:48:14.475668Z&quot;}" data-execution_count="14">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>split_df <span class="op">=</span> pd.DataFrame({</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'x'</span>: <span class="dv">3</span><span class="op">-</span>tile_width<span class="op">/</span><span class="dv">4</span>,</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'y'</span>: [<span class="dv">6</span>, <span class="dv">7</span>],</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'metal'</span>: pd.Categorical([<span class="st">'lanthanoid'</span>, <span class="st">'actinoid'</span>])</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [14]:</pre></div><div id="cell-27" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:46:35.176235Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:46:35.175983Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:46:35.180655Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:46:35.179536Z&quot;}" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>split_df <span class="op">=</span> pd.DataFrame(</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>        <span class="st">"x"</span>: <span class="dv">3</span> <span class="op">-</span> tile_width <span class="op">/</span> <span class="dv">4</span>,</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>        <span class="st">"y"</span>: [<span class="dv">6</span>, <span class="dv">7</span>],</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">"metal"</span>: pd.Categorical([<span class="st">"lanthanoid"</span>, <span class="st">"actinoid"</span>]),</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [15]:</pre></div><div id="cell-28" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:48:14.479414Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:48:14.479153Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:48:16.429996Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:48:16.429448Z&quot;}" data-execution_count="15">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>(ggplot(aes(<span class="st">'x'</span>, <span class="st">'y'</span>))</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> aes(fill<span class="op">=</span><span class="st">'metal'</span>)</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_tile(top, aes(width<span class="op">=</span>tile_width, height<span class="op">=</span>tile_height))</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_tile(split_df, aes(width<span class="op">=</span>tile_width<span class="op">/</span><span class="dv">2</span>, height<span class="op">=</span>tile_height))  <span class="co"># new</span></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_tile(bottom, aes(width<span class="op">=</span>tile_width, height<span class="op">=</span>tile_height))</span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> inner_text(top)</span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> inner_text(bottom)</span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> scale_y_reverse()</span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> coord_equal(expand<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> theme(figure_size<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">6</span>))</span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [15]:</pre></div><div id="cell-28" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:46:35.183622Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:46:35.183367Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:46:37.376488Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:46:37.375777Z&quot;}" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    ggplot(aes(<span class="st">"x"</span>, <span class="st">"y"</span>))</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> aes(fill<span class="op">=</span><span class="st">"metal"</span>)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_tile(top, aes(width<span class="op">=</span>tile_width, height<span class="op">=</span>tile_height))</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_tile(split_df, aes(width<span class="op">=</span>tile_width <span class="op">/</span> <span class="dv">2</span>, height<span class="op">=</span>tile_height))  <span class="co"># new</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_tile(bottom, aes(width<span class="op">=</span>tile_width, height<span class="op">=</span>tile_height))</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> inner_text(top)</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> inner_text(bottom)</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> scale_y_reverse()</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> coord_equal(expand<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> theme(figure_size<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">6</span>))</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div class="">
 <figure class="figure">
@@ -673,22 +695,27 @@
 <div id="cell-29" class="cell markdown">
 <p>Change the <code>fill</code> color for a different look and use a <code>theme</code> that clears out all the clutter.</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [16]:</pre></div><div id="cell-30" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:48:16.436791Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:48:16.436448Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:48:18.342502Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:48:18.341997Z&quot;}" data-execution_count="16">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>(ggplot(aes(<span class="st">'x'</span>, <span class="st">'y'</span>))</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> aes(fill<span class="op">=</span><span class="st">'metal'</span>)</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_tile(top, aes(width<span class="op">=</span>tile_width, height<span class="op">=</span>tile_height))</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_tile(split_df, aes(width<span class="op">=</span>tile_width<span class="op">/</span><span class="dv">2</span>, height<span class="op">=</span>tile_height))</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_tile(bottom, aes(width<span class="op">=</span>tile_width, height<span class="op">=</span>tile_height))</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> inner_text(top)</span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> inner_text(bottom)</span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> scale_y_reverse()</span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> scale_fill_brewer(<span class="bu">type</span><span class="op">=</span><span class="st">'qual'</span>, palette<span class="op">=</span><span class="dv">3</span>)         <span class="co"># new</span></span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> coord_equal(expand<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> theme_void()                                      <span class="co"># new</span></span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> theme(figure_size<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">6</span>),</span>
-<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>         plot_background<span class="op">=</span>element_rect(fill<span class="op">=</span><span class="st">'white'</span>)) <span class="co"># new</span></span>
-<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [16]:</pre></div><div id="cell-30" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:46:37.386390Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:46:37.386115Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:46:39.198766Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:46:39.198188Z&quot;}" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> guides</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    ggplot(aes(<span class="st">"x"</span>, <span class="st">"y"</span>))</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> aes(fill<span class="op">=</span><span class="st">"metal"</span>)</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_tile(top, aes(width<span class="op">=</span>tile_width, height<span class="op">=</span>tile_height))</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_tile(split_df, aes(width<span class="op">=</span>tile_width <span class="op">/</span> <span class="dv">2</span>, height<span class="op">=</span>tile_height))</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_tile(bottom, aes(width<span class="op">=</span>tile_width, height<span class="op">=</span>tile_height))</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> inner_text(top)</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> inner_text(bottom)</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> scale_y_reverse()</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> scale_fill_brewer(<span class="bu">type</span><span class="op">=</span><span class="st">"qual"</span>, palette<span class="op">=</span><span class="dv">3</span>)  <span class="co"># new</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> coord_equal(expand<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> theme_void()  <span class="co"># new</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> theme(</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>        figure_size<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">6</span>),</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>        plot_margin_left<span class="op">=</span><span class="fl">0.01</span>,</span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>        plot_margin_right<span class="op">=</span><span class="fl">0.01</span>,</span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>        plot_background<span class="op">=</span>element_rect(fill<span class="op">=</span><span class="st">"white"</span>),</span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>    )  <span class="co"># new</span></span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div class="">
 <figure class="figure">
@@ -701,39 +728,47 @@
 <p>Add the group number along the top most row of each column, and period number along the left side of the top table.</p>
 <p>For the period number, we set the <code>breaks</code> on the <code>y scale</code>.</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [17]:</pre></div><div id="cell-32" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:48:18.348028Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:48:18.347785Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:48:18.357675Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:48:18.356902Z&quot;}" data-execution_count="17">
+<div class="cell-container"><div class="cell-decorator"><pre>In [17]:</pre></div><div id="cell-32" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:46:39.203694Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:46:39.203448Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:46:39.210809Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:46:39.210207Z&quot;}" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The location of the group number is the top most (and therefore smallest period)</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="co"># element with the group</span></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>groupdf <span class="op">=</span> top.groupby(</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'group'</span></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>).agg(</span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    y<span class="op">=</span>(<span class="st">'period'</span>, np.<span class="bu">min</span>)</span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>).reset_index()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>groupdf <span class="op">=</span> top.groupby(<span class="st">"group"</span>).agg(y<span class="op">=</span>(<span class="st">"period"</span>, <span class="st">"min"</span>)).reset_index()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div>
 <div id="cell-33" class="cell markdown">
 <p>Finally,</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [18]:</pre></div><div id="cell-34" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:48:18.360714Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:48:18.360474Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:48:20.192121Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:48:20.191574Z&quot;}" data-execution_count="18">
+<div class="cell-container"><div class="cell-decorator"><pre>In [18]:</pre></div><div id="cell-34" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:46:39.214539Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:46:39.214064Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:46:41.075876Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:46:41.075297Z&quot;}" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Gallery Plot</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>(ggplot(aes(<span class="st">'x'</span>, <span class="st">'y'</span>))</span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> aes(fill<span class="op">=</span><span class="st">'metal'</span>)</span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_tile(top, aes(width<span class="op">=</span>tile_width, height<span class="op">=</span>tile_height))</span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_tile(split_df, aes(width<span class="op">=</span>tile_width<span class="op">/</span><span class="dv">2</span>, height<span class="op">=</span>tile_height))</span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_tile(bottom, aes(width<span class="op">=</span>tile_width, height<span class="op">=</span>tile_height))</span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> inner_text(top)</span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> inner_text(bottom)</span>
-<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_text(groupdf, aes(<span class="st">'group'</span>, <span class="st">'y'</span>, label<span class="op">=</span><span class="st">'group'</span>), color<span class="op">=</span><span class="st">'gray'</span>, nudge_y<span class="op">=</span><span class="fl">.525</span>,</span>
-<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>             va<span class="op">=</span><span class="st">'bottom'</span>,fontweight<span class="op">=</span><span class="st">'normal'</span>, size<span class="op">=</span><span class="dv">9</span>, inherit_aes<span class="op">=</span><span class="va">False</span>)    <span class="co"># new</span></span>
-<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> scale_y_reverse(breaks<span class="op">=</span><span class="bu">range</span>(<span class="dv">1</span>, <span class="dv">8</span>), limits<span class="op">=</span>(<span class="dv">0</span>, <span class="fl">10.5</span>))                    <span class="co"># modified</span></span>
-<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> scale_fill_brewer(<span class="bu">type</span><span class="op">=</span><span class="st">'qual'</span>, palette<span class="op">=</span><span class="dv">3</span>) </span>
-<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> coord_equal(expand<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> theme_void()</span>
-<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> theme(figure_size<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">6</span>),</span>
-<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>         plot_background<span class="op">=</span>element_rect(fill<span class="op">=</span><span class="st">'white'</span>),</span>
-<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>         axis_text_y<span class="op">=</span>element_text(margin<span class="op">=</span>{<span class="st">'r'</span>: <span class="dv">5</span>}, color<span class="op">=</span><span class="st">'gray'</span>, size<span class="op">=</span><span class="dv">9</span>)    <span class="co"># new</span></span>
-<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>         )</span>
-<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    ggplot(aes(<span class="st">"x"</span>, <span class="st">"y"</span>))</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> aes(fill<span class="op">=</span><span class="st">"metal"</span>)</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_tile(top, aes(width<span class="op">=</span>tile_width, height<span class="op">=</span>tile_height))</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_tile(split_df, aes(width<span class="op">=</span>tile_width <span class="op">/</span> <span class="dv">2</span>, height<span class="op">=</span>tile_height))</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_tile(bottom, aes(width<span class="op">=</span>tile_width, height<span class="op">=</span>tile_height))</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> inner_text(top)</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> inner_text(bottom)</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_text(</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>        groupdf,</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>        aes(<span class="st">"group"</span>, <span class="st">"y"</span>, label<span class="op">=</span><span class="st">"group"</span>),</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>        color<span class="op">=</span><span class="st">"gray"</span>,</span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>        nudge_y<span class="op">=</span><span class="fl">0.525</span>,</span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>        va<span class="op">=</span><span class="st">"bottom"</span>,</span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>        fontweight<span class="op">=</span><span class="st">"normal"</span>,</span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>        size<span class="op">=</span><span class="dv">9</span>,</span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>        inherit_aes<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>    )  <span class="co"># new</span></span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> scale_y_reverse(breaks<span class="op">=</span><span class="bu">range</span>(<span class="dv">1</span>, <span class="dv">8</span>), limits<span class="op">=</span>(<span class="dv">0</span>, <span class="fl">10.5</span>))  <span class="co"># modified</span></span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> scale_fill_brewer(<span class="bu">type</span><span class="op">=</span><span class="st">"qual"</span>, palette<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> coord_equal(expand<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> theme_void()</span>
+<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> theme(</span>
+<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a>        figure_size<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">6</span>),</span>
+<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a>        plot_margin_left<span class="op">=</span><span class="fl">0.01</span>,</span>
+<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a>        plot_margin_right<span class="op">=</span><span class="fl">0.01</span>,</span>
+<span id="cb18-29"><a href="#cb18-29" aria-hidden="true" tabindex="-1"></a>        plot_background<span class="op">=</span>element_rect(fill<span class="op">=</span><span class="st">"white"</span>),</span>
+<span id="cb18-30"><a href="#cb18-30" aria-hidden="true" tabindex="-1"></a>        axis_text_y<span class="op">=</span>element_text(margin<span class="op">=</span>{<span class="st">"r"</span>: <span class="dv">5</span>}, color<span class="op">=</span><span class="st">"gray"</span>, size<span class="op">=</span><span class="dv">9</span>),  <span class="co"># new</span></span>
+<span id="cb18-31"><a href="#cb18-31" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb18-32"><a href="#cb18-32" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div class="">
 <figure class="figure">
@@ -758,10 +793,10 @@
 <div id="cell-37" class="cell markdown">
 <p>Read data</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [19]:</pre></div><div id="cell-38" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:48:20.199304Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:48:20.199048Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:48:20.209674Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:48:20.209012Z&quot;}" data-execution_count="19">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>flights <span class="op">=</span> pd.read_csv(<span class="st">'data/flights.csv'</span>)</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>months <span class="op">=</span> flights[<span class="st">'month'</span>].unique()  <span class="co"># Months ordered January, ..., December</span></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>flights[<span class="st">'month'</span>] <span class="op">=</span> pd.Categorical(flights[<span class="st">'month'</span>], categories<span class="op">=</span>months)</span>
+<div class="cell-container"><div class="cell-decorator"><pre>In [19]:</pre></div><div id="cell-38" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:46:41.082453Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:46:41.082112Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:46:41.091566Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:46:41.091027Z&quot;}" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>flights <span class="op">=</span> pd.read_csv(<span class="st">"data/flights.csv"</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>months <span class="op">=</span> flights[<span class="st">"month"</span>].unique()  <span class="co"># Months ordered January, ..., December</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>flights[<span class="st">"month"</span>] <span class="op">=</span> pd.Categorical(flights[<span class="st">"month"</span>], categories<span class="op">=</span>months)</span>
 <span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>flights.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="19">
 <div>
@@ -815,15 +850,16 @@
 </div>
 </div>
 </div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [20]:</pre></div><div id="cell-39" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:48:20.212547Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:48:20.212302Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:48:21.325315Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:48:21.324612Z&quot;}" data-execution_count="20">
+<div class="cell-container"><div class="cell-decorator"><pre>In [20]:</pre></div><div id="cell-39" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:46:41.094396Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:46:41.094155Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:46:42.215722Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:46:42.215046Z&quot;}" data-execution_count="20">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># We use 'factor(year)' -- a discrete -- instead of 'year' so that all the years</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="co"># are displayed along the x-axis.</span></span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="co"># The .95s create spacing between the tiles.</span></span>
 <span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>(ggplot(flights, aes(<span class="st">'factor(year)'</span>, <span class="st">'month'</span>, fill<span class="op">=</span><span class="st">'passengers'</span>))</span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_tile(aes(width<span class="op">=</span><span class="fl">.95</span>, height<span class="op">=</span><span class="fl">.95</span>))</span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_text(aes(label<span class="op">=</span><span class="st">'passengers'</span>), size<span class="op">=</span><span class="dv">9</span>)</span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>    ggplot(flights, aes(<span class="st">"factor(year)"</span>, <span class="st">"month"</span>, fill<span class="op">=</span><span class="st">"passengers"</span>))</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_tile(aes(width<span class="op">=</span><span class="fl">0.95</span>, height<span class="op">=</span><span class="fl">0.95</span>))</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_text(aes(label<span class="op">=</span><span class="st">"passengers"</span>), size<span class="op">=</span><span class="dv">9</span>)</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div class="">
 <figure class="figure">
@@ -835,9 +871,11 @@
 <div id="cell-40" class="cell markdown">
 <p>That looks like what we want, but it could do with a few tweaks. First the contrast between the tiles and the text is not good for the lower passenger numbers. We use <code>pd.cut</code> to partition the number of passengers into two <em>discrete</em> groups.</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [21]:</pre></div><div id="cell-41" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:48:21.329431Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:48:21.329187Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:48:21.338463Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:48:21.337859Z&quot;}" data-execution_count="21">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>flights[<span class="st">'p_group'</span>] <span class="op">=</span> pd.cut(flights[<span class="st">'passengers'</span>], (<span class="dv">0</span>, <span class="dv">300</span>, <span class="dv">1000</span>), labels<span class="op">=</span>(<span class="st">"low"</span>, <span class="st">'high'</span>))</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>flights.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [21]:</pre></div><div id="cell-41" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:46:42.219734Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:46:42.219478Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:46:42.228346Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:46:42.227690Z&quot;}" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>flights[<span class="st">"p_group"</span>] <span class="op">=</span> pd.cut(</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>    flights[<span class="st">"passengers"</span>], (<span class="dv">0</span>, <span class="dv">300</span>, <span class="dv">1000</span>), labels<span class="op">=</span>(<span class="st">"low"</span>, <span class="st">"high"</span>)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>flights.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="21">
 <div>
 <div>
@@ -896,12 +934,13 @@
 </div>
 </div>
 </div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [22]:</pre></div><div id="cell-42" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:48:21.341281Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:48:21.341048Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:48:22.372725Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:48:22.372099Z&quot;}" data-execution_count="22">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>(ggplot(flights, aes(<span class="st">'factor(year)'</span>, <span class="st">'month'</span>, fill<span class="op">=</span><span class="st">'passengers'</span>))</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_tile(aes(width<span class="op">=</span><span class="fl">.95</span>, height<span class="op">=</span><span class="fl">.95</span>))</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_text(aes(label<span class="op">=</span><span class="st">'passengers'</span>, color<span class="op">=</span><span class="st">'p_group'</span>), size<span class="op">=</span><span class="dv">9</span>, show_legend<span class="op">=</span><span class="va">False</span>)  <span class="co"># modified</span></span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> scale_color_manual([<span class="st">'white'</span>, <span class="st">'black'</span>]) <span class="co"># new</span></span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [22]:</pre></div><div id="cell-42" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:46:42.232019Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:46:42.231493Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:46:43.357370Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:46:43.356815Z&quot;}" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>    ggplot(flights, aes(<span class="st">"factor(year)"</span>, <span class="st">"month"</span>, fill<span class="op">=</span><span class="st">"passengers"</span>))</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_tile(aes(width<span class="op">=</span><span class="fl">0.95</span>, height<span class="op">=</span><span class="fl">0.95</span>))</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_text(aes(label<span class="op">=</span><span class="st">"passengers"</span>, color<span class="op">=</span><span class="st">"p_group"</span>), size<span class="op">=</span><span class="dv">9</span>, show_legend<span class="op">=</span><span class="va">False</span>)  <span class="co"># modified</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> scale_color_manual([<span class="st">"white"</span>, <span class="st">"black"</span>])  <span class="co"># new</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div class="">
 <figure class="figure">
@@ -913,19 +952,20 @@
 <div id="cell-43" class="cell markdown">
 <p>Last tweaks, put <code>January</code> at the top and remove the axis ticks and plot background.</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [23]:</pre></div><div id="cell-44" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:48:22.376714Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:48:22.376466Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:48:23.495710Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:48:23.495167Z&quot;}" data-execution_count="23">
+<div class="cell-container"><div class="cell-decorator"><pre>In [23]:</pre></div><div id="cell-44" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:46:43.360987Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:46:43.360706Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:46:44.459546Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:46:44.459030Z&quot;}" data-execution_count="23">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Gallery Plot</span></span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>(ggplot(flights, aes(<span class="st">'factor(year)'</span>, <span class="st">'month'</span>, fill<span class="op">=</span><span class="st">'passengers'</span>))</span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_tile(aes(width<span class="op">=</span><span class="fl">.95</span>, height<span class="op">=</span><span class="fl">.95</span>))</span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_text(aes(label<span class="op">=</span><span class="st">'passengers'</span>, color<span class="op">=</span><span class="st">'p_group'</span>), size<span class="op">=</span><span class="dv">9</span>, show_legend<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> scale_color_manual([<span class="st">'white'</span>, <span class="st">'black'</span>]) <span class="co"># new</span></span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> scale_y_discrete(limits<span class="op">=</span>months[::<span class="op">-</span><span class="dv">1</span>])          <span class="co"># new</span></span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> theme(                                         <span class="co"># new</span></span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>     axis_ticks<span class="op">=</span>element_blank(),</span>
-<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>     panel_background<span class="op">=</span>element_rect(fill<span class="op">=</span><span class="st">'white'</span>)</span>
-<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a> )</span>
-<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    ggplot(flights, aes(<span class="st">"factor(year)"</span>, <span class="st">"month"</span>, fill<span class="op">=</span><span class="st">"passengers"</span>))</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_tile(aes(width<span class="op">=</span><span class="fl">0.95</span>, height<span class="op">=</span><span class="fl">0.95</span>))</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_text(aes(label<span class="op">=</span><span class="st">"passengers"</span>, color<span class="op">=</span><span class="st">"p_group"</span>), size<span class="op">=</span><span class="dv">9</span>, show_legend<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> scale_color_manual([<span class="st">"white"</span>, <span class="st">"black"</span>])  <span class="co"># new</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> scale_y_discrete(limits<span class="op">=</span>months[::<span class="op">-</span><span class="dv">1</span>])  <span class="co"># new</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> theme(  <span class="co"># new</span></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>        axis_ticks<span class="op">=</span>element_blank(),</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>        panel_background<span class="op">=</span>element_rect(fill<span class="op">=</span><span class="st">"white"</span>),</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div class="">
 <figure class="figure">

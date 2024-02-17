@@ -353,32 +353,30 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="examples" class="level2">
 <h2 class="anchored" data-anchor-id="examples">Examples</h2>
 <div class="quarto-embed-nb-cell">
-<div id="cell-0" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:01.421937Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:01.421629Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:02.323720Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:02.322960Z&quot;}" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> (</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    ggplot,</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    aes,</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    geom_point,</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    facet_grid,</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    labs,</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    guide_legend,</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    guides,</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    theme,</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    element_text,</span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    element_line,</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    element_rect,</span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    theme_set,</span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    theme_void</span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine.data <span class="im">import</span> mtcars</span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="co"># We use theme_void as the base theme so that the modifications</span></span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="co"># we make in the code are transparent in the output</span></span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>theme_set(theme_void())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-0" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:47:21.120050Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:47:21.119766Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:47:22.034998Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:47:22.034087Z&quot;}" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> (</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    ggplot,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    aes,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    geom_point,</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    facet_grid,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    labs,</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    guide_legend,</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    guides,</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    theme,</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    element_text,</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    element_line,</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    element_rect,</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    theme_set,</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    theme_void,</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine.data <span class="im">import</span> mtcars</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="co"># We use theme_void as the base theme so that the modifications</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="co"># we make in the code are transparent in the output</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>theme_set(theme_void())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-1" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:02.327232Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:02.326939Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:02.348389Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:02.347088Z&quot;}" data-execution_count="2">
+<div id="cell-1" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:47:22.038407Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:47:22.038131Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:47:22.054515Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:47:22.053878Z&quot;}" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>mtcars.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
 <div>
@@ -487,25 +485,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>The base plots we will use for the demonstation and some colors.</p>
-<div id="cell-3" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:02.402274Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:02.401982Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:02.412039Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:02.411307Z&quot;}" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="op">=</span> (ggplot(mtcars, aes(<span class="st">'wt'</span>, <span class="st">'mpg'</span>, color<span class="op">=</span><span class="st">'factor(cyl)'</span>))</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>      <span class="op">+</span> geom_point()</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>      <span class="op">+</span> labs(title<span class="op">=</span><span class="st">'mpg vs wt'</span>)</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>     )</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>p2 <span class="op">=</span> p1 <span class="op">+</span> facet_grid(<span class="st">'gear ~ am'</span>)</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>black <span class="op">=</span> <span class="st">'#222222'</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>gray <span class="op">=</span> <span class="st">'#666666'</span></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>red <span class="op">=</span> <span class="st">'#FF3333'</span></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>green <span class="op">=</span> <span class="st">'#66CC00'</span></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>blue <span class="op">=</span> <span class="st">'#3333FF'</span></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>purple <span class="op">=</span> <span class="st">'#9933FF'</span></span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>orange <span class="op">=</span> <span class="st">'#FF8000'</span></span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>yellow <span class="op">=</span> <span class="st">'#FFFF33'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-3" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:47:22.102319Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:47:22.102016Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:47:22.110651Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:47:22.110018Z&quot;}" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="op">=</span> (</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    ggplot(mtcars, aes(<span class="st">"wt"</span>, <span class="st">"mpg"</span>, color<span class="op">=</span><span class="st">"factor(cyl)"</span>))</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_point()</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> labs(title<span class="op">=</span><span class="st">"mpg vs wt"</span>)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>p2 <span class="op">=</span> p1 <span class="op">+</span> facet_grid(<span class="st">"gear"</span>, <span class="st">"am"</span>)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>black <span class="op">=</span> <span class="st">"#222222"</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>gray <span class="op">=</span> <span class="st">"#666666"</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>red <span class="op">=</span> <span class="st">"#FF3333"</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>green <span class="op">=</span> <span class="st">"#66CC00"</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>blue <span class="op">=</span> <span class="st">"#3333FF"</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>purple <span class="op">=</span> <span class="st">"#9933FF"</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>orange <span class="op">=</span> <span class="st">"#FF8000"</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>yellow <span class="op">=</span> <span class="st">"#FFFF33"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>What the plots look like unmodified (unthemed).</p>
-<div id="cell-5" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:02.417133Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:02.416747Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:03.881172Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:03.880579Z&quot;}" data-execution_count="4">
+<div id="cell-5" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:47:22.115193Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:47:22.114876Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:47:23.514064Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:47:23.512659Z&quot;}" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>p1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
@@ -515,7 +514,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div id="cell-6" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:03.884176Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:03.883835Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:04.620583Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:04.619753Z&quot;}" data-execution_count="5">
+<div id="cell-6" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:47:23.517528Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:47:23.517182Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:47:24.115752Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:47:24.115217Z&quot;}" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>p2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
@@ -533,10 +532,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ol>
 <p>Note that none of the <code>themeables</code> control/modify the plotted data. e.g You cannot use <code>text</code> to change the appearance of objects plotted with <code>geom_text</code>.</p>
 <p><strong>text</strong></p>
-<div id="cell-9" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:04.624557Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:04.624209Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:04.953732Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:04.953086Z&quot;}" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="op">+</span> theme(</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    text<span class="op">=</span>element_text(color<span class="op">=</span>purple)</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-9" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:47:24.118819Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:47:24.118583Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:47:24.395266Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:47:24.394634Z&quot;}" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="op">+</span> theme(text<span class="op">=</span>element_text(color<span class="op">=</span>purple))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -546,10 +543,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p><strong>rect</strong></p>
-<div id="cell-11" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:04.957051Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:04.956808Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:05.324350Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:05.323713Z&quot;}" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="op">+</span> theme(</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    rect<span class="op">=</span>element_rect(color<span class="op">=</span>black, size<span class="op">=</span><span class="dv">3</span>, fill<span class="op">=</span><span class="st">'#EEBB0050'</span>)</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-11" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:47:24.398374Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:47:24.398120Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:47:24.730635Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:47:24.729668Z&quot;}" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="op">+</span> theme(rect<span class="op">=</span>element_rect(color<span class="op">=</span>black, size<span class="op">=</span><span class="dv">3</span>, fill<span class="op">=</span><span class="st">"#EEBB0050"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -559,10 +554,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p><strong>line</strong></p>
-<div id="cell-13" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:05.327392Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:05.327155Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:05.583176Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:05.582416Z&quot;}" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="op">+</span> theme(</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    line<span class="op">=</span>element_line(color<span class="op">=</span>black)</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-13" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:47:24.733670Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:47:24.733424Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:47:24.976865Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:47:24.976271Z&quot;}" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="op">+</span> theme(line<span class="op">=</span>element_line(color<span class="op">=</span>black))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -575,17 +568,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="theming-specific-items">Theming specific items</h2>
 <section id="axis_line-and-axis_text" class="level3">
 <h3 class="anchored" data-anchor-id="axis_line-and-axis_text">axis_line and axis_text</h3>
-<div id="cell-16" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:05.587271Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:05.586998Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:05.863138Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:05.862452Z&quot;}" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>p1 <span class="op">+</span> theme(</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    axis_line<span class="op">=</span>element_line(size<span class="op">=</span><span class="dv">2</span>),</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    axis_line_x<span class="op">=</span>element_line(color<span class="op">=</span>red),</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    axis_line_y<span class="op">=</span>element_line(color<span class="op">=</span>blue),</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    axis_text<span class="op">=</span>element_text(margin<span class="op">=</span>{<span class="st">'t'</span>: <span class="dv">5</span>, <span class="st">'r'</span>: <span class="dv">5</span>}),</span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    axis_text_x<span class="op">=</span>element_text(color<span class="op">=</span>black),</span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    axis_text_y<span class="op">=</span>element_text(color<span class="op">=</span>purple)</span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-16" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:47:24.979612Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:47:24.979390Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:47:25.254524Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:47:25.253974Z&quot;}" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="op">+</span> theme(</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    axis_line<span class="op">=</span>element_line(size<span class="op">=</span><span class="dv">2</span>),</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    axis_line_x<span class="op">=</span>element_line(color<span class="op">=</span>red),</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    axis_line_y<span class="op">=</span>element_line(color<span class="op">=</span>blue),</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    axis_text<span class="op">=</span>element_text(margin<span class="op">=</span>{<span class="st">"t"</span>: <span class="dv">5</span>, <span class="st">"r"</span>: <span class="dv">5</span>}),</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    axis_text_x<span class="op">=</span>element_text(color<span class="op">=</span>black),</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    axis_text_y<span class="op">=</span>element_text(color<span class="op">=</span>purple),</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -594,26 +585,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div id="cell-17" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:05.866125Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:05.865886Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:06.130907Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:06.130296Z&quot;}" data-execution_count="10">
+<div id="cell-17" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:47:25.257224Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:47:25.256979Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:47:25.528896Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:47:25.528030Z&quot;}" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="op">+</span> theme(</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    axis_line<span class="op">=</span>element_line(size<span class="op">=</span><span class="fl">.7</span>, color<span class="op">=</span>gray),</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># We are focusing on the ticks, make them long</span></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    axis_ticks_length<span class="op">=</span><span class="dv">20</span>,</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    axis_ticks_length_minor<span class="op">=</span><span class="dv">10</span>,</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    axis_ticks_length_major<span class="op">=</span><span class="dv">20</span>,</span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    axis_ticks<span class="op">=</span>element_line(size<span class="op">=</span><span class="dv">2</span>),</span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>    axis_ticks_major<span class="op">=</span>element_line(color<span class="op">=</span>purple),</span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>    axis_ticks_major_x<span class="op">=</span>element_line(size<span class="op">=</span><span class="dv">4</span>),        <span class="co"># override size=2</span></span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>    axis_ticks_major_y<span class="op">=</span>element_line(color<span class="op">=</span>yellow),  <span class="co"># override color=purple</span></span>
-<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>    axis_ticks_minor<span class="op">=</span>element_line(color<span class="op">=</span>red),</span>
-<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>    axis_ticks_minor_x<span class="op">=</span>element_line(),              <span class="co"># do not override anything</span></span>
-<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>    axis_ticks_minor_y<span class="op">=</span>element_line(color<span class="op">=</span>gray),    <span class="co"># override color=red</span></span>
-<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    axis_line<span class="op">=</span>element_line(size<span class="op">=</span><span class="fl">0.7</span>, color<span class="op">=</span>gray),</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># We are focusing on the ticks, make them long</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    axis_ticks_length<span class="op">=</span><span class="dv">20</span>,</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    axis_ticks_length_minor<span class="op">=</span><span class="dv">10</span>,</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    axis_ticks_length_major<span class="op">=</span><span class="dv">20</span>,</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    axis_ticks<span class="op">=</span>element_line(size<span class="op">=</span><span class="dv">2</span>),</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    axis_ticks_major<span class="op">=</span>element_line(color<span class="op">=</span>purple),</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    axis_ticks_major_x<span class="op">=</span>element_line(size<span class="op">=</span><span class="dv">4</span>),  <span class="co"># override size=2</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>    axis_ticks_major_y<span class="op">=</span>element_line(color<span class="op">=</span>yellow),  <span class="co"># override color=purple</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>    axis_ticks_minor<span class="op">=</span>element_line(color<span class="op">=</span>red),</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>    axis_ticks_minor_x<span class="op">=</span>element_line(),  <span class="co"># do not override anything</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>    axis_ticks_minor_y<span class="op">=</span>element_line(color<span class="op">=</span>gray),  <span class="co"># override color=red</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -625,20 +611,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="axis_title-and-axis_ticks_pad" class="level3">
 <h3 class="anchored" data-anchor-id="axis_title-and-axis_ticks_pad">axis_title and axis_ticks_pad</h3>
-<div id="cell-19" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:06.134315Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:06.133869Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:06.386946Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:06.386170Z&quot;}" data-execution_count="11">
+<div id="cell-19" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:47:25.534174Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:47:25.533888Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:47:25.818166Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:47:25.817576Z&quot;}" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="op">+</span> theme(</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    axis_line<span class="op">=</span>element_line(size<span class="op">=</span><span class="fl">.7</span>, color<span class="op">=</span>gray),</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    axis_line<span class="op">=</span>element_line(size<span class="op">=</span><span class="fl">0.7</span>, color<span class="op">=</span>gray),</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    axis_ticks<span class="op">=</span>element_line(),</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    axis_title<span class="op">=</span>element_text(),</span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    axis_title_x<span class="op">=</span>element_text(color<span class="op">=</span>blue),</span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    axis_title_y<span class="op">=</span>element_text(color<span class="op">=</span>red),</span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># The gap between the title and the ticks</span></span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    axis_ticks_pad<span class="op">=</span><span class="dv">20</span>,</span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    axis_ticks_pad_major<span class="op">=</span><span class="dv">20</span>,</span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>    axis_ticks_pad_minor<span class="op">=</span><span class="dv">20</span></span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    axis_title<span class="op">=</span>element_text(),</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    axis_title_x<span class="op">=</span>element_text(color<span class="op">=</span>blue),</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    axis_title_y<span class="op">=</span>element_text(color<span class="op">=</span>red),</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># The gap between the title and the ticks</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    axis_ticks_pad<span class="op">=</span><span class="dv">20</span>,</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    axis_ticks_pad_major<span class="op">=</span><span class="dv">20</span>,</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    axis_ticks_pad_minor<span class="op">=</span><span class="dv">20</span>,</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -650,15 +634,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="axis_ticks_direction" class="level3">
 <h3 class="anchored" data-anchor-id="axis_ticks_direction">axis_ticks_direction</h3>
-<div id="cell-21" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:06.390225Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:06.389964Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:06.648415Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:06.647723Z&quot;}" data-execution_count="12">
+<div id="cell-21" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:47:25.821351Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:47:25.821086Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:47:26.134943Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:47:26.134299Z&quot;}" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="op">+</span> theme(</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    axis_line<span class="op">=</span>element_line(size<span class="op">=</span><span class="fl">.7</span>, color<span class="op">=</span>gray),</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    axis_line<span class="op">=</span>element_line(size<span class="op">=</span><span class="fl">0.7</span>, color<span class="op">=</span>gray),</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    axis_ticks<span class="op">=</span>element_line(),</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    axis_ticks_direction<span class="op">=</span><span class="st">'in'</span>,</span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    axis_ticks_direction_x<span class="op">=</span><span class="st">'in'</span>,</span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    axis_ticks_direction_y<span class="op">=</span><span class="st">'out'</span></span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    axis_ticks_direction<span class="op">=</span><span class="st">"in"</span>,</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    axis_ticks_direction_x<span class="op">=</span><span class="st">"in"</span>,</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    axis_ticks_direction_y<span class="op">=</span><span class="st">"out"</span>,</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -671,28 +654,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="legend_box" class="level3">
 <h3 class="anchored" data-anchor-id="legend_box">Legend_box</h3>
 <p>Not all themeables that affect the legend box are demonstrated</p>
-<div id="cell-23" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:06.651584Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:06.651339Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:06.948775Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:06.948097Z&quot;}" data-execution_count="13">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>(p1 <span class="op">+</span> aes(fill<span class="op">=</span><span class="st">'drat'</span>)</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> theme(</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    legend_position<span class="op">=</span><span class="st">'left'</span>,</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    legend_direction<span class="op">=</span><span class="st">'horizontal'</span>, <span class="co"># affected by the ncol=2</span></span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    legend_box_margin<span class="op">=</span><span class="dv">5</span>,</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    legend_background<span class="op">=</span>element_rect(color<span class="op">=</span>purple, size<span class="op">=</span><span class="dv">2</span>, fill<span class="op">=</span><span class="st">'white'</span>),</span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>     </span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    legend_box<span class="op">=</span><span class="st">'vertical'</span>,</span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>     </span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>    legend_key<span class="op">=</span>element_rect(fill<span class="op">=</span>gray, alpha<span class="op">=</span><span class="fl">.3</span>),</span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>    legend_title<span class="op">=</span>element_text(color<span class="op">=</span>orange, va<span class="op">=</span><span class="st">"top"</span>),</span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>    legend_text<span class="op">=</span>element_text(weight<span class="op">=</span><span class="st">'bold'</span>),</span>
-<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>     </span>
-<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>    legend_key_spacing<span class="op">=</span><span class="dv">10</span>,      <span class="co"># overridden</span></span>
-<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>    legend_key_spacing_x<span class="op">=</span><span class="dv">15</span>,</span>
-<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>    legend_key_spacing_y<span class="op">=</span><span class="dv">5</span></span>
-<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a> ) </span>
-<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a> </span>
-<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a> <span class="co"># so we can see legend_entry_spacing in action</span></span>
-<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> guides(color<span class="op">=</span>guide_legend(ncol<span class="op">=</span><span class="dv">2</span>))</span>
-<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-23" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:47:26.137856Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:47:26.137625Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:47:26.471831Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:47:26.471233Z&quot;}" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    p1</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> aes(fill<span class="op">=</span><span class="st">"drat"</span>)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> theme(</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>        legend_position<span class="op">=</span><span class="st">"left"</span>,</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>        legend_direction<span class="op">=</span><span class="st">"horizontal"</span>,  <span class="co"># affected by the ncol=2</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>        legend_box_margin<span class="op">=</span><span class="dv">5</span>,</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>        legend_background<span class="op">=</span>element_rect(color<span class="op">=</span>purple, size<span class="op">=</span><span class="dv">2</span>, fill<span class="op">=</span><span class="st">"white"</span>),</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>        legend_box<span class="op">=</span><span class="st">"vertical"</span>,</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>        legend_key<span class="op">=</span>element_rect(fill<span class="op">=</span>gray, alpha<span class="op">=</span><span class="fl">0.3</span>),</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>        legend_title<span class="op">=</span>element_text(color<span class="op">=</span>orange, va<span class="op">=</span><span class="st">"top"</span>),</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>        legend_text<span class="op">=</span>element_text(weight<span class="op">=</span><span class="st">"bold"</span>),</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>        legend_key_spacing<span class="op">=</span><span class="dv">10</span>,  <span class="co"># overridden</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>        legend_key_spacing_x<span class="op">=</span><span class="dv">15</span>,</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>        legend_key_spacing_y<span class="op">=</span><span class="dv">5</span>,</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># so we can see legend_entry_spacing in action</span></span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> guides(color<span class="op">=</span>guide_legend(ncol<span class="op">=</span><span class="dv">2</span>))</span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -704,12 +685,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="plot_background-panel_background-and-panel_border" class="level3">
 <h3 class="anchored" data-anchor-id="plot_background-panel_background-and-panel_border">plot_background, panel_background and panel_border</h3>
-<div id="cell-25" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:06.951845Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:06.951597Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:07.801192Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:07.799720Z&quot;}" data-execution_count="14">
+<div id="cell-25" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:47:26.474847Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:47:26.474612Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:47:27.208907Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:47:27.208257Z&quot;}" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>p2 <span class="op">+</span> theme(</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    plot_background<span class="op">=</span>element_rect(fill<span class="op">=</span><span class="st">'gray'</span>, alpha<span class="op">=</span><span class="fl">.3</span>),</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    panel_background<span class="op">=</span>element_rect(fill<span class="op">=</span>purple, alpha<span class="op">=</span><span class="fl">.2</span>),</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    plot_background<span class="op">=</span>element_rect(fill<span class="op">=</span><span class="st">"gray"</span>, alpha<span class="op">=</span><span class="fl">0.3</span>),</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    panel_background<span class="op">=</span>element_rect(fill<span class="op">=</span>purple, alpha<span class="op">=</span><span class="fl">0.2</span>),</span>
 <span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    panel_border<span class="op">=</span>element_rect(color<span class="op">=</span>red, size<span class="op">=</span><span class="dv">1</span>),</span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    panel_spacing<span class="op">=</span><span class="fl">.025</span>,</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    panel_spacing<span class="op">=</span><span class="fl">0.025</span>,</span>
 <span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
@@ -722,20 +703,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="panel_grid" class="level3">
 <h3 class="anchored" data-anchor-id="panel_grid">panel_grid</h3>
-<div id="cell-27" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:07.806355Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:07.806047Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:08.157935Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:08.157124Z&quot;}" data-execution_count="15">
+<div id="cell-27" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:47:27.211889Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:47:27.211664Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:47:27.480517Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:47:27.479345Z&quot;}" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="op">+</span> theme(</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    panel_grid<span class="op">=</span>element_line(color<span class="op">=</span>purple),</span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    panel_grid_major<span class="op">=</span>element_line(size<span class="op">=</span><span class="fl">1.4</span>, alpha<span class="op">=</span><span class="dv">1</span>),</span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    panel_grid_major_x<span class="op">=</span>element_line(linetype<span class="op">=</span><span class="st">'dashed'</span>),</span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    panel_grid_major_y<span class="op">=</span>element_line(linetype<span class="op">=</span><span class="st">'dashdot'</span>),</span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    panel_grid_minor<span class="op">=</span>element_line(alpha<span class="op">=</span><span class="fl">.25</span>),</span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>    panel_grid_minor_x<span class="op">=</span>element_line(color<span class="op">=</span>red),</span>
-<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>    panel_grid_minor_y<span class="op">=</span>element_line(color<span class="op">=</span>green),</span>
-<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>    panel_ontop<span class="op">=</span><span class="va">False</span>  <span class="co"># puts the points behind the grid</span></span>
-<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    panel_grid_major<span class="op">=</span>element_line(size<span class="op">=</span><span class="fl">1.4</span>, alpha<span class="op">=</span><span class="dv">1</span>),</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    panel_grid_major_x<span class="op">=</span>element_line(linetype<span class="op">=</span><span class="st">"dashed"</span>),</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    panel_grid_major_y<span class="op">=</span>element_line(linetype<span class="op">=</span><span class="st">"dashdot"</span>),</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    panel_grid_minor<span class="op">=</span>element_line(alpha<span class="op">=</span><span class="fl">0.25</span>),</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    panel_grid_minor_x<span class="op">=</span>element_line(color<span class="op">=</span>red),</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    panel_grid_minor_y<span class="op">=</span>element_line(color<span class="op">=</span>green),</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>    panel_ontop<span class="op">=</span><span class="va">False</span>,  <span class="co"># puts the points behind the grid</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -747,23 +725,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="strip_background-strip_align-and-strip_text" class="level3">
 <h3 class="anchored" data-anchor-id="strip_background-strip_align-and-strip_text">strip_background, strip_align and strip_text</h3>
-<div id="cell-29" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:08.209396Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:08.209005Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:09.039956Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:09.039223Z&quot;}" data-execution_count="16">
+<div id="cell-29" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:47:27.483758Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:47:27.483511Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:47:28.105950Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:47:28.105272Z&quot;}" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>p2 <span class="op">+</span> theme(</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    panel_spacing<span class="op">=</span><span class="fl">.025</span>,</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    panel_background<span class="op">=</span>element_rect(fill<span class="op">=</span>gray, alpha<span class="op">=</span><span class="fl">.2</span>),</span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    strip_background<span class="op">=</span>element_rect(color<span class="op">=</span>purple, fill<span class="op">=</span>orange, size<span class="op">=</span><span class="fl">1.4</span>, alpha<span class="op">=</span><span class="fl">.95</span>),</span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>    strip_background_x<span class="op">=</span>element_rect(x<span class="op">=</span><span class="dv">1</span><span class="op">/</span><span class="dv">6</span>, width<span class="op">=</span><span class="dv">2</span><span class="op">/</span><span class="dv">3</span>), <span class="co"># you can get really crazy</span></span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>    strip_background_y<span class="op">=</span>element_rect(),</span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>    strip_align<span class="op">=</span><span class="dv">0</span>,</span>
-<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>    strip_align_x<span class="op">=</span><span class="fl">0.2</span>,</span>
-<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>    strip_align_y<span class="op">=</span><span class="fl">0.2</span>,</span>
-<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>    strip_text<span class="op">=</span>element_text(weight<span class="op">=</span><span class="st">'bold'</span>),</span>
-<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>    strip_text_x<span class="op">=</span>element_text(color<span class="op">=</span>red),</span>
-<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>    strip_text_y<span class="op">=</span>element_text(color<span class="op">=</span>blue)</span>
-<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    panel_spacing<span class="op">=</span><span class="fl">0.025</span>,</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    panel_background<span class="op">=</span>element_rect(fill<span class="op">=</span>gray, alpha<span class="op">=</span><span class="fl">0.2</span>),</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    strip_background<span class="op">=</span>element_rect(color<span class="op">=</span>purple, fill<span class="op">=</span>orange, size<span class="op">=</span><span class="fl">1.4</span>, alpha<span class="op">=</span><span class="fl">0.95</span>),</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    strip_background_x<span class="op">=</span>element_rect(x<span class="op">=</span><span class="dv">1</span> <span class="op">/</span> <span class="dv">6</span>, width<span class="op">=</span><span class="dv">2</span> <span class="op">/</span> <span class="dv">3</span>),  <span class="co"># you can get really crazy</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>    strip_background_y<span class="op">=</span>element_rect(),</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>    strip_align<span class="op">=</span><span class="dv">0</span>,</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>    strip_align_x<span class="op">=</span><span class="fl">0.2</span>,</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>    strip_align_y<span class="op">=</span><span class="fl">0.2</span>,</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>    strip_text<span class="op">=</span>element_text(weight<span class="op">=</span><span class="st">"bold"</span>),</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>    strip_text_x<span class="op">=</span>element_text(color<span class="op">=</span>red),</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>    strip_text_y<span class="op">=</span>element_text(color<span class="op">=</span>blue),</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -778,13 +753,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The <code>aspect_ratio</code> takes precedence over the <code>figure_size</code>, and it modifies the height. The effective width and height are:</p>
 <div class="sourceCode" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>width <span class="op">=</span> figure_size[<span class="dv">0</span>]</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>height <span class="op">=</span> figure_size[<span class="dv">0</span>] <span class="op">*</span> aspect_ratio</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div id="cell-31" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:49:09.043496Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:49:09.043233Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:49:09.550611Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:49:09.550007Z&quot;}" data-execution_count="17">
+<div id="cell-31" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:47:28.108860Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:47:28.108619Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:47:28.553320Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:47:28.552573Z&quot;}" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="op">+</span> theme(</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>    panel_background<span class="op">=</span>element_rect(fill<span class="op">=</span>gray, alpha<span class="op">=</span><span class="fl">.2</span>),</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">#dpi=120,</span></span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    figure_size<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">6</span>), <span class="co"># inches</span></span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    aspect_ratio<span class="op">=</span><span class="dv">1</span><span class="op">/</span><span class="dv">3</span>    <span class="co"># height:width</span></span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>    panel_background<span class="op">=</span>element_rect(fill<span class="op">=</span>gray, alpha<span class="op">=</span><span class="fl">0.2</span>),</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    figure_size<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">6</span>),  <span class="co"># inches</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    aspect_ratio<span class="op">=</span><span class="dv">1</span> <span class="op">/</span> <span class="dv">3</span>,  <span class="co"># height:width</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">

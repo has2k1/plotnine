@@ -209,18 +209,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="using-ipywidgets" class="level1">
 <h1>Using ipyWidgets</h1>
 <p>In this notebook, we will use ipyWidgets to make dynamic selections of the data being visualized.</p>
-<div id="cell-1" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2018-08-07T06:03:25.371031Z&quot;,&quot;start_time&quot;:&quot;2018-08-07T06:03:23.909785Z&quot;}" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:50:11.134333Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:50:11.134051Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:50:12.547206Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:50:12.546438Z&quot;}" data-execution_count="1">
+<div id="cell-1" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2018-08-07T06:03:25.371031Z&quot;,&quot;start_time&quot;:&quot;2018-08-07T06:03:23.909785Z&quot;}" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:48:30.992690Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:48:30.992314Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:48:32.315958Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:48:32.313840Z&quot;}" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> ggplot, aes</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> plotnine <span class="im">as</span> p9</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> itertools</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> copy <span class="im">import</span> copy</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> ipywidgets <span class="im">import</span> widgets</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> IPython.display <span class="im">import</span> display</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine.data <span class="im">import</span> mtcars</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> itertools</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> ipywidgets <span class="im">import</span> widgets</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> IPython.display <span class="im">import</span> display</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine.data <span class="im">import</span> mtcars</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>First of all, <a href="https://ipywidgets.readthedocs.io/en/stable/user_install.html">install ipywidgets</a>:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install ipywidgets</span>
@@ -231,15 +229,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># for jupyter lab (requires npm):</span></span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> i @jupyter-widgets/jupyterlab-manager</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Let’s have alook on the plot with all the data. We are comparing cars with their horse-power in the X axis and miles-per-gallon in the Y axis. The points are collored by car weight.</p>
-<div id="cell-4" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2018-08-07T06:03:31.620599Z&quot;,&quot;start_time&quot;:&quot;2018-08-07T06:03:31.438693Z&quot;}" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:50:12.552433Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:50:12.551462Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:50:13.789653Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:50:13.788644Z&quot;}" data-execution_count="2">
+<div id="cell-4" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2018-08-07T06:03:31.620599Z&quot;,&quot;start_time&quot;:&quot;2018-08-07T06:03:31.438693Z&quot;}" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:48:32.320464Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:48:32.320169Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:48:33.299557Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:48:33.298844Z&quot;}" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># This has to be used the first time you make a plot. This magic allows the notebook to update plots.</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>matplotlib notebook</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> (ggplot(mtcars, aes(x<span class="op">=</span><span class="st">"hp"</span>, y<span class="op">=</span><span class="st">"mpg"</span>, color<span class="op">=</span><span class="st">"wt"</span>))</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>     <span class="op">+</span> p9.geom_point()</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>     <span class="op">+</span> p9.theme_linedraw()</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>p</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> (</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    ggplot(mtcars, aes(x<span class="op">=</span><span class="st">"hp"</span>, y<span class="op">=</span><span class="st">"mpg"</span>, color<span class="op">=</span><span class="st">"wt"</span>))</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.geom_point()</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.theme_linedraw()</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>p</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <script type="application/javascript">
 /* Put everything inside the global mpl namespace */
@@ -1220,7 +1219,7 @@ if (IPython.notebook.kernel !== null) {
 </script>
 </div>
 <div class="cell-output cell-output-display">
-<div id="cf558d9b-f899-425d-a743-eb030aae232f"></div>
+<div id="c4613f1b-5563-49a7-8f6d-5fb61e2db635"></div>
 </div>
 <div class="cell-output cell-output-display">
 <div>
@@ -1232,16 +1231,16 @@ if (IPython.notebook.kernel !== null) {
 </div>
 <p>Now we will get relevant values for the creation of plots with sub-sets of data.</p>
 <p>Initially, select cars based on number of cylinders</p>
-<div id="cell-7" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2018-08-07T06:03:50.180178Z&quot;,&quot;start_time&quot;:&quot;2018-08-07T06:03:50.171172Z&quot;}" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:50:13.794117Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:50:13.793817Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:50:13.797918Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:50:13.797012Z&quot;}" data-execution_count="3">
+<div id="cell-7" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2018-08-07T06:03:50.180178Z&quot;,&quot;start_time&quot;:&quot;2018-08-07T06:03:50.171172Z&quot;}" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:48:33.303055Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:48:33.302785Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:48:33.306168Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:48:33.305549Z&quot;}" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Prepre the list we will use to selec sub-sets of data based on number of cylinders.</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>cylList <span class="op">=</span> np.unique( mtcars[<span class="st">'cyl'</span>] )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>cylList <span class="op">=</span> np.unique(mtcars[<span class="st">"cyl"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-8" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2018-08-07T06:03:51.676870Z&quot;,&quot;start_time&quot;:&quot;2018-08-07T06:03:51.393552Z&quot;}" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:50:13.805573Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:50:13.805121Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:50:14.117152Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:50:14.116241Z&quot;}" data-execution_count="4">
+<div id="cell-8" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2018-08-07T06:03:51.676870Z&quot;,&quot;start_time&quot;:&quot;2018-08-07T06:03:51.393552Z&quot;}" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:48:33.309176Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:48:33.308902Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:48:33.535220Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:48:33.534408Z&quot;}" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The first selection is a drop-down menu for number of cylinders</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>cylSelect <span class="op">=</span> widgets.Dropdown(</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    options<span class="op">=</span><span class="bu">list</span>(cylList),</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    value<span class="op">=</span>cylList[<span class="dv">1</span>],</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    description<span class="op">=</span><span class="st">'Cylinders:'</span>,</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    description<span class="op">=</span><span class="st">"Cylinders:"</span>,</span>
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    disabled<span class="op">=</span><span class="va">False</span>,</span>
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
@@ -1252,65 +1251,68 @@ if (IPython.notebook.kernel !== null) {
 <span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> <span class="va">None</span></span>
 <span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>axs <span class="op">=</span> <span class="va">None</span></span>
 <span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_current_artists():</span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Return artists attached to all the matplotlib axes</span></span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    axes <span class="op">=</span> plt.gca()</span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> itertools.chain(axes.lines, axes.collections, axes.artists, axes.patches, axes.texts)</span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="co"># This is the main function that is called to update the plot every time we chage a selection.</span></span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plotUpdate(<span class="op">*</span>args):</span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Use global variables for matplotlib's figure and axis.</span></span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>    <span class="kw">global</span> fig, axs</span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Get current values of the selection widget</span></span>
-<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>    cylValue <span class="op">=</span> cylSelect.value</span>
-<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create a temporary dataset that is constrained by the user's selections.</span></span>
-<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>    tmpDat <span class="op">=</span> mtcars.loc[(mtcars[<span class="st">'cyl'</span>] <span class="op">==</span> cylValue),:]</span>
-<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create plotnine's plot</span></span>
-<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Using the maximum and minimum values we gatehred before, we can keep the plot axis from</span></span>
-<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>    <span class="co"># changing with the cyinder selection</span></span>
-<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>    p <span class="op">=</span> (ggplot(tmpDat, aes(x<span class="op">=</span><span class="st">"hp"</span>, y<span class="op">=</span><span class="st">"mpg"</span>, color<span class="op">=</span><span class="st">"wt"</span>))</span>
-<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>         <span class="op">+</span> p9.geom_point()</span>
-<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>         <span class="op">+</span> p9.theme_linedraw()</span>
-<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> fig <span class="kw">is</span> <span class="va">None</span>:</span>
-<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>        <span class="co"># If this is the first time a plot is made in the notebook, we let plotnine create a new </span></span>
-<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>        <span class="co"># matplotlib figure and axis.</span></span>
-<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a>        fig <span class="op">=</span> p.draw()</span>
-<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a>        axs <span class="op">=</span> fig.axes</span>
-<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
-<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a>        <span class="co">#p = copy(p)</span></span>
-<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a>        <span class="co"># This helps keeping old selected data from being visualized after a new selection is made.</span></span>
-<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a>        <span class="co"># We delete all previously reated artists from the matplotlib axis.</span></span>
-<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> artist <span class="kw">in</span> get_current_artists():</span>
-<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a>            artist.remove()</span>
-<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a>        <span class="co"># If a plot is being updated, we re-use the figure an axis created before.</span></span>
-<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a>        p._draw_using_figure(fig, axs)</span>
-<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb5-58"><a href="#cb5-58" aria-hidden="true" tabindex="-1"></a>cylSelect.observe(plotUpdate, <span class="st">'value'</span>)</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_current_artists():</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Return artists attached to all the matplotlib axes</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>    axes <span class="op">=</span> plt.gca()</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> itertools.chain(</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>        axes.lines, axes.collections, axes.artists, axes.patches, axes.texts</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a><span class="co"># This is the main function that is called to update the plot every time we chage a selection.</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plotUpdate(<span class="op">*</span>args):</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Use global variables for matplotlib's figure and axis.</span></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>    <span class="kw">global</span> fig, axs</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Get current values of the selection widget</span></span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>    cylValue <span class="op">=</span> cylSelect.value</span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create a temporary dataset that is constrained by the user's selections.</span></span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>    tmpDat <span class="op">=</span> mtcars.loc[(mtcars[<span class="st">"cyl"</span>] <span class="op">==</span> cylValue), :]</span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create plotnine's plot</span></span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Using the maximum and minimum values we gatehred before, we can keep the plot axis from</span></span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>    <span class="co"># changing with the cyinder selection</span></span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>    p <span class="op">=</span> (</span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>        ggplot(tmpDat, aes(x<span class="op">=</span><span class="st">"hp"</span>, y<span class="op">=</span><span class="st">"mpg"</span>, color<span class="op">=</span><span class="st">"wt"</span>))</span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>        <span class="op">+</span> p9.geom_point()</span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>        <span class="op">+</span> p9.theme_linedraw()</span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> fig <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a>        <span class="co"># If this is the first time a plot is made in the notebook, we let plotnine create a new</span></span>
+<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a>        <span class="co"># matplotlib figure and axis.</span></span>
+<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a>        fig <span class="op">=</span> p.draw()</span>
+<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a>        axs <span class="op">=</span> fig.axes</span>
+<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a>        <span class="co"># p = copy(p)</span></span>
+<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a>        <span class="co"># This helps keeping old selected data from being visualized after a new selection is made.</span></span>
+<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a>        <span class="co"># We delete all previously reated artists from the matplotlib axis.</span></span>
+<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> artist <span class="kw">in</span> get_current_artists():</span>
+<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a>            artist.remove()</span>
+<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a>        <span class="co"># If a plot is being updated, we re-use the figure an axis created before.</span></span>
+<span id="cb5-58"><a href="#cb5-58" aria-hidden="true" tabindex="-1"></a>        p._draw_using_figure(fig, axs)</span>
 <span id="cb5-59"><a href="#cb5-59" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-60"><a href="#cb5-60" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the widgets</span></span>
-<span id="cb5-61"><a href="#cb5-61" aria-hidden="true" tabindex="-1"></a>display(cylSelect)</span>
+<span id="cb5-60"><a href="#cb5-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-61"><a href="#cb5-61" aria-hidden="true" tabindex="-1"></a>cylSelect.observe(plotUpdate, <span class="st">"value"</span>)</span>
 <span id="cb5-62"><a href="#cb5-62" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-63"><a href="#cb5-63" aria-hidden="true" tabindex="-1"></a><span class="co"># Plots the first image, with inintial values.</span></span>
-<span id="cb5-64"><a href="#cb5-64" aria-hidden="true" tabindex="-1"></a>plotUpdate()</span>
+<span id="cb5-63"><a href="#cb5-63" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the widgets</span></span>
+<span id="cb5-64"><a href="#cb5-64" aria-hidden="true" tabindex="-1"></a>display(cylSelect)</span>
 <span id="cb5-65"><a href="#cb5-65" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a><span class="co"># Matplotlib function to make the image fit within the plot dimensions. </span></span>
-<span id="cb5-67"><a href="#cb5-67" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a><span class="co"># Plots the first image, with inintial values.</span></span>
+<span id="cb5-67"><a href="#cb5-67" aria-hidden="true" tabindex="-1"></a>plotUpdate()</span>
 <span id="cb5-68"><a href="#cb5-68" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-69"><a href="#cb5-69" aria-hidden="true" tabindex="-1"></a><span class="co"># Trick to get the first rendered image to follow the previous "tight_layout" command.</span></span>
-<span id="cb5-70"><a href="#cb5-70" aria-hidden="true" tabindex="-1"></a><span class="co"># without this, only after the first update would the figure be fit inside its dimensions.</span></span>
-<span id="cb5-71"><a href="#cb5-71" aria-hidden="true" tabindex="-1"></a>cylSelect.value <span class="op">=</span> cylList[<span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-69"><a href="#cb5-69" aria-hidden="true" tabindex="-1"></a><span class="co"># Matplotlib function to make the image fit within the plot dimensions.</span></span>
+<span id="cb5-70"><a href="#cb5-70" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb5-71"><a href="#cb5-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-72"><a href="#cb5-72" aria-hidden="true" tabindex="-1"></a><span class="co"># Trick to get the first rendered image to follow the previous "tight_layout" command.</span></span>
+<span id="cb5-73"><a href="#cb5-73" aria-hidden="true" tabindex="-1"></a><span class="co"># without this, only after the first update would the figure be fit inside its dimensions.</span></span>
+<span id="cb5-74"><a href="#cb5-74" aria-hidden="true" tabindex="-1"></a>cylSelect.value <span class="op">=</span> cylList[<span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"19304125642e48f384c9206adc112aef","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+{"model_id":"b4316455eb0d482b9d7ed92df51607f0","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
 </script>
 </div>
 <div class="cell-output cell-output-display">
@@ -2293,7 +2295,7 @@ if (IPython.notebook.kernel !== null) {
 </script>
 </div>
 <div class="cell-output cell-output-display">
-<div id="bdd399df-980e-4044-ae5d-cef0429b8a7e"></div>
+<div id="da32e2d2-1cc0-4e6b-8915-2be8189ab552"></div>
 </div>
 <div class="cell-output cell-output-display">
 <script type="application/javascript">
@@ -3275,31 +3277,31 @@ if (IPython.notebook.kernel !== null) {
 </script>
 </div>
 <div class="cell-output cell-output-display">
-<div id="c39d868e-b430-4e22-9ec0-dbf8e4ff794e"></div>
+<div id="ca2f4ffb-e87b-43ec-8b74-a7d04e940f49"></div>
 </div>
 </div>
 <p>Having axis ranges change between selections does not help probing the data.</p>
-<div id="cell-10" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2018-08-07T06:04:08.128856Z&quot;,&quot;start_time&quot;:&quot;2018-08-07T06:04:08.114225Z&quot;}" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:50:14.125731Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:50:14.125439Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:50:14.131659Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:50:14.130732Z&quot;}" data-execution_count="5">
+<div id="cell-10" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2018-08-07T06:04:08.128856Z&quot;,&quot;start_time&quot;:&quot;2018-08-07T06:04:08.114225Z&quot;}" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:48:33.541255Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:48:33.540993Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:48:33.546599Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:48:33.545888Z&quot;}" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># We now get the maximum ranges of relevant variables to keep axis constant between images.</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Get range of weight</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>minWt <span class="op">=</span> <span class="bu">min</span>(mtcars[<span class="st">'wt'</span>])</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>maxWt <span class="op">=</span> <span class="bu">max</span>(mtcars[<span class="st">'wt'</span>])</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>minWt <span class="op">=</span> <span class="bu">min</span>(mtcars[<span class="st">"wt"</span>])</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>maxWt <span class="op">=</span> <span class="bu">max</span>(mtcars[<span class="st">"wt"</span>])</span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co"># We get all unique values of weigh, sort them, and transform the numpy.array into a python list.</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>wtOptions <span class="op">=</span> <span class="bu">list</span>( np.sort(np.unique(mtcars.loc[mtcars[<span class="st">'cyl'</span>]<span class="op">==</span>cylList[<span class="dv">0</span>],<span class="st">'wt'</span>]))  )</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>wtOptions <span class="op">=</span> <span class="bu">list</span>(np.sort(np.unique(mtcars.loc[mtcars[<span class="st">"cyl"</span>] <span class="op">==</span> cylList[<span class="dv">0</span>], <span class="st">"wt"</span>])))</span>
 <span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>minHP <span class="op">=</span> <span class="bu">min</span>(mtcars[<span class="st">'hp'</span>])</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>maxHP <span class="op">=</span> <span class="bu">max</span>(mtcars[<span class="st">'hp'</span>])</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>minHP <span class="op">=</span> <span class="bu">min</span>(mtcars[<span class="st">"hp"</span>])</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>maxHP <span class="op">=</span> <span class="bu">max</span>(mtcars[<span class="st">"hp"</span>])</span>
 <span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>minMPG <span class="op">=</span> <span class="bu">min</span>(mtcars[<span class="st">'mpg'</span>])</span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>maxMPG <span class="op">=</span> <span class="bu">max</span>(mtcars[<span class="st">'mpg'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>minMPG <span class="op">=</span> <span class="bu">min</span>(mtcars[<span class="st">"mpg"</span>])</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>maxMPG <span class="op">=</span> <span class="bu">max</span>(mtcars[<span class="st">"mpg"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-11" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2018-08-07T06:04:09.540207Z&quot;,&quot;start_time&quot;:&quot;2018-08-07T06:04:09.246556Z&quot;}" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:50:14.136131Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:50:14.135153Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:50:14.458003Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:50:14.457218Z&quot;}" data-execution_count="6">
+<div id="cell-11" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2018-08-07T06:04:09.540207Z&quot;,&quot;start_time&quot;:&quot;2018-08-07T06:04:09.246556Z&quot;}" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:48:33.550789Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:48:33.550480Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:48:33.804591Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:48:33.803895Z&quot;}" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The first selection is a drop-down menu for number of cylinders</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>cylSelect <span class="op">=</span> widgets.Dropdown(</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    options<span class="op">=</span><span class="bu">list</span>(cylList),</span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    value<span class="op">=</span>cylList[<span class="dv">1</span>],</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    description<span class="op">=</span><span class="st">'Cylinders:'</span>,</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    description<span class="op">=</span><span class="st">"Cylinders:"</span>,</span>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    disabled<span class="op">=</span><span class="va">False</span>,</span>
 <span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
@@ -3310,56 +3312,57 @@ if (IPython.notebook.kernel !== null) {
 <span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> <span class="va">None</span></span>
 <span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>axs <span class="op">=</span> <span class="va">None</span></span>
 <span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="co"># This is the main function that is called to update the plot every time we chage a selection.</span></span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plotUpdate(<span class="op">*</span>args):</span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="co"># This is the main function that is called to update the plot every time we chage a selection.</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plotUpdate(<span class="op">*</span>args):</span>
 <span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Use global variables for matplotlib's figure and axis.</span></span>
 <span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>    <span class="kw">global</span> fig, axs</span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Get current values of the selection widget</span></span>
 <span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>    cylValue <span class="op">=</span> cylSelect.value</span>
-<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create a temporary dataset that is constrained by the user's selections.</span></span>
-<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>    tmpDat <span class="op">=</span> mtcars.loc[(mtcars[<span class="st">'cyl'</span>] <span class="op">==</span> cylValue),:]</span>
-<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>    tmpDat <span class="op">=</span> mtcars.loc[(mtcars[<span class="st">"cyl"</span>] <span class="op">==</span> cylValue), :]</span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create plotnine's plot</span></span>
-<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Using the maximum and minimum values we gatehred before, we can keep the plot axis from</span></span>
 <span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>    <span class="co"># changing with the cyinder selection</span></span>
-<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>    p <span class="op">=</span> (ggplot(tmpDat, aes(x<span class="op">=</span><span class="st">"hp"</span>, y<span class="op">=</span><span class="st">"mpg"</span>, color<span class="op">=</span><span class="st">"wt"</span>))</span>
-<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>         <span class="op">+</span> p9.geom_point()</span>
-<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>         <span class="op">+</span> p9.theme_linedraw()</span>
-<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>         <span class="op">+</span> p9.lims(x<span class="op">=</span>[minHP, maxHP], y<span class="op">=</span>[minMPG, maxMPG])</span>
-<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>         <span class="op">+</span> p9.scale_color_continuous(limits<span class="op">=</span>(minWt, maxWt))</span>
-<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> fig <span class="kw">is</span> <span class="va">None</span>:</span>
-<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a>        fig <span class="op">=</span> p.draw()</span>
-<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a>        axs <span class="op">=</span> fig.axes</span>
-<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
-<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a>        <span class="co">#p = copy(p)</span></span>
-<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> artist <span class="kw">in</span> get_current_artists():</span>
-<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a>            artist.remove()</span>
-<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a>        p._draw_using_figure(fig, axs)</span>
-<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a>cylSelect.observe(plotUpdate, <span class="st">'value'</span>)</span>
-<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the widgets</span></span>
-<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a>display(cylSelect)</span>
-<span id="cb7-53"><a href="#cb7-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a><span class="co"># Plots the first image, with inintial values.</span></span>
-<span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a>plotUpdate()</span>
-<span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-57"><a href="#cb7-57" aria-hidden="true" tabindex="-1"></a><span class="co"># Matplotlib function to make the image fit within the plot dimensions. </span></span>
-<span id="cb7-58"><a href="#cb7-58" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb7-59"><a href="#cb7-59" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-60"><a href="#cb7-60" aria-hidden="true" tabindex="-1"></a><span class="co"># Trick to get the first rendered image to follow the previous "tight_layout" command.</span></span>
-<span id="cb7-61"><a href="#cb7-61" aria-hidden="true" tabindex="-1"></a><span class="co"># without this, only after the first update would the figure be fit inside its dimensions.</span></span>
-<span id="cb7-62"><a href="#cb7-62" aria-hidden="true" tabindex="-1"></a>cylSelect.value <span class="op">=</span> cylList[<span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>    p <span class="op">=</span> (</span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>        ggplot(tmpDat, aes(x<span class="op">=</span><span class="st">"hp"</span>, y<span class="op">=</span><span class="st">"mpg"</span>, color<span class="op">=</span><span class="st">"wt"</span>))</span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>        <span class="op">+</span> p9.geom_point()</span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>        <span class="op">+</span> p9.theme_linedraw()</span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>        <span class="op">+</span> p9.lims(x<span class="op">=</span>[minHP, maxHP], y<span class="op">=</span>[minMPG, maxMPG])</span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>        <span class="op">+</span> p9.scale_color_continuous(limits<span class="op">=</span>(minWt, maxWt))</span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> fig <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a>        fig <span class="op">=</span> p.draw()</span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a>        axs <span class="op">=</span> fig.axes</span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a>        <span class="co"># p = copy(p)</span></span>
+<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> artist <span class="kw">in</span> get_current_artists():</span>
+<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a>            artist.remove()</span>
+<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a>        p._draw_using_figure(fig, axs)</span>
+<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a>cylSelect.observe(plotUpdate, <span class="st">"value"</span>)</span>
+<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the widgets</span></span>
+<span id="cb7-53"><a href="#cb7-53" aria-hidden="true" tabindex="-1"></a>display(cylSelect)</span>
+<span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a><span class="co"># Plots the first image, with inintial values.</span></span>
+<span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a>plotUpdate()</span>
+<span id="cb7-57"><a href="#cb7-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-58"><a href="#cb7-58" aria-hidden="true" tabindex="-1"></a><span class="co"># Matplotlib function to make the image fit within the plot dimensions.</span></span>
+<span id="cb7-59"><a href="#cb7-59" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb7-60"><a href="#cb7-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-61"><a href="#cb7-61" aria-hidden="true" tabindex="-1"></a><span class="co"># Trick to get the first rendered image to follow the previous "tight_layout" command.</span></span>
+<span id="cb7-62"><a href="#cb7-62" aria-hidden="true" tabindex="-1"></a><span class="co"># without this, only after the first update would the figure be fit inside its dimensions.</span></span>
+<span id="cb7-63"><a href="#cb7-63" aria-hidden="true" tabindex="-1"></a>cylSelect.value <span class="op">=</span> cylList[<span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"aa38b7c9764544c6980b6b20ece440e3","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+{"model_id":"0bc926264713481084e7d06d4cc7f546","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
 </script>
 </div>
 <div class="cell-output cell-output-display">
@@ -4342,99 +4345,105 @@ if (IPython.notebook.kernel !== null) {
 </script>
 </div>
 <div class="cell-output cell-output-display">
-<div id="9355bfd1-65be-4246-91e7-f0fd6c5601ce"></div>
+<div id="7c45db09-aeed-4426-b101-d3e20d8f5e73"></div>
 </div>
 </div>
 <p>Now we can make our selection more complicated by restricting the car data being visualized. Using a range slider we can restric data based on car weight.</p>
-<div id="cell-13" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2018-08-07T06:04:18.331250Z&quot;,&quot;start_time&quot;:&quot;2018-08-07T06:04:18.014435Z&quot;}" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:50:14.461795Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:50:14.461496Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:50:14.716545Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:50:14.715871Z&quot;}" data-execution_count="7">
+<div id="cell-13" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2018-08-07T06:04:18.331250Z&quot;,&quot;start_time&quot;:&quot;2018-08-07T06:04:18.014435Z&quot;}" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:48:33.807863Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:48:33.807597Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:48:34.091443Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:48:34.090735Z&quot;}" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The first selection is a drop-down menu for number of cylinders</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>cylSelect <span class="op">=</span> widgets.Dropdown(</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    options<span class="op">=</span><span class="bu">list</span>(cylList),</span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    value<span class="op">=</span>cylList[<span class="dv">1</span>],</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    description<span class="op">=</span><span class="st">'Cylinders:'</span>,</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    description<span class="op">=</span><span class="st">"Cylinders:"</span>,</span>
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    disabled<span class="op">=</span><span class="va">False</span>,</span>
 <span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co"># The second selection is a range of weights</span></span>
 <span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>wtSelect <span class="op">=</span> widgets.SelectionRangeSlider(</span>
 <span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    options<span class="op">=</span>wtOptions,</span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    index<span class="op">=</span>(<span class="dv">0</span>,<span class="bu">len</span>(wtOptions)<span class="op">-</span><span class="dv">1</span>),</span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>    description<span class="op">=</span><span class="st">'Weight'</span>,</span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>    disabled<span class="op">=</span><span class="va">False</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    index<span class="op">=</span>(<span class="dv">0</span>, <span class="bu">len</span>(wtOptions) <span class="op">-</span> <span class="dv">1</span>),</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>    description<span class="op">=</span><span class="st">"Weight"</span>,</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>    disabled<span class="op">=</span><span class="va">False</span>,</span>
 <span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>widgetsCtl <span class="op">=</span> widgets.HBox([cylSelect, wtSelect])</span>
 <span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="co"># The range of weights needs to always be dependent on the cylinder selection.</span></span>
-<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> updateRange(<span class="op">*</span>args):</span>
-<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>    <span class="co">'''Updates the selection range from the slider depending on the cylinder selection.'''</span></span>
-<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>    cylValue <span class="op">=</span> cylSelect.value</span>
-<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>    wtOptions <span class="op">=</span> <span class="bu">list</span>( np.sort(np.unique(mtcars.loc[mtcars[<span class="st">'cyl'</span>]<span class="op">==</span>cylValue,<span class="st">'wt'</span>]))  )</span>
-<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>    wtSelect.options <span class="op">=</span> wtOptions</span>
-<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>    wtSelect.index <span class="op">=</span> (<span class="dv">0</span>,<span class="bu">len</span>(wtOptions)<span class="op">-</span><span class="dv">1</span>)</span>
-<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>cylSelect.observe(updateRange,<span class="st">'value'</span>)</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a><span class="co"># The range of weights needs to always be dependent on the cylinder selection.</span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> updateRange(<span class="op">*</span>args):</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Updates the selection range from the slider depending on the cylinder selection."""</span></span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>    cylValue <span class="op">=</span> cylSelect.value</span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>    wtOptions <span class="op">=</span> <span class="bu">list</span>(np.sort(np.unique(mtcars.loc[mtcars[<span class="st">"cyl"</span>] <span class="op">==</span> cylValue, <span class="st">"wt"</span>])))</span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>    wtSelect.options <span class="op">=</span> wtOptions</span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>    wtSelect.index <span class="op">=</span> (<span class="dv">0</span>, <span class="bu">len</span>(wtOptions) <span class="op">-</span> <span class="dv">1</span>)</span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a><span class="co"># For the widgets to update the same plot, instead of creating one new image every time</span></span>
-<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a><span class="co"># a selection changes. We keep track of the matplotlib image and axis, so we create only one</span></span>
-<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a><span class="co"># figure and set of axis, for the first plot, and then just re-use the figure and axis</span></span>
-<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a><span class="co"># with plotnine's "_draw_using_figure" function.</span></span>
-<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> <span class="va">None</span></span>
-<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>axs <span class="op">=</span> <span class="va">None</span></span>
-<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a><span class="co"># This is the main function that is called to update the plot every time we chage a selection.</span></span>
-<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plotUpdate(<span class="op">*</span>args):</span>
-<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Use global variables for matplotlib's figure and axis.</span></span>
-<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a>    <span class="kw">global</span> fig, axs</span>
-<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Get current values of the selection widgets</span></span>
-<span id="cb8-45"><a href="#cb8-45" aria-hidden="true" tabindex="-1"></a>    cylValue <span class="op">=</span> cylSelect.value</span>
-<span id="cb8-46"><a href="#cb8-46" aria-hidden="true" tabindex="-1"></a>    wrRange <span class="op">=</span> wtSelect.value</span>
-<span id="cb8-47"><a href="#cb8-47" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb8-48"><a href="#cb8-48" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create a temporary dataset that is constrained by the user's selections.</span></span>
-<span id="cb8-49"><a href="#cb8-49" aria-hidden="true" tabindex="-1"></a>    tmpDat <span class="op">=</span> mtcars.loc[(mtcars[<span class="st">'cyl'</span>] <span class="op">==</span> cylValue) <span class="op">&amp;</span> <span class="op">\</span></span>
-<span id="cb8-50"><a href="#cb8-50" aria-hidden="true" tabindex="-1"></a>                        (mtcars[<span class="st">'wt'</span>] <span class="op">&gt;=</span> wrRange[<span class="dv">0</span>]) <span class="op">&amp;</span> <span class="op">\</span></span>
-<span id="cb8-51"><a href="#cb8-51" aria-hidden="true" tabindex="-1"></a>                        (mtcars[<span class="st">'wt'</span>] <span class="op">&lt;=</span> wrRange[<span class="dv">1</span>]),:]</span>
-<span id="cb8-52"><a href="#cb8-52" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb8-53"><a href="#cb8-53" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create plotnine's plot</span></span>
-<span id="cb8-54"><a href="#cb8-54" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb8-55"><a href="#cb8-55" aria-hidden="true" tabindex="-1"></a>    p <span class="op">=</span> (ggplot(tmpDat, aes(x<span class="op">=</span><span class="st">"hp"</span>, y<span class="op">=</span><span class="st">"mpg"</span>, color<span class="op">=</span><span class="st">"wt"</span>))</span>
-<span id="cb8-56"><a href="#cb8-56" aria-hidden="true" tabindex="-1"></a>         <span class="op">+</span> p9.geom_point()</span>
-<span id="cb8-57"><a href="#cb8-57" aria-hidden="true" tabindex="-1"></a>         <span class="op">+</span> p9.theme_linedraw()</span>
-<span id="cb8-58"><a href="#cb8-58" aria-hidden="true" tabindex="-1"></a>         <span class="op">+</span> p9.lims(x<span class="op">=</span>[minHP, maxHP], y<span class="op">=</span>[minMPG, maxMPG])</span>
-<span id="cb8-59"><a href="#cb8-59" aria-hidden="true" tabindex="-1"></a>         <span class="op">+</span> p9.scale_color_continuous(limits<span class="op">=</span>(minWt, maxWt))</span>
-<span id="cb8-60"><a href="#cb8-60" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb8-61"><a href="#cb8-61" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb8-62"><a href="#cb8-62" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> fig <span class="kw">is</span> <span class="va">None</span>:</span>
-<span id="cb8-63"><a href="#cb8-63" aria-hidden="true" tabindex="-1"></a>        fig <span class="op">=</span> p.draw()</span>
-<span id="cb8-64"><a href="#cb8-64" aria-hidden="true" tabindex="-1"></a>        axs <span class="op">=</span> fig.axes</span>
-<span id="cb8-65"><a href="#cb8-65" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
-<span id="cb8-66"><a href="#cb8-66" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> artist <span class="kw">in</span> get_current_artists():</span>
-<span id="cb8-67"><a href="#cb8-67" aria-hidden="true" tabindex="-1"></a>            artist.remove()</span>
-<span id="cb8-68"><a href="#cb8-68" aria-hidden="true" tabindex="-1"></a>        p._draw_using_figure(fig, axs)</span>
-<span id="cb8-69"><a href="#cb8-69" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb8-70"><a href="#cb8-70" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb8-71"><a href="#cb8-71" aria-hidden="true" tabindex="-1"></a>cylSelect.observe(plotUpdate, <span class="st">'value'</span>)</span>
-<span id="cb8-72"><a href="#cb8-72" aria-hidden="true" tabindex="-1"></a>wtSelect.observe(plotUpdate, <span class="st">'value'</span>)</span>
-<span id="cb8-73"><a href="#cb8-73" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-74"><a href="#cb8-74" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the widgets</span></span>
-<span id="cb8-75"><a href="#cb8-75" aria-hidden="true" tabindex="-1"></a>display(widgetsCtl)</span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>cylSelect.observe(updateRange, <span class="st">"value"</span>)</span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a><span class="co"># For the widgets to update the same plot, instead of creating one new image every time</span></span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a><span class="co"># a selection changes. We keep track of the matplotlib image and axis, so we create only one</span></span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a><span class="co"># figure and set of axis, for the first plot, and then just re-use the figure and axis</span></span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a><span class="co"># with plotnine's "_draw_using_figure" function.</span></span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a>axs <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a><span class="co"># This is the main function that is called to update the plot every time we chage a selection.</span></span>
+<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plotUpdate(<span class="op">*</span>args):</span>
+<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Use global variables for matplotlib's figure and axis.</span></span>
+<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a>    <span class="kw">global</span> fig, axs</span>
+<span id="cb8-45"><a href="#cb8-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-46"><a href="#cb8-46" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Get current values of the selection widgets</span></span>
+<span id="cb8-47"><a href="#cb8-47" aria-hidden="true" tabindex="-1"></a>    cylValue <span class="op">=</span> cylSelect.value</span>
+<span id="cb8-48"><a href="#cb8-48" aria-hidden="true" tabindex="-1"></a>    wrRange <span class="op">=</span> wtSelect.value</span>
+<span id="cb8-49"><a href="#cb8-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-50"><a href="#cb8-50" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create a temporary dataset that is constrained by the user's selections.</span></span>
+<span id="cb8-51"><a href="#cb8-51" aria-hidden="true" tabindex="-1"></a>    tmpDat <span class="op">=</span> mtcars.loc[</span>
+<span id="cb8-52"><a href="#cb8-52" aria-hidden="true" tabindex="-1"></a>        (mtcars[<span class="st">"cyl"</span>] <span class="op">==</span> cylValue)</span>
+<span id="cb8-53"><a href="#cb8-53" aria-hidden="true" tabindex="-1"></a>        <span class="op">&amp;</span> (mtcars[<span class="st">"wt"</span>] <span class="op">&gt;=</span> wrRange[<span class="dv">0</span>])</span>
+<span id="cb8-54"><a href="#cb8-54" aria-hidden="true" tabindex="-1"></a>        <span class="op">&amp;</span> (mtcars[<span class="st">"wt"</span>] <span class="op">&lt;=</span> wrRange[<span class="dv">1</span>]),</span>
+<span id="cb8-55"><a href="#cb8-55" aria-hidden="true" tabindex="-1"></a>        :,</span>
+<span id="cb8-56"><a href="#cb8-56" aria-hidden="true" tabindex="-1"></a>    ]</span>
+<span id="cb8-57"><a href="#cb8-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-58"><a href="#cb8-58" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create plotnine's plot</span></span>
+<span id="cb8-59"><a href="#cb8-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-60"><a href="#cb8-60" aria-hidden="true" tabindex="-1"></a>    p <span class="op">=</span> (</span>
+<span id="cb8-61"><a href="#cb8-61" aria-hidden="true" tabindex="-1"></a>        ggplot(tmpDat, aes(x<span class="op">=</span><span class="st">"hp"</span>, y<span class="op">=</span><span class="st">"mpg"</span>, color<span class="op">=</span><span class="st">"wt"</span>))</span>
+<span id="cb8-62"><a href="#cb8-62" aria-hidden="true" tabindex="-1"></a>        <span class="op">+</span> p9.geom_point()</span>
+<span id="cb8-63"><a href="#cb8-63" aria-hidden="true" tabindex="-1"></a>        <span class="op">+</span> p9.theme_linedraw()</span>
+<span id="cb8-64"><a href="#cb8-64" aria-hidden="true" tabindex="-1"></a>        <span class="op">+</span> p9.lims(x<span class="op">=</span>[minHP, maxHP], y<span class="op">=</span>[minMPG, maxMPG])</span>
+<span id="cb8-65"><a href="#cb8-65" aria-hidden="true" tabindex="-1"></a>        <span class="op">+</span> p9.scale_color_continuous(limits<span class="op">=</span>(minWt, maxWt))</span>
+<span id="cb8-66"><a href="#cb8-66" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb8-67"><a href="#cb8-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-68"><a href="#cb8-68" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> fig <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb8-69"><a href="#cb8-69" aria-hidden="true" tabindex="-1"></a>        fig <span class="op">=</span> p.draw()</span>
+<span id="cb8-70"><a href="#cb8-70" aria-hidden="true" tabindex="-1"></a>        axs <span class="op">=</span> fig.axes</span>
+<span id="cb8-71"><a href="#cb8-71" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb8-72"><a href="#cb8-72" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> artist <span class="kw">in</span> get_current_artists():</span>
+<span id="cb8-73"><a href="#cb8-73" aria-hidden="true" tabindex="-1"></a>            artist.remove()</span>
+<span id="cb8-74"><a href="#cb8-74" aria-hidden="true" tabindex="-1"></a>        p._draw_using_figure(fig, axs)</span>
+<span id="cb8-75"><a href="#cb8-75" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-76"><a href="#cb8-76" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-77"><a href="#cb8-77" aria-hidden="true" tabindex="-1"></a><span class="co"># Plots the first image, with inintial values.</span></span>
-<span id="cb8-78"><a href="#cb8-78" aria-hidden="true" tabindex="-1"></a>plotUpdate()</span>
+<span id="cb8-77"><a href="#cb8-77" aria-hidden="true" tabindex="-1"></a>cylSelect.observe(plotUpdate, <span class="st">"value"</span>)</span>
+<span id="cb8-78"><a href="#cb8-78" aria-hidden="true" tabindex="-1"></a>wtSelect.observe(plotUpdate, <span class="st">"value"</span>)</span>
 <span id="cb8-79"><a href="#cb8-79" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-80"><a href="#cb8-80" aria-hidden="true" tabindex="-1"></a><span class="co"># Matplotlib function to make the image fit within the plot dimensions. </span></span>
-<span id="cb8-81"><a href="#cb8-81" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb8-80"><a href="#cb8-80" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the widgets</span></span>
+<span id="cb8-81"><a href="#cb8-81" aria-hidden="true" tabindex="-1"></a>display(widgetsCtl)</span>
 <span id="cb8-82"><a href="#cb8-82" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-83"><a href="#cb8-83" aria-hidden="true" tabindex="-1"></a><span class="co"># Trick to get the first rendered image to follow the previous "tight_layout" command.</span></span>
-<span id="cb8-84"><a href="#cb8-84" aria-hidden="true" tabindex="-1"></a><span class="co"># without this, only after the first update would the figure be fit inside its dimensions.</span></span>
-<span id="cb8-85"><a href="#cb8-85" aria-hidden="true" tabindex="-1"></a>cylSelect.value <span class="op">=</span> cylList[<span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-83"><a href="#cb8-83" aria-hidden="true" tabindex="-1"></a><span class="co"># Plots the first image, with inintial values.</span></span>
+<span id="cb8-84"><a href="#cb8-84" aria-hidden="true" tabindex="-1"></a>plotUpdate()</span>
+<span id="cb8-85"><a href="#cb8-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-86"><a href="#cb8-86" aria-hidden="true" tabindex="-1"></a><span class="co"># Matplotlib function to make the image fit within the plot dimensions.</span></span>
+<span id="cb8-87"><a href="#cb8-87" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb8-88"><a href="#cb8-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-89"><a href="#cb8-89" aria-hidden="true" tabindex="-1"></a><span class="co"># Trick to get the first rendered image to follow the previous "tight_layout" command.</span></span>
+<span id="cb8-90"><a href="#cb8-90" aria-hidden="true" tabindex="-1"></a><span class="co"># without this, only after the first update would the figure be fit inside its dimensions.</span></span>
+<span id="cb8-91"><a href="#cb8-91" aria-hidden="true" tabindex="-1"></a>cylSelect.value <span class="op">=</span> cylList[<span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"48a9e93350594b5bb398117e8f0f39df","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+{"model_id":"18cc23d0c36f46f0a489ed82de1ba5d2","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
 </script>
 </div>
 <div class="cell-output cell-output-display">
@@ -5417,99 +5426,107 @@ if (IPython.notebook.kernel !== null) {
 </script>
 </div>
 <div class="cell-output cell-output-display">
-<div id="7a723448-1314-4c56-acf0-a634876c713a"></div>
+<div id="d5393b3f-f502-4457-9d92-7d88cb25a86a"></div>
 </div>
 </div>
 <p>Finally, we can change some plot properties to make the final figure more understandable.</p>
-<div id="cell-15" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2018-08-07T06:08:12.849996Z&quot;,&quot;start_time&quot;:&quot;2018-08-07T06:08:12.464588Z&quot;}" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:50:14.725239Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:50:14.724921Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:50:15.180507Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:50:15.179674Z&quot;}" data-execution_count="8">
+<div id="cell-15" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2018-08-07T06:08:12.849996Z&quot;,&quot;start_time&quot;:&quot;2018-08-07T06:08:12.464588Z&quot;}" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:48:34.097991Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:48:34.096670Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:48:34.543077Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:48:34.542115Z&quot;}" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The first selection is a drop-down menu for number of cylinders</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>cylSelect <span class="op">=</span> widgets.Dropdown(</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    options<span class="op">=</span><span class="bu">list</span>(cylList),</span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    value<span class="op">=</span>cylList[<span class="dv">1</span>],</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    description<span class="op">=</span><span class="st">'Cylinders:'</span>,</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    description<span class="op">=</span><span class="st">"Cylinders:"</span>,</span>
 <span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    disabled<span class="op">=</span><span class="va">False</span>,</span>
 <span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="co"># The second selection is a range of weights</span></span>
 <span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>wtSelect <span class="op">=</span> widgets.SelectionRangeSlider(</span>
 <span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    options<span class="op">=</span>wtOptions,</span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    index<span class="op">=</span>(<span class="dv">0</span>,<span class="bu">len</span>(wtOptions)<span class="op">-</span><span class="dv">1</span>),</span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>    description<span class="op">=</span><span class="st">'Weight'</span>,</span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>    disabled<span class="op">=</span><span class="va">False</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    index<span class="op">=</span>(<span class="dv">0</span>, <span class="bu">len</span>(wtOptions) <span class="op">-</span> <span class="dv">1</span>),</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>    description<span class="op">=</span><span class="st">"Weight"</span>,</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>    disabled<span class="op">=</span><span class="va">False</span>,</span>
 <span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>widgetsCtl <span class="op">=</span> widgets.HBox([cylSelect, wtSelect])</span>
 <span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a><span class="co"># The range of weights needs to always be dependent on the cylinder selection.</span></span>
-<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> updateRange(<span class="op">*</span>args):</span>
-<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>    <span class="co">'''Updates the selection range from the slider depending on the cylinder selection.'''</span></span>
-<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>    cylValue <span class="op">=</span> cylSelect.value</span>
-<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>    wtOptions <span class="op">=</span> <span class="bu">list</span>( np.sort(np.unique(mtcars.loc[mtcars[<span class="st">'cyl'</span>]<span class="op">==</span>cylValue,<span class="st">'wt'</span>]))  )</span>
-<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>    wtSelect.options <span class="op">=</span> wtOptions</span>
-<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>    wtSelect.index <span class="op">=</span> (<span class="dv">0</span>,<span class="bu">len</span>(wtOptions)<span class="op">-</span><span class="dv">1</span>)</span>
-<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>cylSelect.observe(updateRange,<span class="st">'value'</span>)</span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a><span class="co"># The range of weights needs to always be dependent on the cylinder selection.</span></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> updateRange(<span class="op">*</span>args):</span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Updates the selection range from the slider depending on the cylinder selection."""</span></span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>    cylValue <span class="op">=</span> cylSelect.value</span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>    wtOptions <span class="op">=</span> <span class="bu">list</span>(np.sort(np.unique(mtcars.loc[mtcars[<span class="st">"cyl"</span>] <span class="op">==</span> cylValue, <span class="st">"wt"</span>])))</span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>    wtSelect.options <span class="op">=</span> wtOptions</span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>    wtSelect.index <span class="op">=</span> (<span class="dv">0</span>, <span class="bu">len</span>(wtOptions) <span class="op">-</span> <span class="dv">1</span>)</span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> <span class="va">None</span></span>
-<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a>axs <span class="op">=</span> <span class="va">None</span></span>
-<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a><span class="co"># This is the main function that is called to update the plot every time we chage a selection.</span></span>
-<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plotUpdate(<span class="op">*</span>args):</span>
-<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Use global variables for matplotlib's figure and axis.</span></span>
-<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a>    <span class="kw">global</span> fig, axs</span>
-<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Get current values of the selection widgets</span></span>
-<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a>    cylValue <span class="op">=</span> cylSelect.value</span>
-<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a>    wrRange <span class="op">=</span> wtSelect.value</span>
-<span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb9-44"><a href="#cb9-44" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create a temporary dataset that is constrained by the user's selections of</span></span>
-<span id="cb9-45"><a href="#cb9-45" aria-hidden="true" tabindex="-1"></a>    <span class="co"># number of cylinders and weight.</span></span>
-<span id="cb9-46"><a href="#cb9-46" aria-hidden="true" tabindex="-1"></a>    tmpDat <span class="op">=</span> mtcars.loc[(mtcars[<span class="st">'cyl'</span>] <span class="op">==</span> cylValue) <span class="op">&amp;</span> <span class="op">\</span></span>
-<span id="cb9-47"><a href="#cb9-47" aria-hidden="true" tabindex="-1"></a>                        (mtcars[<span class="st">'wt'</span>] <span class="op">&gt;=</span> wrRange[<span class="dv">0</span>]) <span class="op">&amp;</span> <span class="op">\</span></span>
-<span id="cb9-48"><a href="#cb9-48" aria-hidden="true" tabindex="-1"></a>                        (mtcars[<span class="st">'wt'</span>] <span class="op">&lt;=</span> wrRange[<span class="dv">1</span>]),:]</span>
-<span id="cb9-49"><a href="#cb9-49" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb9-50"><a href="#cb9-50" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create plotnine's plot showing all data ins smaller grey points, and </span></span>
-<span id="cb9-51"><a href="#cb9-51" aria-hidden="true" tabindex="-1"></a>    <span class="co"># the selected data with coloured points.</span></span>
-<span id="cb9-52"><a href="#cb9-52" aria-hidden="true" tabindex="-1"></a>    p <span class="op">=</span> (ggplot(tmpDat, aes(x<span class="op">=</span><span class="st">"hp"</span>, y<span class="op">=</span><span class="st">"mpg"</span>, color<span class="op">=</span><span class="st">"wt"</span>) )</span>
-<span id="cb9-53"><a href="#cb9-53" aria-hidden="true" tabindex="-1"></a>         <span class="op">+</span> p9.geom_point(mtcars, color<span class="op">=</span><span class="st">"grey"</span>)</span>
-<span id="cb9-54"><a href="#cb9-54" aria-hidden="true" tabindex="-1"></a>         <span class="op">+</span> p9.geom_point(size<span class="op">=</span><span class="dv">3</span>)</span>
-<span id="cb9-55"><a href="#cb9-55" aria-hidden="true" tabindex="-1"></a>         <span class="op">+</span> p9.theme_linedraw()</span>
-<span id="cb9-56"><a href="#cb9-56" aria-hidden="true" tabindex="-1"></a>         <span class="op">+</span> p9.xlim([minHP, maxHP])</span>
-<span id="cb9-57"><a href="#cb9-57" aria-hidden="true" tabindex="-1"></a>         <span class="op">+</span> p9.ylim([minMPG, maxMPG])</span>
-<span id="cb9-58"><a href="#cb9-58" aria-hidden="true" tabindex="-1"></a>         <span class="op">+</span> p9.scale_color_continuous(name<span class="op">=</span><span class="st">"spring"</span>,limits<span class="op">=</span>(np.floor(minWt), np.ceil(maxWt)))</span>
-<span id="cb9-59"><a href="#cb9-59" aria-hidden="true" tabindex="-1"></a>         <span class="op">+</span> p9.labs(x <span class="op">=</span> <span class="st">"Horse-Power"</span>, y<span class="op">=</span><span class="st">"Miles Per Gallon"</span>, color<span class="op">=</span><span class="st">"Weight"</span> )</span>
-<span id="cb9-60"><a href="#cb9-60" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb9-61"><a href="#cb9-61" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb9-62"><a href="#cb9-62" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> fig <span class="kw">is</span> <span class="va">None</span>:</span>
-<span id="cb9-63"><a href="#cb9-63" aria-hidden="true" tabindex="-1"></a>        fig <span class="op">=</span> p.draw()</span>
-<span id="cb9-64"><a href="#cb9-64" aria-hidden="true" tabindex="-1"></a>        axs <span class="op">=</span> fig.axes</span>
-<span id="cb9-65"><a href="#cb9-65" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
-<span id="cb9-66"><a href="#cb9-66" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> artist <span class="kw">in</span> get_current_artists():</span>
-<span id="cb9-67"><a href="#cb9-67" aria-hidden="true" tabindex="-1"></a>            artist.remove()</span>
-<span id="cb9-68"><a href="#cb9-68" aria-hidden="true" tabindex="-1"></a>        p._draw_using_figure(fig, axs)</span>
-<span id="cb9-69"><a href="#cb9-69" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb9-70"><a href="#cb9-70" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb9-71"><a href="#cb9-71" aria-hidden="true" tabindex="-1"></a>cylSelect.observe(plotUpdate, <span class="st">'value'</span>)</span>
-<span id="cb9-72"><a href="#cb9-72" aria-hidden="true" tabindex="-1"></a>wtSelect.observe(plotUpdate, <span class="st">'value'</span>)</span>
-<span id="cb9-73"><a href="#cb9-73" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-74"><a href="#cb9-74" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the widgets</span></span>
-<span id="cb9-75"><a href="#cb9-75" aria-hidden="true" tabindex="-1"></a>display(widgetsCtl)</span>
-<span id="cb9-76"><a href="#cb9-76" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-77"><a href="#cb9-77" aria-hidden="true" tabindex="-1"></a><span class="co"># Plots the first image, with inintial values.</span></span>
-<span id="cb9-78"><a href="#cb9-78" aria-hidden="true" tabindex="-1"></a>plotUpdate()</span>
-<span id="cb9-79"><a href="#cb9-79" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-80"><a href="#cb9-80" aria-hidden="true" tabindex="-1"></a><span class="co"># Matplotlib function to make the image fit within the plot dimensions. </span></span>
-<span id="cb9-81"><a href="#cb9-81" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb9-82"><a href="#cb9-82" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-83"><a href="#cb9-83" aria-hidden="true" tabindex="-1"></a><span class="co"># Trick to get the first rendered image to follow the previous "tight_layout" command.</span></span>
-<span id="cb9-84"><a href="#cb9-84" aria-hidden="true" tabindex="-1"></a><span class="co"># without this, only after the first update would the figure be fit inside its dimensions.</span></span>
-<span id="cb9-85"><a href="#cb9-85" aria-hidden="true" tabindex="-1"></a>cylSelect.value <span class="op">=</span> cylList[<span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a>cylSelect.observe(updateRange, <span class="st">"value"</span>)</span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a>axs <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a><span class="co"># This is the main function that is called to update the plot every time we chage a selection.</span></span>
+<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plotUpdate(<span class="op">*</span>args):</span>
+<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Use global variables for matplotlib's figure and axis.</span></span>
+<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a>    <span class="kw">global</span> fig, axs</span>
+<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Get current values of the selection widgets</span></span>
+<span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a>    cylValue <span class="op">=</span> cylSelect.value</span>
+<span id="cb9-44"><a href="#cb9-44" aria-hidden="true" tabindex="-1"></a>    wrRange <span class="op">=</span> wtSelect.value</span>
+<span id="cb9-45"><a href="#cb9-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-46"><a href="#cb9-46" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create a temporary dataset that is constrained by the user's selections of</span></span>
+<span id="cb9-47"><a href="#cb9-47" aria-hidden="true" tabindex="-1"></a>    <span class="co"># number of cylinders and weight.</span></span>
+<span id="cb9-48"><a href="#cb9-48" aria-hidden="true" tabindex="-1"></a>    tmpDat <span class="op">=</span> mtcars.loc[</span>
+<span id="cb9-49"><a href="#cb9-49" aria-hidden="true" tabindex="-1"></a>        (mtcars[<span class="st">"cyl"</span>] <span class="op">==</span> cylValue)</span>
+<span id="cb9-50"><a href="#cb9-50" aria-hidden="true" tabindex="-1"></a>        <span class="op">&amp;</span> (mtcars[<span class="st">"wt"</span>] <span class="op">&gt;=</span> wrRange[<span class="dv">0</span>])</span>
+<span id="cb9-51"><a href="#cb9-51" aria-hidden="true" tabindex="-1"></a>        <span class="op">&amp;</span> (mtcars[<span class="st">"wt"</span>] <span class="op">&lt;=</span> wrRange[<span class="dv">1</span>]),</span>
+<span id="cb9-52"><a href="#cb9-52" aria-hidden="true" tabindex="-1"></a>        :,</span>
+<span id="cb9-53"><a href="#cb9-53" aria-hidden="true" tabindex="-1"></a>    ]</span>
+<span id="cb9-54"><a href="#cb9-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-55"><a href="#cb9-55" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create plotnine's plot showing all data ins smaller grey points, and</span></span>
+<span id="cb9-56"><a href="#cb9-56" aria-hidden="true" tabindex="-1"></a>    <span class="co"># the selected data with coloured points.</span></span>
+<span id="cb9-57"><a href="#cb9-57" aria-hidden="true" tabindex="-1"></a>    p <span class="op">=</span> (</span>
+<span id="cb9-58"><a href="#cb9-58" aria-hidden="true" tabindex="-1"></a>        ggplot(tmpDat, aes(x<span class="op">=</span><span class="st">"hp"</span>, y<span class="op">=</span><span class="st">"mpg"</span>, color<span class="op">=</span><span class="st">"wt"</span>))</span>
+<span id="cb9-59"><a href="#cb9-59" aria-hidden="true" tabindex="-1"></a>        <span class="op">+</span> p9.geom_point(mtcars, color<span class="op">=</span><span class="st">"grey"</span>)</span>
+<span id="cb9-60"><a href="#cb9-60" aria-hidden="true" tabindex="-1"></a>        <span class="op">+</span> p9.geom_point(size<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb9-61"><a href="#cb9-61" aria-hidden="true" tabindex="-1"></a>        <span class="op">+</span> p9.theme_linedraw()</span>
+<span id="cb9-62"><a href="#cb9-62" aria-hidden="true" tabindex="-1"></a>        <span class="op">+</span> p9.xlim([minHP, maxHP])</span>
+<span id="cb9-63"><a href="#cb9-63" aria-hidden="true" tabindex="-1"></a>        <span class="op">+</span> p9.ylim([minMPG, maxMPG])</span>
+<span id="cb9-64"><a href="#cb9-64" aria-hidden="true" tabindex="-1"></a>        <span class="op">+</span> p9.scale_color_continuous(</span>
+<span id="cb9-65"><a href="#cb9-65" aria-hidden="true" tabindex="-1"></a>            name<span class="op">=</span><span class="st">"spring"</span>, limits<span class="op">=</span>(np.floor(minWt), np.ceil(maxWt))</span>
+<span id="cb9-66"><a href="#cb9-66" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb9-67"><a href="#cb9-67" aria-hidden="true" tabindex="-1"></a>        <span class="op">+</span> p9.labs(x<span class="op">=</span><span class="st">"Horse-Power"</span>, y<span class="op">=</span><span class="st">"Miles Per Gallon"</span>, color<span class="op">=</span><span class="st">"Weight"</span>)</span>
+<span id="cb9-68"><a href="#cb9-68" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb9-69"><a href="#cb9-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-70"><a href="#cb9-70" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> fig <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb9-71"><a href="#cb9-71" aria-hidden="true" tabindex="-1"></a>        fig <span class="op">=</span> p.draw()</span>
+<span id="cb9-72"><a href="#cb9-72" aria-hidden="true" tabindex="-1"></a>        axs <span class="op">=</span> fig.axes</span>
+<span id="cb9-73"><a href="#cb9-73" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb9-74"><a href="#cb9-74" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> artist <span class="kw">in</span> get_current_artists():</span>
+<span id="cb9-75"><a href="#cb9-75" aria-hidden="true" tabindex="-1"></a>            artist.remove()</span>
+<span id="cb9-76"><a href="#cb9-76" aria-hidden="true" tabindex="-1"></a>        p._draw_using_figure(fig, axs)</span>
+<span id="cb9-77"><a href="#cb9-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-78"><a href="#cb9-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-79"><a href="#cb9-79" aria-hidden="true" tabindex="-1"></a>cylSelect.observe(plotUpdate, <span class="st">"value"</span>)</span>
+<span id="cb9-80"><a href="#cb9-80" aria-hidden="true" tabindex="-1"></a>wtSelect.observe(plotUpdate, <span class="st">"value"</span>)</span>
+<span id="cb9-81"><a href="#cb9-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-82"><a href="#cb9-82" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the widgets</span></span>
+<span id="cb9-83"><a href="#cb9-83" aria-hidden="true" tabindex="-1"></a>display(widgetsCtl)</span>
+<span id="cb9-84"><a href="#cb9-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-85"><a href="#cb9-85" aria-hidden="true" tabindex="-1"></a><span class="co"># Plots the first image, with inintial values.</span></span>
+<span id="cb9-86"><a href="#cb9-86" aria-hidden="true" tabindex="-1"></a>plotUpdate()</span>
+<span id="cb9-87"><a href="#cb9-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-88"><a href="#cb9-88" aria-hidden="true" tabindex="-1"></a><span class="co"># Matplotlib function to make the image fit within the plot dimensions.</span></span>
+<span id="cb9-89"><a href="#cb9-89" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb9-90"><a href="#cb9-90" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-91"><a href="#cb9-91" aria-hidden="true" tabindex="-1"></a><span class="co"># Trick to get the first rendered image to follow the previous "tight_layout" command.</span></span>
+<span id="cb9-92"><a href="#cb9-92" aria-hidden="true" tabindex="-1"></a><span class="co"># without this, only after the first update would the figure be fit inside its dimensions.</span></span>
+<span id="cb9-93"><a href="#cb9-93" aria-hidden="true" tabindex="-1"></a>cylSelect.value <span class="op">=</span> cylList[<span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"2a0d3433c67340e7981f268f839fb894","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+{"model_id":"a2441563e2bb4594b8ccbda9348612b1","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
 </script>
 </div>
 <div class="cell-output cell-output-display">
@@ -6492,7 +6509,7 @@ if (IPython.notebook.kernel !== null) {
 </script>
 </div>
 <div class="cell-output cell-output-display">
-<div id="41bf1533-d2b3-4271-8c26-8d167d39c683"></div>
+<div id="6a702012-417d-4535-a5d5-6eeafdd1d46f"></div>
 </div>
 </div>
 
@@ -6501,7 +6518,7 @@ if (IPython.notebook.kernel !== null) {
 
 </main> <!-- /main -->
 <script type="application/vnd.jupyter.widget-state+json">
-{"state":{"034ca9cd90c144948870004956968b5f":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"SliderStyleModel","state":{"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"SliderStyleModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"StyleView","description_width":"","handle_color":null}},"0f8dfd811614441085a5663fbf0e3d09":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"SelectionRangeSliderModel","state":{"_dom_classes":[],"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"SelectionRangeSliderModel","_options_labels":["1.513","1.615","1.835","1.935","2.14","2.2","2.32","2.465","2.78","3.15","3.19"],"_view_count":null,"_view_module":"@jupyter-widgets/controls","_view_module_version":"2.0.0","_view_name":"SelectionRangeSliderView","behavior":"drag-tap","continuous_update":true,"description":"Weight","description_allow_html":false,"disabled":false,"index":[0,10],"layout":"IPY_MODEL_a7b8cd8b16e446b99d3feba6f6630f8a","orientation":"horizontal","readout":true,"style":"IPY_MODEL_034ca9cd90c144948870004956968b5f","tabbable":null,"tooltip":null}},"14aee828a0ad438f8a6c49e4b9ab8c72":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"SelectionRangeSliderModel","state":{"_dom_classes":[],"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"SelectionRangeSliderModel","_options_labels":["1.513","1.615","1.835","1.935","2.14","2.2","2.32","2.465","2.78","3.15","3.19"],"_view_count":null,"_view_module":"@jupyter-widgets/controls","_view_module_version":"2.0.0","_view_name":"SelectionRangeSliderView","behavior":"drag-tap","continuous_update":true,"description":"Weight","description_allow_html":false,"disabled":false,"index":[0,10],"layout":"IPY_MODEL_b6af09a03bd9469aba832f2184eb72af","orientation":"horizontal","readout":true,"style":"IPY_MODEL_7e3f42613e554705b3091e10d515db0a","tabbable":null,"tooltip":null}},"19304125642e48f384c9206adc112aef":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"DropdownModel","state":{"_dom_classes":[],"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"DropdownModel","_options_labels":["4","6","8"],"_view_count":null,"_view_module":"@jupyter-widgets/controls","_view_module_version":"2.0.0","_view_name":"DropdownView","description":"Cylinders:","description_allow_html":false,"disabled":false,"index":0,"layout":"IPY_MODEL_58291c4b7e03486a8423c4cefe8a8cfb","style":"IPY_MODEL_86dfe7979b64443eb3bf63b04e8f5d7b","tabbable":null,"tooltip":null}},"1c965bdfcacf46f4b712f3a1bc1c79b1":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"DropdownModel","state":{"_dom_classes":[],"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"DropdownModel","_options_labels":["4","6","8"],"_view_count":null,"_view_module":"@jupyter-widgets/controls","_view_module_version":"2.0.0","_view_name":"DropdownView","description":"Cylinders:","description_allow_html":false,"disabled":false,"index":0,"layout":"IPY_MODEL_e1aaee6b435549ebae67c81d67dee605","style":"IPY_MODEL_6dac8eff3439473892dab4f780cecf36","tabbable":null,"tooltip":null}},"2a0d3433c67340e7981f268f839fb894":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"HBoxModel","state":{"_dom_classes":[],"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"HBoxModel","_view_count":null,"_view_module":"@jupyter-widgets/controls","_view_module_version":"2.0.0","_view_name":"HBoxView","box_style":"","children":["IPY_MODEL_6106ee1784e64cebb7efae2e1bea6783","IPY_MODEL_0f8dfd811614441085a5663fbf0e3d09"],"layout":"IPY_MODEL_33cd3af06a0b4ccf98847aaeedffe588","tabbable":null,"tooltip":null}},"33cd3af06a0b4ccf98847aaeedffe588":{"model_module":"@jupyter-widgets/base","model_module_version":"2.0.0","model_name":"LayoutModel","state":{"_model_module":"@jupyter-widgets/base","_model_module_version":"2.0.0","_model_name":"LayoutModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"LayoutView","align_content":null,"align_items":null,"align_self":null,"border_bottom":null,"border_left":null,"border_right":null,"border_top":null,"bottom":null,"display":null,"flex":null,"flex_flow":null,"grid_area":null,"grid_auto_columns":null,"grid_auto_flow":null,"grid_auto_rows":null,"grid_column":null,"grid_gap":null,"grid_row":null,"grid_template_areas":null,"grid_template_columns":null,"grid_template_rows":null,"height":null,"justify_content":null,"justify_items":null,"left":null,"margin":null,"max_height":null,"max_width":null,"min_height":null,"min_width":null,"object_fit":null,"object_position":null,"order":null,"overflow":null,"padding":null,"right":null,"top":null,"visibility":null,"width":null}},"419305804935475cbd03735c744f38a0":{"model_module":"@jupyter-widgets/base","model_module_version":"2.0.0","model_name":"LayoutModel","state":{"_model_module":"@jupyter-widgets/base","_model_module_version":"2.0.0","_model_name":"LayoutModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"LayoutView","align_content":null,"align_items":null,"align_self":null,"border_bottom":null,"border_left":null,"border_right":null,"border_top":null,"bottom":null,"display":null,"flex":null,"flex_flow":null,"grid_area":null,"grid_auto_columns":null,"grid_auto_flow":null,"grid_auto_rows":null,"grid_column":null,"grid_gap":null,"grid_row":null,"grid_template_areas":null,"grid_template_columns":null,"grid_template_rows":null,"height":null,"justify_content":null,"justify_items":null,"left":null,"margin":null,"max_height":null,"max_width":null,"min_height":null,"min_width":null,"object_fit":null,"object_position":null,"order":null,"overflow":null,"padding":null,"right":null,"top":null,"visibility":null,"width":null}},"48a9e93350594b5bb398117e8f0f39df":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"HBoxModel","state":{"_dom_classes":[],"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"HBoxModel","_view_count":null,"_view_module":"@jupyter-widgets/controls","_view_module_version":"2.0.0","_view_name":"HBoxView","box_style":"","children":["IPY_MODEL_1c965bdfcacf46f4b712f3a1bc1c79b1","IPY_MODEL_14aee828a0ad438f8a6c49e4b9ab8c72"],"layout":"IPY_MODEL_db21524e981249e5858fe6002da6ab47","tabbable":null,"tooltip":null}},"58291c4b7e03486a8423c4cefe8a8cfb":{"model_module":"@jupyter-widgets/base","model_module_version":"2.0.0","model_name":"LayoutModel","state":{"_model_module":"@jupyter-widgets/base","_model_module_version":"2.0.0","_model_name":"LayoutModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"LayoutView","align_content":null,"align_items":null,"align_self":null,"border_bottom":null,"border_left":null,"border_right":null,"border_top":null,"bottom":null,"display":null,"flex":null,"flex_flow":null,"grid_area":null,"grid_auto_columns":null,"grid_auto_flow":null,"grid_auto_rows":null,"grid_column":null,"grid_gap":null,"grid_row":null,"grid_template_areas":null,"grid_template_columns":null,"grid_template_rows":null,"height":null,"justify_content":null,"justify_items":null,"left":null,"margin":null,"max_height":null,"max_width":null,"min_height":null,"min_width":null,"object_fit":null,"object_position":null,"order":null,"overflow":null,"padding":null,"right":null,"top":null,"visibility":null,"width":null}},"6106ee1784e64cebb7efae2e1bea6783":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"DropdownModel","state":{"_dom_classes":[],"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"DropdownModel","_options_labels":["4","6","8"],"_view_count":null,"_view_module":"@jupyter-widgets/controls","_view_module_version":"2.0.0","_view_name":"DropdownView","description":"Cylinders:","description_allow_html":false,"disabled":false,"index":0,"layout":"IPY_MODEL_419305804935475cbd03735c744f38a0","style":"IPY_MODEL_6383e94b56924d078b804c905b3e392f","tabbable":null,"tooltip":null}},"6383e94b56924d078b804c905b3e392f":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"DescriptionStyleModel","state":{"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"DescriptionStyleModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"StyleView","description_width":""}},"6dac8eff3439473892dab4f780cecf36":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"DescriptionStyleModel","state":{"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"DescriptionStyleModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"StyleView","description_width":""}},"7e3f42613e554705b3091e10d515db0a":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"SliderStyleModel","state":{"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"SliderStyleModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"StyleView","description_width":"","handle_color":null}},"86dfe7979b64443eb3bf63b04e8f5d7b":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"DescriptionStyleModel","state":{"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"DescriptionStyleModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"StyleView","description_width":""}},"889437d66c024ee0bebfb086c845cf21":{"model_module":"@jupyter-widgets/base","model_module_version":"2.0.0","model_name":"LayoutModel","state":{"_model_module":"@jupyter-widgets/base","_model_module_version":"2.0.0","_model_name":"LayoutModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"LayoutView","align_content":null,"align_items":null,"align_self":null,"border_bottom":null,"border_left":null,"border_right":null,"border_top":null,"bottom":null,"display":null,"flex":null,"flex_flow":null,"grid_area":null,"grid_auto_columns":null,"grid_auto_flow":null,"grid_auto_rows":null,"grid_column":null,"grid_gap":null,"grid_row":null,"grid_template_areas":null,"grid_template_columns":null,"grid_template_rows":null,"height":null,"justify_content":null,"justify_items":null,"left":null,"margin":null,"max_height":null,"max_width":null,"min_height":null,"min_width":null,"object_fit":null,"object_position":null,"order":null,"overflow":null,"padding":null,"right":null,"top":null,"visibility":null,"width":null}},"a7b8cd8b16e446b99d3feba6f6630f8a":{"model_module":"@jupyter-widgets/base","model_module_version":"2.0.0","model_name":"LayoutModel","state":{"_model_module":"@jupyter-widgets/base","_model_module_version":"2.0.0","_model_name":"LayoutModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"LayoutView","align_content":null,"align_items":null,"align_self":null,"border_bottom":null,"border_left":null,"border_right":null,"border_top":null,"bottom":null,"display":null,"flex":null,"flex_flow":null,"grid_area":null,"grid_auto_columns":null,"grid_auto_flow":null,"grid_auto_rows":null,"grid_column":null,"grid_gap":null,"grid_row":null,"grid_template_areas":null,"grid_template_columns":null,"grid_template_rows":null,"height":null,"justify_content":null,"justify_items":null,"left":null,"margin":null,"max_height":null,"max_width":null,"min_height":null,"min_width":null,"object_fit":null,"object_position":null,"order":null,"overflow":null,"padding":null,"right":null,"top":null,"visibility":null,"width":null}},"aa38b7c9764544c6980b6b20ece440e3":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"DropdownModel","state":{"_dom_classes":[],"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"DropdownModel","_options_labels":["4","6","8"],"_view_count":null,"_view_module":"@jupyter-widgets/controls","_view_module_version":"2.0.0","_view_name":"DropdownView","description":"Cylinders:","description_allow_html":false,"disabled":false,"index":0,"layout":"IPY_MODEL_889437d66c024ee0bebfb086c845cf21","style":"IPY_MODEL_eed71056608e4a5497f257c44437240d","tabbable":null,"tooltip":null}},"b6af09a03bd9469aba832f2184eb72af":{"model_module":"@jupyter-widgets/base","model_module_version":"2.0.0","model_name":"LayoutModel","state":{"_model_module":"@jupyter-widgets/base","_model_module_version":"2.0.0","_model_name":"LayoutModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"LayoutView","align_content":null,"align_items":null,"align_self":null,"border_bottom":null,"border_left":null,"border_right":null,"border_top":null,"bottom":null,"display":null,"flex":null,"flex_flow":null,"grid_area":null,"grid_auto_columns":null,"grid_auto_flow":null,"grid_auto_rows":null,"grid_column":null,"grid_gap":null,"grid_row":null,"grid_template_areas":null,"grid_template_columns":null,"grid_template_rows":null,"height":null,"justify_content":null,"justify_items":null,"left":null,"margin":null,"max_height":null,"max_width":null,"min_height":null,"min_width":null,"object_fit":null,"object_position":null,"order":null,"overflow":null,"padding":null,"right":null,"top":null,"visibility":null,"width":null}},"db21524e981249e5858fe6002da6ab47":{"model_module":"@jupyter-widgets/base","model_module_version":"2.0.0","model_name":"LayoutModel","state":{"_model_module":"@jupyter-widgets/base","_model_module_version":"2.0.0","_model_name":"LayoutModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"LayoutView","align_content":null,"align_items":null,"align_self":null,"border_bottom":null,"border_left":null,"border_right":null,"border_top":null,"bottom":null,"display":null,"flex":null,"flex_flow":null,"grid_area":null,"grid_auto_columns":null,"grid_auto_flow":null,"grid_auto_rows":null,"grid_column":null,"grid_gap":null,"grid_row":null,"grid_template_areas":null,"grid_template_columns":null,"grid_template_rows":null,"height":null,"justify_content":null,"justify_items":null,"left":null,"margin":null,"max_height":null,"max_width":null,"min_height":null,"min_width":null,"object_fit":null,"object_position":null,"order":null,"overflow":null,"padding":null,"right":null,"top":null,"visibility":null,"width":null}},"e1aaee6b435549ebae67c81d67dee605":{"model_module":"@jupyter-widgets/base","model_module_version":"2.0.0","model_name":"LayoutModel","state":{"_model_module":"@jupyter-widgets/base","_model_module_version":"2.0.0","_model_name":"LayoutModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"LayoutView","align_content":null,"align_items":null,"align_self":null,"border_bottom":null,"border_left":null,"border_right":null,"border_top":null,"bottom":null,"display":null,"flex":null,"flex_flow":null,"grid_area":null,"grid_auto_columns":null,"grid_auto_flow":null,"grid_auto_rows":null,"grid_column":null,"grid_gap":null,"grid_row":null,"grid_template_areas":null,"grid_template_columns":null,"grid_template_rows":null,"height":null,"justify_content":null,"justify_items":null,"left":null,"margin":null,"max_height":null,"max_width":null,"min_height":null,"min_width":null,"object_fit":null,"object_position":null,"order":null,"overflow":null,"padding":null,"right":null,"top":null,"visibility":null,"width":null}},"eed71056608e4a5497f257c44437240d":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"DescriptionStyleModel","state":{"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"DescriptionStyleModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"StyleView","description_width":""}}},"version_major":2,"version_minor":0}
+{"state":{"0094a8e32f9f4d80b8a3a9aaa1527e28":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"DropdownModel","state":{"_dom_classes":[],"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"DropdownModel","_options_labels":["4","6","8"],"_view_count":null,"_view_module":"@jupyter-widgets/controls","_view_module_version":"2.0.0","_view_name":"DropdownView","description":"Cylinders:","description_allow_html":false,"disabled":false,"index":0,"layout":"IPY_MODEL_ef0d6926567243f1b58886e4aadc89d3","style":"IPY_MODEL_81a4df93f7cd453b947de32e73b5e099","tabbable":null,"tooltip":null}},"09f00174f69947d4ac6e4612a874eeec":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"SliderStyleModel","state":{"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"SliderStyleModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"StyleView","description_width":"","handle_color":null}},"0bc926264713481084e7d06d4cc7f546":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"DropdownModel","state":{"_dom_classes":[],"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"DropdownModel","_options_labels":["4","6","8"],"_view_count":null,"_view_module":"@jupyter-widgets/controls","_view_module_version":"2.0.0","_view_name":"DropdownView","description":"Cylinders:","description_allow_html":false,"disabled":false,"index":0,"layout":"IPY_MODEL_0cd84b03bf394f83a25e6c82fc687e68","style":"IPY_MODEL_746cb800b860436db75ca35478c210c3","tabbable":null,"tooltip":null}},"0cd84b03bf394f83a25e6c82fc687e68":{"model_module":"@jupyter-widgets/base","model_module_version":"2.0.0","model_name":"LayoutModel","state":{"_model_module":"@jupyter-widgets/base","_model_module_version":"2.0.0","_model_name":"LayoutModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"LayoutView","align_content":null,"align_items":null,"align_self":null,"border_bottom":null,"border_left":null,"border_right":null,"border_top":null,"bottom":null,"display":null,"flex":null,"flex_flow":null,"grid_area":null,"grid_auto_columns":null,"grid_auto_flow":null,"grid_auto_rows":null,"grid_column":null,"grid_gap":null,"grid_row":null,"grid_template_areas":null,"grid_template_columns":null,"grid_template_rows":null,"height":null,"justify_content":null,"justify_items":null,"left":null,"margin":null,"max_height":null,"max_width":null,"min_height":null,"min_width":null,"object_fit":null,"object_position":null,"order":null,"overflow":null,"padding":null,"right":null,"top":null,"visibility":null,"width":null}},"16f6e21ce3744a198bb6c2ef1a2c71ce":{"model_module":"@jupyter-widgets/base","model_module_version":"2.0.0","model_name":"LayoutModel","state":{"_model_module":"@jupyter-widgets/base","_model_module_version":"2.0.0","_model_name":"LayoutModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"LayoutView","align_content":null,"align_items":null,"align_self":null,"border_bottom":null,"border_left":null,"border_right":null,"border_top":null,"bottom":null,"display":null,"flex":null,"flex_flow":null,"grid_area":null,"grid_auto_columns":null,"grid_auto_flow":null,"grid_auto_rows":null,"grid_column":null,"grid_gap":null,"grid_row":null,"grid_template_areas":null,"grid_template_columns":null,"grid_template_rows":null,"height":null,"justify_content":null,"justify_items":null,"left":null,"margin":null,"max_height":null,"max_width":null,"min_height":null,"min_width":null,"object_fit":null,"object_position":null,"order":null,"overflow":null,"padding":null,"right":null,"top":null,"visibility":null,"width":null}},"18cc23d0c36f46f0a489ed82de1ba5d2":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"HBoxModel","state":{"_dom_classes":[],"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"HBoxModel","_view_count":null,"_view_module":"@jupyter-widgets/controls","_view_module_version":"2.0.0","_view_name":"HBoxView","box_style":"","children":["IPY_MODEL_0094a8e32f9f4d80b8a3a9aaa1527e28","IPY_MODEL_7fb2237f930f4a0391980f3b287e6aeb"],"layout":"IPY_MODEL_fc878de629b3484691a7082183d2a64e","tabbable":null,"tooltip":null}},"1dcd71f3d82b4dc7801aea7b0f7d36da":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"SliderStyleModel","state":{"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"SliderStyleModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"StyleView","description_width":"","handle_color":null}},"2ff0d12ae8234a5facc67ba7beaab703":{"model_module":"@jupyter-widgets/base","model_module_version":"2.0.0","model_name":"LayoutModel","state":{"_model_module":"@jupyter-widgets/base","_model_module_version":"2.0.0","_model_name":"LayoutModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"LayoutView","align_content":null,"align_items":null,"align_self":null,"border_bottom":null,"border_left":null,"border_right":null,"border_top":null,"bottom":null,"display":null,"flex":null,"flex_flow":null,"grid_area":null,"grid_auto_columns":null,"grid_auto_flow":null,"grid_auto_rows":null,"grid_column":null,"grid_gap":null,"grid_row":null,"grid_template_areas":null,"grid_template_columns":null,"grid_template_rows":null,"height":null,"justify_content":null,"justify_items":null,"left":null,"margin":null,"max_height":null,"max_width":null,"min_height":null,"min_width":null,"object_fit":null,"object_position":null,"order":null,"overflow":null,"padding":null,"right":null,"top":null,"visibility":null,"width":null}},"322b413c72e14478b74751fd0ff6a2a8":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"DescriptionStyleModel","state":{"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"DescriptionStyleModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"StyleView","description_width":""}},"5337496a2ec648109fc7dec97f90b5bf":{"model_module":"@jupyter-widgets/base","model_module_version":"2.0.0","model_name":"LayoutModel","state":{"_model_module":"@jupyter-widgets/base","_model_module_version":"2.0.0","_model_name":"LayoutModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"LayoutView","align_content":null,"align_items":null,"align_self":null,"border_bottom":null,"border_left":null,"border_right":null,"border_top":null,"bottom":null,"display":null,"flex":null,"flex_flow":null,"grid_area":null,"grid_auto_columns":null,"grid_auto_flow":null,"grid_auto_rows":null,"grid_column":null,"grid_gap":null,"grid_row":null,"grid_template_areas":null,"grid_template_columns":null,"grid_template_rows":null,"height":null,"justify_content":null,"justify_items":null,"left":null,"margin":null,"max_height":null,"max_width":null,"min_height":null,"min_width":null,"object_fit":null,"object_position":null,"order":null,"overflow":null,"padding":null,"right":null,"top":null,"visibility":null,"width":null}},"746cb800b860436db75ca35478c210c3":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"DescriptionStyleModel","state":{"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"DescriptionStyleModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"StyleView","description_width":""}},"7fb2237f930f4a0391980f3b287e6aeb":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"SelectionRangeSliderModel","state":{"_dom_classes":[],"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"SelectionRangeSliderModel","_options_labels":["1.513","1.615","1.835","1.935","2.14","2.2","2.32","2.465","2.78","3.15","3.19"],"_view_count":null,"_view_module":"@jupyter-widgets/controls","_view_module_version":"2.0.0","_view_name":"SelectionRangeSliderView","behavior":"drag-tap","continuous_update":true,"description":"Weight","description_allow_html":false,"disabled":false,"index":[0,10],"layout":"IPY_MODEL_92269f3fbb204df385ec6b459ab3e34d","orientation":"horizontal","readout":true,"style":"IPY_MODEL_09f00174f69947d4ac6e4612a874eeec","tabbable":null,"tooltip":null}},"81a4df93f7cd453b947de32e73b5e099":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"DescriptionStyleModel","state":{"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"DescriptionStyleModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"StyleView","description_width":""}},"92269f3fbb204df385ec6b459ab3e34d":{"model_module":"@jupyter-widgets/base","model_module_version":"2.0.0","model_name":"LayoutModel","state":{"_model_module":"@jupyter-widgets/base","_model_module_version":"2.0.0","_model_name":"LayoutModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"LayoutView","align_content":null,"align_items":null,"align_self":null,"border_bottom":null,"border_left":null,"border_right":null,"border_top":null,"bottom":null,"display":null,"flex":null,"flex_flow":null,"grid_area":null,"grid_auto_columns":null,"grid_auto_flow":null,"grid_auto_rows":null,"grid_column":null,"grid_gap":null,"grid_row":null,"grid_template_areas":null,"grid_template_columns":null,"grid_template_rows":null,"height":null,"justify_content":null,"justify_items":null,"left":null,"margin":null,"max_height":null,"max_width":null,"min_height":null,"min_width":null,"object_fit":null,"object_position":null,"order":null,"overflow":null,"padding":null,"right":null,"top":null,"visibility":null,"width":null}},"9f8488174fd14023aa87f94ba88095b1":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"DescriptionStyleModel","state":{"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"DescriptionStyleModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"StyleView","description_width":""}},"a2441563e2bb4594b8ccbda9348612b1":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"HBoxModel","state":{"_dom_classes":[],"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"HBoxModel","_view_count":null,"_view_module":"@jupyter-widgets/controls","_view_module_version":"2.0.0","_view_name":"HBoxView","box_style":"","children":["IPY_MODEL_b1e15ccee7d642e0b05ad231959a46d1","IPY_MODEL_b17043d35096419e80fe087eae9533be"],"layout":"IPY_MODEL_a8c65598e3b34d41af694cec570f6c16","tabbable":null,"tooltip":null}},"a8c65598e3b34d41af694cec570f6c16":{"model_module":"@jupyter-widgets/base","model_module_version":"2.0.0","model_name":"LayoutModel","state":{"_model_module":"@jupyter-widgets/base","_model_module_version":"2.0.0","_model_name":"LayoutModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"LayoutView","align_content":null,"align_items":null,"align_self":null,"border_bottom":null,"border_left":null,"border_right":null,"border_top":null,"bottom":null,"display":null,"flex":null,"flex_flow":null,"grid_area":null,"grid_auto_columns":null,"grid_auto_flow":null,"grid_auto_rows":null,"grid_column":null,"grid_gap":null,"grid_row":null,"grid_template_areas":null,"grid_template_columns":null,"grid_template_rows":null,"height":null,"justify_content":null,"justify_items":null,"left":null,"margin":null,"max_height":null,"max_width":null,"min_height":null,"min_width":null,"object_fit":null,"object_position":null,"order":null,"overflow":null,"padding":null,"right":null,"top":null,"visibility":null,"width":null}},"b17043d35096419e80fe087eae9533be":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"SelectionRangeSliderModel","state":{"_dom_classes":[],"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"SelectionRangeSliderModel","_options_labels":["1.513","1.615","1.835","1.935","2.14","2.2","2.32","2.465","2.78","3.15","3.19"],"_view_count":null,"_view_module":"@jupyter-widgets/controls","_view_module_version":"2.0.0","_view_name":"SelectionRangeSliderView","behavior":"drag-tap","continuous_update":true,"description":"Weight","description_allow_html":false,"disabled":false,"index":[0,10],"layout":"IPY_MODEL_5337496a2ec648109fc7dec97f90b5bf","orientation":"horizontal","readout":true,"style":"IPY_MODEL_1dcd71f3d82b4dc7801aea7b0f7d36da","tabbable":null,"tooltip":null}},"b1e15ccee7d642e0b05ad231959a46d1":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"DropdownModel","state":{"_dom_classes":[],"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"DropdownModel","_options_labels":["4","6","8"],"_view_count":null,"_view_module":"@jupyter-widgets/controls","_view_module_version":"2.0.0","_view_name":"DropdownView","description":"Cylinders:","description_allow_html":false,"disabled":false,"index":0,"layout":"IPY_MODEL_16f6e21ce3744a198bb6c2ef1a2c71ce","style":"IPY_MODEL_322b413c72e14478b74751fd0ff6a2a8","tabbable":null,"tooltip":null}},"b4316455eb0d482b9d7ed92df51607f0":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"DropdownModel","state":{"_dom_classes":[],"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"DropdownModel","_options_labels":["4","6","8"],"_view_count":null,"_view_module":"@jupyter-widgets/controls","_view_module_version":"2.0.0","_view_name":"DropdownView","description":"Cylinders:","description_allow_html":false,"disabled":false,"index":0,"layout":"IPY_MODEL_2ff0d12ae8234a5facc67ba7beaab703","style":"IPY_MODEL_9f8488174fd14023aa87f94ba88095b1","tabbable":null,"tooltip":null}},"ef0d6926567243f1b58886e4aadc89d3":{"model_module":"@jupyter-widgets/base","model_module_version":"2.0.0","model_name":"LayoutModel","state":{"_model_module":"@jupyter-widgets/base","_model_module_version":"2.0.0","_model_name":"LayoutModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"LayoutView","align_content":null,"align_items":null,"align_self":null,"border_bottom":null,"border_left":null,"border_right":null,"border_top":null,"bottom":null,"display":null,"flex":null,"flex_flow":null,"grid_area":null,"grid_auto_columns":null,"grid_auto_flow":null,"grid_auto_rows":null,"grid_column":null,"grid_gap":null,"grid_row":null,"grid_template_areas":null,"grid_template_columns":null,"grid_template_rows":null,"height":null,"justify_content":null,"justify_items":null,"left":null,"margin":null,"max_height":null,"max_width":null,"min_height":null,"min_width":null,"object_fit":null,"object_position":null,"order":null,"overflow":null,"padding":null,"right":null,"top":null,"visibility":null,"width":null}},"fc878de629b3484691a7082183d2a64e":{"model_module":"@jupyter-widgets/base","model_module_version":"2.0.0","model_name":"LayoutModel","state":{"_model_module":"@jupyter-widgets/base","_model_module_version":"2.0.0","_model_name":"LayoutModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"LayoutView","align_content":null,"align_items":null,"align_self":null,"border_bottom":null,"border_left":null,"border_right":null,"border_top":null,"bottom":null,"display":null,"flex":null,"flex_flow":null,"grid_area":null,"grid_auto_columns":null,"grid_auto_flow":null,"grid_auto_rows":null,"grid_column":null,"grid_gap":null,"grid_row":null,"grid_template_areas":null,"grid_template_columns":null,"grid_template_rows":null,"height":null,"justify_content":null,"justify_items":null,"left":null,"margin":null,"max_height":null,"max_width":null,"min_height":null,"min_width":null,"object_fit":null,"object_position":null,"order":null,"overflow":null,"padding":null,"right":null,"top":null,"visibility":null,"width":null}}},"version_major":2,"version_minor":0}
 </script>
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {

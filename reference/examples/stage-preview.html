@@ -294,7 +294,7 @@
   
 
 
-</header>     <div class="cell-container"><div class="cell-decorator"><pre>In [1]:</pre></div><div id="cell-0" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:48:51.955483Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:48:51.954872Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:48:52.744600Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:48:52.743543Z&quot;}" data-execution_count="1">
+</header>     <div class="cell-container"><div class="cell-decorator"><pre>In [1]:</pre></div><div id="cell-0" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:47:12.777894Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:47:12.777522Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:47:13.472868Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:47:13.472034Z&quot;}" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>load_ext autoreload</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>autoreload <span class="dv">2</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>aimport plotnine</span>
@@ -318,15 +318,16 @@
 <h3 class="anchored" data-anchor-id="stage">stage</h3>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [2]:</pre></div><div id="cell-2" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:48:52.748711Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:48:52.748327Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:48:54.079233Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:48:54.078564Z&quot;}" data-execution_count="2">
+<div class="cell-container"><div class="cell-decorator"><pre>In [2]:</pre></div><div id="cell-2" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:47:13.476359Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:47:13.476014Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:47:14.898909Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:47:14.898191Z&quot;}" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'var1'</span>: <span class="bu">list</span>(<span class="st">'abbcccddddeeeee'</span>),</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'cat'</span>: <span class="bu">list</span>(<span class="st">'RSRSRSRRRSRSSRS'</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"var1"</span>: <span class="bu">list</span>(<span class="st">"abbcccddddeeeee"</span>),</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"cat"</span>: <span class="bu">list</span>(<span class="st">"RSRSRSRRRSRSSRS"</span>)</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>})</span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>(ggplot(df, aes(<span class="st">'var1'</span>))</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_bar()</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    ggplot(df, aes(<span class="st">"var1"</span>))</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_bar()</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div class="">
 <figure class="figure">
@@ -338,11 +339,12 @@
 <div id="cell-3" class="cell markdown">
 <p>Add the corresponding count on top of each bar.</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [3]:</pre></div><div id="cell-4" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:48:54.119997Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:48:54.119517Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:48:54.496830Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:48:54.496186Z&quot;}" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(ggplot(df, aes(<span class="st">'var1'</span>))</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_bar()</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_text(aes(label<span class="op">=</span>after_stat(<span class="st">'count'</span>)), stat<span class="op">=</span><span class="st">'count'</span>)</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [3]:</pre></div><div id="cell-4" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:47:14.935168Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:47:14.934773Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:47:15.278108Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:47:15.277433Z&quot;}" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    ggplot(df, aes(<span class="st">"var1"</span>))</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_bar()</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_text(aes(label<span class="op">=</span>after_stat(<span class="st">"count"</span>)), stat<span class="op">=</span><span class="st">"count"</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div class="">
 <figure class="figure">
@@ -354,11 +356,15 @@
 <div id="cell-5" class="cell markdown">
 <p>Adjust the <code>y</code> position so that the counts do not overlap the bars.</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [4]:</pre></div><div id="cell-6" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:48:54.500513Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:48:54.500237Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:48:54.878730Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:48:54.877808Z&quot;}" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(ggplot(df, aes(<span class="st">'var1'</span>))</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_bar()</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_text(aes(label<span class="op">=</span>after_stat(<span class="st">'count'</span>), y<span class="op">=</span>stage(after_stat<span class="op">=</span><span class="st">'count'</span>, after_scale<span class="op">=</span><span class="st">'y+.1'</span>)), stat<span class="op">=</span><span class="st">'count'</span>)</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [4]:</pre></div><div id="cell-6" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:47:15.281702Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:47:15.281448Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:47:15.615481Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:47:15.614876Z&quot;}" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    ggplot(df, aes(<span class="st">"var1"</span>))</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_bar()</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_text(</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>        aes(label<span class="op">=</span>after_stat(<span class="st">"count"</span>), y<span class="op">=</span>stage(after_stat<span class="op">=</span><span class="st">"count"</span>, after_scale<span class="op">=</span><span class="st">"y+.1"</span>)),</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>        stat<span class="op">=</span><span class="st">"count"</span>,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div class="">
 <figure class="figure">
@@ -370,11 +376,16 @@
 <div id="cell-7" class="cell markdown">
 <p>Note that this will work even nicely for stacked bars where adjustig the position with <code>nudge_y=0.1</code> would not.</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [5]:</pre></div><div id="cell-8" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:48:54.882170Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:48:54.881889Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:48:55.391952Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:48:55.391243Z&quot;}" data-scrolled="false" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(ggplot(df, aes(<span class="st">'var1'</span>, fill<span class="op">=</span><span class="st">'cat'</span>))</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_bar()</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_text(aes(label<span class="op">=</span>after_stat(<span class="st">'count'</span>), y<span class="op">=</span>stage(after_stat<span class="op">=</span><span class="st">'count'</span>, after_scale<span class="op">=</span><span class="st">'y+.1'</span>)), stat<span class="op">=</span><span class="st">'count'</span>, position<span class="op">=</span><span class="st">'stack'</span>)</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [5]:</pre></div><div id="cell-8" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:47:15.618501Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:47:15.618263Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:47:16.079437Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:47:16.078665Z&quot;}" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    ggplot(df, aes(<span class="st">"var1"</span>, fill<span class="op">=</span><span class="st">"cat"</span>))</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_bar()</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_text(</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>        aes(label<span class="op">=</span>after_stat(<span class="st">"count"</span>), y<span class="op">=</span>stage(after_stat<span class="op">=</span><span class="st">"count"</span>, after_scale<span class="op">=</span><span class="st">"y+.1"</span>)),</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>        stat<span class="op">=</span><span class="st">"count"</span>,</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>        position<span class="op">=</span><span class="st">"stack"</span>,</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div class="">
 <figure class="figure">
@@ -388,17 +399,18 @@
 <h2 class="anchored" data-anchor-id="create-a-binned-2d-plot-with-counts">Create a binned 2d plot with counts</h2>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [6]:</pre></div><div id="cell-10" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:48:55.395371Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:48:55.395101Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:48:55.421970Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:48:55.421097Z&quot;}" data-execution_count="6">
+<div class="cell-container"><div class="cell-decorator"><pre>In [6]:</pre></div><div id="cell-10" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:47:16.083049Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:47:16.082768Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:47:16.105466Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:47:16.104607Z&quot;}" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">123</span>)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'col_1'</span>: np.random.rand(<span class="dv">1000</span>),</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'col_2'</span>: np.random.rand(<span class="dv">1000</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"col_1"</span>: np.random.rand(<span class="dv">1000</span>),</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"col_2"</span>: np.random.rand(<span class="dv">1000</span>)</span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [7]:</pre></div><div id="cell-11" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:48:55.425863Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:48:55.425420Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:48:55.853629Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:48:55.852581Z&quot;}" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>(ggplot(df, aes(x<span class="op">=</span><span class="st">'col_1'</span>, y<span class="op">=</span><span class="st">'col_2'</span>))</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_bin_2d(position<span class="op">=</span><span class="st">'identity'</span>, binwidth<span class="op">=</span><span class="fl">0.1</span>)</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [7]:</pre></div><div id="cell-11" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:47:16.108676Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:47:16.108411Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:47:16.465769Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:47:16.465079Z&quot;}" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    ggplot(df, aes(x<span class="op">=</span><span class="st">"col_1"</span>, y<span class="op">=</span><span class="st">"col_2"</span>))</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_bin_2d(position<span class="op">=</span><span class="st">"identity"</span>, binwidth<span class="op">=</span><span class="fl">0.1</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div class="">
 <figure class="figure">
@@ -412,21 +424,22 @@
 <p>First <code>x</code> and <code>y</code> aesthetics are mapped to <em>col_1</em> and <em>col_2</em> variables, then after the statistic consumes them and creates <code>xmin</code>, <code>xmax</code>, <code>ymin</code> &amp; <code>ymax</code> values for each bin along with associated <code>count</code>. After the statistic computation the <code>x</code> and <code>y</code> aesthetics do not exist, but we create meaningful values using the minimum and maximum end-points.</p>
 <p>Note that the binning parameters for the <code>geom</code> and <code>stat</code> combination must be the same. In this case it is the <code>binwidth</code>.</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [8]:</pre></div><div id="cell-13" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:48:55.857104Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:48:55.856826Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:48:56.380478Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:48:56.379733Z&quot;}" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>(ggplot(df, aes(x<span class="op">=</span><span class="st">'col_1'</span>, y<span class="op">=</span><span class="st">'col_2'</span>))</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_bin_2d(position<span class="op">=</span><span class="st">'identity'</span>, binwidth<span class="op">=</span><span class="fl">0.1</span>)</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> stat_bin_2d(</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>     aes(</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>         x<span class="op">=</span>stage(start<span class="op">=</span><span class="st">'col_1'</span>, after_stat<span class="op">=</span><span class="st">'(xmin+xmax)/2'</span>),</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>         y<span class="op">=</span>stage(start<span class="op">=</span><span class="st">'col_2'</span>, after_stat<span class="op">=</span><span class="st">'(ymin+ymax)/2'</span>),</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>         label<span class="op">=</span>after_stat(<span class="st">'count'</span>)</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>     ),</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>     binwidth<span class="op">=</span><span class="fl">0.1</span>,</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>     geom<span class="op">=</span><span class="st">'text'</span>,</span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>     format_string<span class="op">=</span><span class="st">'</span><span class="sc">{:.0f}</span><span class="st">'</span>,</span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>     size<span class="op">=</span><span class="dv">10</span></span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a> )</span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [8]:</pre></div><div id="cell-13" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:47:16.468962Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:47:16.468697Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:47:16.959406Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:47:16.958624Z&quot;}" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    ggplot(df, aes(x<span class="op">=</span><span class="st">"col_1"</span>, y<span class="op">=</span><span class="st">"col_2"</span>))</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_bin_2d(position<span class="op">=</span><span class="st">"identity"</span>, binwidth<span class="op">=</span><span class="fl">0.1</span>)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> stat_bin_2d(</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>        aes(</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>            x<span class="op">=</span>stage(start<span class="op">=</span><span class="st">"col_1"</span>, after_stat<span class="op">=</span><span class="st">"(xmin+xmax)/2"</span>),</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>            y<span class="op">=</span>stage(start<span class="op">=</span><span class="st">"col_2"</span>, after_stat<span class="op">=</span><span class="st">"(ymin+ymax)/2"</span>),</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>            label<span class="op">=</span>after_stat(<span class="st">"count"</span>),</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>        ),</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>        binwidth<span class="op">=</span><span class="fl">0.1</span>,</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>        geom<span class="op">=</span><span class="st">"text"</span>,</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>        format_string<span class="op">=</span><span class="st">"</span><span class="sc">{:.0f}</span><span class="st">"</span>,</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>        size<span class="op">=</span><span class="dv">10</span>,</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div class="">
 <figure class="figure">

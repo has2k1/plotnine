@@ -380,25 +380,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="examples" class="level2">
 <h2 class="anchored" data-anchor-id="examples">Examples</h2>
 <div class="quarto-embed-nb-cell">
-<div id="cell-0" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:46:13.907255Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:46:13.906936Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:46:14.579271Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:46:14.578467Z&quot;}" data-execution_count="1">
+<div id="cell-0" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:44:32.861738Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:44:32.861431Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:44:33.508507Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:44:33.507898Z&quot;}" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> (</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    ggplot,</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    aes,</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    geom_boxplot,</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    geom_jitter,</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    scale_x_discrete,</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    coord_flip</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> (</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    ggplot,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    aes,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    geom_boxplot,</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    geom_jitter,</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    scale_x_discrete,</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    coord_flip,</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="a-box-and-whiskers-plot" class="level3">
 <h3 class="anchored" data-anchor-id="a-box-and-whiskers-plot">A box and whiskers plot</h3>
 <p><em>The boxplot compactly displays the distribution of a continuous variable.</em></p>
 <p>Read more: + <a href="https://en.wikipedia.org/wiki/Box_plot">wikipedia</a> + <a href="https://ggplot2.tidyverse.org/reference/geom_boxplot.html">ggplot2 docs</a></p>
-<div id="cell-2" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:46:14.582736Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:46:14.582392Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:46:14.596428Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:46:14.595705Z&quot;}" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>flights <span class="op">=</span> pd.read_csv(<span class="st">'data/flights.csv'</span>)</span>
+<div id="cell-2" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:44:33.511980Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:44:33.511652Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:44:33.525167Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:44:33.524643Z&quot;}" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>flights <span class="op">=</span> pd.read_csv(<span class="st">"data/flights.csv"</span>)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>flights.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
 <div>
@@ -453,18 +452,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Basic boxplot</p>
-<div id="cell-4" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:46:14.641954Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:46:14.641674Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:46:14.646124Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:46:14.645408Z&quot;}" data-execution_count="3">
+<div id="cell-4" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:44:33.569374Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:44:33.569095Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:44:33.573120Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:44:33.572513Z&quot;}" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>months <span class="op">=</span> [month[:<span class="dv">3</span>] <span class="cf">for</span> month <span class="kw">in</span> flights.month[:<span class="dv">12</span>]]</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(months)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']</code></pre>
 </div>
 </div>
-<div id="cell-5" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:46:14.649344Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:46:14.649073Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:46:16.233114Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:46:16.232431Z&quot;}" data-execution_count="4">
+<div id="cell-5" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:44:33.576342Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:44:33.576084Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:44:35.156772Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:44:35.156007Z&quot;}" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    ggplot(flights) </span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_boxplot(aes(x<span class="op">=</span><span class="st">'factor(month)'</span>, y<span class="op">=</span><span class="st">'passengers'</span>))</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> scale_x_discrete(labels<span class="op">=</span>months, name<span class="op">=</span><span class="st">'month'</span>)  <span class="co"># change ticks labels on OX</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    ggplot(flights)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_boxplot(aes(x<span class="op">=</span><span class="st">"factor(month)"</span>, y<span class="op">=</span><span class="st">"passengers"</span>))</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> scale_x_discrete(labels<span class="op">=</span>months, name<span class="op">=</span><span class="st">"month"</span>)  <span class="co"># change ticks labels on OX</span></span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
@@ -475,15 +474,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Horizontal boxplot</p>
-<div id="cell-7" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:46:16.236715Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:46:16.236331Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:46:16.979192Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:46:16.978609Z&quot;}" data-execution_count="5">
+<div id="cell-7" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:44:35.160421Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:44:35.159855Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:44:35.954280Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:44:35.953647Z&quot;}" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    ggplot(flights) </span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_boxplot(aes(x<span class="op">=</span><span class="st">'factor(month)'</span>, y<span class="op">=</span><span class="st">'passengers'</span>))</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    ggplot(flights)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_boxplot(aes(x<span class="op">=</span><span class="st">"factor(month)"</span>, y<span class="op">=</span><span class="st">"passengers"</span>))</span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> coord_flip()</span>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> scale_x_discrete(</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>        labels<span class="op">=</span>months[::<span class="op">-</span><span class="dv">1</span>], </span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>        labels<span class="op">=</span>months[::<span class="op">-</span><span class="dv">1</span>],</span>
 <span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>        limits<span class="op">=</span>flights.month[<span class="dv">11</span>::<span class="op">-</span><span class="dv">1</span>],</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>        name<span class="op">=</span><span class="st">'month'</span>,</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>        name<span class="op">=</span><span class="st">"month"</span>,</span>
 <span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    )</span>
 <span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
@@ -495,12 +494,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Boxplot with jittered points:</p>
-<div id="cell-9" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:46:16.982176Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:46:16.981946Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:46:17.655553Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:46:17.654975Z&quot;}" data-execution_count="6">
+<div id="cell-9" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:44:35.957263Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:44:35.957033Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:44:36.638997Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:44:36.638369Z&quot;}" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    ggplot(flights, aes(x<span class="op">=</span><span class="st">'factor(month)'</span>, y<span class="op">=</span><span class="st">'passengers'</span>)) </span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    ggplot(flights, aes(x<span class="op">=</span><span class="st">"factor(month)"</span>, y<span class="op">=</span><span class="st">"passengers"</span>))</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_boxplot()</span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_jitter()</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> scale_x_discrete(labels<span class="op">=</span>months, name<span class="op">=</span><span class="st">'month'</span>)  <span class="co"># change ticks labels on OX</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> scale_x_discrete(labels<span class="op">=</span>months, name<span class="op">=</span><span class="st">"month"</span>)  <span class="co"># change ticks labels on OX</span></span>
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>

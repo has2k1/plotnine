@@ -293,17 +293,10 @@
   
 
 
-</header>     <div class="cell-container"><div class="cell-decorator"><pre>In [1]:</pre></div><div id="cell-0" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:45:17.187306Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:45:17.186717Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:45:17.846928Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:45:17.846093Z&quot;}" data-execution_count="1">
+</header>     <div class="cell-container"><div class="cell-decorator"><pre>In [1]:</pre></div><div id="cell-0" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:43:35.327673Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:43:35.327381Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:43:36.005009Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:43:36.004198Z&quot;}" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> (</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    ggplot,</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    aes,</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    after_scale,</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    geom_bar,</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    theme_classic</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> ggplot, aes, after_scale, geom_bar, theme_classic</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div>
 <div id="cell-1" class="cell markdown">
 <section id="after_scale" class="level3">
@@ -314,14 +307,13 @@
 <p>The bars in <code>geom_bar</code> have two aesthetics that control the coloring; <code>fill</code> for the interior and <code>color</code> for the boundary/edge. Using <code>after_scale</code> we can create a matching combination of these two.</p>
 <p>Start off with a mapping to the <code>color</code>.</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [2]:</pre></div><div id="cell-3" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:45:17.850488Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:45:17.850162Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:45:19.223778Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:45:19.223144Z&quot;}" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'var1'</span>: [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">5</span>, <span class="dv">5</span>, <span class="dv">5</span>, <span class="dv">5</span>]</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>(ggplot(df, aes(<span class="st">'var1'</span>, color<span class="op">=</span><span class="st">'factor(var1)'</span>))</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_bar(size<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [2]:</pre></div><div id="cell-3" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:43:36.008706Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:43:36.008380Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:43:37.440721Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:43:37.440091Z&quot;}" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({<span class="st">"var1"</span>: [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">5</span>, <span class="dv">5</span>, <span class="dv">5</span>, <span class="dv">5</span>]})</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    ggplot(df, aes(<span class="st">"var1"</span>, color<span class="op">=</span><span class="st">"factor(var1)"</span>))</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_bar(size<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div class="">
 <figure class="figure">
@@ -333,10 +325,11 @@
 <div id="cell-4" class="cell markdown">
 <p>We can match the <code>color</code> with the <code>fill</code>.</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [3]:</pre></div><div id="cell-5" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:45:19.267856Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:45:19.267465Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:45:19.649150Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:45:19.648487Z&quot;}" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(ggplot(df, aes(<span class="st">'var1'</span>, color<span class="op">=</span><span class="st">'factor(var1)'</span>))</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_bar(aes(fill<span class="op">=</span>after_scale(<span class="st">'color'</span>)), size<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [3]:</pre></div><div id="cell-5" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:43:37.484252Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:43:37.483878Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:43:37.859881Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:43:37.859266Z&quot;}" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    ggplot(df, aes(<span class="st">"var1"</span>, color<span class="op">=</span><span class="st">"factor(var1)"</span>))</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_bar(aes(fill<span class="op">=</span>after_scale(<span class="st">"color"</span>)), size<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div class="">
 <figure class="figure">
@@ -348,10 +341,11 @@
 <div id="cell-6" class="cell markdown">
 <p>As <code>after_scale</code> takes an expression, for the <code>fill</code> aesthetic we can modify the <code>color</code> by adding to it an alpha channel i.e.&nbsp;<code>'#AABBCC'</code> to <code>'#AABBCC66'</code>.</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [4]:</pre></div><div id="cell-7" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:45:19.651873Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:45:19.651658Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:45:20.055335Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:45:20.054670Z&quot;}" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(ggplot(df, aes(<span class="st">'var1'</span>, color<span class="op">=</span><span class="st">'factor(var1)'</span>))</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_bar(aes(fill<span class="op">=</span>after_scale(<span class="st">'color + "66"'</span>)), size<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [4]:</pre></div><div id="cell-7" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:43:37.863495Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:43:37.863178Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:43:38.251308Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:43:38.250632Z&quot;}" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    ggplot(df, aes(<span class="st">"var1"</span>, color<span class="op">=</span><span class="st">"factor(var1)"</span>))</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_bar(aes(fill<span class="op">=</span>after_scale(<span class="st">'color + "66"'</span>)), size<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div class="">
 <figure class="figure">
@@ -367,11 +361,12 @@
 <div id="cell-9" class="cell markdown">
 <p>With a fitting theme.</p>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [5]:</pre></div><div id="cell-10" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:45:20.058612Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:45:20.058368Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:45:20.473580Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:45:20.473027Z&quot;}" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(ggplot(df, aes(<span class="st">'var1'</span>, color<span class="op">=</span><span class="st">'factor(var1)'</span>))</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_bar(aes(fill<span class="op">=</span>after_scale(<span class="st">'color + "66"'</span>)), size<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> theme_classic()</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [5]:</pre></div><div id="cell-10" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:43:38.254425Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:43:38.254200Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:43:38.621588Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:43:38.621081Z&quot;}" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    ggplot(df, aes(<span class="st">"var1"</span>, color<span class="op">=</span><span class="st">"factor(var1)"</span>))</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_bar(aes(fill<span class="op">=</span>after_scale(<span class="st">'color + "66"'</span>)), size<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> theme_classic()</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div class="">
 <figure class="figure">

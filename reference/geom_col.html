@@ -317,38 +317,59 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="examples" class="level2">
 <h2 class="anchored" data-anchor-id="examples">Examples</h2>
 <div class="quarto-embed-nb-cell">
-<div id="cell-0" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:46:21.898632Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:46:21.898315Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:46:22.565523Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:46:22.564685Z&quot;}" data-execution_count="1">
+<div id="cell-0" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:44:40.764862Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:44:40.764436Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:44:41.464909Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:44:41.464160Z&quot;}" data-jupyter="{&quot;outputs_hidden&quot;:true}" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> (</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    ggplot,</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    aes,</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    geom_col,</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    geom_text,</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    position_dodge,</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    lims,</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    theme,</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    element_text,</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    element_blank,</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    element_rect,</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    element_line,</span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> (</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    ggplot,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    aes,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    geom_col,</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    geom_text,</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    position_dodge,</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    lims,</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    theme,</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    element_text,</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    element_blank,</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    element_rect,</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    element_line,</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="two-variable-bar-plot" class="level3">
 <h3 class="anchored" data-anchor-id="two-variable-bar-plot">Two Variable Bar Plot</h3>
 <p><em>Visualising on a single plot the values of a variable that has nested (and independent) variables</em></p>
 <p>Create the data</p>
-<div id="cell-3" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:46:22.570129Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:46:22.569623Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:46:22.584066Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:46:22.583385Z&quot;}" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'variable'</span>: [<span class="st">'gender'</span>, <span class="st">'gender'</span>, <span class="st">'age'</span>, <span class="st">'age'</span>, <span class="st">'age'</span>, <span class="st">'income'</span>, <span class="st">'income'</span>, <span class="st">'income'</span>, <span class="st">'income'</span>],</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'category'</span>: [<span class="st">'Female'</span>, <span class="st">'Male'</span>, <span class="st">'1-24'</span>, <span class="st">'25-54'</span>, <span class="st">'55+'</span>, <span class="st">'Lo'</span>, <span class="st">'Lo-Med'</span>, <span class="st">'Med'</span>, <span class="st">'High'</span>],</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'value'</span>: [<span class="dv">60</span>, <span class="dv">40</span>, <span class="dv">50</span>, <span class="dv">30</span>, <span class="dv">20</span>, <span class="dv">10</span>, <span class="dv">25</span>, <span class="dv">25</span>, <span class="dv">40</span>],</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'variable'</span>] <span class="op">=</span> pd.Categorical(df[<span class="st">'variable'</span>], categories<span class="op">=</span>[<span class="st">'gender'</span>, <span class="st">'age'</span>, <span class="st">'income'</span>])</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'category'</span>] <span class="op">=</span> pd.Categorical(df[<span class="st">'category'</span>], categories<span class="op">=</span>df[<span class="st">'category'</span>])</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-3" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:44:41.468668Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:44:41.468324Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:44:41.484709Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:44:41.484016Z&quot;}" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>        <span class="st">"variable"</span>: [</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>            <span class="st">"gender"</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>            <span class="st">"gender"</span>,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>            <span class="st">"age"</span>,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>            <span class="st">"age"</span>,</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>            <span class="st">"age"</span>,</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>            <span class="st">"income"</span>,</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>            <span class="st">"income"</span>,</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>            <span class="st">"income"</span>,</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>            <span class="st">"income"</span>,</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>        ],</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>        <span class="st">"category"</span>: [</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Female"</span>,</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Male"</span>,</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>            <span class="st">"1-24"</span>,</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>            <span class="st">"25-54"</span>,</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>            <span class="st">"55+"</span>,</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Lo"</span>,</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Lo-Med"</span>,</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Med"</span>,</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>            <span class="st">"High"</span>,</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>        ],</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>        <span class="st">"value"</span>: [<span class="dv">60</span>, <span class="dv">40</span>, <span class="dv">50</span>, <span class="dv">30</span>, <span class="dv">20</span>, <span class="dv">10</span>, <span class="dv">25</span>, <span class="dv">25</span>, <span class="dv">40</span>],</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"variable"</span>] <span class="op">=</span> pd.Categorical(df[<span class="st">"variable"</span>], categories<span class="op">=</span>[<span class="st">"gender"</span>, <span class="st">"age"</span>, <span class="st">"income"</span>])</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"category"</span>] <span class="op">=</span> pd.Categorical(df[<span class="st">"category"</span>], categories<span class="op">=</span>df[<span class="st">"category"</span>])</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
 <div>
 <div>
@@ -427,10 +448,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>We want to visualise this data and at a galance get an idea to how the <code>value</code> breaks down along the <code>category</code>s for the different <code>variable</code>. Note that each <code>variable</code> has different <code>category</code>s.</p>
 <p>First we make a simple plot with all this information and see what to draw from it.</p>
-<div id="cell-5" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:46:22.628257Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:46:22.627990Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:46:23.947397Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:46:23.946713Z&quot;}" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(ggplot(df, aes(x<span class="op">=</span><span class="st">'variable'</span>, y<span class="op">=</span><span class="st">'value'</span>, fill<span class="op">=</span><span class="st">'category'</span>))</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_col()</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-5" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:44:41.530395Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:44:41.529539Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:44:42.855051Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:44:42.854337Z&quot;}" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    ggplot(df, aes(x<span class="op">=</span><span class="st">"variable"</span>, y<span class="op">=</span><span class="st">"value"</span>, fill<span class="op">=</span><span class="st">"category"</span>))</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_col()</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -440,9 +462,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>All the <code>value</code>s along each variable add up to 100, but stacked together the difference within and without the groups is not clear. The solution is to <code>dodge</code> the bars.</p>
-<div id="cell-7" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:46:23.950645Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:46:23.950324Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:46:24.258238Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:46:24.257721Z&quot;}" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(ggplot(df, aes(x<span class="op">=</span><span class="st">'variable'</span>, y<span class="op">=</span><span class="st">'value'</span>, fill<span class="op">=</span><span class="st">'category'</span>))</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_col(stat<span class="op">=</span><span class="st">'identity'</span>, position<span class="op">=</span><span class="st">'dodge'</span>))                     <span class="co"># modified</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-7" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:44:42.858281Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:44:42.857938Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:44:43.158223Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:44:43.157468Z&quot;}" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    ggplot(df, aes(x<span class="op">=</span><span class="st">"variable"</span>, y<span class="op">=</span><span class="st">"value"</span>, fill<span class="op">=</span><span class="st">"category"</span>))</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_col(stat<span class="op">=</span><span class="st">"identity"</span>, position<span class="op">=</span><span class="st">"dodge"</span>)  <span class="co"># modified</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>)  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -454,16 +478,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>This is good, it gives us the plot we want but the legend is not great. Each <code>variable</code> has a different set of <code>category</code>s, but the legend has them all clamped together. We cannot easily change the legend, but we can replicate it’s purpose by labelling the individual bars.</p>
 <p>To do this, we create a <code>geom_text</code> with <code>position_dodge(width=0.9)</code> to match the ratio of the space taken up by each variable. If there was no spacing between the bars of different variables, we would have <code>width=1</code>.</p>
 <p>A minor quack, when text extends beyond the limits we have to manually make space or it would get clipped. Therefore we adjust the bottom <code>y</code> limits.</p>
-<div id="cell-9" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:46:24.261407Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:46:24.261144Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:46:24.609248Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:46:24.608647Z&quot;}" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>dodge_text <span class="op">=</span> position_dodge(width<span class="op">=</span><span class="fl">0.9</span>)                              <span class="co"># new</span></span>
+<div id="cell-9" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:44:43.160987Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:44:43.160752Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:44:43.478756Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:44:43.478152Z&quot;}" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>dodge_text <span class="op">=</span> position_dodge(width<span class="op">=</span><span class="fl">0.9</span>)  <span class="co"># new</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>(ggplot(df, aes(x<span class="op">=</span><span class="st">'variable'</span>, y<span class="op">=</span><span class="st">'value'</span>, fill<span class="op">=</span><span class="st">'category'</span>))</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_col(stat<span class="op">=</span><span class="st">'identity'</span>, position<span class="op">=</span><span class="st">'dodge'</span>, show_legend<span class="op">=</span><span class="va">False</span>)   <span class="co"># modified</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_text(aes(y<span class="op">=-</span><span class="fl">.5</span>, label<span class="op">=</span><span class="st">'category'</span>),                          <span class="co"># new</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>             position<span class="op">=</span>dodge_text,</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>             color<span class="op">=</span><span class="st">'gray'</span>, size<span class="op">=</span><span class="dv">8</span>, angle<span class="op">=</span><span class="dv">45</span>, va<span class="op">=</span><span class="st">'top'</span>)</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> lims(y<span class="op">=</span>(<span class="op">-</span><span class="dv">5</span>, <span class="dv">60</span>))                                                 <span class="co"># new</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    ggplot(df, aes(x<span class="op">=</span><span class="st">"variable"</span>, y<span class="op">=</span><span class="st">"value"</span>, fill<span class="op">=</span><span class="st">"category"</span>))</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_col(stat<span class="op">=</span><span class="st">"identity"</span>, position<span class="op">=</span><span class="st">"dodge"</span>, show_legend<span class="op">=</span><span class="va">False</span>)  <span class="co"># modified</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_text(</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>        aes(y<span class="op">=-</span><span class="fl">0.5</span>, label<span class="op">=</span><span class="st">"category"</span>),  <span class="co"># new</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>        position<span class="op">=</span>dodge_text,</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>        color<span class="op">=</span><span class="st">"gray"</span>,</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>        size<span class="op">=</span><span class="dv">8</span>,</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>        angle<span class="op">=</span><span class="dv">45</span>,</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>        va<span class="op">=</span><span class="st">"top"</span>,</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> lims(y<span class="op">=</span>(<span class="op">-</span><span class="dv">5</span>, <span class="dv">60</span>))  <span class="co"># new</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -473,19 +503,29 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Would it look too crowded if we add value labels on top of the bars?</p>
-<div id="cell-11" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:46:24.612250Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:46:24.611843Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:46:24.998947Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:46:24.998296Z&quot;}" data-scrolled="false" data-execution_count="6">
+<div id="cell-11" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:44:43.482259Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:44:43.482012Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:44:43.885824Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:44:43.885180Z&quot;}" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>dodge_text <span class="op">=</span> position_dodge(width<span class="op">=</span><span class="fl">0.9</span>)</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>(ggplot(df, aes(x<span class="op">=</span><span class="st">'variable'</span>, y<span class="op">=</span><span class="st">'value'</span>, fill<span class="op">=</span><span class="st">'category'</span>))</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_col(stat<span class="op">=</span><span class="st">'identity'</span>, position<span class="op">=</span><span class="st">'dodge'</span>, show_legend<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_text(aes(y<span class="op">=-</span><span class="fl">.5</span>, label<span class="op">=</span><span class="st">'category'</span>),</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>             position<span class="op">=</span>dodge_text,</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>             color<span class="op">=</span><span class="st">'gray'</span>, size<span class="op">=</span><span class="dv">8</span>, angle<span class="op">=</span><span class="dv">45</span>, va<span class="op">=</span><span class="st">'top'</span>)</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_text(aes(label<span class="op">=</span><span class="st">'value'</span>),                                    <span class="co"># new</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>             position<span class="op">=</span>dodge_text,</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>             size<span class="op">=</span><span class="dv">8</span>, va<span class="op">=</span><span class="st">'bottom'</span>, format_string<span class="op">=</span><span class="st">'</span><span class="sc">{}</span><span class="st">%'</span>)</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> lims(y<span class="op">=</span>(<span class="op">-</span><span class="dv">5</span>, <span class="dv">60</span>))</span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    ggplot(df, aes(x<span class="op">=</span><span class="st">"variable"</span>, y<span class="op">=</span><span class="st">"value"</span>, fill<span class="op">=</span><span class="st">"category"</span>))</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_col(stat<span class="op">=</span><span class="st">"identity"</span>, position<span class="op">=</span><span class="st">"dodge"</span>, show_legend<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_text(</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>        aes(y<span class="op">=-</span><span class="fl">0.5</span>, label<span class="op">=</span><span class="st">"category"</span>),</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>        position<span class="op">=</span>dodge_text,</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>        color<span class="op">=</span><span class="st">"gray"</span>,</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>        size<span class="op">=</span><span class="dv">8</span>,</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>        angle<span class="op">=</span><span class="dv">45</span>,</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>        va<span class="op">=</span><span class="st">"top"</span>,</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_text(</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>        aes(label<span class="op">=</span><span class="st">"value"</span>),  <span class="co"># new</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>        position<span class="op">=</span>dodge_text,</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>        size<span class="op">=</span><span class="dv">8</span>,</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>        va<span class="op">=</span><span class="st">"bottom"</span>,</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>        format_string<span class="op">=</span><span class="st">"</span><span class="sc">{}</span><span class="st">%"</span>,</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> lims(y<span class="op">=</span>(<span class="op">-</span><span class="dv">5</span>, <span class="dv">60</span>))</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -495,31 +535,43 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>That looks okay. The <code>value</code>s line up with the <code>category</code>s because we used the same <code>dodge</code> parameters. For the final polish, we remove the y-axis, clear out the panel and make the <code>variable</code> and <code>category</code> labels have the same color.</p>
-<div id="cell-13" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T11:46:25.002058Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T11:46:25.001474Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T11:46:25.376246Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T11:46:25.375588Z&quot;}" data-scrolled="false" data-execution_count="7">
+<div id="cell-13" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:44:43.888620Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:44:43.888384Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:44:44.267009Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:44:44.266436Z&quot;}" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>dodge_text <span class="op">=</span> position_dodge(width<span class="op">=</span><span class="fl">0.9</span>)</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>ccolor <span class="op">=</span> <span class="st">'#555555'</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>ccolor <span class="op">=</span> <span class="st">"#555555"</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Gallery Plot</span></span>
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>(ggplot(df, aes(x<span class="op">=</span><span class="st">'variable'</span>, y<span class="op">=</span><span class="st">'value'</span>, fill<span class="op">=</span><span class="st">'category'</span>))</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_col(stat<span class="op">=</span><span class="st">'identity'</span>, position<span class="op">=</span><span class="st">'dodge'</span>, show_legend<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_text(aes(y<span class="op">=-</span><span class="fl">.5</span>, label<span class="op">=</span><span class="st">'category'</span>),</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>             position<span class="op">=</span>dodge_text,</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>             color<span class="op">=</span>ccolor, size<span class="op">=</span><span class="dv">8</span>, angle<span class="op">=</span><span class="dv">45</span>, va<span class="op">=</span><span class="st">'top'</span>)              <span class="co"># modified</span></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> geom_text(aes(label<span class="op">=</span><span class="st">'value'</span>),</span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>             position<span class="op">=</span>dodge_text,</span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>             size<span class="op">=</span><span class="dv">8</span>, va<span class="op">=</span><span class="st">'bottom'</span>, format_string<span class="op">=</span><span class="st">'</span><span class="sc">{}</span><span class="st">%'</span>)</span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> lims(y<span class="op">=</span>(<span class="op">-</span><span class="dv">5</span>, <span class="dv">60</span>))</span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a> <span class="op">+</span> theme(panel_background<span class="op">=</span>element_rect(fill<span class="op">=</span><span class="st">'white'</span>),               <span class="co"># new</span></span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>         axis_title_y<span class="op">=</span>element_blank(),</span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>         axis_line_x<span class="op">=</span>element_line(color<span class="op">=</span><span class="st">'black'</span>),</span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>         axis_line_y<span class="op">=</span>element_blank(),</span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>         axis_text_y<span class="op">=</span>element_blank(),</span>
-<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>         axis_text_x<span class="op">=</span>element_text(color<span class="op">=</span>ccolor),</span>
-<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>         axis_ticks_major_y<span class="op">=</span>element_blank(),</span>
-<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>         panel_grid<span class="op">=</span>element_blank(),</span>
-<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>         panel_border<span class="op">=</span>element_blank())</span>
-<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    ggplot(df, aes(x<span class="op">=</span><span class="st">"variable"</span>, y<span class="op">=</span><span class="st">"value"</span>, fill<span class="op">=</span><span class="st">"category"</span>))</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_col(stat<span class="op">=</span><span class="st">"identity"</span>, position<span class="op">=</span><span class="st">"dodge"</span>, show_legend<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_text(</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>        aes(y<span class="op">=-</span><span class="fl">0.5</span>, label<span class="op">=</span><span class="st">"category"</span>),</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>        position<span class="op">=</span>dodge_text,</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>        color<span class="op">=</span>ccolor,</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>        size<span class="op">=</span><span class="dv">8</span>,</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>        angle<span class="op">=</span><span class="dv">45</span>,</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>        va<span class="op">=</span><span class="st">"top"</span>,</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>    )  <span class="co"># modified</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_text(</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>        aes(label<span class="op">=</span><span class="st">"value"</span>),</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>        position<span class="op">=</span>dodge_text,</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>        size<span class="op">=</span><span class="dv">8</span>,</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>        va<span class="op">=</span><span class="st">"bottom"</span>,</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>        format_string<span class="op">=</span><span class="st">"</span><span class="sc">{}</span><span class="st">%"</span>,</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> lims(y<span class="op">=</span>(<span class="op">-</span><span class="dv">5</span>, <span class="dv">60</span>))</span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> theme(</span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>        panel_background<span class="op">=</span>element_rect(fill<span class="op">=</span><span class="st">"white"</span>),  <span class="co"># new</span></span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>        axis_title_y<span class="op">=</span>element_blank(),</span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>        axis_line_x<span class="op">=</span>element_line(color<span class="op">=</span><span class="st">"black"</span>),</span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>        axis_line_y<span class="op">=</span>element_blank(),</span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>        axis_text_y<span class="op">=</span>element_blank(),</span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>        axis_text_x<span class="op">=</span>element_text(color<span class="op">=</span>ccolor),</span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>        axis_ticks_major_y<span class="op">=</span>element_blank(),</span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>        panel_grid<span class="op">=</span>element_blank(),</span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>        panel_border<span class="op">=</span>element_blank(),</span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
