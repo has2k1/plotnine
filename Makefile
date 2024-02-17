@@ -71,8 +71,14 @@ doc:
 doc-preview:
 	$(MAKE) -C doc preview
 
-release: clean
-	bash ./tools/release.sh
+release-major:
+	@python ./tools/release-checklist.py major
+
+release-minor:
+	@python ./tools/release-checklist.py minor
+
+release-patch:
+	@python ./tools/release-checklist.py patch
 
 dist: clean
 	python -m build

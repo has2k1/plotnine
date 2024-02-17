@@ -10,7 +10,7 @@ from typing import Literal, Optional, Sequence, TypeAlias
 
 TPL_FILENAME = "release-checklist-tpl.md"
 THIS_DIR = Path(__file__).parent
-NEW_ISSUE = "https://github.com/has2k1/mizani/issues/new"
+NEW_ISSUE = "https://github.com/has2k1/plotnine/issues/new"
 
 VersionPart: TypeAlias = Literal[
     "major",
