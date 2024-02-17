@@ -153,12 +153,6 @@ class theme:
         line=None,
         legend_key=None,
         legend_frame=None,
-        legend_justification=None,
-        legend_justification_bottom=None,
-        legend_justification_inside=None,
-        legend_justification_left=None,
-        legend_justification_right=None,
-        legend_justification_top=None,
         legend_background=None,
         legend_box_background=None,
         panel_background=None,
@@ -200,6 +194,12 @@ class theme:
         legend_box=None,
         legend_box_margin=None,
         legend_box_just=None,
+        legend_justification_right=None,
+        legend_justification_left=None,
+        legend_justification_top=None,
+        legend_justification_bottom=None,
+        legend_justification_inside=None,
+        legend_justification=None,
         legend_direction=None,
         legend_key_width=None,
         legend_key_height=None,
@@ -218,7 +218,6 @@ class theme:
         strip_align_x=None,
         strip_align_y=None,
         strip_align=None,
-        subplots_adjust=None,
         **kwargs,
     ):
         self.themeables = Themeables()
@@ -243,7 +242,8 @@ class theme:
         for name, element in it:
             self.themeables[name] = new(name, element)
 
-        # Unofficial themeables (for extensions)
+        # Unofficial themeables for extensions
+        # or those that have been deprecated
         for name, element in kwargs.items():
             self.themeables[name] = new(name, element)
 
