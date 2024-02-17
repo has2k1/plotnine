@@ -45,11 +45,16 @@ jobs:
           path: tests/result_images/
           if-no-files-found: ignore
 
+      # To change secrets
+      # https://app.codecov.io/github/has2k1/plotnine/settings
+      # https://github.com/has2k1/plotnine/settings/secrets/actions
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
         with:
           fail_ci_if_error: true
           name: "py${{ matrix.python-version }}"
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   lint-and-format:
     runs-on: ubuntu-latest
