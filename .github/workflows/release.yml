@@ -1,0 +1,89 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v[0-9]*'
+
+jobs:
+  run-tests:
+    name: Run all tests
+    uses: ./.github/workflows/testing.yml
+
+  check-semver-tag:
+    name: Check if the tag is in semantic version format
+    needs: [run-tests]
+    runs-on: ubuntu-latest
+    outputs:
+      tag_type: ${{ steps.check-tag.outputs.tag_type }}
+      publish_on: ${{ steps.check-tag.outputs.publish_on }}
+
+    strategy:
+      matrix:
+        python-version: ["3.11"]
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        with:
+          python-version: ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+
+      - name: Check for semantic version tag
+        id: check-tag
+        run: python tools/gha_check_semver.py
+
+      - name: See outputs
+        shell: bash
+        run: |
+          echo "tag_type="${{ steps.check-tag.outputs.tag_type }}
+          echo "publish_on="${{ steps.check-tag.outputs.publish_on }}
+
+  # Ref: https://github.com/pypa/gh-action-pypi-publish
+  publish:
+    name: Build and publish Python 🐍 distributions 📦 to TestPyPI or PyPI
+    needs: [check-semver-tag]
+    runs-on: ubuntu-latest
+
+    if: ${{ needs.check-semver-tag.outputs.publish_on != '' }}
+
+    environment:
+      name: release
+      url: https://github.com/has2k1/plotnine
+
+    permissions:
+      id-token: write  # IMPORTANT: this permission is mandatory for trusted publishing
+
+    strategy:
+      matrix:
+        python-version: ["3.11"]
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install Packages
+        run: python -m pip install build
+
+      - name: Build a wheel and a source tarball
+        run: make dist
+
+      - name: Publish distribution 📦 to Test PyPI
+        if: ${{ needs.check-semver-tag.outputs.publish_on == 'testpypi' }}
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://test.pypi.org/legacy/
+          skip-existing: true
+
+      - name: Publish distribution 📦 to PyPI
+        if: ${{ needs.check-semver-tag.outputs.publish_on == 'pypi' }}
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          skip-existing: true
