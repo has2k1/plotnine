@@ -11,7 +11,7 @@ finally:
 
 # Imports below are generated with the following command:
 #
-# python -c "from plotnine.utils import get_plotnine_all; get_plotnine_all()"
+# python -c "from plotnine._utils.dev import get_plotnine_all; get_plotnine_all()"  # noqa: E501
 #
 # added to the clipboard. Run it and paste the results. Do not edit by hand.
 
@@ -254,10 +254,6 @@ __all__ = (
     "stat_unique",
     "stat_ydensity",
     # plotnine.themes
-    "element_blank",
-    "element_line",
-    "element_rect",
-    "element_text",
     "theme",
     "theme_538",
     "theme_bw",
@@ -276,6 +272,11 @@ __all__ = (
     "theme_update",
     "theme_void",
     "theme_xkcd",
+    # plotnine.themes.elements
+    "element_blank",
+    "element_line",
+    "element_rect",
+    "element_text",
     # plotnine.watermark
     "watermark",
 )

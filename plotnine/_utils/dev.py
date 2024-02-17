@@ -25,6 +25,7 @@ def get_plotnine_all(use_clipboard=True) -> Optional[str]:
         "scales",
         "stats",
         "themes",
+        "themes.elements",
         "watermark",
     )
 
@@ -43,7 +44,7 @@ def get_plotnine_all(use_clipboard=True) -> Optional[str]:
     lst = indent(
         comma_join(get_all_from_module(name) for name in modules), " " * 4
     )
-    _all = f"__all__ = (\n{lst}\n)"
+    _all = f"__all__ = (\n{lst},\n)"
     content = f"{_imports}\n\n{_all}"
     if use_clipboard:
         from pandas.io import clipboard
