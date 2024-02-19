@@ -5807,7 +5807,7 @@
     "href": "index.html#example",
     "title": "A Grammar of Graphics for Python",
     "section": "Example",
-    "text": "Example\nfrom plotnine import ggplot, geom_point, aes, stat_smooth, facet_wrap\nfrom plotnine.data import mtcars\n\n(ggplot(mtcars, aes(\"wt\", \"mpg\", color=\"factor(gear)\"))\n + geom_point()\n + stat_smooth(method=\"lm\")\n + facet_wrap(\"gear\")\n)"
+    "text": "Example\nfrom plotnine import ggplot, geom_point, aes, stat_smooth, facet_wrap\nfrom plotnine.data import mtcars\n\n(\n    ggplot(mtcars, aes(\"wt\", \"mpg\", color=\"factor(gear)\"))\n    + geom_point()\n    + stat_smooth(method=\"lm\")\n    + facet_wrap(\"gear\")\n)"
   },
   {
     "objectID": "index.html#installation",
