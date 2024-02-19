@@ -218,7 +218,7 @@ class geom_path(geom):
     ) -> TupleInt2:
         w, h = min_size
         pad_w, pad_h = w * 0.5, h * 0.5
-        _w = _h = data.get("size", 0) * SIZE_FACTOR  # type: ignore
+        _w = _h = data.get("size", 0) * SIZE_FACTOR
         if data["color"] is not None:
             w = max(w, _w + pad_w)
             h = max(h, _h + pad_h)

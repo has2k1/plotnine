@@ -134,7 +134,7 @@ class stat_bin(stat):
         new_data = assign_bins(
             data["x"],
             breaks,
-            data.get("weight"),  # type: ignore
+            data.get("weight"),
             params["pad"],
             params["closed"],
         )

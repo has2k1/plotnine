@@ -16,9 +16,7 @@ from warnings import warn
 
 import numpy as np
 import pandas as pd
-
-# missing in type stubs
-from pandas.core.groupby import DataFrameGroupBy  # type: ignore
+from pandas.core.groupby import DataFrameGroupBy
 
 from ..exceptions import PlotnineError, PlotnineWarning
 from ..mapping import aes
@@ -864,7 +862,7 @@ def ungroup(data: DataLike) -> DataLike:
     """Return an ungrouped DataFrame, or pass the original data back."""
 
     if isinstance(data, DataFrameGroupBy):
-        return data.obj  # type: ignore
+        return data.obj
 
     return data
 

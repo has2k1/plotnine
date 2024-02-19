@@ -130,7 +130,7 @@ class stat_bindot(stat):
             and params["binpositions"] == "all"
         ):
             binaxis = params["binaxis"]
-            weight: pd.Series | None = data.get("weight")  # pyright: ignore
+            weight = data.get("weight")
             if binaxis == "x":
                 newdata = densitybin(
                     x=data["x"],
@@ -166,7 +166,7 @@ class stat_bindot(stat):
     def compute_group(cls, data, scales, **params):
         # Check that weights are whole numbers
         # (for dots, weights must be whole)
-        weight: pd.Series | None = data.get("weight")  # pyright: ignore
+        weight = data.get("weight")
         if weight is not None:
             int_status = [(w * 1.0).is_integer() for w in weight]
             if not all(int_status):

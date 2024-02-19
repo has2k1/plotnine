@@ -148,8 +148,8 @@ class geom_violin(geom):
 
             _df = polygon_df.iloc
             _loc = polygon_df.columns.get_loc
-            _df[:n, _loc("x")] = _df[:n, _loc("xminv")]
-            _df[n:, _loc("x")] = _df[n:, _loc("xmaxv")]
+            _df[:n, _loc("x")] = _df[:n, _loc("xminv")]  # type: ignore
+            _df[n:, _loc("x")] = _df[n:, _loc("xmaxv")]  # type: ignore
 
             # Close the polygon: set first and last point the same
             polygon_df.loc[-1, :] = polygon_df.loc[0, :]
