@@ -244,7 +244,7 @@ def add_margins(
     for vlst in margin_vars[1:]:
         dfx = df.copy()
         for v in vlst:
-            dfx.loc[0:, v] = "(all)"
+            dfx[v] = "(all)"
         margin_dfs.append(dfx)
 
     merged = pd.concat(margin_dfs, axis=0)
