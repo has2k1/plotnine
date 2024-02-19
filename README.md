@@ -37,8 +37,10 @@ Building a complex plot piece by piece.
 1. Scatter plot
 
    ```python
-   (ggplot(mtcars, aes("wt", "mpg"))
-    + geom_point())
+   (
+       ggplot(mtcars, aes("wt", "mpg"))
+       + geom_point()
+   )
    ```
 
    <img width="90%" align="center" src="./doc/images/readme-image-1.png">
@@ -46,8 +48,10 @@ Building a complex plot piece by piece.
 2. Scatter plot colored according some variable
 
    ```python
-   (ggplot(mtcars, aes("wt", "mpg", color="factor(gear)"))
-    + geom_point())
+   (
+       ggplot(mtcars, aes("wt", "mpg", color="factor(gear)"))
+       + geom_point()
+   )
    ```
 
    <img width="90%" align="center" src="./doc/images/readme-image-2.png">
@@ -56,9 +60,11 @@ Building a complex plot piece by piece.
    smoothed with a linear model with confidence intervals.
 
    ```python
-   (ggplot(mtcars, aes("wt", "mpg", color="factor(gear)"))
-    + geom_point()
-    + stat_smooth(method="lm"))
+   (
+       ggplot(mtcars, aes("wt", "mpg", color="factor(gear)"))
+       + geom_point()
+       + stat_smooth(method="lm")
+   )
    ```
 
    <img width="90%" align="center" src="./doc/images/readme-image-3.png">
@@ -68,10 +74,12 @@ Building a complex plot piece by piece.
    plotted on separate panels.
 
    ```python
-   (ggplot(mtcars, aes("wt", "mpg", color="factor(gear)"))
-    + geom_point()
-    + stat_smooth(method="lm")
-    + facet_wrap("gear"))
+   (
+       ggplot(mtcars, aes("wt", "mpg", color="factor(gear)"))
+       + geom_point()
+       + stat_smooth(method="lm")
+       + facet_wrap("gear")
+   )
    ```
 
    <img width="90%" align="center" src="./doc/images/readme-image-4.png">
@@ -81,11 +89,13 @@ Building a complex plot piece by piece.
    I) Make it playful
 
    ```python
-   (ggplot(mtcars, aes("wt", "mpg", color="factor(gear)"))
-    + geom_point()
-    + stat_smooth(method="lm")
-    + facet_wrap("gear")
-    + theme_xkcd())
+   (
+       ggplot(mtcars, aes("wt", "mpg", color="factor(gear)"))
+       + geom_point()
+       + stat_smooth(method="lm")
+       + facet_wrap("gear")
+       + theme_xkcd()
+   )
    ```
 
    <img width="90%" align="center" src="./doc/images/readme-image-5.png">
@@ -93,11 +103,13 @@ Building a complex plot piece by piece.
    II) Or professional
 
    ```python
-   (ggplot(mtcars, aes("wt", "mpg", color="factor(gear)"))
-    + geom_point()
-    + stat_smooth(method="lm")
-    + facet_wrap("gear")
-    + theme_tufte())
+   (
+       ggplot(mtcars, aes("wt", "mpg", color="factor(gear)"))
+       + geom_point()
+       + stat_smooth(method="lm")
+       + facet_wrap("gear")
+       + theme_tufte()
+   )
    ```
 
    <img width="90%" align="center" src="./doc/images/readme-image-5alt.png">
