@@ -115,7 +115,10 @@ def test_stack_non_linear_scale():
         + geom_col()
         + scale_y_log10()
     )
-    assert p == "stack-non-linear-scale"
+
+    with pytest.warns(RuntimeWarning) as rec:
+        assert p == "stack-non-linear-scale"
+        assert len(rec) == 1
 
 
 def test_fill():

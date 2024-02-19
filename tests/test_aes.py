@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import pytest
 
 from plotnine import (
     aes,
@@ -71,7 +72,9 @@ class TestTransScale:
             + stat_ecdf()
             + scale_y_log10()
         )
-        assert p == "stat_ecdf"
+
+        with pytest.warns(RuntimeWarning):
+            assert p == "stat_ecdf"
 
     def test_stat_bin_2d(self):
         data = pd.DataFrame({"x": [1, 10, 100, 1000], "y": range(4)})
