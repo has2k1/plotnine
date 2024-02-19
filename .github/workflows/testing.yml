@@ -38,6 +38,12 @@ jobs:
           coverage erase
           make test
 
+      - name: List Directory
+        shell: bash
+        run: |
+          ls -la
+          ls -la tests/*
+
       - uses: actions/upload-artifact@v3
         if: failure()
         with:
