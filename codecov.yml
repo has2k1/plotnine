@@ -4,7 +4,7 @@ codecov:
 comment:
    behavior: default
    branches:
-      - 'master'
+      - 'main'
 
 coverage:
    round: 'down'

@@ -25,7 +25,9 @@ jobs:
       - name: Install Packages
         shell: bash
         run: |
-          pip install ".[extra,test]"
+          # Install as an editable so that the coverage path
+          # is predicable
+          pip install -e ".[extra,test]"
 
       - name: Environment Information
         shell: bash
@@ -42,7 +44,6 @@ jobs:
         shell: bash
         run: |
           ls -la
-          ls -la tests/*
 
       - uses: actions/upload-artifact@v3
         if: failure()
@@ -57,10 +58,9 @@ jobs:
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
         with:
-          fail_ci_if_error: true
           name: "py${{ matrix.python-version }}"
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: true
 
   lint-and-format:
     runs-on: ubuntu-latest
