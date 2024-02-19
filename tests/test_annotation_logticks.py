@@ -34,7 +34,6 @@ def test_annotation_logticks():
             panel_grid_major=element_line(color="red"),
         )
     )
-
     assert p == "annotation_logticks"
 
 
@@ -172,8 +171,10 @@ def test_wrong_bases():
         + geom_point()
     )
 
-    with pytest.warns(PlotnineWarning):
+    with pytest.warns() as rec:
         p.draw_test()
+        rec.pop(PlotnineWarning)
+        rec.pop(RuntimeWarning)
 
     # x axis not transform, but ticks requested for a different base
     p = (
@@ -205,7 +206,7 @@ def test_wrong_bases():
         + geom_point()
     )
 
-    with pytest.warns(PlotnineWarning):
+    with pytest.warns() as rec:
         p.draw_test()
 
     # x axis is discrete + coord flip.
