@@ -1,6 +1,13 @@
 name: build
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - '*'
+    tags-ignore:
+      - 'v[0-9]*'
+  pull_request:
+  workflow_call:
 
 jobs:
   unittests:
