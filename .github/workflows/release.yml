@@ -9,6 +9,8 @@ jobs:
   run-tests:
     name: Run all tests
     uses: ./.github/workflows/testing.yml
+    with:
+      skip_codecov: true
 
   check-semver-tag:
     name: Check if the tag is in semantic version format
