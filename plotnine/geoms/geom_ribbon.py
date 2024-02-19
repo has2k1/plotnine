@@ -137,7 +137,7 @@ class geom_ribbon(geom):
 
         # We only change this defaults for fill_between when necessary
         where = data.get("where", None)
-        interpolate = not (where is None or where.all())  # type: ignore
+        interpolate = not (where is None or where.all())
 
         if params["outline_type"] != "full":
             size = 0
