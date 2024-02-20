@@ -20,7 +20,10 @@ def where_can_i_deploy_documentation() -> str:
     """
     if Git.is_release():
         return "website"
-    return "gh-pages" if Git.branch() == "main" else "gh-pages"
+    elif Git.is_pre_release():
+        return "pre-website"
+    else:
+        return "gh-pages"
 
 
 def process_request(arg: str) -> str:

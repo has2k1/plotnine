@@ -187,6 +187,15 @@ class Git:
         return ref_type == "tag" and bool(RELEASE_TAG_PATTERN.match(ref))
 
     @staticmethod
+    def is_pre_release():
+        """
+        Return True if event is a release
+        """
+        ref = os.environ.get("GITHUB_REF_NAME", "")
+        ref_type = os.environ.get("GITHUB_REF_TYPE", "")
+        return ref_type == "tag" and bool(PRE_RELEASE_TAG_PATTERN.match(ref))
+
+    @staticmethod
     def branch():
         """
         Return event branch
