@@ -5,6 +5,8 @@ title: Changelog
 ## v0.13.0
 (2024-02-20)
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10684553.svg)](https://doi.org/10.5281/zenodo.10684553)
+
 ### API Changes
 
 - Requires python >= 3.9
@@ -224,7 +226,7 @@ title: Changelog
 ## v0.12.1
 (2023-05-09)
 
-[![image](https://zenodo.org/badge/DOI/10.5281/zenodo.7919297.svg)](https://doi.org/10.5281/zenodo.7919297)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7919297.svg)](https://doi.org/10.5281/zenodo.7919297)
 
 ### New Features
 
@@ -329,7 +331,7 @@ title: Changelog
 ## v0.10.1
 (2022-09-10)
 
-[![image](https://zenodo.org/badge/DOI/10.5281/zenodo.7124917.svg)](https://doi.org/10.5281/zenodo.7124917)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7124917.svg)](https://doi.org/10.5281/zenodo.7124917)
 
 *This is a re-release of v0.10.0*.
 
@@ -340,7 +342,7 @@ not exist, got no description. This release is fixes error.
 ## v0.10.0
 (2022-09-10)
 
-[![image](https://zenodo.org/badge/DOI/10.5281/zenodo.7124912.svg)](https://doi.org/10.5281/zenodo.7124912)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7124912.svg)](https://doi.org/10.5281/zenodo.7124912)
 
 ### Bug Fixes
 
@@ -380,7 +382,7 @@ not exist, got no description. This release is fixes error.
 ## v0.9.0
 (2022-07-01)
 
-[![image](https://zenodo.org/badge/DOI/10.5281/zenodo.7124918.svg)](https://doi.org/10.5281/zenodo.7124918)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7124918.svg)](https://doi.org/10.5281/zenodo.7124918)
 
 ### API Changes
 
@@ -493,7 +495,7 @@ not exist, got no description. This release is fixes error.
 ## v0.8.0
 (2021-03-24)
 
-[![image](https://zenodo.org/badge/DOI/10.5281/zenodo.4636791.svg)](https://doi.org/10.5281/zenodo.4636791)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4636791.svg)](https://doi.org/10.5281/zenodo.4636791)
 
 ### API Changes
 
@@ -575,7 +577,7 @@ not exist, got no description. This release is fixes error.
 ## v0.7.1
 (2020-08-05)
 
-[![image](https://zenodo.org/badge/DOI/10.5281/zenodo.3973626.svg)](https://doi.org/10.5281/zenodo.3973626)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3973626.svg)](https://doi.org/10.5281/zenodo.3973626)
 
 ### Bug Fixes
 
@@ -593,7 +595,7 @@ not exist, got no description. This release is fixes error.
 ## v0.7.0
 (2020-06-05)
 
-[![image](https://zenodo.org/badge/DOI/10.5281/zenodo.3878645.svg)](https://doi.org/10.5281/zenodo.3878645)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3878645.svg)](https://doi.org/10.5281/zenodo.3878645)
 
 
 ### API Changes
@@ -678,7 +680,7 @@ not exist, got no description. This release is fixes error.
 ## v0.6.0
 (2019-08-21)
 
-[![image](https://zenodo.org/badge/DOI/10.5281/zenodo.3373970.svg)](https://doi.org/10.5281/zenodo.3373970)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3373970.svg)](https://doi.org/10.5281/zenodo.3373970)
 
 ### API Changes
 
@@ -800,7 +802,7 @@ not exist, got no description. This release is fixes error.
 ## v0.5.1
 (2018-10-17)
 
-[![image](https://zenodo.org/badge/DOI/10.5281/zenodo.1464803.svg)](https://doi.org/10.5281/zenodo.1464803)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.1464803.svg)](https://doi.org/10.5281/zenodo.1464803)
 
 ### Bug Fixes
 
@@ -810,7 +812,7 @@ not exist, got no description. This release is fixes error.
 ## v0.5.0
 (2018-10-16)
 
-[![image](https://zenodo.org/badge/DOI/10.5281/zenodo.1464204.svg)](https://doi.org/10.5281/zenodo.1464204)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.1464204.svg)](https://doi.org/10.5281/zenodo.1464204)
 
 ### API Changes
 
@@ -852,7 +854,7 @@ not exist, got no description. This release is fixes error.
 ## v0.4.0
 *2018-01-08*
 
-[![image](https://zenodo.org/badge/DOI/10.5281/zenodo.1325309.svg)](https://doi.org/10.5281/zenodo.1325309)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.1325309.svg)](https://doi.org/10.5281/zenodo.1325309)
 
 ### API Changes
 
