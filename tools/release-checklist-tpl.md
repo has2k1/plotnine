@@ -78,7 +78,7 @@ Release: plotnine-<VERSION>
 - [ ] Update changelog
 
   ```sh
-  nvim doc/changelog.rst
+  nvim doc/changelog.qmd
   git commit -am "Update changelog for release"
   git push
   ```
