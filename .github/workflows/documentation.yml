@@ -55,7 +55,6 @@ jobs:
       - name: Install Package
         shell: bash
         run: |
-          pip install git+https://github.com/has2k1/mizani.git@main
           pip install git+https://github.com/has2k1/quartodoc.git@main
           python -m pip install ".[doc]"
           pip install -r requirements/doc.txt
@@ -82,9 +81,10 @@ jobs:
           ls -la doc/reference/examples
           ls -la doc/tutorials
 
-      - name: Deploy to Github Pages
+      - name: Deploy to Documentation to a Branch
         uses: JamesIves/github-pages-deploy-action@v4
         if: contains(needs.parse_commit_info.outputs.can_deploy, 'true')
         with:
           folder: doc/_site
           branch: ${{ needs.parse_commit_info.outputs.deploy_to }}
+          commit-message: ${{ github.event.head_commit.message }}
