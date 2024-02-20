@@ -11,7 +11,11 @@ def can_i_deploy_documentation() -> bool:
     """
     Return True if documentation should be deployed
     """
-    return Git.is_release() or Git.branch() in ("main", "dev")
+    return (
+        Git.is_release()
+        or Git.is_pre_release()
+        or Git.branch() in ("main", "dev")
+    )
 
 
 def where_can_i_deploy_documentation() -> str:
