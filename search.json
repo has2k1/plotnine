@@ -1988,11 +1988,11 @@
     "text": "guides(\n    alpha=None,\n    color=None,\n    fill=None,\n    linetype=None,\n    shape=None,\n    size=None,\n    stroke=None,\n    colour=None\n)"
   },
   {
-    "objectID": "reference/guides.html#parameters",
-    "href": "reference/guides.html#parameters",
+    "objectID": "reference/guides.html#parameter-attributes",
+    "href": "reference/guides.html#parameter-attributes",
     "title": " plotnine.guides",
-    "section": "Parameters",
-    "text": "Parameters\n\n\nkwargs : dict\n\naesthetic - guide pairings. e.g\nguides(color=guide_colorbar())"
+    "section": "Parameter Attributes",
+    "text": "Parameter Attributes\n\n\nalpha: Optional[LegendOrColorbar | NoGuide] = None\n\nGuide for alpha scale.\n\ncolor: Optional[LegendOrColorbar | NoGuide] = None\n\nGuide for color scale.\n\nfill: Optional[LegendOrColorbar | NoGuide] = None\n\nGuide for fill scale.\n\nlinetype: Optional[LegendOnly | NoGuide] = None\n\nGuide for linetype scale.\n\nshape: Optional[LegendOnly | NoGuide] = None\n\nGuide for shape scale.\n\nsize: Optional[LegendOnly | NoGuide] = None\n\nGuide for size scale.\n\nstroke: Optional[LegendOnly | NoGuide] = None\n\nGuide for stroke scale.\n\ncolour: Optional[LegendOnly | NoGuide] = None\n\nGuide for colour scale."
   },
   {
     "objectID": "reference/guide_colorbar.html",
@@ -2002,11 +2002,11 @@
     "text": "guide_colorbar(\n    title=None,\n    theme=field(default_factory=Theme),\n    position=None,\n    direction=None,\n    reverse=False,\n    order=0,\n    nbin=None,\n    display=\"gradient\",\n    alpha=None,\n    draw_ulim=True,\n    draw_llim=True\n)"
   },
   {
-    "objectID": "reference/guide_colorbar.html#parameters",
-    "href": "reference/guide_colorbar.html#parameters",
+    "objectID": "reference/guide_colorbar.html#parameter-attributes",
+    "href": "reference/guide_colorbar.html#parameter-attributes",
     "title": " plotnine.guide_colorbar",
-    "section": "Parameters",
-    "text": "Parameters\n\n\nnbin : Optional[int] = None\n\nNumber of bins for drawing a colorbar. A larger value yields a smoother colorbar\n\ndisplay : Literal[\"gradient\", \"rectangles\", \"raster\"] = \"gradient\"\n\nHow to render the colorbar.\n\nalpha : Optional[float] = None\n\nOpacity (in the range [0, 1]) of the colorbar. The defualt None, is to use the opacity of the plot.\n\ndraw_ulim : bool = True\n\nWhether to show the upper limit tick marks.\n\ndraw_llim : bool = True\n\nWhether to show the lower limit tick marks.\n\nkwargs : dict\n\nParameters passed on to :class:.guide"
+    "section": "Parameter Attributes",
+    "text": "Parameter Attributes\n\n\ntitle: Optional[str] = None\n\nTitle of the guide. Default is the name of the aesthetic or the name specified using \n\ntheme: Theme = field(default_factory=Theme)\n\nA theme to style the guide. If None, the plots theme is used.\n\nposition: Optional[LegendPosition] = None\n\nWhere to place the guide relative to the panels.\n\ndirection: Optional[Orientation] = None\n\nDirection of the guide. The default is depends on legend_position.\n\nreverse: bool = False\n\nbool(x) -&gt; bool\nReturns True when the argument x is true, False otherwise. The builtins True and False are the only two instances of the class bool. The class bool is a subclass of the class int, and cannot be subclassed.\n\norder: int = 0\n\nint([x]) -&gt; integer int(x, base=10) -&gt; integer\nConvert a number or string to an integer, or return 0 if no arguments are given. If x is a number, return x.__int__(). For floating point numbers, this truncates towards zero.\nIf x is not a number or if base is given, then x must be a string, bytes, or bytearray instance representing an integer literal in the given base. The literal can be preceded by ‘+’ or ‘-’ and be surrounded by whitespace. The base defaults to 10. Valid bases are 0 and 2-36. Base 0 means to interpret the base from the string as an integer literal. &gt;&gt;&gt; int(‘0b100’, base=0) 4\n\nnbin: Optional[int] = None\n\nNumber of bins for drawing a colorbar. A larger value yields a smoother colorbar\n\ndisplay: Literal[\"gradient\", \"rectangles\", \"raster\"] = \"gradient\"\n\nstr(object=’’) -&gt; str str(bytes_or_buffer[, encoding[, errors]]) -&gt; str\nCreate a new string object from the given object. If encoding or errors is specified, then the object must expose a data buffer that will be decoded using the given encoding and error handler. Otherwise, returns the result of object.__str__() (if defined) or repr(object). encoding defaults to sys.getdefaultencoding(). errors defaults to ‘strict’.\n\nalpha: Optional[float] = None\n\nOpacity (in the range [0, 1]) of the colorbar. The defualt None, is to use the opacity of the plot.\n\ndraw_ulim: bool = True\n\nbool(x) -&gt; bool\nReturns True when the argument x is true, False otherwise. The builtins True and False are the only two instances of the class bool. The class bool is a subclass of the class int, and cannot be subclassed.\n\ndraw_llim: bool = True\n\nbool(x) -&gt; bool\nReturns True when the argument x is true, False otherwise. The builtins True and False are the only two instances of the class bool. The class bool is a subclass of the class int, and cannot be subclassed."
   },
   {
     "objectID": "reference/guide_colorbar.html#notes",
@@ -4074,11 +4074,11 @@
     "text": "guide(\n    title=None,\n    theme=field(default_factory=Theme),\n    position=None,\n    direction=None,\n    reverse=False,\n    order=0\n)"
   },
   {
-    "objectID": "reference/guide.html#parameters",
-    "href": "reference/guide.html#parameters",
+    "objectID": "reference/guide.html#parameter-attributes",
+    "href": "reference/guide.html#parameter-attributes",
     "title": " plotnine.guides.guide.guide",
-    "section": "Parameters",
-    "text": "Parameters\n\n\ntitle : Optional[str] = None\n\nTitle of the guide. Default is the name of the aesthetic or the name specified using \n\ntheme : Theme = field(default_factory=Theme)\n\nA theme to style the guide. If None, the plots theme is used.\n\nposition : Optional[LegendPosition] = None\n\nWhere to place the guide relative to the panels.\n\ndirection : Optional[Orientation] = None\n\nDirection of the guide. The default is depends on legend_position.\n\nreverse : bool = False\n\nWhether to reverse the order of the legend keys.\n\norder : int = 0\n\nOrder of this guide among multiple guides."
+    "section": "Parameter Attributes",
+    "text": "Parameter Attributes\n\n\ntitle: Optional[str] = None\n\nTitle of the guide. Default is the name of the aesthetic or the name specified using \n\ntheme: Theme = field(default_factory=Theme)\n\nA theme to style the guide. If None, the plots theme is used.\n\nposition: Optional[LegendPosition] = None\n\nWhere to place the guide relative to the panels.\n\ndirection: Optional[Orientation] = None\n\nDirection of the guide. The default is depends on legend_position.\n\nreverse: bool = False\n\nbool(x) -&gt; bool\nReturns True when the argument x is true, False otherwise. The builtins True and False are the only two instances of the class bool. The class bool is a subclass of the class int, and cannot be subclassed.\n\norder: int = 0\n\nint([x]) -&gt; integer int(x, base=10) -&gt; integer\nConvert a number or string to an integer, or return 0 if no arguments are given. If x is a number, return x.__int__(). For floating point numbers, this truncates towards zero.\nIf x is not a number or if base is given, then x must be a string, bytes, or bytearray instance representing an integer literal in the given base. The literal can be preceded by ‘+’ or ‘-’ and be surrounded by whitespace. The base defaults to 10. Valid bases are 0 and 2-36. Base 0 means to interpret the base from the string as an integer literal. &gt;&gt;&gt; int(‘0b100’, base=0) 4"
   },
   {
     "objectID": "reference/guide.html#notes",
@@ -4102,11 +4102,11 @@
     "text": "guide_legend(\n    title=None,\n    theme=field(default_factory=Theme),\n    position=None,\n    direction=None,\n    reverse=False,\n    order=0,\n    nrow=None,\n    ncol=None,\n    byrow=False,\n    override_aes=field(default_factory=dict)\n)"
   },
   {
-    "objectID": "reference/guide_legend.html#parameters",
-    "href": "reference/guide_legend.html#parameters",
+    "objectID": "reference/guide_legend.html#parameter-attributes",
+    "href": "reference/guide_legend.html#parameter-attributes",
     "title": " plotnine.guide_legend",
-    "section": "Parameters",
-    "text": "Parameters\n\n\nnrow : Optional[int] = None\n\nNumber of rows of legends.\n\nncol : Optional[int] = None\n\nNumber of columns of legends.\n\nbyrow : bool = False\n\nWhether to fill the legend row-wise or column-wise.\n\noverride_aes : dict[str, Any] = field(default_factory=dict)\n\nAesthetic parameters of legend key."
+    "section": "Parameter Attributes",
+    "text": "Parameter Attributes\n\n\ntitle: Optional[str] = None\n\nTitle of the guide. Default is the name of the aesthetic or the name specified using \n\ntheme: Theme = field(default_factory=Theme)\n\nA theme to style the guide. If None, the plots theme is used.\n\nposition: Optional[LegendPosition] = None\n\nWhere to place the guide relative to the panels.\n\ndirection: Optional[Orientation] = None\n\nDirection of the guide. The default is depends on legend_position.\n\nreverse: bool = False\n\nbool(x) -&gt; bool\nReturns True when the argument x is true, False otherwise. The builtins True and False are the only two instances of the class bool. The class bool is a subclass of the class int, and cannot be subclassed.\n\norder: int = 0\n\nint([x]) -&gt; integer int(x, base=10) -&gt; integer\nConvert a number or string to an integer, or return 0 if no arguments are given. If x is a number, return x.__int__(). For floating point numbers, this truncates towards zero.\nIf x is not a number or if base is given, then x must be a string, bytes, or bytearray instance representing an integer literal in the given base. The literal can be preceded by ‘+’ or ‘-’ and be surrounded by whitespace. The base defaults to 10. Valid bases are 0 and 2-36. Base 0 means to interpret the base from the string as an integer literal. &gt;&gt;&gt; int(‘0b100’, base=0) 4\n\nnrow: Optional[int] = None\n\nNumber of rows of legends.\n\nncol: Optional[int] = None\n\nNumber of columns of legends.\n\nbyrow: bool = False\n\nbool(x) -&gt; bool\nReturns True when the argument x is true, False otherwise. The builtins True and False are the only two instances of the class bool. The class bool is a subclass of the class int, and cannot be subclassed.\n\noverride_aes: dict[str, Any] = field(default_factory=dict)\n\nAesthetic parameters of legend key."
   },
   {
     "objectID": "reference/huron.html",
