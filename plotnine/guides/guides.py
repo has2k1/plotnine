@@ -19,7 +19,6 @@ from ..iapi import (
     outside_legend,
 )
 from ..mapping.aes import rename_aesthetics
-from ..themes import theme
 from .guide import guide
 
 if TYPE_CHECKING:
@@ -27,7 +26,7 @@ if TYPE_CHECKING:
 
     from matplotlib.offsetbox import OffsetBox, PackerBase
 
-    from plotnine import ggplot
+    from plotnine import ggplot, theme
     from plotnine.iapi import labels_view
     from plotnine.scales.scales import Scales
     from plotnine.typing import (
@@ -267,7 +266,7 @@ class guides:
         Apply the theme for each guide
         """
         for g in gdefs:
-            g.theme = cast(theme, g.theme)
+            g.theme = cast("theme", g.theme)
             g.theme.apply()
 
     def _assemble_guides(
