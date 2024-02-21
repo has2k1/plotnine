@@ -573,7 +573,6 @@ def to_rgba(
     However :), the colors can be rgba hex values or
     list-likes and the alpha dimension will be respected.
     """
-    from matplotlib.typing import ColorType
 
     def is_iterable(var):
         return np.iterable(var) and not isinstance(var, str)
@@ -608,7 +607,7 @@ def to_rgba(
         return c
 
     if is_iterable(colors):
-        colors = cast(Sequence[ColorType], colors)
+        colors = cast(Sequence["ColorType"], colors)
 
         if all(no_color(c) for c in colors):
             return "none"
@@ -618,7 +617,7 @@ def to_rgba(
         else:
             return [to_rgba_hex(c, alpha) for c in colors]
     else:
-        colors = cast(ColorType, colors)
+        colors = cast("ColorType", colors)
 
         if no_color(colors):
             return colors
