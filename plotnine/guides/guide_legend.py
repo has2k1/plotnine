@@ -15,7 +15,6 @@ import pandas as pd
 from .._utils import get_opposite_side, remove_missing
 from ..exceptions import PlotnineError, PlotnineWarning
 from ..mapping.aes import rename_aesthetics
-from ..themes import theme
 from .guide import GuideElements, guide
 
 if TYPE_CHECKING:
@@ -24,6 +23,7 @@ if TYPE_CHECKING:
     from matplotlib.artist import Artist
     from matplotlib.offsetbox import PackerBase
 
+    from plotnine import theme
     from plotnine.geoms.geom import geom
     from plotnine.layer import layer
     from plotnine.typing import SidePosition, TupleFloat2, TupleInt2
@@ -238,7 +238,7 @@ class guide_legend(guide):
 
         from .._mpl.offsetbox import ColoredDrawingArea
 
-        self.theme = cast(theme, self.theme)
+        self.theme = cast("theme", self.theme)
 
         obverse = slice(0, None)
         reverse = slice(None, None, -1)

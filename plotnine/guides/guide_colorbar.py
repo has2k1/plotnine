@@ -15,7 +15,6 @@ from .._utils import get_opposite_side
 from ..exceptions import PlotnineError, PlotnineWarning
 from ..mapping.aes import rename_aesthetics
 from ..scales.scale_continuous import scale_continuous
-from ..themes import theme
 from .guide import GuideElements, guide
 
 if TYPE_CHECKING:
@@ -25,6 +24,7 @@ if TYPE_CHECKING:
     from matplotlib.offsetbox import AuxTransformBox, PackerBase
     from matplotlib.text import Text
 
+    from plotnine import theme
     from plotnine.scales.scale import scale
     from plotnine.typing import SidePosition
 
@@ -171,7 +171,7 @@ class guide_colorbar(guide):
 
         from .._mpl.offsetbox import DPICorAuxTransformBox
 
-        self.theme = cast(theme, self.theme)
+        self.theme = cast("theme", self.theme)
 
         obverse = slice(0, None)
         reverse = slice(None, None, -1)

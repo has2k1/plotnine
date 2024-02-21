@@ -203,7 +203,7 @@ class layer:
         else:
             # Recognise polars dataframes
             if hasattr(self._data, "to_pandas"):
-                self.data = typing.cast(
+                self.data = cast(
                     "DataFrameConvertible", self._data
                 ).to_pandas()
             elif isinstance(self._data, pd.DataFrame):
