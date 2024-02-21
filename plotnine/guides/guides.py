@@ -60,25 +60,33 @@ class guides:
     """
     Guides for each scale
 
-    Used to assign a particular guide to an aesthetic(s).
-
-    Parameters
-    ----------
-    kwargs : dict
-        aesthetic - guide pairings. e.g
-        ```python
-        guides(color=guide_colorbar())
-        ```
+    Used to assign or remove a particular guide to the scale
+    of an aesthetic.
     """
 
     alpha: Optional[LegendOrColorbar | NoGuide] = None
+    """Guide for alpha scale."""
+
     color: Optional[LegendOrColorbar | NoGuide] = None
+    """Guide for color scale."""
+
     fill: Optional[LegendOrColorbar | NoGuide] = None
+    """Guide for fill scale."""
+
     linetype: Optional[LegendOnly | NoGuide] = None
+    """Guide for linetype scale."""
+
     shape: Optional[LegendOnly | NoGuide] = None
+    """Guide for shape scale."""
+
     size: Optional[LegendOnly | NoGuide] = None
+    """Guide for size scale."""
+
     stroke: Optional[LegendOnly | NoGuide] = None
+    """Guide for stroke scale."""
+
     colour: Optional[LegendOnly | NoGuide] = None
+    """Guide for colour scale."""
 
     def __post_init__(self):
         self.plot: ggplot

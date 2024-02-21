@@ -39,34 +39,34 @@ class guide(ABC, metaclass=Register):
     """
     Base class for all guides
 
-    Parameters
-    ----------
-    title :
-        Title of the guide. Default is the name of the aesthetic or the
-        name specified using [](`~plotnine.components.labels.lab`)
-    theme :
-        A theme to style the guide. If `None`, the plots theme is used.
-    position :
-        Where to place the guide relative to the panels.
-    direction :
-        Direction of the guide. The default is depends on
-        [](`~plotnine.themes.themeable.legend_position`).
-    reverse : bool, default=False
-        Whether to reverse the order of the legend keys.
-    order : int
-        Order of this guide among multiple guides.
-
     Notes
     -----
     At the moment not all parameters have been fully implemented.
     """
 
     title: Optional[str] = None
+    """
+    Title of the guide. Default is the name of the aesthetic or the
+    name specified using [](`~plotnine.components.labels.lab`)
+    """
+
     theme: Theme = field(default_factory=Theme)
+    """A theme to style the guide. If `None`, the plots theme is used."""
+
     position: Optional[LegendPosition] = None
+    """Where to place the guide relative to the panels."""
+
     direction: Optional[Orientation] = None
+    """
+    Direction of the guide. The default is depends on
+    [](`~plotnine.themes.themeable.legend_position`).
+    """
+
     reverse: bool = False
+    """Whether to reverse the order of the legend keys."""
+
     order: int = 0
+    """Order of this guide among multiple guides."""
 
     # Non-Parameter Attributes
     available_aes: set[str] = field(init=False, default_factory=set)
