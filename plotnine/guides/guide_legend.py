@@ -43,29 +43,27 @@ class LayerParameters:
 class guide_legend(guide):
     """
     Legend guide
-
-    Parameters
-    ----------
-    nrow :
-        Number of rows of legends.
-    ncol :
-        Number of columns of legends.
-    byrow :
-        Whether to fill the legend row-wise or column-wise.
-    override_aes :
-        Aesthetic parameters of legend key.
     """
 
     nrow: Optional[int] = None
+    """Number of rows of legends."""
+
     ncol: Optional[int] = None
+    """Number of columns of legends."""
+
     byrow: bool = False
+    """Whether to fill the legend row-wise or column-wise."""
+
     override_aes: dict[str, Any] = field(default_factory=dict)
+    """Aesthetic parameters of legend key."""
 
     # Non-Parameter Attributes
     available_aes: set[str] = field(
         init=False, default_factory=lambda: {"any"}
     )
-    layer_parameters: list[LayerParameters] = field(
+    """Aesthetics for which this guide can be used"""
+
+    _layer_parameters: list[LayerParameters] = field(
         init=False, default_factory=list
     )
 
@@ -191,9 +189,9 @@ class guide_legend(guide):
                 list(l.geom.REQUIRED_AES | l.geom.NON_MISSING_AES),
                 f"{l.geom.__class__.__name__} legend",
             )
-            self.layer_parameters.append(LayerParameters(l.geom, data, l))
+            self._layer_parameters.append(LayerParameters(l.geom, data, l))
 
-        if not self.layer_parameters:
+        if not self._layer_parameters:
             return None
         return self
 
@@ -266,7 +264,7 @@ class guide_legend(guide):
             )
 
             # overlay geoms
-            for params in self.layer_parameters:
+            for params in self._layer_parameters:
                 with suppress(IndexError):
                     key_data = params.data.iloc[i]
                     params.geom.draw_legend(key_data, da, params.layer)
@@ -391,7 +389,7 @@ class GuideElementsLegend(GuideElements):
 
         # Find the size that fits each key in the legend,
         sizes: list[list[TupleFloat2]] = []
-        for params in guide.layer_parameters:
+        for params in guide._layer_parameters:
             sizes.append([])
             get_key_size = params.geom.legend_key_size
             for i in range(len(params.data)):
