@@ -59,7 +59,7 @@ class _RenderDocClass(RenderDocClass):
         usage_signature = dedent(m.group("usage_signature"))
         return Div(
             CodeBlock(usage_signature, Attr(classes=["py"])),
-            Attr(classes=["doc-signature"]),
+            Attr(classes=["doc-signature", "doc-class"]),
         )
 
     def render_body(self):

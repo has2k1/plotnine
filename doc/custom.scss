@@ -10,14 +10,29 @@ $primary: #9E2F68;
 /*-- scss:rules --*/
 $signature-border-color: tint-color($primary, 25%);
 
-// docstring signatures
-.doc-signature > div:first-child {
+
+.doc-signature.doc-module > div:first-child,
+.doc-signature.doc-class > div:first-child {
    border-top: 0.25rem solid $signature-border-color;
 }
 
-section .doc-signature > div:first-child {
-   border-top: none;
+.doc-signature.doc-function > div:first-child,
+.doc-signature.doc-method > div:first-child {
    border-left: 0.25rem solid $signature-border-color;
+}
+
+.doc-signature.doc-attribute > p > code::before {
+  // A half-dot whose breadth is the same as the border width,
+  // and slide it to the border.
+  content: "";
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  background-color: $signature-border-color;
+  border-radius: 50%;
+  vertical-align: middle;
+  margin-left: -.75rem;
+  margin-right: .5rem;
 }
 
 // gallery
