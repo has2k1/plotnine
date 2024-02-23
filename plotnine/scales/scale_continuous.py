@@ -46,7 +46,7 @@ class scale_continuous(scale):
     {superclass_parameters}
     trans : str | callable
         Name of a trans function or a trans function.
-        See :mod:`mizani.transforms` for possible options.
+        See [](`mizani.transforms`) for possible options.
     oob : callable, default=mizani.bounds.censor
         Function to deal with out of bounds (limits)
         data points. Default is to turn them into

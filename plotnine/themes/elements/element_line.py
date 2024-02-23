@@ -25,12 +25,11 @@ class element_line(element_base):
     linetype : str | tuple
         line style. if a string, it should be one of *solid*, *dashed*,
         *dashdot* or *dotted*. you can create interesting dashed patterns
-        using tuples, see :meth:`matplotlib.lines.line2D.set_linestyle`.
+        using tuples, see [](`~matplotlib.lines.line2D.set_linestyle`).
     size : float
         line thickness
     kwargs : dict
-        parameters recognised by
-        :class:`matplotlib.lines.line2d`.
+        Parameters recognised by [](`~matplotlib.lines.line2d`).
     """
 
     def __init__(

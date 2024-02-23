@@ -71,7 +71,7 @@ class scale(ABC, metaclass=Register):
         shows up as the axis label or legend title. Suitable
         defaults are chosen depending on the type of scale.
     labels : bool | list | callable, default=True
-        List of :py:class:`str`. Labels at the `breaks`.
+        List of [](`str`). Labels at the `breaks`.
         Alternatively, a callable that takes an array_like of
         break points as input and returns a list of strings.
     limits : array_like, default=None
@@ -86,7 +86,7 @@ class scale(ABC, metaclass=Register):
         Function to map data points onto the scale. Most
         scales define their own palettes.
     aesthetics : list | str, default=None
-        list of :py:class:`str`. Aesthetics covered by the
+        list of [](`str`). Aesthetics covered by the
         scale. These are defined by each scale and the
         user should probably not change them. Have fun.
     """

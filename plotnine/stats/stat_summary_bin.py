@@ -53,7 +53,7 @@ class stat_summary_bin(stat):
         ambiguity in the argument names.
     random_state : int | ~numpy.random.RandomState, default=None
         Seed or Random number generator to use. If `None`, then
-        numpy global generator :class:`numpy.random` is used.
+        numpy global generator [](`numpy.random`) is used.
 
     Notes
     -----

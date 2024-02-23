@@ -233,7 +233,7 @@ def get_var_type(col: pd.Series) -> Literal["c", "o", "u"]:
     See Also
     --------
     The origin of the character codes is
-    :class:`statsmodels.nonparametric.kernel_density.KDEMultivariate`.
+    [](`~statsmodels.nonparametric.kernel_density.KDEMultivariate`).
     """
     if array_kind.continuous(col):
         return "c"

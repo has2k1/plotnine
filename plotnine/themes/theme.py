@@ -71,9 +71,9 @@ class theme:
 
         will only modify the x-axis text.
     kwargs: dict
-        kwargs are :ref:`themeables <themeables>`. The themeables are
-        elements that are subclasses of `themeable`. Many themeables
-        are defined using theme elements i.e
+        kwargs are `themeables`. The themeables are elements that are
+        subclasses of `themeable`. Many themeables are defined using
+        theme elements i.e
 
         - [](`~plotnine.themes.element_line`)
         - [](`~plotnine.themes.element_rect`)
@@ -84,8 +84,8 @@ class theme:
 
     Notes
     -----
-    When subclassing, make sure to call :python:`theme.__init__`.
-    After which you can customise :python:`self._rcParams` within
+    When subclassing, make sure to call `theme.__init__`{.py}.
+    After which you can customise `self._rcParams`{.py} within
     the `__init__` method of the new theme. The `rcParams`
     should not be modified after that.
     """

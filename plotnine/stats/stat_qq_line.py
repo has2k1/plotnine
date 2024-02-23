@@ -21,7 +21,7 @@ class stat_qq_line(stat):
         Distribution or distribution function name. The default is
         *norm* for a normal probability plot. Objects that look enough
         like a stats.distributions instance (i.e. they have a ppf
-        method) are also accepted. See :mod:`scipy stats <scipy.stats>`
+        method) are also accepted. See [scipy stats ](`scipy.stats`)
         for available distributions.
     dparams : dict, default=None
         Distribution-specific shape parameters (shape parameters plus

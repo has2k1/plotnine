@@ -29,7 +29,7 @@ class watermark:
         Alpha blending value.
     kwargs :
         Additional parameters passed to
-        :meth:`matplotlib.figure.figimage`.
+        [](`~matplotlib.figure.figimage`)
 
     Notes
     -----

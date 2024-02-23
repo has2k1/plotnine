@@ -53,7 +53,7 @@ class geom_text(geom):
     nudge_y : float, default=0
         Vertical adjustment to apply to the text
     adjust_text: dict, default=None
-        Parameters to :class:`adjustText.adjust_text` will repel
+        Parameters to [](`~adjustText.adjust_text`) will repel
         overlapping texts. This parameter takes priority of over
         `nudge_x` and `nudge_y`.
         `adjust_text` does not work well when it is used in the
@@ -62,7 +62,7 @@ class geom_text(geom):
         https://github.com/Phlya/adjustText/wiki .
     format_string : str, default=None
         If not `None`{.py}, then the text is formatted with this
-        string using :meth:`str.format` e.g:
+        string using [](`str.format`) e.g:
 
         ```python
         # 2.348 -> "2.35%"

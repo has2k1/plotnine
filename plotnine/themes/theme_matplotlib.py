@@ -8,7 +8,7 @@ class theme_matplotlib(theme):
     The default matplotlib look and feel.
 
     The theme can be used (and has the same parameter
-    to customize) like a :class:`matplotlib.rc_context` manager.
+    to customize) like a [](`matplotlib.rc_context`) manager.
 
     Parameters
     ----------

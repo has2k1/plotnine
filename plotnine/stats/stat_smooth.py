@@ -86,8 +86,8 @@ class stat_smooth(stat):
         An object that can be used to construct a patsy design matrix.
         This is usually a string. You can only use a formula if `method`
         is one of *lm*, *ols*, *wls*, *glm*, *rlm* or *gls*, and in the
-        :ref:`formula <patsy:formulas>` you may refer to the `x` and
-        `y` aesthetic variables.
+        [formula](https://patsy.readthedocs.io/en/stable/formulas.html)
+        you may refer to the `x` and `y` aesthetic variables.
     se : bool, default=True
         If `True`{.py} draw confidence interval around the smooth line.
     n : int, default=80

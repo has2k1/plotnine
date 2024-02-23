@@ -38,7 +38,7 @@ class coord_fixed(coord_cartesian):
 
     When changing the `aspect_ratio` in either way, the `width` of the
     panel remains constant (as derived from the
-    :class:`plotnine.themes.themeable.figure_size` themeable) and the
+    [](`plotnine.themes.themeable.figure_size`) themeable) and the
     `height` is altered to achieve desired ratio.
     """
 

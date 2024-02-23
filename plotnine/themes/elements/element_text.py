@@ -23,7 +23,7 @@ class element_text(element_base):
     Parameters
     ----------
     family :
-        Font family. See :meth:`matplotlib.text.Text.set_family`
+        Font family. See [](`~matplotlib.text.Text.set_family`)
         for supported values.
     style :
         Font style
@@ -52,7 +52,7 @@ class element_text(element_base):
         Not all text themeables support margin parameters and other
         than the `units`, only some of the other keys may apply.
     kwargs :
-        Parameters recognised by :class:`matplotlib.text.Text`
+        Parameters recognised by [](`~matplotlib.text.Text`)
 
     Notes
     -----

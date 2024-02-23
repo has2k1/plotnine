@@ -60,7 +60,7 @@ class stat_bindot(stat):
     drop : bool, default=False
         If `True`{.py}, remove all bins with zero counts.
     right : bool, default=True
-        When `method='histodot'`{.py}, :py:`True` means include right
+        When `method='histodot'`{.py}, `True`{.py} means include right
         edge of the bins and if `False`{.py} the left edge is included.
     breaks : FloatArray, default=None
         Bin boundaries for `method='histodot'`{.py}. This supercedes the
