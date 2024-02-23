@@ -53,7 +53,7 @@ class geom(ABC, metaclass=Register):
     """Geom/layer specific dataframe"""
 
     mapping: aes
-    """Mappings i.e. `aes(x='col1', fill='col2')`{.py}"""
+    """Mappings i.e. `aes(x="col1", fill="col2")`{.py}"""
 
     aes_params: dict[str, Any] = {}  # setting of aesthetic
     params: dict[str, Any]  # parameter settings
@@ -379,8 +379,8 @@ class geom(ABC, metaclass=Register):
         Plot data belonging to a unit.
 
         A matplotlib plot function may require that an aethestic
-        have a single unique value. e.g. linestyle='dashed' and
-        not linestyle=['dashed', 'dotted', ...].
+        have a single unique value. e.g. `linestyle="dashed"`{.py}
+        and not `linestyle=["dashed", "dotted", ...]`{.py}.
         A single call to such a function can only plot lines with
         the same linestyle. However, if the plot we want has more
         than one line with different linestyles, we need to group

@@ -414,7 +414,7 @@ not exist, got no description. This release is fixes error.
 - You can now align the `plot_title` horizontally to the left or right.
 
   ```py
-  theme(plot_title=element_text(ha='left'))
+  theme(plot_title=element_text(ha="left"))
   ```
 
   Before, the title was always centered.
@@ -584,7 +584,7 @@ not exist, got no description. This release is fixes error.
 - Fixed issue where a plot has no data and the geoms have no data,
   but the mappings are valid. ({{< issue 404 >}})
 
-- Fixed `preserve='single'` in [](:class:`~plotnine.position_dodge`)
+- Fixed `preserve="single"` in [](:class:`~plotnine.position_dodge`)
   and [](:class:`~plotnine.position_dodge2`) to work for geoms that
   only have `x` aesthetic and not `xmin` and `xmax`
   e.g [](:class:`~plotnine.geom_text`).
@@ -631,7 +631,7 @@ not exist, got no description. This release is fixes error.
   scale.
 
 - Fixed [](:class:`~plotnine.geom_violin`) and other geoms when used
-  with `position='dodge'` not to crash when if a layer has an empty
+  with `position="dodge"` not to crash when if a layer has an empty
   group of data.
 
 - Fixed bug in [](:class:`~plotnine.geom_path`) for some cases when groups
@@ -640,7 +640,7 @@ not exist, got no description. This release is fixes error.
 - Fixed all stats that compute kernel density estimates to work when all
   the data points are the same. ({{< issue 317 >}})
 
-- Fixed issue where setting the group to a string value i.e. `group='string'`
+- Fixed issue where setting the group to a string value i.e. `group="string"`
   outside `aes()` failed due to an error.
 
 - Fixed issue where discrete position scales could not deal with fewer limits
@@ -910,7 +910,7 @@ not exist, got no description. This release is fixes error.
 - Fixed bug in discrete scales where a column could not be mapped
   to integer values. ({{< issue 108 >}})
 
-- Make it possible to hide the legend with `theme(legend_position='none')`.
+- Make it possible to hide the legend with `theme(legend_position="none")`.
   ({{< issue 119 >}})
 
 - Fixed issue in [](:class:`~plotnine.stat_summary_bin`) where some input
@@ -922,8 +922,8 @@ not exist, got no description. This release is fixes error.
 - Fixed `IndexError` in [](:class:`~plotnine.facet_grid`) when row/column
   variable has 1 unique value. ({{< issue 129 >}})
 
-- Fixed [](:class:`~plotnine.facet_grid`) when `scale='free'`,
-  `scale='free_x'` or `scale='free_y'`, the panels share axes
+- Fixed [](:class:`~plotnine.facet_grid`) when `scale="free"`,
+  `scale="free_x"` or `scale="free_y"`, the panels share axes
   along the row or column.
 
 - Fixed [](:class:`~plotnine.geom_boxplot`) so that user can create a boxplot
@@ -1071,7 +1071,7 @@ not exist, got no description. This release is fixes error.
 *(2017-06-22)*
 
 - Fixed bug where manually setting the aesthetic `fill=None` or
-  `fill='None'` could lead to a black fill instead of an empty
+  `fill="None"` could lead to a black fill instead of an empty
   fill.
 
 - Fixed bug where computed aesthetics could not be used in larger
@@ -1083,7 +1083,7 @@ not exist, got no description. This release is fixes error.
 - Fixed bug where `ggplot(data=df)`{.py} resulted in an exception.
 
 - Fixed missing axis ticks and labels for [](:class:`~plotnine.facet_wrap`)
-  when the scales are allowed to vary (e.g `scales='free'`) between
+  when the scales are allowed to vary (e.g `scales="free"`) between
   the panels.
 
 - Fixed bug in [](:class:`~plotnine.stat_density`) where changing the

@@ -124,7 +124,7 @@ class guide_legend(guide):
         ```python
         from ggplot import *
         p = (
-            ggplot(aes(x='cut', fill='cut', color='cut'), data=diamonds)
+            ggplot(aes(x="cut", fill="cut", color="cut"), data=diamonds)
             + stat_bin()
         )
         ```
