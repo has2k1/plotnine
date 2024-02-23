@@ -91,9 +91,9 @@ class Layout:
         Notes
         -----
         The number of x or y scales depends on the facetting,
-        particularly the scales parameter. e.g if `scales='free'`
+        particularly the scales parameter. e.g if `scales="free"`{.py}
         then each panel will have separate x and y scales, and
-        if `scales='fixed'` then all panels will share an x
+        if `scales="fixed"`{.py} then all panels will share an x
         scale and a y scale.
         """
         layout = self.layout

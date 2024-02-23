@@ -71,7 +71,7 @@ class geom_dotplot(geom):
         # Issue warnings when parameters don't make sense
         if gp["position"] == "stack":
             warn(
-                "position='stack' doesn't work properly with "
+                'position="stack" doesn"t work properly with '
                 "geom_dotplot. Use stackgroups=True instead.",
                 PlotnineWarning,
             )
@@ -82,8 +82,8 @@ class geom_dotplot(geom):
         ):
             warn(
                 "geom_dotplot called with stackgroups=TRUE and "
-                "method='dotdensity'. You probably want to set "
-                "binpositions='all'",
+                'method="dotdensity". You probably want to set '
+                'binpositions="all"',
                 PlotnineWarning,
             )
 

@@ -368,7 +368,7 @@ def loess(data, xseq, **params):
         kwargs["surface"] = "direct"
         warnings.warn(
             "Making prediction outside the data range, "
-            "setting loess control parameter `surface='direct'`.",
+            'setting loess control parameter `surface="direct"`.',
             PlotnineWarning,
         )
 

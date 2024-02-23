@@ -52,11 +52,11 @@ class geom_ribbon(geom):
         expression should match the `ymin` value or expression. i.e.
 
         ```python
-         aes(ymin=0, ymax='col1', where='col1 > 0')  # good
-         aes(ymin=0, ymax='col1', where='col1 > 10')  # bad
+         aes(ymin=0, ymax="col1", where="col1 > 0")  # good
+         aes(ymin=0, ymax="col1", where="col1 > 10")  # bad
 
-         aes(ymin=col2, ymax='col1', where='col1 > col2')  # good
-         aes(ymin=col2, ymax='col1', where='col1 > col3')  # bad
+         aes(ymin=col2, ymax="col1", where="col1 > col2")  # good
+         aes(ymin=col2, ymax="col1", where="col1 > col3")  # bad
         ```
     """
     DEFAULT_AES = {

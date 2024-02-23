@@ -190,7 +190,7 @@ def test_array_mapping_and_evaluation():
         {"x": range(12), "y": range(12), "g": list("abcd") * 3}
     )
 
-    # should be the same as if color='g'
+    # should be the same as if color="g"
     p = (
         ggplot(data, aes("x", "y", color=data["g"]))
         + geom_point(size=4)

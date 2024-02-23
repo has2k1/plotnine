@@ -47,7 +47,7 @@ class stat_sina(stat):
     bin_limit : int, default=1
         If the samples within the same y-axis bin are more
         than `bin_limit`, the samples's X coordinates will be adjusted.
-        This parameter is effective only when `method='counts'`{.py}
+        This parameter is effective only when `method="counts"`{.py}
     random_state : int | ~numpy.random.RandomState, default=None
         Seed or Random number generator to use. If `None`, then
         numpy global generator [](`numpy.random`) is used.

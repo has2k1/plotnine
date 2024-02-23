@@ -56,7 +56,7 @@ class annotate:
 
     You should choose or ignore accordingly.
 
-    All `geoms` are created with `stat='identity'`{.py}.
+    All `geoms` are created with `stat="identity"`{.py}.
     """
 
     _annotation_geom: geom_base_class

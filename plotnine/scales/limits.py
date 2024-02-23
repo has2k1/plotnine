@@ -50,9 +50,9 @@ class _lim:
         # aesthetic is mapped to a categorical but the limits
         # are not provided in categorical form. We only handle
         # the case where the mapping uses an expression to
-        # conver to categorical e.g `aes(color='factor(cyl)')`.
-        # However if `'cyl'` column is a categorical and the
-        # mapping is `aes(color='cyl')`, that will result in
+        # conver to categorical e.g `aes(color="factor(cyl)")`.
+        # However if `"cyl"` column is a categorical and the
+        # mapping is `aes(color="cyl")`, that will result in
         # an error. If later case proves common enough then we
         # could inspect the data and be clever based on that too!!
         ae = self.aesthetic

@@ -109,7 +109,7 @@ class geom_boxplot(geom):
         _position = kwargs.get("position", self.DEFAULT_PARAMS["position"])
         varwidth = kwargs.get("varwidth", self.DEFAULT_PARAMS["varwidth"])
 
-        # varwidth = True is not compatible with preserve='total'
+        # varwidth = True is not compatible with preserve="total"
         if varwidth:
             if isinstance(_position, str):
                 kwargs["position"] = position_dodge2(preserve="single")

@@ -19,7 +19,7 @@ class stat_ydensity(stat):
     Parameters
     ----------
     {common_parameters}
-    kernel : str, default='gaussian'
+    kernel : str, default="gaussian"
         Kernel used for density estimation. One of:
 
         ```python

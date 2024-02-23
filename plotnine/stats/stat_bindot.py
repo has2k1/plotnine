@@ -38,13 +38,13 @@ class stat_bindot(stat):
         Number of bins. Overridden by binwidth. If `None`{.py},
         a number is computed using the freedman-diaconis method.
     binwidth : float, default=None
-        When `method='dotdensity'`{.py}, this specifies the maximum
-        binwidth. When `method='histodot'`{.py}, this specifies the
+        When `method="dotdensity"`{.py}, this specifies the maximum
+        binwidth. When `method="histodot"`{.py}, this specifies the
         binwidth. This supercedes the `bins`.
     origin : float, default=None
-        When `method='histodot'`{.py}, origin of the first bin.
+        When `method="histodot"`{.py}, origin of the first bin.
     width : float, default=0.9
-        When `binaxis='y'`{.py}, the spacing of the dotstacks for
+        When `binaxis="y"`{.py}, the spacing of the dotstacks for
         dodging.
     binaxis : Literal["x", "y"], default="x"
         Axis to bin along.
@@ -60,10 +60,10 @@ class stat_bindot(stat):
     drop : bool, default=False
         If `True`{.py}, remove all bins with zero counts.
     right : bool, default=True
-        When `method='histodot'`{.py}, `True`{.py} means include right
+        When `method="histodot"`{.py}, `True`{.py} means include right
         edge of the bins and if `False`{.py} the left edge is included.
     breaks : FloatArray, default=None
-        Bin boundaries for `method='histodot'`{.py}. This supercedes the
+        Bin boundaries for `method="histodot"`{.py}. This supercedes the
         `binwidth` and `bins`.
 
     See Also
