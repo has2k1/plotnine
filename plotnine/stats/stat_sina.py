@@ -50,7 +50,7 @@ class stat_sina(stat):
         This parameter is effective only when `method='counts'`{.py}
     random_state : int | ~numpy.random.RandomState, default=None
         Seed or Random number generator to use. If `None`, then
-        numpy global generator :class:`numpy.random` is used.
+        numpy global generator [](`numpy.random`) is used.
     scale : Literal["area", "count", "width"], default="area"
         How to scale the sina groups.
 

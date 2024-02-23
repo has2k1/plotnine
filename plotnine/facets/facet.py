@@ -165,7 +165,7 @@ class facet:
 
         Notes
         -----
-        This method will be called after :meth:`setup_params`,
+        This method will be called after [](`~plotnine.facet.setup_params`),
         therefore the `params` property will be set.
         """
         return data

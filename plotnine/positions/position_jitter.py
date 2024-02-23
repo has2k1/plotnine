@@ -28,7 +28,7 @@ class position_jitter(position):
         If `None`, `0.4` of the resolution of the data.
     random_state :
         Seed or Random number generator to use. If `None`, then
-        numpy global generator :class:`numpy.random` is used.
+        numpy global generator [](`numpy.random`) is used.
     """
 
     REQUIRED_AES = {"x", "y"}

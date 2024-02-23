@@ -462,8 +462,8 @@ class scale_color_cmap(scale_continuous):
 
     See Also
     --------
-    :mod:`matplotlib.cm`
-    :mod:`matplotlib.colors`
+    [](`matplotlib.cm`)
+    [](`matplotlib.colors`)
     """
 
     _aesthetics = ["color"]
@@ -500,8 +500,8 @@ class scale_color_cmap_d(scale_discrete):
     ----------
     cmap_name :
         A standard Matplotlib colormap name. It must be of type
-        :class:`matplotlib.colors.ListedColormap`.
-        . The default is `viridis`. For the list of names checkout
+        [](`matplotlib.colors.ListedColormap`).
+        The default is `viridis`. For the list of names checkout
         the output of `matplotlib.cm.cmap_d.keys()` or see the
         `documentation <http://matplotlib.org/users/colormaps.html>`_.
     {superclass_parameters}
@@ -510,8 +510,8 @@ class scale_color_cmap_d(scale_discrete):
 
     See Also
     --------
-    :mod:`matplotlib.cm`
-    :mod:`matplotlib.colors`
+    [](`matplotlib.cm`)
+    [](`matplotlib.colors`)
     """
 
     _aesthetics = ["color"]

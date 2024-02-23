@@ -20,7 +20,7 @@ class scale_datetime(scale_continuous):
         `breaks`.
     date_labels : str, default=None
         Format string for the labels.
-        See :ref:`strftime <strftime-strptime-behavior>`.
+        See [strftime](:ref:`strftime-strptime-behavior`).
         If specified, `date_labels` takes precedence over
         `labels`.
     date_minor_breaks : str, default=None

@@ -36,7 +36,7 @@ class position_jitterdodge(position):
         Amount to dodge in horizontal direction.
     random_state :
         Seed or Random number generator to use. If `None`, then
-        numpy global generator :class:`numpy.random` is used.
+        numpy global generator [](`numpy.random`) is used.
     """
 
     REQUIRED_AES = {"x", "y"}

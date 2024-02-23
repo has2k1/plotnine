@@ -61,7 +61,7 @@ class DPICorAuxTransformBox(AuxTransformBox):
 
     def get_transform(self):
         """
-        Return the :class:`~matplotlib.transforms.Transform` applied
+        Return the [](`~matplotlib.transforms.Transform`) applied
         to the children
         """
         return (

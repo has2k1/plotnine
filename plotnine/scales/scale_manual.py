@@ -91,7 +91,7 @@ class scale_shape_manual(_scale_manual):
     ----------
     values : array_like | dict
         Shapes that make up the palette. See
-        :mod:`matplotlib.markers.` for list of all possible
+        [](`matplotlib.markers`) for list of all possible
         shapes. The values will be matched with the `limits`
         of the scale or the `breaks` if provided.
         If it is a dict then it should map data values to shapes.
@@ -99,7 +99,7 @@ class scale_shape_manual(_scale_manual):
 
     See Also
     --------
-    :mod:`matplotlib.markers`
+    [](`matplotlib.markers`)
     """
 
     _aesthetics = ["shape"]
@@ -136,7 +136,7 @@ class scale_linetype_manual(_scale_manual):
 
     See Also
     --------
-    :mod:`matplotlib.markers`
+    [](`matplotlib.markers`)
     """
 
     _aesthetics = ["linetype"]

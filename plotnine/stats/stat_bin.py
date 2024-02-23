@@ -39,7 +39,7 @@ class stat_bin(stat):
         The center of one of the bins. Note that if center is above
         or below the range of the data, things will be shifted by
         an appropriate number of widths. To center on integers, for
-        example, use `width=1`{.py} and :py:`center=0`, even if 0 i
+        example, use `width=1`{.py} and `center=0`{.py}, even if 0 i
         s outside the range of the data. At most one of center and
         boundary may be specified.
     boundary : float, default=None

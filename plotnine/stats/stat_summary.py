@@ -51,7 +51,7 @@ def mean_cl_boot(
         Confidence interval in the range (0, 1).
     random_state : int | ~numpy.random.RandomState, default=None
         Seed or Random number generator to use. If `None`, then
-        numpy global generator :class:`numpy.random` is used.
+        numpy global generator [](`numpy.random`) is used.
     """
     return bootstrap_statistics(
         series,
@@ -238,7 +238,7 @@ class stat_summary(stat):
         ambiguity in the argument names.
     random_state : int | ~numpy.random.RandomState, default=None
         Seed or Random number generator to use. If `None`, then
-        numpy global generator :class:`numpy.random` is used.
+        numpy global generator [](`numpy.random`) is used.
 
     Notes
     -----

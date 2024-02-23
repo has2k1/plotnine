@@ -91,7 +91,7 @@ class PlotnineAnimation(ArtistAnimation):
         figure
             Matplotlib figure
         artists
-            List of :class:`Matplotlib.artist.Artist`
+            List of [](`Matplotlib.artist.Artist`)
         """
         import matplotlib.pyplot as plt
 
@@ -146,7 +146,7 @@ class PlotnineAnimation(ArtistAnimation):
             """
             Set limits of all the scales in the animation
 
-            Should be called before :func:`check_scale_limits`.
+            Should be called before `check_scale_limits`.
 
             Parameters
             ----------
@@ -165,7 +165,7 @@ class PlotnineAnimation(ArtistAnimation):
             Raises a PlotnineError if any of the scales has limits
             that do not match those of the first plot/frame.
 
-            Should be called after :func:`set_scale_limits`.
+            Should be called after `set_scale_limits`.
 
             Parameters
             ----------

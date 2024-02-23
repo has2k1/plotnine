@@ -31,9 +31,9 @@ class element_rect(element_base):
         Line thickness
     kwargs : dict
         Parameters recognised by
-        :class:`matplotlib.patches.Rectangle`. In some cases
-        you can use the fancy parameters from
-        :class:`matplotlib.patches.FancyBboxPatch`.
+        [](`~matplotlib.patches.Rectangle`).
+        In some cases you can use the fancy parameters from
+        [](`~matplotlib.patches.FancyBboxPatch`).
     """
 
     def __init__(

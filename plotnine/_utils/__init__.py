@@ -434,7 +434,7 @@ def jitter(x, factor=1, amount=None, random_state=None):
         range of the `x` values.
     random_state : int | ~numpy.random.RandomState, default=None
         Seed or Random number generator to use. If `None`, then
-        numpy global generator :class:`numpy.random` is used.
+        numpy global generator [](`numpy.random`) is used.
 
     References:
 

@@ -40,8 +40,8 @@ class themeable(metaclass=RegistryHierarchyMeta):
     Abstract class of things that can be themed.
 
     Every subclass of themeable is stored in a dict at
-    :python:`themeable.register` with the name of the subclass as
-    the key.
+    [](`~plotnine.theme.themeables.themeable.register`) with the name
+    of the subclass as the key.
 
     It is the base of a class hierarchy that uses inheritance in a
     non-traditional manner. In the textbook use of class inheritance,
@@ -269,8 +269,9 @@ class Themeables(dict[str, themeable]):
         insertion, any existing themeables that will be
         affected by a new from `other` will either be merged
         or removed. This makes sure that a general themeable
-        of type :class:`text` can be added to override an
-        existing specific one of type :class:`axis_text_x`.
+        of type [](`~plotnine.theme.themeables.text`) can be
+        added to override an existing specific one of type
+        [](`~plotnine.theme.themeables.axis_text_x`).
         """
         for new in other.values():
             new_key = new.__class__.__name__
@@ -300,8 +301,10 @@ class Themeables(dict[str, themeable]):
 
         Themeables should be applied or merged in order from general
         to specific. i.e.
-            - apply :class:`axis_line` before :class:`axis_line_x`
-            - merge :class:`axis_line_x` into :class:`axis_line`
+            - apply [](`~plotnine.theme.themeables.axis_line`)
+              before [](`~plotnine.theme.themeables.axis_line_x`)
+            - merge [](`~plotnine.theme.themeables.axis_line_x`)
+              into [](`~plotnine.theme.themeables.axis_line`)
         """
         hierarchy = themeable._hierarchy
         result: dict[str, themeable] = {}
@@ -328,9 +331,10 @@ class Themeables(dict[str, themeable]):
         Get the value a specific themeable(s) property
 
         Themeables store theming attribute values in the
-        :attr:`Themeable.properties` :class:`dict`. The goal
-        of this method is to look a value from that dictionary,
-        and fallback along the inheritance heirarchy of themeables.
+        [](`~plotnine.themes.themeables.Themeable.properties`)
+        [](`dict`). The goal of this method is to look a value from
+        that dictionary, and fallback along the inheritance heirarchy
+        of themeables.
 
         Parameters
         ----------
@@ -369,9 +373,10 @@ class Themeables(dict[str, themeable]):
         Get the value a specific themeable(s) property
 
         Themeables store theming attribute values in the
-        :attr:`Themeable.properties` :class:`dict`. The goal
-        of this method is to look a value from that dictionary,
-        and fallback along the inheritance heirarchy of themeables.
+        [](`~plotnine.theme.themeables.Themeable.properties`)
+        [](`dict`). The goal of this method is to look a value from
+        that dictionary, and fallback along the inheritance heirarchy
+        of themeables.
 
         Parameters
         ----------
@@ -1686,8 +1691,10 @@ class axis_ticks_pad_major_y(themeable):
 
     Note
     ----
-    Padding is not applied when the :class:`axis_ticks_major_y` are
-    blank, but it does apply when the :class:`axis_ticks_length_major_y`
+    Padding is not applied when the
+    [](`~plotnine.theme.themeables.axis_ticks_major_y`) are
+    blank, but it does apply when the
+    [](`~plotnine.theme.themeables.axis_ticks_length_major_y`)
     is zero.
     """
 
@@ -1711,9 +1718,10 @@ class axis_ticks_pad_major(axis_ticks_pad_major_x, axis_ticks_pad_major_y):
 
     Note
     ----
-    Padding is not applied when the :class:`axis_ticks_major` are
-    blank, but it does apply when the :class:`axis_ticks_length_major`
-    is zero.
+    Padding is not applied when the
+    [](`~plotnine.theme.themeables.axis_ticks_major`) are blank,
+    but it does apply when the
+    [](`~plotnine.theme.themeables.axis_ticks_length_major`) is zero.
     """
 
 
@@ -1727,9 +1735,10 @@ class axis_ticks_pad_minor_x(themeable):
 
     Note
     ----
-    Padding is not applied when the :class:`axis_ticks_minor_x` are
-    blank, but it does apply when the :class:`axis_ticks_length_minor_x`
-    is zero.
+    Padding is not applied when the
+    [](`~plotnine.theme.themeables.axis_ticks_minor_x`) are
+    blank, but it does apply when the
+    [](`~plotnine.theme.themeables.axis_ticks_length_minor_x`) is zero.
     """
 
     def apply_ax(self, ax: Axes):
@@ -1751,8 +1760,10 @@ class axis_ticks_pad_minor_y(themeable):
 
     Note
     ----
-    Padding is not applied when the :class:`axis_ticks_minor_y` are
-    blank, but it does apply when the :class:`axis_ticks_length_minor_y`
+    Padding is not applied when the
+    [](`~plotnine.theme.themeables.axis_ticks_minor_y`) are
+    blank, but it does apply when the
+    [](`~plotnine.theme.themeables.axis_ticks_length_minor_y`)
     is zero.
     """
 
@@ -1775,9 +1786,10 @@ class axis_ticks_pad_minor(axis_ticks_pad_minor_x, axis_ticks_pad_minor_y):
 
     Note
     ----
-    Padding is not applied when the :class:`axis_ticks_minor` are
-    blank, but it does apply when the :class:`axis_ticks_length_minor`
-    is zero.
+    Padding is not applied when the
+    [](`~plotnine.theme.themeables.axis_ticks_minor`) are
+    blank, but it does apply when the
+    [](`~plotnine.theme.themeables.axis_ticks_length_minor`) is zero.
     """
 
 
@@ -1792,8 +1804,10 @@ class axis_ticks_pad(axis_ticks_pad_major, axis_ticks_pad_minor):
 
     Note
     ----
-    Padding is not applied when the :class:`axis_ticks` are blank,
-    but it does apply when the :class:`axis_ticks_length` is zero.
+    Padding is not applied when the
+    [](`~plotnine.theme.themeables.axis_ticks`) are blank,
+    but it does apply when the
+    [](`~plotnine.theme.themeables.axis_ticks_length`) is zero.
     """
 
 
@@ -1871,9 +1885,10 @@ class panel_spacing_y(themeable):
     Notes
     -----
     It is deliberate to have the vertical spacing be a fraction of
-    the width. That means that when :class:`panel_spacing_x` is the
-    equal :class:`panel_spacing_x`, the spaces in both directions
-    will be equal.
+    the width. That means that when
+    [](`~plotnine.theme.themeables.panel_spacing_x`) is the
+    equal [](`~plotnine.theme.themeables.panel_spacing_x`),
+    the spaces in both directions will be equal.
     """
 
 
@@ -2051,7 +2066,8 @@ class legend_box_just(themeable):
     ----------
     theme_element : Literal["left", "right", "center", "top", "bottom", \
                     "baseline"], default=None
-        If `None`, the value that will apply depends on :class:`legend_box`.
+        If `None`, the value that will apply depends on
+        [](`~plotnine.theme.themeables.legend_box`).
     """
 
 
