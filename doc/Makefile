@@ -14,6 +14,13 @@ for line in sys.stdin:
 endef
 export PRINT_HELP_PYSCRIPT
 
+define CREATE_OBJECTS_INV
+import sphobjinv as soi
+inv = soi.Inventory(source="objects.txt")
+soi.writebytes("objects.inv", soi.compress(inv.data_file()))
+endef
+export CREATE_OBJECTS_INV
+
 QRENDERER_STYLE_FILE=qrenderer.scss
 QRENDERER_STYLE_URL=https://raw.githubusercontent.com/has2k1/qrenderer/main/doc/qrenderer.scss
 
@@ -27,6 +34,8 @@ clean:  ## Remove build artefacts
 	rm -rf reference/
 	rm -rf _site/
 	rm -rf _inv/
+	rm -f objects.txt
+	rm -f objects.inv
 
 readme-images:
 	cd images; python readme_images.py
@@ -49,6 +58,7 @@ config:  ## Configure project for quartodoc and quarto
 
 docstrings: config  ## Generate qmd files from the docstrings
 	quartodoc build --config _quartodoc.yml
+	@python -c "$$CREATE_OBJECTS_INV"
 
 html: docstrings download_qrenderer_style ## Build html site
 	quarto render
