@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>plotnine 0.0.post1+g9280c8c</title>
+<title>plotnine 0.0.post1+g4323c53</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -113,7 +113,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine 0.0.post1+g9280c8c</span>
+    <span class="navbar-title">plotnine 0.0.post1+g4323c53</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -275,15 +275,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </dd>
 <dt><code><span class="doc-parameter-name">binwidth</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#float">float</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
 <dd>
-<p>When <code class="sourceCode python">method<span class="op">=</span><span class="st">'dotdensity'</span></code>, this specifies the maximum binwidth. When <code class="sourceCode python">method<span class="op">=</span><span class="st">'histodot'</span></code>, this specifies the binwidth. This supercedes the <code>bins</code>.</p>
+<p>When <code class="sourceCode python">method<span class="op">=</span><span class="st">"dotdensity"</span></code>, this specifies the maximum binwidth. When <code class="sourceCode python">method<span class="op">=</span><span class="st">"histodot"</span></code>, this specifies the binwidth. This supercedes the <code>bins</code>.</p>
 </dd>
 <dt><code><span class="doc-parameter-name">origin</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#float">float</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
 <dd>
-<p>When <code class="sourceCode python">method<span class="op">=</span><span class="st">'histodot'</span></code>, origin of the first bin.</p>
+<p>When <code class="sourceCode python">method<span class="op">=</span><span class="st">"histodot"</span></code>, origin of the first bin.</p>
 </dd>
 <dt><code><span class="doc-parameter-name">width</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#float">float</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">0.9</span></code></dt>
 <dd>
-<p>When <code class="sourceCode python">binaxis<span class="op">=</span><span class="st">'y'</span></code>, the spacing of the dotstacks for dodging.</p>
+<p>When <code class="sourceCode python">binaxis<span class="op">=</span><span class="st">"y"</span></code>, the spacing of the dotstacks for dodging.</p>
 </dd>
 <dt><code><span class="doc-parameter-name">binaxis</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">Literal[<span class="st">"x"</span>, <span class="st">"y"</span>]</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default"><span class="st">"x"</span></span></code></dt>
 <dd>
@@ -303,11 +303,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </dd>
 <dt><code><span class="doc-parameter-name">right</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#bool">bool</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">True</span></code></dt>
 <dd>
-<p>When <code class="sourceCode python">method<span class="op">=</span><span class="st">'histodot'</span></code>, :py:<code>True</code> means include right edge of the bins and if <code class="sourceCode python"><span class="va">False</span></code> the left edge is included.</p>
+<p>When <code class="sourceCode python">method<span class="op">=</span><span class="st">"histodot"</span></code>, <code class="sourceCode python"><span class="va">True</span></code> means include right edge of the bins and if <code class="sourceCode python"><span class="va">False</span></code> the left edge is included.</p>
 </dd>
 <dt><code><span class="doc-parameter-name">breaks</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">FloatArray</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
 <dd>
-<p>Bin boundaries for <code class="sourceCode python">method<span class="op">=</span><span class="st">'histodot'</span></code>. This supercedes the <code>binwidth</code> and <code>bins</code>.</p>
+<p>Bin boundaries for <code class="sourceCode python">method<span class="op">=</span><span class="st">"histodot"</span></code>. This supercedes the <code>binwidth</code> and <code>bins</code>.</p>
 </dd>
 <dt><code><span class="doc-parameter-name">**kwargs</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/typing.html#typing.Any">Any</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">{}</span></code></dt>
 <dd>
@@ -318,7 +318,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="see-also" class="level2 doc-see-also">
 <h2 class="doc-see-also anchored" data-anchor-id="see-also">See Also</h2>
-<p>plotnine.stats.stat_bin</p>
+<dl>
+<dt></dt>
+<dd>
+
+</dd>
+</dl>
 
 
 </section>

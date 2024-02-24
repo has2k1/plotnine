@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>plotnine 0.0.post1+g9280c8c</title>
+<title>plotnine 0.0.post1+g4323c53</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -113,7 +113,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine 0.0.post1+g9280c8c</span>
+    <span class="navbar-title">plotnine 0.0.post1+g4323c53</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -351,11 +351,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </dd>
 <dt><code><span class="doc-parameter-name">adjust_text</span></code></dt>
 <dd>
-<p>Parameters to :class:<code>adjustText.adjust_text</code> will repel overlapping texts. This parameter takes priority of over <code>nudge_x</code> and <code>nudge_y</code>. <code>adjust_text</code> does not work well when it is used in the first layer of the plot, or if it is the only layer. For more see the documentation at https://github.com/Phlya/adjustText/wiki .</p>
+<p>Parameters to <a href="https://adjusttext.readthedocs.io/en/latest/index.html#adjustText.adjust_text"><code>adjust_text</code></a> will repel overlapping texts. This parameter takes priority of over <code>nudge_x</code> and <code>nudge_y</code>. <code>adjust_text</code> does not work well when it is used in the first layer of the plot, or if it is the only layer. For more see the documentation at https://github.com/Phlya/adjustText/wiki .</p>
 </dd>
 <dt><code><span class="doc-parameter-name">format_string</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#str">str</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
 <dd>
-<p>If not <code class="sourceCode python"><span class="va">None</span></code>, then the text is formatted with this string using :meth:<code>str.format</code> e.g:</p>
+<p>If not <code class="sourceCode python"><span class="va">None</span></code>, then the text is formatted with this string using <a href="https://docs.python.org/3/library/stdtypes.html#str.format"><code>str.format</code></a> e.g:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 2.348 -&gt; "2.35%"</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>geom_text(format_string<span class="op">=</span><span class="st">"</span><span class="sc">{:.2f}</span><span class="st">%"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </dd>
@@ -372,7 +372,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="see-also" class="level2 doc-see-also">
 <h2 class="doc-see-also anchored" data-anchor-id="see-also">See Also</h2>
-<p>plotnine.geoms.geom_label matplotlib.text.Text matplotlib.patheffects</p>
+<dl>
+<dt><a href="https://matplotlib.org/stable/api/text_api.html#matplotlib.text.Text"><code>Text</code></a></dt>
+<dd>
+
+</dd>
+</dl>
 
 
 </section>
