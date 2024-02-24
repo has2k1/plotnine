@@ -23,7 +23,7 @@ class geom_col(geom_bar):
 
     See Also
     --------
-    plotnine.geoms.geom_bar
+    plotnine.geom_bar
     """
 
     REQUIRED_AES = {"x", "y"}

@@ -94,7 +94,7 @@ class position(ABC, metaclass=Register):
 
         See Also
         --------
-        position_jitter.compute_panel
+        plotnine.position_jitter.compute_panel
         """
         msg = "{} needs to implement this method"
         raise NotImplementedError(msg.format(cls.__name__))

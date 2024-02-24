@@ -60,7 +60,7 @@ class stat_sina(stat):
 
     See Also
     --------
-    plotnine.geoms.geom_sina
+    plotnine.geom_sina
     """
 
     _aesthetics_doc = """

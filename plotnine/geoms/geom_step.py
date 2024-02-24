@@ -37,7 +37,7 @@ class geom_step(geom_path):
 
     See Also
     --------
-    plotnine.geoms.geom_path : For documentation of extra parameters.
+    plotnine.geom_path : For documentation of extra parameters.
     """
 
     DEFAULT_PARAMS = {

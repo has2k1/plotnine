@@ -23,7 +23,7 @@ class geom_tile(geom_rect):
 
     See Also
     --------
-    plotnine.geoms.geom_rect
+    plotnine.geom_rect
     """
 
     DEFAULT_AES = {

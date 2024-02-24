@@ -22,7 +22,7 @@ class stat_boxplot(stat):
 
     See Also
     --------
-    plotnine.geoms.geom_boxplot
+    plotnine.geom_boxplot
     """
 
     _aesthetics_doc = """

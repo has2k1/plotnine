@@ -26,7 +26,7 @@ class geom_area(geom_ribbon):
 
     See Also
     --------
-    plotnine.geoms.geom_ribbon
+    plotnine.geom_ribbon
     """
 
     REQUIRED_AES = {"x", "y"}

@@ -26,7 +26,7 @@ class geom_bar(geom_rect):
 
     See Also
     --------
-    plotnine.geoms.geom_histogram
+    plotnine.geom_histogram
     """
 
     REQUIRED_AES = {"x", "y"}

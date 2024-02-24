@@ -247,7 +247,7 @@ class stat_summary(stat):
 
     See Also
     --------
-    plotnine.geoms.geom_pointrange
+    plotnine.geom_pointrange
     """
 
     _aesthetics_doc = """

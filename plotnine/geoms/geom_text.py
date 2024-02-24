@@ -76,7 +76,7 @@ class geom_text(geom):
 
     See Also
     --------
-    plotnine.geoms.geom_label
+    plotnine.geom_label
     matplotlib.text.Text
     matplotlib.patheffects
 

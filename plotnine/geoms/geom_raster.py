@@ -74,8 +74,8 @@ class geom_raster(geom):
 
     See Also
     --------
-    plotnine.geoms.geom_rect
-    plotnine.geoms.geom_tile
+    plotnine.geom_rect
+    plotnine.geom_tile
     """
 
     DEFAULT_AES = {"alpha": 1, "fill": "#333333"}

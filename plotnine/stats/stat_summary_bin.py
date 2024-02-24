@@ -63,7 +63,7 @@ class stat_summary_bin(stat):
 
     See Also
     --------
-    plotnine.geoms.geom_pointrange
+    plotnine.geom_pointrange
     """
 
     _aesthetics_doc = """
