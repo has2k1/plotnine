@@ -202,9 +202,12 @@ class aes(Dict[str, Any]):
 
     See Also
     --------
-    plotnine.mapping.after_stat
-    plotnine.mapping.after_scale
-    plotnine.mapping.stage
+    plotnine.mapping.after_stat : For how to map aesthetics to variable
+        calculated by the stat
+    plotnine.mapping.after_scale : For how to alter aesthetics after the
+        data has been mapped by the scale.
+    plotnine.mapping.stage : For how to map to evaluate the mapping to
+        aesthetics at more than one stage of the plot building pipeline.
     """
 
     def __init__(self, *args, **kwargs):
