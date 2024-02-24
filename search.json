@@ -557,7 +557,7 @@
     "href": "reference/stat_ydensity.html#see-also",
     "title": " plotnine.stat_ydensity",
     "section": "See Also",
-    "text": "See Also\n\nKDEUnivariate"
+    "text": "See Also\n\ngeom_violinKDEUnivariate"
   },
   {
     "objectID": "reference/stat_summary_bin.html",
@@ -711,7 +711,7 @@
     "href": "reference/stat_density.html#see-also",
     "title": " plotnine.stat_density",
     "section": "See Also",
-    "text": "See Also\n\nKDEUnivariate"
+    "text": "See Also\n\ngeom_densityKDEUnivariate"
   },
   {
     "objectID": "reference/stat_boxplot.html",
@@ -1194,7 +1194,7 @@
     "href": "reference/scale_color_gradient2.html#see-also",
     "title": " plotnine.scale_color_gradient2",
     "section": "See Also",
-    "text": "See Also"
+    "text": "See Also\n\nscale_color_gradientscale_color_gradient"
   },
   {
     "objectID": "reference/scale_color_distiller.html",
@@ -2083,7 +2083,7 @@
     "href": "reference/geom_text.html#see-also",
     "title": " plotnine.geom_text",
     "section": "See Also",
-    "text": "See Also\n\nText"
+    "text": "See Also\n\ngeom_labelText"
   },
   {
     "objectID": "reference/geom_spoke.html",
@@ -2104,7 +2104,7 @@
     "href": "reference/geom_spoke.html#see-also",
     "title": " plotnine.geom_spoke",
     "section": "See Also",
-    "text": "See Also\n\n\n\nFor documentation of extra parameters."
+    "text": "See Also\n\ngeom_segment\n\nFor documentation of extra parameters."
   },
   {
     "objectID": "reference/geom_sina.html",
@@ -2272,7 +2272,7 @@
     "href": "reference/geom_line.html#see-also",
     "title": " plotnine.geom_line",
     "section": "See Also",
-    "text": "See Also\n\n\n\nFor documentation of other parameters."
+    "text": "See Also\n\ngeom_path\n\nFor documentation of other parameters."
   },
   {
     "objectID": "reference/geom_line.html#examples",
@@ -2300,7 +2300,7 @@
     "href": "reference/geom_jitter.html#see-also",
     "title": " plotnine.geom_jitter",
     "section": "See Also",
-    "text": "See Also"
+    "text": "See Also\n\nposition_jitter"
   },
   {
     "objectID": "reference/geom_histogram.html",
@@ -3028,7 +3028,7 @@
     "href": "reference/after_scale.html#see-also",
     "title": " plotnine.after_scale",
     "section": "See Also",
-    "text": "See Also"
+    "text": "See Also\n\nafter_stat"
   },
   {
     "objectID": "reference/after_scale.html#examples",
@@ -3091,7 +3091,7 @@
     "href": "reference/aes.html#see-also",
     "title": " plotnine.aes",
     "section": "See Also",
-    "text": "See Also\n\n\n\nFor how to map aesthetics to variable calculated by the stat\n\n\n\nFor how to alter aesthetics after the data has been mapped by the scale.\n\n\n\nFor how to map to evaluate the mapping to aesthetics at more than one stage of the plot building pipeline."
+    "text": "See Also\n\nafter_stat\n\nFor how to map aesthetics to variable calculated by the stat\n\nafter_scale\n\nFor how to alter aesthetics after the data has been mapped by the scale.\n\nstage\n\nFor how to map to evaluate the mapping to aesthetics at more than one stage of the plot building pipeline."
   },
   {
     "objectID": "reference/aes.html#examples",
@@ -3119,7 +3119,7 @@
     "href": "reference/after_stat.html#see-also",
     "title": " plotnine.after_stat",
     "section": "See Also",
-    "text": "See Also"
+    "text": "See Also\n\nafter_scale"
   },
   {
     "objectID": "reference/after_stat.html#examples",
@@ -3784,7 +3784,7 @@
     "href": "reference/geom_label.html#see-also",
     "title": " plotnine.geom_label",
     "section": "See Also",
-    "text": "See Also\n\n\n\nFor documentation of the parameters. BoxStyle for the parameters that affect the boxstyle."
+    "text": "See Also\n\ngeom_text\n\nFor documentation of the parameters. BoxStyle for the parameters that affect the boxstyle."
   },
   {
     "objectID": "reference/geom_linerange.html",
@@ -3896,7 +3896,7 @@
     "href": "reference/geom_raster.html#see-also",
     "title": " plotnine.geom_raster",
     "section": "See Also",
-    "text": "See Also"
+    "text": "See Also\n\ngeom_rect"
   },
   {
     "objectID": "reference/geom_ribbon.html",
@@ -3980,7 +3980,7 @@
     "href": "reference/geom_step.html#see-also",
     "title": " plotnine.geom_step",
     "section": "See Also",
-    "text": "See Also\n\n\n\nFor documentation of extra parameters."
+    "text": "See Also\n\ngeom_path\n\nFor documentation of extra parameters."
   },
   {
     "objectID": "reference/geom_step.html#examples",
@@ -4799,7 +4799,7 @@
     "href": "reference/scale_color_gradient.html#see-also",
     "title": " plotnine.scale_color_gradient",
     "section": "See Also",
-    "text": "See Also"
+    "text": "See Also\n\nscale_color_gradient2scale_color_gradient"
   },
   {
     "objectID": "reference/scale_color_gradientn.html",
@@ -4820,7 +4820,7 @@
     "href": "reference/scale_color_gradientn.html#see-also",
     "title": " plotnine.scale_color_gradientn",
     "section": "See Also",
-    "text": "See Also"
+    "text": "See Also\n\nscale_color_gradientscale_color_gradient"
   },
   {
     "objectID": "reference/scale_color_grey.html",
