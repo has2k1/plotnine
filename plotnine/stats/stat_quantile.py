@@ -30,7 +30,7 @@ class stat_quantile(stat):
     See Also
     --------
     statsmodels.regression.quantile_regression.QuantReg
-    plotnine.geoms.geom_quantile
+    plotnine.geom_quantile
     """
 
     _aesthetics_doc = """

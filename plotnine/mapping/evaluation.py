@@ -82,8 +82,8 @@ def after_stat(x):
 
     See Also
     --------
-    plotnine.mapping.after_scale
-    plotnine.mapping.stage
+    plotnine.after_scale
+    plotnine.stage
     """
     return stage(after_stat=x)
 
@@ -102,8 +102,8 @@ def after_scale(x):
 
     See Also
     --------
-    plotnine.mapping.after_stat
-    plotnine.mapping.stage
+    plotnine.after_stat
+    plotnine.stage
     """
     return stage(after_scale=x)
 

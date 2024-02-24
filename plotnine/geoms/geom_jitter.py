@@ -38,8 +38,8 @@ class geom_jitter(geom_point):
 
     See Also
     --------
-    plotnine.positions.position_jitter
-    plotnine.geoms.geom_point
+    plotnine.position_jitter
+    plotnine.geom_point
     """
 
     DEFAULT_PARAMS = {

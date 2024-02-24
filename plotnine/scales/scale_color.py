@@ -180,8 +180,8 @@ class scale_color_gradient(scale_continuous):
 
     See Also
     --------
-    plotnine.scales.scale_color_gradient2
-    plotnine.scales.scale_color_gradientn
+    plotnine.scale_color_gradient2
+    plotnine.scale_color_gradientn
     """
 
     _aesthetics = ["color"]
@@ -277,8 +277,8 @@ class scale_color_gradient2(scale_continuous):
 
     See Also
     --------
-    plotnine.scales.scale_color_gradient
-    plotnine.scales.scale_color_gradientn
+    plotnine.scale_color_gradient
+    plotnine.scale_color_gradientn
     """
 
     _aesthetics = ["color"]
@@ -338,8 +338,8 @@ class scale_color_gradientn(scale_continuous):
 
     See Also
     --------
-    plotnine.scales.scale_color_gradient
-    plotnine.scales.scale_color_gradientn
+    plotnine.scale_color_gradient
+    plotnine.scale_color_gradientn
     """
 
     _aesthetics = ["color"]

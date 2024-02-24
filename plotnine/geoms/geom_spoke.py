@@ -24,7 +24,7 @@ class geom_spoke(geom_segment):
 
     See Also
     --------
-    plotnine.geoms.geom_segment : For documentation of extra
+    plotnine.geom_segment : For documentation of extra
         parameters.
     """
 

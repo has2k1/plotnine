@@ -15,7 +15,7 @@ class geom_density(geom_area):
 
     See Also
     --------
-    plotnine.geoms.geom_ribbon
+    plotnine.geom_ribbon
     """
 
     DEFAULT_AES = {

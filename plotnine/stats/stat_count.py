@@ -23,7 +23,7 @@ class stat_count(stat):
 
     See Also
     --------
-    plotnine.stats.stat_bin
+    plotnine.stat_bin
     """
 
     _aesthetics_doc = """

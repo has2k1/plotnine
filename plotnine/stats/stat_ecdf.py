@@ -25,7 +25,7 @@ class stat_ecdf(stat):
 
     See Also
     --------
-    plotnine.geoms.geom_step
+    plotnine.geom_step
     """
 
     _aesthetics_doc = """

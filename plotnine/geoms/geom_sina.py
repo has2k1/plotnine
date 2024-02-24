@@ -20,7 +20,7 @@ class geom_sina(geom_point):
 
     See Also
     --------
-    plotnine.stats.stat_sina
+    plotnine.stat_sina
 
     References
     ----------

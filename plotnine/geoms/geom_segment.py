@@ -36,7 +36,7 @@ class geom_segment(geom):
 
     See Also
     --------
-    plotnine.geoms.geom_path.arrow : for adding arrowhead(s) to segments.
+    plotnine.arrow : for adding arrowhead(s) to segments.
     """
 
     DEFAULT_AES = {

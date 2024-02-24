@@ -22,7 +22,7 @@ class geom_line(geom_path):
 
     See Also
     --------
-    plotnine.geoms.geom_path : For documentation of other parameters.
+    plotnine.geom_path : For documentation of other parameters.
     """
 
     def setup_data(self, data: pd.DataFrame) -> pd.DataFrame:
