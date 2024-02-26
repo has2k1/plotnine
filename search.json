@@ -263,7 +263,7 @@
     "href": "reference/watermark.html#parameters",
     "title": " plotnine.watermark",
     "section": "Parameters",
-    "text": "Parameters\n\n\nfilename : str | pathlib.Path\n\nImage file\n\nxo : int = 0\n\nx position offset in pixels.\n\nyo : int = 0\n\ny position offset in pixels.\n\nalpha : Optional[float] = None\n\nAlpha blending value.\n\nkwargs : Any = {}\n\nAdditional parameters passed to"
+    "text": "Parameters\n\n\nfilename : str | pathlib.Path\n\nImage file\n\nxo : int = 0\n\nx position offset in pixels.\n\nyo : int = 0\n\ny position offset in pixels.\n\nalpha : Optional[float] = None\n\nAlpha blending value.\n\nkwargs : Any = {}\n\nAdditional parameters passed to figimage"
   },
   {
     "objectID": "reference/watermark.html#notes",
@@ -298,7 +298,7 @@
     "href": "reference/themeable.html#notes",
     "title": " plotnine.themes.themeable.themeable",
     "section": "Notes",
-    "text": "Notes\nA user should never create instances of class or subclasses of it."
+    "text": "Notes\nA user should never create instances of class Themeable or subclasses of it."
   },
   {
     "objectID": "reference/themeable.html#attributes",
@@ -312,7 +312,7 @@
     "href": "reference/themeable.html#methods",
     "title": " plotnine.themes.themeable.themeable",
     "section": "Methods",
-    "text": "Methods\n\n\n\nName\nDescription\n\n\n\n\napply\nCalled by the theme to apply the themeable\n\n\napply_ax\nCalled after a chart has been plotted.\n\n\napply_figure\nApply theme to the figure\n\n\nblank_ax\nBlank out theme elements\n\n\nblank_figure\nBlank out elements on the figure\n\n\nfrom_class_name\nCreate a themeable by name\n\n\nis_blank\nReturn True if theme_element is made of element_blank\n\n\nmerge\nMerge properties of other into self\n\n\n\n\n apply\n\napply(theme)\n\n\nCalled by the theme to apply the themeable\nSubclasses should not have to override this method\n\n\n\n apply_ax\n\napply_ax(ax)\n\n\nCalled after a chart has been plotted.\nSubclasses can override this method to customize the plot according to the theme.\nThis method should be implemented as super().apply_ax() followed by extracting the portion of the axes specific to this themeable then applying the properties.\n\n\nParameters\n\n\nax : matplotlib.axes.Axes\n\n\n\n\n\n\n\n\n apply_figure\n\napply_figure(figure, targets)\n\n\nApply theme to the figure\n\n\n\n blank_ax\n\nblank_ax(ax)\n\n\nBlank out theme elements\n\n\n\n blank_figure\n\nblank_figure(figure, targets)\n\n\nBlank out elements on the figure\n\n\n\n from_class_name \n\nfrom_class_name(name, theme_element)\n\n\nCreate a themeable by name\n\n\nParameters\n\n\nname : str\n\nClass name\n\ntheme_element : element object\n\nAn element of the type required by the theme. For lines, text and rects it should be one of: , , or \n\n\n\n\n\nReturns\n\n\nout : plotnine.themes.themeable.themeable\n\n\n\n\n\n\n\n\n is_blank\n\nis_blank()\n\n\nReturn True if theme_element is made of element_blank\n\n\n\n merge\n\nmerge(other)\n\n\nMerge properties of other into self\n\n\nRaises\n\n\nValueError\n\nIf any of the properties are blank"
+    "text": "Methods\n\n\n\nName\nDescription\n\n\n\n\napply\nCalled by the theme to apply the themeable\n\n\napply_ax\nCalled after a chart has been plotted.\n\n\napply_figure\nApply theme to the figure\n\n\nblank_ax\nBlank out theme elements\n\n\nblank_figure\nBlank out elements on the figure\n\n\nfrom_class_name\nCreate a themeable by name\n\n\nis_blank\nReturn True if theme_element is made of element_blank\n\n\nmerge\nMerge properties of other into self\n\n\n\n\n apply\n\napply(theme)\n\n\nCalled by the theme to apply the themeable\nSubclasses should not have to override this method\n\n\n\n apply_ax\n\napply_ax(ax)\n\n\nCalled after a chart has been plotted.\nSubclasses can override this method to customize the plot according to the theme.\nThis method should be implemented as super().apply_ax() followed by extracting the portion of the axes specific to this themeable then applying the properties.\n\n\nParameters\n\n\nax : matplotlib.axes.Axes\n\n\n\n\n\n\n\n\n apply_figure\n\napply_figure(figure, targets)\n\n\nApply theme to the figure\n\n\n\n blank_ax\n\nblank_ax(ax)\n\n\nBlank out theme elements\n\n\n\n blank_figure\n\nblank_figure(figure, targets)\n\n\nBlank out elements on the figure\n\n\n\n from_class_name \n\nfrom_class_name(name, theme_element)\n\n\nCreate a themeable by name\n\n\nParameters\n\n\nname : str\n\nClass name\n\ntheme_element : element object\n\nAn element of the type required by the theme. For lines, text and rects it should be one of: element_line, element_rect, element_text or element_blank\n\n\n\n\n\nReturns\n\n\nout : plotnine.themes.themeable.themeable\n\n\n\n\n\n\n\n\n is_blank\n\nis_blank()\n\n\nReturn True if theme_element is made of element_blank\n\n\n\n merge\n\nmerge(other)\n\n\nMerge properties of other into self\n\n\nRaises\n\n\nValueError\n\nIf any of the properties are blank"
   },
   {
     "objectID": "reference/theme_void.html",
@@ -445,7 +445,7 @@
     "href": "reference/theme.html#parameters",
     "title": " plotnine.theme",
     "section": "Parameters",
-    "text": "Parameters\n\n\ncomplete : bool = False\n\nThemes that are complete will override any existing themes. themes that are not complete (ie. partial) will add to or override specific elements of the current theme. e.g:\ntheme_gray() + theme_xkcd()\nwill be completely determined by , but:\ntheme_gray() + theme(axis_text_x=element_text(angle=45))\nwill only modify the x-axis text.\n\nkwargs = {}\n\nkwargs are themeables. The themeables are elements that are subclasses of themeable. Many themeables are defined using theme elements i.e\n\n\n\n\n\nThese simply bind together all the aspects of a themeable that can be themed. See themeable."
+    "text": "Parameters\n\n\ncomplete : bool = False\n\nThemes that are complete will override any existing themes. themes that are not complete (ie. partial) will add to or override specific elements of the current theme. e.g:\ntheme_gray() + theme_xkcd()\nwill be completely determined by theme_xkcd, but:\ntheme_gray() + theme(axis_text_x=element_text(angle=45))\nwill only modify the x-axis text.\n\nkwargs = {}\n\nkwargs are themeables. The themeables are elements that are subclasses of themeable. Many themeables are defined using theme elements i.e\n\nelement_line\nelement_rect\nelement_text\n\nThese simply bind together all the aspects of a themeable that can be themed. See themeable."
   },
   {
     "objectID": "reference/theme.html#notes",
@@ -557,7 +557,7 @@
     "href": "reference/stat_ydensity.html#see-also",
     "title": " plotnine.stat_ydensity",
     "section": "See Also",
-    "text": "See Also\n\ngeom_violinKDEUnivariate"
+    "text": "See Also\n\ngeom_violinKDEUnivariatefi"
   },
   {
     "objectID": "reference/stat_summary_bin.html",
@@ -585,7 +585,7 @@
     "href": "reference/stat_summary_bin.html#see-also",
     "title": " plotnine.stat_summary_bin",
     "section": "See Also",
-    "text": "See Also"
+    "text": "See Also\n\ngeom_pointrang"
   },
   {
     "objectID": "reference/stat_sum.html",
@@ -613,14 +613,14 @@
     "href": "reference/stat_sina.html#parameters",
     "title": " plotnine.stat_sina",
     "section": "Parameters",
-    "text": "Parameters\n\n\nmapping : aes = None\n\nAesthetic mappings created with aes. If specified and inherit_aes=True, it is combined with the default mapping for the plot. You must supply mapping if there is no plot mapping.\n\n\n\n\n\n\n\nAesthetic\nDefault value\n\n\n\n\nx\n\n\n\ny\n\n\n\n\nThe bold aesthetics are required.\nOptions for computed aesthetics\n\"quantile\"  # quantile\n\"group\"     # group identifier\nCalculated aesthetics are accessed using the after_stat function. e.g. after_stat('quantile').\n\ndata : DataFrame = None\n\nThe data to be displayed in this layer. If None, the data from from the ggplot() call is used. If specified, it overrides the data from the ggplot() call.\n\ngeom : str | geom = \"sina\"\n\nThe statistical transformation to use on the data for this layer. If it is a string, it must be the registered and known to Plotnine.\n\nposition : str | position = \"dodge\"\n\nPosition adjustment. If it is a string, it must be registered and known to Plotnine.\n\nna_rm : bool = False\n\nIf False, removes missing values with a warning. If True silently removes missing values.\n\nbinwidth : float = None\n\nThe width of the bins. The default is to use bins that cover the range of the data. You should always override this value, exploring multiple widths to find the best to illustrate the stories in your data.\n\nbins : int = 50\n\nNumber of bins. Overridden by binwidth.\n\nmethod : Literal[density, counts] = \"density\"\n\nChoose the method to spread the samples within the same bin along the x-axis. Available methods: “density”, “counts” (can be abbreviated, e.g. “d”). See Details.\n\nmaxwidth : float = None\n\nControl the maximum width the points can spread into. Values should be in the range (0, 1).\n\nadjust : float = 1\n\nAdjusts the bandwidth of the density kernel when method=\"density\". see .\n\nbw : str | float = \"nrd0\"\n\nThe bandwidth to use, If a float is given, it is the bandwidth. The str choices are: \"nrd0\", \"normal_reference\", \"scott\", \"silverman\"\nnrd0 is a port of stats::bw.nrd0 in R; it is eqiuvalent to silverman when there is more than 1 value in a group.\n\nbin_limit : int = 1\n\nIf the samples within the same y-axis bin are more than bin_limit, the samples’s X coordinates will be adjusted. This parameter is effective only when method=\"counts\"\n\nrandom_state : int | RandomState = None\n\nSeed or Random number generator to use. If None, then numpy global generator numpy.random is used.\n\nscale : Literal[area, count, width] = \"area\"\n\nHow to scale the sina groups.\n\narea - Scale by the largest density/bin among the different sinas\ncount - areas are scaled proportionally to the number of points\nwidth - Only scale according to the maxwidth parameter.\n\n\n**kwargs : Any = {}\n\nAesthetics or parameters used by the geom."
+    "text": "Parameters\n\n\nmapping : aes = None\n\nAesthetic mappings created with aes. If specified and inherit_aes=True, it is combined with the default mapping for the plot. You must supply mapping if there is no plot mapping.\n\n\n\n\n\n\n\nAesthetic\nDefault value\n\n\n\n\nx\n\n\n\ny\n\n\n\n\nThe bold aesthetics are required.\nOptions for computed aesthetics\n\"quantile\"  # quantile\n\"group\"     # group identifier\nCalculated aesthetics are accessed using the after_stat function. e.g. after_stat('quantile').\n\ndata : DataFrame = None\n\nThe data to be displayed in this layer. If None, the data from from the ggplot() call is used. If specified, it overrides the data from the ggplot() call.\n\ngeom : str | geom = \"sina\"\n\nThe statistical transformation to use on the data for this layer. If it is a string, it must be the registered and known to Plotnine.\n\nposition : str | position = \"dodge\"\n\nPosition adjustment. If it is a string, it must be registered and known to Plotnine.\n\nna_rm : bool = False\n\nIf False, removes missing values with a warning. If True silently removes missing values.\n\nbinwidth : float = None\n\nThe width of the bins. The default is to use bins that cover the range of the data. You should always override this value, exploring multiple widths to find the best to illustrate the stories in your data.\n\nbins : int = 50\n\nNumber of bins. Overridden by binwidth.\n\nmethod : Literal[density, counts] = \"density\"\n\nChoose the method to spread the samples within the same bin along the x-axis. Available methods: “density”, “counts” (can be abbreviated, e.g. “d”). See Details.\n\nmaxwidth : float = None\n\nControl the maximum width the points can spread into. Values should be in the range (0, 1).\n\nadjust : float = 1\n\nAdjusts the bandwidth of the density kernel when method=\"density\". see stat_density.\n\nbw : str | float = \"nrd0\"\n\nThe bandwidth to use, If a float is given, it is the bandwidth. The str choices are: \"nrd0\", \"normal_reference\", \"scott\", \"silverman\"\nnrd0 is a port of stats::bw.nrd0 in R; it is eqiuvalent to silverman when there is more than 1 value in a group.\n\nbin_limit : int = 1\n\nIf the samples within the same y-axis bin are more than bin_limit, the samples’s X coordinates will be adjusted. This parameter is effective only when method=\"counts\"\n\nrandom_state : int | RandomState = None\n\nSeed or Random number generator to use. If None, then numpy global generator numpy.random is used.\n\nscale : Literal[area, count, width] = \"area\"\n\nHow to scale the sina groups.\n\narea - Scale by the largest density/bin among the different sinas\ncount - areas are scaled proportionally to the number of points\nwidth - Only scale according to the maxwidth parameter.\n\n\n**kwargs : Any = {}\n\nAesthetics or parameters used by the geom."
   },
   {
     "objectID": "reference/stat_sina.html#see-also",
     "href": "reference/stat_sina.html#see-also",
     "title": " plotnine.stat_sina",
     "section": "See Also",
-    "text": "See Also"
+    "text": "See Also\n\ngeom_sin"
   },
   {
     "objectID": "reference/stat_qq_line.html",
@@ -690,7 +690,7 @@
     "href": "reference/stat_ecdf.html#see-also",
     "title": " plotnine.stat_ecdf",
     "section": "See Also",
-    "text": "See Also"
+    "text": "See Also\n\ngeom_ste"
   },
   {
     "objectID": "reference/stat_density.html",
@@ -711,7 +711,7 @@
     "href": "reference/stat_density.html#see-also",
     "title": " plotnine.stat_density",
     "section": "See Also",
-    "text": "See Also\n\ngeom_densityKDEUnivariate"
+    "text": "See Also\n\ngeom_densityKDEUnivariatefi"
   },
   {
     "objectID": "reference/stat_boxplot.html",
@@ -732,7 +732,7 @@
     "href": "reference/stat_boxplot.html#see-also",
     "title": " plotnine.stat_boxplot",
     "section": "See Also",
-    "text": "See Also"
+    "text": "See Also\n\ngeom_boxplo"
   },
   {
     "objectID": "reference/stat_bin_2d.html",
@@ -767,7 +767,7 @@
     "href": "reference/stat.html#methods",
     "title": " plotnine.stats.stat.stat",
     "section": "Methods",
-    "text": "Methods\n\n\n\nName\nDescription\n\n\n\n\naesthetics\nReturn a set of all non-computed aesthetics for this stat.\n\n\ncompute_group\nCalculate statistics for the group\n\n\ncompute_layer\nCalculate statistics for this layers\n\n\ncompute_panel\nCalculate the statistics for all the groups\n\n\nfinish_layer\nModify data after the aesthetics have been mapped\n\n\nfrom_geom\nReturn an instantiated stat object\n\n\nsetup_data\nOveride to modify data before compute_layer is called\n\n\nsetup_params\nOveride this to verify or adjust parameters\n\n\nto_layer\nMake a layer that represents this stat\n\n\nuse_defaults\nCombine data with defaults and set aesthetics from parameters\n\n\n\n\n aesthetics \n\naesthetics()\n\n\nReturn a set of all non-computed aesthetics for this stat.\nstats should not override this method.\n\n\n\n compute_group \n\ncompute_group(data, scales, **params)\n\n\nCalculate statistics for the group\nAll stats should implement this method\n\n\nParameters\n\n\ndata : pd.DataFrame\n\nData for a group\n\nscales : pos_scales\n\nx (scales.x) and y (scales.y) scale objects. The most likely reason to use scale information is to find out the physical size of a scale. e.g.\nrange_x = scales.x.dimension()\n\nparams : Any = {}\n\nParameters\n\n\n\n\n\n\n compute_layer \n\ncompute_layer(data, params, layout)\n\n\nCalculate statistics for this layers\nThis is the top-most computation method for the stat. It does not do any computations, but it knows how to verify the data, partition it call the next computation method and merge results.\nstats should not override this method.\n\n\nParameters\n\n\ndata : pd.DataFrame\n\nData points for all objects in a layer.\n\nparams : dict[str, Any]\n\nStat parameters\n\nlayout : Layout\n\nPanel layout information\n\n\n\n\n\n\n compute_panel \n\ncompute_panel(data, scales, **params)\n\n\nCalculate the statistics for all the groups\nReturn the results in a single dataframe.\nThis is a default function that can be overriden by individual stats\n\n\nParameters\n\n\ndata : pd.DataFrame\n\ndata for the computing\n\nscales : pos_scales\n\nx (scales.x) and y (scales.y) scale objects. The most likely reason to use scale information is to find out the physical size of a scale. e.g.\nrange_x = scales.x.dimension()\n\nparams : Any = {}\n\nThe parameters for the stat. It includes default values if user did not set a particular parameter.\n\n\n\n\n\n\n finish_layer\n\nfinish_layer(data, params)\n\n\nModify data after the aesthetics have been mapped\nThis can be used by stats that require access to the mapped values of the computed aesthetics, part 3 as shown below.\n1. stat computes and creates variables\n2. variables mapped to aesthetics\n3. stat sees and modifies data according to the\n   aesthetic values\nThe default to is to do nothing.\n\n\nParameters\n\n\ndata : pd.DataFrame\n\nData for the layer\n\nparams : dict[str, Any]\n\nParemeters\n\n\n\n\n\nReturns\n\n\ndata : pd.DataFrame\n\nModified data\n\n\n\n\n\n\n from_geom \n\nfrom_geom(geom)\n\n\nReturn an instantiated stat object\nstats should not override this method.\n\n\nParameters\n\n\ngeom : geom\n\nA geom object\n\n\n\n\n\nReturns\n\n\nstat\n\nA stat object\n\n\n\n\n\nRaises\n\n\n if unable to create a stat.\n\n\n\n\n\n\n\n\n setup_data\n\nsetup_data(data)\n\n\nOveride to modify data before compute_layer is called\n\n\nParameters\n\n\ndata : pd.DataFrame\n\nData\n\n\n\n\n\nReturns\n\n\nout : pd.DataFrame\n\nData\n\n\n\n\n\n\n setup_params\n\nsetup_params(data)\n\n\nOveride this to verify or adjust parameters\n\n\nParameters\n\n\ndata : pd.DataFrame\n\nData\n\n\n\n\n\nReturns\n\n\nout : dict[str, Any]\n\nParameters used by the stats.\n\n\n\n\n\n\n to_layer\n\nto_layer()\n\n\nMake a layer that represents this stat\n\n\nReturns\n\n\nout : layer\n\nLayer\n\n\n\n\n\n\n use_defaults\n\nuse_defaults(data)\n\n\nCombine data with defaults and set aesthetics from parameters\nstats should not override this method.\n\n\nParameters\n\n\ndata : pd.DataFrame\n\nData used for drawing the geom.\n\n\n\n\n\nReturns\n\n\nout : pd.DataFrame\n\nData used for drawing the geom."
+    "text": "Methods\n\n\n\nName\nDescription\n\n\n\n\naesthetics\nReturn a set of all non-computed aesthetics for this stat.\n\n\ncompute_group\nCalculate statistics for the group\n\n\ncompute_layer\nCalculate statistics for this layers\n\n\ncompute_panel\nCalculate the statistics for all the groups\n\n\nfinish_layer\nModify data after the aesthetics have been mapped\n\n\nfrom_geom\nReturn an instantiated stat object\n\n\nsetup_data\nOveride to modify data before compute_layer is called\n\n\nsetup_params\nOveride this to verify or adjust parameters\n\n\nto_layer\nMake a layer that represents this stat\n\n\nuse_defaults\nCombine data with defaults and set aesthetics from parameters\n\n\n\n\n aesthetics \n\naesthetics()\n\n\nReturn a set of all non-computed aesthetics for this stat.\nstats should not override this method.\n\n\n\n compute_group \n\ncompute_group(data, scales, **params)\n\n\nCalculate statistics for the group\nAll stats should implement this method\n\n\nParameters\n\n\ndata : pd.DataFrame\n\nData for a group\n\nscales : pos_scales\n\nx (scales.x) and y (scales.y) scale objects. The most likely reason to use scale information is to find out the physical size of a scale. e.g.\nrange_x = scales.x.dimension()\n\nparams : Any = {}\n\nParameters\n\n\n\n\n\n\n compute_layer \n\ncompute_layer(data, params, layout)\n\n\nCalculate statistics for this layers\nThis is the top-most computation method for the stat. It does not do any computations, but it knows how to verify the data, partition it call the next computation method and merge results.\nstats should not override this method.\n\n\nParameters\n\n\ndata : pd.DataFrame\n\nData points for all objects in a layer.\n\nparams : dict[str, Any]\n\nStat parameters\n\nlayout : Layout\n\nPanel layout information\n\n\n\n\n\n\n compute_panel \n\ncompute_panel(data, scales, **params)\n\n\nCalculate the statistics for all the groups\nReturn the results in a single dataframe.\nThis is a default function that can be overriden by individual stats\n\n\nParameters\n\n\ndata : pd.DataFrame\n\ndata for the computing\n\nscales : pos_scales\n\nx (scales.x) and y (scales.y) scale objects. The most likely reason to use scale information is to find out the physical size of a scale. e.g.\nrange_x = scales.x.dimension()\n\nparams : Any = {}\n\nThe parameters for the stat. It includes default values if user did not set a particular parameter.\n\n\n\n\n\n\n finish_layer\n\nfinish_layer(data, params)\n\n\nModify data after the aesthetics have been mapped\nThis can be used by stats that require access to the mapped values of the computed aesthetics, part 3 as shown below.\n1. stat computes and creates variables\n2. variables mapped to aesthetics\n3. stat sees and modifies data according to the\n   aesthetic values\nThe default to is to do nothing.\n\n\nParameters\n\n\ndata : pd.DataFrame\n\nData for the layer\n\nparams : dict[str, Any]\n\nParemeters\n\n\n\n\n\nReturns\n\n\ndata : pd.DataFrame\n\nModified data\n\n\n\n\n\n\n from_geom \n\nfrom_geom(geom)\n\n\nReturn an instantiated stat object\nstats should not override this method.\n\n\nParameters\n\n\ngeom : geom\n\nA geom object\n\n\n\n\n\nReturns\n\n\nstat\n\nA stat object\n\n\n\n\n\nRaises\n\n\nPlotnineError if unable to create a stat.\n\n\n\n\n\n\n\n\n setup_data\n\nsetup_data(data)\n\n\nOveride to modify data before compute_layer is called\n\n\nParameters\n\n\ndata : pd.DataFrame\n\nData\n\n\n\n\n\nReturns\n\n\nout : pd.DataFrame\n\nData\n\n\n\n\n\n\n setup_params\n\nsetup_params(data)\n\n\nOveride this to verify or adjust parameters\n\n\nParameters\n\n\ndata : pd.DataFrame\n\nData\n\n\n\n\n\nReturns\n\n\nout : dict[str, Any]\n\nParameters used by the stats.\n\n\n\n\n\n\n to_layer\n\nto_layer()\n\n\nMake a layer that represents this stat\n\n\nReturns\n\n\nout : layer\n\nLayer\n\n\n\n\n\n\n use_defaults\n\nuse_defaults(data)\n\n\nCombine data with defaults and set aesthetics from parameters\nstats should not override this method.\n\n\nParameters\n\n\ndata : pd.DataFrame\n\nData used for drawing the geom.\n\n\n\n\n\nReturns\n\n\nout : pd.DataFrame\n\nData used for drawing the geom."
   },
   {
     "objectID": "reference/set_option.html",
@@ -1299,14 +1299,14 @@
     "href": "reference/save_as_pdf_pages.html#parameters",
     "title": " plotnine.save_as_pdf_pages",
     "section": "Parameters",
-    "text": "Parameters\n\n\nplots : Iterable[ggplot]\n\nPlot objects to write to file. plots may be either a collection such as a list or set\nbase_plot = ggplot(…)\nplots = [base_plot + ggtitle('%d of 3' % i) for i in range(1, 3)]\nsave_as_pdf_pages(plots)\nor, a generator that yields ggplot objects:\ndef myplots():\n    for i in range(1, 3):\n        yield ggplot(…) + ggtitle('%d of 3' % i)\nsave_as_pdf_pages(myplots())\n\nfilename : Optional[str | Path] = None\n\nFile name to write the plot to. If not specified, a name like “plotnine-save-.pdf” is used.\n\npath : str | None = None\n\nPath to save plot to (if you just want to set path and not filename).\n\nverbose : bool = True\n\nIf True, print the saving information.\n\nkwargs : Any = {}\n\nAdditional arguments to pass to ."
+    "text": "Parameters\n\n\nplots : Iterable[ggplot]\n\nPlot objects to write to file. plots may be either a collection such as a list or set\nbase_plot = ggplot(…)\nplots = [base_plot + ggtitle('%d of 3' % i) for i in range(1, 3)]\nsave_as_pdf_pages(plots)\nor, a generator that yields ggplot objects:\ndef myplots():\n    for i in range(1, 3):\n        yield ggplot(…) + ggtitle('%d of 3' % i)\nsave_as_pdf_pages(myplots())\n\nfilename : Optional[str | Path] = None\n\nFile name to write the plot to. If not specified, a name like “plotnine-save-.pdf” is used.\n\npath : str | None = None\n\nPath to save plot to (if you just want to set path and not filename).\n\nverbose : bool = True\n\nIf True, print the saving information.\n\nkwargs : Any = {}\n\nAdditional arguments to pass to savefig."
   },
   {
     "objectID": "reference/save_as_pdf_pages.html#notes",
     "href": "reference/save_as_pdf_pages.html#notes",
     "title": " plotnine.save_as_pdf_pages",
     "section": "Notes",
-    "text": "Notes\nUsing pandas methods, tidy data can be “faceted” across pages:\nfrom plotnine.data import mtcars\n\ndef facet_pages(column)\n    base_plot = [\n        aes(x=\"wt\", y=\"mpg\", label=\"name\"),\n        geom_text(),\n    ]\n    for label, group_data in mtcars.groupby(column):\n        yield ggplot(group_data) + base_plot + ggtitle(label)\n\nsave_as_pdf_pages(facet_pages('cyl'))\nUnlike save, save_as_pdf_pages does not process arguments for height or width. To set the figure size, add figure_size to the theme for some or all of the objects in plots:\nplot = ggplot(…)\n# The following are equivalent\nplot.save('filename.pdf', height=6, width=8)\nsave_as_pdf_pages([plot + theme(figure_size=(8, 6))])"
+    "text": "Notes\nUsing pandas groupby methods, tidy data can be “faceted” across pages:\nfrom plotnine.data import mtcars\n\ndef facet_pages(column)\n    base_plot = [\n        aes(x=\"wt\", y=\"mpg\", label=\"name\"),\n        geom_text(),\n    ]\n    for label, group_data in mtcars.groupby(column):\n        yield ggplot(group_data) + base_plot + ggtitle(label)\n\nsave_as_pdf_pages(facet_pages('cyl'))\nUnlike save, save_as_pdf_pages does not process arguments for height or width. To set the figure size, add figure_size to the theme for some or all of the objects in plots:\nplot = ggplot(…)\n# The following are equivalent\nplot.save('filename.pdf', height=6, width=8)\nsave_as_pdf_pages([plot + theme(figure_size=(8, 6))])"
   },
   {
     "objectID": "reference/qplot.html",
@@ -1390,7 +1390,7 @@
     "href": "reference/position.html#methods",
     "title": " plotnine.positions.position.position",
     "section": "Methods",
-    "text": "Methods\n\n\n\nName\nDescription\n\n\n\n\ncollide\nCalculate boundaries of geometry object\n\n\ncollide2\nCalculate boundaries of geometry object\n\n\ncompute_layer\nCompute position for the layer in all panels\n\n\ncompute_panel\nPositions must override this function\n\n\nfrom_geom\nCreate and return a position object for the geom\n\n\nsetup_data\nVerify & return data\n\n\nsetup_params\nVerify, modify & return a copy of the params.\n\n\nstrategy\nCalculate boundaries of geometry object\n\n\ntransform_position\nTransform all the variables that map onto the x and y scales.\n\n\n\n\n collide \n\ncollide(data, params)\n\n\nCalculate boundaries of geometry object\nUses Strategy\n\n\n\n collide2 \n\ncollide2(data, params)\n\n\nCalculate boundaries of geometry object\nUses Strategy\n\n\n\n compute_layer \n\ncompute_layer(data, params, layout)\n\n\nCompute position for the layer in all panels\nPositions can override this function instead of compute_panel if the position computations are independent of the panel. i.e when not colliding\n\n\n\n compute_panel \n\ncompute_panel(data, scales, params)\n\n\nPositions must override this function\n\n\nNotes\nMake necessary adjustments to the columns in the dataframe.\nCreate the position transformation functions and use self.transform_position() do the rest.\n\n\nSee Also\n\n\n\n\n\n\n\n\n\n from_geom \n\nfrom_geom(geom)\n\n\nCreate and return a position object for the geom\n\n\nParameters\n\n\ngeom : geom\n\nAn instantiated geom object.\n\n\n\n\n\nReturns\n\n\nout : position\n\nA position object\n\n\n\n\n\nRaises\n\n\nPlotnineError\n\nIf unable to create a position.\n\n\n\n\n\n\n setup_data\n\nsetup_data(data, params)\n\n\nVerify & return data\n\n\n\n setup_params\n\nsetup_params(data)\n\n\nVerify, modify & return a copy of the params.\n\n\n\n strategy \n\nstrategy(data, params)\n\n\nCalculate boundaries of geometry object\n\n\n\n transform_position \n\ntransform_position(data, trans_x=None, trans_y=None)\n\n\nTransform all the variables that map onto the x and y scales.\n\n\nParameters\n\n\ndata : dataframe\n\nData to transform\n\ntrans_x : callable = None\n\nTransforms x scale mappings Takes one argument, either a scalar or an array-type\n\ntrans_y : callable = None\n\nTransforms y scale mappings Takes one argument, either a scalar or an array-type"
+    "text": "Methods\n\n\n\nName\nDescription\n\n\n\n\ncollide\nCalculate boundaries of geometry object\n\n\ncollide2\nCalculate boundaries of geometry object\n\n\ncompute_layer\nCompute position for the layer in all panels\n\n\ncompute_panel\nPositions must override this function\n\n\nfrom_geom\nCreate and return a position object for the geom\n\n\nsetup_data\nVerify & return data\n\n\nsetup_params\nVerify, modify & return a copy of the params.\n\n\nstrategy\nCalculate boundaries of geometry object\n\n\ntransform_position\nTransform all the variables that map onto the x and y scales.\n\n\n\n\n collide \n\ncollide(data, params)\n\n\nCalculate boundaries of geometry object\nUses Strategy\n\n\n\n collide2 \n\ncollide2(data, params)\n\n\nCalculate boundaries of geometry object\nUses Strategy\n\n\n\n compute_layer \n\ncompute_layer(data, params, layout)\n\n\nCompute position for the layer in all panels\nPositions can override this function instead of compute_panel if the position computations are independent of the panel. i.e when not colliding\n\n\n\n compute_panel \n\ncompute_panel(data, scales, params)\n\n\nPositions must override this function\n\n\nNotes\nMake necessary adjustments to the columns in the dataframe.\nCreate the position transformation functions and use self.transform_position() do the rest.\n\n\nSee Also\n\ncompute_pane\n\n\n\n\n\n\n\n from_geom \n\nfrom_geom(geom)\n\n\nCreate and return a position object for the geom\n\n\nParameters\n\n\ngeom : geom\n\nAn instantiated geom object.\n\n\n\n\n\nReturns\n\n\nout : position\n\nA position object\n\n\n\n\n\nRaises\n\n\nPlotnineError\n\nIf unable to create a position.\n\n\n\n\n\n\n setup_data\n\nsetup_data(data, params)\n\n\nVerify & return data\n\n\n\n setup_params\n\nsetup_params(data)\n\n\nVerify, modify & return a copy of the params.\n\n\n\n strategy \n\nstrategy(data, params)\n\n\nCalculate boundaries of geometry object\n\n\n\n transform_position \n\ntransform_position(data, trans_x=None, trans_y=None)\n\n\nTransform all the variables that map onto the x and y scales.\n\n\nParameters\n\n\ndata : dataframe\n\nData to transform\n\ntrans_x : callable = None\n\nTransforms x scale mappings Takes one argument, either a scalar or an array-type\n\ntrans_y : callable = None\n\nTransforms y scale mappings Takes one argument, either a scalar or an array-type"
   },
   {
     "objectID": "reference/plot_subtitle.html",
@@ -1474,7 +1474,7 @@
     "href": "reference/panel_spacing_y.html#notes",
     "title": " plotnine.themes.themeable.panel_spacing_y",
     "section": "Notes",
-    "text": "Notes\nIt is deliberate to have the vertical spacing be a fraction of the width. That means that when is the equal , the spaces in both directions will be equal."
+    "text": "Notes\nIt is deliberate to have the vertical spacing be a fraction of the width. That means that when panel_spacing_x is the equal panel_spacing_x, the spaces in both directions will be equal."
   },
   {
     "objectID": "reference/panel_spacing.html",
@@ -1810,7 +1810,7 @@
     "href": "reference/legend_box_just.html#parameters",
     "title": " plotnine.themes.themeable.legend_box_just",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : Literal[\"left\", \"right\", \"center\", \"top\", \"bottom\", \"baseline\"] = None\n\nIf None, the value that will apply depends on ."
+    "text": "Parameters\n\n\ntheme_element : Literal[\"left\", \"right\", \"center\", \"top\", \"bottom\", \"baseline\"] = None\n\nIf None, the value that will apply depends on legend_box."
   },
   {
     "objectID": "reference/legend_box.html",
@@ -1852,7 +1852,7 @@
     "href": "reference/layer.html#methods",
     "title": " plotnine.layer.layer",
     "section": "Methods",
-    "text": "Methods\n\n\n\nName\nDescription\n\n\n\n\ncompute_aesthetics\nReturn a dataframe where the columns match the aesthetic mappings\n\n\ncompute_position\nCompute the position of each geometric object\n\n\ncompute_statistic\nCompute & return statistics for this layer\n\n\ndraw\nDraw geom\n\n\nfinish_statistics\nPrepare/modify data for plotting\n\n\nfrom_geom\nCreate a layer given a \n\n\nmap_statistic\nMapping aesthetics to computed statistics\n\n\nsetup\nPrepare layer for the plot building\n\n\nsetup_data\nPrepare/modify data for plotting\n\n\nuse_defaults\nPrepare/modify data for plotting\n\n\n\n\n compute_aesthetics\n\ncompute_aesthetics(plot)\n\n\nReturn a dataframe where the columns match the aesthetic mappings\nTransformations like ‘factor(cyl)’ and other expression evaluation are made in here\n\n\n\n compute_position\n\ncompute_position(layout)\n\n\nCompute the position of each geometric object\nThis is in concert with the other objects in the panel depending on the position class of the geom\n\n\n\n compute_statistic\n\ncompute_statistic(layout)\n\n\nCompute & return statistics for this layer\n\n\n\n draw\n\ndraw(layout, coord)\n\n\nDraw geom\n\n\nParameters\n\n\nlayout : Layout\n\nLayout object created when the plot is getting built\n\ncoord : coord\n\nType of coordinate axes\n\n\n\n\n\n\n finish_statistics\n\nfinish_statistics()\n\n\nPrepare/modify data for plotting\n\n\n\n from_geom \n\nfrom_geom(geom)\n\n\nCreate a layer given a \n\n\nParameters\n\n\ngeom : geom\n\ngeom from which a layer will be created\n\n\n\n\n\nReturns\n\n\nout : layer\n\nLayer that represents the specific geom.\n\n\n\n\n\n\n map_statistic\n\nmap_statistic(plot)\n\n\nMapping aesthetics to computed statistics\n\n\n\n setup\n\nsetup(plot)\n\n\nPrepare layer for the plot building\nGive the layer access to the data, mapping and environment\n\n\n\n setup_data\n\nsetup_data()\n\n\nPrepare/modify data for plotting\n\n\n\n use_defaults\n\nuse_defaults(data=None, aes_modifiers=None)\n\n\nPrepare/modify data for plotting\n\n\nParameters\n\n\ndata : pd.DataFrame | None = None\n\nData\n\naes_modifiers : dict[str, Any] | None = None\n\nExpression to evaluate and replace aesthetics in the data."
+    "text": "Methods\n\n\n\nName\nDescription\n\n\n\n\ncompute_aesthetics\nReturn a dataframe where the columns match the aesthetic mappings\n\n\ncompute_position\nCompute the position of each geometric object\n\n\ncompute_statistic\nCompute & return statistics for this layer\n\n\ndraw\nDraw geom\n\n\nfinish_statistics\nPrepare/modify data for plotting\n\n\nfrom_geom\nCreate a layer given a geom\n\n\nmap_statistic\nMapping aesthetics to computed statistics\n\n\nsetup\nPrepare layer for the plot building\n\n\nsetup_data\nPrepare/modify data for plotting\n\n\nuse_defaults\nPrepare/modify data for plotting\n\n\n\n\n compute_aesthetics\n\ncompute_aesthetics(plot)\n\n\nReturn a dataframe where the columns match the aesthetic mappings\nTransformations like ‘factor(cyl)’ and other expression evaluation are made in here\n\n\n\n compute_position\n\ncompute_position(layout)\n\n\nCompute the position of each geometric object\nThis is in concert with the other objects in the panel depending on the position class of the geom\n\n\n\n compute_statistic\n\ncompute_statistic(layout)\n\n\nCompute & return statistics for this layer\n\n\n\n draw\n\ndraw(layout, coord)\n\n\nDraw geom\n\n\nParameters\n\n\nlayout : Layout\n\nLayout object created when the plot is getting built\n\ncoord : coord\n\nType of coordinate axes\n\n\n\n\n\n\n finish_statistics\n\nfinish_statistics()\n\n\nPrepare/modify data for plotting\n\n\n\n from_geom \n\nfrom_geom(geom)\n\n\nCreate a layer given a geom\n\n\nParameters\n\n\ngeom : geom\n\ngeom from which a layer will be created\n\n\n\n\n\nReturns\n\n\nout : layer\n\nLayer that represents the specific geom.\n\n\n\n\n\n\n map_statistic\n\nmap_statistic(plot)\n\n\nMapping aesthetics to computed statistics\n\n\n\n setup\n\nsetup(plot)\n\n\nPrepare layer for the plot building\nGive the layer access to the data, mapping and environment\n\n\n\n setup_data\n\nsetup_data()\n\n\nPrepare/modify data for plotting\n\n\n\n use_defaults\n\nuse_defaults(data=None, aes_modifiers=None)\n\n\nPrepare/modify data for plotting\n\n\nParameters\n\n\ndata : pd.DataFrame | None = None\n\nData\n\naes_modifiers : dict[str, Any] | None = None\n\nExpression to evaluate and replace aesthetics in the data."
   },
   {
     "objectID": "reference/labeller.html",
@@ -2006,7 +2006,7 @@
     "href": "reference/guide_colorbar.html#parameter-attributes",
     "title": " plotnine.guide_colorbar",
     "section": "Parameter Attributes",
-    "text": "Parameter Attributes\n\n\ntitle: Optional[str] = None\n\nTitle of the guide. Default is the name of the aesthetic or the name specified using \n\ntheme: Theme = field(default_factory=Theme)\n\nA theme to style the guide. If None, the plots theme is used.\n\nposition: Optional[LegendPosition] = None\n\nWhere to place the guide relative to the panels.\n\ndirection: Optional[Orientation] = None\n\nDirection of the guide. The default is depends on legend_position.\n\nreverse: bool = False\n\nbool(x) -&gt; bool\nReturns True when the argument x is true, False otherwise. The builtins True and False are the only two instances of the class bool. The class bool is a subclass of the class int, and cannot be subclassed.\n\norder: int = 0\n\nint([x]) -&gt; integer int(x, base=10) -&gt; integer\nConvert a number or string to an integer, or return 0 if no arguments are given. If x is a number, return x.__int__(). For floating point numbers, this truncates towards zero.\nIf x is not a number or if base is given, then x must be a string, bytes, or bytearray instance representing an integer literal in the given base. The literal can be preceded by ‘+’ or ‘-’ and be surrounded by whitespace. The base defaults to 10. Valid bases are 0 and 2-36. Base 0 means to interpret the base from the string as an integer literal. &gt;&gt;&gt; int(‘0b100’, base=0) 4\n\nnbin: Optional[int] = None\n\nNumber of bins for drawing a colorbar. A larger value yields a smoother colorbar\n\ndisplay: Literal[\"gradient\", \"rectangles\", \"raster\"] = \"gradient\"\n\nstr(object=’’) -&gt; str str(bytes_or_buffer[, encoding[, errors]]) -&gt; str\nCreate a new string object from the given object. If encoding or errors is specified, then the object must expose a data buffer that will be decoded using the given encoding and error handler. Otherwise, returns the result of object.__str__() (if defined) or repr(object). encoding defaults to sys.getdefaultencoding(). errors defaults to ‘strict’.\n\nalpha: Optional[float] = None\n\nOpacity (in the range [0, 1]) of the colorbar. The defualt None, is to use the opacity of the plot.\n\ndraw_ulim: bool = True\n\nbool(x) -&gt; bool\nReturns True when the argument x is true, False otherwise. The builtins True and False are the only two instances of the class bool. The class bool is a subclass of the class int, and cannot be subclassed.\n\ndraw_llim: bool = True\n\nbool(x) -&gt; bool\nReturns True when the argument x is true, False otherwise. The builtins True and False are the only two instances of the class bool. The class bool is a subclass of the class int, and cannot be subclassed."
+    "text": "Parameter Attributes\n\n\ntitle: Optional[str] = None\n\nTitle of the guide. Default is the name of the aesthetic or the name specified using lab\n\ntheme: Theme = field(default_factory=Theme)\n\nA theme to style the guide. If None, the plots theme is used.\n\nposition: Optional[LegendPosition] = None\n\nWhere to place the guide relative to the panels.\n\ndirection: Optional[Orientation] = None\n\nDirection of the guide. The default is depends on legend_position.\n\nreverse: bool = False\n\nbool(x) -&gt; bool\nReturns True when the argument x is true, False otherwise. The builtins True and False are the only two instances of the class bool. The class bool is a subclass of the class int, and cannot be subclassed.\n\norder: int = 0\n\nint([x]) -&gt; integer int(x, base=10) -&gt; integer\nConvert a number or string to an integer, or return 0 if no arguments are given. If x is a number, return x.__int__(). For floating point numbers, this truncates towards zero.\nIf x is not a number or if base is given, then x must be a string, bytes, or bytearray instance representing an integer literal in the given base. The literal can be preceded by ‘+’ or ‘-’ and be surrounded by whitespace. The base defaults to 10. Valid bases are 0 and 2-36. Base 0 means to interpret the base from the string as an integer literal. &gt;&gt;&gt; int(‘0b100’, base=0) 4\n\nnbin: Optional[int] = None\n\nNumber of bins for drawing a colorbar. A larger value yields a smoother colorbar\n\ndisplay: Literal[\"gradient\", \"rectangles\", \"raster\"] = \"gradient\"\n\nstr(object=’’) -&gt; str str(bytes_or_buffer[, encoding[, errors]]) -&gt; str\nCreate a new string object from the given object. If encoding or errors is specified, then the object must expose a data buffer that will be decoded using the given encoding and error handler. Otherwise, returns the result of object.__str__() (if defined) or repr(object). encoding defaults to sys.getdefaultencoding(). errors defaults to ‘strict’.\n\nalpha: Optional[float] = None\n\nOpacity (in the range [0, 1]) of the colorbar. The defualt None, is to use the opacity of the plot.\n\ndraw_ulim: bool = True\n\nbool(x) -&gt; bool\nReturns True when the argument x is true, False otherwise. The builtins True and False are the only two instances of the class bool. The class bool is a subclass of the class int, and cannot be subclassed.\n\ndraw_llim: bool = True\n\nbool(x) -&gt; bool\nReturns True when the argument x is true, False otherwise. The builtins True and False are the only two instances of the class bool. The class bool is a subclass of the class int, and cannot be subclassed."
   },
   {
     "objectID": "reference/guide_colorbar.html#notes",
@@ -2083,7 +2083,7 @@
     "href": "reference/geom_text.html#see-also",
     "title": " plotnine.geom_text",
     "section": "See Also",
-    "text": "See Also\n\ngeom_labelText"
+    "text": "See Also\n\ngeom_labelTextpatheffect"
   },
   {
     "objectID": "reference/geom_spoke.html",
@@ -2125,7 +2125,7 @@
     "href": "reference/geom_sina.html#see-also",
     "title": " plotnine.geom_sina",
     "section": "See Also",
-    "text": "See Also"
+    "text": "See Also\n\nstat_sin"
   },
   {
     "objectID": "reference/geom_sina.html#references",
@@ -2293,14 +2293,14 @@
     "href": "reference/geom_jitter.html#parameters",
     "title": " plotnine.geom_jitter",
     "section": "Parameters",
-    "text": "Parameters\n\n\nmapping : aes = None\n\nAesthetic mappings created with aes. If specified and inherit_aes=True, it is combined with the default mapping for the plot. You must supply mapping if there is no plot mapping.\n\n\n\n\n\n\n\nAesthetic\nDefault value\n\n\n\n\nx\n\n\n\ny\n\n\n\nalpha\n1\n\n\ncolor\n'black'\n\n\nfill\nNone\n\n\ngroup\n\n\n\nshape\n'o'\n\n\nsize\n1.5\n\n\nstroke\n0.5\n\n\n\nThe bold aesthetics are required.\n\ndata : DataFrame = None\n\nThe data to be displayed in this layer. If None, the data from from the ggplot() call is used. If specified, it overrides the data from the ggplot() call.\n\nstat : str | stat = \"identity\"\n\nThe statistical transformation to use on the data for this layer. If it is a string, it must be the registered and known to Plotnine.\n\nposition : str | position = \"jitter\"\n\nPosition adjustment. If it is a string, it must be registered and known to Plotnine.\n\nna_rm : bool = False\n\nIf False, removes missing values with a warning. If True silently removes missing values.\n\ninherit_aes : bool = True\n\nIf False, overrides the default aesthetics.\n\nshow_legend : bool | dict = None\n\nWhether this layer should be included in the legends. None the default, includes any aesthetics that are mapped. If a bool, False never includes and True always includes. A dict can be used to exclude specific aesthetis of the layer from showing in the legend. e.g show_legend={'color': False}, any other aesthetic are included by default.\n\nraster : bool = False\n\nIf True, draw onto this layer a raster (bitmap) object even ifthe final image is in vector format.\n\nwidth : float = None\n\nProportion to jitter in horizontal direction. The default value is that from \n\nheight : float = None\n\nProportion to jitter in vertical direction. The default value is that from .\n\nrandom_state : int | RandomState = None\n\nSeed or Random number generator to use. If None, then numpy global generator numpy.random is used.\n\n**kwargs : Any = {}\n\nAesthetics or parameters used by the stat."
+    "text": "Parameters\n\n\nmapping : aes = None\n\nAesthetic mappings created with aes. If specified and inherit_aes=True, it is combined with the default mapping for the plot. You must supply mapping if there is no plot mapping.\n\n\n\n\n\n\n\nAesthetic\nDefault value\n\n\n\n\nx\n\n\n\ny\n\n\n\nalpha\n1\n\n\ncolor\n'black'\n\n\nfill\nNone\n\n\ngroup\n\n\n\nshape\n'o'\n\n\nsize\n1.5\n\n\nstroke\n0.5\n\n\n\nThe bold aesthetics are required.\n\ndata : DataFrame = None\n\nThe data to be displayed in this layer. If None, the data from from the ggplot() call is used. If specified, it overrides the data from the ggplot() call.\n\nstat : str | stat = \"identity\"\n\nThe statistical transformation to use on the data for this layer. If it is a string, it must be the registered and known to Plotnine.\n\nposition : str | position = \"jitter\"\n\nPosition adjustment. If it is a string, it must be registered and known to Plotnine.\n\nna_rm : bool = False\n\nIf False, removes missing values with a warning. If True silently removes missing values.\n\ninherit_aes : bool = True\n\nIf False, overrides the default aesthetics.\n\nshow_legend : bool | dict = None\n\nWhether this layer should be included in the legends. None the default, includes any aesthetics that are mapped. If a bool, False never includes and True always includes. A dict can be used to exclude specific aesthetis of the layer from showing in the legend. e.g show_legend={'color': False}, any other aesthetic are included by default.\n\nraster : bool = False\n\nIf True, draw onto this layer a raster (bitmap) object even ifthe final image is in vector format.\n\nwidth : float = None\n\nProportion to jitter in horizontal direction. The default value is that from position_jitter\n\nheight : float = None\n\nProportion to jitter in vertical direction. The default value is that from position_jitter.\n\nrandom_state : int | RandomState = None\n\nSeed or Random number generator to use. If None, then numpy global generator numpy.random is used.\n\n**kwargs : Any = {}\n\nAesthetics or parameters used by the stat."
   },
   {
     "objectID": "reference/geom_jitter.html#see-also",
     "href": "reference/geom_jitter.html#see-also",
     "title": " plotnine.geom_jitter",
     "section": "See Also",
-    "text": "See Also\n\nposition_jitter"
+    "text": "See Also\n\nposition_jittergeom_poin"
   },
   {
     "objectID": "reference/geom_histogram.html",
@@ -2321,7 +2321,7 @@
     "href": "reference/geom_histogram.html#see-also",
     "title": " plotnine.geom_histogram",
     "section": "See Also",
-    "text": "See Also"
+    "text": "See Also\n\ngeom_ba"
   },
   {
     "objectID": "reference/geom_histogram.html#examples",
@@ -2370,7 +2370,7 @@
     "href": "reference/geom_dotplot.html#see-also",
     "title": " plotnine.geom_dotplot",
     "section": "See Also",
-    "text": "See Also"
+    "text": "See Also\n\nstat_bindo"
   },
   {
     "objectID": "reference/geom_density.html",
@@ -2391,7 +2391,7 @@
     "href": "reference/geom_density.html#see-also",
     "title": " plotnine.geom_density",
     "section": "See Also",
-    "text": "See Also"
+    "text": "See Also\n\ngeom_ribbo"
   },
   {
     "objectID": "reference/geom_density.html#examples",
@@ -2475,7 +2475,7 @@
     "href": "reference/geom_area.html#see-also",
     "title": " plotnine.geom_area",
     "section": "See Also",
-    "text": "See Also"
+    "text": "See Also\n\ngeom_ribbo"
   },
   {
     "objectID": "reference/geom.html",
@@ -2496,7 +2496,7 @@
     "href": "reference/geom.html#methods",
     "title": " plotnine.geoms.geom.geom",
     "section": "Methods",
-    "text": "Methods\n\n\n\nName\nDescription\n\n\n\n\naesthetics\nReturn all the aesthetics for this geom\n\n\ndraw_group\nPlot data belonging to a group.\n\n\ndraw_layer\nDraw layer across all panels\n\n\ndraw_legend\nDraw a rectangle in the box\n\n\ndraw_panel\nPlot all groups\n\n\ndraw_unit\nPlot data belonging to a unit.\n\n\nfrom_stat\nReturn an instantiated geom object\n\n\nhandle_na\nRemove rows with NaN values\n\n\nlegend_key_size\nCalculate the size of key that would fit the layer contents\n\n\nsetup_data\nModify the data before drawing takes place\n\n\nto_layer\nMake a layer that represents this geom\n\n\nuse_defaults\nCombine data with defaults and set aesthetics from parameters\n\n\n\n\n aesthetics \n\naesthetics()\n\n\nReturn all the aesthetics for this geom\ngeoms should not override this method.\n\n\n\n draw_group \n\ndraw_group(data, panel_params, coord, ax, **params)\n\n\nPlot data belonging to a group.\n\n\nParameters\n\n\ndata : pd.DataFrame\n\nData to be plotted by this geom. This is the dataframe created in the plot_build pipeline.\n\npanel_params : panel_view\n\nThe scale information as may be required by the axes. At this point, that information is about ranges, ticks and labels. Keys of interest to the geom are:\n\"x_range\"  # tuple\n\"y_range\"  # tuple\n\ncoord : coord\n\nCoordinate (e.g. coord_cartesian) system of the geom.\n\nax : axes\n\nAxes on which to plot.\n\nparams : dict = {}\n\nCombined parameters for the geom and stat. Also includes the zorder.\n\n\n\n\n\n\n draw_layer\n\ndraw_layer(data, layout, coord, **params)\n\n\nDraw layer across all panels\ngeoms should not override this method.\n\n\nParameters\n\n\ndata : pd.DataFrame\n\nDataFrame specific for this layer\n\nlayout : Layout\n\nLayout object created when the plot is getting built\n\ncoord : coord\n\nType of coordinate axes\n\nparams : Any = {}\n\nCombined geom and stat parameters. Also includes the stacking order of the layer in the plot (zorder)\n\n\n\n\n\n\n draw_legend \n\ndraw_legend(data, da, lyr)\n\n\nDraw a rectangle in the box\n\n\nParameters\n\n\ndata : pd.Series[Any]\n\nA row of the data plotted to this layer\n\nda : DrawingArea\n\nCanvas on which to draw\n\nlyr : layer\n\nLayer that the geom belongs to.\n\n\n\n\n\nReturns\n\n\nDrawingArea\n\nThe DrawingArea after a layer has been drawn onto it.\n\n\n\n\n\n\n draw_panel\n\ndraw_panel(data, panel_params, coord, ax, **params)\n\n\nPlot all groups\nFor efficiency, geoms that do not need to partition different groups before plotting should override this method and avoid the groupby.\n\n\nParameters\n\n\ndata : pd.DataFrame\n\nData to be plotted by this geom. This is the dataframe created in the plot_build pipeline.\n\npanel_params : panel_view\n\nThe scale information as may be required by the axes. At this point, that information is about ranges, ticks and labels. Attributes are of interest to the geom are:\n\"panel_params.x.range\"  # tuple\n\"panel_params.y.range\"  # tuple\n\ncoord : coord\n\nCoordinate (e.g. coord_cartesian) system of the geom.\n\nax : Axes\n\nAxes on which to plot.\n\nparams : Any = {}\n\nCombined parameters for the geom and stat. Also includes the zorder.\n\n\n\n\n\n\n draw_unit \n\ndraw_unit(data, panel_params, coord, ax, **params)\n\n\nPlot data belonging to a unit.\nA matplotlib plot function may require that an aethestic have a single unique value. e.g. linestyle=\"dashed\" and not linestyle=[\"dashed\", \"dotted\", ...]. A single call to such a function can only plot lines with the same linestyle. However, if the plot we want has more than one line with different linestyles, we need to group the lines with the same linestyle and plot them as one unit. In this case, draw_group calls this function to do the plotting. For an example see .\n\n\nParameters\n\n\ndata : pd.DataFrame\n\nData to be plotted by this geom. This is the dataframe created in the plot_build pipeline.\n\npanel_params : panel_view\n\nThe scale information as may be required by the axes. At this point, that information is about ranges, ticks and labels. Keys of interest to the geom are:\n\"x_range\"  # tuple\n\"y_range\"  # tuple\nIn rare cases a geom may need access to the x or y scales. Those are available at:\n\"scales\"   # SimpleNamespace\n\ncoord : coord\n\nCoordinate (e.g. coord_cartesian) system of the geom.\n\nax : Axes\n\nAxes on which to plot.\n\nparams : Any = {}\n\nCombined parameters for the geom and stat. Also includes the zorder.\n\n\n\n\n\n\n from_stat \n\nfrom_stat(stat)\n\n\nReturn an instantiated geom object\ngeoms should not override this method.\n\n\nParameters\n\n\nstat : stat\n\nstat\n\n\n\n\n\nReturns\n\n\ngeom\n\nA geom object\n\n\n\n\n\nRaises\n\n\nPlotnineError\n\nIf unable to create a geom.\n\n\n\n\n\n\n handle_na\n\nhandle_na(data)\n\n\nRemove rows with NaN values\ngeoms that infer extra information from missing values should override this method. For example .\n\n\nParameters\n\n\ndata : pd.DataFrame\n\nData\n\n\n\n\n\nReturns\n\n\npd.DataFrame\n\nData without the NaNs.\n\n\n\n\n\nNotes\nShows a warning if the any rows are removed and the na_rm parameter is False. It only takes into account the columns of the required aesthetics.\n\n\n\n legend_key_size \n\nlegend_key_size(data, min_size, lyr)\n\n\nCalculate the size of key that would fit the layer contents\n\n\nParameters\n\n\ndata : pd.Series[Any]\n\nA row of the data plotted to this layer\n\nmin_size : TupleInt2\n\nInitial size which should be expanded to fit the contents.\n\nlyr : layer\n\nLayer\n\n\n\n\n\n\n setup_data\n\nsetup_data(data)\n\n\nModify the data before drawing takes place\nThis function is called before position adjustments are done. It is used by geoms to create the final aesthetics used for drawing. The base class method does nothing, geoms can override this method for two reasons:\n\nThe stat does not create all the aesthetics (usually position aesthetics) required for drawing the geom, but those aesthetics can be computed from the available data. For example and .\nThe geom inherits from another geom (superclass) which does the drawing and the superclass requires certain aesthetics to be present in the data. For example and .\n\n\n\nParameters\n\n\ndata : pd.DataFrame\n\nData used for drawing the geom.\n\n\n\n\n\nReturns\n\n\npd.DataFrame\n\nData used for drawing the geom.\n\n\n\n\n\n\n to_layer\n\nto_layer()\n\n\nMake a layer that represents this geom\n\n\nReturns\n\n\nlayer\n\nLayer\n\n\n\n\n\n\n use_defaults\n\nuse_defaults(data, aes_modifiers)\n\n\nCombine data with defaults and set aesthetics from parameters\ngeoms should not override this method.\n\n\nParameters\n\n\ndata : pd.DataFrame\n\nData used for drawing the geom.\n\naes_modifiers : dict[str, Any]\n\nAesthetics\n\n\n\n\n\nReturns\n\n\npd.DataFrame\n\nData used for drawing the geom."
+    "text": "Methods\n\n\n\nName\nDescription\n\n\n\n\naesthetics\nReturn all the aesthetics for this geom\n\n\ndraw_group\nPlot data belonging to a group.\n\n\ndraw_layer\nDraw layer across all panels\n\n\ndraw_legend\nDraw a rectangle in the box\n\n\ndraw_panel\nPlot all groups\n\n\ndraw_unit\nPlot data belonging to a unit.\n\n\nfrom_stat\nReturn an instantiated geom object\n\n\nhandle_na\nRemove rows with NaN values\n\n\nlegend_key_size\nCalculate the size of key that would fit the layer contents\n\n\nsetup_data\nModify the data before drawing takes place\n\n\nto_layer\nMake a layer that represents this geom\n\n\nuse_defaults\nCombine data with defaults and set aesthetics from parameters\n\n\n\n\n aesthetics \n\naesthetics()\n\n\nReturn all the aesthetics for this geom\ngeoms should not override this method.\n\n\n\n draw_group \n\ndraw_group(data, panel_params, coord, ax, **params)\n\n\nPlot data belonging to a group.\n\n\nParameters\n\n\ndata : pd.DataFrame\n\nData to be plotted by this geom. This is the dataframe created in the plot_build pipeline.\n\npanel_params : panel_view\n\nThe scale information as may be required by the axes. At this point, that information is about ranges, ticks and labels. Keys of interest to the geom are:\n\"x_range\"  # tuple\n\"y_range\"  # tuple\n\ncoord : coord\n\nCoordinate (e.g. coord_cartesian) system of the geom.\n\nax : axes\n\nAxes on which to plot.\n\nparams : dict = {}\n\nCombined parameters for the geom and stat. Also includes the zorder.\n\n\n\n\n\n\n draw_layer\n\ndraw_layer(data, layout, coord, **params)\n\n\nDraw layer across all panels\ngeoms should not override this method.\n\n\nParameters\n\n\ndata : pd.DataFrame\n\nDataFrame specific for this layer\n\nlayout : Layout\n\nLayout object created when the plot is getting built\n\ncoord : coord\n\nType of coordinate axes\n\nparams : Any = {}\n\nCombined geom and stat parameters. Also includes the stacking order of the layer in the plot (zorder)\n\n\n\n\n\n\n draw_legend \n\ndraw_legend(data, da, lyr)\n\n\nDraw a rectangle in the box\n\n\nParameters\n\n\ndata : pd.Series[Any]\n\nA row of the data plotted to this layer\n\nda : DrawingArea\n\nCanvas on which to draw\n\nlyr : layer\n\nLayer that the geom belongs to.\n\n\n\n\n\nReturns\n\n\nDrawingArea\n\nThe DrawingArea after a layer has been drawn onto it.\n\n\n\n\n\n\n draw_panel\n\ndraw_panel(data, panel_params, coord, ax, **params)\n\n\nPlot all groups\nFor efficiency, geoms that do not need to partition different groups before plotting should override this method and avoid the groupby.\n\n\nParameters\n\n\ndata : pd.DataFrame\n\nData to be plotted by this geom. This is the dataframe created in the plot_build pipeline.\n\npanel_params : panel_view\n\nThe scale information as may be required by the axes. At this point, that information is about ranges, ticks and labels. Attributes are of interest to the geom are:\n\"panel_params.x.range\"  # tuple\n\"panel_params.y.range\"  # tuple\n\ncoord : coord\n\nCoordinate (e.g. coord_cartesian) system of the geom.\n\nax : Axes\n\nAxes on which to plot.\n\nparams : Any = {}\n\nCombined parameters for the geom and stat. Also includes the zorder.\n\n\n\n\n\n\n draw_unit \n\ndraw_unit(data, panel_params, coord, ax, **params)\n\n\nPlot data belonging to a unit.\nA matplotlib plot function may require that an aethestic have a single unique value. e.g. linestyle=\"dashed\" and not linestyle=[\"dashed\", \"dotted\", ...]. A single call to such a function can only plot lines with the same linestyle. However, if the plot we want has more than one line with different linestyles, we need to group the lines with the same linestyle and plot them as one unit. In this case, draw_group calls this function to do the plotting. For an example see geom_point.\n\n\nParameters\n\n\ndata : pd.DataFrame\n\nData to be plotted by this geom. This is the dataframe created in the plot_build pipeline.\n\npanel_params : panel_view\n\nThe scale information as may be required by the axes. At this point, that information is about ranges, ticks and labels. Keys of interest to the geom are:\n\"x_range\"  # tuple\n\"y_range\"  # tuple\nIn rare cases a geom may need access to the x or y scales. Those are available at:\n\"scales\"   # SimpleNamespace\n\ncoord : coord\n\nCoordinate (e.g. coord_cartesian) system of the geom.\n\nax : Axes\n\nAxes on which to plot.\n\nparams : Any = {}\n\nCombined parameters for the geom and stat. Also includes the zorder.\n\n\n\n\n\n\n from_stat \n\nfrom_stat(stat)\n\n\nReturn an instantiated geom object\ngeoms should not override this method.\n\n\nParameters\n\n\nstat : stat\n\nstat\n\n\n\n\n\nReturns\n\n\ngeom\n\nA geom object\n\n\n\n\n\nRaises\n\n\nPlotnineError\n\nIf unable to create a geom.\n\n\n\n\n\n\n handle_na\n\nhandle_na(data)\n\n\nRemove rows with NaN values\ngeoms that infer extra information from missing values should override this method. For example geom_path.\n\n\nParameters\n\n\ndata : pd.DataFrame\n\nData\n\n\n\n\n\nReturns\n\n\npd.DataFrame\n\nData without the NaNs.\n\n\n\n\n\nNotes\nShows a warning if the any rows are removed and the na_rm parameter is False. It only takes into account the columns of the required aesthetics.\n\n\n\n legend_key_size \n\nlegend_key_size(data, min_size, lyr)\n\n\nCalculate the size of key that would fit the layer contents\n\n\nParameters\n\n\ndata : pd.Series[Any]\n\nA row of the data plotted to this layer\n\nmin_size : TupleInt2\n\nInitial size which should be expanded to fit the contents.\n\nlyr : layer\n\nLayer\n\n\n\n\n\n\n setup_data\n\nsetup_data(data)\n\n\nModify the data before drawing takes place\nThis function is called before position adjustments are done. It is used by geoms to create the final aesthetics used for drawing. The base class method does nothing, geoms can override this method for two reasons:\n\nThe stat does not create all the aesthetics (usually position aesthetics) required for drawing the geom, but those aesthetics can be computed from the available data. For example geom_boxplot and geom_violin.\nThe geom inherits from another geom (superclass) which does the drawing and the superclass requires certain aesthetics to be present in the data. For example geom_tile and geom_area.\n\n\n\nParameters\n\n\ndata : pd.DataFrame\n\nData used for drawing the geom.\n\n\n\n\n\nReturns\n\n\npd.DataFrame\n\nData used for drawing the geom.\n\n\n\n\n\n\n to_layer\n\nto_layer()\n\n\nMake a layer that represents this geom\n\n\nReturns\n\n\nlayer\n\nLayer\n\n\n\n\n\n\n use_defaults\n\nuse_defaults(data, aes_modifiers)\n\n\nCombine data with defaults and set aesthetics from parameters\ngeoms should not override this method.\n\n\nParameters\n\n\ndata : pd.DataFrame\n\nData used for drawing the geom.\n\naes_modifiers : dict[str, Any]\n\nAesthetics\n\n\n\n\n\nReturns\n\n\npd.DataFrame\n\nData used for drawing the geom."
   },
   {
     "objectID": "reference/figure_format.html",
@@ -2545,7 +2545,7 @@
     "href": "reference/facet.html#methods",
     "title": " plotnine.facets.facet.facet",
     "section": "Methods",
-    "text": "Methods\n\n\n\nName\nDescription\n\n\n\n\ncompute_layout\nCompute layout\n\n\nfinish_data\nModify data before it is drawn out by the geom\n\n\nmake_figure\nCreate and return Matplotlib figure and subplot axes\n\n\nmake_strips\nCreate strips for the facet\n\n\nmap\nAssign a data points to panels\n\n\nset_limits_breaks_and_labels\nAdd limits, breaks and labels to the axes\n\n\nsetup_data\nAllow the facet to manipulate the data\n\n\nsetup_params\nCreate facet parameters\n\n\ntrain_position_scales\nCompute ranges for the x and y scales\n\n\n\n\n compute_layout\n\ncompute_layout(data)\n\n\nCompute layout\n\n\nParameters\n\n\ndata : list[pd.DataFrame]\n\nDataframe for a each layer\n\n\n\n\n\n\n finish_data\n\nfinish_data(data, layout)\n\n\nModify data before it is drawn out by the geom\nThe default is to return the data without modification. Subclasses should override this method as the require.\n\n\nParameters\n\n\ndata : pd.DataFrame\n\nA single layer’s data.\n\nlayout : Layout\n\nLayout\n\n\n\n\n\nReturns\n\n\npd.DataFrame\n\nModified layer data\n\n\n\n\n\n\n make_figure\n\nmake_figure()\n\n\nCreate and return Matplotlib figure and subplot axes\n\n\n\n make_strips\n\nmake_strips(layout_info, ax)\n\n\nCreate strips for the facet\n\n\nParameters\n\n\nlayout_info : layout_details\n\nLayout information. Row from the layout table\n\nax : Axes\n\nAxes to label\n\n\n\n\n\n\n map\n\nmap(data, layout)\n\n\nAssign a data points to panels\n\n\nParameters\n\n\ndata : pd.DataFrame\n\nData for a layer\n\nlayout : pd.DataFrame\n\nAs returned by self.compute_layout\n\n\n\n\n\nReturns\n\n\npd.DataFrame\n\nData with all points mapped to the panels on which they will be plotted.\n\n\n\n\n\n\n set_limits_breaks_and_labels\n\nset_limits_breaks_and_labels(panel_params, ax)\n\n\nAdd limits, breaks and labels to the axes\n\n\nParameters\n\n\npanel_params : panel_view\n\nrange information for the axes\n\nax : Axes\n\nAxes\n\n\n\n\n\n\n setup_data\n\nsetup_data(data)\n\n\nAllow the facet to manipulate the data\n\n\nParameters\n\n\ndata : list[pd.DataFrame]\n\nData for each of the layers\n\n\n\n\n\nReturns\n\n\nlist[pd.DataFrame]\n\nData for each of the layers\n\n\n\n\n\nNotes\nThis method will be called after , therefore the params property will be set.\n\n\n\n setup_params\n\nsetup_params(data)\n\n\nCreate facet parameters\n\n\nParameters\n\n\ndata : list[pd.DataFrame]\n\nPlot data and data for the layers\n\n\n\n\n\n\n train_position_scales\n\ntrain_position_scales(layout, layers)\n\n\nCompute ranges for the x and y scales"
+    "text": "Methods\n\n\n\nName\nDescription\n\n\n\n\ncompute_layout\nCompute layout\n\n\nfinish_data\nModify data before it is drawn out by the geom\n\n\nmake_figure\nCreate and return Matplotlib figure and subplot axes\n\n\nmake_strips\nCreate strips for the facet\n\n\nmap\nAssign a data points to panels\n\n\nset_limits_breaks_and_labels\nAdd limits, breaks and labels to the axes\n\n\nsetup_data\nAllow the facet to manipulate the data\n\n\nsetup_params\nCreate facet parameters\n\n\ntrain_position_scales\nCompute ranges for the x and y scales\n\n\n\n\n compute_layout\n\ncompute_layout(data)\n\n\nCompute layout\n\n\nParameters\n\n\ndata : list[pd.DataFrame]\n\nDataframe for a each layer\n\n\n\n\n\n\n finish_data\n\nfinish_data(data, layout)\n\n\nModify data before it is drawn out by the geom\nThe default is to return the data without modification. Subclasses should override this method as the require.\n\n\nParameters\n\n\ndata : pd.DataFrame\n\nA single layer’s data.\n\nlayout : Layout\n\nLayout\n\n\n\n\n\nReturns\n\n\npd.DataFrame\n\nModified layer data\n\n\n\n\n\n\n make_figure\n\nmake_figure()\n\n\nCreate and return Matplotlib figure and subplot axes\n\n\n\n make_strips\n\nmake_strips(layout_info, ax)\n\n\nCreate strips for the facet\n\n\nParameters\n\n\nlayout_info : layout_details\n\nLayout information. Row from the layout table\n\nax : Axes\n\nAxes to label\n\n\n\n\n\n\n map\n\nmap(data, layout)\n\n\nAssign a data points to panels\n\n\nParameters\n\n\ndata : pd.DataFrame\n\nData for a layer\n\nlayout : pd.DataFrame\n\nAs returned by self.compute_layout\n\n\n\n\n\nReturns\n\n\npd.DataFrame\n\nData with all points mapped to the panels on which they will be plotted.\n\n\n\n\n\n\n set_limits_breaks_and_labels\n\nset_limits_breaks_and_labels(panel_params, ax)\n\n\nAdd limits, breaks and labels to the axes\n\n\nParameters\n\n\npanel_params : panel_view\n\nrange information for the axes\n\nax : Axes\n\nAxes\n\n\n\n\n\n\n setup_data\n\nsetup_data(data)\n\n\nAllow the facet to manipulate the data\n\n\nParameters\n\n\ndata : list[pd.DataFrame]\n\nData for each of the layers\n\n\n\n\n\nReturns\n\n\nlist[pd.DataFrame]\n\nData for each of the layers\n\n\n\n\n\nNotes\nThis method will be called after setup_params, therefore the params property will be set.\n\n\n\n setup_params\n\nsetup_params(data)\n\n\nCreate facet parameters\n\n\nParameters\n\n\ndata : list[pd.DataFrame]\n\nPlot data and data for the layers\n\n\n\n\n\n\n train_position_scales\n\ntrain_position_scales(layout, layers)\n\n\nCompute ranges for the x and y scales"
   },
   {
     "objectID": "reference/element_text.html",
@@ -2566,7 +2566,7 @@
     "href": "reference/element_text.html#notes",
     "title": " plotnine.element_text",
     "section": "Notes",
-    "text": "Notes\n will accept parameters that conform to the ggplot2 element_text API, but it is preferable the Matplotlib based API described above."
+    "text": "Notes\nelement_text will accept parameters that conform to the ggplot2 element_text API, but it is preferable the Matplotlib based API described above."
   },
   {
     "objectID": "reference/element_line.html",
@@ -2580,7 +2580,7 @@
     "href": "reference/element_line.html#parameters",
     "title": " plotnine.element_line",
     "section": "Parameters",
-    "text": "Parameters\n\n\ncolor : str | tuple = None\n\nline color\n\ncolour : str | tuple = None\n\nalias of color\n\nlinetype : str | tuple = None\n\nline style. if a string, it should be one of solid, dashed, dashdot or dotted. you can create interesting dashed patterns using tuples, see .\n\nsize : float = None\n\nline thickness\n\nkwargs : dict = {}\n\nParameters recognised by ."
+    "text": "Parameters\n\n\ncolor : str | tuple = None\n\nline color\n\ncolour : str | tuple = None\n\nalias of color\n\nlinetype : str | tuple = None\n\nline style. if a string, it should be one of solid, dashed, dashdot or dotted. you can create interesting dashed patterns using tuples, see set_linestyle.\n\nsize : float = None\n\nline thickness\n\nkwargs : dict = {}\n\nParameters recognised by line2d."
   },
   {
     "objectID": "reference/economics_long.html",
@@ -2734,7 +2734,7 @@
     "href": "reference/axis_ticks_pad_minor_x.html#note",
     "title": " plotnine.themes.themeable.axis_ticks_pad_minor_x",
     "section": "Note",
-    "text": "Note\nPadding is not applied when the are blank, but it does apply when the is zero."
+    "text": "Note\nPadding is not applied when the axis_ticks_minor_x are blank, but it does apply when the axis_ticks_length_minor_x is zero."
   },
   {
     "objectID": "reference/axis_ticks_pad_major_y.html",
@@ -2755,7 +2755,7 @@
     "href": "reference/axis_ticks_pad_major_y.html#note",
     "title": " plotnine.themes.themeable.axis_ticks_pad_major_y",
     "section": "Note",
-    "text": "Note\nPadding is not applied when the are blank, but it does apply when the is zero."
+    "text": "Note\nPadding is not applied when the axis_ticks_major_y are blank, but it does apply when the axis_ticks_length_major_y is zero."
   },
   {
     "objectID": "reference/axis_ticks_pad_major.html",
@@ -2776,7 +2776,7 @@
     "href": "reference/axis_ticks_pad_major.html#note",
     "title": " plotnine.themes.themeable.axis_ticks_pad_major",
     "section": "Note",
-    "text": "Note\nPadding is not applied when the are blank, but it does apply when the is zero."
+    "text": "Note\nPadding is not applied when the axis_ticks_major are blank, but it does apply when the axis_ticks_length_major is zero."
   },
   {
     "objectID": "reference/axis_ticks_minor_y.html",
@@ -3028,7 +3028,7 @@
     "href": "reference/after_scale.html#see-also",
     "title": " plotnine.after_scale",
     "section": "See Also",
-    "text": "See Also\n\nafter_stat"
+    "text": "See Also\n\nafter_statstag"
   },
   {
     "objectID": "reference/after_scale.html#examples",
@@ -3119,7 +3119,7 @@
     "href": "reference/after_stat.html#see-also",
     "title": " plotnine.after_stat",
     "section": "See Also",
-    "text": "See Also\n\nafter_scale"
+    "text": "See Also\n\nafter_scalestag"
   },
   {
     "objectID": "reference/after_stat.html#examples",
@@ -3343,7 +3343,7 @@
     "href": "reference/axis_ticks_pad.html#note",
     "title": " plotnine.themes.themeable.axis_ticks_pad",
     "section": "Note",
-    "text": "Note\nPadding is not applied when the are blank, but it does apply when the is zero."
+    "text": "Note\nPadding is not applied when the axis_ticks are blank, but it does apply when the axis_ticks_length is zero."
   },
   {
     "objectID": "reference/axis_ticks_pad_major_x.html",
@@ -3378,7 +3378,7 @@
     "href": "reference/axis_ticks_pad_minor.html#note",
     "title": " plotnine.themes.themeable.axis_ticks_pad_minor",
     "section": "Note",
-    "text": "Note\nPadding is not applied when the are blank, but it does apply when the is zero."
+    "text": "Note\nPadding is not applied when the axis_ticks_minor are blank, but it does apply when the axis_ticks_length_minor is zero."
   },
   {
     "objectID": "reference/axis_ticks_pad_minor_y.html",
@@ -3399,7 +3399,7 @@
     "href": "reference/axis_ticks_pad_minor_y.html#note",
     "title": " plotnine.themes.themeable.axis_ticks_pad_minor_y",
     "section": "Note",
-    "text": "Note\nPadding is not applied when the are blank, but it does apply when the is zero."
+    "text": "Note\nPadding is not applied when the axis_ticks_minor_y are blank, but it does apply when the axis_ticks_length_minor_y is zero."
   },
   {
     "objectID": "reference/axis_ticks_y.html",
@@ -3644,7 +3644,7 @@
     "href": "reference/geom_bar.html#see-also",
     "title": " plotnine.geom_bar",
     "section": "See Also",
-    "text": "See Also"
+    "text": "See Also\n\ngeom_histogra"
   },
   {
     "objectID": "reference/geom_bar.html#examples",
@@ -3686,7 +3686,7 @@
     "href": "reference/geom_col.html#see-also",
     "title": " plotnine.geom_col",
     "section": "See Also",
-    "text": "See Also"
+    "text": "See Also\n\ngeom_ba"
   },
   {
     "objectID": "reference/geom_col.html#examples",
@@ -3742,7 +3742,7 @@
     "href": "reference/geom_freqpoly.html",
     "title": " plotnine.geom_freqpoly",
     "section": "",
-    "text": "geom_freqpoly(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"bin\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    lineend=\"butt\",\n    linejoin=\"round\",\n    arrow=None,\n    **kwargs\n)\n\n\nFrequency polygon\nSee for documentation of the parameters."
+    "text": "geom_freqpoly(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"bin\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    lineend=\"butt\",\n    linejoin=\"round\",\n    arrow=None,\n    **kwargs\n)\n\n\nFrequency polygon\nSee geom_path for documentation of the parameters."
   },
   {
     "objectID": "reference/geom_hline.html",
@@ -3896,7 +3896,7 @@
     "href": "reference/geom_raster.html#see-also",
     "title": " plotnine.geom_raster",
     "section": "See Also",
-    "text": "See Also\n\ngeom_rect"
+    "text": "See Also\n\ngeom_rectgeom_til"
   },
   {
     "objectID": "reference/geom_ribbon.html",
@@ -4008,7 +4008,7 @@
     "href": "reference/geom_tile.html#see-also",
     "title": " plotnine.geom_tile",
     "section": "See Also",
-    "text": "See Also"
+    "text": "See Also\n\ngeom_rec"
   },
   {
     "objectID": "reference/geom_tile.html#examples",
@@ -4078,7 +4078,7 @@
     "href": "reference/guide.html#parameter-attributes",
     "title": " plotnine.guides.guide.guide",
     "section": "Parameter Attributes",
-    "text": "Parameter Attributes\n\n\ntitle: Optional[str] = None\n\nTitle of the guide. Default is the name of the aesthetic or the name specified using \n\ntheme: Theme = field(default_factory=Theme)\n\nA theme to style the guide. If None, the plots theme is used.\n\nposition: Optional[LegendPosition] = None\n\nWhere to place the guide relative to the panels.\n\ndirection: Optional[Orientation] = None\n\nDirection of the guide. The default is depends on legend_position.\n\nreverse: bool = False\n\nbool(x) -&gt; bool\nReturns True when the argument x is true, False otherwise. The builtins True and False are the only two instances of the class bool. The class bool is a subclass of the class int, and cannot be subclassed.\n\norder: int = 0\n\nint([x]) -&gt; integer int(x, base=10) -&gt; integer\nConvert a number or string to an integer, or return 0 if no arguments are given. If x is a number, return x.__int__(). For floating point numbers, this truncates towards zero.\nIf x is not a number or if base is given, then x must be a string, bytes, or bytearray instance representing an integer literal in the given base. The literal can be preceded by ‘+’ or ‘-’ and be surrounded by whitespace. The base defaults to 10. Valid bases are 0 and 2-36. Base 0 means to interpret the base from the string as an integer literal. &gt;&gt;&gt; int(‘0b100’, base=0) 4"
+    "text": "Parameter Attributes\n\n\ntitle: Optional[str] = None\n\nTitle of the guide. Default is the name of the aesthetic or the name specified using lab\n\ntheme: Theme = field(default_factory=Theme)\n\nA theme to style the guide. If None, the plots theme is used.\n\nposition: Optional[LegendPosition] = None\n\nWhere to place the guide relative to the panels.\n\ndirection: Optional[Orientation] = None\n\nDirection of the guide. The default is depends on legend_position.\n\nreverse: bool = False\n\nbool(x) -&gt; bool\nReturns True when the argument x is true, False otherwise. The builtins True and False are the only two instances of the class bool. The class bool is a subclass of the class int, and cannot be subclassed.\n\norder: int = 0\n\nint([x]) -&gt; integer int(x, base=10) -&gt; integer\nConvert a number or string to an integer, or return 0 if no arguments are given. If x is a number, return x.__int__(). For floating point numbers, this truncates towards zero.\nIf x is not a number or if base is given, then x must be a string, bytes, or bytearray instance representing an integer literal in the given base. The literal can be preceded by ‘+’ or ‘-’ and be surrounded by whitespace. The base defaults to 10. Valid bases are 0 and 2-36. Base 0 means to interpret the base from the string as an integer literal. &gt;&gt;&gt; int(‘0b100’, base=0) 4"
   },
   {
     "objectID": "reference/guide.html#notes",
@@ -4106,7 +4106,7 @@
     "href": "reference/guide_legend.html#parameter-attributes",
     "title": " plotnine.guide_legend",
     "section": "Parameter Attributes",
-    "text": "Parameter Attributes\n\n\ntitle: Optional[str] = None\n\nTitle of the guide. Default is the name of the aesthetic or the name specified using \n\ntheme: Theme = field(default_factory=Theme)\n\nA theme to style the guide. If None, the plots theme is used.\n\nposition: Optional[LegendPosition] = None\n\nWhere to place the guide relative to the panels.\n\ndirection: Optional[Orientation] = None\n\nDirection of the guide. The default is depends on legend_position.\n\nreverse: bool = False\n\nbool(x) -&gt; bool\nReturns True when the argument x is true, False otherwise. The builtins True and False are the only two instances of the class bool. The class bool is a subclass of the class int, and cannot be subclassed.\n\norder: int = 0\n\nint([x]) -&gt; integer int(x, base=10) -&gt; integer\nConvert a number or string to an integer, or return 0 if no arguments are given. If x is a number, return x.__int__(). For floating point numbers, this truncates towards zero.\nIf x is not a number or if base is given, then x must be a string, bytes, or bytearray instance representing an integer literal in the given base. The literal can be preceded by ‘+’ or ‘-’ and be surrounded by whitespace. The base defaults to 10. Valid bases are 0 and 2-36. Base 0 means to interpret the base from the string as an integer literal. &gt;&gt;&gt; int(‘0b100’, base=0) 4\n\nnrow: Optional[int] = None\n\nNumber of rows of legends.\n\nncol: Optional[int] = None\n\nNumber of columns of legends.\n\nbyrow: bool = False\n\nbool(x) -&gt; bool\nReturns True when the argument x is true, False otherwise. The builtins True and False are the only two instances of the class bool. The class bool is a subclass of the class int, and cannot be subclassed.\n\noverride_aes: dict[str, Any] = field(default_factory=dict)\n\nAesthetic parameters of legend key."
+    "text": "Parameter Attributes\n\n\ntitle: Optional[str] = None\n\nTitle of the guide. Default is the name of the aesthetic or the name specified using lab\n\ntheme: Theme = field(default_factory=Theme)\n\nA theme to style the guide. If None, the plots theme is used.\n\nposition: Optional[LegendPosition] = None\n\nWhere to place the guide relative to the panels.\n\ndirection: Optional[Orientation] = None\n\nDirection of the guide. The default is depends on legend_position.\n\nreverse: bool = False\n\nbool(x) -&gt; bool\nReturns True when the argument x is true, False otherwise. The builtins True and False are the only two instances of the class bool. The class bool is a subclass of the class int, and cannot be subclassed.\n\norder: int = 0\n\nint([x]) -&gt; integer int(x, base=10) -&gt; integer\nConvert a number or string to an integer, or return 0 if no arguments are given. If x is a number, return x.__int__(). For floating point numbers, this truncates towards zero.\nIf x is not a number or if base is given, then x must be a string, bytes, or bytearray instance representing an integer literal in the given base. The literal can be preceded by ‘+’ or ‘-’ and be surrounded by whitespace. The base defaults to 10. Valid bases are 0 and 2-36. Base 0 means to interpret the base from the string as an integer literal. &gt;&gt;&gt; int(‘0b100’, base=0) 4\n\nnrow: Optional[int] = None\n\nNumber of rows of legends.\n\nncol: Optional[int] = None\n\nNumber of columns of legends.\n\nbyrow: bool = False\n\nbool(x) -&gt; bool\nReturns True when the argument x is true, False otherwise. The builtins True and False are the only two instances of the class bool. The class bool is a subclass of the class int, and cannot be subclassed.\n\noverride_aes: dict[str, Any] = field(default_factory=dict)\n\nAesthetic parameters of legend key."
   },
   {
     "objectID": "reference/huron.html",
@@ -5002,7 +5002,7 @@
     "href": "reference/scale_linetype.html#notes",
     "title": " plotnine.scale_linetype",
     "section": "Notes",
-    "text": "Notes\nThe available linetypes are 'solid', 'dashed', 'dashdot', 'dotted' If you need more custom linetypes, use"
+    "text": "Notes\nThe available linetypes are 'solid', 'dashed', 'dashdot', 'dotted' If you need more custom linetypes, use scale_linetype_manual"
   },
   {
     "objectID": "reference/scale_linetype_identity.html",
@@ -5289,7 +5289,7 @@
     "href": "reference/stat_bindot.html#see-also",
     "title": " plotnine.stat_bindot",
     "section": "See Also",
-    "text": "See Also"
+    "text": "See Also\n\nstat_bi"
   },
   {
     "objectID": "reference/stat_count.html",
@@ -5310,7 +5310,7 @@
     "href": "reference/stat_count.html#see-also",
     "title": " plotnine.stat_count",
     "section": "See Also",
-    "text": "See Also"
+    "text": "See Also\n\nstat_bi"
   },
   {
     "objectID": "reference/stat_density_2d.html",
@@ -5331,7 +5331,7 @@
     "href": "reference/stat_density_2d.html#see-also",
     "title": " plotnine.stat_density_2d",
     "section": "See Also",
-    "text": "See Also\n\nKDEMultivariategaussian_kde"
+    "text": "See Also\n\nKDEMultivariategaussian_kdeKernelDensit"
   },
   {
     "objectID": "reference/stat_ellipse.html",
@@ -5408,7 +5408,7 @@
     "href": "reference/stat_quantile.html#see-also",
     "title": " plotnine.stat_quantile",
     "section": "See Also",
-    "text": "See Also\n\nQuantReg"
+    "text": "See Also\n\nQuantReggeom_quantil"
   },
   {
     "objectID": "reference/stat_smooth.html",
@@ -5429,14 +5429,14 @@
     "href": "reference/stat_smooth.html#see-also",
     "title": " plotnine.stat_smooth",
     "section": "See Also",
-    "text": "See Also\n\nOLSWLSRLMGLMGLSlowessloessrolling"
+    "text": "See Also\n\nOLSWLSRLMGLMGLSlowessloessrollingGaussianProcessRegresso"
   },
   {
     "objectID": "reference/stat_smooth.html#notes",
     "href": "reference/stat_smooth.html#notes",
     "title": " plotnine.stat_smooth",
     "section": "Notes",
-    "text": "Notes\n and are effectively aliases, they both use the same arguments. Use unless you want to display the results with a non-standard geom."
+    "text": "Notes\ngeom_smooth and stat_smooth are effectively aliases, they both use the same arguments. Use geom_smooth unless you want to display the results with a non-standard geom."
   },
   {
     "objectID": "reference/stat_summary.html",
@@ -5464,7 +5464,7 @@
     "href": "reference/stat_summary.html#see-also",
     "title": " plotnine.stat_summary",
     "section": "See Also",
-    "text": "See Also"
+    "text": "See Also\n\ngeom_pointrang"
   },
   {
     "objectID": "reference/stat_unique.html",
@@ -5597,7 +5597,7 @@
     "href": "reference/theme_get.html",
     "title": " plotnine.theme_get",
     "section": "",
-    "text": "theme_get()\n\n\nReturn the default theme\nThe default theme is the one set (using ) by the user. If none has been set, then is the default."
+    "text": "theme_get()\n\n\nReturn the default theme\nThe default theme is the one set (using theme_set) by the user. If none has been set, then theme_gray is the default."
   },
   {
     "objectID": "reference/theme_grey.html",

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>plotnine 0.0.post1+gbb7b00d</title>
+<title>plotnine 0.0.post1+gd908e13</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -113,7 +113,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine 0.0.post1+gbb7b00d</span>
+    <span class="navbar-title">plotnine 0.0.post1+gd908e13</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -213,7 +213,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="doc-text">
 <p>Abstract class of things that can be themed.</p>
-<p>Every subclass of themeable is stored in a dict at with the name of the subclass as the key.</p>
+<p>Every subclass of themeable is stored in a dict at <code>register</code> with the name of the subclass as the key.</p>
 <p>It is the base of a class hierarchy that uses inheritance in a non-traditional manner. In the textbook use of class inheritance, superclasses are general and subclasses are specializations. In some since the hierarchy used here is the opposite in that superclasses are more specific than subclasses.</p>
 <p>It is probably better to think if this hierarchy of leveraging Python’s multiple inheritance to implement composition. For example the <code>axis_title</code> themeable is <em>composed of</em> the <code>x_axis_title</code> and the <code>y_axis_title</code>. We are just using multiple inheritance to specify this composition.</p>
 <p>When implementing a new themeable based on the ggplot2 documentation, it is important to keep this in mind and reverse the order of the “inherits from” in the documentation.</p>
@@ -236,7 +236,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <section id="notes" class="level2 doc-notes">
 <h2 class="doc-notes anchored" data-anchor-id="notes">Notes</h2>
-<p>A user should never create instances of class or subclasses of it.</p>
+<p>A user should never create instances of class <code>Themeable</code> or subclasses of it.</p>
 </section>
 <section id="attributes" class="level2 doc-attributes">
 <h2 class="doc-attributes anchored" data-anchor-id="attributes">Attributes</h2>
@@ -437,7 +437,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </dd>
 <dt><code><span class="doc-parameter-name">theme_element</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">element object</span></code></dt>
 <dd>
-<p>An element of the type required by the theme. For lines, text and rects it should be one of: , , or </p>
+<p>An element of the type required by the theme. For lines, text and rects it should be one of: <code>element_line</code>, <code>element_rect</code>, <code>element_text</code> or <code>element_blank</code></p>
 </dd>
 </dl>
 </div>
