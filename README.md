@@ -4,7 +4,6 @@
 [![License](https://img.shields.io/pypi/l/plotnine.svg)](https://pypi.python.org/pypi/plotnine)
 [![DOI](https://zenodo.org/badge/89276692.svg)](https://zenodo.org/badge/latestdoi/89276692)
 [![Build Status](https://github.com/has2k1/plotnine/workflows/build/badge.svg?branch=main)](https://github.com/has2k1/plotnine/actions?query=branch%3Amain+workflow%3A%22build%22)
-[![Documentation](https://readthedocs.org/projects/plotnine/badge/?version=latest)](https://plotnine.readthedocs.io/en/latest/)
 [![Coverage](https://codecov.io/github/has2k1/plotnine/coverage.svg?branch=main)](https://codecov.io/github/has2k1/plotnine?branch=main)
 
 plotnine is an implementation of a *grammar of graphics* in Python
