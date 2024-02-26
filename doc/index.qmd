@@ -1,5 +1,9 @@
 ---
 title: A Grammar of Graphics for Python
+
+aliases:
+   - en/stable
+   - en/latest
 ---
 
 ![](images/logo-540.png){.float-end .w-25}
