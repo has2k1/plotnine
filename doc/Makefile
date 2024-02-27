@@ -37,17 +37,16 @@ clean:  ## Remove build artefacts
 	rm -f objects.txt
 	rm -f objects.inv
 
-deps:  ## Install build dependencies
-	cd ..; make doc-deps
-
 readme-images:
 	cd images; python readme_images.py
 
-download_qrenderer_style:  ## Download qrenderer.scss
 	@if [ ! -f $(QRENDERER_STYLE_FILE) ]; then \
 		echo "Downloading $(QRENDERER_STYLE_FILE)"; \
 		wget $(QRENDERER_STYLE_URL) -O $(QRENDERER_STYLE_FILE); \
 	fi
+
+deps: download_qrenderer_style  ## Install build dependencies
+	cd ..; make doc-deps
 
 interlinks:  ## Gather interlinks
 	quartodoc interlinks
