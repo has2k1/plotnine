@@ -25,7 +25,7 @@ format:
     theme:
       - lumen
       - qrenderer.scss
-      - custom.scss
+      - plotnine.scss
 
 
 filters:
