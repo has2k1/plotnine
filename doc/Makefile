@@ -37,6 +37,9 @@ clean:  ## Remove build artefacts
 	rm -f objects.txt
 	rm -f objects.inv
 
+deps:  ## Install build dependencies
+	cd ..; make doc-deps
+
 readme-images:
 	cd images; python readme_images.py
 
