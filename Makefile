@@ -91,6 +91,9 @@ install: clean
 
 doc-deps:
 	pip install -e ".[doc]"
+	pip install -r requirements/doc.txt
+	quarto add --no-prompt has2k1/issuey
+	quarto add --no-prompt has2k1/interlinks
 
 develop: clean-cache
 	pip install -e ".[all]"
