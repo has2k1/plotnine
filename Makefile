@@ -89,6 +89,9 @@ build: dist
 install: clean
 	pip install ".[extra]"
 
+doc-deps:
+	pip install -e ".[doc]"
+
 develop: clean-cache
 	pip install -e ".[all]"
 
