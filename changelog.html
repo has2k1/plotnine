@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>plotnine 0.0.post1+g3418fa4 - Changelog</title>
+<title>plotnine 0.0.post1+gd908e13 - Changelog</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -113,7 +113,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">plotnine 0.0.post1+g3418fa4</span>
+    <span class="navbar-title">plotnine 0.0.post1+gd908e13</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -567,7 +567,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p><a href="./reference/labs.html#plotnine.labs"><code>labs</code></a> can now be used to create a <code>caption</code>. This caption can be styled using the <code>plot_caption</code> parameter to <a href="./reference/theme.html#plotnine.theme"><code>theme</code></a>.</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>theme(plot_caption<span class="op">=</span>element_text(size<span class="op">=</span><span class="dv">13</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
 <li><p>You can now align the <code>plot_title</code> horizontally to the left or right.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>theme(plot_title<span class="op">=</span>element_text(ha<span class="op">=</span><span class="st">'left'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>theme(plot_title<span class="op">=</span>element_text(ha<span class="op">=</span><span class="st">"left"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Before, the title was always centered.</p></li>
 </ul>
 </section>
@@ -668,7 +668,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="bug-fixes-6">Bug Fixes</h3>
 <ul>
 <li><p>Fixed issue where a plot has no data and the geoms have no data, but the mappings are valid. (<a href="https://github.com/has2k1/plotnine/issues/404" title="Issue: #404">#404</a>)</p></li>
-<li><p>Fixed <code>preserve='single'</code> in <a href="./reference/position_dodge.html#plotnine.position_dodge"><code>position_dodge</code></a> and <a href="./reference/position_dodge2.html#plotnine.position_dodge2"><code>position_dodge2</code></a> to work for geoms that only have <code>x</code> aesthetic and not <code>xmin</code> and <code>xmax</code> e.g <a href="./reference/geom_text.html#plotnine.geom_text"><code>geom_text</code></a>.</p></li>
+<li><p>Fixed <code>preserve="single"</code> in <a href="./reference/position_dodge.html#plotnine.position_dodge"><code>position_dodge</code></a> and <a href="./reference/position_dodge2.html#plotnine.position_dodge2"><code>position_dodge2</code></a> to work for geoms that only have <code>x</code> aesthetic and not <code>xmin</code> and <code>xmax</code> e.g <a href="./reference/geom_text.html#plotnine.geom_text"><code>geom_text</code></a>.</p></li>
 <li><p>Fix regression in <code>v0.7.0</code> where plots with a colorbar would fail if using <a href="./reference/theme_matplotlib.html#plotnine.theme_matplotlib"><code>theme_matplotlib</code></a>.</p></li>
 </ul>
 </section>
@@ -701,10 +701,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="bug-fixes-7">Bug Fixes</h3>
 <ul>
 <li><p>Fixed issue where a wrong warning could be issued about changing the transform of a specialised scale. It mostly affected the <em>timedelta</em> scale.</p></li>
-<li><p>Fixed <a href="./reference/geom_violin.html#plotnine.geom_violin"><code>geom_violin</code></a> and other geoms when used with <code>position='dodge'</code> not to crash when if a layer has an empty group of data.</p></li>
+<li><p>Fixed <a href="./reference/geom_violin.html#plotnine.geom_violin"><code>geom_violin</code></a> and other geoms when used with <code>position="dodge"</code> not to crash when if a layer has an empty group of data.</p></li>
 <li><p>Fixed bug in <a href="./reference/geom_path.html#plotnine.geom_path"><code>geom_path</code></a> for some cases when groups had less than 2 points. (<a href="https://github.com/has2k1/plotnine/issues/319" title="Issue: #319">#319</a>)</p></li>
 <li><p>Fixed all stats that compute kernel density estimates to work when all the data points are the same. (<a href="https://github.com/has2k1/plotnine/issues/317" title="Issue: #317">#317</a>)</p></li>
-<li><p>Fixed issue where setting the group to a string value i.e.&nbsp;<code>group='string'</code> outside <code>aes()</code> failed due to an error.</p></li>
+<li><p>Fixed issue where setting the group to a string value i.e.&nbsp;<code>group="string"</code> outside <code>aes()</code> failed due to an error.</p></li>
 <li><p>Fixed issue where discrete position scales could not deal with fewer limits than those present in the data. (<a href="https://github.com/has2k1/plotnine/issues/342" title="Issue: #342">#342</a>)</p></li>
 <li><p>Fixed issue with using custom tuple linetypes~ with <a href="./reference/scale_linetype_manual.html#plotnine.scale_linetype_manual"><code>scale_linetype_manual</code></a>. (<a href="https://github.com/has2k1/plotnine/issues/352" title="Issue: #352">#352</a>)</p></li>
 <li><p>Fixed <a href="./reference/geom_map.html#plotnine.geom_map"><code>geom_map</code></a> to work with facets. (<a href="https://github.com/has2k1/plotnine/issues/359" title="Issue: #359">#359</a>)</p></li>
@@ -880,11 +880,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>Fixed <a href="./reference/stat_bin.html#plotnine.stat_bin"><code>stat_bin</code></a> and <a href="./reference/stat_bin_2d.html#plotnine.stat_bin_2d"><code>stat_bin_2d</code></a> to properly handle the <code>breaks</code> parameter when used with a transforming scale.</p></li>
 <li><p>Fixed issue with x and y scales where the <code>name</code> of the scale was ignored when determining the axis titles. Now, the <code>name</code> parameter is specified, it is used as the title. (<a href="https://github.com/has2k1/plotnine/issues/105" title="Issue: #105">#105</a>)</p></li>
 <li><p>Fixed bug in discrete scales where a column could not be mapped to integer values. (<a href="https://github.com/has2k1/plotnine/issues/108" title="Issue: #108">#108</a>)</p></li>
-<li><p>Make it possible to hide the legend with <code>theme(legend_position='none')</code>. (<a href="https://github.com/has2k1/plotnine/issues/119" title="Issue: #119">#119</a>)</p></li>
+<li><p>Make it possible to hide the legend with <code>theme(legend_position="none")</code>. (<a href="https://github.com/has2k1/plotnine/issues/119" title="Issue: #119">#119</a>)</p></li>
 <li><p>Fixed issue in <a href="./reference/stat_summary_bin.html#plotnine.stat_summary_bin"><code>stat_summary_bin</code></a> where some input values gave an error. (<a href="https://github.com/has2k1/plotnine/issues/123" title="Issue: #123">#123</a>)</p></li>
 <li><p>Fixed <a href="./reference/geom_ribbon.html#plotnine.geom_ribbon"><code>geom_ribbon</code></a> to sort data before plotting. (<a href="https://github.com/has2k1/plotnine/issues/127" title="Issue: #127">#127</a>)</p></li>
 <li><p>Fixed <code>IndexError</code> in <a href="./reference/facet_grid.html#plotnine.facet_grid"><code>facet_grid</code></a> when row/column variable has 1 unique value. (<a href="https://github.com/has2k1/plotnine/issues/129" title="Issue: #129">#129</a>)</p></li>
-<li><p>Fixed <a href="./reference/facet_grid.html#plotnine.facet_grid"><code>facet_grid</code></a> when <code>scale='free'</code>, <code>scale='free_x'</code> or <code>scale='free_y'</code>, the panels share axes along the row or column.</p></li>
+<li><p>Fixed <a href="./reference/facet_grid.html#plotnine.facet_grid"><code>facet_grid</code></a> when <code>scale="free"</code>, <code>scale="free_x"</code> or <code>scale="free_y"</code>, the panels share axes along the row or column.</p></li>
 <li><p>Fixed <a href="./reference/geom_boxplot.html#plotnine.geom_boxplot"><code>geom_boxplot</code></a> so that user can create a boxplot by specifying all required aesthetics. (<a href="https://github.com/has2k1/plotnine/issues/136" title="Issue: #136">#136</a>)</p></li>
 <li><p>Fixed <a href="./reference/geom_violin.html#plotnine.geom_violin"><code>geom_violin</code></a> to work when some groups are empty. (<a href="https://github.com/has2k1/plotnine/issues/131" title="Issue: #131">#131</a>)</p></li>
 <li><p>Fixed continuous scales to accept <code>minor=None</code>. (<a href="https://github.com/has2k1/plotnine/issues/120" title="Issue: #120">#120</a>)</p></li>
@@ -963,11 +963,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="v0.2.1">v0.2.1</h2>
 <p><em>(2017-06-22)</em></p>
 <ul>
-<li><p>Fixed bug where manually setting the aesthetic <code>fill=None</code> or <code>fill='None'</code> could lead to a black fill instead of an empty fill.</p></li>
+<li><p>Fixed bug where manually setting the aesthetic <code>fill=None</code> or <code>fill="None"</code> could lead to a black fill instead of an empty fill.</p></li>
 <li><p>Fixed bug where computed aesthetics could not be used in larger statements. (<a href="https://github.com/has2k1/plotnine/issues/7" title="Issue: #7">#7</a>)</p></li>
 <li><p>Fixed bug in <a href="./reference/stat_summary.html#plotnine.stat_summary"><code>stat_summary</code></a> where the you got an exception for some types of the <code>x</code> aesthetic values.</p></li>
 <li><p>Fixed bug where <code class="sourceCode python">ggplot(data<span class="op">=</span>df)</code> resulted in an exception.</p></li>
-<li><p>Fixed missing axis ticks and labels for <a href="./reference/facet_wrap.html#plotnine.facet_wrap"><code>facet_wrap</code></a> when the scales are allowed to vary (e.g <code>scales='free'</code>) between the panels.</p></li>
+<li><p>Fixed missing axis ticks and labels for <a href="./reference/facet_wrap.html#plotnine.facet_wrap"><code>facet_wrap</code></a> when the scales are allowed to vary (e.g <code>scales="free"</code>) between the panels.</p></li>
 <li><p>Fixed bug in <a href="./reference/stat_density.html#plotnine.stat_density"><code>stat_density</code></a> where changing the x limits lead to an exception. (<a href="https://github.com/has2k1/plotnine/issues/22" title="Issue: #22">#22</a>)</p></li>
 </ul>
 </section>

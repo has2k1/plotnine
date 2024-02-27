@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>plotnine 0.0.post1+g3418fa4</title>
+<title>plotnine 0.0.post1+gd908e13</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -113,7 +113,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine 0.0.post1+g3418fa4</span>
+    <span class="navbar-title">plotnine 0.0.post1+gd908e13</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -205,7 +205,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <dl>
 <dt><code><span class="doc-parameter-name">plots</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/typing.html#typing.Iterable">Iterable</a>[<a href="../reference/ggplot.html#plotnine.ggplot">ggplot</a>]</span></code></dt>
 <dd>
-<p>Plot objects to write to file. <code>plots</code> may be either a collection such as a :py:class:<code>list</code> or :py:class:<code>set</code>:</p>
+<p>Plot objects to write to file. <code>plots</code> may be either a collection such as a <a href="https://docs.python.org/3/library/stdtypes.html#list"><code>list</code></a> or <a href="https://docs.python.org/3/library/stdtypes.html#set"><code>set</code></a></p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>base_plot <span class="op">=</span> ggplot(…)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>plots <span class="op">=</span> [base_plot <span class="op">+</span> ggtitle(<span class="st">'</span><span class="sc">%d</span><span class="st"> of 3'</span> <span class="op">%</span> i) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="dv">3</span>)]</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>save_as_pdf_pages(plots)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -229,26 +229,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </dd>
 <dt><code><span class="doc-parameter-name">kwargs</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/typing.html#typing.Any">Any</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">{}</span></code></dt>
 <dd>
-<p>Additional arguments to pass to :py:meth:<code>matplotlib.figure.Figure.savefig</code>.</p>
+<p>Additional arguments to pass to <code>savefig</code>.</p>
 </dd>
 </dl>
 </div>
 </section>
 <section id="notes" class="level2 doc-notes">
 <h2 class="doc-notes anchored" data-anchor-id="notes">Notes</h2>
-<p>Using pandas :meth:<code>~pandas.DataFrame.groupby</code> methods, tidy data can be “faceted” across pages:</p>
+<p>Using pandas <code>groupby</code> methods, tidy data can be “faceted” across pages:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine.data <span class="im">import</span> mtcars</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> facet_pages(column)</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    base_plot <span class="op">=</span> [</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>        aes(x<span class="op">=</span><span class="st">'wt'</span>, y<span class="op">=</span><span class="st">'mpg'</span>, label<span class="op">=</span><span class="st">'name'</span>),</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>        aes(x<span class="op">=</span><span class="st">"wt"</span>, y<span class="op">=</span><span class="st">"mpg"</span>, label<span class="op">=</span><span class="st">"name"</span>),</span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>        geom_text(),</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>        ]</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    ]</span>
 <span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> label, group_data <span class="kw">in</span> mtcars.groupby(column):</span>
 <span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>        <span class="cf">yield</span> ggplot(group_data) <span class="op">+</span> base_plot <span class="op">+</span> ggtitle(label)</span>
 <span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>save_as_pdf_pages(facet_pages(<span class="st">'cyl'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Unlike :meth:<code>ggplot.save</code>, :meth:<code>save_as_pdf_pages</code> does not process arguments for <code>height</code> or <code>width</code>. To set the figure size, add <a href="../reference/figure_size.html#plotnine.themes.themeable.figure_size"><code>figure_size</code></a> to the theme for some or all of the objects in <code>plots</code>:</p>
+<p>Unlike <a href="../reference/ggplot.html#plotnine.ggplot.save"><code>save</code></a>, <a href="../reference/save_as_pdf_pages.html#plotnine.save_as_pdf_pages"><code>save_as_pdf_pages</code></a> does not process arguments for <code>height</code> or <code>width</code>. To set the figure size, add <a href="../reference/figure_size.html#plotnine.themes.themeable.figure_size"><code>figure_size</code></a> to the theme for some or all of the objects in <code>plots</code>:</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>plot <span class="op">=</span> ggplot(…)</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># The following are equivalent</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>plot.save(<span class="st">'filename.pdf'</span>, height<span class="op">=</span><span class="dv">6</span>, width<span class="op">=</span><span class="dv">8</span>)</span>

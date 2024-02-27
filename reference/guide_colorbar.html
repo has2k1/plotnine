@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>plotnine 0.0.post1+g3418fa4</title>
+<title>plotnine 0.0.post1+gd908e13</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -113,7 +113,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine 0.0.post1+g3418fa4</span>
+    <span class="navbar-title">plotnine 0.0.post1+gd908e13</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -177,7 +177,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#plotnine.guide_colorbar" id="toc-plotnine.guide_colorbar" class="nav-link active" data-scroll-target="#plotnine.guide_colorbar"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.guide_colorbar</span></a></li>
-  <li><a href="#parameters" id="toc-parameters" class="nav-link" data-scroll-target="#parameters">Parameters</a></li>
+  <li><a href="#parameter-attributes" id="toc-parameter-attributes" class="nav-link" data-scroll-target="#parameter-attributes">Parameter Attributes</a></li>
   <li><a href="#notes" id="toc-notes" class="nav-link" data-scroll-target="#notes">Notes</a></li>
   </ul>
 </nav>
@@ -211,33 +211,59 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="doc-text">
 <p>Guide colorbar</p>
 </div>
-<section id="parameters" class="level2 doc-parameters">
-<h2 class="doc-parameters anchored" data-anchor-id="parameters">Parameters</h2>
+<section id="parameter-attributes" class="level2 doc-parameter-attributes">
+<h2 class="doc-parameter-attributes anchored" data-anchor-id="parameter-attributes">Parameter Attributes</h2>
 <div class="doc-definition-items">
 <dl>
-<dt><code><span class="doc-parameter-name">nbin</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/typing.html#typing.Optional">Optional</a>[<a href="https://docs.python.org/3/library/functions.html#int">int</a>]</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
+<dt><code>title: <a href="https://docs.python.org/3/library/typing.html#typing.Optional">Optional</a>[<a href="https://docs.python.org/3/library/stdtypes.html#str">str</a>] = None</code></dt>
+<dd>
+<p>Title of the guide. Default is the name of the aesthetic or the name specified using <code>lab</code></p>
+</dd>
+<dt><code>theme: <a href="../reference/theme.html#plotnine.theme">Theme</a> = field(default_factory=<a href="../reference/theme.html#plotnine.theme">Theme</a>)</code></dt>
+<dd>
+<p>A theme to style the guide. If <code>None</code>, the plots theme is used.</p>
+</dd>
+<dt><code>position: <a href="https://docs.python.org/3/library/typing.html#typing.Optional">Optional</a>[<a href="../reference/typing.html#plotnine.typing.LegendPosition">LegendPosition</a>] = None</code></dt>
+<dd>
+<p>Where to place the guide relative to the panels.</p>
+</dd>
+<dt><code>direction: <a href="https://docs.python.org/3/library/typing.html#typing.Optional">Optional</a>[<a href="../reference/typing.html#plotnine.typing.Orientation">Orientation</a>] = None</code></dt>
+<dd>
+<p>Direction of the guide. The default is depends on <a href="../reference/legend_position.html#plotnine.themes.themeable.legend_position"><code>legend_position</code></a>.</p>
+</dd>
+<dt><code>reverse: <a href="https://docs.python.org/3/library/functions.html#bool">bool</a> = False</code></dt>
+<dd>
+<p>bool(x) -&gt; bool</p>
+<p>Returns True when the argument x is true, False otherwise. The builtins True and False are the only two instances of the class bool. The class bool is a subclass of the class int, and cannot be subclassed.</p>
+</dd>
+<dt><code>order: <a href="https://docs.python.org/3/library/functions.html#int">int</a> = 0</code></dt>
+<dd>
+<p>int([x]) -&gt; integer int(x, base=10) -&gt; integer</p>
+<p>Convert a number or string to an integer, or return 0 if no arguments are given. If x is a number, return x.__int__(). For floating point numbers, this truncates towards zero.</p>
+<p>If x is not a number or if base is given, then x must be a string, bytes, or bytearray instance representing an integer literal in the given base. The literal can be preceded by ‘+’ or ‘-’ and be surrounded by whitespace. The base defaults to 10. Valid bases are 0 and 2-36. Base 0 means to interpret the base from the string as an integer literal. &gt;&gt;&gt; int(‘0b100’, base=0) 4</p>
+</dd>
+<dt><code>nbin: <a href="https://docs.python.org/3/library/typing.html#typing.Optional">Optional</a>[<a href="https://docs.python.org/3/library/functions.html#int">int</a>] = None</code></dt>
 <dd>
 <p>Number of bins for drawing a colorbar. A larger value yields a smoother colorbar</p>
 </dd>
-<dt><code><span class="doc-parameter-name">display</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/typing.html#typing.Literal">Literal</a>[<span class="st">"gradient"</span>, <span class="st">"rectangles"</span>, <span class="st">"raster"</span>]</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default"><span class="st">"gradient"</span></span></code></dt>
+<dt><code>display: <a href="https://docs.python.org/3/library/typing.html#typing.Literal">Literal</a>[<span class="st">"gradient"</span>, <span class="st">"rectangles"</span>, <span class="st">"raster"</span>] = <span class="st">"gradient"</span></code></dt>
 <dd>
-<p>How to render the colorbar.</p>
+<p>str(object=’’) -&gt; str str(bytes_or_buffer[, encoding[, errors]]) -&gt; str</p>
+<p>Create a new string object from the given object. If encoding or errors is specified, then the object must expose a data buffer that will be decoded using the given encoding and error handler. Otherwise, returns the result of object.__str__() (if defined) or repr(object). encoding defaults to sys.getdefaultencoding(). errors defaults to ‘strict’.</p>
 </dd>
-<dt><code><span class="doc-parameter-name">alpha</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/typing.html#typing.Optional">Optional</a>[<a href="https://docs.python.org/3/library/functions.html#float">float</a>]</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
+<dt><code>alpha: <a href="https://docs.python.org/3/library/typing.html#typing.Optional">Optional</a>[<a href="https://docs.python.org/3/library/functions.html#float">float</a>] = None</code></dt>
 <dd>
 <p>Opacity (in the range <code>[0, 1]</code>) of the colorbar. The defualt <code>None</code>, is to use the opacity of the plot.</p>
 </dd>
-<dt><code><span class="doc-parameter-name">draw_ulim</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#bool">bool</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">True</span></code></dt>
+<dt><code>draw_ulim: <a href="https://docs.python.org/3/library/functions.html#bool">bool</a> = True</code></dt>
 <dd>
-<p>Whether to show the upper limit tick marks.</p>
+<p>bool(x) -&gt; bool</p>
+<p>Returns True when the argument x is true, False otherwise. The builtins True and False are the only two instances of the class bool. The class bool is a subclass of the class int, and cannot be subclassed.</p>
 </dd>
-<dt><code><span class="doc-parameter-name">draw_llim</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#bool">bool</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">True</span></code></dt>
+<dt><code>draw_llim: <a href="https://docs.python.org/3/library/functions.html#bool">bool</a> = True</code></dt>
 <dd>
-<p>Whether to show the lower limit tick marks.</p>
-</dd>
-<dt><code><span class="doc-parameter-name">kwargs</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#dict">dict</a></span></code></dt>
-<dd>
-<p>Parameters passed on to :class:<code>.guide</code></p>
+<p>bool(x) -&gt; bool</p>
+<p>Returns True when the argument x is true, False otherwise. The builtins True and False are the only two instances of the class bool. The class bool is a subclass of the class int, and cannot be subclassed.</p>
 </dd>
 </dl>
 </div>
