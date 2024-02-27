@@ -35,44 +35,6 @@ $signature-border-color: tint-color($primary, 25%);
   margin-right: .5rem;
 }
 
-// gallery
-
-.gallery>.card {
-   @extend .border-2;
-   @extend .rounded-3;
-}
-
-.gallery>.card>.card-header {
-   @extend .py-1;
-   @extend .px-2;
-   @extend .rounded-top-3;
-   @extend .border-bottom;
-   @extend .border-1;
-   @extend .bg-light;
-   @extend .small;
-   text-align: center;
-}
-
-.gallery>.card>.card-header>p {
-   @extend .my-1;
-}
-
-.gallery>.card>.card-body {
-   @extend .p-2;
-   height: 250px;
-}
-
-.gallery>.card>.card-body>p:first-child {
-   display: contents;
-}
-
-.gallery>.card>.card-body>p:first-child img {
-   width: 100%;
-   height: 100%;
-   object-fit: contain;
-}
-
-
 /*-- scss:functions --*/
 
 /*-- scss:uses --*/
