@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>plotnine 0.0.post1+gd908e13</title>
+<title>plotnine 0.0.post1+g3418fa4</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -113,7 +113,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine 0.0.post1+gd908e13</span>
+    <span class="navbar-title">plotnine 0.0.post1+g3418fa4</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -192,7 +192,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1 class="title doc-object doc-class doc-has-member-docs"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.geom_ribbon</span></h1>
 </section>
 </header>
-<div class="doc-signature doc-class">
+<div class="doc-signature">
 <div class="sourceCode" id="cb1"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>geom_ribbon(</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    mapping<span class="op">=</span><span class="va">None</span>,</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span><span class="va">None</span>,</span>
@@ -277,11 +277,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <dt><code>where</code></dt>
 <dd>
 <p>Define where to exclude horizontal regions from being filled. Regions between any two <code>False</code> values are skipped. For sensible demarcation the value used in the <em>where</em> predicate expression should match the <code>ymin</code> value or expression. i.e.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a> aes(ymin<span class="op">=</span><span class="dv">0</span>, ymax<span class="op">=</span><span class="st">"col1"</span>, where<span class="op">=</span><span class="st">"col1 &gt; 0"</span>)  <span class="co"># good</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a> aes(ymin<span class="op">=</span><span class="dv">0</span>, ymax<span class="op">=</span><span class="st">"col1"</span>, where<span class="op">=</span><span class="st">"col1 &gt; 10"</span>)  <span class="co"># bad</span></span>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a> aes(ymin<span class="op">=</span><span class="dv">0</span>, ymax<span class="op">=</span><span class="st">'col1'</span>, where<span class="op">=</span><span class="st">'col1 &gt; 0'</span>)  <span class="co"># good</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a> aes(ymin<span class="op">=</span><span class="dv">0</span>, ymax<span class="op">=</span><span class="st">'col1'</span>, where<span class="op">=</span><span class="st">'col1 &gt; 10'</span>)  <span class="co"># bad</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a> aes(ymin<span class="op">=</span>col2, ymax<span class="op">=</span><span class="st">"col1"</span>, where<span class="op">=</span><span class="st">"col1 &gt; col2"</span>)  <span class="co"># good</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a> aes(ymin<span class="op">=</span>col2, ymax<span class="op">=</span><span class="st">"col1"</span>, where<span class="op">=</span><span class="st">"col1 &gt; col3"</span>)  <span class="co"># bad</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a> aes(ymin<span class="op">=</span>col2, ymax<span class="op">=</span><span class="st">'col1'</span>, where<span class="op">=</span><span class="st">'col1 &gt; col2'</span>)  <span class="co"># good</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a> aes(ymin<span class="op">=</span>col2, ymax<span class="op">=</span><span class="st">'col1'</span>, where<span class="op">=</span><span class="st">'col1 &gt; col3'</span>)  <span class="co"># bad</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </dd>
 </dl>
 </dd>
