@@ -50,7 +50,7 @@ extensions:  ## Install quarto/pandoc extensions
 	quarto add --no-prompt has2k1/issuey
 	quarto add --no-prompt has2k1/interlinks
 
-deps: download_qrenderer_style  ## Install build dependencies
+deps: extensions download_qrenderer_style  ## Install build dependencies
 	cd ..; make doc-deps
 
 interlinks:  ## Gather interlinks
