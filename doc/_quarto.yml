@@ -14,7 +14,6 @@ website:
     left:
       - file: reference/index.qmd
         text: "Reference"
-      - file: gallery/index.qmd
     right:
       - icon: github
         href: https://github.com/has2k1/plotnine
