@@ -32,7 +32,7 @@ clean-test:
 	rm -fr tests/result_images/*
 
 ruff:
-	ruff . $(args)
+	ruff check . $(args)
 
 format:
 	ruff format . --check

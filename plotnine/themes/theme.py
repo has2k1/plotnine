@@ -386,12 +386,10 @@ class theme:
         return self.add_theme(other)
 
     @overload
-    def __radd__(self, other: theme) -> theme:
-        ...
+    def __radd__(self, other: theme) -> theme: ...
 
     @overload
-    def __radd__(self, other: ggplot) -> ggplot:
-        ...
+    def __radd__(self, other: ggplot) -> ggplot: ...
 
     def __radd__(self, other: theme | ggplot) -> theme | ggplot:
         """

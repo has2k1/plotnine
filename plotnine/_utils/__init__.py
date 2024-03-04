@@ -1,6 +1,7 @@
 """
 Little functions used all over the codebase
 """
+
 from __future__ import annotations
 
 import inspect
@@ -527,22 +528,19 @@ def remove_missing(
 
 
 @overload
-def to_rgba(colors: ColorType, alpha: float) -> ColorType:
-    ...
+def to_rgba(colors: ColorType, alpha: float) -> ColorType: ...
 
 
 @overload
 def to_rgba(
     colors: Sequence[ColorType], alpha: float
-) -> Sequence[ColorType] | ColorType:
-    ...
+) -> Sequence[ColorType] | ColorType: ...
 
 
 @overload
 def to_rgba(
     colors: AnySeries, alpha: AnySeries
-) -> Sequence[ColorType] | ColorType:
-    ...
+) -> Sequence[ColorType] | ColorType: ...
 
 
 def to_rgba(

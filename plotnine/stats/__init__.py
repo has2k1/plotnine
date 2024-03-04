@@ -1,6 +1,7 @@
 """
 Statistics
 """
+
 from .stat_bin import stat_bin
 from .stat_bin_2d import stat_bin2d, stat_bin_2d
 from .stat_bindot import stat_bindot

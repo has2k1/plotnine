@@ -1,6 +1,7 @@
 """
 This script is run by the Makefile before quarto_build
 """
+
 import re
 from importlib.metadata import version as get_version
 from pathlib import Path

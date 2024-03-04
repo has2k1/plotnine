@@ -8,6 +8,7 @@ differences between `Axes.get_tightbbox` and `Axes.bbox` are independent of
 Axes position. This may fail if `Axes.adjustable` is `datalim` as well as
 such cases as when left or right margin are affected by xlabel.
 """
+
 from __future__ import annotations
 
 import typing

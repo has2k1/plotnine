@@ -4,6 +4,7 @@ Internal API
 Specifications for containers that will hold different kinds
 of objects with data created when the plot is being built.
 """
+
 from __future__ import annotations
 
 import itertools

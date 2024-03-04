@@ -7,6 +7,7 @@ kernel densities with the wider scientific python ecosystem.
 Credit: Jake VanderPlas for the original kde_* functions
 https://jakevdp.github.io/blog/2013/12/01/kernel-density-estimation/
 """
+
 from __future__ import annotations
 
 import typing

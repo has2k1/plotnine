@@ -1,6 +1,7 @@
 """
 Scales
 """
+
 # limits
 from .limits import expand_limits, lims, xlim, ylim
 

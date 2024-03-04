@@ -2,7 +2,6 @@
 
 """Functions that alter the matplotlib rc dictionary on the fly."""
 
-
 import functools
 
 import matplotlib as _mpl
