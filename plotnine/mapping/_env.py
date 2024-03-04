@@ -15,11 +15,9 @@ if TYPE_CHECKING:
         Supports __getitem__
         """
 
-        def __getitem__(self, key: str, /) -> Any:
-            ...
+        def __getitem__(self, key: str, /) -> Any: ...
 
-        def __iter__(self) -> Iterator[Hashable]:
-            ...
+        def __iter__(self) -> Iterator[Hashable]: ...
 
 
 __all__ = ("Environment",)

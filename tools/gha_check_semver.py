@@ -20,6 +20,7 @@ Writes the following variables to the output file for the github step:
 The output of this script should tell you whether to publish a release
 and to what index.
 """
+
 import os
 import re
 from pathlib import Path

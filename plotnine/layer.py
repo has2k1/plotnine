@@ -407,12 +407,10 @@ class Layers(List[layer]):
     """
 
     @overload
-    def __radd__(self, other: Iterable[layer]) -> Layers:
-        ...
+    def __radd__(self, other: Iterable[layer]) -> Layers: ...
 
     @overload
-    def __radd__(self, other: ggplot) -> ggplot:
-        ...
+    def __radd__(self, other: ggplot) -> ggplot: ...
 
     def __radd__(self, other: Iterable[layer] | ggplot) -> Layers | ggplot:
         """
@@ -431,12 +429,10 @@ class Layers(List[layer]):
         return other
 
     @overload
-    def __getitem__(self, key: SupportsIndex) -> layer:
-        ...
+    def __getitem__(self, key: SupportsIndex) -> layer: ...
 
     @overload
-    def __getitem__(self, key: slice) -> Layers:
-        ...
+    def __getitem__(self, key: slice) -> Layers: ...
 
     def __getitem__(self, key: SupportsIndex | slice) -> layer | Layers:
         result = super().__getitem__(key)
