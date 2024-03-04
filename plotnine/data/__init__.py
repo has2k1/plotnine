@@ -133,6 +133,29 @@ models interactively. *Biometrics*, **37**, 391–411.
 """
 
 meat.__doc__ = """
+US Meat Production
+
+**Description**
+
+Monthly production weight of red meat and poultry. The values are in
+units of 1 million lbs.
+
+| Column            | Description           |
+|-------------------|-----------------------|
+| date              | Month of the year     |
+| beef              | Beef weight           |
+| veal              | Veal weight           |
+| pork              | Pork weight           |
+| lamb_and_mutton   | Lamb & Mutton weight  |
+| broilers          | Broiler weight        |
+| other_chicken     | Other Chicken weight  |
+| turkey            | Turkey weight         |
+
+**Source**
+
+[Livestock and Meat Dosmestic Data]\
+(https://www.ers.usda.gov/data-products/livestock-and-meat-domestic-data/)
+from the Economic Research Service of the U.S. DEPARTMENT OF AGRICULTURE.
 
 """
 
