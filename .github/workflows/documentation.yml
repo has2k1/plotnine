@@ -57,10 +57,7 @@ jobs:
       - name: Install Package
         shell: bash
         run: |
-          pip install git+https://github.com/has2k1/quartodoc.git@main
-          python -m pip install ".[doc]"
-          pip install -r requirements/doc.txt
-          pushd doc; make install-filters; popd
+          make doc-deps
 
       - name: Environment Information
         shell: bash
@@ -80,8 +77,6 @@ jobs:
           ls -la doc
           cat doc/_variables.yml
           ls -la doc/reference
-          ls -la doc/reference/examples
-          ls -la doc/tutorials
 
       - name: Deploy to Documentation to a Branch
         uses: JamesIves/github-pages-deploy-action@v4
