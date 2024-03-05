@@ -88,7 +88,7 @@ class theme_matplotlib(theme):
             plot_caption=element_text(
                 ha="right",
                 va="bottom",
-                ma="right",
+                ma="left",
                 margin={"t": m, "units": "fig"},
             ),
             plot_margin=m,
