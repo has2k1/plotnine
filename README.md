@@ -18,7 +18,7 @@ complex) plots are easy to think about and build incrementaly, while the
 simple plots remain simple to create.
 
 To learn more about how to use plotnine, check out the
-[documentation](https://plotnine.readthedocs.io/en/latest/). Since plotnine
+[documentation](https://plotnine.org). Since plotnine
 has an API similar to ggplot2, where it lacks in coverage the
 [ggplot2 documentation](http://ggplot2.tidyverse.org/reference/index.html)
 may be helpful.
