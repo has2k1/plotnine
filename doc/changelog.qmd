@@ -2,6 +2,17 @@
 title: Changelog
 ---
 
+## v0.13.1
+(not-yet-released)
+
+### Bug Fixes
+
+- Fixed a bug where a legend with blank title or text could result in a
+  wrong justification.
+
+- Fixed a bug where setting legend justification to a string i.e one of
+  `left`, `right`, `top`, `bottom`, `center` had no effect.
+
 ## v0.13.0
 (2024-02-20)
 

@@ -465,7 +465,7 @@ class GuidesElements:
         if self.position == "none":
             return legend_justifications_view()
 
-        dim_lookup = {"left": 0, "right": 0, "top": 1, "bottom": 1}
+        dim_lookup = {"left": 1, "right": 1, "top": 0, "bottom": 0}
 
         # Process justification for legend on left, right, top & bottom
         def _lrtb(pos):

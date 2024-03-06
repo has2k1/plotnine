@@ -20,6 +20,7 @@ from .guide import GuideElements, guide
 if TYPE_CHECKING:
     from typing import Literal, Optional, Sequence
 
+    from matplotlib.artist import Artist
     from matplotlib.collections import LineCollection
     from matplotlib.offsetbox import AuxTransformBox, PackerBase
     from matplotlib.text import Text
@@ -218,8 +219,9 @@ class guide_colorbar(guide):
         targets.legend_title = title_box._text  # type: ignore
 
         # labels
-        texts = add_labels(auxbox, labels, tick_locations, elements)
-        targets.legend_text_colorbar = texts
+        if not self.elements.text.is_blank:
+            texts = add_labels(auxbox, labels, tick_locations, elements)
+            targets.legend_text_colorbar = texts
 
         # colorbar
         if self.display == "rectangles":
@@ -247,7 +249,12 @@ class guide_colorbar(guide):
             "top": (VPacker, obverse),
         }
         packer, slc = lookup[elements.title_position]
-        children = [title_box, auxbox][slc]
+
+        if elements.title.is_blank:
+            children: list[Artist] = [auxbox]
+        else:
+            children = [title_box, auxbox][slc]
+
         box = packer(
             children=children,
             sep=elements.title.margin,
@@ -469,6 +476,7 @@ class GuideElementsColorbar(GuideElements):
         _margin = self.theme.getp(("legend_text_colorbar", "margin"))
         align_edge = get_opposite_side(self.text_position)
         margin = _margin.get_as(align_edge[0], "pt")
+        is_blank = self.theme.T.is_blank("legend_text_colorbar")
 
         if self.is_vertical:
             ha = ha or align_edge
@@ -477,7 +485,14 @@ class GuideElementsColorbar(GuideElements):
             va = va or align_edge
             ha = ha or "center"
 
-        return NS(margin=margin, align=None, fontsize=size, ha=ha, va=va)
+        return NS(
+            margin=margin,
+            align=None,
+            fontsize=size,
+            ha=ha,
+            va=va,
+            is_blank=is_blank,
+        )
 
     @cached_property
     def key_width(self):

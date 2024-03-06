@@ -280,15 +280,18 @@ class guide_legend(guide):
             "top": (VPacker, obverse),
         }
         packer, slc = lookup[elements.text_position]
-        key_boxes = [
-            packer(
-                children=[l, d][slc],
-                sep=elements.text.margin,
-                align=elements.text.align,
-                pad=0,
-            )
-            for d, l in zip(drawings, labels)
-        ][keys_order]
+        if self.elements.text.is_blank:
+            key_boxes = [d for d in drawings][keys_order]
+        else:
+            key_boxes = [
+                packer(
+                    children=[l, d][slc],
+                    sep=elements.text.margin,
+                    align=elements.text.align,
+                    pad=0,
+                )
+                for d, l in zip(drawings, labels)
+            ][keys_order]
 
         # Put the entries together in rows or columns
         # A chunk is either a row or a column of entries
@@ -326,7 +329,12 @@ class guide_legend(guide):
 
         # Put the title and entries together
         packer, slc = lookup[elements.title_position]
-        children = [title_box, entries_box][slc]
+
+        if elements.title.is_blank:
+            children: list[Artist] = [entries_box]
+        else:
+            children = [title_box, entries_box][slc]
+
         box = packer(
             children=children,
             sep=elements.title.margin,
@@ -350,6 +358,7 @@ class GuideElementsLegend(GuideElements):
         _margin = self.theme.getp(("legend_text_legend", "margin"))
         _loc = get_opposite_side(self.text_position)[0]
         margin = _margin.get_as(_loc, "pt")
+        is_blank = self.theme.T.is_blank("legend_text_legend")
 
         # The original ha & va values are used by the HPacker/VPacker
         # to align the TextArea with the DrawingArea.
@@ -362,6 +371,7 @@ class GuideElementsLegend(GuideElements):
             fontsize=size,
             ha="center",
             va="baseline",
+            is_blank=is_blank,
         )
 
     @cached_property

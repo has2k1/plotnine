@@ -192,6 +192,7 @@ class GuideElements:
         _loc = get_opposite_side(self.title_position)[0]
         margin = _margin.get_as(_loc, "pt")
         top_or_bottom = self.title_position in ("top", "bottom")
+        is_blank = self.theme.T.is_blank("legend_title")
 
         # The original ha & va values are used by the HPacker/VPacker
         # to align the title textarea with the bundled legend keys.
@@ -200,7 +201,13 @@ class GuideElements:
         else:
             align = (ha or "center") if top_or_bottom else va
 
-        return NS(margin=margin, align=align, ha="center", va="baseline")
+        return NS(
+            margin=margin,
+            align=align,
+            ha="center",
+            va="baseline",
+            is_blank=is_blank,
+        )
 
     @cached_property
     def text_position(self) -> SidePosition:
