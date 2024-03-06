@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.550">
+<meta name="generator" content="quarto-1.5.24">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>plotnine 0.13.0</title>
+<title>plotnine {{&lt; var version &gt;}} – geom_map</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -113,7 +113,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine 0.13.0</span>
+    <span class="navbar-title">plotnine 0.13.1</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -126,33 +126,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a class="nav-link" href="../reference/index.html"> 
 <span class="menu-text">Reference</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../gallery/index.html"> 
-<span class="menu-text">Gallery</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../tutorials/index.html"> 
-<span class="menu-text">Tutorials</span></a>
-  </li>  
-  <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-pages" role="button" data-bs-toggle="dropdown" aria-expanded="false">
- <span class="menu-text">Pages</span>
-    </a>
-    <ul class="dropdown-menu" aria-labelledby="nav-menu-pages">    
-        <li>
-    <a class="dropdown-item" href="../changelog.html">
- <span class="dropdown-text">Changelog</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="../external-resources.html">
- <span class="dropdown-text">External Resources</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="../about.html">
- <span class="dropdown-text">About Plotnine</span></a>
-  </li>  
-    </ul>
-  </li>
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
@@ -162,7 +135,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
-          <div class="quarto-navbar-tools">
+            <div class="quarto-navbar-tools">
 </div>
       </div> <!-- /container-fluid -->
     </nav>
@@ -179,9 +152,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#plotnine.geom_map" id="toc-plotnine.geom_map" class="nav-link active" data-scroll-target="#plotnine.geom_map"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.geom_map</span></a></li>
   <li><a href="#parameters" id="toc-parameters" class="nav-link" data-scroll-target="#parameters">Parameters</a></li>
   <li><a href="#notes" id="toc-notes" class="nav-link" data-scroll-target="#notes">Notes</a></li>
-  <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a></li>
   </ul>
-<div class="quarto-alternate-notebooks"><h2>Notebooks</h2><ul><li><a href="examples/geom_map-preview.html"><i class="bi bi-journal-code"></i>The Political Territories of Westeros</a></li></ul></div></nav>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -194,7 +166,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1 class="title doc-object doc-class doc-has-member-docs"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.geom_map</span></h1>
 </section>
 </header>
-<div class="doc-signature">
+<div class="doc-signature doc-class">
 <div class="sourceCode" id="cb1"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>geom_map(</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    mapping<span class="op">=</span><span class="va">None</span>,</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span><span class="va">None</span>,</span>
@@ -309,135 +281,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="notes" class="level2 doc-notes">
 <h2 class="doc-notes anchored" data-anchor-id="notes">Notes</h2>
 <p>This geom is best suited for plotting a shapefile read into geopandas dataframe. The dataframe should have a <code>geometry</code> column.</p>
-</section>
-<section id="examples" class="level2">
-<h2 class="anchored" data-anchor-id="examples">Examples</h2>
-<div class="quarto-embed-nb-cell">
-<div id="cell-0" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:45:38.811965Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:45:38.811543Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:45:39.669892Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:45:39.669135Z&quot;}" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> geopandas <span class="im">as</span> gp</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> (</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    ggplot,</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    aes,</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    geom_map,</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    geom_text,</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    labs,</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    scale_fill_brewer,</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    scale_x_continuous,</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    scale_y_continuous,</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    scale_size_continuous,</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    coord_cartesian,</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    element_rect,</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    theme_void,</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    theme,</span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<section id="the-political-territories-of-westeros" class="level3">
-<h3 class="anchored" data-anchor-id="the-political-territories-of-westeros">The Political Territories of Westeros</h3>
-<p><em>Layering different features on a Map</em></p>
-<p>Read data and select features in Westeros only.</p>
-<div id="cell-3" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:45:39.673653Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:45:39.673316Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:45:40.319064Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:45:40.318323Z&quot;}" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>continents <span class="op">=</span> gp.read_file(<span class="st">"data/lands-of-ice-and-fire/continents.shp"</span>)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>islands <span class="op">=</span> gp.read_file(<span class="st">"data/lands-of-ice-and-fire/islands.shp"</span>)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>lakes <span class="op">=</span> gp.read_file(<span class="st">"data/lands-of-ice-and-fire/lakes.shp"</span>)</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>rivers <span class="op">=</span> gp.read_file(<span class="st">"data/lands-of-ice-and-fire/rivers.shp"</span>)</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>political <span class="op">=</span> gp.read_file(<span class="st">"data/lands-of-ice-and-fire/political.shp"</span>)</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>wall <span class="op">=</span> gp.read_file(<span class="st">"data/lands-of-ice-and-fire/wall.shp"</span>)</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>roads <span class="op">=</span> gp.read_file(<span class="st">"data/lands-of-ice-and-fire/roads.shp"</span>)</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>locations <span class="op">=</span> gp.read_file(<span class="st">"data/lands-of-ice-and-fire/locations.shp"</span>)</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>westeros <span class="op">=</span> continents.query(<span class="st">'name=="Westeros"'</span>)</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>islands <span class="op">=</span> islands.query(<span class="st">'continent=="Westeros" and name!="Summer Islands"'</span>)</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>lakes <span class="op">=</span> lakes.query(<span class="st">'continent=="Westeros"'</span>)</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>rivers <span class="op">=</span> rivers.query(<span class="st">'continent=="Westeros"'</span>)</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>roads <span class="op">=</span> roads.query(<span class="st">'continent=="Westeros"'</span>)</span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>wg <span class="op">=</span> westeros.geometry[<span class="dv">0</span>]</span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>bool_idx <span class="op">=</span> [wg.contains(g) <span class="cf">for</span> g <span class="kw">in</span> locations.geometry]</span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>westeros_locations <span class="op">=</span> locations[bool_idx]</span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>cities <span class="op">=</span> westeros_locations[westeros_locations[<span class="st">"type"</span>] <span class="op">==</span> <span class="st">"City"</span>].copy()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Create map by placing the features in layers in an order that limits obstraction.</p>
-<p>The <code>GeoDataFrame.geometry.centroid</code> property has the center coordinates of polygons, we use these to place the labels of the political regions.</p>
-<div id="cell-5" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:45:40.322655Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:45:40.322351Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:45:42.363536Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:45:42.362403Z&quot;}" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># colors</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>water_color <span class="op">=</span> <span class="st">"#a3ccff"</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>wall_color <span class="op">=</span> <span class="st">"white"</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>road_color <span class="op">=</span> <span class="st">"brown"</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Create label text by merging the territory name and</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co"># the claimant to the territory</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fmt_labels(names, claimants):</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    labels <span class="op">=</span> []</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> name, claimant <span class="kw">in</span> <span class="bu">zip</span>(names, claimants):</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> name:</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>            labels.append(<span class="st">"</span><span class="sc">{}</span><span class="st"> (</span><span class="sc">{}</span><span class="st">)"</span>.<span class="bu">format</span>(name, claimant))</span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>            labels.append(<span class="st">"(</span><span class="sc">{}</span><span class="st">)"</span>.<span class="bu">format</span>(claimant))</span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> labels</span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> calculate_center(df):</span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="co">    Calculate the centre of a geometry</span></span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="co">    This method first converts to a planar crs, gets the centroid</span></span>
-<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="co">    then converts back to the original crs. This gives a more</span></span>
-<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="co">    accurate</span></span>
-<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
-<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>    original_crs <span class="op">=</span> df.crs</span>
-<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>    planar_crs <span class="op">=</span> <span class="st">"EPSG:3857"</span></span>
-<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> df[<span class="st">"geometry"</span>].to_crs(planar_crs).centroid.to_crs(original_crs)</span>
-<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>political[<span class="st">"center"</span>] <span class="op">=</span> calculate_center(political)</span>
-<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>cities[<span class="st">"center"</span>] <span class="op">=</span> calculate_center(cities)</span>
-<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a><span class="co"># Gallery Plot</span></span>
-<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>    ggplot()</span>
-<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_map(westeros, fill<span class="op">=</span><span class="va">None</span>)</span>
-<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_map(islands, fill<span class="op">=</span><span class="va">None</span>)</span>
-<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_map(political, aes(fill<span class="op">=</span><span class="st">"ClaimedBy"</span>), color<span class="op">=</span><span class="va">None</span>, show_legend<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_map(wall, color<span class="op">=</span>wall_color, size<span class="op">=</span><span class="dv">2</span>)</span>
-<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_map(lakes, fill<span class="op">=</span>water_color, color<span class="op">=</span><span class="va">None</span>)</span>
-<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_map(rivers, aes(size<span class="op">=</span><span class="st">"size"</span>), color<span class="op">=</span>water_color, show_legend<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_map(roads, aes(size<span class="op">=</span><span class="st">"size"</span>), color<span class="op">=</span>road_color, alpha<span class="op">=</span><span class="fl">0.5</span>, show_legend<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_map(cities, size<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_text(</span>
-<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a>        political,</span>
-<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a>        aes(<span class="st">"center.x"</span>, <span class="st">"center.y"</span>, label<span class="op">=</span><span class="st">"fmt_labels(name, ClaimedBy)"</span>),</span>
-<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a>        size<span class="op">=</span><span class="dv">8</span>,</span>
-<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a>        fontweight<span class="op">=</span><span class="st">"bold"</span>,</span>
-<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_text(</span>
-<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a>        cities,</span>
-<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a>        aes(<span class="st">"center.x"</span>, <span class="st">"center.y"</span>, label<span class="op">=</span><span class="st">"name"</span>),</span>
-<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a>        size<span class="op">=</span><span class="dv">8</span>,</span>
-<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a>        ha<span class="op">=</span><span class="st">"left"</span>,</span>
-<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a>        nudge_x<span class="op">=</span><span class="fl">0.20</span>,</span>
-<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> labs(title<span class="op">=</span><span class="st">"The Political Territories of Westeros"</span>)</span>
-<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> scale_fill_brewer(<span class="bu">type</span><span class="op">=</span><span class="st">"qual"</span>, palette<span class="op">=</span><span class="dv">8</span>)</span>
-<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> scale_x_continuous(expand<span class="op">=</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>))</span>
-<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> scale_y_continuous(expand<span class="op">=</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>))</span>
-<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> scale_size_continuous(<span class="bu">range</span><span class="op">=</span>(<span class="fl">0.4</span>, <span class="dv">1</span>))</span>
-<span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> coord_cartesian()</span>
-<span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> theme_void()</span>
-<span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> theme(figure_size<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">12</span>), panel_background<span class="op">=</span>element_rect(fill<span class="op">=</span>water_color))</span>
-<span id="cb4-68"><a href="#cb4-68" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="geom_map_files/figure-html/examples-geom_map-cell-4-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<p><strong>Credit</strong>: <a href="https://www.cartographersguild.com/member.php?u=95244">cadaei</a> of the <a href="https://www.cartographersguild.com/">cartographersguild</a> website forum.</p>
-</section>
-<a class="quarto-notebook-link" id="nblink-1" href="examples/geom_map-preview.html#cell-0">Source: The Political Territories of Westeros</a></div>
 
 
 </section>
@@ -522,6 +365,24 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
   function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
@@ -556,7 +417,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
     });
   }
   const xrefs = window.document.querySelectorAll('a.quarto-xref');
@@ -831,19 +696,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script>
 </div> <!-- /content -->
-<footer class="footer">
-  <div class="nav-footer">
-    <div class="nav-footer-left">
-<p>Proudly supported by <a href="https://posit.co"><img src="https://www.rstudio.com/assets/img/posit-logo-fullcolor-TM.svg" class="img-fluid" alt="Posit" width="65"></a></p>
-</div>   
-    <div class="nav-footer-center">
-<p>Developed by: Hassan Kibirige, License: <a href="../license.html">MIT</a></p>
-</div>
-    <div class="nav-footer-right">
-      &nbsp;
-    </div>
-  </div>
-</footer>
 
 
 

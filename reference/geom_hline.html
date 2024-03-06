@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.550">
+<meta name="generator" content="quarto-1.5.24">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>plotnine 0.13.0</title>
+<title>plotnine {{&lt; var version &gt;}} – geom_hline</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -57,7 +57,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="../site_libs/quarto-nav/headroom.min.js"></script>
 <script src="../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
@@ -101,9 +101,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
-
-<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
 
 </head>
@@ -116,7 +113,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine 0.13.0</span>
+    <span class="navbar-title">plotnine 0.13.1</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -129,33 +126,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a class="nav-link" href="../reference/index.html"> 
 <span class="menu-text">Reference</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../gallery/index.html"> 
-<span class="menu-text">Gallery</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../tutorials/index.html"> 
-<span class="menu-text">Tutorials</span></a>
-  </li>  
-  <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-pages" role="button" data-bs-toggle="dropdown" aria-expanded="false">
- <span class="menu-text">Pages</span>
-    </a>
-    <ul class="dropdown-menu" aria-labelledby="nav-menu-pages">    
-        <li>
-    <a class="dropdown-item" href="../changelog.html">
- <span class="dropdown-text">Changelog</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="../external-resources.html">
- <span class="dropdown-text">External Resources</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="../about.html">
- <span class="dropdown-text">About Plotnine</span></a>
-  </li>  
-    </ul>
-  </li>
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
@@ -165,7 +135,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
-          <div class="quarto-navbar-tools">
+            <div class="quarto-navbar-tools">
 </div>
       </div> <!-- /container-fluid -->
     </nav>
@@ -181,9 +151,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#plotnine.geom_hline" id="toc-plotnine.geom_hline" class="nav-link active" data-scroll-target="#plotnine.geom_hline"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.geom_hline</span></a></li>
   <li><a href="#parameters" id="toc-parameters" class="nav-link" data-scroll-target="#parameters">Parameters</a></li>
-  <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a></li>
   </ul>
-<div class="quarto-alternate-notebooks"><h2>Notebooks</h2><ul><li><a href="examples/geom_hline-preview.html"><i class="bi bi-journal-code"></i>Horizontal line</a></li></ul></div></nav>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -196,7 +165,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1 class="title doc-object doc-class doc-has-member-docs"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.geom_hline</span></h1>
 </section>
 </header>
-<div class="doc-signature">
+<div class="doc-signature doc-class">
 <div class="sourceCode" id="cb1"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>geom_hline(</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    mapping<span class="op">=</span><span class="va">None</span>,</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span><span class="va">None</span>,</span>
@@ -294,207 +263,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </dd>
 </dl>
 </div>
-</section>
-<section id="examples" class="level2">
-<h2 class="anchored" data-anchor-id="examples">Examples</h2>
-<div class="quarto-embed-nb-cell">
-<div id="cell-0" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:45:23.827470Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:45:23.827148Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:45:24.620531Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:45:24.619630Z&quot;}" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> ggplot, aes, geom_point, geom_hline, facet_grid, labs</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine.data <span class="im">import</span> mpg</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<section id="horizontal-line" class="level3">
-<h3 class="anchored" data-anchor-id="horizontal-line">Horizontal line</h3>
-<p><code>geom_hline()</code> draws a vertical line, and is useful as a guide.</p>
-<div id="cell-2" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:45:24.624401Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:45:24.624120Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:45:24.640581Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:45:24.639917Z&quot;}" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>mpg.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="2">
-<div>
-<div>
-
-
-<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">manufacturer</th>
-<th data-quarto-table-cell-role="th">model</th>
-<th data-quarto-table-cell-role="th">displ</th>
-<th data-quarto-table-cell-role="th">year</th>
-<th data-quarto-table-cell-role="th">cyl</th>
-<th data-quarto-table-cell-role="th">trans</th>
-<th data-quarto-table-cell-role="th">drv</th>
-<th data-quarto-table-cell-role="th">cty</th>
-<th data-quarto-table-cell-role="th">hwy</th>
-<th data-quarto-table-cell-role="th">fl</th>
-<th data-quarto-table-cell-role="th">class</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">0</td>
-<td>audi</td>
-<td>a4</td>
-<td>1.8</td>
-<td>1999</td>
-<td>4</td>
-<td>auto(l5)</td>
-<td>f</td>
-<td>18</td>
-<td>29</td>
-<td>p</td>
-<td>compact</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">1</td>
-<td>audi</td>
-<td>a4</td>
-<td>1.8</td>
-<td>1999</td>
-<td>4</td>
-<td>manual(m5)</td>
-<td>f</td>
-<td>21</td>
-<td>29</td>
-<td>p</td>
-<td>compact</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">2</td>
-<td>audi</td>
-<td>a4</td>
-<td>2.0</td>
-<td>2008</td>
-<td>4</td>
-<td>manual(m6)</td>
-<td>f</td>
-<td>20</td>
-<td>31</td>
-<td>p</td>
-<td>compact</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">3</td>
-<td>audi</td>
-<td>a4</td>
-<td>2.0</td>
-<td>2008</td>
-<td>4</td>
-<td>auto(av)</td>
-<td>f</td>
-<td>21</td>
-<td>30</td>
-<td>p</td>
-<td>compact</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">4</td>
-<td>audi</td>
-<td>a4</td>
-<td>2.8</td>
-<td>1999</td>
-<td>6</td>
-<td>auto(l5)</td>
-<td>f</td>
-<td>16</td>
-<td>26</td>
-<td>p</td>
-<td>compact</td>
-</tr>
-</tbody>
-</table>
-
-</div>
-</div>
-</div>
-</div>
-<p>It’s useful to use <code>geom_hline()</code> with some data, so we start with a basic scatter plot:</p>
-<div id="cell-4" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:45:24.688349Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:45:24.688068Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:45:26.006953Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:45:26.006187Z&quot;}" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    ggplot(mpg, aes(x<span class="op">=</span><span class="st">"displ"</span>, y<span class="op">=</span><span class="st">"hwy"</span>))</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_point()</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> labs(x<span class="op">=</span><span class="st">"displacement"</span>, y<span class="op">=</span><span class="st">"horsepower"</span>)</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="geom_hline_files/figure-html/examples-geom_hline-cell-4-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Now add a horizontal line to the scatter plot:</p>
-<div id="cell-6" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:45:26.010470Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:45:26.010097Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:45:26.324494Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:45:26.323966Z&quot;}" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    ggplot(mpg, aes(x<span class="op">=</span><span class="st">"displ"</span>, y<span class="op">=</span><span class="st">"hwy"</span>))</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_point()</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_hline(yintercept<span class="op">=</span><span class="dv">25</span>)  <span class="co"># add one horizonal line</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> labs(x<span class="op">=</span><span class="st">"displacement"</span>, y<span class="op">=</span><span class="st">"horsepower"</span>)</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="geom_hline_files/figure-html/examples-geom_hline-cell-5-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>You can add many horizontal lines:</p>
-<div id="cell-8" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:45:26.327259Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:45:26.327041Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:45:26.631869Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:45:26.631036Z&quot;}" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    ggplot(mpg, aes(x<span class="op">=</span><span class="st">"displ"</span>, y<span class="op">=</span><span class="st">"hwy"</span>))</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_point()</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_hline(yintercept<span class="op">=</span>[<span class="dv">25</span>, <span class="dv">35</span>, <span class="dv">45</span>])  <span class="co"># add many horizontal lines using a list</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> labs(x<span class="op">=</span><span class="st">"displacement"</span>, y<span class="op">=</span><span class="st">"horsepower"</span>)</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="geom_hline_files/figure-html/examples-geom_hline-cell-6-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>You can change the look of the line:</p>
-<div id="cell-10" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:45:26.634989Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:45:26.634717Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:45:26.943440Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:45:26.942862Z&quot;}" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    ggplot(mpg, aes(x<span class="op">=</span><span class="st">"displ"</span>, y<span class="op">=</span><span class="st">"hwy"</span>))</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_point()</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_hline(</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>        yintercept<span class="op">=</span><span class="dv">25</span>,</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>        color<span class="op">=</span><span class="st">"yellow"</span>,  <span class="co"># set line colour</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>        size<span class="op">=</span><span class="dv">2</span>,  <span class="co"># set line thickness</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>        linetype<span class="op">=</span><span class="st">"dashed"</span>,  <span class="co"># set line type</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> labs(x<span class="op">=</span><span class="st">"displacement"</span>, y<span class="op">=</span><span class="st">"horsepower"</span>)</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="geom_hline_files/figure-html/examples-geom_hline-cell-7-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>And you can add horizontal lines to a facet plot:</p>
-<div id="cell-12" class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2024-02-17T18:45:26.947324Z&quot;,&quot;iopub.status.busy&quot;:&quot;2024-02-17T18:45:26.946857Z&quot;,&quot;iopub.status.idle&quot;:&quot;2024-02-17T18:45:27.423712Z&quot;,&quot;shell.execute_reply&quot;:&quot;2024-02-17T18:45:27.423134Z&quot;}" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    ggplot(mpg, aes(x<span class="op">=</span><span class="st">"displ"</span>, y<span class="op">=</span><span class="st">"hwy"</span>))</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_point()</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_hline(yintercept<span class="op">=</span><span class="dv">25</span>)  <span class="co"># add a vertical line...</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> facet_grid(<span class="st">"drv"</span>)  <span class="co"># ... to a facet plot</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> labs(x<span class="op">=</span><span class="st">"displacement"</span>, y<span class="op">=</span><span class="st">"horsepower"</span>)</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="geom_hline_files/figure-html/examples-geom_hline-cell-8-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-</section>
-<a class="quarto-notebook-link" id="nblink-1" href="examples/geom_hline-preview.html#cell-0">Source: Horizontal line</a></div>
 
 
 </section>
@@ -579,6 +347,24 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
   function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
@@ -613,7 +399,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
     });
   }
   const xrefs = window.document.querySelectorAll('a.quarto-xref');
@@ -888,19 +678,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script>
 </div> <!-- /content -->
-<footer class="footer">
-  <div class="nav-footer">
-    <div class="nav-footer-left">
-<p>Proudly supported by <a href="https://posit.co"><img src="https://www.rstudio.com/assets/img/posit-logo-fullcolor-TM.svg" class="img-fluid" alt="Posit" width="65"></a></p>
-</div>   
-    <div class="nav-footer-center">
-<p>Developed by: Hassan Kibirige, License: <a href="../license.html">MIT</a></p>
-</div>
-    <div class="nav-footer-right">
-      &nbsp;
-    </div>
-  </div>
-</footer>
 
 
 

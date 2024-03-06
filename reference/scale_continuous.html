@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.550">
+<meta name="generator" content="quarto-1.5.24">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>plotnine 0.13.0</title>
+<title>plotnine {{&lt; var version &gt;}} – scale_continuous</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -113,7 +113,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine 0.13.0</span>
+    <span class="navbar-title">plotnine 0.13.1</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -126,33 +126,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a class="nav-link" href="../reference/index.html"> 
 <span class="menu-text">Reference</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../gallery/index.html"> 
-<span class="menu-text">Gallery</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../tutorials/index.html"> 
-<span class="menu-text">Tutorials</span></a>
-  </li>  
-  <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-pages" role="button" data-bs-toggle="dropdown" aria-expanded="false">
- <span class="menu-text">Pages</span>
-    </a>
-    <ul class="dropdown-menu" aria-labelledby="nav-menu-pages">    
-        <li>
-    <a class="dropdown-item" href="../changelog.html">
- <span class="dropdown-text">Changelog</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="../external-resources.html">
- <span class="dropdown-text">External Resources</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="../about.html">
- <span class="dropdown-text">About Plotnine</span></a>
-  </li>  
-    </ul>
-  </li>
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
@@ -162,7 +135,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
-          <div class="quarto-navbar-tools">
+            <div class="quarto-navbar-tools">
 </div>
       </div> <!-- /container-fluid -->
     </nav>
@@ -193,7 +166,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1 class="title doc-object doc-class doc-has-member-docs"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.scales.scale_continuous.scale_continuous</span></h1>
 </section>
 </header>
-<div class="doc-signature">
+<div class="doc-signature doc-class">
 <div class="sourceCode" id="cb1"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>scale_continuous(<span class="op">**</span>kwargs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="doc-text">
@@ -230,7 +203,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </dd>
 <dt><code><span class="doc-parameter-name">labels</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#bool">bool</a> | <a href="https://docs.python.org/3/library/stdtypes.html#list">list</a> | <a href="https://docs.python.org/3/library/functions.html#callable">callable</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">True</span></code></dt>
 <dd>
-<p>List of :py:class:<code>str</code>. Labels at the <code>breaks</code>. Alternatively, a callable that takes an array_like of break points as input and returns a list of strings.</p>
+<p>List of <a href="https://docs.python.org/3/library/stdtypes.html#str"><code>str</code></a>. Labels at the <code>breaks</code>. Alternatively, a callable that takes an array_like of break points as input and returns a list of strings.</p>
 </dd>
 <dt><code><span class="doc-parameter-name">limits</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://numpy.org/doc/stable/glossary.html#term-array_like">array_like</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
 <dd>
@@ -246,11 +219,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </dd>
 <dt><code><span class="doc-parameter-name">aesthetics</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#list">list</a> | <a href="https://docs.python.org/3/library/stdtypes.html#str">str</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
 <dd>
-<p>list of :py:class:<code>str</code>. Aesthetics covered by the scale. These are defined by each scale and the user should probably not change them. Have fun.</p>
+<p>list of <a href="https://docs.python.org/3/library/stdtypes.html#str"><code>str</code></a>. Aesthetics covered by the scale. These are defined by each scale and the user should probably not change them. Have fun.</p>
 </dd>
 <dt><code><span class="doc-parameter-name">trans</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> | <a href="https://docs.python.org/3/library/functions.html#callable">callable</a></span></code></dt>
 <dd>
-<p>Name of a trans function or a trans function. See :mod:<code>mizani.transforms</code> for possible options.</p>
+<p>Name of a trans function or a trans function. See <a href="https://mizani.readthedocs.io/en/stable/transforms.html#module-mizani.transforms"><code>mizani.transforms</code></a> for possible options.</p>
 </dd>
 <dt><code><span class="doc-parameter-name">oob</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#callable">callable</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">mizani.bounds.censor</span></code></dt>
 <dd>
@@ -354,6 +327,24 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
   function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
@@ -388,7 +379,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
     });
   }
   const xrefs = window.document.querySelectorAll('a.quarto-xref');
@@ -663,19 +658,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script>
 </div> <!-- /content -->
-<footer class="footer">
-  <div class="nav-footer">
-    <div class="nav-footer-left">
-<p>Proudly supported by <a href="https://posit.co"><img src="https://www.rstudio.com/assets/img/posit-logo-fullcolor-TM.svg" class="img-fluid" alt="Posit" width="65"></a></p>
-</div>   
-    <div class="nav-footer-center">
-<p>Developed by: Hassan Kibirige, License: <a href="../license.html">MIT</a></p>
-</div>
-    <div class="nav-footer-right">
-      &nbsp;
-    </div>
-  </div>
-</footer>
 
 
 

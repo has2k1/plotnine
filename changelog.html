@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.550">
+<meta name="generator" content="quarto-1.5.24">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>plotnine 0.13.0 - Changelog</title>
+<title>plotnine {{&lt; var version &gt;}} – Changelog</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -113,7 +113,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">plotnine 0.13.0</span>
+    <span class="navbar-title">plotnine 0.13.1</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -126,33 +126,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a class="nav-link" href="./reference/index.html"> 
 <span class="menu-text">Reference</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./gallery/index.html"> 
-<span class="menu-text">Gallery</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./tutorials/index.html"> 
-<span class="menu-text">Tutorials</span></a>
-  </li>  
-  <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-pages" role="button" data-bs-toggle="dropdown" aria-expanded="false">
- <span class="menu-text">Pages</span>
-    </a>
-    <ul class="dropdown-menu" aria-labelledby="nav-menu-pages">    
-        <li>
-    <a class="dropdown-item" href="./changelog.html">
- <span class="dropdown-text">Changelog</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="./external-resources.html">
- <span class="dropdown-text">External Resources</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="./about.html">
- <span class="dropdown-text">About Plotnine</span></a>
-  </li>  
-    </ul>
-  </li>
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
@@ -162,7 +135,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
-          <div class="quarto-navbar-tools">
+            <div class="quarto-navbar-tools">
 </div>
       </div> <!-- /container-fluid -->
     </nav>
@@ -176,16 +149,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#v0.13.0" id="toc-v0.13.0" class="nav-link active" data-scroll-target="#v0.13.0">v0.13.0</a>
+  <li><a href="#v0.13.1" id="toc-v0.13.1" class="nav-link active" data-scroll-target="#v0.13.1">v0.13.1</a>
+  <ul class="collapse">
+  <li><a href="#bug-fixes" id="toc-bug-fixes" class="nav-link" data-scroll-target="#bug-fixes">Bug Fixes</a></li>
+  </ul></li>
+  <li><a href="#v0.13.0" id="toc-v0.13.0" class="nav-link" data-scroll-target="#v0.13.0">v0.13.0</a>
   <ul class="collapse">
   <li><a href="#api-changes" id="toc-api-changes" class="nav-link" data-scroll-target="#api-changes">API Changes</a></li>
   <li><a href="#new" id="toc-new" class="nav-link" data-scroll-target="#new">New</a></li>
-  <li><a href="#bug-fixes" id="toc-bug-fixes" class="nav-link" data-scroll-target="#bug-fixes">Bug Fixes</a></li>
+  <li><a href="#bug-fixes-1" id="toc-bug-fixes-1" class="nav-link" data-scroll-target="#bug-fixes-1">Bug Fixes</a></li>
   <li><a href="#enhancements" id="toc-enhancements" class="nav-link" data-scroll-target="#enhancements">Enhancements</a></li>
   </ul></li>
   <li><a href="#v0.12.4" id="toc-v0.12.4" class="nav-link" data-scroll-target="#v0.12.4">v0.12.4</a>
   <ul class="collapse">
-  <li><a href="#bug-fixes-1" id="toc-bug-fixes-1" class="nav-link" data-scroll-target="#bug-fixes-1">Bug Fixes</a></li>
+  <li><a href="#bug-fixes-2" id="toc-bug-fixes-2" class="nav-link" data-scroll-target="#bug-fixes-2">Bug Fixes</a></li>
   <li><a href="#enhancements-1" id="toc-enhancements-1" class="nav-link" data-scroll-target="#enhancements-1">Enhancements</a></li>
   </ul></li>
   <li><a href="#v0.12.3" id="toc-v0.12.3" class="nav-link" data-scroll-target="#v0.12.3">v0.12.3</a>
@@ -198,12 +175,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#new-features" id="toc-new-features" class="nav-link" data-scroll-target="#new-features">New Features</a></li>
   <li><a href="#enhancements-3" id="toc-enhancements-3" class="nav-link" data-scroll-target="#enhancements-3">Enhancements</a></li>
   <li><a href="#api-changes-1" id="toc-api-changes-1" class="nav-link" data-scroll-target="#api-changes-1">API Changes</a></li>
-  <li><a href="#bug-fixes-2" id="toc-bug-fixes-2" class="nav-link" data-scroll-target="#bug-fixes-2">Bug Fixes</a></li>
+  <li><a href="#bug-fixes-3" id="toc-bug-fixes-3" class="nav-link" data-scroll-target="#bug-fixes-3">Bug Fixes</a></li>
   </ul></li>
   <li><a href="#v0.10.1" id="toc-v0.10.1" class="nav-link" data-scroll-target="#v0.10.1">v0.10.1</a></li>
   <li><a href="#v0.10.0" id="toc-v0.10.0" class="nav-link" data-scroll-target="#v0.10.0">v0.10.0</a>
   <ul class="collapse">
-  <li><a href="#bug-fixes-3" id="toc-bug-fixes-3" class="nav-link" data-scroll-target="#bug-fixes-3">Bug Fixes</a></li>
+  <li><a href="#bug-fixes-4" id="toc-bug-fixes-4" class="nav-link" data-scroll-target="#bug-fixes-4">Bug Fixes</a></li>
   <li><a href="#new-features-1" id="toc-new-features-1" class="nav-link" data-scroll-target="#new-features-1">New Features</a></li>
   <li><a href="#api-changes-2" id="toc-api-changes-2" class="nav-link" data-scroll-target="#api-changes-2">API Changes</a></li>
   </ul></li>
@@ -211,56 +188,56 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#api-changes-3" id="toc-api-changes-3" class="nav-link" data-scroll-target="#api-changes-3">API Changes</a></li>
   <li><a href="#new-features-2" id="toc-new-features-2" class="nav-link" data-scroll-target="#new-features-2">New Features</a></li>
-  <li><a href="#bug-fixes-4" id="toc-bug-fixes-4" class="nav-link" data-scroll-target="#bug-fixes-4">Bug Fixes</a></li>
+  <li><a href="#bug-fixes-5" id="toc-bug-fixes-5" class="nav-link" data-scroll-target="#bug-fixes-5">Bug Fixes</a></li>
   <li><a href="#enhancements-4" id="toc-enhancements-4" class="nav-link" data-scroll-target="#enhancements-4">Enhancements</a></li>
   </ul></li>
   <li><a href="#v0.8.0" id="toc-v0.8.0" class="nav-link" data-scroll-target="#v0.8.0">v0.8.0</a>
   <ul class="collapse">
   <li><a href="#api-changes-4" id="toc-api-changes-4" class="nav-link" data-scroll-target="#api-changes-4">API Changes</a></li>
   <li><a href="#new-features-3" id="toc-new-features-3" class="nav-link" data-scroll-target="#new-features-3">New Features</a></li>
-  <li><a href="#bug-fixes-5" id="toc-bug-fixes-5" class="nav-link" data-scroll-target="#bug-fixes-5">Bug Fixes</a></li>
+  <li><a href="#bug-fixes-6" id="toc-bug-fixes-6" class="nav-link" data-scroll-target="#bug-fixes-6">Bug Fixes</a></li>
   <li><a href="#enhancements-5" id="toc-enhancements-5" class="nav-link" data-scroll-target="#enhancements-5">Enhancements</a></li>
   </ul></li>
   <li><a href="#v0.7.1" id="toc-v0.7.1" class="nav-link" data-scroll-target="#v0.7.1">v0.7.1</a>
   <ul class="collapse">
-  <li><a href="#bug-fixes-6" id="toc-bug-fixes-6" class="nav-link" data-scroll-target="#bug-fixes-6">Bug Fixes</a></li>
+  <li><a href="#bug-fixes-7" id="toc-bug-fixes-7" class="nav-link" data-scroll-target="#bug-fixes-7">Bug Fixes</a></li>
   </ul></li>
   <li><a href="#v0.7.0" id="toc-v0.7.0" class="nav-link" data-scroll-target="#v0.7.0">v0.7.0</a>
   <ul class="collapse">
   <li><a href="#api-changes-5" id="toc-api-changes-5" class="nav-link" data-scroll-target="#api-changes-5">API Changes</a></li>
   <li><a href="#new-features-4" id="toc-new-features-4" class="nav-link" data-scroll-target="#new-features-4">New Features</a></li>
-  <li><a href="#bug-fixes-7" id="toc-bug-fixes-7" class="nav-link" data-scroll-target="#bug-fixes-7">Bug Fixes</a></li>
+  <li><a href="#bug-fixes-8" id="toc-bug-fixes-8" class="nav-link" data-scroll-target="#bug-fixes-8">Bug Fixes</a></li>
   <li><a href="#enhancements-6" id="toc-enhancements-6" class="nav-link" data-scroll-target="#enhancements-6">Enhancements</a></li>
   </ul></li>
   <li><a href="#v0.6.0" id="toc-v0.6.0" class="nav-link" data-scroll-target="#v0.6.0">v0.6.0</a>
   <ul class="collapse">
   <li><a href="#api-changes-6" id="toc-api-changes-6" class="nav-link" data-scroll-target="#api-changes-6">API Changes</a></li>
   <li><a href="#new-features-5" id="toc-new-features-5" class="nav-link" data-scroll-target="#new-features-5">New Features</a></li>
-  <li><a href="#bug-fixes-8" id="toc-bug-fixes-8" class="nav-link" data-scroll-target="#bug-fixes-8">Bug Fixes</a></li>
+  <li><a href="#bug-fixes-9" id="toc-bug-fixes-9" class="nav-link" data-scroll-target="#bug-fixes-9">Bug Fixes</a></li>
   <li><a href="#enhancements-7" id="toc-enhancements-7" class="nav-link" data-scroll-target="#enhancements-7">Enhancements</a></li>
   </ul></li>
   <li><a href="#v0.5.1" id="toc-v0.5.1" class="nav-link" data-scroll-target="#v0.5.1">v0.5.1</a>
   <ul class="collapse">
-  <li><a href="#bug-fixes-9" id="toc-bug-fixes-9" class="nav-link" data-scroll-target="#bug-fixes-9">Bug Fixes</a></li>
+  <li><a href="#bug-fixes-10" id="toc-bug-fixes-10" class="nav-link" data-scroll-target="#bug-fixes-10">Bug Fixes</a></li>
   </ul></li>
   <li><a href="#v0.5.0" id="toc-v0.5.0" class="nav-link" data-scroll-target="#v0.5.0">v0.5.0</a>
   <ul class="collapse">
   <li><a href="#api-changes-7" id="toc-api-changes-7" class="nav-link" data-scroll-target="#api-changes-7">API Changes</a></li>
-  <li><a href="#bug-fixes-10" id="toc-bug-fixes-10" class="nav-link" data-scroll-target="#bug-fixes-10">Bug Fixes</a></li>
+  <li><a href="#bug-fixes-11" id="toc-bug-fixes-11" class="nav-link" data-scroll-target="#bug-fixes-11">Bug Fixes</a></li>
   <li><a href="#enhancements-8" id="toc-enhancements-8" class="nav-link" data-scroll-target="#enhancements-8">Enhancements</a></li>
   </ul></li>
   <li><a href="#v0.4.0" id="toc-v0.4.0" class="nav-link" data-scroll-target="#v0.4.0">v0.4.0</a>
   <ul class="collapse">
   <li><a href="#api-changes-8" id="toc-api-changes-8" class="nav-link" data-scroll-target="#api-changes-8">API Changes</a></li>
   <li><a href="#new-features-6" id="toc-new-features-6" class="nav-link" data-scroll-target="#new-features-6">New Features</a></li>
-  <li><a href="#bug-fixes-11" id="toc-bug-fixes-11" class="nav-link" data-scroll-target="#bug-fixes-11">Bug Fixes</a></li>
+  <li><a href="#bug-fixes-12" id="toc-bug-fixes-12" class="nav-link" data-scroll-target="#bug-fixes-12">Bug Fixes</a></li>
   </ul></li>
   <li><a href="#v0.3.0" id="toc-v0.3.0" class="nav-link" data-scroll-target="#v0.3.0">v0.3.0</a>
   <ul class="collapse">
   <li><a href="#api-changes-9" id="toc-api-changes-9" class="nav-link" data-scroll-target="#api-changes-9">API Changes</a></li>
   <li><a href="#new-features-7" id="toc-new-features-7" class="nav-link" data-scroll-target="#new-features-7">New Features</a></li>
   <li><a href="#enhancements-9" id="toc-enhancements-9" class="nav-link" data-scroll-target="#enhancements-9">Enhancements</a></li>
-  <li><a href="#bug-fixes-12" id="toc-bug-fixes-12" class="nav-link" data-scroll-target="#bug-fixes-12">Bug Fixes</a></li>
+  <li><a href="#bug-fixes-13" id="toc-bug-fixes-13" class="nav-link" data-scroll-target="#bug-fixes-13">Bug Fixes</a></li>
   </ul></li>
   <li><a href="#v0.2.1" id="toc-v0.2.1" class="nav-link" data-scroll-target="#v0.2.1">v0.2.1</a></li>
   <li><a href="#v0.2.0" id="toc-v0.2.0" class="nav-link" data-scroll-target="#v0.2.0">v0.2.0</a>
@@ -293,9 +270,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
+<section id="v0.13.1" class="level2">
+<h2 class="anchored" data-anchor-id="v0.13.1">v0.13.1</h2>
+<p>(2024-03-06)</p>
+<section id="bug-fixes" class="level3">
+<h3 class="anchored" data-anchor-id="bug-fixes">Bug Fixes</h3>
+<ul>
+<li><p>Fixed a bug where a legend with blank title or text could result in a wrong justification.</p></li>
+<li><p>Fixed a bug where setting legend justification to a string i.e one of <code>left</code>, <code>right</code>, <code>top</code>, <code>bottom</code>, <code>center</code> had no effect.</p></li>
+</ul>
+</section>
+</section>
 <section id="v0.13.0" class="level2">
 <h2 class="anchored" data-anchor-id="v0.13.0">v0.13.0</h2>
 <p>(2024-02-20)</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="https://doi.org/10.5281/zenodo.10684553"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.10684553.svg" class="img-fluid figure-img" alt="DOI"></a></p>
+<figcaption>DOI</figcaption>
+</figure>
+</div>
 <section id="api-changes" class="level3">
 <h3 class="anchored" data-anchor-id="api-changes">API Changes</h3>
 <ul>
@@ -374,8 +368,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>The <code>space</code> parameter of <a href="./reference/facet_grid.html#plotnine.facet_grid"><code>facet_grid</code></a> now responds to the values <code>free</code>, <code>free_x</code> and <code>free_y</code> to have panels whose relative width and/or height depends on the data range. (<a href="https://github.com/has2k1/plotnine/issues/545" title="Issue: #545">#545</a>)</p></li>
 </ul>
 </section>
-<section id="bug-fixes" class="level3">
-<h3 class="anchored" data-anchor-id="bug-fixes">Bug Fixes</h3>
+<section id="bug-fixes-1" class="level3">
+<h3 class="anchored" data-anchor-id="bug-fixes-1">Bug Fixes</h3>
 <ul>
 <li><p>Fixed handling of minor breaks in <a href="./reference/scale_continuous.html#plotnine.scales.scale_continuous.scale_continuous"><code>scale_continuous</code></a> to accept numpy arrays and when the scale has a transform, that the minor breaks are supplied in user space and not transform space. Just like the major breaks. (<a href="https://github.com/has2k1/plotnine/issues/685" title="Issue: #685">#685</a>)</p></li>
 <li><p>Fixed theming of axis_ticks with the size parameter. (<a href="https://github.com/has2k1/plotnine/issues/703" title="Issue: #703">#703</a>)</p></li>
@@ -400,8 +394,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="v0.12.4" class="level2">
 <h2 class="anchored" data-anchor-id="v0.12.4">v0.12.4</h2>
 <p>(2023-11-06)</p>
-<section id="bug-fixes-1" class="level3">
-<h3 class="anchored" data-anchor-id="bug-fixes-1">Bug Fixes</h3>
+<section id="bug-fixes-2" class="level3">
+<h3 class="anchored" data-anchor-id="bug-fixes-2">Bug Fixes</h3>
 <ul>
 <li><p>Fixed <a href="./reference/position_dodge.html#plotnine.position_dodge"><code>position_dodge</code></a> to work with to work for <a href="./reference/geom_segment.html#plotnine.geom_segment"><code>geom_segment</code></a>.</p></li>
 <li><p>Fixed the <code>x</code> limits when plotting <a href="./reference/geom_sina.html#plotnine.geom_sina"><code>geom_sina</code></a>.</p></li>
@@ -437,8 +431,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>(2023-05-09)</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="https://doi.org/10.5281/zenodo.7919297"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.7919297.svg" class="img-fluid figure-img" alt="image"></a></p>
-<figcaption>image</figcaption>
+<p><a href="https://doi.org/10.5281/zenodo.7919297"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.7919297.svg" class="img-fluid figure-img" alt="DOI"></a></p>
+<figcaption>DOI</figcaption>
 </figure>
 </div>
 <section id="new-features" class="level3">
@@ -479,8 +473,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>Changed default font-family (san-serif) from DejaVu Sans to Helvetica.</p></li>
 </ul>
 </section>
-<section id="bug-fixes-2" class="level3">
-<h3 class="anchored" data-anchor-id="bug-fixes-2">Bug Fixes</h3>
+<section id="bug-fixes-3" class="level3">
+<h3 class="anchored" data-anchor-id="bug-fixes-3">Bug Fixes</h3>
 <ul>
 <li><p>Fixed bug where a discrete position scale failed when mapping an empty variable. (<a href="https://github.com/has2k1/plotnine/issues/647" title="Issue: #647">#647</a>)</p></li>
 <li><p>Fixed bug where <a href="./reference/facet_grid.html#plotnine.facet_grid"><code>facet_grid</code></a> with a datetime column run into an exception. (<a href="https://github.com/has2k1/plotnine/issues/629" title="Issue: #629">#629</a>)</p></li>
@@ -497,8 +491,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>(2022-09-10)</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="https://doi.org/10.5281/zenodo.7124917"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.7124917.svg" class="img-fluid figure-img" alt="image"></a></p>
-<figcaption>image</figcaption>
+<p><a href="https://doi.org/10.5281/zenodo.7124917"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.7124917.svg" class="img-fluid figure-img" alt="DOI"></a></p>
+<figcaption>DOI</figcaption>
 </figure>
 </div>
 <p><em>This is a re-release of v0.10.0</em>.</p>
@@ -509,12 +503,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>(2022-09-10)</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="https://doi.org/10.5281/zenodo.7124912"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.7124912.svg" class="img-fluid figure-img" alt="image"></a></p>
-<figcaption>image</figcaption>
+<p><a href="https://doi.org/10.5281/zenodo.7124912"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.7124912.svg" class="img-fluid figure-img" alt="DOI"></a></p>
+<figcaption>DOI</figcaption>
 </figure>
 </div>
-<section id="bug-fixes-3" class="level3">
-<h3 class="anchored" data-anchor-id="bug-fixes-3">Bug Fixes</h3>
+<section id="bug-fixes-4" class="level3">
+<h3 class="anchored" data-anchor-id="bug-fixes-4">Bug Fixes</h3>
 <ul>
 <li><p>Fixed bug in <a href="./reference/stat_bin_2d.html#plotnine.stat_bin_2d"><code>stat_bin_2d</code></a> where bins whose edges are zero or negative would yield the wrong plot. (<a href="https://github.com/has2k1/plotnine/issues/604" title="Issue: #604">#604</a>)</p></li>
 <li><p>Fixed bug <a href="./reference/stat_density_2d.html#plotnine.stat_density_2d"><code>stat_density_2d</code></a> which had been broken by Matplotlib 1.6.0. (<a href="https://github.com/has2k1/plotnine/issues/619" title="Issue: #619">#619</a>)</p></li>
@@ -542,8 +536,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>(2022-07-01)</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="https://doi.org/10.5281/zenodo.7124918"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.7124918.svg" class="img-fluid figure-img" alt="image"></a></p>
-<figcaption>image</figcaption>
+<p><a href="https://doi.org/10.5281/zenodo.7124918"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.7124918.svg" class="img-fluid figure-img" alt="DOI"></a></p>
+<figcaption>DOI</figcaption>
 </figure>
 </div>
 <section id="api-changes-3" class="level3">
@@ -561,12 +555,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p><a href="./reference/labs.html#plotnine.labs"><code>labs</code></a> can now be used to create a <code>caption</code>. This caption can be styled using the <code>plot_caption</code> parameter to <a href="./reference/theme.html#plotnine.theme"><code>theme</code></a>.</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>theme(plot_caption<span class="op">=</span>element_text(size<span class="op">=</span><span class="dv">13</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
 <li><p>You can now align the <code>plot_title</code> horizontally to the left or right.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>theme(plot_title<span class="op">=</span>element_text(ha<span class="op">=</span><span class="st">'left'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>theme(plot_title<span class="op">=</span>element_text(ha<span class="op">=</span><span class="st">"left"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Before, the title was always centered.</p></li>
 </ul>
 </section>
-<section id="bug-fixes-4" class="level3">
-<h3 class="anchored" data-anchor-id="bug-fixes-4">Bug Fixes</h3>
+<section id="bug-fixes-5" class="level3">
+<h3 class="anchored" data-anchor-id="bug-fixes-5">Bug Fixes</h3>
 <ul>
 <li><p>Fixed bug in <a href="./reference/facet_grid.html#plotnine.facet_grid"><code>facet_grid</code></a> and <a href="./reference/facet_wrap.html#plotnine.facet_wrap"><code>facet_wrap</code></a> where the <code>drop</code> parameter was ignored. (<a href="https://github.com/has2k1/plotnine/issues/510" title="Issue: #510">#510</a>)</p></li>
 <li><p>Fixed issue with <a href="./reference/annotation_logticks.html#plotnine.annotation_logticks"><code>annotation_logticks</code></a> where the wrong range was used for the x|y axis. (<a href="https://github.com/has2k1/plotnine/issues/525" title="Issue: #525">#525</a>)</p></li>
@@ -602,8 +596,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>(2021-03-24)</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="https://doi.org/10.5281/zenodo.4636791"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.4636791.svg" class="img-fluid figure-img" alt="image"></a></p>
-<figcaption>image</figcaption>
+<p><a href="https://doi.org/10.5281/zenodo.4636791"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.4636791.svg" class="img-fluid figure-img" alt="DOI"></a></p>
+<figcaption>DOI</figcaption>
 </figure>
 </div>
 <section id="api-changes-4" class="level3">
@@ -622,8 +616,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>Using the <code>space</code> parameter, <a href="./reference/facet_grid.html#plotnine.facet_grid"><code>facet_grid</code></a> gained the ability to have rows and columns of panels of different sizes.</p></li>
 </ul>
 </section>
-<section id="bug-fixes-5" class="level3">
-<h3 class="anchored" data-anchor-id="bug-fixes-5">Bug Fixes</h3>
+<section id="bug-fixes-6" class="level3">
+<h3 class="anchored" data-anchor-id="bug-fixes-6">Bug Fixes</h3>
 <ul>
 <li><p>Fixed issue where some plots with a colorbar would fail for specific themes. (<a href="https://github.com/has2k1/plotnine/issues/424" title="Issue: #424">#424</a>)</p></li>
 <li><p>Fixed <a href="./reference/geom_map.html#plotnine.geom_map"><code>geom_map</code></a> to plot <code>MultiLineString</code> geom types.</p></li>
@@ -654,15 +648,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>(2020-08-05)</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="https://doi.org/10.5281/zenodo.3973626"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.3973626.svg" class="img-fluid figure-img" alt="image"></a></p>
-<figcaption>image</figcaption>
+<p><a href="https://doi.org/10.5281/zenodo.3973626"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.3973626.svg" class="img-fluid figure-img" alt="DOI"></a></p>
+<figcaption>DOI</figcaption>
 </figure>
 </div>
-<section id="bug-fixes-6" class="level3">
-<h3 class="anchored" data-anchor-id="bug-fixes-6">Bug Fixes</h3>
+<section id="bug-fixes-7" class="level3">
+<h3 class="anchored" data-anchor-id="bug-fixes-7">Bug Fixes</h3>
 <ul>
 <li><p>Fixed issue where a plot has no data and the geoms have no data, but the mappings are valid. (<a href="https://github.com/has2k1/plotnine/issues/404" title="Issue: #404">#404</a>)</p></li>
-<li><p>Fixed <code>preserve='single'</code> in <a href="./reference/position_dodge.html#plotnine.position_dodge"><code>position_dodge</code></a> and <a href="./reference/position_dodge2.html#plotnine.position_dodge2"><code>position_dodge2</code></a> to work for geoms that only have <code>x</code> aesthetic and not <code>xmin</code> and <code>xmax</code> e.g <a href="./reference/geom_text.html#plotnine.geom_text"><code>geom_text</code></a>.</p></li>
+<li><p>Fixed <code>preserve="single"</code> in <a href="./reference/position_dodge.html#plotnine.position_dodge"><code>position_dodge</code></a> and <a href="./reference/position_dodge2.html#plotnine.position_dodge2"><code>position_dodge2</code></a> to work for geoms that only have <code>x</code> aesthetic and not <code>xmin</code> and <code>xmax</code> e.g <a href="./reference/geom_text.html#plotnine.geom_text"><code>geom_text</code></a>.</p></li>
 <li><p>Fix regression in <code>v0.7.0</code> where plots with a colorbar would fail if using <a href="./reference/theme_matplotlib.html#plotnine.theme_matplotlib"><code>theme_matplotlib</code></a>.</p></li>
 </ul>
 </section>
@@ -672,8 +666,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>(2020-06-05)</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="https://doi.org/10.5281/zenodo.3878645"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.3878645.svg" class="img-fluid figure-img" alt="image"></a></p>
-<figcaption>image</figcaption>
+<p><a href="https://doi.org/10.5281/zenodo.3878645"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.3878645.svg" class="img-fluid figure-img" alt="DOI"></a></p>
+<figcaption>DOI</figcaption>
 </figure>
 </div>
 <section id="api-changes-5" class="level3">
@@ -691,14 +685,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p><a href="./reference/stat_smooth.html#plotnine.stat_smooth"><code>stat_smooth</code></a> can now use formulae for linear models.</p></li>
 </ul>
 </section>
-<section id="bug-fixes-7" class="level3">
-<h3 class="anchored" data-anchor-id="bug-fixes-7">Bug Fixes</h3>
+<section id="bug-fixes-8" class="level3">
+<h3 class="anchored" data-anchor-id="bug-fixes-8">Bug Fixes</h3>
 <ul>
 <li><p>Fixed issue where a wrong warning could be issued about changing the transform of a specialised scale. It mostly affected the <em>timedelta</em> scale.</p></li>
-<li><p>Fixed <a href="./reference/geom_violin.html#plotnine.geom_violin"><code>geom_violin</code></a> and other geoms when used with <code>position='dodge'</code> not to crash when if a layer has an empty group of data.</p></li>
+<li><p>Fixed <a href="./reference/geom_violin.html#plotnine.geom_violin"><code>geom_violin</code></a> and other geoms when used with <code>position="dodge"</code> not to crash when if a layer has an empty group of data.</p></li>
 <li><p>Fixed bug in <a href="./reference/geom_path.html#plotnine.geom_path"><code>geom_path</code></a> for some cases when groups had less than 2 points. (<a href="https://github.com/has2k1/plotnine/issues/319" title="Issue: #319">#319</a>)</p></li>
 <li><p>Fixed all stats that compute kernel density estimates to work when all the data points are the same. (<a href="https://github.com/has2k1/plotnine/issues/317" title="Issue: #317">#317</a>)</p></li>
-<li><p>Fixed issue where setting the group to a string value i.e.&nbsp;<code>group='string'</code> outside <code>aes()</code> failed due to an error.</p></li>
+<li><p>Fixed issue where setting the group to a string value i.e.&nbsp;<code>group="string"</code> outside <code>aes()</code> failed due to an error.</p></li>
 <li><p>Fixed issue where discrete position scales could not deal with fewer limits than those present in the data. (<a href="https://github.com/has2k1/plotnine/issues/342" title="Issue: #342">#342</a>)</p></li>
 <li><p>Fixed issue with using custom tuple linetypes~ with <a href="./reference/scale_linetype_manual.html#plotnine.scale_linetype_manual"><code>scale_linetype_manual</code></a>. (<a href="https://github.com/has2k1/plotnine/issues/352" title="Issue: #352">#352</a>)</p></li>
 <li><p>Fixed <a href="./reference/geom_map.html#plotnine.geom_map"><code>geom_map</code></a> to work with facets. (<a href="https://github.com/has2k1/plotnine/issues/359" title="Issue: #359">#359</a>)</p></li>
@@ -723,8 +717,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>(2019-08-21)</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="https://doi.org/10.5281/zenodo.3373970"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.3373970.svg" class="img-fluid figure-img" alt="image"></a></p>
-<figcaption>image</figcaption>
+<p><a href="https://doi.org/10.5281/zenodo.3373970"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.3373970.svg" class="img-fluid figure-img" alt="DOI"></a></p>
+<figcaption>DOI</figcaption>
 </figure>
 </div>
 <section id="api-changes-6" class="level3">
@@ -746,8 +740,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Added <a href="./reference/annotation_stripes.html#plotnine.annotation_stripes"><code>annotation_stripes</code></a>.</li>
 </ul>
 </section>
-<section id="bug-fixes-8" class="level3">
-<h3 class="anchored" data-anchor-id="bug-fixes-8">Bug Fixes</h3>
+<section id="bug-fixes-9" class="level3">
+<h3 class="anchored" data-anchor-id="bug-fixes-9">Bug Fixes</h3>
 <ul>
 <li><p>Fixed bug where facetting would fail if done on a plot with annotation(s) and one of the facetting columns was also a variable in the environment.</p></li>
 <li><p>Fixed bug where <a href="./reference/coord_flip.html#plotnine.coord_flip"><code>coord_flip</code></a> would not flip geoms created by <a href="./reference/geom_rug.html#plotnine.geom_rug"><code>geom_rug</code></a>. (<a href="https://github.com/has2k1/plotnine/issues/216" title="Issue: #216">#216</a>)</p></li>
@@ -790,12 +784,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>(2018-10-17)</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="https://doi.org/10.5281/zenodo.1464803"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.1464803.svg" class="img-fluid figure-img" alt="image"></a></p>
-<figcaption>image</figcaption>
+<p><a href="https://doi.org/10.5281/zenodo.1464803"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.1464803.svg" class="img-fluid figure-img" alt="DOI"></a></p>
+<figcaption>DOI</figcaption>
 </figure>
 </div>
-<section id="bug-fixes-9" class="level3">
-<h3 class="anchored" data-anchor-id="bug-fixes-9">Bug Fixes</h3>
+<section id="bug-fixes-10" class="level3">
+<h3 class="anchored" data-anchor-id="bug-fixes-10">Bug Fixes</h3>
 <ul>
 <li>Changed the dependency for mizani to <code>v0.5.2</code>. This fixes an issue where facetting may create plots with missing items. (<a href="https://github.com/has2k1/plotnine/issues/210" title="Issue: #210">#210</a>)</li>
 </ul>
@@ -806,8 +800,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>(2018-10-16)</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="https://doi.org/10.5281/zenodo.1464204"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.1464204.svg" class="img-fluid figure-img" alt="image"></a></p>
-<figcaption>image</figcaption>
+<p><a href="https://doi.org/10.5281/zenodo.1464204"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.1464204.svg" class="img-fluid figure-img" alt="DOI"></a></p>
+<figcaption>DOI</figcaption>
 </figure>
 </div>
 <section id="api-changes-7" class="level3">
@@ -817,8 +811,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>geopandas has been removed as a requirement for installation. Users of <a href="./reference/geom_map.html#plotnine.geom_map"><code>geom_map</code></a> will have to install it separately. (<a href="https://github.com/has2k1/plotnine/issues/178" title="Issue: #178">#178</a>)</li>
 </ul>
 </section>
-<section id="bug-fixes-10" class="level3">
-<h3 class="anchored" data-anchor-id="bug-fixes-10">Bug Fixes</h3>
+<section id="bug-fixes-11" class="level3">
+<h3 class="anchored" data-anchor-id="bug-fixes-11">Bug Fixes</h3>
 <ul>
 <li><p>Fixed issue where with the <code>subplots_adjust</code> themeable could not be used to set the <code>wspace</code> and <code>hspace</code> Matplotlib subplot parameters. (<a href="https://github.com/has2k1/plotnine/issues/185" title="Issue: #185">#185</a>)</p></li>
 <li><p>Fixed in <a href="./reference/stat_bin.html#plotnine.stat_bin"><code>stat_bin</code></a> where setting custom limits for the scale leads to an error. (<a href="https://github.com/has2k1/plotnine/issues/189" title="Issue: #189">#189</a>)</p></li>
@@ -841,8 +835,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><em>2018-01-08</em></p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="https://doi.org/10.5281/zenodo.1325309"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.1325309.svg" class="img-fluid figure-img" alt="image"></a></p>
-<figcaption>image</figcaption>
+<p><a href="https://doi.org/10.5281/zenodo.1325309"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.1325309.svg" class="img-fluid figure-img" alt="DOI"></a></p>
+<figcaption>DOI</figcaption>
 </figure>
 </div>
 <section id="api-changes-8" class="level3">
@@ -865,8 +859,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>Added <a href="./reference/save_as_pdf_pages.html#plotnine.save_as_pdf_pages"><code>save_as_pdf_pages</code></a>.</p></li>
 </ul>
 </section>
-<section id="bug-fixes-11" class="level3">
-<h3 class="anchored" data-anchor-id="bug-fixes-11">Bug Fixes</h3>
+<section id="bug-fixes-12" class="level3">
+<h3 class="anchored" data-anchor-id="bug-fixes-12">Bug Fixes</h3>
 <ul>
 <li><p>Fixed issue where colorbars may chop off the colors at the limits of a scale.</p></li>
 <li><p>Fixed issue with creating fixed mappings to datetime and timedelta type values. (<a href="https://github.com/has2k1/plotnine/issues/88" title="Issue: #88">#88</a>)</p></li>
@@ -874,11 +868,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>Fixed <a href="./reference/stat_bin.html#plotnine.stat_bin"><code>stat_bin</code></a> and <a href="./reference/stat_bin_2d.html#plotnine.stat_bin_2d"><code>stat_bin_2d</code></a> to properly handle the <code>breaks</code> parameter when used with a transforming scale.</p></li>
 <li><p>Fixed issue with x and y scales where the <code>name</code> of the scale was ignored when determining the axis titles. Now, the <code>name</code> parameter is specified, it is used as the title. (<a href="https://github.com/has2k1/plotnine/issues/105" title="Issue: #105">#105</a>)</p></li>
 <li><p>Fixed bug in discrete scales where a column could not be mapped to integer values. (<a href="https://github.com/has2k1/plotnine/issues/108" title="Issue: #108">#108</a>)</p></li>
-<li><p>Make it possible to hide the legend with <code>theme(legend_position='none')</code>. (<a href="https://github.com/has2k1/plotnine/issues/119" title="Issue: #119">#119</a>)</p></li>
+<li><p>Make it possible to hide the legend with <code>theme(legend_position="none")</code>. (<a href="https://github.com/has2k1/plotnine/issues/119" title="Issue: #119">#119</a>)</p></li>
 <li><p>Fixed issue in <a href="./reference/stat_summary_bin.html#plotnine.stat_summary_bin"><code>stat_summary_bin</code></a> where some input values gave an error. (<a href="https://github.com/has2k1/plotnine/issues/123" title="Issue: #123">#123</a>)</p></li>
 <li><p>Fixed <a href="./reference/geom_ribbon.html#plotnine.geom_ribbon"><code>geom_ribbon</code></a> to sort data before plotting. (<a href="https://github.com/has2k1/plotnine/issues/127" title="Issue: #127">#127</a>)</p></li>
 <li><p>Fixed <code>IndexError</code> in <a href="./reference/facet_grid.html#plotnine.facet_grid"><code>facet_grid</code></a> when row/column variable has 1 unique value. (<a href="https://github.com/has2k1/plotnine/issues/129" title="Issue: #129">#129</a>)</p></li>
-<li><p>Fixed <a href="./reference/facet_grid.html#plotnine.facet_grid"><code>facet_grid</code></a> when <code>scale='free'</code>, <code>scale='free_x'</code> or <code>scale='free_y'</code>, the panels share axes along the row or column.</p></li>
+<li><p>Fixed <a href="./reference/facet_grid.html#plotnine.facet_grid"><code>facet_grid</code></a> when <code>scale="free"</code>, <code>scale="free_x"</code> or <code>scale="free_y"</code>, the panels share axes along the row or column.</p></li>
 <li><p>Fixed <a href="./reference/geom_boxplot.html#plotnine.geom_boxplot"><code>geom_boxplot</code></a> so that user can create a boxplot by specifying all required aesthetics. (<a href="https://github.com/has2k1/plotnine/issues/136" title="Issue: #136">#136</a>)</p></li>
 <li><p>Fixed <a href="./reference/geom_violin.html#plotnine.geom_violin"><code>geom_violin</code></a> to work when some groups are empty. (<a href="https://github.com/has2k1/plotnine/issues/131" title="Issue: #131">#131</a>)</p></li>
 <li><p>Fixed continuous scales to accept <code>minor=None</code>. (<a href="https://github.com/has2k1/plotnine/issues/120" title="Issue: #120">#120</a>)</p></li>
@@ -937,8 +931,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>You can now specify infinite coordinates with <a href="./reference/geom_rect.html#plotnine.geom_rect"><code>geom_rect</code></a>. (<a href="https://github.com/has2k1/plotnine/issues/166" title="Issue: #166">#166</a>)</p></li>
 </ul>
 </section>
-<section id="bug-fixes-12" class="level3">
-<h3 class="anchored" data-anchor-id="bug-fixes-12">Bug Fixes</h3>
+<section id="bug-fixes-13" class="level3">
+<h3 class="anchored" data-anchor-id="bug-fixes-13">Bug Fixes</h3>
 <ul>
 <li><p>Fixed bug where facetting led to a reordering of the data. This would manifest as a bug for <code>geoms</code> where order was important. (<a href="https://github.com/has2k1/plotnine/issues/26" title="Issue: #26">#26</a>)</p></li>
 <li><p>Fix bug where facetting by a column whose name (eg. <code>class</code>) is a python keyword resulted in an exception. (<a href="https://github.com/has2k1/plotnine/issues/28" title="Issue: #28">#28</a>)</p></li>
@@ -957,11 +951,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="v0.2.1">v0.2.1</h2>
 <p><em>(2017-06-22)</em></p>
 <ul>
-<li><p>Fixed bug where manually setting the aesthetic <code>fill=None</code> or <code>fill='None'</code> could lead to a black fill instead of an empty fill.</p></li>
+<li><p>Fixed bug where manually setting the aesthetic <code>fill=None</code> or <code>fill="None"</code> could lead to a black fill instead of an empty fill.</p></li>
 <li><p>Fixed bug where computed aesthetics could not be used in larger statements. (<a href="https://github.com/has2k1/plotnine/issues/7" title="Issue: #7">#7</a>)</p></li>
 <li><p>Fixed bug in <a href="./reference/stat_summary.html#plotnine.stat_summary"><code>stat_summary</code></a> where the you got an exception for some types of the <code>x</code> aesthetic values.</p></li>
 <li><p>Fixed bug where <code class="sourceCode python">ggplot(data<span class="op">=</span>df)</code> resulted in an exception.</p></li>
-<li><p>Fixed missing axis ticks and labels for <a href="./reference/facet_wrap.html#plotnine.facet_wrap"><code>facet_wrap</code></a> when the scales are allowed to vary (e.g <code>scales='free'</code>) between the panels.</p></li>
+<li><p>Fixed missing axis ticks and labels for <a href="./reference/facet_wrap.html#plotnine.facet_wrap"><code>facet_wrap</code></a> when the scales are allowed to vary (e.g <code>scales="free"</code>) between the panels.</p></li>
 <li><p>Fixed bug in <a href="./reference/stat_density.html#plotnine.stat_density"><code>stat_density</code></a> where changing the x limits lead to an exception. (<a href="https://github.com/has2k1/plotnine/issues/22" title="Issue: #22">#22</a>)</p></li>
 </ul>
 </section>
@@ -1069,6 +1063,24 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
   function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
@@ -1103,7 +1115,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
     });
   }
   const xrefs = window.document.querySelectorAll('a.quarto-xref');
@@ -1378,19 +1394,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script>
 </div> <!-- /content -->
-<footer class="footer">
-  <div class="nav-footer">
-    <div class="nav-footer-left">
-<p>Proudly supported by <a href="https://posit.co"><img src="https://www.rstudio.com/assets/img/posit-logo-fullcolor-TM.svg" class="img-fluid" alt="Posit" width="65"></a></p>
-</div>   
-    <div class="nav-footer-center">
-<p>Developed by: Hassan Kibirige, License: <a href="./license.html">MIT</a></p>
-</div>
-    <div class="nav-footer-right">
-      &nbsp;
-    </div>
-  </div>
-</footer>
 
 
 

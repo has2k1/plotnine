@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.550">
+<meta name="generator" content="quarto-1.5.24">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>plotnine 0.13.0</title>
+<title>plotnine {{&lt; var version &gt;}} – guide_legend</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -113,7 +113,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine 0.13.0</span>
+    <span class="navbar-title">plotnine 0.13.1</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -126,33 +126,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a class="nav-link" href="../reference/index.html"> 
 <span class="menu-text">Reference</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../gallery/index.html"> 
-<span class="menu-text">Gallery</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../tutorials/index.html"> 
-<span class="menu-text">Tutorials</span></a>
-  </li>  
-  <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-pages" role="button" data-bs-toggle="dropdown" aria-expanded="false">
- <span class="menu-text">Pages</span>
-    </a>
-    <ul class="dropdown-menu" aria-labelledby="nav-menu-pages">    
-        <li>
-    <a class="dropdown-item" href="../changelog.html">
- <span class="dropdown-text">Changelog</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="../external-resources.html">
- <span class="dropdown-text">External Resources</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="../about.html">
- <span class="dropdown-text">About Plotnine</span></a>
-  </li>  
-    </ul>
-  </li>
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
@@ -162,7 +135,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
-          <div class="quarto-navbar-tools">
+            <div class="quarto-navbar-tools">
 </div>
       </div> <!-- /container-fluid -->
     </nav>
@@ -177,7 +150,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#plotnine.guide_legend" id="toc-plotnine.guide_legend" class="nav-link active" data-scroll-target="#plotnine.guide_legend"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.guide_legend</span></a></li>
-  <li><a href="#parameters" id="toc-parameters" class="nav-link" data-scroll-target="#parameters">Parameters</a></li>
+  <li><a href="#parameter-attributes" id="toc-parameter-attributes" class="nav-link" data-scroll-target="#parameter-attributes">Parameter Attributes</a></li>
   </ul>
 </nav>
     </div>
@@ -192,7 +165,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1 class="title doc-object doc-class doc-has-member-docs"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.guide_legend</span></h1>
 </section>
 </header>
-<div class="doc-signature">
+<div class="doc-signature doc-class">
 <div class="sourceCode" id="cb1"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>guide_legend(</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="va">None</span>,</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    theme<span class="op">=</span>field(default_factory<span class="op">=</span>Theme),</span>
@@ -209,23 +182,51 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="doc-text">
 <p>Legend guide</p>
 </div>
-<section id="parameters" class="level2 doc-parameters">
-<h2 class="doc-parameters anchored" data-anchor-id="parameters">Parameters</h2>
+<section id="parameter-attributes" class="level2 doc-parameter-attributes">
+<h2 class="doc-parameter-attributes anchored" data-anchor-id="parameter-attributes">Parameter Attributes</h2>
 <div class="doc-definition-items">
 <dl>
-<dt><code><span class="doc-parameter-name">nrow</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/typing.html#typing.Optional">Optional</a>[<a href="https://docs.python.org/3/library/functions.html#int">int</a>]</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
+<dt><code>title: <a href="https://docs.python.org/3/library/typing.html#typing.Optional">Optional</a>[<a href="https://docs.python.org/3/library/stdtypes.html#str">str</a>] = None</code></dt>
+<dd>
+<p>Title of the guide. Default is the name of the aesthetic or the name specified using <code>lab</code></p>
+</dd>
+<dt><code>theme: <a href="../reference/theme.html#plotnine.theme">Theme</a> = field(default_factory=<a href="../reference/theme.html#plotnine.theme">Theme</a>)</code></dt>
+<dd>
+<p>A theme to style the guide. If <code>None</code>, the plots theme is used.</p>
+</dd>
+<dt><code>position: <a href="https://docs.python.org/3/library/typing.html#typing.Optional">Optional</a>[<a href="../reference/typing.html#plotnine.typing.LegendPosition">LegendPosition</a>] = None</code></dt>
+<dd>
+<p>Where to place the guide relative to the panels.</p>
+</dd>
+<dt><code>direction: <a href="https://docs.python.org/3/library/typing.html#typing.Optional">Optional</a>[<a href="../reference/typing.html#plotnine.typing.Orientation">Orientation</a>] = None</code></dt>
+<dd>
+<p>Direction of the guide. The default is depends on <a href="../reference/legend_position.html#plotnine.themes.themeable.legend_position"><code>legend_position</code></a>.</p>
+</dd>
+<dt><code>reverse: <a href="https://docs.python.org/3/library/functions.html#bool">bool</a> = False</code></dt>
+<dd>
+<p>bool(x) -&gt; bool</p>
+<p>Returns True when the argument x is true, False otherwise. The builtins True and False are the only two instances of the class bool. The class bool is a subclass of the class int, and cannot be subclassed.</p>
+</dd>
+<dt><code>order: <a href="https://docs.python.org/3/library/functions.html#int">int</a> = 0</code></dt>
+<dd>
+<p>int([x]) -&gt; integer int(x, base=10) -&gt; integer</p>
+<p>Convert a number or string to an integer, or return 0 if no arguments are given. If x is a number, return x.__int__(). For floating point numbers, this truncates towards zero.</p>
+<p>If x is not a number or if base is given, then x must be a string, bytes, or bytearray instance representing an integer literal in the given base. The literal can be preceded by ‘+’ or ‘-’ and be surrounded by whitespace. The base defaults to 10. Valid bases are 0 and 2-36. Base 0 means to interpret the base from the string as an integer literal. &gt;&gt;&gt; int(‘0b100’, base=0) 4</p>
+</dd>
+<dt><code>nrow: <a href="https://docs.python.org/3/library/typing.html#typing.Optional">Optional</a>[<a href="https://docs.python.org/3/library/functions.html#int">int</a>] = None</code></dt>
 <dd>
 <p>Number of rows of legends.</p>
 </dd>
-<dt><code><span class="doc-parameter-name">ncol</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/typing.html#typing.Optional">Optional</a>[<a href="https://docs.python.org/3/library/functions.html#int">int</a>]</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
+<dt><code>ncol: <a href="https://docs.python.org/3/library/typing.html#typing.Optional">Optional</a>[<a href="https://docs.python.org/3/library/functions.html#int">int</a>] = None</code></dt>
 <dd>
 <p>Number of columns of legends.</p>
 </dd>
-<dt><code><span class="doc-parameter-name">byrow</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#bool">bool</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">False</span></code></dt>
+<dt><code>byrow: <a href="https://docs.python.org/3/library/functions.html#bool">bool</a> = False</code></dt>
 <dd>
-<p>Whether to fill the legend row-wise or column-wise.</p>
+<p>bool(x) -&gt; bool</p>
+<p>Returns True when the argument x is true, False otherwise. The builtins True and False are the only two instances of the class bool. The class bool is a subclass of the class int, and cannot be subclassed.</p>
 </dd>
-<dt><code><span class="doc-parameter-name">override_aes</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#dict">dict</a>[<a href="https://docs.python.org/3/library/stdtypes.html#str">str</a>, <a href="https://docs.python.org/3/library/typing.html#typing.Any">Any</a>]</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">field(default_factory=dict)</span></code></dt>
+<dt><code>override_aes: <a href="https://docs.python.org/3/library/stdtypes.html#dict">dict</a>[<a href="https://docs.python.org/3/library/stdtypes.html#str">str</a>, <a href="https://docs.python.org/3/library/typing.html#typing.Any">Any</a>] = field(default_factory=<a href="https://docs.python.org/3/library/stdtypes.html#dict">dict</a>)</code></dt>
 <dd>
 <p>Aesthetic parameters of legend key.</p>
 </dd>
@@ -315,6 +316,24 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
   function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
@@ -349,7 +368,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
     });
   }
   const xrefs = window.document.querySelectorAll('a.quarto-xref');
@@ -624,19 +647,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script>
 </div> <!-- /content -->
-<footer class="footer">
-  <div class="nav-footer">
-    <div class="nav-footer-left">
-<p>Proudly supported by <a href="https://posit.co"><img src="https://www.rstudio.com/assets/img/posit-logo-fullcolor-TM.svg" class="img-fluid" alt="Posit" width="65"></a></p>
-</div>   
-    <div class="nav-footer-center">
-<p>Developed by: Hassan Kibirige, License: <a href="../license.html">MIT</a></p>
-</div>
-    <div class="nav-footer-right">
-      &nbsp;
-    </div>
-  </div>
-</footer>
 
 
 
