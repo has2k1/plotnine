@@ -2888,14 +2888,14 @@
     "href": "changelog.html",
     "title": "Changelog",
     "section": "",
-    "text": "(not-yet-released)\n\n\n\nFixed a bug where a legend with blank title or text could result in a wrong justification.\nFixed a bug where setting legend justification to a string i.e one of left, right, top, bottom, center had no effect."
+    "text": "(2024-03-06)\n\n\n\nFixed a bug where a legend with blank title or text could result in a wrong justification.\nFixed a bug where setting legend justification to a string i.e one of left, right, top, bottom, center had no effect."
   },
   {
     "objectID": "changelog.html#v0.13.1",
     "href": "changelog.html#v0.13.1",
     "title": "Changelog",
     "section": "",
-    "text": "(not-yet-released)\n\n\n\nFixed a bug where a legend with blank title or text could result in a wrong justification.\nFixed a bug where setting legend justification to a string i.e one of left, right, top, bottom, center had no effect."
+    "text": "(2024-03-06)\n\n\n\nFixed a bug where a legend with blank title or text could result in a wrong justification.\nFixed a bug where setting legend justification to a string i.e one of left, right, top, bottom, center had no effect."
   },
   {
     "objectID": "changelog.html#v0.13.0",
