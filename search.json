@@ -1726,7 +1726,7 @@
     "href": "reference/guide_colorbar.html",
     "title": " plotnine.guide_colorbar",
     "section": "",
-    "text": "guide_colorbar(\n    title=None,\n    theme=field(default_factory=Theme),\n    position=None,\n    direction=None,\n    reverse=False,\n    order=0,\n    nbin=None,\n    display=\"gradient\",\n    alpha=None,\n    draw_ulim=True,\n    draw_llim=True\n)"
+    "text": "guide_colorbar(\n    title=None,\n    theme=Theme(),\n    position=None,\n    direction=None,\n    reverse=False,\n    order=0,\n    nbin=None,\n    display=\"gradient\",\n    alpha=None,\n    draw_ulim=True,\n    draw_llim=True\n)"
   },
   {
     "objectID": "reference/guide_colorbar.html#parameter-attributes",
@@ -2153,7 +2153,7 @@
     "href": "reference/geom.html#attributes",
     "title": " plotnine.geoms.geom.geom",
     "section": "Attributes",
-    "text": "Attributes\n\n\n\nName\nDescription\n\n\n\n\nDEFAULT_AES\ndict() -&gt; new empty dictionary\n\n\nDEFAULT_PARAMS\ndict() -&gt; new empty dictionary\n\n\nNON_MISSING_AES\nset() -&gt; new empty set object\n\n\nREQUIRED_AES\nset() -&gt; new empty set object\n\n\naes_params\ndict() -&gt; new empty dictionary\n\n\ndata\nGeom/layer specific dataframe\n\n\nlegend_geom\nstr(object=’’) -&gt; str\n\n\nmapping\nMappings i.e. aes(x=\"col1\", fill=\"col2\")\n\n\n\n\n DEFAULT_AES\n\nDEFAULT_AES = {}\n\n\ndict() -&gt; new empty dictionary dict(mapping) -&gt; new dictionary initialized from a mapping object’s (key, value) pairs dict(iterable) -&gt; new dictionary initialized as if via: d = {} for k, v in iterable: d[k] = v dict(**kwargs) -&gt; new dictionary initialized with the name=value pairs in the keyword argument list. For example: dict(one=1, two=2)\n\n\n\n DEFAULT_PARAMS\n\nDEFAULT_PARAMS = {}\n\n\ndict() -&gt; new empty dictionary dict(mapping) -&gt; new dictionary initialized from a mapping object’s (key, value) pairs dict(iterable) -&gt; new dictionary initialized as if via: d = {} for k, v in iterable: d[k] = v dict(**kwargs) -&gt; new dictionary initialized with the name=value pairs in the keyword argument list. For example: dict(one=1, two=2)\n\n\n\n NON_MISSING_AES\n\nNON_MISSING_AES = set()\n\n\nset() -&gt; new empty set object set(iterable) -&gt; new set object\nBuild an unordered collection of unique elements.\n\n\n\n REQUIRED_AES\n\nREQUIRED_AES = set()\n\n\nset() -&gt; new empty set object set(iterable) -&gt; new set object\nBuild an unordered collection of unique elements.\n\n\n\n aes_params\n\naes_params = copy_keys(kwargs, {}, self.aesthetics())\n\n\ndict() -&gt; new empty dictionary dict(mapping) -&gt; new dictionary initialized from a mapping object’s (key, value) pairs dict(iterable) -&gt; new dictionary initialized as if via: d = {} for k, v in iterable: d[k] = v dict(**kwargs) -&gt; new dictionary initialized with the name=value pairs in the keyword argument list. For example: dict(one=1, two=2)\n\n\n\n data\n\ndata = kwargs[\"data\"]\n\n\nGeom/layer specific dataframe\n\n\n\n legend_geom\n\nlegend_geom = \"point\"\n\n\nstr(object=’’) -&gt; str str(bytes_or_buffer[, encoding[, errors]]) -&gt; str\nCreate a new string object from the given object. If encoding or errors is specified, then the object must expose a data buffer that will be decoded using the given encoding and error handler. Otherwise, returns the result of object.__str__() (if defined) or repr(object). encoding defaults to sys.getdefaultencoding(). errors defaults to ‘strict’.\n\n\n\n mapping\n\nmapping = kwargs[\"mapping\"]\n\n\nMappings i.e. aes(x=\"col1\", fill=\"col2\")"
+    "text": "Attributes\n\n\n\nName\nDescription\n\n\n\n\nDEFAULT_AES\ndict() -&gt; new empty dictionary\n\n\nDEFAULT_PARAMS\ndict() -&gt; new empty dictionary\n\n\nNON_MISSING_AES\nset() -&gt; new empty set object\n\n\nREQUIRED_AES\nset() -&gt; new empty set object\n\n\naes_params\ndict() -&gt; new empty dictionary\n\n\ndata\nGeom/layer specific dataframe\n\n\nlegend_geom\nstr(object=’’) -&gt; str\n\n\nmapping\nMappings i.e. aes(x=\"col1\", fill=\"col2\")\n\n\n\n\n DEFAULT_AES\n\nDEFAULT_AES : dict[str, Any] = {}\n\n\ndict() -&gt; new empty dictionary dict(mapping) -&gt; new dictionary initialized from a mapping object’s (key, value) pairs dict(iterable) -&gt; new dictionary initialized as if via: d = {} for k, v in iterable: d[k] = v dict(**kwargs) -&gt; new dictionary initialized with the name=value pairs in the keyword argument list. For example: dict(one=1, two=2)\n\n\n\n DEFAULT_PARAMS\n\nDEFAULT_PARAMS : dict[str, Any] = {}\n\n\ndict() -&gt; new empty dictionary dict(mapping) -&gt; new dictionary initialized from a mapping object’s (key, value) pairs dict(iterable) -&gt; new dictionary initialized as if via: d = {} for k, v in iterable: d[k] = v dict(**kwargs) -&gt; new dictionary initialized with the name=value pairs in the keyword argument list. For example: dict(one=1, two=2)\n\n\n\n NON_MISSING_AES\n\nNON_MISSING_AES : set[str] = set()\n\n\nset() -&gt; new empty set object set(iterable) -&gt; new set object\nBuild an unordered collection of unique elements.\n\n\n\n REQUIRED_AES\n\nREQUIRED_AES : set[str] = set()\n\n\nset() -&gt; new empty set object set(iterable) -&gt; new set object\nBuild an unordered collection of unique elements.\n\n\n\n aes_params\n\naes_params : dict[str, Any] = copy_keys(kwargs, {}, self.aesthetics())\n\n\ndict() -&gt; new empty dictionary dict(mapping) -&gt; new dictionary initialized from a mapping object’s (key, value) pairs dict(iterable) -&gt; new dictionary initialized as if via: d = {} for k, v in iterable: d[k] = v dict(**kwargs) -&gt; new dictionary initialized with the name=value pairs in the keyword argument list. For example: dict(one=1, two=2)\n\n\n\n data\n\ndata : DataLike = kwargs[\"data\"]\n\n\nGeom/layer specific dataframe\n\n\n\n legend_geom\n\nlegend_geom : str = \"point\"\n\n\nstr(object=’’) -&gt; str str(bytes_or_buffer[, encoding[, errors]]) -&gt; str\nCreate a new string object from the given object. If encoding or errors is specified, then the object must expose a data buffer that will be decoded using the given encoding and error handler. Otherwise, returns the result of object.__str__() (if defined) or repr(object). encoding defaults to sys.getdefaultencoding(). errors defaults to ‘strict’.\n\n\n\n mapping\n\nmapping : aes = kwargs[\"mapping\"]\n\n\nMappings i.e. aes(x=\"col1\", fill=\"col2\")"
   },
   {
     "objectID": "reference/geom.html#methods",
@@ -2167,7 +2167,7 @@
     "href": "reference/figure_format.html",
     "title": " plotnine.options.figure_format",
     "section": "",
-    "text": "figure_format = None\n\n\nThe format for the inline figures outputed by the jupyter kernel.\nIf None, it is the value of\n%config InlineBackend.figure_format\nIf that has not been set, the default is “retina”. You can set it explicitly with:\n%config InlineBackend.figure_format = \"retina\""
+    "text": "figure_format : Optional[FigureFormat] = None\n\n\nThe format for the inline figures outputed by the jupyter kernel.\nIf None, it is the value of\n%config InlineBackend.figure_format\nIf that has not been set, the default is “retina”. You can set it explicitly with:\n%config InlineBackend.figure_format = \"retina\""
   },
   {
     "objectID": "reference/faithful.html",
@@ -2314,14 +2314,14 @@
     "href": "reference/dpi.html",
     "title": " plotnine.options.dpi",
     "section": "",
-    "text": "dpi = 100\n\n\nDefault DPI used by the themes"
+    "text": "dpi : int = 100\n\n\nDefault DPI used by the themes"
   },
   {
     "objectID": "reference/current_theme.html",
     "href": "reference/current_theme.html",
     "title": " plotnine.options.current_theme",
     "section": "",
-    "text": "current_theme = None\n\n\nTheme used when none is added to the ggplot object"
+    "text": "current_theme : Optional[theme | Type[theme]] = None\n\n\nTheme used when none is added to the ggplot object"
   },
   {
     "objectID": "reference/coord_flip.html",
@@ -2384,7 +2384,7 @@
     "href": "reference/base_margin.html",
     "title": " plotnine.options.base_margin",
     "section": "",
-    "text": "base_margin = 0.01\n\n\nA size that is proportional of the figure width and is used by some themes to determine other margins"
+    "text": "base_margin : float = 0.01\n\n\nA size that is proportional of the figure width and is used by some themes to determine other margins"
   },
   {
     "objectID": "reference/axis_title_y.html",
@@ -2888,14 +2888,21 @@
     "href": "changelog.html",
     "title": "Changelog",
     "section": "",
-    "text": "(2024-03-06)\n\n\n\n\nFixed a bug where a legend with blank title or text could result in a wrong justification.\nFixed a bug where setting legend justification to a string i.e one of left, right, top, bottom, center had no effect."
+    "text": "(not-yet-released)\n\n\n\nDrawing the plot ensures that pandas Copy-on-Write is turned off. Plotnine is not yet compatible with Copy-on-Write so this prevents errors for users who have turned on the option."
+  },
+  {
+    "objectID": "changelog.html#v0.13.2",
+    "href": "changelog.html#v0.13.2",
+    "title": "Changelog",
+    "section": "",
+    "text": "(not-yet-released)\n\n\n\nDrawing the plot ensures that pandas Copy-on-Write is turned off. Plotnine is not yet compatible with Copy-on-Write so this prevents errors for users who have turned on the option."
   },
   {
     "objectID": "changelog.html#v0.13.1",
     "href": "changelog.html#v0.13.1",
     "title": "Changelog",
-    "section": "",
-    "text": "(2024-03-06)\n\n\n\n\nFixed a bug where a legend with blank title or text could result in a wrong justification.\nFixed a bug where setting legend justification to a string i.e one of left, right, top, bottom, center had no effect."
+    "section": "v0.13.1",
+    "text": "v0.13.1\n(2024-03-06)\n\n\nBug Fixes\n\nFixed a bug where a legend with blank title or text could result in a wrong justification.\nFixed a bug where setting legend justification to a string i.e one of left, right, top, bottom, center had no effect."
   },
   {
     "objectID": "changelog.html#v0.13.0",
@@ -3112,7 +3119,7 @@
     "href": "reference/aspect_ratio.html",
     "title": " plotnine.options.aspect_ratio",
     "section": "",
-    "text": "aspect_ratio = \"auto\"\n\n\nDefault aspect ratio used by the themes"
+    "text": "aspect_ratio : Literal[\"auto\"] | float = \"auto\"\n\n\nDefault aspect ratio used by the themes"
   },
   {
     "objectID": "reference/axis_line_x.html",
@@ -3385,7 +3392,7 @@
     "href": "reference/base_family.html",
     "title": " plotnine.options.base_family",
     "section": "",
-    "text": "base_family = \"sans-serif\"\n\n\nThe base font family for all text that is part of the theme. Default is sans-serif and one is choosen automatically from rcParams[“font.san-serif”]"
+    "text": "base_family : str = \"sans-serif\"\n\n\nThe base font family for all text that is part of the theme. Default is sans-serif and one is choosen automatically from rcParams[“font.san-serif”]"
   },
   {
     "objectID": "reference/close_all_figures.html",
@@ -3602,7 +3609,7 @@
     "href": "reference/figure_size.html",
     "title": " plotnine.options.figure_size",
     "section": "",
-    "text": "figure_size = (640 / dpi, 480 / dpi)\n\n\nDefault figure size inches"
+    "text": "figure_size : tuple[float, float] = (640 / dpi, 480 / dpi)\n\n\nDefault figure size inches"
   },
   {
     "objectID": "reference/geom_abline.html",
@@ -4001,7 +4008,7 @@
     "href": "reference/guide.html",
     "title": " plotnine.guides.guide.guide",
     "section": "",
-    "text": "guide(\n    title=None,\n    theme=field(default_factory=Theme),\n    position=None,\n    direction=None,\n    reverse=False,\n    order=0\n)"
+    "text": "guide(\n    title=None,\n    theme=Theme(),\n    position=None,\n    direction=None,\n    reverse=False,\n    order=0\n)"
   },
   {
     "objectID": "reference/guide.html#parameter-attributes",
@@ -4029,7 +4036,7 @@
     "href": "reference/guide_legend.html",
     "title": " plotnine.guide_legend",
     "section": "",
-    "text": "guide_legend(\n    title=None,\n    theme=field(default_factory=Theme),\n    position=None,\n    direction=None,\n    reverse=False,\n    order=0,\n    nrow=None,\n    ncol=None,\n    byrow=False,\n    override_aes=field(default_factory=dict)\n)"
+    "text": "guide_legend(\n    title=None,\n    theme=Theme(),\n    position=None,\n    direction=None,\n    reverse=False,\n    order=0,\n    nrow=None,\n    ncol=None,\n    byrow=False,\n    override_aes=dict()\n)"
   },
   {
     "objectID": "reference/guide_legend.html#parameter-attributes",
@@ -5226,7 +5233,7 @@
     "href": "reference/stat.html#attributes",
     "title": " plotnine.stats.stat.stat",
     "section": "Attributes",
-    "text": "Attributes\n\n\n\nName\nDescription\n\n\n\n\nCREATES\nset() -&gt; new empty set object\n\n\nDEFAULT_AES\ndict() -&gt; new empty dictionary\n\n\nDEFAULT_PARAMS\ndict() -&gt; new empty dictionary\n\n\nNON_MISSING_AES\nset() -&gt; new empty set object\n\n\nREQUIRED_AES\nset() -&gt; new empty set object\n\n\n\n\n CREATES\n\nCREATES = set()\n\n\nset() -&gt; new empty set object set(iterable) -&gt; new set object\nBuild an unordered collection of unique elements.\n\n\n\n DEFAULT_AES\n\nDEFAULT_AES = aes(**self.DEFAULT_AES)\n\n\ndict() -&gt; new empty dictionary dict(mapping) -&gt; new dictionary initialized from a mapping object’s (key, value) pairs dict(iterable) -&gt; new dictionary initialized as if via: d = {} for k, v in iterable: d[k] = v dict(**kwargs) -&gt; new dictionary initialized with the name=value pairs in the keyword argument list. For example: dict(one=1, two=2)\n\n\n\n DEFAULT_PARAMS\n\nDEFAULT_PARAMS = {}\n\n\ndict() -&gt; new empty dictionary dict(mapping) -&gt; new dictionary initialized from a mapping object’s (key, value) pairs dict(iterable) -&gt; new dictionary initialized as if via: d = {} for k, v in iterable: d[k] = v dict(**kwargs) -&gt; new dictionary initialized with the name=value pairs in the keyword argument list. For example: dict(one=1, two=2)\n\n\n\n NON_MISSING_AES\n\nNON_MISSING_AES = set()\n\n\nset() -&gt; new empty set object set(iterable) -&gt; new set object\nBuild an unordered collection of unique elements.\n\n\n\n REQUIRED_AES\n\nREQUIRED_AES = set()\n\n\nset() -&gt; new empty set object set(iterable) -&gt; new set object\nBuild an unordered collection of unique elements."
+    "text": "Attributes\n\n\n\nName\nDescription\n\n\n\n\nCREATES\nset() -&gt; new empty set object\n\n\nDEFAULT_AES\ndict() -&gt; new empty dictionary\n\n\nDEFAULT_PARAMS\ndict() -&gt; new empty dictionary\n\n\nNON_MISSING_AES\nset() -&gt; new empty set object\n\n\nREQUIRED_AES\nset() -&gt; new empty set object\n\n\n\n\n CREATES\n\nCREATES : set[str] = set()\n\n\nset() -&gt; new empty set object set(iterable) -&gt; new set object\nBuild an unordered collection of unique elements.\n\n\n\n DEFAULT_AES\n\nDEFAULT_AES : dict[str, Any] = aes(**self.DEFAULT_AES)\n\n\ndict() -&gt; new empty dictionary dict(mapping) -&gt; new dictionary initialized from a mapping object’s (key, value) pairs dict(iterable) -&gt; new dictionary initialized as if via: d = {} for k, v in iterable: d[k] = v dict(**kwargs) -&gt; new dictionary initialized with the name=value pairs in the keyword argument list. For example: dict(one=1, two=2)\n\n\n\n DEFAULT_PARAMS\n\nDEFAULT_PARAMS : dict[str, Any] = {}\n\n\ndict() -&gt; new empty dictionary dict(mapping) -&gt; new dictionary initialized from a mapping object’s (key, value) pairs dict(iterable) -&gt; new dictionary initialized as if via: d = {} for k, v in iterable: d[k] = v dict(**kwargs) -&gt; new dictionary initialized with the name=value pairs in the keyword argument list. For example: dict(one=1, two=2)\n\n\n\n NON_MISSING_AES\n\nNON_MISSING_AES : set[str] = set()\n\n\nset() -&gt; new empty set object set(iterable) -&gt; new set object\nBuild an unordered collection of unique elements.\n\n\n\n REQUIRED_AES\n\nREQUIRED_AES : set[str] = set()\n\n\nset() -&gt; new empty set object set(iterable) -&gt; new set object\nBuild an unordered collection of unique elements."
   },
   {
     "objectID": "reference/stat.html#methods",
@@ -5674,7 +5681,7 @@
     "href": "reference/themeable.html#attributes",
     "title": " plotnine.themes.themeable.themeable",
     "section": "Attributes",
-    "text": "Attributes\n\n\n\nName\nDescription\n\n\n\n\nproperties\nReturn only the properties that can be applied\n\n\nrcParams\nReturn themeables rcparams to an rcparam dict before plotting.\n\n\n\n\n properties \n\nproperties\n\n\nReturn only the properties that can be applied\n\n\n\n rcParams \n\nrcParams\n\n\nReturn themeables rcparams to an rcparam dict before plotting.\n\n\nReturns\n\n\ndict\n\nDictionary of legal matplotlib parameters.\n\nThis method should always call super(…).rcParams and\n\n\n\nupdate the dictionary that it returns with its own value, and\n\n\n\nreturn that dictionary.\n\n\n\nThis method is called before plotting. It tends to be more\n\n\n\nuseful for general themeables. Very specific themeables\n\n\n\noften cannot be be themed until they are created as a\n\n\n\nresult of the plotting process."
+    "text": "Attributes\n\n\n\nName\nDescription\n\n\n\n\nproperties\nReturn only the properties that can be applied\n\n\nrcParams\nReturn themeables rcparams to an rcparam dict before plotting.\n\n\n\n\n properties \n\nproperties\n\n\nReturn only the properties that can be applied\n\n\n\n rcParams \n\nrcParams : dict[str, Any]\n\n\nReturn themeables rcparams to an rcparam dict before plotting.\n\n\nReturns\n\n\ndict\n\nDictionary of legal matplotlib parameters.\n\nThis method should always call super(…).rcParams and\n\n\n\nupdate the dictionary that it returns with its own value, and\n\n\n\nreturn that dictionary.\n\n\n\nThis method is called before plotting. It tends to be more\n\n\n\nuseful for general themeables. Very specific themeables\n\n\n\noften cannot be be themed until they are created as a\n\n\n\nresult of the plotting process."
   },
   {
     "objectID": "reference/themeable.html#methods",
