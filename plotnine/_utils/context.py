@@ -39,7 +39,10 @@ class plot_context:
         # from slices we do not want complaints. We always uses the
         # new frames knowing that they are separate from the original.
         self.pd_option_context = pd.option_context(
-            "mode.chained_assignment", None
+            "mode.chained_assignment",
+            None,
+            "mode.copy_on_write",
+            False,
         )
         self.rc_context.__enter__()
         self.pd_option_context.__enter__()

@@ -2,6 +2,15 @@
 title: Changelog
 ---
 
+## v0.13.2
+(not-yet-released)
+
+### Enhancements
+
+- Drawing the plot ensures that pandas Copy-on-Write is turned off. Plotnine
+  is not yet compatible with Copy-on-Write so this prevents errors for users
+  who have turned on the option.
+
 ## v0.13.1
 (2024-03-06)
 
