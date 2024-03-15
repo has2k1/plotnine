@@ -5,6 +5,8 @@ title: Changelog
 ## v0.13.2
 (2024-03-14)
 
+[![](https://zenodo.org/badge/DOI/10.5281/zenodo.10820452.svg)](https://doi.org/10.5281/zenodo.10820452)
+
 ### Enhancements
 
 - Drawing the plot ensures that pandas Copy-on-Write is turned off. Plotnine
