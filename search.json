@@ -2888,14 +2888,21 @@
     "href": "changelog.html",
     "title": "Changelog",
     "section": "",
-    "text": "(2024-03-14)\n\n\n\n\nDrawing the plot ensures that pandas Copy-on-Write is turned off. Plotnine is not yet compatible with Copy-on-Write so this prevents errors for users who have turned on the option."
+    "text": "(not-yet-released)\n\n\n\nFixed layout manager to make space for the strip_text when there is no strip_background. #760"
+  },
+  {
+    "objectID": "changelog.html#v0.13.3",
+    "href": "changelog.html#v0.13.3",
+    "title": "Changelog",
+    "section": "",
+    "text": "(not-yet-released)\n\n\n\nFixed layout manager to make space for the strip_text when there is no strip_background. #760"
   },
   {
     "objectID": "changelog.html#v0.13.2",
     "href": "changelog.html#v0.13.2",
     "title": "Changelog",
-    "section": "",
-    "text": "(2024-03-14)\n\n\n\n\nDrawing the plot ensures that pandas Copy-on-Write is turned off. Plotnine is not yet compatible with Copy-on-Write so this prevents errors for users who have turned on the option."
+    "section": "v0.13.2",
+    "text": "v0.13.2\n(2024-03-14)\n\n\nEnhancements\n\nDrawing the plot ensures that pandas Copy-on-Write is turned off. Plotnine is not yet compatible with Copy-on-Write so this prevents errors for users who have turned on the option."
   },
   {
     "objectID": "changelog.html#v0.13.1",
