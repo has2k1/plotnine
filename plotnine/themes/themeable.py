@@ -30,7 +30,6 @@ if TYPE_CHECKING:
     from matplotlib.artist import Artist
     from matplotlib.axes import Axes
     from matplotlib.figure import Figure
-    from matplotlib.patches import Patch
 
     from plotnine import theme
     from plotnine.themes.targets import ThemeTargets
@@ -426,16 +425,6 @@ class Themeables(dict[str, themeable]):
         return False
 
 
-def _blankout_rect(rect: Patch):
-    """
-    Make rect invisible
-    """
-    # set_visible(False) does not clear the attributes
-    rect.set_edgecolor("none")
-    rect.set_facecolor("none")
-    rect.set_linewidth(0)
-
-
 class MixinSequenceOfValues(themeable):
     """
     Make themeable also accept a sequence to values
@@ -725,19 +714,11 @@ class strip_text_x(MixinSequenceOfValues):
         if texts := targets.strip_text_x:
             self.set(texts)
 
-        if rects := targets.strip_background_x:
-            for rect in rects:
-                rect.set_visible(True)
-
     def blank_figure(self, figure: Figure, targets: ThemeTargets):
         super().blank_figure(figure, targets)
         if texts := targets.strip_text_x:
             for text in texts:
                 text.set_visible(False)
-
-        if rects := targets.strip_background_x:
-            for rect in rects:
-                rect.set_visible(False)
 
 
 class strip_text_y(MixinSequenceOfValues):
@@ -756,19 +737,11 @@ class strip_text_y(MixinSequenceOfValues):
         if texts := targets.strip_text_y:
             self.set(texts)
 
-        if rects := targets.strip_background_y:
-            for rect in rects:
-                rect.set_visible(True)
-
     def blank_figure(self, figure: Figure, targets: ThemeTargets):
         super().blank_figure(figure, targets)
         if texts := targets.strip_text_y:
             for text in texts:
                 text.set_visible(False)
-
-        if rects := targets.strip_background_y:
-            for rect in rects:
-                rect.set_visible(False)
 
 
 class strip_text(strip_text_x, strip_text_y):
@@ -1324,7 +1297,7 @@ class legend_key(MixinSequenceOfValues):
     def blank_figure(self, figure: Figure, targets: ThemeTargets):
         super().blank_figure(figure, targets)
         for da in targets.legend_key:
-            _blankout_rect(da.patch)
+            da.patch.set_visible(False)
 
 
 class legend_frame(themeable):
@@ -1346,7 +1319,7 @@ class legend_frame(themeable):
     def blank_figure(self, figure: Figure, targets: ThemeTargets):
         super().blank_figure(figure, targets)
         if rect := targets.legend_frame:
-            _blankout_rect(rect)
+            rect.set_visible(False)
 
 
 class legend_background(themeable):
@@ -1380,7 +1353,7 @@ class legend_background(themeable):
         super().blank_figure(figure, targets)
         if legends := targets.legends:
             for aob in legends.boxes:
-                _blankout_rect(aob.patch)
+                aob.patch.set_visible(False)
 
 
 class legend_box_background(themeable):
@@ -1421,7 +1394,7 @@ class panel_background(themeable):
 
     def blank_ax(self, ax: Axes):
         super().blank_ax(ax)
-        _blankout_rect(ax.patch)
+        ax.patch.set_visible(False)
 
 
 class panel_border(MixinSequenceOfValues):
@@ -1455,7 +1428,7 @@ class panel_border(MixinSequenceOfValues):
     def blank_figure(self, figure: Figure, targets: ThemeTargets):
         super().blank_figure(figure, targets)
         for rect in targets.panel_border:
-            _blankout_rect(rect)
+            rect.set_visible(False)
 
 
 class plot_background(themeable):
@@ -1473,7 +1446,7 @@ class plot_background(themeable):
 
     def blank_figure(self, figure: Figure, targets: ThemeTargets):
         super().blank_figure(figure, targets)
-        _blankout_rect(figure.patch)
+        figure.patch.set_visible(False)
 
 
 class strip_background_x(MixinSequenceOfValues):
@@ -1493,7 +1466,7 @@ class strip_background_x(MixinSequenceOfValues):
     def blank_figure(self, figure: Figure, targets: ThemeTargets):
         super().blank_figure(figure, targets)
         for rect in targets.strip_background_x:
-            _blankout_rect(rect)
+            rect.set_visible(False)
 
 
 class strip_background_y(MixinSequenceOfValues):
@@ -1513,7 +1486,7 @@ class strip_background_y(MixinSequenceOfValues):
     def blank_figure(self, figure: Figure, targets: ThemeTargets):
         super().blank_figure(figure, targets)
         for rect in targets.strip_background_y:
-            _blankout_rect(rect)
+            rect.set_visible(False)
 
 
 class strip_background(strip_background_x, strip_background_y):

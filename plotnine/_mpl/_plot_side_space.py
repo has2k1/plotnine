@@ -592,20 +592,30 @@ def get_top_strip_height(pack: LayoutPack) -> float:
     """
     Height taken up by the top strips
     """
-    if not pack.strip_background_x:
+    if not pack.strip_text_x:
         return 0
-    patches = [p for p in pack.strip_background_x if p.position == "top"]
-    return max_height(pack, patches)
+
+    artists = [
+        st.patch if st.patch.get_visible() else st
+        for st in pack.strip_text_x
+        if st.patch.position == "top"
+    ]
+    return max_height(pack, artists)
 
 
 def get_right_strip_width(pack: LayoutPack) -> float:
     """
     Width taken up by the right strips
     """
-    if not pack.strip_background_y:
+    if not pack.strip_text_y:
         return 0
-    patches = [p for p in pack.strip_background_y if p.position == "right"]
-    return max_width(pack, patches)
+
+    artists = [
+        st.patch if st.patch.get_visible() else st
+        for st in pack.strip_text_y
+        if st.patch.position == "right"
+    ]
+    return max_width(pack, artists)
 
 
 def get_xaxis_ticks(pack: LayoutPack, ax: Axes) -> Iterator[Tick]:

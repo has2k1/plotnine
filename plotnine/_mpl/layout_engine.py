@@ -14,7 +14,7 @@ if typing.TYPE_CHECKING:
     from matplotlib.figure import Figure
 
     from plotnine import ggplot, theme
-    from plotnine._mpl.patches import StripTextPatch
+    from plotnine._mpl.text import StripText
     from plotnine.facets.facet import facet
     from plotnine.iapi import legend_artists
 
@@ -38,8 +38,8 @@ class LayoutPack:
     plot_caption: Optional[Text] = None
     plot_subtitle: Optional[Text] = None
     plot_title: Optional[Text] = None
-    strip_background_x: Optional[list[StripTextPatch]] = None
-    strip_background_y: Optional[list[StripTextPatch]] = None
+    strip_text_x: Optional[list[StripText]] = None
+    strip_text_y: Optional[list[StripText]] = None
 
 
 class PlotnineLayoutEngine(LayoutEngine):
@@ -105,6 +105,6 @@ class PlotnineLayoutEngine(LayoutEngine):
             plot_caption=get_target("plot_caption"),
             plot_subtitle=get_target("plot_subtitle"),
             plot_title=get_target("plot_title"),
-            strip_background_x=get_target("strip_background_x"),
-            strip_background_y=get_target("strip_background_y"),
+            strip_text_x=get_target("strip_text_x"),
+            strip_text_y=get_target("strip_text_y"),
         )

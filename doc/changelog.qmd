@@ -2,6 +2,14 @@
 title: Changelog
 ---
 
+## v0.13.3
+(not-yet-released)
+
+### Bug Fixes
+
+- Fixed layout manager to make space for the `strip_text` when there is no
+  `strip_background`. {{< issue 760 >}}
+
 ## v0.13.2
 (2024-03-14)
 

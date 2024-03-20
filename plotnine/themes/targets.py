@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 
     from plotnine._mpl.offsetbox import ColoredDrawingArea
     from plotnine._mpl.patches import StripTextPatch
-    from plotnine._mpl.text import SText
+    from plotnine._mpl.text import StripText
     from plotnine.iapi import legend_artists
 
 
@@ -40,5 +40,5 @@ class ThemeTargets:
     plot_title: Optional[Text] = None
     strip_background_x: list[StripTextPatch] = field(default_factory=list)
     strip_background_y: list[StripTextPatch] = field(default_factory=list)
-    strip_text_x: list[SText] = field(default_factory=list)
-    strip_text_y: list[SText] = field(default_factory=list)
+    strip_text_x: list[StripText] = field(default_factory=list)
+    strip_text_y: list[StripText] = field(default_factory=list)
