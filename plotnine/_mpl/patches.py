@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 
     from plotnine.typing import StripPosition
 
-    from .text import SText
+    from .text import StripText
 
 
 # We subclass because we want to learn the size and location
@@ -27,11 +27,11 @@ class StripTextPatch(FancyBboxPatch):
     """
 
     # The text artists that is wrapped by this box
-    text: SText
+    text: StripText
     position: StripPosition
     _update = False
 
-    def __init__(self, text: SText):
+    def __init__(self, text: StripText):
         boxstyle = f"square, pad={text.draw_info.strip_text_margin}"
 
         super().__init__(

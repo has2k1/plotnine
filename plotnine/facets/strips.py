@@ -127,13 +127,13 @@ class strip:
         Create a background patch and put a label on it
         """
 
-        from .._mpl.text import SText
+        from .._mpl.text import StripText
 
         targets = self.theme.targets
         draw_info = self.get_draw_info()
 
-        text = SText(draw_info)
-        rect = text.spatch
+        text = StripText(draw_info)
+        rect = text.patch
 
         self.figure.add_artist(text)
 

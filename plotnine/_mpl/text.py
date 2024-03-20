@@ -13,13 +13,13 @@ if typing.TYPE_CHECKING:
     from plotnine.iapi import strip_draw_info
 
 
-class SText(Text):
+class StripText(Text):
     """
     Strip Text
     """
 
     draw_info: strip_draw_info
-    spatch: StripTextPatch
+    patch: StripTextPatch
 
     def __init__(self, info: strip_draw_info):
         kwargs = {
@@ -38,15 +38,18 @@ class SText(Text):
             **kwargs,
         )
         self.draw_info = info
-        self.spatch = StripTextPatch(self)
+        self.patch = StripTextPatch(self)
 
     def draw(self, renderer: RendererBase):
+        if not self.get_visible():
+            return
+
         info = self.draw_info
         # "fill up" spatch to contain the text
-        self.spatch.update_position_size(renderer)
+        self.patch.update_position_size(renderer)
 
         # Get bbox of spatch in transAxes space
-        patch_bbox = bbox_in_axes_space(self.spatch, info.ax, renderer)
+        patch_bbox = bbox_in_axes_space(self.patch, info.ax, renderer)
 
         # Align patch across the edge of the panel
         if info.position == "top":
@@ -56,9 +59,9 @@ class SText(Text):
             l, b, w, h = info.x, info.y, patch_bbox.width, info.box_height
             l = l + patch_bbox.width * info.strip_align
 
-        self.spatch.set_bounds(l, b, w, h)
-        self.spatch.set_transform(info.ax.transAxes)
-        self.spatch.set_mutation_scale(0)
+        self.patch.set_bounds(l, b, w, h)
+        self.patch.set_transform(info.ax.transAxes)
+        self.patch.set_mutation_scale(0)
 
         # Put text in center of patch
         self._x = l + w / 2
@@ -71,5 +74,5 @@ class SText(Text):
         self.set_verticalalignment("center_baseline")  # top-strip
 
         # Draw spatch
-        self.spatch.draw(renderer)
+        self.patch.draw(renderer)
         return super().draw(renderer)
