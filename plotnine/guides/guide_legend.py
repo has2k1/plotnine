@@ -12,7 +12,7 @@ from warnings import warn
 import numpy as np
 import pandas as pd
 
-from .._utils import get_opposite_side, remove_missing
+from .._utils import remove_missing
 from ..exceptions import PlotnineError, PlotnineWarning
 from ..mapping.aes import rename_aesthetics
 from .guide import GuideElements, guide
@@ -355,18 +355,15 @@ class GuideElementsLegend(GuideElements):
         size = self.theme.getp(("legend_text_legend", "size"))
         ha = self.theme.getp(("legend_text_legend", "ha"), "center")
         va = self.theme.getp(("legend_text_legend", "va"), "center")
-        _margin = self.theme.getp(("legend_text_legend", "margin"))
-        _loc = get_opposite_side(self.text_position)[0]
-        margin = _margin.get_as(_loc, "pt")
         is_blank = self.theme.T.is_blank("legend_text_legend")
 
         # The original ha & va values are used by the HPacker/VPacker
         # to align the TextArea with the DrawingArea.
         # We set ha & va to values that combine best with the aligning
         # for the text area.
-        align = va if self.text_position in ("left", "right") else ha
+        align = va if self.text_position in {"left", "right"} else ha
         return NS(
-            margin=margin,
+            margin=self._text_margin,
             align=align,
             fontsize=size,
             ha="center",
@@ -375,12 +372,18 @@ class GuideElementsLegend(GuideElements):
         )
 
     @cached_property
-    def key_spacing_x(self) -> int:
-        return self.theme.getp("legend_key_spacing_x")
+    def text_position(self) -> SidePosition:
+        if not (pos := self.theme.getp("legend_text_position")):
+            pos = "right"
+        return pos
 
     @cached_property
-    def key_spacing_y(self) -> int:
-        return self.theme.getp("legend_key_spacing_y")
+    def key_spacing_x(self) -> float:
+        return self.theme.getp("legend_key_spacing_x", 0)
+
+    @cached_property
+    def key_spacing_y(self) -> float:
+        return self.theme.getp("legend_key_spacing_y", 0)
 
     @cached_property
     def _key_dimensions(self) -> list[TupleFloat2]:

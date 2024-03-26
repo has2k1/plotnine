@@ -40,7 +40,6 @@ class theme_gray(theme):
                 size=base_size,
                 linespacing=0.9,
                 rotation=0,
-                margin={},
             ),
             aspect_ratio=get_option("aspect_ratio"),
             axis_line=element_line(),
@@ -73,9 +72,9 @@ class theme_gray(theme):
             legend_background=element_rect(color="none"),
             legend_box_margin=0,  # points
             legend_box_spacing=m * 3,  # figure units
-            legend_key_spacing_x=2,
-            legend_key_spacing_y=2,
             legend_frame=element_blank(),
+            legend_key_spacing_x=6,
+            legend_key_spacing_y=2,
             legend_key=element_rect(fill="#F2F2F2", colour="none"),
             legend_key_size=base_size * 0.8 * 1.8,
             legend_ticks_length=0.2,
