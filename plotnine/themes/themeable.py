@@ -482,7 +482,11 @@ class axis_title_x(themeable):
     def apply_figure(self, figure: Figure, targets: ThemeTargets):
         super().apply_figure(figure, targets)
         if text := targets.axis_title_x:
-            text.set(**self.properties)
+            props = self.properties
+            # ha can be a float and is handled by the layout manager
+            with suppress(KeyError):
+                del props["ha"]
+            text.set(**props)
 
     def blank_figure(self, figure: Figure, targets: ThemeTargets):
         super().blank_figure(figure, targets)
@@ -504,7 +508,11 @@ class axis_title_y(themeable):
     def apply_figure(self, figure: Figure, targets: ThemeTargets):
         super().apply_figure(figure, targets)
         if text := targets.axis_title_y:
-            text.set(**self.properties)
+            props = self.properties
+            # va can be a float and is handled by the layout manager
+            with suppress(KeyError):
+                del props["va"]
+            text.set(**props)
 
     def blank_figure(self, figure: Figure, targets: ThemeTargets):
         super().blank_figure(figure, targets)
@@ -639,7 +647,11 @@ class plot_title(themeable):
     def apply_figure(self, figure: Figure, targets: ThemeTargets):
         super().apply_figure(figure, targets)
         if text := targets.plot_title:
-            text.set(**self.properties)
+            props = self.properties
+            # ha can be a float and is handled by the layout manager
+            with suppress(KeyError):
+                del props["ha"]
+            text.set(**props)
 
     def blank_figure(self, figure: Figure, targets: ThemeTargets):
         super().blank_figure(figure, targets)

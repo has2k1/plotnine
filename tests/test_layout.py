@@ -52,6 +52,18 @@ class TestLayout:
     def test_default(self):
         assert self.g == "default"
 
+    def test_axis_title_x_justification(self):
+        p = self.g + theme(axis_title_x=element_text(ha=0.2))
+        assert p == "axis_title_x_justification"
+
+    def test_axis_title_y_justification(self):
+        p = self.g + theme(axis_title_y=element_text(va=0.8))
+        assert p == "axis_title_y_justification"
+
+    def test_plot_title_justification(self):
+        p = self.g + theme(plot_title=element_text(ha=1))
+        assert p == "plot_title_justification"
+
     def test_legend_on_top(self):
         p = self.g + theme(legend_position="top")
         assert p == "legend_at_top"
