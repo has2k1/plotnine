@@ -16,7 +16,7 @@ from copy import deepcopy
 from dataclasses import dataclass
 
 from ._plot_side_space import LRTBSpaces, WHSpaceParts, calculate_panel_spacing
-from .utils import get_transPanels
+from .utils import bbox_in_figure_space, get_transPanels
 
 if typing.TYPE_CHECKING:
     from typing import Literal, TypeAlias
@@ -159,62 +159,82 @@ def set_figure_artist_positions(
     if pack.plot_title:
         ha = theme.getp(("plot_title", "ha"))
         pack.plot_title.set_y(sides.t.edge("plot_title"))
-        horizonally_align_text_with_panels(pack.plot_title, params, ha)
+        horizonally_align_text_with_panels(pack.plot_title, params, ha, pack)
 
     if pack.plot_subtitle:
         ha = theme.getp(("plot_subtitle", "ha"))
         pack.plot_subtitle.set_y(sides.t.edge("plot_subtitle"))
-        horizonally_align_text_with_panels(pack.plot_subtitle, params, ha)
+        horizonally_align_text_with_panels(
+            pack.plot_subtitle, params, ha, pack
+        )
 
     if pack.plot_caption:
         ha = theme.getp(("plot_caption", "ha"), "right")
         pack.plot_caption.set_y(sides.b.edge("plot_caption"))
-        horizonally_align_text_with_panels(pack.plot_caption, params, ha)
+        horizonally_align_text_with_panels(pack.plot_caption, params, ha, pack)
 
     if pack.axis_title_x:
         ha = theme.getp(("axis_title_x", "ha"), "center")
         pack.axis_title_x.set_y(sides.b.edge("axis_title_x"))
-        horizonally_align_text_with_panels(pack.axis_title_x, params, ha)
+        horizonally_align_text_with_panels(pack.axis_title_x, params, ha, pack)
 
     if pack.axis_title_y:
         va = theme.getp(("axis_title_y", "va"), "center")
         pack.axis_title_y.set_x(sides.l.edge("axis_title_y"))
-        vertically_align_text_with_panels(pack.axis_title_y, params, va)
+        vertically_align_text_with_panels(pack.axis_title_y, params, va, pack)
 
     if pack.legends:
         set_legends_position(pack.legends, tparams, pack.figure)
 
 
 def horizonally_align_text_with_panels(
-    text: Text, params: GridSpecParams, ha: str
+    text: Text, params: GridSpecParams, ha: str | float, pack: LayoutPack
 ):
     """
     Horizontal justification
 
     Reinterpret horizontal alignment to be justification about the panels.
     """
-    if ha == "center":
-        text.set_x((params.left + params.right) / 2)
-    elif ha == "left":
-        text.set_x(params.left)
-    elif ha == "right":
-        text.set_x(params.right)
+    if isinstance(ha, str):
+        lookup = {
+            "left": 0.0,
+            "center": 0.5,
+            "right": 1.0,
+        }
+        f = lookup[ha]
+    else:
+        f = ha
+
+    box = bbox_in_figure_space(text, pack.figure, pack.renderer)
+    x = params.left * (1 - f) + (params.right - box.width) * f
+    text.set_x(x)
+    text.set_horizontalalignment("left")
 
 
 def vertically_align_text_with_panels(
-    text: Text, params: GridSpecParams, va: str
+    text: Text, params: GridSpecParams, va: str | float, pack: LayoutPack
 ):
     """
     Vertical justification
 
     Reinterpret vertical alignment to be justification about the panels.
     """
-    if va == "center":
-        text.set_y((params.top + params.bottom) / 2)
-    elif va == "top":
-        text.set_y(params.top)
-    elif va == "bottom":
-        text.set_y(params.bottom)
+    if isinstance(va, str):
+        lookup = {
+            "top": 1.0,
+            "center": 0.5,
+            "baseline": 0.5,
+            "center_baseline": 0.5,
+            "bottom": 0.0,
+        }
+        f = lookup[va]
+    else:
+        f = va
+
+    box = bbox_in_figure_space(text, pack.figure, pack.renderer)
+    y = params.bottom * (1 - f) + (params.top - box.height) * f
+    text.set_y(y)
+    text.set_verticalalignment("bottom")
 
 
 def set_legends_position(

@@ -74,8 +74,11 @@ class element_text(element_base):
             | Sequence[str | TupleFloat3 | TupleFloat4]
         ] = None,
         size: Optional[float | Sequence[float]] = None,
-        ha: Optional[Literal["center", "left", "right"]] = None,
-        va: Optional[Literal["center", "top", "bottom", "baseline"]] = None,
+        ha: Optional[Literal["center", "left", "right"] | float] = None,
+        va: Optional[
+            Literal["center", "top", "bottom", "baseline", "center_baseline"]
+            | float
+        ] = None,
         rotation: Optional[
             Literal["vertical", "horizontal"]
             | float

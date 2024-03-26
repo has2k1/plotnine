@@ -12,7 +12,11 @@ title: Changelog
 
 - Made the default position of `guide_legend` text to be right. {{< issue 761 >}}
 
+- Fixed aligning (`ha` & `va`) of `plot_title`, `plot_subtitle`, `plot_caption`,
+  `axis_title_x`, `axis_title_y` to work with float values in the range `[0, 1]`.
+
 ## v0.13.2
+
 (2024-03-14)
 
 [![](https://zenodo.org/badge/DOI/10.5281/zenodo.10820452.svg)](https://doi.org/10.5281/zenodo.10820452)
