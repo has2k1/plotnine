@@ -473,26 +473,45 @@ class GuideElementsColorbar(GuideElements):
         size = self.theme.getp(("legend_text_colorbar", "size"))
         ha = self.theme.getp(("legend_text_colorbar", "ha"))
         va = self.theme.getp(("legend_text_colorbar", "va"))
-        _margin = self.theme.getp(("legend_text_colorbar", "margin"))
-        align_edge = get_opposite_side(self.text_position)
-        margin = _margin.get_as(align_edge[0], "pt")
         is_blank = self.theme.T.is_blank("legend_text_colorbar")
 
+        # Default text alignment depends on the direction of the
+        # colorbar
+        _loc = get_opposite_side(self.text_position)
         if self.is_vertical:
-            ha = ha or align_edge
+            ha = ha or _loc
             va = va or "center"
         else:
-            va = va or align_edge
+            va = va or _loc
             ha = ha or "center"
 
         return NS(
-            margin=margin,
+            margin=self._text_margin,
             align=None,
             fontsize=size,
             ha=ha,
             va=va,
             is_blank=is_blank,
         )
+
+    @cached_property
+    def text_position(self) -> SidePosition:
+        if not (position := self.theme.getp("legend_text_position")):
+            position = "right" if self.is_vertical else "bottom"
+
+        if self.is_vertical and position not in ("right", "left"):
+            msg = (
+                "The text position for a vertical legend must be "
+                "either left or right."
+            )
+            raise PlotnineError(msg)
+        elif self.is_horizontal and position not in ("bottom", "top"):
+            msg = (
+                "The text position for a horizonta legend must be "
+                "either top or bottom."
+            )
+            raise PlotnineError(msg)
+        return position
 
     @cached_property
     def key_width(self):
@@ -525,20 +544,3 @@ class GuideElementsColorbar(GuideElements):
     def ticks(self):
         lw = self.theme.getp(("legend_ticks", "linewidth"))
         return NS(linewidth=lw)
-
-    @cached_property
-    def text_position(self) -> SidePosition:
-        position = super().text_position
-        if self.is_vertical and position not in ("right", "left"):
-            msg = (
-                "The text position for a vertical legend must be "
-                "either left or right."
-            )
-            raise PlotnineError(msg)
-        elif self.is_horizontal and position not in ("bottom", "top"):
-            msg = (
-                "The text position for a horizonta legend must be "
-                "either top or bottom."
-            )
-            raise PlotnineError(msg)
-        return position

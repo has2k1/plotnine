@@ -68,7 +68,7 @@ class theme_seaborn(theme):
             ),
             legend_box_margin=0,
             legend_box_spacing=m * 3,  # figure units
-            legend_key_spacing_x=5,
+            legend_key_spacing_x=6,
             legend_key_spacing_y=2,
             legend_key_size=base_size * 0.8 * 1.8,
             legend_frame=element_blank(),
