@@ -2258,7 +2258,7 @@
     "href": "reference/element_text.html#parameters",
     "title": " plotnine.element_text",
     "section": "Parameters",
-    "text": "Parameters\n\n\nfamily : Optional[str | list[str]] = None\n\nFont family. See set_family for supported values.\n\nstyle : Optional[str | Sequence[str]] = None\n\nFont style\n\ncolor : Optional[str | TupleFloat3 | TupleFloat4 | Sequence[str | TupleFloat3 | TupleFloat4]] = None\n\nText color\n\nweight : Optional[int | str | Sequence[int | str]] = None\n\nShould be one of normal, bold, heavy, light, ultrabold or ultralight.\n\nsize : Optional[float | Sequence[float]] = None\n\ntext size\n\nha : Optional[Literal[\"center\", \"left\", \"right\"]] = None\n\nHorizontal Alignment.\n\nva : Optional[Literal[\"center\", \"top\", \"bottom\", \"baseline\"]] = None\n\nVertical alignment.\n\nrotation : Optional[Literal[\"vertical\", \"horizontal\"] | float | Sequence[Literal[\"vertical\", \"horizontal\"]] | Sequence[float]] = None\n\nRotation angle in the range [0, 360]\n\nlinespacing : float = None\n\nLine spacing\n\nbackgroundcolor : Optional[str | TupleFloat3 | TupleFloat4 | Sequence[str | TupleFloat3 | TupleFloat4]] = None\n\nBackground color\n\nmargin : Optional[dict[Literal[\"t\", \"b\", \"l\", \"r\", \"units\"], Any]] = None\n\nMargin around the text. The keys are t, b, l, r and units. The tblr keys are floats. The units is one of pt, lines or in. Not all text themeables support margin parameters and other than the units, only some of the other keys may apply.\n\nkwargs : Any = {}\n\nParameters recognised by Text"
+    "text": "Parameters\n\n\nfamily : Optional[str | list[str]] = None\n\nFont family. See set_family for supported values.\n\nstyle : Optional[str | Sequence[str]] = None\n\nFont style\n\ncolor : Optional[str | TupleFloat3 | TupleFloat4 | Sequence[str | TupleFloat3 | TupleFloat4]] = None\n\nText color\n\nweight : Optional[int | str | Sequence[int | str]] = None\n\nShould be one of normal, bold, heavy, light, ultrabold or ultralight.\n\nsize : Optional[float | Sequence[float]] = None\n\ntext size\n\nha : Optional[Literal[\"center\", \"left\", \"right\"] | float] = None\n\nHorizontal Alignment.\n\nva : Optional[Literal[\"center\", \"top\", \"bottom\", \"baseline\", \"center_baseline\"] | float] = None\n\nVertical alignment.\n\nrotation : Optional[Literal[\"vertical\", \"horizontal\"] | float | Sequence[Literal[\"vertical\", \"horizontal\"]] | Sequence[float]] = None\n\nRotation angle in the range [0, 360]\n\nlinespacing : float = None\n\nLine spacing\n\nbackgroundcolor : Optional[str | TupleFloat3 | TupleFloat4 | Sequence[str | TupleFloat3 | TupleFloat4]] = None\n\nBackground color\n\nmargin : Optional[dict[Literal[\"t\", \"b\", \"l\", \"r\", \"units\"], Any]] = None\n\nMargin around the text. The keys are t, b, l, r and units. The tblr keys are floats. The units is one of pt, lines or in. Not all text themeables support margin parameters and other than the units, only some of the other keys may apply.\n\nkwargs : Any = {}\n\nParameters recognised by Text"
   },
   {
     "objectID": "reference/element_text.html#notes",
@@ -2888,14 +2888,14 @@
     "href": "changelog.html",
     "title": "Changelog",
     "section": "",
-    "text": "(not-yet-released)\n\n\n\nFixed layout manager to make space for the strip_text when there is no strip_background. #760"
+    "text": "(not-yet-released)\n\n\n\nFixed layout manager to make space for the strip_text when there is no strip_background. #760\nMade the default position of guide_legend text to be right. #761\nFixed aligning (ha & va) of plot_title, plot_subtitle, plot_caption, axis_title_x, axis_title_y to work with float values in the range [0, 1]."
   },
   {
     "objectID": "changelog.html#v0.13.3",
     "href": "changelog.html#v0.13.3",
     "title": "Changelog",
     "section": "",
-    "text": "(not-yet-released)\n\n\n\nFixed layout manager to make space for the strip_text when there is no strip_background. #760"
+    "text": "(not-yet-released)\n\n\n\nFixed layout manager to make space for the strip_text when there is no strip_background. #760\nMade the default position of guide_legend text to be right. #761\nFixed aligning (ha & va) of plot_title, plot_subtitle, plot_caption, axis_title_x, axis_title_y to work with float values in the range [0, 1]."
   },
   {
     "objectID": "changelog.html#v0.13.2",
