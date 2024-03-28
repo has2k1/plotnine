@@ -2888,14 +2888,14 @@
     "href": "changelog.html",
     "title": "Changelog",
     "section": "",
-    "text": "(2024-03-27)\n\n\n\nFixed layout manager to make space for the strip_text when there is no strip_background. #760\nMade the default position of guide_legend text to be right. #761\nFixed aligning (ha & va) of plot_title, plot_subtitle, plot_caption, axis_title_x, axis_title_y to work with float values in the range [0, 1]."
+    "text": "(2024-03-27) \n\n\n\nFixed layout manager to make space for the strip_text when there is no strip_background. #760\nMade the default position of guide_legend text to be right. #761\nFixed aligning (ha & va) of plot_title, plot_subtitle, plot_caption, axis_title_x, axis_title_y to work with float values in the range [0, 1]."
   },
   {
     "objectID": "changelog.html#v0.13.3",
     "href": "changelog.html#v0.13.3",
     "title": "Changelog",
     "section": "",
-    "text": "(2024-03-27)\n\n\n\nFixed layout manager to make space for the strip_text when there is no strip_background. #760\nMade the default position of guide_legend text to be right. #761\nFixed aligning (ha & va) of plot_title, plot_subtitle, plot_caption, axis_title_x, axis_title_y to work with float values in the range [0, 1]."
+    "text": "(2024-03-27) \n\n\n\nFixed layout manager to make space for the strip_text when there is no strip_background. #760\nMade the default position of guide_legend text to be right. #761\nFixed aligning (ha & va) of plot_title, plot_subtitle, plot_caption, axis_title_x, axis_title_y to work with float values in the range [0, 1]."
   },
   {
     "objectID": "changelog.html#v0.13.2",
