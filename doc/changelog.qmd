@@ -4,11 +4,12 @@ title: Changelog
 
 ## v0.13.4
 (2024-04-03)
+[![](https://zenodo.org/badge/DOI/10.5281/zenodo.10912461.svg)](https://doi.org/10.5281/zenodo.10912461)
 
 ### Bug Fixes
 
 - Fixed regression in v0.13.3 where setting some text elements `element_blank` led to an
-  error. {{< issue 764 >}}
+  error. ({{< issue 764 >}})
 
 ## v0.13.3
 (2024-03-27)
@@ -18,9 +19,9 @@ title: Changelog
 ### Bug Fixes
 
 - Fixed layout manager to make space for the `strip_text` when there is no
-  `strip_background`. {{< issue 760 >}}
+  `strip_background`. ({{< issue 760 >}})
 
-- Made the default position of `guide_legend` text to be right. {{< issue 761 >}}
+- Made the default position of `guide_legend` text to be right. ({{< issue 761 >}})
 
 - Fixed aligning (`ha` & `va`) of `plot_title`, `plot_subtitle`, `plot_caption`,
   `axis_title_x`, `axis_title_y` to work with float values in the range `[0, 1]`.
