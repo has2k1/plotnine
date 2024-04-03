@@ -2888,14 +2888,14 @@
     "href": "changelog.html",
     "title": "Changelog",
     "section": "",
-    "text": "(not-yet-released)\n\n\n\nFixed regression in v0.13.3 where setting some text elements element_blank led to an error. #764"
+    "text": "(2024-04-03)\n\n\n\nFixed regression in v0.13.3 where setting some text elements element_blank led to an error. #764"
   },
   {
     "objectID": "changelog.html#v0.13.4",
     "href": "changelog.html#v0.13.4",
     "title": "Changelog",
     "section": "",
-    "text": "(not-yet-released)\n\n\n\nFixed regression in v0.13.3 where setting some text elements element_blank led to an error. #764"
+    "text": "(2024-04-03)\n\n\n\nFixed regression in v0.13.3 where setting some text elements element_blank led to an error. #764"
   },
   {
     "objectID": "changelog.html#v0.13.3",
