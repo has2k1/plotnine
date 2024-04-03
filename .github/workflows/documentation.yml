@@ -31,7 +31,7 @@ jobs:
 
           echo "can_deploy=$CAN_DEPLOY" >> $GITHUB_OUTPUT
           echo "deploy_to=$DEPLOY_TO" >> $GITHUB_OUTPUT
-          echo "commit_title=$TITLE" >> $GITHUB_OUTPUT
+          echo "commit_title='$TITLE'" >> $GITHUB_OUTPUT
           echo github.ref ${{ github.ref }}
 
   build-documentation:
