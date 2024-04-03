@@ -40,6 +40,7 @@ class theme_gray(theme):
                 size=base_size,
                 linespacing=0.9,
                 rotation=0,
+                margin={},
             ),
             aspect_ratio=get_option("aspect_ratio"),
             axis_line=element_line(),

@@ -28,6 +28,7 @@ if TYPE_CHECKING:
 
     from plotnine import ggplot, theme
     from plotnine.iapi import labels_view
+    from plotnine.scales.scale import scale
     from plotnine.scales.scales import Scales
     from plotnine.typing import (
         LegendOnly,
@@ -35,6 +36,7 @@ if TYPE_CHECKING:
         LegendPosition,
         NoGuide,
         Orientation,
+        ScaledAestheticsName,
         SidePosition,
         TextJustification,
         TupleFloat2,
@@ -93,9 +95,10 @@ class guides:
         self.plot_scales: Scales
         self.plot_labels: labels_view
         self.elements: GuidesElements
-
+        self._lookup: dict[tuple[scale, ScaledAestheticsName], guide] = {}
         if self.colour is not None and self.color is not None:
             raise ValueError("Got a guide for color and colour, choose one.")
+        rename_aesthetics(self)
 
     def __radd__(self, plot: ggplot):
         """
@@ -117,16 +120,6 @@ class guides:
 
         return plot
 
-    def _guide_lookup(self) -> dict[str, guide | NoGuide]:
-        """
-        Lookup dict for guides that have been set
-        """
-        return {
-            f.name: g
-            for f in fields(self)
-            if (g := getattr(self, f.name)) is not None
-        }
-
     def _build(self) -> Sequence[guide]:
         """
         Build the guides
@@ -139,18 +132,18 @@ class guides:
         """
         return self._create_geoms(self._merge(self._train()))
 
-    def _train(self) -> Sequence[guide]:
+    def _setup(self, plot: ggplot):
         """
-        Compute all the required guides
+        Setup all guides that will be active
+        """
+        self.plot = plot
+        self.elements = GuidesElements(self.plot.theme)
 
-        Returns
-        -------
-        gdefs : list
-            Guides for the plots
-        """
-        gdefs: list[guide] = []
-        rename_aesthetics(self)
-        guide_lookup = self._guide_lookup()
+        guide_lookup = {
+            f.name: g
+            for f in fields(self)
+            if (g := getattr(self, f.name)) is not None
+        }
 
         for scale in self.plot.scales:
             for ae in scale.aesthetics:
@@ -171,58 +164,62 @@ class guides:
 
                 # check the validity of guide.
                 # if guide is str, then find the guide object
-                g = self._setup(g)
+                if isinstance(g, str):
+                    g = Registry[f"guide_{g}"]()
+                elif not isinstance(g, guide):
+                    raise PlotnineError(f"Unknown guide: {g}")
 
-                # Guide turned off
-                if not g.elements.position:
-                    continue
+                g.setup(self)
+                self._lookup[(scale, ae)] = g
 
-                # check the consistency of the guide and scale.
-                if (
-                    "any" not in g.available_aes
-                    and scale.aesthetics[0] not in g.available_aes
-                ):
-                    raise PlotnineError(
-                        f"{g.__class__.__name__} cannot be used for "
-                        f"{scale.aesthetics}"
-                    )
+    def _train(self) -> Sequence[guide]:
+        """
+        Compute all the required guides
 
-                # title
-                if g.title is None:
-                    if scale.name:
-                        g.title = scale.name
-                    else:
-                        g.title = getattr(self.plot.labels, ae)
-                        if g.title is None:
-                            warn(
-                                f"Cannot generate legend for the {ae!r} "
-                                "aesthetic. Make sure you have mapped a "
-                                "variable to it",
-                                PlotnineWarning,
-                            )
+        Returns
+        -------
+        gdefs : list
+            Guides for the plots
+        """
+        gdefs: list[guide] = []
+        for (scale, ae), g in self._lookup.items():
+            # Guide turned off
+            if not g.elements.position:
+                continue
 
-                # each guide object trains scale within the object,
-                # so Guides (i.e., the container of guides)
-                # need not to know about them
-                g = g.train(scale, ae)
+            # check the consistency of the guide and scale.
+            if (
+                "any" not in g.available_aes
+                and scale.aesthetics[0] not in g.available_aes
+            ):
+                raise PlotnineError(
+                    f"{g.__class__.__name__} cannot be used for "
+                    f"{scale.aesthetics}"
+                )
 
-                if g is not None:
-                    gdefs.append(g)
+            # title
+            if g.title is None:
+                if scale.name:
+                    g.title = scale.name
+                else:
+                    g.title = getattr(self.plot.labels, ae)
+                    if g.title is None:
+                        warn(
+                            f"Cannot generate legend for the {ae!r} "
+                            "aesthetic. Make sure you have mapped a "
+                            "variable to it",
+                            PlotnineWarning,
+                        )
+
+            # each guide object trains scale within the object,
+            # so Guides (i.e., the container of guides)
+            # need not to know about them
+            g = g.train(scale, ae)
+
+            if g is not None:
+                gdefs.append(g)
 
         return gdefs
-
-    def _setup(self, g: str | guide) -> guide:
-        """
-        Validate guide object
-        """
-        if isinstance(g, str):
-            g = Registry[f"guide_{g}"]()
-
-        if not isinstance(g, guide):
-            raise PlotnineError(f"Unknown guide: {g}")
-
-        g.setup(self)
-        return g
 
     def _merge(self, gdefs: Sequence[guide]) -> Sequence[guide]:
         """
@@ -274,7 +271,6 @@ class guides:
         Apply the theme for each guide
         """
         for g in gdefs:
-            g.theme = cast("theme", g.theme)
             g.theme.apply()
 
     def _assemble_guides(
@@ -347,14 +343,9 @@ class guides:
 
         return legends
 
-    def draw(self, plot: ggplot) -> Optional[OffsetBox]:
+    def draw(self) -> Optional[OffsetBox]:
         """
         Draw guides onto the figure
-
-        Parameters
-        ----------
-        plot :
-            ggplot object
 
         Returns
         -------
@@ -362,9 +353,6 @@ class guides:
             A box that contains all the guides for the plot.
             If there are no guides, **None** is returned.
         """
-        self.plot = plot
-        self.elements = GuidesElements(plot.theme)
-
         if self.elements.position == "none":
             return
 
@@ -387,9 +375,9 @@ class guides:
         self._apply_guide_themes(gdefs)
         legends = self._assemble_guides(gdefs, guide_boxes)
         for aob in legends.boxes:
-            plot.figure.add_artist(aob)
+            self.plot.figure.add_artist(aob)
 
-        plot.theme.targets.legends = legends
+        self.plot.theme.targets.legends = legends
 
 
 VALID_JUSTIFICATION_WORDS = {"left", "right", "top", "bottom", "center"}

@@ -314,6 +314,15 @@ class Themeables(dict[str, themeable]):
                     result[name] = self[name]
         return result
 
+    def setup(self, theme: theme):
+        """
+        Setup themeables for theming
+        """
+        # Setup theme elements
+        for name, th in self.items():
+            if isinstance(th.theme_element, element_base):
+                th.theme_element.setup(theme, name)
+
     def items(self):
         """
         List of (name, themeable) in reverse based on the inheritance.

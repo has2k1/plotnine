@@ -23,7 +23,6 @@ if TYPE_CHECKING:
     from matplotlib.artist import Artist
     from matplotlib.offsetbox import PackerBase
 
-    from plotnine import theme
     from plotnine.geoms.geom import geom
     from plotnine.layer import layer
     from plotnine.typing import SidePosition, TupleFloat2, TupleInt2
@@ -235,8 +234,6 @@ class guide_legend(guide):
         from matplotlib.offsetbox import HPacker, TextArea, VPacker
 
         from .._mpl.offsetbox import ColoredDrawingArea
-
-        self.theme = cast("theme", self.theme)
 
         obverse = slice(0, None)
         reverse = slice(None, None, -1)

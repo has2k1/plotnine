@@ -222,7 +222,6 @@ class theme:
     ):
         self.themeables = Themeables()
         self.complete = complete
-        self._is_setup = False
 
         if complete:
             self._rcParams = deepcopy(default_rcparams)
@@ -281,8 +280,6 @@ class theme:
         Subclasses that override this method should make sure that the
         base class method is called.
         """
-        self._add_default_themeable_properties()
-
         for th in self.T.values():
             th.apply(self)
 
@@ -297,18 +294,12 @@ class theme:
 
         It also initialises where the artists to be themed will be stored.
         """
-        from .elements.element_base import element_base
-
         self.plot = plot
         self.figure = plot.figure
         self.axs = plot.axs
         self.targets = ThemeTargets()
-
-        for name, th in self.T.items():
-            if isinstance(th.theme_element, element_base):
-                th.theme_element.setup(self, name)
-
-        self._is_setup = True
+        self._add_default_themeable_properties()
+        self.T.setup(self)
 
     def _add_default_themeable_properties(self):
         """
@@ -320,7 +311,7 @@ class theme:
 
         This is where the theme is modified to add those values.
         """
-        smart_title_and_subtitle_ha(self)
+        self._smart_title_and_subtitle_ha()
 
     @property
     def rcParams(self):
@@ -366,9 +357,6 @@ class theme:
         A complete theme will annihilate any previous themes. Partial themes
         can be added together and can be added to a complete theme.
         """
-        if self._is_setup:
-            other.setup(self.plot)
-
         if other.complete:
             return other
 
@@ -445,8 +433,11 @@ class theme:
         new = result.__dict__
 
         shallow = {"plot", "figure", "axs"}
+        skip = {"targets"}
         for key, item in old.items():
-            if key in shallow:
+            if key in skip:
+                continue
+            elif key in shallow:
                 new[key] = item
                 memo[id(new[key])] = new[key]
             else:
@@ -462,6 +453,39 @@ class theme:
         """
         dpi = self.getp("dpi")
         return self + theme(dpi=dpi * 2)
+
+    def _smart_title_and_subtitle_ha(self):
+        """
+        Smartly add the horizontal alignment for the title and subtitle
+        """
+        from .elements import element_text
+
+        has_title = bool(
+            self.plot.labels.get("title", "")
+        ) and not self.T.is_blank("plot_title")
+        has_subtitle = bool(
+            self.plot.labels.get("subtitle", "")
+        ) and not self.T.is_blank("plot_subtitle")
+
+        title_ha = self.getp(("plot_title", "ha"))
+        subtitle_ha = self.getp(("plot_subtitle", "ha"))
+
+        default_title_ha, default_subtitle_ha = "center", "left"
+        kwargs = {}
+
+        if has_title and title_ha is None:
+            if has_subtitle and not subtitle_ha:
+                title_ha = default_subtitle_ha
+            else:
+                title_ha = default_title_ha
+            kwargs["plot_title"] = element_text(ha=title_ha)
+
+        if has_subtitle and subtitle_ha is None:
+            subtitle_ha = default_subtitle_ha
+            kwargs["plot_subtitle"] = element_text(ha=subtitle_ha)
+
+        if kwargs:
+            self += theme(**kwargs)
 
 
 def theme_get() -> theme:
@@ -513,33 +537,3 @@ def theme_update(**kwargs: themeable):
     """
     assert "complete" not in kwargs
     theme_set(theme_get() + theme(**kwargs))  # pyright: ignore
-
-
-def smart_title_and_subtitle_ha(plot_theme: theme):
-    """
-    Smartly add the horizontal alignment for the title and subtitle
-    """
-    from .elements import element_text
-
-    has_title = plot_theme.targets.plot_title is not None
-    has_subtitle = plot_theme.targets.plot_subtitle is not None
-
-    title_ha = plot_theme.getp(("plot_title", "ha"))
-    subtitle_ha = plot_theme.getp(("plot_subtitle", "ha"))
-
-    default_title_ha, default_subtitle_ha = "center", "left"
-    kwargs = {}
-
-    if has_title and title_ha is None:
-        if has_subtitle and not subtitle_ha:
-            title_ha = default_subtitle_ha
-        else:
-            title_ha = default_title_ha
-        kwargs["plot_title"] = element_text(ha=title_ha)
-
-    if has_subtitle and subtitle_ha is None:
-        subtitle_ha = default_subtitle_ha
-        kwargs["plot_subtitle"] = element_text(ha=subtitle_ha)
-
-    if kwargs:
-        plot_theme += theme(**kwargs)

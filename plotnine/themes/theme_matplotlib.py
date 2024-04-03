@@ -35,6 +35,7 @@ class theme_matplotlib(theme):
                 size=base_size,
                 linespacing=1,
                 rotation=0,
+                margin={},
             ),
             aspect_ratio=get_option("aspect_ratio"),
             axis_text=element_text(margin={"t": 2.4, "r": 2.4, "units": "pt"}),

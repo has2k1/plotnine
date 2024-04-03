@@ -4,7 +4,7 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from typing import Optional, Sequence
+    from typing import Optional
 
     from matplotlib.collections import LineCollection
     from matplotlib.patches import Rectangle
@@ -30,8 +30,8 @@ class ThemeTargets:
     legend_frame: Optional[Rectangle] = None
     legend_key: list[ColoredDrawingArea] = field(default_factory=list)
     legends: Optional[legend_artists] = None
-    legend_text_colorbar: Sequence[Text] = field(default_factory=list)
-    legend_text_legend: Sequence[Text] = field(default_factory=list)
+    legend_text_colorbar: list[Text] = field(default_factory=list)
+    legend_text_legend: list[Text] = field(default_factory=list)
     legend_ticks: Optional[LineCollection] = None
     legend_title: Optional[Text] = None
     panel_border: list[Rectangle] = field(default_factory=list)

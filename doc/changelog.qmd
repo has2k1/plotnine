@@ -2,6 +2,14 @@
 title: Changelog
 ---
 
+## v0.13.4
+(not-yet-released)
+
+### Bug Fixes
+
+- Fixed regression in v0.13.3 where setting some text elements `element_blank` led to an
+  error. {{< issue 764 >}}
+
 ## v0.13.3
 (2024-03-27)
 [![](https://zenodo.org/badge/DOI/10.5281/zenodo.10887259.svg)](https://doi.org/10.5281/zenodo.10887259)
