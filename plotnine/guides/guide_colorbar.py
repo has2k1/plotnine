@@ -411,7 +411,7 @@ def add_labels(
     labels: Sequence[str],
     ys: Sequence[float],
     elements: GuideElementsColorbar,
-) -> Sequence[Text]:
+) -> list[Text]:
     """
     Return Texts added to the auxbox
     """

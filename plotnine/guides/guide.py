@@ -114,6 +114,7 @@ class guide(ABC, metaclass=Register):
         # guide theme has priority and its targets are tracked
         # independently.
         self.theme = guides.plot.theme + self.theme
+        self.theme.setup(guides.plot)
         self.plot_layers = guides.plot.layers
         self.plot_mapping = guides.plot.mapping
         self.elements = self._elements_cls(self.theme, self)
@@ -189,11 +190,8 @@ class GuideElements:
         ha = self.theme.getp(("legend_title", "ha"))
         va = self.theme.getp(("legend_title", "va"), "center")
         _margin = self.theme.getp(("legend_title", "margin"))
-        if _margin is not None:
-            _loc = get_opposite_side(self.title_position)[0]
-            margin = _margin.get_as(_loc, "pt")
-        else:
-            margin = 0
+        _loc = get_opposite_side(self.title_position)[0]
+        margin = _margin.get_as(_loc, "pt")
         top_or_bottom = self.title_position in ("top", "bottom")
         is_blank = self.theme.T.is_blank("legend_title")
 
@@ -219,12 +217,8 @@ class GuideElements:
     @cached_property
     def _text_margin(self) -> float:
         _margin = self.theme.getp((f"legend_text_{self.guide_kind}", "margin"))
-        if _margin is not None:
-            _loc = get_opposite_side(self.text_position)
-            margin = _margin.get_as(_loc[0], "pt")
-        else:
-            margin = 0
-        return margin
+        _loc = get_opposite_side(self.text_position)
+        return _margin.get_as(_loc[0], "pt")
 
     @cached_property
     def title_position(self) -> SidePosition:

@@ -273,13 +273,14 @@ class ggplot:
 
             # setup
             self.figure, self.axs = self.facet.setup(self)
+            self.guides._setup(self)
             self.theme.setup(self)
 
             # Drawing
             self._draw_layers()
             self._draw_panel_borders()
             self._draw_breaks_and_labels()
-            self.guides.draw(self)
+            self.guides.draw()
             self._draw_figure_texts()
             self._draw_watermarks()
 
@@ -314,12 +315,13 @@ class ggplot:
 
             # setup
             self.figure, self.axs = self.facet.setup(self)
+            self.guides._setup(self)
             self.theme.setup(self)
 
             # drawing
             self._draw_layers()
             self._draw_breaks_and_labels()
-            self.guides.draw(self)
+            self.guides.draw()
 
             # artist theming
             self.theme.apply()

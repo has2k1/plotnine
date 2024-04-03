@@ -122,9 +122,8 @@ class element_text(element_base):
 
         super().__init__()
         self.properties.update(**kwargs)
-
         if margin is not None:
-            margin = Margin(self, **margin)  # type: ignore
+            self.properties["margin"] = Margin(self, **margin)
 
         # Use the parameters that have been set
         names = (
@@ -138,7 +137,6 @@ class element_text(element_base):
             "style",
             "va",
             "weight",
-            "margin",
         )
         variables = locals()
         for name in names:

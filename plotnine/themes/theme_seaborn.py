@@ -46,7 +46,7 @@ class theme_seaborn(theme):
             aspect_ratio=get_option("aspect_ratio"),
             dpi=get_option("dpi"),
             figure_size=get_option("figure_size"),
-            text=element_text(size=base_size, rotation=0),
+            text=element_text(size=base_size, rotation=0, margin={}),
             axis_text=element_text(
                 size=base_size * 0.8,
                 margin={
