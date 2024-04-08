@@ -75,6 +75,7 @@ build = [
 dev = [
     "twine",
     "plotnine[typing]",
+    "pre-commit",
 ]
 
 typing = [
