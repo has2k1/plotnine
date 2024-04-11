@@ -11,6 +11,7 @@ from .._utils import get_valid_kwargs
 from ..exceptions import PlotnineError, PlotnineWarning
 
 if TYPE_CHECKING:
+    import statsmodels.api as sm
     from patsy.eval import EvalEnvironment
 
     from plotnine.mapping import Environment
@@ -274,6 +275,10 @@ def glm(data, xseq, **params):
     init_kwargs, fit_kwargs = separate_method_kwargs(
         params["method_args"], sm.GLM, sm.GLM.fit
     )
+
+    if isinstance(family := init_kwargs.get("family"), str):
+        init_kwargs["family"] = _glm_family(family)
+
     model = sm.GLM(data["y"], X, **init_kwargs)
     results = model.fit(**fit_kwargs)
 
@@ -282,7 +287,7 @@ def glm(data, xseq, **params):
 
     if params["se"]:
         prediction = results.get_prediction(Xseq)
-        ci = prediction.conf_int(1 - params["level"])
+        ci = prediction.conf_int(alpha=1 - params["level"])
         data["ymin"] = ci[:, 0]
         data["ymax"] = ci[:, 1]
 
@@ -300,6 +305,10 @@ def glm_formula(data, xseq, **params):
     init_kwargs, fit_kwargs = separate_method_kwargs(
         params["method_args"], sm.GLM, sm.GLM.fit
     )
+
+    if isinstance(family := init_kwargs.get("family"), str):
+        init_kwargs["family"] = _glm_family(family)
+
     model = smf.glm(params["formula"], data, eval_env=eval_env, **init_kwargs)
     results = model.fit(**fit_kwargs)
     data = pd.DataFrame({"x": xseq})
@@ -308,7 +317,7 @@ def glm_formula(data, xseq, **params):
     if params["se"]:
         xdata = pd.DataFrame({"x": xseq})
         prediction = results.get_prediction(xdata)
-        ci = prediction.conf_int(1 - params["level"])
+        ci = prediction.conf_int(alpha=1 - params["level"])
         data["ymin"] = ci[:, 0]
         data["ymax"] = ci[:, 1]
     return data
@@ -594,3 +603,27 @@ def _to_patsy_env(environment: Environment) -> EvalEnvironment:
 
     eval_env = EvalEnvironment(environment.namespaces)
     return eval_env
+
+
+def _glm_family(family: str) -> sm.families.Family:
+    """
+    Get glm-family instance
+
+    Ref: https://www.statsmodels.org/stable/glm.html#families
+    """
+    import statsmodels.api as sm
+
+    lookup: dict[str, type[sm.families.Family]] = {
+        "binomial": sm.families.Binomial,
+        "gamma": sm.families.Gamma,
+        "gaussian": sm.families.Gaussian,
+        "inverseGaussian": sm.families.InverseGaussian,
+        "negativeBinomial": sm.families.NegativeBinomial,
+        "poisson": sm.families.Poisson,
+        "tweedie": sm.families.Tweedie,
+    }
+    try:
+        return lookup[family.lower()](link=None)  # pyright: ignore
+    except KeyError as err:
+        msg = f"GLM family should be one of {tuple(lookup)}"
+        raise ValueError(msg) from err

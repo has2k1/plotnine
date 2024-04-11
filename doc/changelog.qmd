@@ -2,8 +2,17 @@
 title: Changelog
 ---
 
+## v0.13.5
+(not-yet-released)
+
+### Bug Fixes
+
+- Fix bug in [](:class:`~plotnine.stat_smooth`) where you could not set the
+  family when using a `glm`. ({{< issue 769 >}})
+
 ## v0.13.4
 (2024-04-03)
+
 [![](https://zenodo.org/badge/DOI/10.5281/zenodo.10912461.svg)](https://doi.org/10.5281/zenodo.10912461)
 
 ### Bug Fixes
