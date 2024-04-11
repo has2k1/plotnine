@@ -167,7 +167,9 @@ class TestOther:
             p.draw_test()
 
     def test_glm(self):
-        p = self.p + geom_smooth(aes(y="y_noisy"), method="glm")
+        p = self.p + geom_smooth(
+            aes(y="y_noisy"), method="glm", method_args={"family": "gaussian"}
+        )
         p.draw_test()
 
     def test_gls(self):
