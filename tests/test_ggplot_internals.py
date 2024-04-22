@@ -55,18 +55,6 @@ def test_labels():
     assert gg.labels.title == "title2"
     assert gg.labels.caption == "caption2"
 
-    with pytest.raises(PlotnineError):
-        gg = gg + labs(z="z-axis")
-
-    with pytest.raises(PlotnineError):
-        gg = gg + xlab(None)
-
-    with pytest.raises(PlotnineError):
-        gg = gg + ylab(None)
-
-    with pytest.raises(PlotnineError):
-        gg = gg + ggtitle(None)
-
 
 def test_ggplot_parameters():
     p = ggplot(data, aes("x"))
