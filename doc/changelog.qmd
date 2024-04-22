@@ -10,6 +10,9 @@ title: Changelog
 - Fix bug in [](:class:`~plotnine.stat_smooth`) where you could not set the
   family when using a `glm`. ({{< issue 769 >}})
 
+- Fix bug in [](:class:`~plotnine.position_dodge2`) the widths of the dodged
+  objects were mixed up. ({{< issue 772 >}})
+
 ## v0.13.4
 (2024-04-03)
 
