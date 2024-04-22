@@ -21,6 +21,7 @@ __all__ = (
     "msleep",
     "mtcars",
     "pageviews",
+    "penguins",
     "presidential",
     "seals",
     "txhousing",
@@ -37,6 +38,7 @@ economics = pd.read_csv(DATA_DIR / "economics.csv", parse_dates=[0])
 economics_long = pd.read_csv(DATA_DIR / "economics_long.csv", parse_dates=[0])
 presidential = pd.read_csv(DATA_DIR / "presidential.csv", parse_dates=[1, 2])
 txhousing = pd.read_csv(DATA_DIR / "txhousing.csv")
+penguins = pd.read_csv(DATA_DIR / "penguins.csv")
 luv_colours = pd.read_csv(DATA_DIR / "luv_colours.csv")
 faithfuld = pd.read_csv(DATA_DIR / "faithfuld.csv")
 faithful = pd.read_csv(DATA_DIR / "faithful.csv")
@@ -79,7 +81,7 @@ def _process_categories():
     """
     Set columns in some of the dataframes to categoricals
     """
-    global diamonds, midwest, mpg, msleep
+    global diamonds, midwest, mpg, msleep, penguins
     diamonds = _ordered_categories(
         diamonds,
         {
@@ -93,6 +95,7 @@ def _process_categories():
     )
     midwest = _unordered_categories(midwest, ["category"])
     msleep = _unordered_categories(msleep, ["vore", "conservation"])
+    penguins = _unordered_categories(penguins, ["species", "island", "sex"])
 
 
 _process_categories()
@@ -245,6 +248,50 @@ A data frame with 478 rows and 6 variables
 """
 
 economics_long.__doc__ = economics.__doc__
+
+penguins.__doc__ = """
+Palmer Penguins
+
+## Description
+
+Data about 3 different species of penguins collected from 3 islands
+in the Palmer Archipelago, Antarctica.
+
+## Format
+
+A dataframe with 344 rows and 8 variables
+
++--------------------+------------------------------------------------+
+| Column             | Description                                    |
++====================+================================================+
+| species            | Penguin species (Adélie, Chinstrap and Gentoo) |
++--------------------+------------------------------------------------+
+| island             | Island in Palmer Archipelago, Antarctica       |
+|                    | (Biscoe, Dream or Torgersen)                   |
++--------------------+------------------------------------------------+
+| bill_length_mm     | Bill length (millimeters)                      |
++--------------------+------------------------------------------------+
+| bill_depth_mm      | Bill depth (millimeters)                       |
++--------------------+------------------------------------------------+
+| flipper_length_mm  | Flipper length (millimeters)                   |
++--------------------+------------------------------------------------+
+| body_mass_g        | Body mass (grams)                              |
++--------------------+------------------------------------------------+
+| sex                | Penguin sex (female, male)                     |
++--------------------+------------------------------------------------+
+| year               | The study year (2007, 2008, or 2009)           |
++--------------------+------------------------------------------------+
+
+## Source
+
+Collected by [Dr. Kristen Gorman]\
+(https://www.uaf.edu/cfos/people/faculty/detail/kristen-gorman.php)
+and the [Palmer Station, Antarctica LTER](https://pallter.marine.rutgers.edu/).
+
+Made conveniently availabe by
+[Alison Horst](https://github.com/allisonhorst/palmerpenguins/) to serve as
+a dataset exploration and visualisation.
+"""
 
 presidential.__doc__ = """
 Terms of 11 presidents from Eisenhower to Obama.
