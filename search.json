@@ -2888,14 +2888,14 @@
     "href": "changelog.html",
     "title": "Changelog",
     "section": "",
-    "text": "(not-yet-released)\n\n\n\nFix bug in stat_smooth where you could not set the family when using a glm. (#769)\nFix bug in position_dodge2 the widths of the dodged objects were mixed up. (#772)"
+    "text": "(not-yet-released)\n\n\n\nFix bug in stat_smooth where you could not set the family when using a glm. (#769)\nFix bug in position_dodge2 the widths of the dodged objects were mixed up. (#772)\n\n\n\n\n\nAdded palmerpenguins dataset."
   },
   {
     "objectID": "changelog.html#v0.13.5",
     "href": "changelog.html#v0.13.5",
     "title": "Changelog",
     "section": "",
-    "text": "(not-yet-released)\n\n\n\nFix bug in stat_smooth where you could not set the family when using a glm. (#769)\nFix bug in position_dodge2 the widths of the dodged objects were mixed up. (#772)"
+    "text": "(not-yet-released)\n\n\n\nFix bug in stat_smooth where you could not set the family when using a glm. (#769)\nFix bug in position_dodge2 the widths of the dodged objects were mixed up. (#772)\n\n\n\n\n\nAdded palmerpenguins dataset."
   },
   {
     "objectID": "changelog.html#v0.13.4",
