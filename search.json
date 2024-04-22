@@ -2286,7 +2286,7 @@
     "href": "reference/economics_long.html",
     "title": " plotnine.data.economics_long",
     "section": "",
-    "text": "economics_long = pd.read_csv(DATA_DIR / \"economics_long.csv\", parse_dates=[0])\n::: {.doc-text} US economic time series."
+    "text": "economics_long = pd.read_csv(DATA_DIR / \"economics_long.csv\", parse_dates=[0])"
   },
   {
     "objectID": "reference/economics_long.html#description",
@@ -2307,7 +2307,7 @@
     "href": "reference/economics_long.html#footnotes",
     "title": " plotnine.data.economics_long",
     "section": "Footnotes",
-    "text": "Footnotes\n\n\nhttp://research.stlouisfed.org/fred2/series/PSAVERT↩︎\nhttp://research.stlouisfed.org/fred2/series/PCE↩︎\nhttp://research.stlouisfed.org/fred2/series/UNEMPLOY↩︎\nhttp://research.stlouisfed.org/fred2/series/UEMPMED↩︎\nhttp://research.stlouisfed.org/fred2/series/POP :::↩︎"
+    "text": "Footnotes\n\n\nhttp://research.stlouisfed.org/fred2/series/PSAVERT↩︎\nhttp://research.stlouisfed.org/fred2/series/PCE↩︎\nhttp://research.stlouisfed.org/fred2/series/UNEMPLOY↩︎\nhttp://research.stlouisfed.org/fred2/series/UEMPMED↩︎\nhttp://research.stlouisfed.org/fred2/series/POP↩︎"
   },
   {
     "objectID": "reference/dpi.html",
@@ -2888,14 +2888,14 @@
     "href": "changelog.html",
     "title": "Changelog",
     "section": "",
-    "text": "(not-yet-released)\n\n\n\nFix bug in stat_smooth where you could not set the family when using a glm. (#769)"
+    "text": "(not-yet-released)\n\n\n\nFix bug in stat_smooth where you could not set the family when using a glm. (#769)\nFix bug in position_dodge2 the widths of the dodged objects were mixed up. (#772)"
   },
   {
     "objectID": "changelog.html#v0.13.5",
     "href": "changelog.html#v0.13.5",
     "title": "Changelog",
     "section": "",
-    "text": "(not-yet-released)\n\n\n\nFix bug in stat_smooth where you could not set the family when using a glm. (#769)"
+    "text": "(not-yet-released)\n\n\n\nFix bug in stat_smooth where you could not set the family when using a glm. (#769)\nFix bug in position_dodge2 the widths of the dodged objects were mixed up. (#772)"
   },
   {
     "objectID": "changelog.html#v0.13.4",
@@ -3497,7 +3497,7 @@
     "href": "reference/economics.html",
     "title": " plotnine.data.economics",
     "section": "",
-    "text": "economics = pd.read_csv(DATA_DIR / \"economics.csv\", parse_dates=[0])\n::: {.doc-text} US economic time series."
+    "text": "economics = pd.read_csv(DATA_DIR / \"economics.csv\", parse_dates=[0])"
   },
   {
     "objectID": "reference/economics.html#description",
@@ -3518,7 +3518,7 @@
     "href": "reference/economics.html#footnotes",
     "title": " plotnine.data.economics",
     "section": "Footnotes",
-    "text": "Footnotes\n\n\nhttp://research.stlouisfed.org/fred2/series/PSAVERT↩︎\nhttp://research.stlouisfed.org/fred2/series/PCE↩︎\nhttp://research.stlouisfed.org/fred2/series/UNEMPLOY↩︎\nhttp://research.stlouisfed.org/fred2/series/UEMPMED↩︎\nhttp://research.stlouisfed.org/fred2/series/POP :::↩︎"
+    "text": "Footnotes\n\n\nhttp://research.stlouisfed.org/fred2/series/PSAVERT↩︎\nhttp://research.stlouisfed.org/fred2/series/PCE↩︎\nhttp://research.stlouisfed.org/fred2/series/UNEMPLOY↩︎\nhttp://research.stlouisfed.org/fred2/series/UEMPMED↩︎\nhttp://research.stlouisfed.org/fred2/series/POP↩︎"
   },
   {
     "objectID": "reference/element_blank.html",
