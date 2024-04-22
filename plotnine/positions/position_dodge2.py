@@ -117,7 +117,7 @@ class position_dodge2(position_dodge):
             # If n is None, preserve total widths of elements at
             # each position by dividing widths by the number of
             # elements at that position
-            n = data["xid"].value_counts().to_numpy()
+            n = data["xid"].value_counts(sort=False).to_numpy()
             n = n[data.loc[:, "xid"] - 1]
             data["new_width"] = (data["xmax"] - data["xmin"]) / n
         else:
