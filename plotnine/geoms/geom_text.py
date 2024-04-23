@@ -252,8 +252,8 @@ class geom_text(geom):
             if params["path_effects"]:
                 text_elem.set_path_effects(params["path_effects"])
 
-        _adjust = params["adjust_text"]
-        if _adjust:
+        # TODO: Do adjust text per panel
+        if _adjust := params["adjust_text"]:
             from adjustText import adjust_text
 
             if params["zorder"] == 1:
@@ -263,9 +263,19 @@ class geom_text(geom):
                     PlotnineWarning,
                 )
 
-            arrowprops = _adjust.pop("arrowprops", {})
+            _adjust = _adjust.copy()
+            arrowprops = _adjust.pop("arrowprops", {}).copy()
             if "color" not in arrowprops:
                 arrowprops["color"] = color[0]
+
+            # The head_length, tail_length and tail_width of the arrow are
+            # specified on the same scale as the fontsize, but their default
+            # values are in the [0, 1] range. The true values are obtained by
+            # multiplying by the mutation_scale. The default value of
+            # mutation_scale is 1, so the arrow is effectively invisible.
+            # A good default for this usecase is the size of text.
+            if "mutation_scale" not in arrowprops:
+                arrowprops["mutation_scale"] = data["size"].mean()
 
             adjust_text(texts, ax=ax, arrowprops=arrowprops, **_adjust)
 
