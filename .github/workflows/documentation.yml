@@ -27,7 +27,12 @@ jobs:
           set -xe
           CAN_DEPLOY=$(python ../utils/please.py can_i_deploy_documentation)
           DEPLOY_TO=$(python ../utils/please.py where_can_i_deploy_documentation)
-          TITLE=$(echo '${{ github.event.head_commit.message }}' | head -n 1)
+          # The message string is directly substituted in before the command is run.
+          # We use a HereDoc to avoid quotation issues if the message has quotes as well.
+          TITLE=$(cat <<EOF | head -n 1
+          ${{ github.event.head_commit.message }}
+          EOF
+          )
 
           echo "can_deploy=$CAN_DEPLOY" >> $GITHUB_OUTPUT
           echo "deploy_to=$DEPLOY_TO" >> $GITHUB_OUTPUT
