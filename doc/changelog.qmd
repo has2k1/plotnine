@@ -16,6 +16,9 @@ title: Changelog
 - Fixed [](:class:`~plotnine.geom_text`) to work better with
   [adjustText](https://pypi.org/project/adjustText/) `v1.0.0` and above.
 
+- Fixed images generated in quarto so that they have the dimensions
+  (taking the dpi into account) that are specified in theme. ({{< issue 773 >}})
+
 ### Enhancements
 
 - Added _palmerpenguins_ dataset.

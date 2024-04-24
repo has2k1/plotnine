@@ -170,6 +170,13 @@ class mpl_save_view:
     figure: Figure
     kwargs: dict[str, Any]
 
+    def __post_init__(self):
+        # If savefig.dpi rcparam has been set, it will override
+        # the figure dpi which is set in the theme. We make sure
+        # our call to savefig will contain the figure dpi.
+        if "dpi" not in self.kwargs:
+            self.kwargs["dpi"] = self.figure.get_dpi()
+
 
 @dataclass
 class layout_details:
