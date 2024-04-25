@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>plotnine {{&lt; var version &gt;}} – plot_margin_bottom</title>
+<title>plotnine {{&lt; var version &gt;}} – svg_usefonts</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -149,7 +149,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#plotnine.themes.themeable.plot_margin_bottom" id="toc-plotnine.themes.themeable.plot_margin_bottom" class="nav-link active" data-scroll-target="#plotnine.themes.themeable.plot_margin_bottom"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.themes.themeable.plot_margin_bottom</span></a></li>
+  <li><a href="#plotnine.themes.themeable.svg_usefonts" id="toc-plotnine.themes.themeable.svg_usefonts" class="nav-link active" data-scroll-target="#plotnine.themes.themeable.svg_usefonts"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.themes.themeable.svg_usefonts</span></a></li>
   <li><a href="#parameters" id="toc-parameters" class="nav-link" data-scroll-target="#parameters">Parameters</a></li>
   </ul>
 </nav>
@@ -161,23 +161,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <header id="title-block-header" class="quarto-title-block default">
-<section id="plotnine.themes.themeable.plot_margin_bottom" class="level1 title doc-object doc-class quarto-title display-7">
-<h1 class="title doc-object doc-class"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.themes.themeable.plot_margin_bottom</span></h1>
+<section id="plotnine.themes.themeable.svg_usefonts" class="level1 title doc-object doc-class doc-has-member-docs quarto-title display-7">
+<h1 class="title doc-object doc-class doc-has-member-docs"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.themes.themeable.svg_usefonts</span></h1>
 </section>
 </header>
 <div class="doc-signature doc-class">
-<div class="sourceCode" id="cb1"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>plot_margin_bottom(theme_element)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>svg_usefonts(theme_element)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="doc-text">
-<p>Plot Margin at the bottom</p>
+<p>How to renderer fonts for svg images</p>
 </div>
 <section id="parameters" class="level2 doc-parameters">
 <h2 class="doc-parameters anchored" data-anchor-id="parameters">Parameters</h2>
 <div class="doc-definition-items">
 <dl>
-<dt><code><span class="doc-parameter-name">theme_element</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#float">float</a></span></code></dt>
+<dt><code><span class="doc-parameter-name">theme_element</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#bool">bool</a></span></code></dt>
 <dd>
-<p>Must be in the [0, 1] range. It is specified as a fraction of the figure width and figure height.</p>
+<p>If <code>True</code>, assume fonts are installed on the machine where the SVG will be viewed.</p>
+<p>If <code>False</code>, embed characters as paths; this is supported by most SVG renderers.</p>
+<p>You should probably set this to <code>True</code> if you intend to edit the svg file.</p>
 </dd>
 </dl>
 </div>
