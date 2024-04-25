@@ -24,17 +24,13 @@ class plot_context:
     """
 
     def __init__(self, plot: ggplot, show: bool = False):
+        import matplotlib as mpl
+
         self.plot = plot
         self.show = show
 
-    def __enter__(self) -> Self:
-        """
-        Enclose in matplolib & pandas environments
-        """
-        import matplotlib as mpl
-
-        self.rc_context = mpl.rc_context(self.plot.theme.rcParams)
-
+        # Contexts
+        self.rc_context = mpl.rc_context(plot.theme.rcParams)
         # Pandas deprecated is_copy, and when we create new dataframes
         # from slices we do not want complaints. We always uses the
         # new frames knowing that they are separate from the original.
@@ -44,6 +40,11 @@ class plot_context:
             "mode.copy_on_write",
             False,
         )
+
+    def __enter__(self) -> Self:
+        """
+        Enclose in matplolib & pandas environments
+        """
         self.rc_context.__enter__()
         self.pd_option_context.__enter__()
         return self

@@ -672,7 +672,9 @@ class ggplot:
             verbose=verbose,
             **kwargs,
         )
-        sv.figure.savefig(**sv.kwargs)
+
+        with plot_context(self).rc_context:
+            sv.figure.savefig(**sv.kwargs)
 
 
 ggsave = ggplot.save
@@ -780,5 +782,6 @@ def save_as_pdf_pages(
         # Re-add the first element to the iterator, if it was removed
         for plot in plots:
             fig = plot.draw()
-            # Save as a page in the PDF file
-            pdf.savefig(fig, **fig_kwargs)
+            with plot_context(plot).rc_context:
+                # Save as a page in the PDF file
+                pdf.savefig(fig, **fig_kwargs)
