@@ -478,6 +478,7 @@ quartodoc:
         - strip_text_x
         - strip_text_y
         - subplots_adjust
+        - svg_usefonts
         - text
         - title
 
