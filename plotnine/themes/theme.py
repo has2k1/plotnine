@@ -218,6 +218,7 @@ class theme:
         strip_align_x=None,
         strip_align_y=None,
         strip_align=None,
+        svg_usefonts=None,
         **kwargs,
     ):
         self.themeables = Themeables()

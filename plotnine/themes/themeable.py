@@ -2384,6 +2384,33 @@ class strip_align(strip_align_x, strip_align_y):
     """
 
 
+class svg_usefonts(themeable):
+    """
+    How to renderer fonts for svg images
+
+    Parameters
+    ----------
+    theme_element : bool
+        If `True`, assume fonts are installed on the machine where
+        the SVG will be viewed.
+
+        If `False`, embed characters as paths; this is supported by
+        most SVG renderers.
+
+        You should probably set this to `True` if you intend to edit
+        the svg file.
+    """
+
+    @property
+    def rcParams(self) -> dict[str, Any]:
+        rcParams = super().rcParams
+
+        rcParams["svg.fonttype"] = (
+            "none" if self.properties.get("value") else "path"
+        )
+        return rcParams
+
+
 # Deprecated
 
 

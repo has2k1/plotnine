@@ -19,6 +19,11 @@ title: Changelog
 - Fixed images generated in quarto so that they have the dimensions
   (taking the dpi into account) that are specified in theme. ({{< issue 773 >}})
 
+### New
+
+- Added themeable [](:class:`~plotnine.themes.themeable.svg_usefonts`).
+  ({{< issue 756 >}})
+
 ### Enhancements
 
 - Added _palmerpenguins_ dataset.
