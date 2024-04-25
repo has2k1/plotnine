@@ -14,7 +14,7 @@ dataframe to the visual objects that make up the plot.
 <img width="33%" align="right" src="./doc/images/logo-540.png">
 
 Plotting with a *grammar of graphics* is powerful. Custom (and otherwise
-complex) plots are easy to think about and build incrementaly, while the
+complex) plots are easy to think about and build incrementally, while the
 simple plots remain simple to create.
 
 To learn more about how to use plotnine, check out the
