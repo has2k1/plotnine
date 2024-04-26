@@ -12,6 +12,8 @@ if TYPE_CHECKING:
 __all__ = ("xlab", "ylab", "labs", "ggtitle")
 
 
+# TODO: Make keyword-only when python>=3.10
+# i.e. @dataclass(kw_only=True)
 @dataclass
 class labs:
     """
@@ -20,20 +22,73 @@ class labs:
 
     # Names of Scaled Aesthetics
     x: str | None = None
+    """
+    Name of the x-axis.
+    """
+
     y: str | None = None
+    """
+    Name of the y-axis.
+    """
+
     alpha: str | None = None
+    """
+    Name of the alpha legend.
+    """
+
     color: str | None = None
+    """
+    Name of the color legend or colorbar.
+    """
+
     colour: str | None = None
+    """
+    Name of the colour legend or colourbar.
+
+    This is an alias of the `color` parameter. Only use one of
+    the spellings.
+    """
+
     fill: str | None = None
+    """
+    Name of the fill legend/colourbar.
+    """
+
     linetype: str | None = None
+    """
+    Name of the linetype legend.
+    """
+
     shape: str | None = None
+    """
+    Name of the shape legend.
+    """
+
     size: str | None = None
+    """
+    Name of the size legend.
+    """
+
     stroke: str | None = None
+    """
+    Name of the stroke legend.
+    """
 
     # Other texts
     title: str | None = None
+    """
+    The title of the plot.
+    """
+
     subtitle: str | None = None
+    """
+    The subtitle of the plot.
+    """
+
     caption: str | None = None
+    """
+    The caption at the bottom of the plot.
+    """
 
     def __post_init__(self):
         kwargs: dict[str, str] = {
