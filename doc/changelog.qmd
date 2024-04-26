@@ -5,6 +5,8 @@ title: Changelog
 ## v0.13.5
 (2024-04-26)
 
+[![](https://zenodo.org/badge/DOI/10.5281/zenodo.11075182.svg)](https://doi.org/10.5281/zenodo.11075182)
+
 ### Bug Fixes
 
 - Fixed bug in [](:class:`~plotnine.stat_smooth`) where you could not set the
