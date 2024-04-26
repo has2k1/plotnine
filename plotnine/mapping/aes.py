@@ -21,7 +21,8 @@ if typing.TYPE_CHECKING:
         colour: Any
 
     THasAesNames = TypeVar(
-        "THasAesNames", bound=Sequence[str] | dict[str, Any] | ColorOrColour
+        "THasAesNames",
+        bound=Sequence[str] | dict[str, Any] | ColorOrColour,
     )
 
 __all__ = ("aes",)
@@ -347,7 +348,8 @@ def rename_aesthetics(obj: THasAesNames) -> THasAesNames:
             if name != new_name:
                 obj[new_name] = obj.pop(name)
     elif isinstance(obj, Sequence):
-        return type(obj)(s.replace("colour", "color") for s in obj)
+        T = type(obj)
+        return T(s.replace("colour", "color") for s in obj)  # pyright: ignore
     elif obj.color is None and obj.colour is not None:
         obj.color, obj.colour = obj.colour, None
 
