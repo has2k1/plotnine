@@ -2692,14 +2692,14 @@
     "href": "changelog.html",
     "title": "Changelog",
     "section": "",
-    "text": "(not-yet-released)\n\n\n\nFixed bug in stat_smooth where you could not set the family when using a glm. (#769)\nFixed bug in position_dodge2 the widths of the dodged objects were mixed up. (#772)\nFixed geom_text to work better with adjustText v1.0.0 and above.\nFixed images generated in quarto so that they have the dimensions (taking the dpi into account) that are specified in theme. (#773)\n\n\n\n\n\nAdded themeable svg_usefonts. (#756)\n\n\n\n\n\nAdded palmerpenguins dataset."
+    "text": "(2024-04-26)\n\n\n\n\nFixed bug in stat_smooth where you could not set the family when using a glm. (#769)\nFixed bug in position_dodge2 the widths of the dodged objects were mixed up. (#772)\nFixed geom_text to work better with adjustText v1.0.0 and above.\nFixed images generated in quarto so that they have the dimensions (taking the dpi into account) that are specified in theme. (#773)\n\n\n\n\n\nAdded themeable svg_usefonts. (#756)\n\n\n\n\n\nAdded palmerpenguins dataset."
   },
   {
     "objectID": "changelog.html#v0.13.5",
     "href": "changelog.html#v0.13.5",
     "title": "Changelog",
     "section": "",
-    "text": "(not-yet-released)\n\n\n\nFixed bug in stat_smooth where you could not set the family when using a glm. (#769)\nFixed bug in position_dodge2 the widths of the dodged objects were mixed up. (#772)\nFixed geom_text to work better with adjustText v1.0.0 and above.\nFixed images generated in quarto so that they have the dimensions (taking the dpi into account) that are specified in theme. (#773)\n\n\n\n\n\nAdded themeable svg_usefonts. (#756)\n\n\n\n\n\nAdded palmerpenguins dataset."
+    "text": "(2024-04-26)\n\n\n\n\nFixed bug in stat_smooth where you could not set the family when using a glm. (#769)\nFixed bug in position_dodge2 the widths of the dodged objects were mixed up. (#772)\nFixed geom_text to work better with adjustText v1.0.0 and above.\nFixed images generated in quarto so that they have the dimensions (taking the dpi into account) that are specified in theme. (#773)\n\n\n\n\n\nAdded themeable svg_usefonts. (#756)\n\n\n\n\n\nAdded palmerpenguins dataset."
   },
   {
     "objectID": "changelog.html#v0.13.4",
