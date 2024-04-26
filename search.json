@@ -4092,7 +4092,7 @@
     "href": "reference/labs.html#parameter-attributes",
     "title": " plotnine.labs",
     "section": "Parameter Attributes",
-    "text": "Parameter Attributes\n\n\nx: str | None = None\n\n\n\ny: str | None = None\n\n\n\nalpha: str | None = None\n\n\n\ncolor: str | None = None\n\n\n\ncolour: str | None = None\n\n\n\nfill: str | None = None\n\n\n\nlinetype: str | None = None\n\n\n\nshape: str | None = None\n\n\n\nsize: str | None = None\n\n\n\nstroke: str | None = None\n\n\n\ntitle: str | None = None\n\n\n\nsubtitle: str | None = None\n\n\n\ncaption: str | None = None"
+    "text": "Parameter Attributes\n\n\nx: str | None = None\n\nName of the x-axis.\n\ny: str | None = None\n\nName of the y-axis.\n\nalpha: str | None = None\n\nName of the alpha legend.\n\ncolor: str | None = None\n\nName of the color legend or colorbar.\n\ncolour: str | None = None\n\nName of the colour legend or colourbar.\nThis is an alias of the color parameter. Only use one of the spellings.\n\nfill: str | None = None\n\nName of the fill legend/colourbar.\n\nlinetype: str | None = None\n\nName of the linetype legend.\n\nshape: str | None = None\n\nName of the shape legend.\n\nsize: str | None = None\n\nName of the size legend.\n\nstroke: str | None = None\n\nName of the stroke legend.\n\ntitle: str | None = None\n\nThe title of the plot.\n\nsubtitle: str | None = None\n\nThe subtitle of the plot.\n\ncaption: str | None = None\n\nThe caption at the bottom of the plot."
   },
   {
     "objectID": "reference/legend_background.html",
