@@ -218,22 +218,13 @@ class geom_text(geom):
                 fill = [list(fill)] * len(data["x"])
             plot_data["facecolor"] = fill
 
-            if params["boxstyle"] in ("round", "round4"):
-                boxstyle = (
-                    f"{params['boxstyle']},"
-                    f"pad={params['label_padding']},"
-                    f"rounding_size={params['label_r']}"
-                )
+            tokens = [params["boxstyle"], f"pad={params['label_padding']}"]
+            if params["boxstyle"] in {"round", "round4"}:
+                tokens.append(f"rounding_size={params['label_r']}")
             elif params["boxstyle"] in ("roundtooth", "sawtooth"):
-                boxstyle = (
-                    f"{params['boxstyle']},"
-                    f"pad={params['label_padding']},"
-                    f"tooth_size={params['tooth_size']}"
-                )
-            else:
-                boxstyle = (
-                    f"{params['boxstyle']}," f"pad={params['label_padding']},"
-                )
+                tokens.append(f"tooth_size={params['tooth_size']}")
+
+            boxstyle = ",".join(tokens)
             bbox = {"linewidth": params["label_size"], "boxstyle": boxstyle}
         else:
             bbox = {}
