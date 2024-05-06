@@ -160,23 +160,35 @@ class guide_legend(guide):
                 continue
 
             matched = self.legend_aesthetics(l)
+            matched_set = set(matched)
 
             # This layer does not contribute to the legend
-            if not set(matched) - exclude:
+            if not matched_set - exclude:
                 continue
 
             data = self.key[matched].copy()
 
             # Modify aesthetics
+
+            # When doing after_scale evaluations, we only consider those
+            # for the aesthetics of this legend. The reduces the spurious
+            # warnings where an evaluation of another aesthetic failed yet
+            # it is not needed.
+            aes_modifiers = {
+                ae: expr
+                for ae, expr in l.mapping._scaled.items()
+                if ae in matched_set
+            }
+
             try:
-                data = l.use_defaults(data)
+                data = l.use_defaults(data, aes_modifiers)
             except PlotnineError:
                 warn(
                     "Failed to apply `after_scale` modifications "
                     "to the legend.",
                     PlotnineWarning,
                 )
-                data = l.use_defaults(data, aes_modifiers={})
+                data = l.use_defaults(data, {})
 
             # override.aes in guide_legend manually changes the geom
             for ae in set(self.override_aes) & set(data.columns):
