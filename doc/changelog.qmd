@@ -4,6 +4,12 @@ title: Changelog
 ## v0.13.6
 (not-yet-released)
 
+### Bug Fixes
+
+- Fixed [](:class:`~plotnine.geom_label`) to work with a `boxstyle` of any
+  following `square`, `circle`, `darrow`, `larrow`, `rarrow`, `roundtooth`
+  or `sawtooth`.({{< issue 779 >}})
+
 ### Enhancements
 
 - Stopped spurious warnings of the form ``PlotnineWarning: Failed to apply
