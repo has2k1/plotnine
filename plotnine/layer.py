@@ -368,8 +368,8 @@ class layer:
 
     def use_defaults(
         self,
-        data: pd.DataFrame | None = None,
-        aes_modifiers: dict[str, Any] | None = None,
+        data: pd.DataFrame,
+        aes_modifiers: dict[str, Any],
     ) -> pd.DataFrame:
         """
         Prepare/modify data for plotting
@@ -382,12 +382,6 @@ class layer:
             Expression to evaluate and replace aesthetics in
             the data.
         """
-        if data is None:
-            data = self.data
-
-        if aes_modifiers is None:
-            aes_modifiers = self.mapping._scaled
-
         return self.geom.use_defaults(data, aes_modifiers)
 
     def finish_statistics(self):
@@ -474,13 +468,9 @@ class Layers(List[layer]):
         for l in self:
             l.compute_position(layout)
 
-    def use_defaults(
-        self,
-        data: pd.DataFrame | None = None,
-        aes_modifiers: dict[str, Any] | None = None,
-    ):
+    def use_defaults_after_scale(self):
         for l in self:
-            l.use_defaults(data, aes_modifiers)
+            l.use_defaults(l.data, l.mapping._scaled)
 
     def transform(self, scales: Scales):
         for l in self:

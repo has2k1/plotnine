@@ -1,6 +1,14 @@
 ---
 title: Changelog
 ---
+## v0.13.6
+(not-yet-released)
+
+### Enhancements
+
+- Stopped spurious warnings of the form ``PlotnineWarning: Failed to apply
+  `after_scale` modifications to the legend.`` when the `after_scale`
+  mapping is for another aesthetic.
 
 ## v0.13.5
 (2024-04-26)

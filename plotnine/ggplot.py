@@ -400,7 +400,7 @@ class ggplot:
         layout.setup_panel_params(self.coordinates)
 
         # fill in the defaults
-        layers.use_defaults()
+        layers.use_defaults_after_scale()
 
         # Allow stats to modify the layer data
         layers.finish_statistics()
