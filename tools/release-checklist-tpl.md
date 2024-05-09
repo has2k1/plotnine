@@ -114,11 +114,11 @@ Release: plotnine-<VERSION>
   - [ ] Update [plotnine-feedsock](https://github.com/conda-forge/plotnine-feedstock)
 
     ```sh
-    cd ../plotnine-feestock
+    cd ../plotnine-feedstock
     git switch main
     git pull upstream main
     git switch -c v<VERSION>
-    nvim recipe/meta.yml
+    nvim recipe/meta.yaml
     git commit -am  "Version <VERSION>"
     git push -u origin v<VERSION>
     ```
