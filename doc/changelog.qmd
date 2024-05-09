@@ -2,7 +2,7 @@
 title: Changelog
 ---
 ## v0.13.6
-(not-yet-released)
+(2024-05-09)
 
 ### Bug Fixes
 
