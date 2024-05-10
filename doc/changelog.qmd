@@ -4,6 +4,8 @@ title: Changelog
 ## v0.13.6
 (2024-05-09)
 
+[![](https://zenodo.org/badge/DOI/10.5281/zenodo.11172701.svg)](https://doi.org/10.5281/zenodo.11172701)
+
 ### Bug Fixes
 
 - Fixed [](:class:`~plotnine.geom_label`) to work with a `boxstyle` of any
