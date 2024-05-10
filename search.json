@@ -2692,14 +2692,14 @@
     "href": "changelog.html",
     "title": "Changelog",
     "section": "",
-    "text": "(2024-05-09)\n\n\n\nFixed geom_label to work with a boxstyle of any following square, circle, darrow, larrow, rarrow, roundtooth or sawtooth.(#779)\n\n\n\n\n\nStopped spurious warnings of the form PlotnineWarning: Failed to apply   `after_scale` modifications to the legend. when the after_scale mapping is for another aestetic.\nAdded width and height as default aesthetics of geom_tile."
+    "text": "(2024-05-09)\n\n\n\n\nFixed geom_label to work with a boxstyle of any following square, circle, darrow, larrow, rarrow, roundtooth or sawtooth.(#779)\n\n\n\n\n\nStopped spurious warnings of the form PlotnineWarning: Failed to apply   `after_scale` modifications to the legend. when the after_scale mapping is for another aestetic.\nAdded width and height as default aesthetics of geom_tile."
   },
   {
     "objectID": "changelog.html#v0.13.6",
     "href": "changelog.html#v0.13.6",
     "title": "Changelog",
     "section": "",
-    "text": "(2024-05-09)\n\n\n\nFixed geom_label to work with a boxstyle of any following square, circle, darrow, larrow, rarrow, roundtooth or sawtooth.(#779)\n\n\n\n\n\nStopped spurious warnings of the form PlotnineWarning: Failed to apply   `after_scale` modifications to the legend. when the after_scale mapping is for another aestetic.\nAdded width and height as default aesthetics of geom_tile."
+    "text": "(2024-05-09)\n\n\n\n\nFixed geom_label to work with a boxstyle of any following square, circle, darrow, larrow, rarrow, roundtooth or sawtooth.(#779)\n\n\n\n\n\nStopped spurious warnings of the form PlotnineWarning: Failed to apply   `after_scale` modifications to the legend. when the after_scale mapping is for another aestetic.\nAdded width and height as default aesthetics of geom_tile."
   },
   {
     "objectID": "changelog.html#v0.13.5",
