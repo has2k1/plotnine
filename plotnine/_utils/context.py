@@ -2,8 +2,6 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-import pandas as pd
-
 if TYPE_CHECKING:
     from typing_extensions import Self
 
@@ -31,22 +29,12 @@ class plot_context:
 
         # Contexts
         self.rc_context = mpl.rc_context(plot.theme.rcParams)
-        # Pandas deprecated is_copy, and when we create new dataframes
-        # from slices we do not want complaints. We always uses the
-        # new frames knowing that they are separate from the original.
-        self.pd_option_context = pd.option_context(
-            "mode.chained_assignment",
-            None,
-            "mode.copy_on_write",
-            False,
-        )
 
     def __enter__(self) -> Self:
         """
         Enclose in matplolib & pandas environments
         """
         self.rc_context.__enter__()
-        self.pd_option_context.__enter__()
         return self
 
     def __exit__(self, exc_type, exc_value, exc_traceback):
@@ -66,4 +54,3 @@ class plot_context:
                 plt.close(self.plot.figure)
 
         self.rc_context.__exit__(exc_type, exc_value, exc_traceback)
-        self.pd_option_context.__exit__(exc_type, exc_value, exc_traceback)
