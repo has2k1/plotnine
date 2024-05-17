@@ -52,10 +52,10 @@ class coord_cartesian(coord):
     ) -> pd.DataFrame:
         from mizani.bounds import squish_infinite
 
-        def squish_infinite_x(col):
+        def squish_infinite_x(col: FloatSeries) -> FloatArray:
             return squish_infinite(col, range=panel_params.x.range)
 
-        def squish_infinite_y(col):
+        def squish_infinite_y(col: FloatSeries) -> FloatArray:
             return squish_infinite(col, range=panel_params.y.range)
 
         return transform_position(data, squish_infinite_x, squish_infinite_y)
