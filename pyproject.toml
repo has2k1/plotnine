@@ -15,7 +15,6 @@ classifiers = [
     "Operating System :: Unix",
     "Operating System :: MacOS",
     "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
@@ -30,7 +29,7 @@ dependencies = [
     "scipy>=1.7.0",
     "statsmodels>=0.14.0",
 ]
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 
 [project.optional-dependencies]
 all = [
@@ -55,8 +54,6 @@ doc = [
     "click",
     "numpydoc>=0.9.1",
     "quartodoc>=0.7.2",
-    # Use importlib.resources when min supported python >= 3.9.0
-    "importlib_resources",
 ]
 
 lint = [
