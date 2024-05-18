@@ -221,7 +221,7 @@ def munch_data(data: pd.DataFrame, dist: FloatArray) -> pd.DataFrame:
     # not counting the last one
     dist[np.isnan(dist)] = 1
     extra = np.maximum(np.floor(dist / segment_length), 1)
-    extra = extra.astype(int, copy=False)
+    extra = extra.astype(int)
 
     # Generate extra pieces for x and y values
     # The final point must be manually inserted at the end
