@@ -1,0 +1,31 @@
+title: "[CONTEST]: "
+labels: ["contest-2024"]
+body:
+  - type: input
+    id: authors
+    attributes:
+      label: Authors
+      description: "List full names of all authors of the submission. If you include affiliation, please do so inside parentheses."
+    validations:
+      required: true
+  - type: input
+    id: links
+    attributes:
+      label: Links
+      description: "Any social or website links for authors. Use markdown for, e.g. [twitter](https://twitter.com/HKibirige), [github](https://github.com/has2k1)"
+    validations:
+      required: false
+  - type: textarea
+    id: description
+    attributes:
+      label: Full description
+      description: "Fully describe your submission. Feel free to link away to a Quarto Pub post, a README, personal blog, or similar. This can be edited after your submission."
+    validations:
+      required: true
+  - type: textarea
+    id: repo
+    attributes:
+      label: Code repository
+      description: "Link to a repo with data & code for reproducing your plotnine plot."
+    validations:
+      required: false
