@@ -1,6 +1,57 @@
 title: "[CONTEST]: "
 labels: ["contest-2024"]
 body:
+  - type: markdown
+  
+    attributes:
+      value: >-
+        
+        <details>
+        <summary><b>What should my submission include?</b></summary>
+        <br/>
+        To produce your final plot, every submission must include all the code, data, and processing steps, at least minimally documented.
+        <br/><br/>
+
+
+        #### 1. Code
+
+        <br>
+        A link to the repository or script that fully reproduces your submission. Please include any data used to produce the plot.
+        <br><br>
+
+        #### 2. Plot
+
+        <br>
+        Include your plot. If your submission includes many plots (e.g. it’s a multipart tutorial or article that includes many plots), please also link away to the full article. 
+        <br><br>
+
+        #### 3. Documentation
+
+        <br>
+        Whether as code comments or via prose in something like a Quarto doc or Jupyter notebook, be sure to include an explanation of what you are doing, and how your code works. Comments may be minimal, but they should help a novice to plotnine understand how your code produces your final plot.
+
+        <br/><br/>
+        </details>
+
+        
+        <details>
+        <summary><b>How will submissions be judged?</b></summary>
+        <br>
+
+
+        Broadly, entries will be judged based on utility and beauty. 
+        Is your plot easy to read and comprehend?
+        Is it a technically impressive, well-documented example?
+        Does it demonstrate novel, useful elements of plot design?
+        Is it aesthetically pleasing?
+        We recognize that some plots may excel in one of these categories, with some in another (and some in all).
+        We promise that the evaluation will keep this in mind.
+        <br><br>
+        We also realize our judging criteria are subjective.
+        Therefore, Hassan Kibirige, the creator of plotnine, along with a panel of visualization wizards will help review this year’s submissions. 
+
+        </details>
+      
   - type: input
     id: authors
     attributes:
@@ -12,7 +63,8 @@ body:
     id: links
     attributes:
       label: Links
-      description: "Any social or website links for authors. Use markdown for, e.g. [twitter](https://twitter.com/HKibirige), [github](https://github.com/has2k1)"
+      description: "Any social or website links for authors. Use markdown for, e.g. `[twitter](https://twitter.com/HKibirige)`, `[github](https://github.com/has2k1)`"
+      placeholder: "e.g. [twitter](https://twitter.com/HKibirige), [github](https://github.com/has2k1)"
     validations:
       required: false
   - type: textarea
