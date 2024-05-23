@@ -5,6 +5,8 @@ body:
   
     attributes:
       value: >-
+        Thank you for submitting to the [2024 Plotnine Plotting Contest](https://posit.co/blog/announcing-the-2024-plotnine-contest/).
+        The submission deadline is Friday, July 12, 2024 (https://time.is/Anywhere_on_Earth).
         
         <details>
         <summary><b>What should my submission include?</b></summary>
@@ -50,6 +52,26 @@ body:
         We also realize our judging criteria are subjective.
         Therefore, Hassan Kibirige, the creator of plotnine, along with a panel of visualization wizards will help review this year’s submissions. 
 
+        </details>
+
+        <details>
+        <summary><b>What are the prizes?</summary>
+
+
+        #### 1. Grand Prize
+        
+        In addition to the prizes below, any number of Plotnine & Posit t-shirts, books, mugs, and other swag (worth up to $200).
+
+        #### 2. Runners Up
+
+        In addition to the prizes below, one year of shinyapps.io Basic plan or one year of Posit.cloud.
+
+        #### 3. Honorable Mentions
+
+
+        A larger-than-large helping of open source stickers plus a side of hex for plot-making packages (and other goodies).
+
+         
         </details>
       
   - type: input
