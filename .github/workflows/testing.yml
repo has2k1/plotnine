@@ -39,8 +39,6 @@ jobs:
           # Install as an editable so that the coverage path
           # is predicable
           pip install -e ".[extra,test]"
-          pip install --upgrade git+https://github.com/has2k1/mizani
-          pip install --upgrade git+https://github.com/pandas-dev/pandas
 
       - name: Environment Information
         shell: bash
