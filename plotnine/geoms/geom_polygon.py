@@ -80,7 +80,7 @@ class geom_polygon(geom):
         from matplotlib.collections import PolyCollection
 
         data = coord.transform(data, panel_params, munch=True)
-        data["size"] *= SIZE_FACTOR
+        data["linewidth"] = data["size"] * SIZE_FACTOR
 
         # Each group is a polygon with a single facecolor
         # with potentially an edgecolor for every edge.
@@ -100,7 +100,7 @@ class geom_polygon(geom):
             facecolor.append("none" if fill is None else fill)
             edgecolor.append(df["color"].iloc[0] or "none")
             linestyle.append(df["linetype"].iloc[0])
-            linewidth.append(df["size"].iloc[0])
+            linewidth.append(df["linewidth"].iloc[0])
 
         col = PolyCollection(
             verts,
@@ -136,10 +136,10 @@ class geom_polygon(geom):
         """
         from matplotlib.patches import Rectangle
 
-        data["size"] *= SIZE_FACTOR
         # We take into account that the linewidth
         # bestrides the boundary of the rectangle
-        linewidth = np.min([data["size"], da.width / 4, da.height / 4])
+        linewidth = data["size"] * SIZE_FACTOR
+        linewidth = np.min([linewidth, da.width / 4, da.height / 4])
 
         if data["color"] is None:
             linewidth = 0

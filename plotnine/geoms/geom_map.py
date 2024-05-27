@@ -132,14 +132,14 @@ class geom_map(geom):
         if geom_type in ("Polygon", "MultiPolygon"):
             from matplotlib.collections import PatchCollection
 
-            data["size"] *= SIZE_FACTOR
+            linewidth = data["size"] * SIZE_FACTOR
             patches = [PolygonPatch(g) for g in data["geometry"]]
             coll = PatchCollection(
                 patches,
                 edgecolor=data["color"],
                 facecolor=data["fill"],
                 linestyle=data["linetype"],
-                linewidth=data["size"],
+                linewidth=linewidth,
                 zorder=params["zorder"],
                 rasterized=params["raster"],
             )
@@ -172,7 +172,7 @@ class geom_map(geom):
         elif geom_type in ("LineString", "MultiLineString"):
             from matplotlib.collections import LineCollection
 
-            data["size"] *= SIZE_FACTOR
+            linewidth = data["size"] * SIZE_FACTOR
             data["color"] = to_rgba(data["color"], data["alpha"])
             segments = []
             for g in data["geometry"]:
@@ -184,7 +184,7 @@ class geom_map(geom):
             coll = LineCollection(
                 segments,
                 edgecolor=data["color"],
-                linewidth=data["size"],
+                linewidth=linewidth,
                 linestyle=data["linetype"],
                 zorder=params["zorder"],
                 rasterized=params["raster"],

@@ -117,7 +117,7 @@ class geom_ribbon(geom):
         ax: Axes,
         **params: Any,
     ):
-        size = data["size"].iloc[0] * SIZE_FACTOR
+        linewidth = data["size"].iloc[0] * SIZE_FACTOR
         fill = to_rgba(data["fill"], data["alpha"])
 
         if data["color"].isna().all():
@@ -140,7 +140,7 @@ class geom_ribbon(geom):
         interpolate = not (where is None or where.all())
 
         if params["outline_type"] != "full":
-            size = 0
+            linewidth = 0
             color = "none"
 
         fill_between(
@@ -151,7 +151,7 @@ class geom_ribbon(geom):
             interpolate=interpolate,
             facecolor=fill,
             edgecolor=color,
-            linewidth=size,
+            linewidth=linewidth,
             linestyle=data["linetype"].iloc[0],
             zorder=params["zorder"],
             rasterized=params["raster"],

@@ -274,7 +274,7 @@ class geom_boxplot(geom):
         if facecolor is None:
             facecolor = "none"
 
-        kwargs = {"linestyle": data["linetype"], "linewidth": data["size"]}
+        kwargs = {"linestyle": data["linetype"]}
 
         box = Rectangle(
             (da.width * 0.125, da.height * 0.25),
@@ -282,6 +282,7 @@ class geom_boxplot(geom):
             height=da.height * 0.5,
             facecolor=facecolor,
             edgecolor=data["color"],
+            linewidth=data["size"],
             capstyle="projecting",
             antialiased=False,
             **kwargs,
@@ -290,7 +291,7 @@ class geom_boxplot(geom):
 
         kwargs["solid_capstyle"] = "butt"
         kwargs["color"] = data["color"]
-        kwargs["linewidth"] *= SIZE_FACTOR
+        kwargs["linewidth"] = data["size"] * SIZE_FACTOR
 
         # middle strike through
         strike = Line2D(

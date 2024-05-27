@@ -78,7 +78,7 @@ class geom_rect(geom):
         from matplotlib.collections import PolyCollection
 
         data = coord.transform(data, panel_params, munch=True)
-        data["size"] *= SIZE_FACTOR
+        linewidth = data["size"] * SIZE_FACTOR
 
         limits = zip(data["xmin"], data["xmax"], data["ymin"], data["ymax"])
 
@@ -96,7 +96,7 @@ class geom_rect(geom):
             facecolors=fill,
             edgecolors=color,
             linestyles=data["linetype"],
-            linewidths=data["size"],
+            linewidths=linewidth,
             zorder=params["zorder"],
             rasterized=params["raster"],
         )
