@@ -1964,14 +1964,14 @@
     "href": "reference/geom_label.html",
     "title": " plotnine.geom_label",
     "section": "",
-    "text": "geom_label(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"identity\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    parse=False,\n    family=None,\n    fontweight=\"normal\",\n    fontstyle=\"normal\",\n    nudge_x=0,\n    nudge_y=0,\n    adjust_text=None,\n    format_string=None,\n    path_effects=None,\n    boxstyle=\"round\",\n    boxcolor=None,\n    label_padding=0.25,\n    label_r=0.25,\n    label_size=0.7,\n    tooth_size=None,\n    **kwargs\n)"
+    "text": "geom_label(mapping=None, data=None, **kwargs)"
   },
   {
     "objectID": "reference/geom_label.html#parameters",
     "href": "reference/geom_label.html#parameters",
     "title": " plotnine.geom_label",
     "section": "Parameters",
-    "text": "Parameters\n\n\nmapping : aes = None\n\nAesthetic mappings created with aes. If specified and inherit_aes=True, it is combined with the default mapping for the plot. You must supply mapping if there is no plot mapping.\n\n\n\n\n\n\n\nAesthetic\nDefault value\n\n\n\n\nlabel\n\n\n\nx\n\n\n\ny\n\n\n\nalpha\n1\n\n\nangle\n0\n\n\ncolor\n'black'\n\n\nfill\n'white'\n\n\ngroup\n\n\n\nha\n'center'\n\n\nlineheight\n1.2\n\n\nsize\n11\n\n\nva\n'center'\n\n\n\nThe bold aesthetics are required.\nAesthetics Descriptions\n\nha\n\nHorizontal alignment. One of left, center or right.\n\nva\n\nVertical alignment. One of top, center, bottom, baseline.\n\n\n\ndata : DataFrame = None\n\nThe data to be displayed in this layer. If None, the data from from the ggplot() call is used. If specified, it overrides the data from the ggplot() call.\n\nstat : str | stat = \"identity\"\n\nThe statistical transformation to use on the data for this layer. If it is a string, it must be the registered and known to Plotnine.\n\nposition : str | position = \"identity\"\n\nPosition adjustment. If it is a string, it must be registered and known to Plotnine.\n\nna_rm : bool = False\n\nIf False, removes missing values with a warning. If True silently removes missing values.\n\ninherit_aes : bool = True\n\nIf False, overrides the default aesthetics.\n\nshow_legend : bool | dict = None\n\nWhether this layer should be included in the legends. None the default, includes any aesthetics that are mapped. If a bool, False never includes and True always includes. A dict can be used to exclude specific aesthetis of the layer from showing in the legend. e.g show_legend={'color': False}, any other aesthetic are included by default.\n\nraster : bool = False\n\nIf True, draw onto this layer a raster (bitmap) object even ifthe final image is in vector format.\n\nboxstyle : str = \"round\"\n\nOptions are:\n'circle'\n'darrow'\n'larrow'\n'rarrow'\n'round '\n'round4'\n'roundtooth'\n'sawtooth'\n'square'\n\nboxcolor\n\nColor of box around the text. If None, the color is the same as the text.\n\nlabel_padding : float = 0.25\n\nAmount of padding\n\nlabel_r : float = 0.25\n\nRounding radius of corners.\n\nlabel_size : float = 0.7\n\nLinewidth of the label boundary.\n\ntooth_size : float = None\n\nSize of the roundtooth or sawtooth if they are the chosen boxstyle. The default depends on Matplotlib\n\n**kwargs : Any = {}\n\nAesthetics or parameters used by the stat."
+    "text": "Parameters\n\n\nboxstyle : str = \"round\"\n\nOptions are:\n'circle'\n'darrow'\n'larrow'\n'rarrow'\n'round '\n'round4'\n'roundtooth'\n'sawtooth'\n'square'\n\nboxcolor\n\nColor of box around the text. If None, the color is the same as the text.\n\nlabel_padding : float = 0.25\n\nAmount of padding\n\nlabel_r : float = 0.25\n\nRounding radius of corners.\n\nlabel_size : float = 0.7\n\nLinewidth of the label boundary.\n\ntooth_size : float = None\n\nSize of the roundtooth or sawtooth if they are the chosen boxstyle. The default depends on Matplotlib"
   },
   {
     "objectID": "reference/geom_label.html#see-also",
@@ -2692,14 +2692,21 @@
     "href": "changelog.html",
     "title": "Changelog",
     "section": "",
-    "text": "(2024-05-09)\n\n\n\n\nFixed geom_label to work with a boxstyle of any following square, circle, darrow, larrow, rarrow, roundtooth or sawtooth.(#779)\n\n\n\n\n\nStopped spurious warnings of the form PlotnineWarning: Failed to apply   `after_scale` modifications to the legend. when the after_scale mapping is for another aestetic.\nAdded width and height as default aesthetics of geom_tile."
+    "text": "(not-yet-released)\n\n\n\nThe family, fontstyle and fontweight parameters of geom_text are now aesthetics (#790).\n\n\n\n\n\ngeom_text has gained new aesthetics fontvariant and fontstretch."
+  },
+  {
+    "objectID": "changelog.html#v0.14.0",
+    "href": "changelog.html#v0.14.0",
+    "title": "Changelog",
+    "section": "",
+    "text": "(not-yet-released)\n\n\n\nThe family, fontstyle and fontweight parameters of geom_text are now aesthetics (#790).\n\n\n\n\n\ngeom_text has gained new aesthetics fontvariant and fontstretch."
   },
   {
     "objectID": "changelog.html#v0.13.6",
     "href": "changelog.html#v0.13.6",
     "title": "Changelog",
-    "section": "",
-    "text": "(2024-05-09)\n\n\n\n\nFixed geom_label to work with a boxstyle of any following square, circle, darrow, larrow, rarrow, roundtooth or sawtooth.(#779)\n\n\n\n\n\nStopped spurious warnings of the form PlotnineWarning: Failed to apply   `after_scale` modifications to the legend. when the after_scale mapping is for another aestetic.\nAdded width and height as default aesthetics of geom_tile."
+    "section": "v0.13.6",
+    "text": "v0.13.6\n(2024-05-09)\n\n\nBug Fixes\n\nFixed geom_label to work with a boxstyle of any following square, circle, darrow, larrow, rarrow, roundtooth or sawtooth.(#779)\n\n\n\nEnhancements\n\nStopped spurious warnings of the form PlotnineWarning: Failed to apply   `after_scale` modifications to the legend. when the after_scale mapping is for another aestetic.\nAdded width and height as default aesthetics of geom_tile."
   },
   {
     "objectID": "changelog.html#v0.13.5",
@@ -3952,14 +3959,14 @@
     "href": "reference/geom_text.html",
     "title": " plotnine.geom_text",
     "section": "",
-    "text": "geom_text(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"identity\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    parse=False,\n    family=None,\n    fontweight=\"normal\",\n    fontstyle=\"normal\",\n    nudge_x=0,\n    nudge_y=0,\n    adjust_text=None,\n    format_string=None,\n    path_effects=None,\n    **kwargs\n)"
+    "text": "geom_text(mapping=None, data=None, **kwargs)"
   },
   {
     "objectID": "reference/geom_text.html#parameters",
     "href": "reference/geom_text.html#parameters",
     "title": " plotnine.geom_text",
     "section": "Parameters",
-    "text": "Parameters\n\n\nmapping : aes = None\n\nAesthetic mappings created with aes. If specified and inherit_aes=True, it is combined with the default mapping for the plot. You must supply mapping if there is no plot mapping.\n\n\n\n\n\n\n\nAesthetic\nDefault value\n\n\n\n\nlabel\n\n\n\nx\n\n\n\ny\n\n\n\nalpha\n1\n\n\nangle\n0\n\n\ncolor\n'black'\n\n\ngroup\n\n\n\nha\n'center'\n\n\nlineheight\n1.2\n\n\nsize\n11\n\n\nva\n'center'\n\n\n\nThe bold aesthetics are required.\nAesthetics Descriptions\n\nha\n\nHorizontal alignment. One of left, center or right.\n\nva\n\nVertical alignment. One of top, center, bottom, baseline.\n\n\n\ndata : DataFrame = None\n\nThe data to be displayed in this layer. If None, the data from from the ggplot() call is used. If specified, it overrides the data from the ggplot() call.\n\nstat : str | stat = \"identity\"\n\nThe statistical transformation to use on the data for this layer. If it is a string, it must be the registered and known to Plotnine.\n\nposition : str | position = \"identity\"\n\nPosition adjustment. If it is a string, it must be registered and known to Plotnine.\n\nna_rm : bool = False\n\nIf False, removes missing values with a warning. If True silently removes missing values.\n\ninherit_aes : bool = True\n\nIf False, overrides the default aesthetics.\n\nshow_legend : bool | dict = None\n\nWhether this layer should be included in the legends. None the default, includes any aesthetics that are mapped. If a bool, False never includes and True always includes. A dict can be used to exclude specific aesthetis of the layer from showing in the legend. e.g show_legend={'color': False}, any other aesthetic are included by default.\n\nraster : bool = False\n\nIf True, draw onto this layer a raster (bitmap) object even ifthe final image is in vector format.\n\nparse : bool = False\n\nIf True, the labels will be rendered with latex.\n\nfamily : str = None\n\nFont family.\n\nfontweight : int | str = \"normal\"\n\nFont weight.\n\nfontstyle : Literal[\"normal\", \"italic\", \"oblique\"] = \"normal\"\n\nFont style.\n\nnudge_x : float = 0\n\nHorizontal adjustment to apply to the text\n\nnudge_y : float = 0\n\nVertical adjustment to apply to the text\n\nadjust_text\n\nParameters to adjust_text will repel overlapping texts. This parameter takes priority of over nudge_x and nudge_y. adjust_text does not work well when it is used in the first layer of the plot, or if it is the only layer. For more see the documentation at https://github.com/Phlya/adjustText/wiki .\n\nformat_string : str = None\n\nIf not None, then the text is formatted with this string using str.format e.g:\n# 2.348 -&gt; \"2.35%\"\ngeom_text(format_string=\"{:.2f}%\")\n\npath_effects : list = None\n\nIf not None, then the text will use these effects. See  documentation for more details.\n\n**kwargs : Any = {}\n\nAesthetics or parameters used by the stat."
+    "text": "Parameters\n\n\nparse : bool = False\n\nIf True, the labels will be rendered with latex.\n\nnudge_x : float = 0\n\nHorizontal adjustment to apply to the text\n\nnudge_y : float = 0\n\nVertical adjustment to apply to the text\n\nadjust_text\n\nParameters to adjust_text will repel overlapping texts. This parameter takes priority of over nudge_x and nudge_y. adjust_text does not work well when it is used in the first layer of the plot, or if it is the only layer. For more see the documentation at https://github.com/Phlya/adjustText/wiki .\n\nformat_string : str = None\n\nIf not None, then the text is formatted with this string using str.format e.g:\n# 2.348 -&gt; \"2.35%\"\ngeom_text(format_string=\"{:.2f}%\")\n\npath_effects : list = None\n\nIf not None, then the text will use these effects. See  documentation for more details."
   },
   {
     "objectID": "reference/geom_text.html#see-also",
