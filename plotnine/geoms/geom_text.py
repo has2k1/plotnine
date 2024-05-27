@@ -42,12 +42,6 @@ class geom_text(geom):
     parse : bool, default=False
         If `True`{.py}, the labels will be rendered with
         [latex](http://matplotlib.org/users/usetex.html).
-    family : str, default=None
-        Font family.
-    fontweight : int | str, default="normal"
-        Font weight.
-    fontstyle : Literal["normal", "italic", "oblique"], default="normal"
-        Font style.
     nudge_x : float, default=0
         Horizontal adjustment to apply to the text
     nudge_y : float, default=0
@@ -87,13 +81,64 @@ class geom_text(geom):
 
     **Aesthetics Descriptions**
 
+    `size`
+
+    :   Float or one of:
+
+        ```python
+        {
+            "xx-small", "x-small", "small", "medium", "large",
+            "x-large", "xx-large"
+        }
+        ```
+
     `ha`
 
-    :   Horizontal alignment. One of *left*, *center* or *right.*
+    :   Horizontal alignment. One of `{"left", "center", "right"}`{.py}.
 
     `va`
 
-    :   Vertical alignment. One of *top*, *center*, *bottom*, *baseline*.
+    :   Vertical alignment. One of
+        `{"top", "center", "bottom", "baseline", "center_baseline"}`{.py}.
+
+    `family`
+
+    :   Font family. Can be a font name
+        e.g. "Arial", "Helvetica", "Times", ... or a family that is one of
+        `{"serif", "sans-serif", "cursive", "fantasy", "monospace"}}`{.py}
+
+    `fontweight`
+
+    :   Font weight. A numeric value in range 0-1000 or a string that is
+        one of:
+
+        ```python
+        {
+            "ultralight", "light", "normal", "regular", "book", "medium",
+            "roman", "semibold", "demibold", "demi", "bold", "heavy",
+            "extra bold", "black"
+        }
+        ```
+
+    `fontstyle`
+
+    :   Font style. One of `{"normal", "italic", "oblique"}`{.py}.
+
+    `fontvariant`
+
+    :   Font variant. One of `{"normal", "small-caps"}`{.py}.
+
+    `fontstretch`
+
+    :   Font Stretch. A numeric value in range 0-1000, or one of:
+
+        ```python
+        {
+            "ultra-condensed", "extra-condensed", "condensed",
+            "semi-condensed", "normal", "semi-expanded", "expanded",
+            "extra-expanded", "ultra-expanded"
+        }
+        ```
     """
     DEFAULT_AES = {
         "alpha": 1,
@@ -103,6 +148,11 @@ class geom_text(geom):
         "lineheight": 1.2,
         "ha": "center",
         "va": "center",
+        "family": None,
+        "fontweight": "normal",
+        "fontstyle": "normal",
+        "fontvariant": None,
+        "fontstretch": None,
     }
     REQUIRED_AES = {"label", "x", "y"}
     DEFAULT_PARAMS = {
@@ -110,9 +160,6 @@ class geom_text(geom):
         "position": "identity",
         "na_rm": False,
         "parse": False,
-        "family": None,
-        "fontweight": "normal",
-        "fontstyle": "normal",
         "nudge_x": 0,
         "nudge_y": 0,
         "adjust_text": None,
@@ -198,14 +245,18 @@ class geom_text(geom):
 
         # Create a dataframe for the plotting data required
         # by ax.text
-        plot_data = data[["x", "y", "size", "ha", "va"]].copy()
-        plot_data["s"] = data["label"]
-        plot_data["rotation"] = data["angle"]
-        plot_data["linespacing"] = data["lineheight"]
+        ae_names = list(set(geom_text.DEFAULT_AES) | geom_text.REQUIRED_AES)
+        plot_data = data[ae_names]
+        plot_data.rename(
+            {
+                "label": "s",
+                "angle": "rotation",
+                "lineheight": "linespacing",
+            },
+            axis=1,
+            inplace=True,
+        )
         plot_data["color"] = color
-        plot_data["family"] = params["family"]
-        plot_data["fontweight"] = params["fontweight"]
-        plot_data["fontstyle"] = params["fontstyle"]
         plot_data["zorder"] = params["zorder"]
         plot_data["rasterized"] = params["raster"]
         plot_data["clip_on"] = True
@@ -299,7 +350,7 @@ class geom_text(geom):
             y=0.5 * da.height,
             text="a",
             size=data["size"],
-            family=lyr.geom.params["family"],
+            family=data["family"],
             color=color,
             rotation=data["angle"],
             horizontalalignment="center",

@@ -1,6 +1,21 @@
 ---
 title: Changelog
 ---
+## v0.14.0
+
+(not-yet-released)
+
+### Enhancements
+
+- The `family`, `fontstyle` and `fontweight` parameters of
+  [](:class:`~plotnine.geom_text`) are now aesthetics ({{< issue 790 >}}).
+
+### New Features
+
+- [](:class:`~plotnine.geom_text`) has gained new aesthetics
+  `fontvariant` and `fontstretch`.
+
+
 ## v0.13.6
 (2024-05-09)
 
