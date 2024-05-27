@@ -11,9 +11,15 @@ import matplotlib.pyplot as plt
 from matplotlib.testing.compare import compare_images
 
 from plotnine import ggplot, theme
+from plotnine.themes.theme import DEFAULT_RCPARAMS
 
 TOLERANCE = 2  # Default tolerance for the tests
 DPI = 72  # Default DPI for the tests
+
+# To get uniform test images, we use fonts that ship with matplotlib
+DEFAULT_RCPARAMS["font.monospace"] = ["Dejavu Sans Mono"]
+DEFAULT_RCPARAMS["font.sans-serif"] = ["Dejavu Sans"]
+DEFAULT_RCPARAMS["font.serif"] = ["Dejavu Serif"]
 
 # This partial theme modifies all themes that are used in
 # the test. It is limited to setting the size of the test
