@@ -156,7 +156,7 @@ class geom_path(geom):
         **params: Any,
     ):
         data = coord.transform(data, panel_params, munch=True)
-        data["size"] *= SIZE_FACTOR
+        data["linewidth"] = data["size"] * SIZE_FACTOR
 
         if "constant" in params:
             constant: bool = params.pop("constant")
@@ -195,7 +195,7 @@ class geom_path(geom):
         """
         from matplotlib.lines import Line2D
 
-        data["size"] *= SIZE_FACTOR
+        linewidth = data["size"] * SIZE_FACTOR
         x = [0, da.width]
         y = [0.5 * da.height] * 2
         color = to_rgba(data["color"], data["alpha"])
@@ -204,7 +204,7 @@ class geom_path(geom):
             x,
             y,
             linestyle=data["linetype"],
-            linewidth=data["size"],
+            linewidth=linewidth,
             color=color,
             solid_capstyle="butt",
             antialiased=False,
@@ -324,7 +324,7 @@ class arrow:
                 "rasterized": params["raster"],
                 "edgecolor": data.loc[idx1, "color"],
                 "facecolor": data.loc[idx1, "facecolor"],
-                "linewidth": data.loc[idx1, "size"],
+                "linewidth": data.loc[idx1, "linewidth"],
                 "linestyle": data.loc[idx1, "linetype"],
             }
 
@@ -350,7 +350,7 @@ class arrow:
                 "rasterized": params["raster"],
                 "edgecolor": data["color"].iloc[0],
                 "facecolor": data["facecolor"].iloc[0],
-                "linewidth": data["size"].iloc[0],
+                "linewidth": data["linewidth"].iloc[0],
                 "linestyle": data["linetype"].iloc[0],
                 "joinstyle": "round",
                 "capstyle": "butt",
@@ -478,7 +478,7 @@ def _draw_segments(data: pd.DataFrame, ax: Axes, **params: Any):
     segments = np.vstack(_segments).tolist()
 
     edgecolor = color if color is None else [color[i] for i in indices]
-    linewidth = data.loc[indices, "size"]
+    linewidth = data.loc[indices, "linewidth"]
     linestyle = data.loc[indices, "linetype"]
 
     coll = LineCollection(
@@ -506,7 +506,7 @@ def _draw_lines(data: pd.DataFrame, ax: Axes, **params: Any):
         data["x"],
         data["y"],
         color=color,
-        linewidth=data["size"].iloc[0],
+        linewidth=data["linewidth"].iloc[0],
         linestyle=data["linetype"].iloc[0],
         zorder=params["zorder"],
         rasterized=params["raster"],

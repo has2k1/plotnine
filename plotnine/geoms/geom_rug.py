@@ -73,7 +73,7 @@ class geom_rug(geom):
             t = str.maketrans("tblr", "rlbt")
             sides = sides.translate(t)
 
-        data["size"] *= SIZE_FACTOR
+        linewidth = data["size"] * SIZE_FACTOR
 
         has_x = "x" in data.columns
         has_y = "y" in data.columns
@@ -119,7 +119,7 @@ class geom_rug(geom):
         coll = LineCollection(
             rugs,
             edgecolor=color,
-            linewidth=data["size"],
+            linewidth=linewidth,
             linestyle=data["linetype"],
             zorder=params["zorder"],
             rasterized=params["raster"],

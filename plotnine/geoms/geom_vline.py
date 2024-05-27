@@ -120,13 +120,13 @@ class geom_vline(geom):
 
         x = [0.5 * da.width] * 2
         y = [0, da.height]
-        data["size"] *= SIZE_FACTOR
+        linewidth = data["size"] * SIZE_FACTOR
         color = to_rgba(data["color"], data["alpha"])
         key = Line2D(
             x,
             y,
             linestyle=data["linetype"],
-            linewidth=data["size"],
+            linewidth=linewidth,
             color=color,
             solid_capstyle="butt",
             antialiased=False,

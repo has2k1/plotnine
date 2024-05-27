@@ -187,7 +187,7 @@ class geom_crossbar(geom):
         from matplotlib.lines import Line2D
         from matplotlib.patches import Rectangle
 
-        data["size"] *= SIZE_FACTOR
+        linewidth = data["size"] * SIZE_FACTOR
 
         # background
         facecolor = to_rgba(data["fill"], data["alpha"])
@@ -198,7 +198,7 @@ class geom_crossbar(geom):
             (da.width * 0.125, da.height * 0.25),
             width=da.width * 0.75,
             height=da.height * 0.5,
-            linewidth=data["size"],
+            linewidth=linewidth,
             facecolor=facecolor,
             edgecolor=data["color"],
             linestyle=data["linetype"],
@@ -211,7 +211,7 @@ class geom_crossbar(geom):
             [da.width * 0.125, da.width * 0.875],
             [da.height * 0.5, da.height * 0.5],
             linestyle=data["linetype"],
-            linewidth=data["size"],
+            linewidth=linewidth,
             color=data["color"],
         )
         da.add_artist(strike)

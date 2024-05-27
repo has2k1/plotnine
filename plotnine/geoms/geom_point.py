@@ -91,7 +91,7 @@ class geom_point(geom):
         # All other sizes for which the MPL units should
         # be in points must scaled using sqrt(pi)
         size = ((data["size"] + data["stroke"]) ** 2) * np.pi
-        stroke = data["stroke"] * SIZE_FACTOR
+        linewidth = data["stroke"] * SIZE_FACTOR
         color = to_rgba(data["color"], data["alpha"])
         shape = data["shape"].iloc[0]
 
@@ -114,7 +114,7 @@ class geom_point(geom):
             s=size,
             facecolor=fill,
             edgecolor=color,
-            linewidth=stroke,
+            linewidth=linewidth,
             marker=shape,
             zorder=params["zorder"],
             rasterized=params["raster"],
@@ -146,7 +146,7 @@ class geom_point(geom):
             data["fill"] = data["color"]
 
         size = (data["size"] + data["stroke"]) * SIZE_FACTOR
-        stroke = data["stroke"] * SIZE_FACTOR
+        edgewidth = data["stroke"] * SIZE_FACTOR
         fill = to_rgba(data["fill"], data["alpha"])
         color = to_rgba(data["color"], data["alpha"])
 
@@ -157,7 +157,7 @@ class geom_point(geom):
             markersize=size,
             markerfacecolor=fill,
             markeredgecolor=color,
-            markeredgewidth=stroke,
+            markeredgewidth=edgewidth,
         )
         da.add_artist(key)
         return da
@@ -169,8 +169,8 @@ class geom_point(geom):
         w, h = min_size
         pad_w, pad_h = w * 0.5, h * 0.5
         _size = data["size"] * SIZE_FACTOR
-        _stroke = 2 * data["stroke"] * SIZE_FACTOR
-        _w = _h = _size + _stroke
+        _edgewidth = 2 * data["stroke"] * SIZE_FACTOR
+        _w = _h = _size + _edgewidth
         if data["color"] is not None:
             w = max(w, _w + pad_w)
             h = max(h, _h + pad_h)

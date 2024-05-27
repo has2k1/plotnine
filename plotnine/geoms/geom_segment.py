@@ -69,7 +69,7 @@ class geom_segment(geom):
         from matplotlib.collections import LineCollection
 
         data = coord.transform(data, panel_params)
-        data["size"] *= SIZE_FACTOR
+        linewidth = data["size"] * SIZE_FACTOR
         color = to_rgba(data["color"], data["alpha"])
 
         # start point -> end point, sequence of xy points
@@ -80,7 +80,7 @@ class geom_segment(geom):
         coll = LineCollection(
             list(segments),
             edgecolor=color,
-            linewidth=data["size"],
+            linewidth=linewidth,
             linestyle=data["linetype"][0],
             zorder=params["zorder"],
             rasterized=params["raster"],
@@ -93,7 +93,8 @@ class geom_segment(geom):
             adata["group"] = np.hstack([idx, idx])
             adata["x"] = np.hstack([data["x"], data["xend"]])
             adata["y"] = np.hstack([data["y"], data["yend"]])
-            other = ["color", "alpha", "size", "linetype"]
+            adata["linewidth"] = np.hstack([linewidth, linewidth])
+            other = ["color", "alpha", "linetype"]
             for param in other:
                 adata[param] = np.hstack([data[param], data[param]])
 
