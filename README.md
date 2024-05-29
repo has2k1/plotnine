@@ -9,7 +9,7 @@
 plotnine is an implementation of a *grammar of graphics* in Python
 based on [ggplot2](https://github.com/tidyverse/ggplot2).
 The grammar allows you to compose plots by explicitly mapping variables in a
-dataframe to the visual objects that make up the plot.
+dataframe to the visual characteristics (position, color, size etc.) of objects that make up the plot.
 
 <img width="33%" align="right" src="./doc/images/logo-540.png">
 
