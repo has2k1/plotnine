@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import sys
+from datetime import datetime, timedelta
 from typing import (
+    TYPE_CHECKING,
     Any,
     Callable,
     Literal,
@@ -14,31 +16,6 @@ import numpy as np
 import pandas as pd
 from numpy.typing import NDArray
 from typing_extensions import TypeAlias  # noqa: TCH002
-
-from plotnine import ggplot, guide_colorbar, guide_legend
-from plotnine.iapi import strip_label_details
-
-
-class PlotAddable(Protocol):
-    """
-    Object that can be added to a ggplot object
-    """
-
-    def __radd__(self, plot: ggplot) -> ggplot:
-        """
-        Add to ggplot object
-
-        Parameters
-        ----------
-        other :
-            ggplot object
-
-        Returns
-        -------
-        :
-            ggplot object
-        """
-        ...
 
 
 class DataFrameConvertible(Protocol):
@@ -81,14 +58,6 @@ AnyArrayLike: TypeAlias = AnyArray | pd.Series[Any] | Sequence[Any]
 IntArrayLike: TypeAlias = IntArray | IntSeries | Sequence[int]
 FloatArrayLike: TypeAlias = FloatArray | FloatSeries | Sequence[float]
 
-# Type Variables
-# A array variable we can pass to a transforming function and expect
-# result to be of the same type
-TFloatArrayLike = TypeVar("TFloatArrayLike", bound=FloatArrayLike)
-
-# Column transformation function
-TransformCol: TypeAlias = Callable[[FloatSeries], FloatSeries | FloatArray]
-
 # Input data can be a DataFrame, a DataFrame factory or things that
 # are convertible to DataFrames.
 # `Data` is mostly used internally and `DataLike` is the input type
@@ -111,29 +80,9 @@ ColorsLike: TypeAlias = (
 FigureFormat: TypeAlias = Literal["png", "retina", "jpeg", "jpg", "svg", "pdf"]
 
 # Facet strip
-StripLabellingFuncNames: TypeAlias = Literal[
-    "label_value", "label_both", "label_context"
-]
 
 # Facet space
 FacetSpaceRatios: TypeAlias = dict[Literal["x", "y"], Sequence[float]]
-
-# Function that can facet strips
-StripLabellingFunc: TypeAlias = Callable[
-    [strip_label_details], strip_label_details
-]
-
-StripLabellingDict: TypeAlias = (
-    dict[str, str] | dict[str, Callable[[str], str]]
-)
-
-# Can be coerced to a StripLabellingFunc
-CanBeStripLabellingFunc: TypeAlias = (
-    StripLabellingFuncNames
-    | StripLabellingFunc
-    | Callable[[str], str]
-    | StripLabellingDict
-)
 
 StripPosition: TypeAlias = Literal["top", "right"]
 
@@ -159,6 +108,12 @@ ScaledAestheticsName: TypeAlias = Literal[
     "shape",
     "size",
     "stroke",
+    # boxplot
+    "ymax_final",
+    "ymin_final",
+    "lower",
+    "middle",
+    "upper",
 ]
 
 # limits
@@ -222,13 +177,48 @@ LegendPosition: TypeAlias = (
 )
 Orientation: TypeAlias = Literal["horizontal", "vertical"]
 GuideKind: TypeAlias = Literal["legend", "colorbar", "colourbar"]
-LegendOrColorbar: TypeAlias = (
-    guide_legend | guide_colorbar | Literal["legend", "colorbar"]
-)
 NoGuide: TypeAlias = Literal["none", False]
-LegendOnly: TypeAlias = guide_legend | Literal["legend"]
 VerticalJustification: TypeAlias = Literal["bottom", "center", "top"]
 HorizontalJustification: TypeAlias = Literal["left", "center", "right"]
 TextJustification: TypeAlias = (
     VerticalJustification | HorizontalJustification | Literal["baseline"]
 )
+
+# Type Variables
+# A array variable we can pass to a transforming function and expect
+# result to be of the same type
+TFloatArrayLike = TypeVar("TFloatArrayLike", bound=FloatArrayLike)
+BreaksRawT = TypeVar(
+    "BreaksRawT", ScaleDiscreteBreaksRaw, ScaleContinuousBreaksRaw
+)
+LimitsRawT = TypeVar(
+    "LimitsRawT", ScaleDiscreteLimitsRaw, ScaleContinuousLimitsRaw
+)
+GuideTypeT = TypeVar(
+    "GuideTypeT",
+    Literal["legend"] | None,
+    Literal["colorbar"] | None,
+    Literal["legend", "colorbar"] | None,
+    None,
+)
+
+TDomainDType = TypeVar(
+    "TDomainDType", float, int, bool, str, datetime, timedelta
+)
+TDiscreteDomainDType = TypeVar("TDiscreteDomainDType", bound=str)
+TContinuousDomainDType = TypeVar(
+    "TContinuousDomainDType", float, datetime, timedelta
+)
+
+# TBreaksRaw = TDiscreteBreaksRaw | TContinuousBreaksRaw
+
+# Column transformation function
+TransformCol: TypeAlias = Callable[[FloatSeries], FloatSeries | FloatArray]
+
+
+class PTransform(Protocol):
+    """
+    Transform function
+    """
+
+    def __call__(self, x: TFloatArrayLike) -> TFloatArrayLike: ...

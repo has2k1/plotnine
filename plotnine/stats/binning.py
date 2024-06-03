@@ -287,7 +287,7 @@ def fuzzybreaks(
         return breaks
 
     recompute_bins = binwidth is not None
-    srange = scale.limits
+    srange = scale.final_limits
 
     if binwidth is None or np.isnan(binwidth):
         binwidth = (srange[1] - srange[0]) / bins

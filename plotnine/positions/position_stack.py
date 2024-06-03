@@ -88,7 +88,7 @@ class position_stack(position):
 
         if isinstance(scales.y, scale_continuous):
             undo_transform = (
-                not scales.y.is_linear and scales.y.trans.domain_is_numerical
+                not scales.y.is_linear_scale and scales.y.domain_is_numerical
             )
         else:
             undo_transform = False

@@ -1,65 +1,65 @@
 from __future__ import annotations
 
-from contextlib import suppress
+from dataclasses import KW_ONLY, InitVar, dataclass
 
-from ..doctools import document
-from .scale_continuous import scale_continuous
+from .scale_continuous import TransUser, scale_continuous
 
 
-@document
+@dataclass
 class scale_datetime(scale_continuous):
     """
     Base class for all date/datetime scales
-
-    Parameters
-    ----------
-    date_breaks : str, default=None
-        A string giving the distance between major breaks.
-        For example `'2 weeks'`, `'5 years'`. If specified,
-        `date_breaks` takes precedence over
-        `breaks`.
-    date_labels : str, default=None
-        Format string for the labels.
-        See [strftime](:ref:`strftime-strptime-behavior`).
-        If specified, `date_labels` takes precedence over
-        `labels`.
-    date_minor_breaks : str, default=None
-        A string giving the distance between minor breaks.
-        For example `'2 weeks'`, `'5 years'`. If specified,
-        `date_minor_breaks` takes precedence over
-        `minor_breaks`.
-    {superclass_parameters}
     """
 
-    _trans = "datetime"
+    date_breaks: InitVar[str | None] = None
+    """
+    A string giving the distance between major breaks.
+    For example `'2 weeks'`, `'5 years'`. If specified,
+    `date_breaks` takes precedence over
+    `breaks`.
+    """
 
-    def __init__(self, **kwargs):
-        from mizani.breaks import breaks_date
-        from mizani.labels import label_date
+    date_labels: InitVar[str | None] = None
+    """
+    Format string for the labels.
+    See [strftime](:ref:`strftime-strptime-behavior`).
+    If specified, `date_labels` takes precedence over
+    `labels`.
+    """
 
-        # Permit the use of the general parameters for
-        # specifying the format strings
-        with suppress(KeyError):
-            breaks = kwargs["breaks"]
-            if isinstance(breaks, str):
-                kwargs["breaks"] = breaks_date(width=breaks)
+    date_minor_breaks: InitVar[str | None] = None
+    """
+    A string giving the distance between minor breaks.
+    For example `'2 weeks'`, `'5 years'`. If specified,
+    `date_minor_breaks` takes precedence over
+    `minor_breaks`.
+    """
 
-        with suppress(KeyError):
-            minor_breaks = kwargs["minor_breaks"]
-            if isinstance(minor_breaks, str):
-                kwargs["minor_breaks"] = breaks_date(width=minor_breaks)
+    _: KW_ONLY
+    trans: TransUser = "datetime"
 
-        # Using the more specific parameters take precedence
-        with suppress(KeyError):
-            breaks_fmt = kwargs.pop("date_breaks")
-            kwargs["breaks"] = breaks_date(breaks_fmt)
+    def __post_init__(
+        self,
+        date_breaks: str | None,
+        date_labels: str | None,
+        date_minor_breaks: str | None,
+    ):
+        from mizani.breaks import breaks_date as breaks_func
+        from mizani.labels import label_date as labels_func
 
-        with suppress(KeyError):
-            labels_fmt = kwargs.pop("date_labels")
-            kwargs["labels"] = label_date(labels_fmt)
+        if date_breaks is not None:
+            self.breaks = breaks_func(date_breaks)  # pyright: ignore
+        elif isinstance(self.breaks, str):
+            self.breaks = breaks_func(width=self.breaks)  # pyright: ignore
 
-        with suppress(KeyError):
-            minor_breaks_fmt = kwargs.pop("date_minor_breaks")
-            kwargs["minor_breaks"] = breaks_date(minor_breaks_fmt)
+        if date_labels is not None:
+            self.labels = labels_func(date_labels)  # pyright: ignore
+        elif isinstance(self.labels, str):
+            self.labels = labels_func(width=self.labels)  # pyright: ignore
 
-        scale_continuous.__init__(self, **kwargs)
+        if date_minor_breaks is not None:
+            self.minor_breaks = breaks_func(date_minor_breaks)  # pyright: ignore
+        elif isinstance(self.minor_breaks, str):
+            self.minor_breaks = breaks_func(width=self.minor_breaks)  # pyright: ignore
+
+        scale_continuous.__post_init__(self)

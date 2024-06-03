@@ -116,7 +116,7 @@ class stat_function(stat):
 
         # continuous scale
         if isinstance(scales.x, scale_continuous):
-            x = scales.x.trans.inverse(x)
+            x = scales.x.inverse(x)
 
         # We know these can handle array_likes
         if isinstance(old_fun, (np.ufunc, np.vectorize)):

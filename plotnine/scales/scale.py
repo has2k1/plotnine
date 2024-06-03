@@ -1,20 +1,19 @@
 from __future__ import annotations
 
-import typing
 from abc import ABC
 from copy import copy, deepcopy
-from warnings import warn
+from dataclasses import dataclass, field
+from typing import TYPE_CHECKING, Generic, TypeVar
 
 import numpy as np
-from mizani.palettes import identity_pal
 
 from .._utils.registry import Register
-from ..exceptions import PlotnineError, PlotnineWarning
+from ..exceptions import PlotnineError
 from ..mapping.aes import is_position_aes, rename_aesthetics
 from .range import Range
 
-if typing.TYPE_CHECKING:
-    from typing import Any, Literal, Optional
+if TYPE_CHECKING:
+    from typing import Any
 
     import pandas as pd
     from numpy.typing import NDArray
@@ -31,130 +30,123 @@ if typing.TYPE_CHECKING:
 
     from ..iapi import range_view, scale_view
 
+RangeT = TypeVar("RangeT", bound=Range)
+BreaksRawT = TypeVar("BreaksRawT")
+LimitsRawT = TypeVar("LimitsRawT")
+GuideTypeT = TypeVar("GuideTypeT")
 
-class scale(ABC, metaclass=Register):
+
+@dataclass(kw_only=True)
+class scale(
+    Generic[RangeT, BreaksRawT, LimitsRawT, GuideTypeT],
+    ABC,
+    metaclass=Register,
+):
     """
     Base class for all scales
-
-    Parameters
-    ----------
-    breaks : bool | list | callable, default=True
-        List of major break points. Or a callable that
-        takes a tuple of limits and returns a list of breaks.
-        If `True`, automatically calculate the breaks.
-    expand : tuple, default=None
-        Multiplicative and additive expansion constants
-        that determine how the scale is expanded. If
-        specified must be of length 2 or 4. Specifically the
-        values are in this order:
-
-        ```
-        (mul, add)
-        (mul_low, add_low, mul_high, add_high)
-        ```
-
-        For example,
-
-        - `(0, 0)` - Do not expand.
-        - `(0, 1)` - Expand lower and upper limits by 1 unit.
-        - `(1, 0)` - Expand lower and upper limits by 100%.
-        - `(0, 0, 0, 0)` - Do not expand, as `(0, 0)`.
-        - `(0, 0, 0, 1)` - Expand upper limit by 1 unit.
-        - `(0, 1, 0.1, 0)` - Expand lower limit by 1 unit and
-          upper limit by 10%.
-        - `(0, 0, 0.1, 2)` - Expand upper limit by 10% plus
-          2 units.
-
-        If not specified, suitable defaults are chosen.
-    name : str, default=None
-        Name used as the label of the scale. This is what
-        shows up as the axis label or legend title. Suitable
-        defaults are chosen depending on the type of scale.
-    labels : bool | list | callable, default=True
-        List of [](`str`). Labels at the `breaks`.
-        Alternatively, a callable that takes an array_like of
-        break points as input and returns a list of strings.
-    limits : array_like, default=None
-        Limits of the scale. Most commonly, these are the
-        min & max values for the scales. For scales that
-        deal with categoricals, these may be a subset or
-        superset of the categories.
-    na_value : scalar, default=float("nan")
-        What value to assign to missing values. Default
-        is to assign `np.nan`.
-    palette : callable, default=None
-        Function to map data points onto the scale. Most
-        scales define their own palettes.
-    aesthetics : list | str, default=None
-        list of [](`str`). Aesthetics covered by the
-        scale. These are defined by each scale and the
-        user should probably not change them. Have fun.
     """
 
-    # major breaks
-    breaks = True
-
-    # aesthetics affected by this scale
-    _aesthetics: list[ScaledAestheticsName] = []
-
-    # What to do with the NA values
-    na_value: Any = np.nan
-
-    # used as the axis label or legend title
     name: str | None = None
+    """
+    The name of the scale. It is used as the label of the axis or the
+    title of the guide. Suitable defaults are chosen depending on
+    the type of scale.
+    """
+
+    # # major breaks
+    breaks: BreaksRawT
+    """
+    List of major break points. Or a callable that takes a tuple of limits
+    and returns a list of breaks. If `True`, automatically calculate the
+    breaks.
+    """
+
+    limits: LimitsRawT
+    """
+    Limits of the scale. Most commonly, these are the min & max values
+    for the scales. For scales that deal with categoricals, these may be a
+    subset or superset of the categories.
+    """
 
     # labels at the breaks
     labels: ScaleLabelsRaw = True
-
-    # legend or any other guide
-    guide: Optional[Literal["legend", "colorbar"]] = "legend"
-
-    # (min, max) - set by user
-    _limits = None
+    """
+    Labels at the `breaks`. Alternatively, a callable that takes an
+    array_like of break points as input and returns a list of strings.
+    """
 
     # multiplicative and additive expansion constants
-    expand: Optional[TupleFloat2 | TupleFloat4] = None
+    expand: TupleFloat2 | TupleFloat4 | None = None
+    """
+    Multiplicative and additive expansion constants
+    that determine how the scale is expanded. If
+    specified must be of length 2 or 4. Specifically the
+    values are in this order:
 
-    # range class for the aesthetic
-    _range_class: type[Range] = Range
+    ```
+    (mul, add)
+    (mul_low, add_low, mul_high, add_high)
+    ```
 
-    # Default palette
-    _palette = identity_pal()
+    For example,
 
-    def __init__(self, **kwargs):
-        for k, v in kwargs.items():
-            if hasattr(self, k):
-                setattr(self, k, v)
-            else:
-                msg = "{} could not recognise parameter `{}`"
-                warn(msg.format(self.__class__.__name__, k), PlotnineWarning)
+    - `(0, 0)` - Do not expand.
+    - `(0, 1)` - Expand lower and upper limits by 1 unit.
+    - `(1, 0)` - Expand lower and upper limits by 100%.
+    - `(0, 0, 0, 0)` - Do not expand, as `(0, 0)`.
+    - `(0, 0, 0, 1)` - Expand upper limit by 1 unit.
+    - `(0, 1, 0.1, 0)` - Expand lower limit by 1 unit and
+      upper limit by 10%.
+    - `(0, 0, 0.1, 2)` - Expand upper limit by 10% plus
+      2 units.
 
-        self.range = self._range_class()
+    If not specified, suitable defaults are chosen.
+    """
+
+    # legend or any other guide
+    guide: GuideTypeT
+    """
+    Whether to include a legend
+    """
+
+    # What to do with the NA values
+    na_value: Any = np.nan
+    """
+    What value to assign to missing values. Default
+    is to assign `np.nan`.
+    """
+
+    aesthetics: list[ScaledAestheticsName] = field(default_factory=list)
+    """
+    Aesthetics affected by this scale. These are defined by each scale
+    and the user should probably not change them. Have fun.
+    """
+
+    _range: RangeT = field(init=False, repr=False)
+
+    # Defined aesthetics for the scale
+    _aesthetics: list[ScaledAestheticsName] = field(init=False, repr=False)
+
+    def __post_init__(self):
+        breaks = getattr(self, "breaks")
 
         if (
-            np.iterable(self.breaks)
+            np.iterable(breaks)
             and np.iterable(self.labels)
             and len(self.breaks) != len(self.labels)  # type: ignore
         ):
             raise PlotnineError("Breaks and labels have unequal lengths")
 
         if (
-            self.breaks is None
+            breaks is None
             and not is_position_aes(self.aesthetics)
             and self.guide is not None
         ):
-            self.guide = None
+            self.guide = None  # pyright: ignore
 
-    @property
-    def aesthetics(self):
-        return self._aesthetics
-
-    @aesthetics.setter
-    def aesthetics(self, value):
-        if isinstance(value, str):
-            value = [value]
-        # TODO: Find a way to make the type checking work
-        self._aesthetics = rename_aesthetics(value)  # pyright: ignore
+        self.aesthetics = rename_aesthetics(
+            self.aesthetics if self.aesthetics else self._aesthetics
+        )
 
     def __radd__(self, plot):
         """
@@ -162,15 +154,6 @@ class scale(ABC, metaclass=Register):
         """
         plot.scales.append(copy(self))
         return plot
-
-    def palette(self, value):
-        """
-        Aesthetic mapping function
-
-        Note that not all scales need to implement/provide a palette.
-        For example identity & position scales do not use a palette.
-        """
-        return self._palette(value)  # type: ignore
 
     def map(self, x, limits=None):
         """
@@ -294,25 +277,18 @@ class scale(ABC, metaclass=Register):
 
         i.e Forget all the training
         """
-        self.range.reset()
+        self._range.reset()
 
     def is_empty(self) -> bool:
         """
         Whether the scale has size information
         """
-        if not hasattr(self, "range"):
+        if not hasattr(self, "_range"):
             return True
-        return self.range.is_empty() and self._limits is None
+        return self._range.is_empty() and self.limits is None
 
     @property
-    def limits(self) -> ScaleLimits:
-        raise NotImplementedError
-
-    @limits.setter
-    def limits(
-        self,
-        value,  # : ScaleLimitsRaw
-    ):
+    def final_limits(self) -> ScaleLimits:
         raise NotImplementedError
 
     def train_df(self, df: pd.DataFrame):

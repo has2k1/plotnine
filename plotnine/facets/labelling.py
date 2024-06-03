@@ -1,18 +1,34 @@
 from __future__ import annotations
 
-import typing
 from abc import ABCMeta, abstractmethod
+from typing import TYPE_CHECKING
 
 from ..exceptions import PlotnineError
 
-if typing.TYPE_CHECKING:
-    from typing import Callable, Optional
+if TYPE_CHECKING:
+    from typing import Callable, Literal, Optional, TypeAlias
 
     from ..iapi import strip_label_details
-    from ..typing import (
-        CanBeStripLabellingFunc,
-        StripLabellingFunc,
-        StripLabellingFuncNames,
+
+    # Function that can facet strips
+    StripLabellingFunc: TypeAlias = Callable[
+        [strip_label_details], strip_label_details
+    ]
+
+    StripLabellingFuncNames: TypeAlias = Literal[
+        "label_value", "label_both", "label_context"
+    ]
+
+    StripLabellingDict: TypeAlias = (
+        dict[str, str] | dict[str, Callable[[str], str]]
+    )
+
+    # Can be coerced to a StripLabellingFunc
+    CanBeStripLabellingFunc: TypeAlias = (
+        StripLabellingFuncNames
+        | StripLabellingFunc
+        | Callable[[str], str]
+        | StripLabellingDict
     )
 
 

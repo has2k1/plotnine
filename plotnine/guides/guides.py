@@ -22,17 +22,15 @@ from ..mapping.aes import rename_aesthetics
 from .guide import guide
 
 if TYPE_CHECKING:
-    from typing import Literal, Optional, Sequence
+    from typing import Literal, Optional, Sequence, TypeAlias
 
     from matplotlib.offsetbox import OffsetBox, PackerBase
 
-    from plotnine import ggplot, theme
+    from plotnine import ggplot, guide_colorbar, guide_legend, theme
     from plotnine.iapi import labels_view
     from plotnine.scales.scale import scale
     from plotnine.scales.scales import Scales
     from plotnine.typing import (
-        LegendOnly,
-        LegendOrColorbar,
         LegendPosition,
         NoGuide,
         Orientation,
@@ -41,6 +39,11 @@ if TYPE_CHECKING:
         TextJustification,
         TupleFloat2,
     )
+
+    LegendOrColorbar: TypeAlias = (
+        guide_legend | guide_colorbar | Literal["legend", "colorbar"]
+    )
+    LegendOnly: TypeAlias = guide_legend | Literal["legend"]
 
 
 # Terminology
@@ -95,7 +98,9 @@ class guides:
         self.plot_scales: Scales
         self.plot_labels: labels_view
         self.elements: GuidesElements
-        self._lookup: dict[tuple[scale, ScaledAestheticsName], guide] = {}
+        self._lookup: dict[
+            tuple[str, ScaledAestheticsName], tuple[scale, guide]
+        ] = {}
         if self.colour is not None and self.color is not None:
             raise ValueError("Got a guide for color and colour, choose one.")
         rename_aesthetics(self)
@@ -170,7 +175,7 @@ class guides:
                     raise PlotnineError(f"Unknown guide: {g}")
 
                 g.setup(self)
-                self._lookup[(scale, ae)] = g
+                self._lookup[(scale.__class__.__name__, ae)] = (scale, g)
 
     def _train(self) -> Sequence[guide]:
         """
@@ -182,7 +187,7 @@ class guides:
             Guides for the plots
         """
         gdefs: list[guide] = []
-        for (scale, ae), g in self._lookup.items():
+        for (_, ae), (scale, g) in self._lookup.items():
             # Guide turned off
             if not g.elements.position:
                 continue

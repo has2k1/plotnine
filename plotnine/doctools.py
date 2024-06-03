@@ -11,7 +11,6 @@ if typing.TYPE_CHECKING:
     from typing import Any, Type, TypeVar
 
     from plotnine.geoms.geom import geom
-    from plotnine.scales.scale import scale
     from plotnine.stats.stat import stat
 
     T = TypeVar("T")
@@ -519,67 +518,9 @@ def document_stat(stat: type[stat]) -> type[stat]:
     return stat
 
 
-def document_scale(cls: type[scale]) -> type[scale]:
-    """
-    Create a documentation for a scale
-
-    Import the superclass parameters
-
-    It replaces `{superclass_parameters}` with the documentation
-    of the parameters from the superclass.
-
-    Parameters
-    ----------
-    cls : type
-        A scale class
-
-    Returns
-    -------
-    cls : type
-        The scale class with a modified docstring.
-    """
-    params_list = []
-    # Get set of cls params
-    cls_param_string = docstring_parameters_section(cls)
-    cls_param_dict = parameters_str_to_dict(cls_param_string)
-    cls_params = set(cls_param_dict.keys())
-
-    for i, base in enumerate(cls.__bases__):
-        # Get set of base class params
-        base_param_string = param_string = docstring_parameters_section(base)
-        base_param_dict = parameters_str_to_dict(base_param_string)
-        base_params = set(base_param_dict.keys())
-
-        # Remove duplicate params from the base class
-        duplicate_params = base_params & cls_params
-        for param in duplicate_params:
-            del base_param_dict[param]
-
-        if duplicate_params:
-            param_string = parameters_dict_to_str(base_param_dict)
-
-        # Accumulate params of base case
-        if i == 0:
-            # Compensate for the indentation of the
-            # {superclass_parameters} string
-            param_string = param_string.strip()
-        params_list.append(param_string)
-
-        # Prevent the next base classes from bringing in the
-        # same parameters.
-        cls_params |= base_params
-
-    # Fill in the processed superclass parameters
-    superclass_parameters = "\n".join(params_list)
-    cls_doc = cls.__doc__ or ""  # for typechecker
-    cls.__doc__ = cls_doc.format(superclass_parameters=superclass_parameters)
-    return cls
-
-
 DOC_FUNCTIONS = {
     "geom": document_geom,
     "stat": document_stat,
-    "scale": document_scale,
 }
 
 

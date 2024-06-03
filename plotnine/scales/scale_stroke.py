@@ -1,78 +1,75 @@
+from dataclasses import KW_ONLY, InitVar, dataclass
+from typing import Literal
 from warnings import warn
 
 import numpy as np
 
 from .._utils.registry import alias
-from ..doctools import document
 from ..exceptions import PlotnineWarning
 from .scale_continuous import scale_continuous
 from .scale_discrete import scale_discrete
 
 
-@document
-class scale_stroke_continuous(scale_continuous):
+@dataclass
+class scale_stroke_continuous(scale_continuous[Literal["legend"] | None]):
     """
     Continuous Stroke Scale
-
-    Parameters
-    ----------
-    range :
-        Range ([Minimum, Maximum]) of output stroke values.
-        Should be between 0 and 1.
-    {superclass_parameters}
     """
 
     _aesthetics = ["stroke"]
+    range: InitVar[tuple[float, float]] = (1, 6)
+    """
+    Range ([Minimum, Maximum]) of output stroke values.
+    Should be between 0 and 1.
+    """
+    _: KW_ONLY
+    guide: Literal["legend"] | None = "legend"
 
-    def __init__(self, range: tuple[float, float] = (1, 6), **kwargs):
+    def __post_init__(self, range):
         from mizani.palettes import rescale_pal
 
-        # TODO: fix types in mizani
-        self.palette = rescale_pal(range)  # pyright: ignore
-        scale_continuous.__init__(self, **kwargs)
+        super().__post_init__()
+        self.palette = rescale_pal(range)
 
 
-@document
+@dataclass
 class scale_stroke_ordinal(scale_discrete):
     """
     Discrete Stroke Scale
-
-    Parameters
-    ----------
-    range :
-        Range ([Minimum, Maximum]) of output stroke values.
-        Should be between 0 and 1.
-    {superclass_parameters}
     """
 
     _aesthetics = ["stroke"]
+    range: InitVar[tuple[float, float]] = (1, 6)
+    """
+    Range ([Minimum, Maximum]) of output stroke values.
+    Should be between 0 and 1.
+    """
 
-    def __init__(self, range: tuple[float, float] = (1, 6), **kwargs):
-        def palette(value: int):
-            return np.linspace(range[0], range[1], value)
+    def __post_init__(self, range):
+        super().__post_init__()
+
+        def palette(n: int):
+            return np.linspace(range[0], range[1], n)
 
         self.palette = palette
-        scale_discrete.__init__(self, **kwargs)
 
 
-@document
+@dataclass
 class scale_stroke_discrete(scale_stroke_ordinal):
     """
     Discrete Stroke Scale
-
-    Parameters
-    ----------
-    {superclass_parameters}
     """
 
     _aesthetics = ["stroke"]
 
-    def __init__(self, **kwargs):
+    def __post_init__(self, range):
         warn(
             "Using stroke for a ordinal variable is not advised.",
             PlotnineWarning,
         )
-        super().__init__(**kwargs)
+        super().__post_init__(
+            range,
+        )
 
 
 @alias
