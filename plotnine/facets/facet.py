@@ -24,12 +24,12 @@ if typing.TYPE_CHECKING:
 
     from plotnine import ggplot, theme
     from plotnine.coords.coord import coord
+    from plotnine.facets.labelling import CanBeStripLabellingFunc
     from plotnine.facets.layout import Layout
     from plotnine.iapi import layout_details, panel_view
     from plotnine.layer import Layers
     from plotnine.mapping import Environment
     from plotnine.scales.scale import scale
-    from plotnine.typing import CanBeStripLabellingFunc
 
 
 class facet:

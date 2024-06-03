@@ -92,7 +92,7 @@ class guide_colorbar(guide):
 
         # value = breaks (numeric) is used for determining the
         # position of ticks
-        limits = scale.limits
+        limits = scale.final_limits
         breaks = scale.get_bounded_breaks()
 
         if not len(breaks):

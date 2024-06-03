@@ -1,7 +1,7 @@
+from dataclasses import InitVar, dataclass
 from warnings import warn
 
 from .._utils.registry import alias
-from ..doctools import document
 from ..exceptions import PlotnineError, PlotnineWarning
 from .scale_continuous import scale_continuous
 from .scale_discrete import scale_discrete
@@ -49,54 +49,46 @@ FILLED_SHAPES = set(shapes)
 UNFILLED_SHAPES = set(unfilled_shapes)
 
 
-@document
+@dataclass
 class scale_shape(scale_discrete):
     """
     Scale for shapes
-
-    Parameters
-    ----------
-    unfilled :
-        If `True`, then all shapes will have no interiors
-        that can be a filled.
-    {superclass_parameters}
     """
 
     _aesthetics = ["shape"]
+    unfilled: InitVar[bool] = False
+    """
+    If `True`, then all shapes will have no interiors
+    that can be a filled.
+    """
 
-    def __init__(self, unfilled: bool = False, **kwargs):
+    def __post_init__(self, unfilled):
         from mizani.palettes import manual_pal
 
+        super().__post_init__()
         _shapes = unfilled_shapes if unfilled else shapes
-        self._palette = manual_pal(_shapes)
-        scale_discrete.__init__(self, **kwargs)
+        self.palette = manual_pal(_shapes)
 
 
-@document
+@dataclass
 class scale_shape_ordinal(scale_shape):
     """
     Scale for shapes
-
-    Parameters
-    ----------
-    {superclass_parameters}
     """
 
     _aesthetics = ["shape"]
 
-    def __init__(self, **kwargs):
+    def __post_init__(self, unfilled):
         warn(
             "Using shapes for an ordinal variable is not advised.",
             PlotnineWarning,
         )
-        super().__init__(**kwargs)
+        super().__post_init__(unfilled)
 
 
 class scale_shape_continuous(scale_continuous):
     """
     Continuous scale for shapes
-
-    This is not a valid type of scale.
     """
 
     def __init__(self):

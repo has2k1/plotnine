@@ -26,6 +26,7 @@ from plotnine.scales import (
     scale_color_manual,
     scale_identity,
     scale_manual,
+    scale_size_manual,
     scale_xy,
 )
 from plotnine.scales.scale_alpha import (
@@ -36,7 +37,6 @@ from plotnine.scales.scale_linetype import (
     scale_linetype_continuous,
     scale_linetype_discrete,
 )
-from plotnine.scales.scale_manual import _scale_manual
 from plotnine.scales.scale_shape import (
     scale_shape_continuous,
     scale_shape_discrete,
@@ -306,8 +306,8 @@ def test_xy_limits():
     s1 = scale_x_discrete(limits=lst)
     s2 = scale_x_discrete(limits=arr)
     s3 = scale_x_discrete(limits=series)
-    assert all(s2.limits == s1.limits)
-    assert all(s3.limits == s1.limits)
+    assert all(s2.final_limits == s1.final_limits)
+    assert all(s3.final_limits == s1.final_limits)
 
 
 def test_setting_limits():
@@ -315,23 +315,23 @@ def test_setting_limits():
 
     s = scale_x_continuous()
     s.train(lst)
-    assert s.limits == (1, 10)
+    assert s.final_limits == (1, 10)
 
     s = scale_x_continuous(limits=(3, 7))
     s.train(lst)
-    assert s.limits == (3, 7)
+    assert s.final_limits == (3, 7)
 
     s = scale_x_continuous(limits=(3, None))
     s.train(lst)
-    assert s.limits == (3, 10)
+    assert s.final_limits == (3, 10)
 
     s = scale_x_continuous(limits=(None, 7))
     s.train(lst)
-    assert s.limits == (1, 7)
+    assert s.final_limits == (1, 7)
 
     s = scale_color.scale_color_hue(limits=tuple("abcdefg"))
     s.train(["a", "b", "a"])
-    assert s.limits == tuple("abcdefg")
+    assert s.final_limits == tuple("abcdefg")
 
 
 def test_discrete_xy_scale_limits():
@@ -340,11 +340,11 @@ def test_discrete_xy_scale_limits():
 
     s = scale_x_discrete()
     s.train(x)
-    assert s.limits == lst
+    assert s.final_limits == lst
 
     s = scale_x_discrete(limits=reversed)
     s.train(x)
-    assert s.limits == lst[::-1]
+    assert s.final_limits == lst[::-1]
 
 
 def test_discrete_xy_scale_drop_limits():
@@ -366,19 +366,19 @@ def test_setting_limits_transformed():
 
     s = scale_y_continuous(trans="log10")
     s.train(lst)
-    assert s.limits == (1, 10)
+    assert s.final_limits == (1, 10)
 
     s = scale_y_continuous(trans="log10", limits=[2, 7])
     s.train(lst)
-    assert s.limits == (np.log10(2), np.log10(7))
+    assert s.final_limits == (np.log10(2), np.log10(7))
 
     s = scale_y_continuous(trans="log10", limits=[2, None])
     s.train(lst)
-    assert s.limits == (np.log10(2), np.log10(10))
+    assert s.final_limits == (np.log10(2), np.log10(10))
 
     s = scale_y_continuous(trans="log10", limits=[None, 7])
     s.train(lst)
-    assert s.limits == (np.log10(1), np.log10(7))
+    assert s.final_limits == (np.log10(1), np.log10(7))
 
 
 def test_scale_continuous_limits_as_function():
@@ -390,7 +390,7 @@ def test_scale_continuous_limits_as_function():
     sc2 = scale_x_continuous(limits=reverse)
     sc1.train(x)
     sc2.train(x)
-    assert sc1.limits == sc2.limits[::-1]
+    assert sc1.final_limits == sc2.final_limits[::-1]
 
 
 def test_scale_discrete_limits_as_function():
@@ -402,7 +402,7 @@ def test_scale_discrete_limits_as_function():
     sc2 = scale_color.scale_color_discrete(limits=reverse)
     sc1.train(x)
     sc2.train(x)
-    assert sc1.limits == sc2.limits[::-1]
+    assert sc1.final_limits == sc2.final_limits[::-1]
 
 
 def test_minor_breaks():
@@ -564,13 +564,13 @@ def test_scale_without_a_mapping():
 def test_scale_discrete_mapping_nulls():
     a = np.array([1, 2, 3], dtype=object)
 
-    sc = _scale_manual([1, 2, 3, 4, 5])
+    sc = scale_size_manual([1, 2, 3, 4, 5])
     sc.train(a)
     res = sc.map([1, 2, 3])
     expected = np.array([1, 2, 3])
     npt.assert_array_equal(res, expected)
 
-    sc = _scale_manual([1, None, 3, 4, 5])
+    sc = scale_size_manual([1, None, 3, 4, 5])
     sc.train(a)
     res = sc.map([1, 2, 3])
     expected = np.array([1, np.nan, 3])
@@ -773,10 +773,6 @@ def test_changing_scale_transform():
 
     with pytest.warns(PlotnineWarning):
         scale_xy.scale_x_datetime(trans="identity")
-
-    s = scale_xy.scale_x_reverse()
-    with pytest.warns(PlotnineWarning):
-        s.trans = "log10"
 
 
 def test_datetime_scale_limits():

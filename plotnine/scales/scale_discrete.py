@@ -1,96 +1,110 @@
 from __future__ import annotations
 
-import typing
+from dataclasses import dataclass
+from typing import TYPE_CHECKING, Any, Callable, Literal, Sequence, TypeAlias
 
 import numpy as np
 import pandas as pd
 from mizani.bounds import expand_range_distinct
+from mizani.palettes import none_pal
+from numpy.typing import NDArray  # noqa: TCH002
 
 from .._utils import match
-from ..doctools import document
 from ..iapi import range_view, scale_view
 from ._expand import expand_range
 from .range import RangeDiscrete
 from .scale import scale
 
-if typing.TYPE_CHECKING:
-    from typing import Any, Optional, Sequence
+if TYPE_CHECKING:
+    from typing import Optional, TypeAlias
 
     from mizani.transforms import trans
 
     from plotnine.typing import (
-        AnyArrayLike,
         CoordRange,
         ScaleDiscreteBreaks,
-        ScaleDiscreteBreaksRaw,
         ScaleDiscreteLimits,
-        ScaleDiscreteLimitsRaw,
         ScaleLabels,
         TupleFloat2,
         TupleFloat4,
     )
 
-# Range, RangeDiscrete, RangeContinuous
-# ScaleBreaksRaw, ScaleDiscreteBreaksRaw, ScaleContinuousBreaksRaw
-# ScaleLimitsRaw, ScaleDiscreteLimitsRaw, ScaleContinuousLimitsRaw
+
+AnyArrayLike: TypeAlias = "NDArray[Any] | pd.Series[Any] | Sequence[Any]"
+DiscretePalette: TypeAlias = "Callable[[int], AnyArrayLike | dict[Any, Any]]"
+DiscreteBreaks: TypeAlias = Sequence[str]
+DiscreteLimits: TypeAlias = Sequence[str]
+DiscreteBreaksRaw: TypeAlias = (
+    bool | None | DiscreteBreaks | Callable[[DiscreteLimits], DiscreteBreaks]
+)
+DiscreteLimitsRaw: TypeAlias = (
+    None | DiscreteLimits | Callable[[DiscreteLimits], DiscreteLimits]
+)
 
 
-@document
-class scale_discrete(scale):
+@dataclass(kw_only=True)
+class scale_discrete(
+    scale[
+        RangeDiscrete,
+        DiscreteBreaksRaw,
+        DiscreteLimitsRaw,
+        Literal["legend"] | None,
+    ]
+):
     """
     Base class for all discrete scales
-
-    Parameters
-    ----------
-    {superclass_parameters}
-    limits : array_like, default=None
-        Limits of the scale. For scales that deal with
-        categoricals, these may be a subset or superset of
-        the categories. Data values that are not in the limits
-        will be treated as missing data and represented with
-        the `na_value`.
-    drop : bool, default=True
-        Whether to drop unused categories from
-        the scale
-    na_translate : bool, default=True
-        If `True` translate missing values and show them.
-        If `False` remove missing values. Default value is
-        `True`
-    na_value : object
-        If `na_translate=True`, what aesthetic value should be
-        assigned to the missing values. This parameter does not
-        apply to position scales where `nan` is always placed
-        on the right.
     """
 
-    _range_class = RangeDiscrete
-    _limits: Optional[ScaleDiscreteLimitsRaw]
-    range: RangeDiscrete
-    breaks: ScaleDiscreteBreaksRaw
+    limits: DiscreteLimitsRaw = None
+    """
+    Limits of the scale. These are the categories (unique values) of
+    the variables. If is only a subset of the values, those that are
+    left out will be treated as missing data and represented with a
+    `na_value`.
+    """
+
+    breaks: DiscreteBreaksRaw = True
+    """
+    List of major break points. Or a callable that takes a tuple of limits
+    and returns a list of breaks. If `True`, automatically calculate the
+    breaks.
+    """
+
     drop: bool = True  # drop unused factor levels from the scale
+    """
+    Whether to drop unused categories from the scale
+    """
+
     na_translate: bool = True
+    """
+    If `True` translate missing values and show them. If `False` remove
+    missing values.
+    """
+
+    na_value: Any = np.nan
+    """
+    If `na_translate=True`, what aesthetic value should be assigned to the
+    missing values. This parameter does not apply to position scales where
+    `nan` is always placed on the right.
+    """
+
+    guide: Literal["legend"] | None = "legend"
+
+    def __post_init__(self):
+        super().__post_init__()
+        self._range = RangeDiscrete()
 
     @property
-    def limits(self) -> ScaleDiscreteLimits:
+    def final_limits(self) -> ScaleDiscreteLimits:
         if self.is_empty():
             return ("0", "1")
 
-        if self._limits is None:
-            return tuple(self.range.range)
-        elif callable(self._limits):
-            return tuple(self._limits(self.range.range))
+        if self.limits is None:
+            return tuple(self._range.range)
+        elif callable(self.limits):
+            return tuple(self.limits(self._range.range))
         else:
-            return tuple(self._limits)
-
-    @limits.setter
-    def limits(self, value: ScaleDiscreteLimitsRaw):
-        self._limits = value
-
-    def palette(self, value: int) -> AnyArrayLike | dict[Any, Any]:
-        """
-        Aesthetic mapping function
-        """
-        return super().palette(value)
+            return tuple(self.limits)
 
     def train(self, x: AnyArrayLike, drop=False):
         """
@@ -109,7 +123,7 @@ class scale_discrete(scale):
             return
 
         na_rm = not self.na_translate
-        self.range.train(x, drop, na_rm=na_rm)
+        self._range.train(x, drop, na_rm=na_rm)
 
     def dimension(self, expand=(0, 0, 0, 0), limits=None):
         """
@@ -118,7 +132,7 @@ class scale_discrete(scale):
         Unlike limits, this always returns a numeric vector of length 2
         """
         if limits is None:
-            limits = self.limits
+            limits = self.final_limits
 
         return expand_range_distinct((0, len(limits)), expand)
 
@@ -155,7 +169,7 @@ class scale_discrete(scale):
         Information about the trained scale
         """
         if limits is None:
-            limits = self.limits
+            limits = self.final_limits
 
         if range is None:
             range = self.dimension(limits=limits)
@@ -183,6 +197,12 @@ class scale_discrete(scale):
         """
         return super().default_expansion(mult, add, expand)
 
+    def palette(self, n: int) -> Sequence[Any]:
+        """
+        Map integer `n` to `n` values of the scale
+        """
+        return none_pal()(n)
+
     def map(
         self, x, limits: Optional[ScaleDiscreteLimits] = None
     ) -> Sequence[Any]:
@@ -190,7 +210,7 @@ class scale_discrete(scale):
         Map values in x to a palette
         """
         if limits is None:
-            limits = self.limits
+            limits = self.final_limits
 
         n = sum(~pd.isna(list(limits)))
         pal = self.palette(n)
@@ -242,7 +262,7 @@ class scale_discrete(scale):
             return []
 
         if limits is None:
-            limits = self.limits
+            limits = self.final_limits
 
         if self.breaks in (None, False):
             breaks = []
@@ -262,7 +282,7 @@ class scale_discrete(scale):
         Return Breaks that are within limits
         """
         if limits is None:
-            limits = self.limits
+            limits = self.final_limits
 
         lookup_limits = set(limits)
         return [b for b in self.get_breaks() if b in lookup_limits]

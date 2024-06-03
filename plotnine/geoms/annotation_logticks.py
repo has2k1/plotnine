@@ -18,7 +18,6 @@ if typing.TYPE_CHECKING:
     from typing import Any, Literal, Optional, Sequence
 
     from matplotlib.axes import Axes
-    from mizani.transforms import trans
 
     from plotnine.coords.coord import coord
     from plotnine.facets.layout import Layout
@@ -96,17 +95,10 @@ class _geom_logticks(geom_rug):
             The bases (base_x, base_y) to use when generating the ticks.
         """
 
-        def is_log_trans(t: trans) -> bool:
-            return hasattr(t, "base") and t.__class__.__name__.startswith(
-                "log"
-            )
-
         def get_base(sc, ubase: Optional[float]) -> float:
             ae = sc.aesthetics[0]
 
-            if not isinstance(sc, ScaleContinuous) or not is_log_trans(
-                sc.trans
-            ):
+            if not isinstance(sc, ScaleContinuous) or not sc.is_log_scale:
                 warnings.warn(
                     f"annotation_logticks for {ae}-axis which does not have "
                     "a log scale. The logticks may not make sense.",
@@ -114,7 +106,7 @@ class _geom_logticks(geom_rug):
                 )
                 return 10 if ubase is None else ubase
 
-            base = sc.trans.base  # pyright: ignore
+            base = sc._trans.base  # pyright: ignore
             if ubase is not None and base != ubase:
                 warnings.warn(
                     f"The x-axis is log transformed in base={base} ,"

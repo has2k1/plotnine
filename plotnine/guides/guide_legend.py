@@ -422,7 +422,7 @@ class GuideElementsLegend(GuideElements):
 
         # The maximum size across each layer
         arr = np.max(sizes, axis=0)
-        return [tuple(row) for row in arr]
+        return [(row[0], row[1]) for row in arr]
 
     @cached_property
     def key_widths(self) -> list[float]:

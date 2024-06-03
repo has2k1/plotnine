@@ -36,6 +36,8 @@ from .scales.scales import Scales
 from .themes.theme import theme, theme_get
 
 if TYPE_CHECKING:
+    from typing import Protocol
+
     from matplotlib.axes import Axes
     from matplotlib.figure import Figure
     from typing_extensions import Self
@@ -44,7 +46,29 @@ if TYPE_CHECKING:
     from plotnine.coords.coord import coord
     from plotnine.facets.facet import facet
     from plotnine.layer import layer
-    from plotnine.typing import DataLike, PlotAddable
+    from plotnine.typing import DataLike
+
+    class PlotAddable(Protocol):
+        """
+        Object that can be added to a ggplot object
+        """
+
+        def __radd__(self, plot: ggplot) -> ggplot:
+            """
+            Add to ggplot object
+
+            Parameters
+            ----------
+            other :
+                ggplot object
+
+            Returns
+            -------
+            :
+                ggplot object
+            """
+            ...
+
 
 __all__ = ("ggplot", "ggsave", "save_as_pdf_pages")
 

@@ -1,23 +1,23 @@
 from __future__ import annotations
 
-import typing
+from dataclasses import dataclass
 from itertools import chain
+from typing import TYPE_CHECKING
 
 import numpy as np
 import pandas as pd
 
 from .._utils import array_kind, match
 from .._utils.registry import alias
-from ..doctools import document
 from ..exceptions import PlotnineError
 from ..iapi import range_view
 from ._expand import expand_range
 from .range import RangeContinuous
-from .scale_continuous import scale_continuous
+from .scale_continuous import TransUser, scale_continuous
 from .scale_datetime import scale_datetime
 from .scale_discrete import scale_discrete
 
-if typing.TYPE_CHECKING:
+if TYPE_CHECKING:
     from typing import Sequence
 
     from mizani.transforms import trans
@@ -32,38 +32,29 @@ if typing.TYPE_CHECKING:
 # scale_position_discrete and scale_position_continuous
 # are intermediate base classes where the required overriding
 # is done
-@document
+@dataclass(kw_only=True)
 class scale_position_discrete(scale_discrete):
     """
     Base class for discrete position scales
-
-    Parameters
-    ----------
-    {superclass_parameters}
-    limits : array_like, default=None
-        Limits of the scale. For discrete scale, these are
-        the categories (unique values) of the variable.
-        For scales that deal with categoricals, these may
-        be a subset or superset of the categories.
     """
 
-    # All positions have no guide
-    guide = None
+    def __post_init__(self):
+        super().__post_init__()
+        # Keeps two ranges, range and range_c
+        self._range_c = RangeContinuous()
+        if isinstance(self.limits, tuple):
+            self.limits = list(self.limits)
 
-    # Keeps two ranges, range and range_c
-    range_c: RangeContinuous
-
-    def __init__(self, *args, **kwargs):
-        self.range_c = RangeContinuous()
-        scale_discrete.__init__(self, *args, **kwargs)
+        # All positions have no guide
+        self.guide = None
 
     def reset(self):
         # Can't reset discrete scale because
         # no way to recover values
-        self.range_c.reset()
+        self._range_c.reset()
 
     def is_empty(self) -> bool:
-        return super().is_empty() and self.range_c.is_empty()
+        return super().is_empty() and self._range_c.is_empty()
 
     def train(self, x, drop=False):
         # The discrete position scale is capable of doing
@@ -72,15 +63,15 @@ class scale_position_discrete(scale_discrete):
         # possible to place objects at non-integer positions,
         # as is necessary for jittering etc.
         if array_kind.continuous(x):
-            self.range_c.train(x)
+            self._range_c.train(x)
         else:
-            self.range.train(x, drop=self.drop)
+            self._range.train(x, drop=self.drop)
 
     def map(self, x, limits=None):
         # Discrete values are converted into integers starting
         # at 1
         if limits is None:
-            limits = self.limits
+            limits = self.final_limits
         if array_kind.discrete(x):
             # TODO: Rewrite without using numpy
             seq = np.arange(1, len(limits) + 1)
@@ -99,28 +90,22 @@ class scale_position_discrete(scale_discrete):
         return list(x)
 
     @property
-    def limits(self):
+    def final_limits(self):
         if self.is_empty():
             return (0, 1)
-        elif self._limits is not None and not callable(self._limits):
-            return self._limits
-        elif self._limits is None:
+        elif self.limits is not None and not callable(self.limits):
+            return self.limits
+        elif self.limits is None:
             # discrete range
-            return self.range.range
-        elif callable(self._limits):
-            limits = self._limits(self.range.range)
+            return self._range.range
+        elif callable(self.limits):
+            limits = self.limits(self._range.range)
             # Functions that return iterators e.g. reversed
             if iter(limits) is limits:
                 limits = list(limits)
             return limits
         else:
             raise PlotnineError("Lost, do not know what the limits are.")
-
-    @limits.setter
-    def limits(self, value):
-        if isinstance(value, tuple):
-            value = list(value)
-        self._limits = value
 
     def dimension(self, expand=(0, 0, 0, 0), limits=None):
         """
@@ -131,23 +116,23 @@ class scale_position_discrete(scale_discrete):
         from mizani.bounds import expand_range_distinct
 
         if limits is None:
-            limits = self.limits
+            limits = self.final_limits
 
         if self.is_empty():
             return (0, 1)
 
-        if self.range.is_empty():  # only continuous
-            return expand_range_distinct(self.range_c.range, expand)
-        elif self.range_c.is_empty():  # only discrete
+        if self._range.is_empty():  # only continuous
+            return expand_range_distinct(self._range_c.range, expand)
+        elif self._range_c.is_empty():  # only discrete
             # FIXME: I think this branch should not exist
-            return expand_range_distinct((1, len(self.limits)), expand)
+            return expand_range_distinct((1, len(self.final_limits)), expand)
         else:  # both
             # e.g categorical bar plot have discrete items, but
             # are plot on a continuous x scale
             a = np.hstack(
                 [
-                    self.range_c.range,
-                    expand_range_distinct((1, len(self.range.range)), expand),
+                    self._range_c.range,
+                    expand_range_distinct((1, len(self._range.range)), expand),
                 ]
             )
             return a.min(), a.max()
@@ -164,7 +149,7 @@ class scale_position_discrete(scale_discrete):
             climits = (0, 1)
         else:
             climits = (1, len(limits))
-            self.range_c.range
+            self._range_c.range
 
         if coord_limits is not None:
             # - Override None in coord_limits
@@ -179,12 +164,12 @@ class scale_position_discrete(scale_discrete):
         # Expand discrete range
         rv_d = expand_range(climits, expand, trans)
 
-        if self.range_c.is_empty():
+        if self._range_c.is_empty():
             return rv_d
 
         # Expand continuous range
         no_expand = self.default_expansion(0, 0)
-        rv_c = expand_range(self.range_c.range, no_expand, trans)
+        rv_c = expand_range(self._range_c.range, no_expand, trans)
 
         # Merge the ranges
         rv = range_view(
@@ -202,18 +187,13 @@ class scale_position_discrete(scale_discrete):
         return rv
 
 
-@document
-class scale_position_continuous(scale_continuous):
+@dataclass(kw_only=True)
+class scale_position_continuous(scale_continuous[None]):
     """
     Base class for continuous position scales
-
-    Parameters
-    ----------
-    {superclass_parameters}
     """
 
-    # All positions have no guide
-    guide = None
+    guide: None = None
 
     def map(self, x, limits=None):
         # Position aesthetics don't map, because the coordinate
@@ -222,33 +202,25 @@ class scale_position_continuous(scale_continuous):
         if not len(x):
             return x
         if limits is None:
-            limits = self.limits
+            limits = self.final_limits
         scaled = self.oob(x, limits)  # type: ignore
         scaled[pd.isna(scaled)] = self.na_value
         return scaled
 
 
-@document
+@dataclass(kw_only=True)
 class scale_x_discrete(scale_position_discrete):
     """
     Discrete x position
-
-    Parameters
-    ----------
-    {superclass_parameters}
     """
 
     _aesthetics = ["x", "xmin", "xmax", "xend"]
 
 
-@document
+@dataclass(kw_only=True)
 class scale_y_discrete(scale_position_discrete):
     """
     Discrete y position
-
-    Parameters
-    ----------
-    {superclass_parameters}
     """
 
     _aesthetics = ["y", "ymin", "ymax", "yend"]
@@ -265,27 +237,19 @@ class scale_y_ordinal(scale_y_discrete):
     pass
 
 
-@document
+@dataclass(kw_only=True)
 class scale_x_continuous(scale_position_continuous):
     """
     Continuous x position
-
-    Parameters
-    ----------
-    {superclass_parameters}
     """
 
     _aesthetics = ["x", "xmin", "xmax", "xend", "xintercept"]
 
 
-@document
+@dataclass(kw_only=True)
 class scale_y_continuous(scale_position_continuous):
     """
     Continuous y position
-
-    Parameters
-    ----------
-    {superclass_parameters}
     """
 
     _aesthetics = [
@@ -299,30 +263,26 @@ class scale_y_continuous(scale_position_continuous):
         "lower",
         "middle",
         "upper",
-    ]  # pyright: ignore
+    ]
 
 
 # Transformed scales
-@document
+@dataclass(kw_only=True)
 class scale_x_datetime(scale_datetime, scale_x_continuous):
     """
     Continuous x position for datetime data points
-
-    Parameters
-    ----------
-    {superclass_parameters}
     """
 
+    guide: None = None
 
-@document
+
+@dataclass(kw_only=True)
 class scale_y_datetime(scale_datetime, scale_y_continuous):
     """
     Continuous y position for datetime data points
-
-    Parameters
-    ----------
-    {superclass_parameters}
     """
+
+    guide: None = None
 
 
 @alias
@@ -335,131 +295,91 @@ class scale_y_date(scale_y_datetime):
     pass
 
 
-@document
+@dataclass(kw_only=True)
 class scale_x_timedelta(scale_x_continuous):
     """
     Continuous x position for timedelta data points
-
-    Parameters
-    ----------
-    {superclass_parameters}
     """
 
-    _trans = "pd_timedelta"
+    trans: TransUser = "pd_timedelta"
 
 
-@document
+@dataclass(kw_only=True)
 class scale_y_timedelta(scale_y_continuous):
     """
     Continuous y position for timedelta data points
-
-    Parameters
-    ----------
-    {superclass_parameters}
     """
 
-    _trans = "pd_timedelta"
+    trans: TransUser = "pd_timedelta"
 
 
-@document
+@dataclass(kw_only=True)
 class scale_x_sqrt(scale_x_continuous):
     """
     Continuous x position sqrt transformed scale
-
-    Parameters
-    ----------
-    {superclass_parameters}
     """
 
-    _trans = "sqrt"
+    trans: TransUser = "sqrt"
 
 
-@document
+@dataclass(kw_only=True)
 class scale_y_sqrt(scale_y_continuous):
     """
     Continuous y position sqrt transformed scale
-
-    Parameters
-    ----------
-    {superclass_parameters}
     """
 
-    _trans = "sqrt"
+    trans: TransUser = "sqrt"
 
 
-@document
+@dataclass(kw_only=True)
 class scale_x_log10(scale_x_continuous):
     """
     Continuous x position log10 transformed scale
-
-    Parameters
-    ----------
-    {superclass_parameters}
     """
 
-    _trans = "log10"
+    trans: TransUser = "log10"
 
 
-@document
+@dataclass(kw_only=True)
 class scale_y_log10(scale_y_continuous):
     """
     Continuous y position log10 transformed scale
-
-    Parameters
-    ----------
-    {superclass_parameters}
     """
 
-    _trans = "log10"
+    trans: TransUser = "log10"
 
 
-@document
+@dataclass(kw_only=True)
 class scale_x_reverse(scale_x_continuous):
     """
     Continuous x position reverse transformed scale
-
-    Parameters
-    ----------
-    {superclass_parameters}
     """
 
-    _trans = "reverse"
+    trans: TransUser = "reverse"
 
 
-@document
+@dataclass(kw_only=True)
 class scale_y_reverse(scale_y_continuous):
     """
     Continuous y position reverse transformed scale
-
-    Parameters
-    ----------
-    {superclass_parameters}
     """
 
-    _trans = "reverse"
+    trans: TransUser = "reverse"
 
 
-@document
+@dataclass(kw_only=True)
 class scale_x_symlog(scale_x_continuous):
     """
     Continuous x position symmetric logarithm transformed scale
-
-    Parameters
-    ----------
-    {superclass_parameters}
     """
 
-    _trans = "symlog"
+    trans: TransUser = "symlog"
 
 
-@document
+@dataclass(kw_only=True)
 class scale_y_symlog(scale_y_continuous):
     """
     Continuous y position symmetric logarithm transformed scale
-
-    Parameters
-    ----------
-    {superclass_parameters}
     """
 
-    _trans = "symlog"
+    trans: TransUser = "symlog"

@@ -71,7 +71,7 @@ class coord_cartesian(coord):
         ) -> scale_view:
             expansion = scale.default_expansion(expand=self.expand)
             ranges = scale.expand_limits(
-                scale.limits, expansion, coord_limits, identity_trans
+                scale.final_limits, expansion, coord_limits, identity_trans
             )
             sv = scale.view(limits=coord_limits, range=ranges.range)
             return sv

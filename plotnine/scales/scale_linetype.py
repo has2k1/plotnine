@@ -1,7 +1,7 @@
+from dataclasses import dataclass
 from warnings import warn
 
 from .._utils.registry import alias
-from ..doctools import document
 from ..exceptions import PlotnineError, PlotnineWarning
 from .scale_continuous import scale_continuous
 from .scale_discrete import scale_discrete
@@ -9,14 +9,10 @@ from .scale_discrete import scale_discrete
 LINETYPES = ["solid", "dashed", "dashdot", "dotted"]
 
 
-@document
+@dataclass
 class scale_linetype(scale_discrete):
     """
     Scale for line patterns
-
-    Parameters
-    ----------
-    {superclass_parameters}
 
     Notes
     -----
@@ -28,31 +24,28 @@ class scale_linetype(scale_discrete):
 
     _aesthetics = ["linetype"]
 
-    def __init__(self, **kwargs):
+    def __post_init__(self):
         from mizani.palettes import manual_pal
 
-        self._palette = manual_pal(LINETYPES)
-        super().__init__(**kwargs)
+        super().__post_init__()
+        self.palette = manual_pal(LINETYPES)
 
 
-@document
+@dataclass
 class scale_linetype_ordinal(scale_linetype):
     """
     Scale for line patterns
-
-    Parameters
-    ----------
-    {superclass_parameters}
     """
 
     _aesthetics = ["linetype"]
 
-    def __init__(self, **kwargs):
+    def __post_init__(self):
+        super().__post_init__()
+
         warn(
             "Using linetype for an ordinal variable is not advised.",
             PlotnineWarning,
         )
-        super().__init__(**kwargs)
 
 
 class scale_linetype_continuous(scale_continuous):

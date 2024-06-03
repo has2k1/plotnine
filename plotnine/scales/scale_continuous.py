@@ -1,33 +1,39 @@
 from __future__ import annotations
 
-import typing
 from contextlib import suppress
+from dataclasses import dataclass
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Callable,
+    Sequence,
+    Type,
+    TypeAlias,
+    TypeVar,
+)
 from warnings import warn
 
 import numpy as np
 import pandas as pd
 from mizani.bounds import censor, expand_range_distinct, rescale, zero_range
+from mizani.palettes import identity_pal
+from mizani.transforms import trans
+from numpy.typing import NDArray  # noqa: TCH002
 
 from .._utils import match
-from ..doctools import document
 from ..exceptions import PlotnineError, PlotnineWarning
 from ..iapi import range_view, scale_view
 from ._expand import expand_range
 from .range import RangeContinuous
 from .scale import scale
 
-if typing.TYPE_CHECKING:
-    from typing import Any, Optional, Sequence, Type
+if TYPE_CHECKING:
+    from typing import Optional, TypeAlias
 
-    from mizani.transforms import trans
+    from mizani.typing import PCensor, PRescale
 
     from plotnine.typing import (
         CoordRange,
-        FloatArrayLike,
-        ScaleContinuousBreaks,
-        ScaleContinuousBreaksRaw,
-        ScaleContinuousLimits,
-        ScaleContinuousLimitsRaw,
         ScaleLabels,
         ScaleMinorBreaksRaw,
         TFloatArrayLike,
@@ -35,36 +41,39 @@ if typing.TYPE_CHECKING:
         TupleFloat4,
     )
 
+GuideTypeT = TypeVar("GuideTypeT")
+AnyArrayLike: TypeAlias = "NDArray[Any] | pd.Series[Any] | Sequence[Any]"
+FloatArrayLike: TypeAlias = (
+    "NDArray[np.float64] | pd.Series[float] | Sequence[float]"  # noqa: E501
+)
+ContinuousPalette: TypeAlias = "Callable[[FloatArrayLike], AnyArrayLike]"
+ContinuousBreaks: TypeAlias = Sequence[float]
+ContinuousLimits: TypeAlias = tuple[float, float]
+ContinuousBreaksRaw: TypeAlias = (
+    bool
+    | None
+    | ContinuousBreaks
+    | Callable[[ContinuousLimits], ContinuousBreaks]
+)
+ContinuousLimitsRaw: TypeAlias = (
+    None | ContinuousLimits | Callable[[ContinuousLimits], ContinuousLimits]
+)
+TransUser: TypeAlias = trans | str | Type[trans] | None
 
-@document
-class scale_continuous(scale):
+
+@dataclass(kw_only=True)
+class scale_continuous(
+    scale[
+        RangeContinuous,
+        ContinuousBreaksRaw,
+        ContinuousLimitsRaw,
+        # subclasses are still generic and must specify the
+        # type of the guide
+        GuideTypeT,
+    ]
+):
     """
     Base class for all continuous scales
-
-    Parameters
-    ----------
-    {superclass_parameters}
-    trans : str | callable
-        Name of a trans function or a trans function.
-        See [](`mizani.transforms`) for possible options.
-    oob : callable, default=mizani.bounds.censor
-        Function to deal with out of bounds (limits)
-        data points. Default is to turn them into
-        `np.nan`, which then get dropped.
-    minor_breaks : list | int | callable, default=None
-        If a list-like, it is the minor breaks points.
-        If an integer, it is the number of minor breaks between
-        any set of major breaks.
-        If a function, it should have the signature
-        `func(limits)` and return a list-like of consisting
-        of the minor break points.
-        If `None`, no minor breaks are calculated.
-        The default is to automatically calculate them.
-    rescaler : callable, default=mizani.bounds.rescale
-        Function to rescale data points so that they can
-        be handled by the palette. Default is to rescale
-        them onto the [0, 1] range. Scales that inherit
-        from this class may have another default.
 
     Notes
     -----
@@ -72,96 +81,55 @@ class scale_continuous(scale):
     keyword arguments.
     """
 
-    _range_class = RangeContinuous
-    _limits: Optional[ScaleContinuousLimitsRaw]
-    range: RangeContinuous
-    rescaler = staticmethod(rescale)  # Used by diverging & n colour gradients
-    oob = staticmethod(censor)  # what to do with out of bounds data points
-    breaks: ScaleContinuousBreaksRaw
+    limits: ContinuousLimitsRaw = None
+    """
+    Limits of the scale. Most commonly, these are the minimum & maximum
+    values for the scale. If not specified they are derived from the data.
+    It may also be a function that takes the derived limits and transforms
+    them into the final limits.
+    """
+
+    rescaler: PRescale = rescale
+    """
+    Function to rescale data points so that they can be handled by the
+    palette. Default is to rescale them onto the [0, 1] range. Scales
+    that inherit from this class may have another default.
+    """
+
+    oob: PCensor = censor
+    """
+    Function to deal with out of bounds (limits) data points. Default
+    is to turn them into `np.nan`, which then get dropped.
+    """
+
+    breaks: ContinuousBreaksRaw = True
+    """
+    Major breaks
+    """
+
     minor_breaks: ScaleMinorBreaksRaw = True
-    _trans: trans | str = "identity"  # transform class
+    """
+    If a list-like, it is the minor breaks points. If an integer, it is the
+    number of minor breaks between any set of major breaks.
+    If a function, it should have the signature `func(limits)` and return a
+    list-like of consisting of the minor break points.
+    If `None`, no minor breaks are calculated. The default is to automatically
+    calculate them.
+    """
 
-    def __init__(self, **kwargs):
-        # Make sure we have a transform.
-        self.trans = kwargs.pop("trans", self._trans)
+    trans: TransUser = None
+    """
+    The transformation of the scale. Either name of a trans function or
+    a trans function. See [](`mizani.transforms`) for possible options.
+    """
 
-        with suppress(KeyError):
-            self.limits = kwargs.pop("limits")
+    def __post_init__(self):
+        super().__post_init__()
+        self._range = RangeContinuous()
+        self._trans = self._make_trans()
+        self.limits = self._prep_limits(self.limits)
 
-        scale.__init__(self, **kwargs)
-
-    def _check_trans(self, t):
-        """
-        Check if transform t is valid
-
-        When scales specialise on a specific transform (other than
-        the identity transform), the user should know when they
-        try to change the transform.
-
-        Parameters
-        ----------
-        t : mizani.transforms.trans
-            Transform object
-        """
-        orig_trans_name = self.__class__._trans
-        new_trans_name = t.__class__.__name__
-        if new_trans_name.endswith("_trans"):
-            new_trans_name = new_trans_name[:-6]
-        if orig_trans_name not in ("identity", new_trans_name):
-            warn(
-                "You have changed the transform of a specialised scale. "
-                "The result may not be what you expect.\n"
-                "Original transform: {}\n"
-                "New transform: {}".format(orig_trans_name, new_trans_name),
-                PlotnineWarning,
-                stacklevel=2,
-            )
-
-    @property
-    def trans(self) -> trans:
-        return self._trans  # pyright: ignore
-
-    @trans.setter
-    def trans(self, value: trans | str | Type[trans]):
-        from mizani.transforms import gettrans
-
-        t: trans = gettrans(value)
-        self._check_trans(t)
-        self._trans = t
-
-    @property
-    def limits(self):
-        if self.is_empty():
-            return (0, 1)
-
-        if self._limits is None:
-            return self.range.range
-        elif callable(self._limits):
-            # Function works in the dataspace, but the limits are
-            # stored in transformed space. The range of the scale is
-            # in transformed space (i.e. with in the domain of the scale)
-            _range = self.inverse(self.range.range)
-            return self.trans.transform(self._limits(_range))
-        elif (
-            self._limits is not None
-            and not self.range.is_empty()
-            and
-            # Fall back to the range if the limits
-            # are not set or if any is None or NaN
-            len(self._limits) == len(self.range.range)
-        ):
-            l1, l2 = self._limits
-            r1, r2 = self.range.range
-            if l1 is None:
-                l1 = self.trans.transform([r1])[0]
-            if l2 is None:
-                l2 = self.trans.transform([r2])[0]
-            return l1, l2
-
-        return self._limits
-
-    @limits.setter
-    def limits(self, value: ScaleContinuousLimitsRaw):
+    def _prep_limits(self, value: ContinuousLimitsRaw) -> ContinuousLimitsRaw:
         """
         Limits for the continuous scale
 
@@ -178,8 +146,7 @@ class scale_continuous(scale):
         # labeling of the plot axis and the guides are in
         # the original dataspace.
         if isinstance(value, bool) or value is None or callable(value):
-            self._limits = value
-            return
+            return value
 
         a, b = value
         a = self.transform([a])[0] if a is not None else a
@@ -188,7 +155,72 @@ class scale_continuous(scale):
         if a is not None and b is not None and a > b:
             a, b = b, a
 
-        self._limits = a, b
+        return a, b
+
+    def _make_trans(self) -> trans:
+        """
+        Return a valid transform object
+
+        When scales specialise on a specific transform (other than
+        the identity transform), the user should know when they
+        try to change the transform.
+
+        Parameters
+        ----------
+        t : mizani.transforms.trans
+            Transform object
+        """
+        from mizani.transforms import gettrans
+
+        t = gettrans(self.trans if self.trans else self.__class__.trans)
+
+        orig_trans_name = self.__class__.trans
+        new_trans_name = t.__class__.__name__
+        if new_trans_name.endswith("_trans"):
+            new_trans_name = new_trans_name[:-6]
+
+        if orig_trans_name not in {None, "identity", new_trans_name}:
+            warn(
+                "You have changed the transform of a specialised scale. "
+                "The result may not be what you expect.\n"
+                "Original transform: {}\n"
+                "New transform: {}".format(orig_trans_name, new_trans_name),
+                PlotnineWarning,
+                stacklevel=1,
+            )
+
+        return t
+
+    @property
+    def final_limits(self) -> ContinuousLimits:
+        if self.is_empty():
+            return (0, 1)
+
+        if self.limits is None:
+            return self._range.range
+        elif callable(self.limits):
+            # Function works in the dataspace, but the limits are
+            # stored in transformed space. The range of the scale is
+            # in transformed space (i.e. with in the domain of the scale)
+            _range = self.inverse(self._range.range)
+            return self.transform(self.limits(_range))
+        elif (
+            self.limits is not None
+            and not self._range.is_empty()
+            and
+            # Fall back to the range if the limits
+            # are not set or if any is None or NaN
+            len(self.limits) == len(self._range.range)
+        ):
+            l1, l2 = self.limits
+            r1, r2 = self._range.range
+            if l1 is None:
+                l1 = self.transform([r1])[0]
+            if l2 is None:
+                l2 = self.transform([r2])[0]
+            return l1, l2
+
+        return self.limits
 
     def train(self, x: FloatArrayLike):
         """
@@ -197,7 +229,7 @@ class scale_continuous(scale):
         if not len(x):
             return
 
-        self.range.train(x)
+        self._range.train(x)
 
     def transform_df(self, df: pd.DataFrame) -> pd.DataFrame:
         """
@@ -217,10 +249,7 @@ class scale_continuous(scale):
         """
         Transform array|series x
         """
-        try:
-            return self.trans.transform(x)
-        except TypeError:
-            return [self.trans.transform(val) for val in x]  # pyright: ignore
+        return self._trans.transform(x)
 
     def inverse_df(self, df):
         """
@@ -240,19 +269,34 @@ class scale_continuous(scale):
         """
         Inverse transform array|series x
         """
-        try:
-            return self.trans.inverse(x)
-        except TypeError:
-            return [self.trans.inverse(val) for val in x]  # pyright: ignore
+        return self._trans.inverse(x)
 
     @property
-    def is_linear(self) -> bool:
+    def is_linear_scale(self) -> bool:
         """
         Return True if the scale is linear
 
         Depends on the transformation.
         """
-        return self.trans.transform_is_linear
+        return self._trans.transform_is_linear
+
+    @property
+    def domain_is_numerical(self) -> bool:
+        """
+        Return True if transformation acts on numerical data.
+
+        Depends on the transformation.
+        """
+        return self._trans.domain_is_numerical
+
+    @property
+    def is_log_scale(self) -> bool:
+        """
+        Return True if the scale is log transformationed
+        """
+        return hasattr(
+            self._trans, "base"
+        ) and self._trans.__class__.__name__.startswith("log")
 
     def dimension(self, expand=(0, 0, 0, 0), limits=None):
         """
@@ -261,12 +305,12 @@ class scale_continuous(scale):
         Unlike limits, this always returns a numeric vector of length 2
         """
         if limits is None:
-            limits = self.limits
+            limits = self.final_limits
         return expand_range_distinct(limits, expand)
 
     def expand_limits(
         self,
-        limits: ScaleContinuousLimits,
+        limits: ContinuousLimits,
         expand: TupleFloat2 | TupleFloat4,
         coord_limits: CoordRange | None,
         trans: trans,
@@ -294,7 +338,7 @@ class scale_continuous(scale):
         Information about the trained scale
         """
         if limits is None:
-            limits = self.limits
+            limits = self.final_limits
 
         if range is None:
             range = self.dimension(limits=limits)
@@ -323,17 +367,17 @@ class scale_continuous(scale):
         """
         return super().default_expansion(mult, add, expand)
 
-    def palette(self, value: FloatArrayLike) -> Sequence[Any]:
+    def palette(self, x):
         """
-        Aesthetic mapping function
+        Map an data values to values of the scale
         """
-        return super().palette(value)
+        return identity_pal()(x)
 
     def map(
-        self, x: FloatArrayLike, limits: Optional[ScaleContinuousLimits] = None
+        self, x: FloatArrayLike, limits: Optional[ContinuousLimits] = None
     ) -> FloatArrayLike:
         if limits is None:
-            limits = self.limits
+            limits = self.final_limits
 
         x = self.oob(self.rescaler(x, _from=limits))
 
@@ -347,8 +391,8 @@ class scale_continuous(scale):
         return scaled
 
     def get_breaks(
-        self, limits: Optional[ScaleContinuousLimits] = None
-    ) -> ScaleContinuousBreaks:
+        self, limits: Optional[ContinuousLimits] = None
+    ) -> ContinuousBreaks:
         """
         Generate breaks for the axis or legend
 
@@ -370,7 +414,7 @@ class scale_continuous(scale):
         data is plotted in transformed space.
         """
         if limits is None:
-            limits = self.limits
+            limits = self.final_limits
 
         # To data space
         _limits = self.inverse(limits)
@@ -380,8 +424,8 @@ class scale_continuous(scale):
         elif self.breaks is True:
             # TODO: Fix this type mismatch in mizani with
             # a typevar so that type-in = type-out
-            _tlimits = self.trans.breaks(_limits)
-            breaks: ScaleContinuousBreaks = _tlimits  # pyright: ignore
+            _tlimits = self._trans.breaks(_limits)
+            breaks: ContinuousBreaks = _tlimits  # pyright: ignore
         elif zero_range(_limits):
             breaks = [_limits[0]]
         elif callable(self.breaks):
@@ -393,36 +437,36 @@ class scale_continuous(scale):
         return breaks
 
     def get_bounded_breaks(
-        self, limits: Optional[ScaleContinuousLimits] = None
-    ) -> ScaleContinuousBreaks:
+        self, limits: Optional[ContinuousLimits] = None
+    ) -> ContinuousBreaks:
         """
         Return Breaks that are within limits
         """
         if limits is None:
-            limits = self.limits
+            limits = self.final_limits
         breaks = self.get_breaks(limits)
         strict_breaks = [b for b in breaks if limits[0] <= b <= limits[1]]
         return strict_breaks
 
     def get_minor_breaks(
         self,
-        major: ScaleContinuousBreaks,
-        limits: Optional[ScaleContinuousLimits] = None,
-    ) -> ScaleContinuousBreaks:
+        major: ContinuousBreaks,
+        limits: Optional[ContinuousLimits] = None,
+    ) -> ContinuousBreaks:
         """
         Return minor breaks
         """
         if limits is None:
-            limits = self.limits
+            limits = self.final_limits
 
         if self.minor_breaks is False or self.minor_breaks is None:
             minor_breaks = []
         elif self.minor_breaks is True:
-            minor_breaks: ScaleContinuousBreaks = self.trans.minor_breaks(
+            minor_breaks: ContinuousBreaks = self._trans.minor_breaks(
                 major, limits
             )  # pyright: ignore
         elif isinstance(self.minor_breaks, int):
-            minor_breaks: ScaleContinuousBreaks = self.trans.minor_breaks(
+            minor_breaks: ContinuousBreaks = self._trans.minor_breaks(
                 major,
                 limits,
                 self.minor_breaks,  # pyright: ignore
@@ -438,7 +482,7 @@ class scale_continuous(scale):
         return minor_breaks
 
     def get_labels(
-        self, breaks: Optional[ScaleContinuousBreaks] = None
+        self, breaks: Optional[ContinuousBreaks] = None
     ) -> ScaleLabels:
         """
         Generate labels for the axis or legend
@@ -457,7 +501,7 @@ class scale_continuous(scale):
         if self.labels is False or self.labels is None:
             labels = []
         elif self.labels is True:
-            labels = self.trans.format(breaks)  # type: ignore
+            labels = self._trans.format(breaks)  # type: ignore
         elif callable(self.labels):
             labels = self.labels(breaks)
         elif isinstance(self.labels, dict):

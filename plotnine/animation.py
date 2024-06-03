@@ -156,7 +156,7 @@ class PlotnineAnimation(ArtistAnimation):
             """
             for sc in scales:
                 ae = sc.aesthetics[0]
-                scale_limits[ae] = sc.limits
+                scale_limits[ae] = sc.final_limits
 
         def check_scale_limits(scales: list[scale], frame_no: int):
             """
@@ -189,7 +189,7 @@ class PlotnineAnimation(ArtistAnimation):
                         f"The plot for frame {frame_no} does not "
                         f"have a scale for the {ae} aesthetic."
                     )
-                if sc.limits != scale_limits[ae]:
+                if sc.final_limits != scale_limits[ae]:
                     raise PlotnineError(
                         f"The {ae} scale of plot for frame {frame_no} has "
                         "different limits from those of the first frame."

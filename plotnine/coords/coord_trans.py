@@ -112,7 +112,7 @@ class coord_trans(coord):
 
             expansion = scale.default_expansion(expand=self.expand)
             ranges = scale.expand_limits(
-                scale.limits, expansion, coord_limits, trans
+                scale.final_limits, expansion, coord_limits, trans
             )
             sv = scale.view(limits=coord_limits, range=ranges.range)
             sv.range = tuple(sorted(ranges.range_coord))  # type: ignore

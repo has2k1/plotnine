@@ -1,81 +1,75 @@
+from dataclasses import KW_ONLY, InitVar, dataclass
+from typing import Literal
 from warnings import warn
 
 import numpy as np
 from mizani.bounds import rescale_max
 
 from .._utils.registry import alias
-from ..doctools import document
 from ..exceptions import PlotnineWarning
 from .scale_continuous import scale_continuous
 from .scale_datetime import scale_datetime
 from .scale_discrete import scale_discrete
 
 
-@document
+@dataclass
 class scale_size_ordinal(scale_discrete):
     """
     Discrete area size scale
-
-    Parameters
-    ----------
-    range :
-        Minimum and maximum size of the plotting symbol.
-        It must be of size 2.
-    {superclass_parameters}
     """
 
     _aesthetics = ["size"]
+    range: InitVar[tuple[float, float]] = (2, 6)
+    """
+    Range ([Minimum, Maximum]) of the size.
+    """
 
-    def __init__(self, range: tuple[float, float] = (2, 6), **kwargs):
+    def __post_init__(self, range):
+        super().__post_init__()
+
         def palette(value):
             area = np.linspace(range[0] ** 2, range[1] ** 2, value)
             return np.sqrt(area)
 
-        self.palette = palette
-        scale_discrete.__init__(self, **kwargs)
+        self.palette = palette  # type: ignore
 
 
-@document
+@dataclass
 class scale_size_discrete(scale_size_ordinal):
     """
     Discrete area size scale
-
-    Parameters
-    ----------
-    {superclass_parameters}
     """
 
     _aesthetics = ["size"]
 
-    def __init__(self, **kwargs):
+    def __post_init__(self, range):
         warn(
             "Using size for a discrete variable is not advised.",
             PlotnineWarning,
         )
-        super().__init__(**kwargs)
+        super().__post_init__(range)
 
 
-@document
-class scale_size_continuous(scale_continuous):
+@dataclass
+class scale_size_continuous(scale_continuous[Literal["legend"] | None]):
     """
     Continuous area size scale
-
-    Parameters
-    ----------
-    range :
-        Minimum and maximum area of the plotting symbol.
-        It must be of size 2.
-    {superclass_parameters}
     """
 
     _aesthetics = ["size"]
+    range: InitVar[tuple[float, float]] = (1, 6)
+    """
+    Range ([Minimum, Maximum]) of the size.
+    """
 
-    def __init__(self, range: tuple[float, float] = (1, 6), **kwargs):
+    _: KW_ONLY
+    guide: Literal["legend"] | None = "legend"
+
+    def __post_init__(self, range):
         from mizani.palettes import area_pal
 
-        # TODO: fix types in mizani
-        self.palette = area_pal(range)  # pyright: ignore
-        scale_continuous.__init__(self, **kwargs)
+        super().__post_init__()
+        self.palette = area_pal(range)
 
 
 @alias
@@ -83,70 +77,70 @@ class scale_size(scale_size_continuous):
     pass
 
 
-@document
-class scale_size_radius(scale_continuous):
+@dataclass
+class scale_size_radius(scale_continuous[Literal["legend"] | None]):
     """
     Continuous radius size scale
-
-    Parameters
-    ----------
-    range :
-        Minimum and maximum radius of the plotting symbol.
-        It must be of size 2.
-    {superclass_parameters}
     """
 
     _aesthetics = ["size"]
+    range: InitVar[tuple[float, float]] = (1, 6)
+    """
+    Range ([Minimum, Maximum]) of the size.
+    """
 
-    def __init__(self, range: tuple[float, float] = (1, 6), **kwargs):
+    _: KW_ONLY
+    guide: Literal["legend"] | None = "legend"
+
+    def __post_init__(self, range):
         from mizani.palettes import rescale_pal
 
-        # TODO: fix types in mizani
-        self.palette = rescale_pal(range)  # pyright: ignore
-        scale_continuous.__init__(self, **kwargs)
+        super().__post_init__()
+        self.palette = rescale_pal(range)
 
 
-@document
-class scale_size_area(scale_continuous):
+@dataclass
+class scale_size_area(scale_continuous[Literal["legend"] | None]):
     """
     Continuous area size scale
-
-    Parameters
-    ----------
-    max_size :
-        Maximum size of the plotting symbol.
-    {superclass_parameters}
     """
 
     _aesthetics = ["size"]
-    rescaler = staticmethod(rescale_max)
+    max_size: InitVar[float] = 6
+    """
+    Maximum size of the plotting symbol.
+    """
 
-    def __init__(self, max_size: float = 6, **kwargs):
+    _: KW_ONLY
+    rescaler = rescale_max
+    guide: Literal["legend"] | None = "legend"
+
+    def __post_init__(self, max_size):
         from mizani.palettes import abs_area
 
-        # TODO: fix types in mizani
-        self.palette = abs_area(max_size)  # pyright: ignore
-        scale_continuous.__init__(self, **kwargs)
+        super().__post_init__()
+        self.palette = abs_area(max_size)
 
 
-@document
+@dataclass
 class scale_size_datetime(scale_datetime):
     """
     Datetime area-size scale
-
-    Parameters
-    ----------
-    range :
-        Minimum and maximum area of the plotting symbol.
-        It must be of size 2.
-    {superclass_parameters}
     """
 
     _aesthetics = ["size"]
+    range: InitVar[tuple[float, float]] = (1, 6)
+    """
+    Range ([Minimum, Maximum]) of the size.
+    """
 
-    def __init__(self, range: tuple[float, float] = (1, 6), **kwargs):
+    _: KW_ONLY
+    guide: Literal["legend"] | None = "legend"
+
+    def __post_init__(
+        self, range, date_breaks, date_labels, date_minor_breaks
+    ):
         from mizani.palettes import area_pal
 
-        # TODO: fix types in mizani
-        self.palette = area_pal(range)  # pyright: ignore
-        scale_datetime.__init__(self, **kwargs)
+        super().__post_init__(date_breaks, date_labels, date_minor_breaks)
+        self.palette = area_pal(range)
