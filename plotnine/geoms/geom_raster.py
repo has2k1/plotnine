@@ -184,7 +184,7 @@ class geom_raster(geom):
         yidx, xidx = nrow - y_pos - 1, x_pos
 
         # Create and "color" the matrix.
-        # Any gaps left whites (ones) colors pluse zero alpha values
+        # Any gaps left whites (ones) colors plus zero alpha values
         # allows makes it possible to have a "neutral" interpolation
         # into the gaps when intervals are uneven.
         X = np.ones((nrow, ncol, 4))

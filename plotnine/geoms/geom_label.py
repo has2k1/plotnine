@@ -22,7 +22,7 @@ _params = geom_text.DEFAULT_PARAMS.copy()
 _params.update(
     {
         # boxstyle is one of
-        #   cirle, larrow, rarrow, round, round4,
+        #   circle, larrow, rarrow, round, round4,
         #   roundtooth, sawtooth, square
         #
         # Documentation at matplotlib.patches.BoxStyle
