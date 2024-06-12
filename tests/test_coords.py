@@ -44,7 +44,7 @@ def test_coord_trans():
 
 
 def test_coord_trans_reverse():
-    # coord trans can reverse continous and discrete data
+    # coord trans can reverse continuous and discrete data
     p = (
         ggplot(data, aes("factor(x)"))
         + geom_bar(aes(fill="factor(z)"), show_legend=False)

@@ -72,7 +72,7 @@ l3 = element_line(color="blue", size=2, linewidth=2, linetype="solid")
 blank = element_blank()
 
 
-def test_add_element_heirarchy():
+def test_add_element_hierarchy():
     # parent themeable modifies child themeable
     theme1 = theme_gray() + theme(axis_line_x=l1)  # child
     theme2 = theme1 + theme(axis_line=l2)  # parent

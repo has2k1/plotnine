@@ -51,7 +51,7 @@ class Layout:
         Create a layout for the panels
 
         The layout is a dataframe that stores all the
-        structual information about the panels that will
+        structural information about the panels that will
         make up the plot. The actual layout depends on
         the type of facet.
 
