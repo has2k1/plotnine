@@ -1,8 +1,9 @@
 from __future__ import annotations
 
-import typing
+import os
+from typing import TYPE_CHECKING
 
-if typing.TYPE_CHECKING:
+if TYPE_CHECKING:
     from typing import Any, Literal, Optional, Type
 
     from plotnine import theme
@@ -105,3 +106,35 @@ def set_option(name: str, value: Any) -> Any:
     old = d[name]
     d[name] = value
     return old
+
+
+# Quarto sets environment variables for the figure dpi, size and format
+# for the project or document.
+#
+# https://quarto.org/docs/computations/execution-options.html#figure-options
+#
+# If we are in quarto, we read those and make them the default values for
+# the options.
+# Note that, reading the variables and setting them in a context manager
+# cannot not work since the option values would be set after the original
+# defaults have been used by the theme.
+if "QUARTO_FIG_WIDTH" in os.environ:
+
+    def _set_options_from_quarto():
+        """
+        Set options from quarto
+        """
+        global dpi, figure_size, figure_format
+
+        dpi = int(os.environ["QUARTO_FIG_DPI"])
+        figure_size = (
+            float(os.environ["QUARTO_FIG_WIDTH"]),
+            float(os.environ["QUARTO_FIG_HEIGHT"]),
+        )
+
+        # quarto verifies the format
+        # If is retina, it doubles the original dpi and changes the
+        # format to png
+        figure_format = os.environ["QUARTO_FIG_FORMAT"]  # pyright: ignore
+
+    _set_options_from_quarto()
