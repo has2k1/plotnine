@@ -108,7 +108,7 @@ def _rectangles_to_polygons(df: pd.DataFrame) -> pd.DataFrame:
     Convert rect data to polygons
 
     Parameters
-    ---------
+    ----------
     df : dataframe
         Dataframe with *xmin*, *xmax*, *ymin* and *ymax* columns,
         plus others for aesthetics ...
