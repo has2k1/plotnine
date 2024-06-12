@@ -134,14 +134,14 @@ class facet:
         plot.facet.environment = plot.environment
         return plot
 
-    def setup(self, plot: ggplot):
+    def setup(self, plot: ggplot, num: int):
         self.plot = plot
         self.layout = plot.layout
 
         if hasattr(plot, "figure"):
             self.figure, self.axs = plot.figure, plot.axs
         else:
-            self.figure, self.axs = self.make_figure()
+            self.figure, self.axs = self.make_figure(num=num)
 
         self.coordinates = plot.coordinates
         self.theme = plot.theme
@@ -376,16 +376,18 @@ class facet:
 
         return result
 
-    def _make_figure(self) -> tuple[Figure, GridSpec]:
+    def _make_figure(self, num = None) -> tuple[Figure, GridSpec]:
         """
         Create figure & gridspec
         """
         import matplotlib.pyplot as plt
         from matplotlib.gridspec import GridSpec
+        if num is not None:
+            return plt.figure(num=num), GridSpec(self.nrow, self.ncol)
+        else:
+            return plt.figure(), GridSpec(self.nrow, self.ncol)
 
-        return plt.figure(), GridSpec(self.nrow, self.ncol)
-
-    def make_figure(self) -> tuple[Figure, list[Axes]]:
+    def make_figure(self, num=None) -> tuple[Figure, list[Axes]]:
         """
         Create and return Matplotlib figure and subplot axes
         """
@@ -393,7 +395,10 @@ class facet:
         axsarr = np.empty((self.nrow, self.ncol), dtype=object)
 
         # Create figure & gridspec
-        figure, gs = self._make_figure()
+        if num is not None:
+            figure, gs = self._make_figure(num)
+        else:
+            figure, gs = self._make_figure()
         self.grid_spec = gs
 
         # Create axes
