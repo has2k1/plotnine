@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.39">
+<meta name="generator" content="quarto-1.5.45">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>plotnine {{&lt; var version &gt;}} – Changelog</title>
+<title>Changelog – plotnine {{&lt; var version &gt;}}</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -113,7 +113,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">plotnine 0.0.post1+ge7b8fda</span>
+    <span class="navbar-title">plotnine 0.0.post1+g8a4881a</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -505,7 +505,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ul>
 <li><p>All <code>__all__</code> variables are explicitly assigned to help static typecheckers infer module attributes. (<a href="https://github.com/has2k1/plotnine/issues/685" title="Issue: #685">#685</a>)</p></li>
 <li><p>You can now pickle the drawn matplotlib figures. (<a href="https://github.com/has2k1/plotnine/issues/729" title="Issue: #729">#729</a>)</p></li>
-<li><p>The facet titles in the <code>strip_text</code> are now better aligned are appear more centered withing the <code>strip_background</code>.</p></li>
+<li><p>The facet titles in the <code>strip_text</code> are now better aligned are appear more centered within the <code>strip_background</code>.</p></li>
 </ul>
 </section>
 </section>
@@ -584,7 +584,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ul>
 <li><p><a href="./reference/ggplot.html#plotnine.ggplot.__add__"><code>__add__</code></a> and <a href="./reference/ggplot.html#plotnine.ggplot.__iadd__"><code>__iadd__</code></a> now accept the same types of objects. In this change <a href="./reference/ggplot.html#plotnine.ggplot.__iadd__"><code>__iadd__</code></a> has gained the ability to accept a list of objects.</p></li>
 <li><p><a href="./reference/ggplot.html#plotnine.ggplot.draw"><code>draw</code></a> no longer accepts the argument <code>return_ggplot</code> and the return value is always a matplolib figure.</p></li>
-<li><p>Themeables <code>strip_margin</code>, <code>strip_margin_x</code> and <code>strip_margin_y</code>) have been renamed to <a href="./reference/strip_align.html#plotnine.themes.themeable.strip_align"><code>strip_align</code></a>, <a href="./reference/strip_align_x.html#plotnine.themes.themeable.strip_align_x"><code>strip_align_x</code></a> <a href="./reference/strip_align_y.html#plotnine.themes.themeable.strip_align_y"><code>strip_align_y</code></a> repectively.</p></li>
+<li><p>Themeables <code>strip_margin</code>, <code>strip_margin_x</code> and <code>strip_margin_y</code>) have been renamed to <a href="./reference/strip_align.html#plotnine.themes.themeable.strip_align"><code>strip_align</code></a>, <a href="./reference/strip_align_x.html#plotnine.themes.themeable.strip_align_x"><code>strip_align_x</code></a> <a href="./reference/strip_align_y.html#plotnine.themes.themeable.strip_align_y"><code>strip_align_y</code></a> respectively.</p></li>
 <li><p><a href="./reference/subplots_adjust.html#plotnine.themes.themeable.subplots_adjust"><code>subplots_adjust</code></a> has been deprecated. You no longer need to use <code class="sourceCode python">theme(subplots_adjust<span class="op">=</span>{<span class="st">"right"</span>: <span class="fl">0.85</span>})</code> and the like to make space for the legend or text around the panels. In the future, this will through an error.</p></li>
 <li><p>Changed default font-family (san-serif) from DejaVu Sans to Helvetica.</p></li>
 </ul>
@@ -624,7 +624,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="new-features-2" class="level3">
 <h3 class="anchored" data-anchor-id="new-features-2">New Features</h3>
 <ul>
-<li><p><a href="./reference/geom_ribbon.html#plotnine.geom_ribbon"><code>geom_ribbon</code></a> acquired new parameter <code>where</code> which can be used shade withing given limits .</p></li>
+<li><p><a href="./reference/geom_ribbon.html#plotnine.geom_ribbon"><code>geom_ribbon</code></a> acquired new parameter <code>where</code> which can be used shade within given limits .</p></li>
 <li><p>Added support for objects with a <code>to_pandas</code> method to convert them to a pandas dataframe. You can now pass in <a href="https://pola.rs">polars</a> dataframes.</p></li>
 <li><p><a href="./reference/geom_ribbon.html#plotnine.geom_ribbon"><code>geom_ribbon</code></a> acquired new parameter <code>outline_type</code> which controls how to stroke the boundaries of the shaded area. This parameter is also available to <a href="./reference/geom_area.html#plotnine.geom_area"><code>geom_area</code></a> and <a href="./reference/geom_density.html#plotnine.geom_density"><code>geom_density</code></a>. (<a href="https://github.com/has2k1/plotnine/issues/605" title="Issue: #605">#605</a>)</p></li>
 </ul>
@@ -632,7 +632,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="api-changes-2" class="level3">
 <h3 class="anchored" data-anchor-id="api-changes-2">API Changes</h3>
 <ul>
-<li><p>The automatic groups generated by the system and depending on the aesthetic mappings now only depend those aesthetics that have scales. This is more strict than has been, should affect very few cases of code that has been written and it should be less suprising to the users.</p></li>
+<li><p>The automatic groups generated by the system and depending on the aesthetic mappings now only depend those aesthetics that have scales. This is more strict than has been, should affect very few cases of code that has been written and it should be less surprising to the users.</p></li>
 <li><p><a href="./reference/geom_area.html#plotnine.geom_area"><code>geom_area</code></a> and <a href="./reference/geom_density.html#plotnine.geom_density"><code>geom_density</code></a> now default to showing only the upper outline/boundary of the area. Use <code>outline_type="full"</code> for the old behaviour.</p></li>
 </ul>
 </section>
@@ -687,7 +687,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ul>
 <li><p><a href="./reference/stat_summary.html#plotnine.stat_summary"><code>stat_summary</code></a> now has a default summary function. (<a href="https://github.com/has2k1/plotnine/issues/528" title="Issue: #528">#528</a>)</p></li>
 <li><p><a href="./reference/stat_density.html#plotnine.stat_density"><code>stat_density</code></a> now uses a fast computation path for gaussian densities with no weights. This was probably a regression.</p></li>
-<li><p><a href="./reference/geom_map.html#plotnine.geom_map"><code>geom_map</code></a> can now draw MultiPoints, MultiLineStrings and MultiPolgons.</p></li>
+<li><p><a href="./reference/geom_map.html#plotnine.geom_map"><code>geom_map</code></a> can now draw MultiPoints, MultiLineStrings and MultiPolygons.</p></li>
 <li><p><a href="./reference/geom_text.html#plotnine.geom_text"><code>geom_text</code></a> with <code>adjust_text</code> can now be used in more than one layer with good enough results.</p></li>
 </ul>
 </section>
@@ -759,7 +759,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="api-changes-5" class="level3">
 <h3 class="anchored" data-anchor-id="api-changes-5">API Changes</h3>
 <ul>
-<li><p>Changed the default method of caculating bandwidth for all stats that use kernel density estimation. The affected stats are <a href="./reference/stat_density.html#plotnine.stat_density"><code>stat_density</code></a>, <a href="./reference/stat_ydensity.html#plotnine.stat_ydensity"><code>stat_ydensity</code></a>, and <a href="./reference/stat_sina.html#plotnine.stat_sina"><code>stat_sina</code></a>. These stats can now work with groups that have a single unique value.</p></li>
+<li><p>Changed the default method of calculating bandwidth for all stats that use kernel density estimation. The affected stats are <a href="./reference/stat_density.html#plotnine.stat_density"><code>stat_density</code></a>, <a href="./reference/stat_ydensity.html#plotnine.stat_ydensity"><code>stat_ydensity</code></a>, and <a href="./reference/stat_sina.html#plotnine.stat_sina"><code>stat_sina</code></a>. These stats can now work with groups that have a single unique value.</p></li>
 <li><p>Changed <code>scale_colour_continuous</code> to refer to the same scale as <a href="./reference/scale_color_continuous.html#plotnine.scale_color_continuous"><code>scale_color_continuous</code></a>.</p></li>
 <li><p>Changed <a href="./reference/scale_color_cmap.html#plotnine.scale_color_cmap"><code>scale_color_cmap</code></a> so the parameter <code>cmap_name</code> refers to the name of the color palette and <code>name</code> refers to the name of the scale. (<a href="https://github.com/has2k1/plotnine/issues/371" title="Issue: #371">#371</a>)</p></li>
 </ul>
@@ -829,7 +829,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>Fixed bug where plots with <a href="./reference/theme_xkcd.html#plotnine.theme_xkcd"><code>theme_xkcd</code></a> cannot be saved twice. (<a href="https://github.com/has2k1/plotnine/issues/199" title="Issue: #199">#199</a>)</p></li>
 <li><p>Fixed bug that made it impossible to map to columns with the same name as a calculated columns of the stat. (<a href="https://github.com/has2k1/plotnine/issues/234" title="Issue: #234">#234</a>)</p></li>
 <li><p>Fixed bug in <a href="./reference/geom_smooth.html#plotnine.geom_smooth"><code>geom_smooth</code></a> that made it difficult to use it with stats other than <a href="./reference/stat_smooth.html#plotnine.stat_smooth"><code>stat_smooth</code></a>. (<a href="https://github.com/has2k1/plotnine/issues/242" title="Issue: #242">#242</a>)</p></li>
-<li><p>Fixed bug in <a href="./reference/position_dodge.html#plotnine.position_dodge"><code>position_dodge</code></a> where by bar plot could get thinner when facetting and useing <code>preserve = 'single'</code>. (<a href="https://github.com/has2k1/plotnine/issues/224" title="Issue: #224">#224</a>)</p></li>
+<li><p>Fixed bug in <a href="./reference/position_dodge.html#plotnine.position_dodge"><code>position_dodge</code></a> where by bar plot could get thinner when facetting and using <code>preserve = 'single'</code>. (<a href="https://github.com/has2k1/plotnine/issues/224" title="Issue: #224">#224</a>)</p></li>
 <li><p>Fixed bug in <a href="./reference/coord_trans.html#plotnine.coord_trans"><code>coord_trans</code></a> where if the transformation reversed the original limits, the order in which the data was laid out remained unchanged. (<a href="https://github.com/has2k1/plotnine/issues/253" title="Issue: #253">#253</a>)</p></li>
 <li><p>Fixed bug in <a href="./reference/stat_count.html#plotnine.stat_count"><code>stat_count</code></a> where <code>float</code> weights were rounded and lead to a wrong plot. (<a href="https://github.com/has2k1/plotnine/issues/260" title="Issue: #260">#260</a>)</p></li>
 <li><p>Fixed bug where one could not use the British spelling <code>colour</code> to rename a color scale. (<a href="https://github.com/has2k1/plotnine/issues/264" title="Issue: #264">#264</a>)</p></li>
@@ -853,7 +853,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p><a href="./reference/position_nudge.html#plotnine.position_nudge"><code>position_nudge</code></a> can now deal with more geoms e.g. <a href="./reference/geom_boxplot.html#plotnine.geom_boxplot"><code>geom_boxplot</code></a>.</p></li>
 <li><p>The <code>limits</code> parameter of <a href="./reference/scale_x_discrete.html#plotnine.scale_x_discrete"><code>scale_x_discrete</code></a> and <a href="./reference/scale_y_discrete.html#plotnine.scale_y_discrete"><code>scale_y_discrete</code></a> can now be a function.</p></li>
 <li><p>The <code>width</code> of the boxplot can now be set irrespective of the stat.</p></li>
-<li><p>The mid-point color of <a href="./reference/scale_color_distiller.html#plotnine.scale_color_distiller"><code>scale_color_distiller</code></a> now matches that of the trainned data.</p></li>
+<li><p>The mid-point color of <a href="./reference/scale_color_distiller.html#plotnine.scale_color_distiller"><code>scale_color_distiller</code></a> now matches that of the trained data.</p></li>
 <li><p>The way in which layers are created has been refactored to give packages that that extend plotnine more flexibility in manipulating the layers.</p></li>
 <li><p>You can now specify one sided limits for coordinates. e.g. <code class="sourceCode python">coord_cartesian(limits<span class="op">=</span>(<span class="va">None</span>, <span class="dv">10</span>))</code>.</p></li>
 <li><p>All the themeables have been lifted into the definition of <a href="./reference/theme.html#plotnine.theme"><code>theme</code></a> so they can be suggested autocomplete.</p></li>
@@ -889,7 +889,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>Fixed in <a href="./reference/stat_bin.html#plotnine.stat_bin"><code>stat_bin</code></a> where setting custom limits for the scale leads to an error. (<a href="https://github.com/has2k1/plotnine/issues/189" title="Issue: #189">#189</a>)</p></li>
 <li><p>Fixed issue interactive plots where the x &amp; y coordinates of the mouse do not show. (<a href="https://github.com/has2k1/plotnine/issues/187" title="Issue: #187">#187</a>)</p></li>
 <li><p>Fixed bug in <a href="./reference/geom_abline.html#plotnine.geom_abline"><code>geom_abline</code></a> where passing the mapping as a keyword parameter lead to a wrong plot. (<a href="https://github.com/has2k1/plotnine/issues/196" title="Issue: #196">#196</a>)</p></li>
-<li><p>Fixed issue where <code>minor_breaks</code> for tranformed scaled would have to be given in the transformed coordinates. Know they are given the data coordinates just like the major <code>breaks</code>.</p></li>
+<li><p>Fixed issue where <code>minor_breaks</code> for transformed scaled would have to be given in the transformed coordinates. Know they are given the data coordinates just like the major <code>breaks</code>.</p></li>
 </ul>
 </section>
 <section id="enhancements-12" class="level3">
@@ -897,7 +897,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ul>
 <li><p>For all geoms, with <a href="./reference/coord_cartesian.html#plotnine.coord_cartesian"><code>coord_cartesian</code></a> <code>float('inf')</code> or <code>np.inf</code> are interpreted as the boundary of the plot panel.</p></li>
 <li><p>Discrete scales now show missing data (<code>None</code> and <code>nan</code>). This behaviour is controlled by the new <code>na_translate</code> option.</p></li>
-<li><p>The <code>minor_breaks</code> parameter for continuous scales can now be given as an integer. An integer is taken to controll the number of minor breaks between any set of major breaks.</p></li>
+<li><p>The <code>minor_breaks</code> parameter for continuous scales can now be given as an integer. An integer is taken to control the number of minor breaks between any set of major breaks.</p></li>
 </ul>
 </section>
 </section>
