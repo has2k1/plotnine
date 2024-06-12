@@ -82,7 +82,7 @@ class stat_ellipse(stat):
         else:
             raise ValueError(f"Unknown value for type={type_}")
 
-        # numpy's cholesky function does not gaurantee upper/lower
+        # numpy's cholesky function does not guarantee upper/lower
         # triangular factorization.
         chol_decomp = linalg.cholesky(cov, lower=False)
 

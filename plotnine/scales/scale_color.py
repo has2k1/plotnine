@@ -372,7 +372,7 @@ class scale_color_distiller(scale_color_gradientn):
     """
     Sequential and diverging continuous color scales
 
-    This is a convinience scale around
+    This is a convenience scale around
     [](`~plotnine.scales.scale_color_gradientn`) with colors from
     [colorbrewer.org](http://colorbrewer2.org). It smoothly
     interpolates 7 colors from a brewer palette to create a

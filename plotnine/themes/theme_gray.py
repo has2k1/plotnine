@@ -23,7 +23,7 @@ class theme_gray(theme):
         base_family = base_family or get_option("base_family")
         quarter_line = base_size / 4
         fifth_line = base_size / 5
-        eigth_line = base_size / 8
+        eighth_line = base_size / 8
         m = get_option("base_margin")
 
         super().__init__(
@@ -53,7 +53,7 @@ class theme_gray(theme):
             axis_ticks_direction="out",
             axis_ticks_length=0,
             axis_ticks_length_major=quarter_line,
-            axis_ticks_length_minor=eigth_line,
+            axis_ticks_length_minor=eighth_line,
             axis_ticks_minor=element_blank(),
             axis_ticks_pad=2,
             axis_title_x=element_text(

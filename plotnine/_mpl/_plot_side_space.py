@@ -46,8 +46,8 @@ if TYPE_CHECKING:
     ]
 
 # Note
-# Margins around the plot are specfied in figure coordinates
-# We interprete that value to be a fraction of the width. So along
+# Margins around the plot are specified in figure coordinates
+# We interpret that value to be a fraction of the width. So along
 # the vertical direction we multiply by W/H to get equal space
 # in both directions
 
@@ -117,7 +117,7 @@ class _side_spaces(ABC):
         """
         Return size of legend in figure coordinates
 
-        We need this to accurately justify the legend by proprotional
+        We need this to accurately justify the legend by proportional
         values e.g. 0.2, instead of just left, right, top,  bottom &
         center.
         """
@@ -477,7 +477,7 @@ def _calculate_panel_spacing_facet_grid(
     sw = theme.getp("panel_spacing_x")
     sh = theme.getp("panel_spacing_y") * W / H
 
-    # width and height of axes as fraction of figure width & heigt
+    # width and height of axes as fraction of figure width & height
     w = ((spaces.right - spaces.left) - sw * (ncol - 1)) / ncol
     h = ((spaces.top - spaces.bottom) - sh * (nrow - 1)) / nrow
 
@@ -511,7 +511,7 @@ def _calculate_panel_spacing_facet_wrap(
     #   +ve: Away from the panel
     #    0:  Top of the panel
     #   -ve: Into the panel
-    # Where values <= -1, put the strip completly into
+    # Where values <= -1, put the strip completely into
     # the panel. We do not worry about larger -ves.
     strip_align_x = theme.getp("strip_align_x")
 
@@ -527,7 +527,7 @@ def _calculate_panel_spacing_facet_wrap(
         sw += max_ylabels_width(pack)
         sw += max_yticks_width(pack)
 
-    # width and height of axes as fraction of figure width & heigt
+    # width and height of axes as fraction of figure width & height
     w = ((spaces.right - spaces.left) - sw * (ncol - 1)) / ncol
     h = ((spaces.top - spaces.bottom) - sh * (nrow - 1)) / nrow
 

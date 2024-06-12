@@ -33,7 +33,7 @@ class stat_bin(stat):
         Number of bins. Overridden by binwidth. If `None`{.py},
         a number is computed using the freedman-diaconis method.
     breaks : array_like, default=None
-        Bin boundaries. This supercedes the `binwidth`, `bins`,
+        Bin boundaries. This supersedes the `binwidth`, `bins`,
         `center` and `boundary`.
     center : float, default=None
         The center of one of the bins. Note that if center is above

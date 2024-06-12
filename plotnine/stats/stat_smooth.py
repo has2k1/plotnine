@@ -63,7 +63,7 @@ class stat_smooth(stat):
             # degrees of freedom we can compute the confidence
             # intervals using the t-distribution.
             #
-            # For an alternative, implement confidence interals by
+            # For an alternative, implement confidence intervals by
             # the bootstrap method
             if params["se"]:
                 from plotnine.utils.smoothers import tdist_ci
@@ -157,7 +157,7 @@ class stat_smooth(stat):
 
     def setup_data(self, data):
         """
-        Overide to modify data before compute_layer is called
+        Override to modify data before compute_layer is called
         """
         data = data[np.isfinite(data["x"]) & np.isfinite(data["y"])]
         return data
@@ -200,7 +200,7 @@ class stat_smooth(stat):
                     "You can only use a formula with `method` is "
                     f"one of {allowed}"
                 )
-            params["enviroment"] = self.environment
+            params["environment"] = self.environment
 
         return params
 

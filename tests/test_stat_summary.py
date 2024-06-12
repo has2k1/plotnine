@@ -73,7 +73,7 @@ def test_summary_functions():
     assert p == "summary_functions"
 
 
-def test_stat_summary_raises_on_invalid_paremeters():
+def test_stat_summary_raises_on_invalid_parameters():
     with pytest.raises(TypeError):
         geom_point(stat_summary(funy=np.mean))
     with pytest.raises(TypeError):

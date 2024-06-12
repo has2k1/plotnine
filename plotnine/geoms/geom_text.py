@@ -186,7 +186,7 @@ class geom_text(geom):
         else:
             check_adjust_text()
 
-        # Accomodate the old names
+        # Accommodate the old names
         if mapping and "hjust" in mapping:
             mapping["ha"] = mapping.pop("hjust")
 

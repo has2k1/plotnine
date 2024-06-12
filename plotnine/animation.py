@@ -108,7 +108,7 @@ class PlotnineAnimation(ArtistAnimation):
 
         def initialise_artist_offsets(n: int):
             """
-            Initilise artists_offsets arrays to zero
+            Initialise artists_offsets arrays to zero
 
             Parameters
             ----------

@@ -41,7 +41,7 @@ class scale_view:
     scale: scale
     aesthetics: list[ScaledAestheticsName]
     name: Optional[str]
-    # Trainned limits of the scale
+    # Trained limits of the scale
     limits: ScaleLimits
     # Physical size of scale, including expansions
     range: CoordRange
@@ -53,7 +53,7 @@ class scale_view:
 @dataclass
 class range_view:
     """
-    Range information after trainning
+    Range information after training
     """
 
     range: TupleFloat2

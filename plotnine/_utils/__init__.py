@@ -285,7 +285,7 @@ def ninteraction(df: pd.DataFrame, drop: bool = False) -> list[int]:
     Returns
     -------
     out : list
-        Row asssignments.
+        Row assignments.
 
     Notes
     -----
@@ -548,7 +548,7 @@ def to_rgba(
     alpha: float | Sequence[float] | AnySeries,
 ) -> Sequence[ColorType] | ColorType:
     """
-    Covert hex colors to rgba values.
+    Convert hex colors to rgba values.
 
     Parameters
     ----------
@@ -585,7 +585,7 @@ def to_rgba(
 
     def to_rgba_hex(c: ColorType, a: float) -> str:
         """
-        Conver rgb color to rgba hex value
+        Convert rgb color to rgba hex value
 
         If color c has an alpha channel, then alpha value
         a is ignored
@@ -1230,14 +1230,14 @@ def simple_table(
 
 def no_init(default: T) -> T:
     """
-    Set defaut value of a dataclass field that will not be __init__ed
+    Set default value of a dataclass field that will not be __init__ed
     """
     return field(init=False, default=default)
 
 
 def no_init_mutable(default: T) -> T:
     """
-    Set defaut value of a dataclass field that will not be __init__ed
+    Set default value of a dataclass field that will not be __init__ed
     """
     return field(init=False, default_factory=lambda: deepcopy(default))
 

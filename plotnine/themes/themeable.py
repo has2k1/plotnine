@@ -342,7 +342,7 @@ class Themeables(dict[str, themeable]):
         Themeables store theming attribute values in the
         [](`~plotnine.themes.themeables.Themeable.properties`)
         [](`dict`). The goal of this method is to look a value from
-        that dictionary, and fallback along the inheritance heirarchy
+        that dictionary, and fallback along the inheritance hierarchy
         of themeables.
 
         Parameters
@@ -384,7 +384,7 @@ class Themeables(dict[str, themeable]):
         Themeables store theming attribute values in the
         [](`~plotnine.theme.themeables.Themeable.properties`)
         [](`dict`). The goal of this method is to look a value from
-        that dictionary, and fallback along the inheritance heirarchy
+        that dictionary, and fallback along the inheritance hierarchy
         of themeables.
 
         Parameters
@@ -445,7 +445,7 @@ class MixinSequenceOfValues(themeable):
         theme(axis_text_x=element_text(color=("red", "green", "blue")))
 
     The number of values in the list must match the number of objects
-    targetted by the themeable..
+    targeted by the themeable..
     """
 
     def set(
@@ -2418,7 +2418,7 @@ class subplots_adjust(themeable):
     def apply_figure(self, figure: Figure, targets: ThemeTargets):
         warn(
             "You no longer need to use subplots_adjust to make space for "
-            "the legend or text around the panels. This paramater will be "
+            "the legend or text around the panels. This parameter will be "
             "removed in a future version. You can still use 'plot_margin' "
             "'panel_spacing' for your other spacing needs.",
             FutureWarning,

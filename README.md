@@ -125,7 +125,7 @@ $ pip install 'plotnine[extra]'    # 2. includes extra/optional packages
 $ pip install 'plotnine[test]'     # 3. testing
 $ pip install 'plotnine[doc]'      # 4. generating docs
 $ pip install 'plotnine[dev]'      # 5. development (making releases)
-$ pip install 'plotnine[all]'      # 6. everyting
+$ pip install 'plotnine[all]'      # 6. everything
 
 # Or using conda
 $ conda install -c conda-forge plotnine

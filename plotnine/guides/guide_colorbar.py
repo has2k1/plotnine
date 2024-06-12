@@ -52,7 +52,7 @@ class guide_colorbar(guide):
 
     alpha: Optional[float] = None
     """
-    Opacity (in the range `[0, 1]`) of the colorbar. The defualt
+    Opacity (in the range `[0, 1]`) of the colorbar. The default
     `None`, is to use the opacity of the plot.
     """
 
@@ -284,7 +284,7 @@ def add_gradient_colorbar(
     if len(colors) == 1:
         colors = [colors[0], colors[0]]
 
-    # Number of horizontal egdes(breaks) in the grid
+    # Number of horizontal edges(breaks) in the grid
     # No need to create more nbreak than colors, provided
     # no. of colors = no. of breaks = no. of cmap colors
     # the shading does a perfect interpolation

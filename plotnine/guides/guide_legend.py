@@ -150,7 +150,7 @@ class guide_legend(guide):
         will be used in the call to geom.
         """
         # A layer either contributes to the guide, or it does not. The
-        # guide entries may be ploted in the layers
+        # guide entries may be plotted in the layers
         for l in self.plot_layers:
             exclude = set()
             if isinstance(l.show_legend, dict):

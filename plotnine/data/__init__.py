@@ -43,7 +43,7 @@ luv_colours = pd.read_csv(DATA_DIR / "luv_colours.csv")
 faithfuld = pd.read_csv(DATA_DIR / "faithfuld.csv")
 faithful = pd.read_csv(DATA_DIR / "faithful.csv")
 
-# For conveniece to the user, we set some columns in these
+# For convenience to the user, we set some columns in these
 # dataframes to categoricals.
 diamonds = pd.read_csv(DATA_DIR / "diamonds.csv")
 midwest = pd.read_csv(DATA_DIR / "midwest.csv")
@@ -288,7 +288,7 @@ Collected by [Dr. Kristen Gorman]\
 (https://www.uaf.edu/cfos/people/faculty/detail/kristen-gorman.php)
 and the [Palmer Station, Antarctica LTER](https://pallter.marine.rutgers.edu/).
 
-Made conveniently availabe by
+Made conveniently available by
 [Alison Horst](https://github.com/allisonhorst/palmerpenguins/) to serve as
 a dataset exploration and visualisation.
 """

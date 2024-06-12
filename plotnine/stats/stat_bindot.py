@@ -40,7 +40,7 @@ class stat_bindot(stat):
     binwidth : float, default=None
         When `method="dotdensity"`{.py}, this specifies the maximum
         binwidth. When `method="histodot"`{.py}, this specifies the
-        binwidth. This supercedes the `bins`.
+        binwidth. This supersedes the `bins`.
     origin : float, default=None
         When `method="histodot"`{.py}, origin of the first bin.
     width : float, default=0.9
@@ -63,7 +63,7 @@ class stat_bindot(stat):
         When `method="histodot"`{.py}, `True`{.py} means include right
         edge of the bins and if `False`{.py} the left edge is included.
     breaks : FloatArray, default=None
-        Bin boundaries for `method="histodot"`{.py}. This supercedes the
+        Bin boundaries for `method="histodot"`{.py}. This supersedes the
         `binwidth` and `bins`.
 
     See Also

@@ -128,7 +128,7 @@ def qplot(
     # Work out plot data, and modify aesthetics, if necessary
     def replace_auto(lst: list[str], str2: str) -> list[str]:
         """
-        Replace all occurences of 'auto' in with str2
+        Replace all occurrences of 'auto' in with str2
         """
         for i, value in enumerate(lst):
             if value == "auto":
@@ -168,7 +168,7 @@ def qplot(
                     xlab = "range(len(y))"
                     ylab = "y"
                 else:
-                    # We could solve the issue in layer.compute_asthetics
+                    # We could solve the issue in layer.compute_aesthetics
                     # but it is not worth the extra complexity
                     raise PlotnineError("Cannot infer how long x should be.")
             replace_auto(geom, "point")
