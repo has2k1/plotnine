@@ -893,8 +893,13 @@ class axis_line_x(themeable):
 
     def apply_ax(self, ax: Axes):
         super().apply_ax(ax)
+        properties = self.properties
+        # MPL has a default zorder of 2.5 for spines
+        # so layers 3+ would be drawn on top of the spines
+        if "zorder" not in properties:
+            properties["zorder"] = 10000
         ax.spines["top"].set_visible(False)
-        ax.spines["bottom"].set(**self.properties)
+        ax.spines["bottom"].set(**properties)
 
     def blank_ax(self, ax: Axes):
         super().blank_ax(ax)
@@ -916,8 +921,13 @@ class axis_line_y(themeable):
 
     def apply_ax(self, ax: Axes):
         super().apply_ax(ax)
+        properties = self.properties
+        # MPL has a default zorder of 2.5 for spines
+        # so layers 3+ would be drawn on top of the spines
+        if "zorder" not in properties:
+            properties["zorder"] = 10000
         ax.spines["right"].set_visible(False)
-        ax.spines["left"].set(**self.properties)
+        ax.spines["left"].set(**properties)
 
     def blank_ax(self, ax: Axes):
         super().blank_ax(ax)
