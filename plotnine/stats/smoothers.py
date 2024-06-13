@@ -103,7 +103,7 @@ def lm_formula(data, xseq, **params):
     import statsmodels.api as sm
     import statsmodels.formula.api as smf
 
-    eval_env = _to_patsy_env(params["enviroment"])
+    eval_env = _to_patsy_env(params["environment"])
     formula = params["formula"]
     weights = data.get("weight", None)
 
@@ -178,7 +178,7 @@ def rlm_formula(data, xseq, **params):
     import statsmodels.api as sm
     import statsmodels.formula.api as smf
 
-    eval_env = _to_patsy_env(params["enviroment"])
+    eval_env = _to_patsy_env(params["environment"])
     formula = params["formula"]
     init_kwargs, fit_kwargs = separate_method_kwargs(
         params["method_args"], sm.RLM, sm.RLM.fit
@@ -236,7 +236,7 @@ def gls_formula(data, xseq, **params):
     import statsmodels.api as sm
     import statsmodels.formula.api as smf
 
-    eval_env = _to_patsy_env(params["enviroment"])
+    eval_env = _to_patsy_env(params["environment"])
     formula = params["formula"]
     init_kwargs, fit_kwargs = separate_method_kwargs(
         params["method_args"], sm.GLS, sm.GLS.fit
@@ -301,7 +301,7 @@ def glm_formula(data, xseq, **params):
     import statsmodels.api as sm
     import statsmodels.formula.api as smf
 
-    eval_env = _to_patsy_env(params["enviroment"])
+    eval_env = _to_patsy_env(params["environment"])
     init_kwargs, fit_kwargs = separate_method_kwargs(
         params["method_args"], sm.GLM, sm.GLM.fit
     )

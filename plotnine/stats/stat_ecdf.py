@@ -9,7 +9,7 @@ from .stat import stat
 @document
 class stat_ecdf(stat):
     """
-    Emperical Cumulative Density Function
+    Empirical Cumulative Density Function
 
     {usage}
 

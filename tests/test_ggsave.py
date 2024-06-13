@@ -134,7 +134,7 @@ class TestExceptions:
 
     def test_bad_units(self):
         with pytest.raises(Exception):
-            p.save(width=1, heigth=1, units="xxx")
+            p.save(width=1, height=1, units="xxx")
 
 
 # This should be the last function in the file since it can catch

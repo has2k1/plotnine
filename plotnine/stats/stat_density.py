@@ -16,7 +16,7 @@ if typing.TYPE_CHECKING:
     from plotnine.typing import FloatArrayLike
 
 
-# NOTE: Parameter discriptions are in
+# NOTE: Parameter descriptions are in
 # statsmodels/nonparametric/kde.py
 @document
 class stat_density(stat):
@@ -268,7 +268,7 @@ def nrd0(x: FloatArrayLike) -> float:
     n = len(x)
     if n < 1:
         raise ValueError(
-            "Need at leat 2 data points to compute the nrd0 bandwidth."
+            "Need at least 2 data points to compute the nrd0 bandwidth."
         )
 
     std: float = np.std(x, ddof=1)  # pyright: ignore

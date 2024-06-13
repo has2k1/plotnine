@@ -10,7 +10,7 @@ DOC_DIR = Path(__file__).parent
 EXAMPLES_DIR = DOC_DIR / "reference" / "examples"
 TUTORIALS_DIR = DOC_DIR / "tutorials"
 
-# The varibables file holds the version
+# The variables file holds the version
 variables_filepath = DOC_DIR / "_variables.yml"
 VARIABLES_TPL = """\
 version: {version}

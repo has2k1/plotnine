@@ -20,7 +20,7 @@ current_theme: Optional[theme | Type[theme]] = None
 base_family: str = "sans-serif"
 """
 The base font family for all text that is part of the theme.
-Default is sans-serif and one is choosen automatically from
+Default is sans-serif and one is chosen automatically from
 rcParams["font.san-serif"]
 """
 
@@ -41,7 +41,7 @@ Default figure size inches
 
 figure_format: Optional[FigureFormat] = None
 """
-The format for the inline figures outputed by the jupyter kernel.
+The format for the inline figures outputted by the jupyter kernel.
 
 If `None`, it is the value of
 

@@ -94,7 +94,7 @@ def label_context(
     Returns
     -------
     out : str
-        Contatenated label values (or pairs of variable names
+        Concatenated label values (or pairs of variable names
         & values)
     """
     if len(label_info) == 1:

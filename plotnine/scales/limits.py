@@ -50,7 +50,7 @@ class _lim:
         # aesthetic is mapped to a categorical but the limits
         # are not provided in categorical form. We only handle
         # the case where the mapping uses an expression to
-        # conver to categorical e.g `aes(color="factor(cyl)")`.
+        # convert to categorical e.g `aes(color="factor(cyl)")`.
         # However if `"cyl"` column is a categorical and the
         # mapping is `aes(color="cyl")`, that will result in
         # an error. If later case proves common enough then we
@@ -62,7 +62,7 @@ class _lim:
         # Look through all the mappings for this aesthetic,
         # if we detect any factor stuff then we convert the
         # limits data to categorical so that the right scale
-        # can be choosen. This should take care of the most
+        # can be chosen. This should take care of the most
         # common use cases.
         for layer in plot.layers:
             with suppress(KeyError):

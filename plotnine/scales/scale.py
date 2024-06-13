@@ -207,7 +207,7 @@ class scale(ABC, metaclass=Register):
         trans,  # : Trans | Type[Trans]
     ) -> range_view:
         """
-        Exand the limits of the scale
+        Expand the limits of the scale
         """
         raise NotImplementedError
 

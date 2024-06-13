@@ -196,7 +196,7 @@ class stat(ABC, metaclass=Register):
 
     def setup_params(self, data: pd.DataFrame) -> dict[str, Any]:
         """
-        Overide this to verify or adjust parameters
+        Override this to verify or adjust parameters
 
         Parameters
         ----------
@@ -212,7 +212,7 @@ class stat(ABC, metaclass=Register):
 
     def setup_data(self, data: pd.DataFrame) -> pd.DataFrame:
         """
-        Overide to modify data before compute_layer is called
+        Override to modify data before compute_layer is called
 
         Parameters
         ----------
@@ -247,7 +247,7 @@ class stat(ABC, metaclass=Register):
         data :
             Data for the layer
         params :
-            Paremeters
+            Parameters
 
         Returns
         -------
@@ -316,7 +316,7 @@ class stat(ABC, metaclass=Register):
 
         Return the results in a single dataframe.
 
-        This is a default function that can be overriden
+        This is a default function that can be overridden
         by individual stats
 
         Parameters

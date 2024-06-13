@@ -49,7 +49,7 @@ class coord:
         Parameters
         ----------
         data :
-            Data for alls Layer
+            Data for all Layer
 
         Returns
         -------

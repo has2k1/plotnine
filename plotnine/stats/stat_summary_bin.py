@@ -28,7 +28,7 @@ class stat_summary_bin(stat):
     bins : int | tuple, default=30
         Number of bins. Overridden by binwidth.
     breaks : array_like | tuple[array_like, array_like], default=None
-        Bin boundaries. This supercedes the `binwidth`, `bins`
+        Bin boundaries. This supersedes the `binwidth`, `bins`
         and `boundary` arguments.
     boundary : float | tuple, default=None
         A boundary between two bins. As with center, things are
@@ -57,7 +57,7 @@ class stat_summary_bin(stat):
 
     Notes
     -----
-    The *binwidth*, *bins*, *breaks* and *bounary* arguments can be a
+    The *binwidth*, *bins*, *breaks* and *boundary* arguments can be a
     tuples with two values `(xaxis-value, yaxis-value)` of the
     required type.
 

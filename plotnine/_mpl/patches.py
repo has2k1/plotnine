@@ -81,7 +81,7 @@ class InsideStrokedRectangle(Rectangle):
     @artist.allow_rasterization
     def draw(self, renderer):
         """
-        Draw with the bounds of the rectangle adjusted to accomodate the stroke
+        Draw with the bounds of the rectangle adjusted to contain the stroke
         """
         x, y = self.xy
         w, h = self.get_width(), self.get_height()
