@@ -2692,14 +2692,14 @@
     "href": "changelog.html",
     "title": "Changelog",
     "section": "",
-    "text": "(not-yet-released)\n\n\n\nThe family, fontstyle and fontweight parameters of geom_text are now aesthetics (#790).\n\n\n\n\n\ngeom_text has gained new aesthetics fontvariant and fontstretch."
+    "text": "(not-yet-released)\n\n\n\nThe family, fontstyle and fontweight parameters of geom_text are now aesthetics (#790).\n\n\n\n\n\ngeom_text has gained new aesthetics fontvariant and fontstretch.\n\n\n\n\n\nFix layers 3 and above not to overlap the axis lines if there are any (#798)."
   },
   {
     "objectID": "changelog.html#v0.14.0",
     "href": "changelog.html#v0.14.0",
     "title": "Changelog",
     "section": "",
-    "text": "(not-yet-released)\n\n\n\nThe family, fontstyle and fontweight parameters of geom_text are now aesthetics (#790).\n\n\n\n\n\ngeom_text has gained new aesthetics fontvariant and fontstretch."
+    "text": "(not-yet-released)\n\n\n\nThe family, fontstyle and fontweight parameters of geom_text are now aesthetics (#790).\n\n\n\n\n\ngeom_text has gained new aesthetics fontvariant and fontstretch.\n\n\n\n\n\nFix layers 3 and above not to overlap the axis lines if there are any (#798)."
   },
   {
     "objectID": "changelog.html#v0.13.6",
