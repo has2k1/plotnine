@@ -383,6 +383,7 @@ class facet:
         import matplotlib.pyplot as plt
         from matplotlib.gridspec import GridSpec
         if num is not None:
+            plt.figure(num).clear()
             return plt.figure(num=num), GridSpec(self.nrow, self.ncol)
         else:
             return plt.figure(), GridSpec(self.nrow, self.ncol)
