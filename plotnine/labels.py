@@ -116,9 +116,8 @@ class xlab(labs):
         x aesthetic label (x-axis)
     """
 
-    def __init__(self, name: str, /):
-        self.x = name
-        self.labels = labels_view(x=name)
+    def __init__(self, label: str):
+        super().__init__(x=label)
 
 
 class ylab(labs):
@@ -131,9 +130,8 @@ class ylab(labs):
         y aesthetic label i.e. y-axis label
     """
 
-    def __init__(self, name: str, /):
-        self.y = name
-        self.labels = labels_view(y=name)
+    def __init__(self, label: str):
+        super().__init__(y=label)
 
 
 class ggtitle(labs):
@@ -146,6 +144,5 @@ class ggtitle(labs):
         Plot title
     """
 
-    def __init__(self, title: str, /):
-        self.title = title
-        self.labels = labels_view(title=title)
+    def __init__(self, title: str | None = None, subtitle: str | None = None):
+        super().__init__(title=title, subtitle=subtitle)
