@@ -13,6 +13,9 @@ title: Changelog
 - plotnine now responds to the `fig-width`, `fig-height` and `fig-format`
   settings in the meta section of a quarto document.
 
+- [](:class:`~plotnine.ggtitle`) now accepts `title` and `subtitle` as
+  keyword arguments. ({{<issue 804 >}})
+
 ### New Features
 
 - [](:class:`~plotnine.geom_text`) has gained new aesthetics
