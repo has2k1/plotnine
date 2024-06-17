@@ -125,6 +125,7 @@ class stat_sina(stat):
         params["cut"] = 0
         params["gridsize"] = None
         params["clip"] = (-np.inf, np.inf)
+        params["bounds"] = (-np.inf, np.inf)
         params["n"] = 512
         return params
 

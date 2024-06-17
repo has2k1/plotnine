@@ -1,8 +1,9 @@
 import numpy as np
 import pandas as pd
 import pytest
+import scipy.stats as stats
 
-from plotnine import aes, geom_density, ggplot, lims
+from plotnine import aes, geom_density, ggplot, lims, stat_function
 from plotnine.exceptions import PlotnineWarning
 
 n = 6  # Some even number greater than 2
@@ -58,3 +59,17 @@ def test_few_datapoints():
         + lims(x=(0, 4))
     )
     assert p == "few_datapoints"
+
+
+def test_bounds():
+    rs = np.random.RandomState(123)
+    data = pd.DataFrame({"x": rs.uniform(size=1000)})
+
+    p = (
+        ggplot(data, aes("x"))
+        + geom_density()
+        + geom_density(bounds=(0, 1), color="blue")
+        + stat_function(fun=stats.uniform.pdf, color="red")
+    )
+
+    assert p == "bounds"

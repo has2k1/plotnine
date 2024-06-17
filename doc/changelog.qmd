@@ -18,6 +18,10 @@ title: Changelog
 - [](:class:`~plotnine.geom_text`) has gained new aesthetics
   `fontvariant` and `fontstretch`.
 
+- [](:stat:`~plotnine.stat_density`) has gained a new parameter `bounds`
+  that you can use remove asymptotic boundary effects that arise from
+  density estimates on an infinite domain. ({{< issue 796 >}})
+
 ### Bug Fixes
 
 - Fix layers 3 and above not to overlap the axis lines if there are any
