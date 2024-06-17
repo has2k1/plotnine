@@ -10,11 +10,18 @@ title: Changelog
 - The `family`, `fontstyle` and `fontweight` parameters of
   [](:class:`~plotnine.geom_text`) are now aesthetics ({{< issue 790 >}}).
 
+- plotnine now responds to the `fig-width`, `fig-height` and `fig-format`
+  settings in the meta section of a quarto document.
+
 ### New Features
 
 - [](:class:`~plotnine.geom_text`) has gained new aesthetics
   `fontvariant` and `fontstretch`.
 
+### Bug Fixes
+
+- Fix layers 3 and above not to overlap the axis lines if there are any
+  ({{< issue 798 >}}).
 
 ## v0.13.6
 (2024-05-09)
