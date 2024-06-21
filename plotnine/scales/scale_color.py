@@ -454,8 +454,8 @@ class scale_color_cmap(scale_continuous):
     cmap_name :
         A standard Matplotlib colormap name. The default is
         `viridis`. For the list of names checkout the output
-        of `matplotlib.cm.cmap_d.keys()` or see the
-        `documentation <http://matplotlib.org/users/colormaps.html>`_.
+        of `matplotlib.colormaps()` or see the
+        [documentation](http://matplotlib.org/users/colormaps.html).
     {superclass_parameters}
     na_value : str, default="#7F7F7F"
         Color of missing values.
