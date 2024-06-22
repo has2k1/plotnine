@@ -25,7 +25,7 @@ dependencies = [
     "matplotlib>=3.7.0",
     "pandas>=2.2.0",
     "mizani~=0.11.4",
-    "numpy>=1.23.0",
+    "numpy>=1.23.5",
     "scipy>=1.7.0",
     "statsmodels>=0.14.0",
 ]
@@ -45,7 +45,7 @@ extra = [
     "adjustText",
     "geopandas",
     "scikit-learn",
-    "scikit-misc>=0.3.0"
+    "scikit-misc>=0.4.0"
 ]
 
 doc = [
