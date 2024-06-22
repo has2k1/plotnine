@@ -88,6 +88,7 @@ def test_label_aesthetics():
     assert p == "label_aesthetics"
 
 
+@pytest.mark.skip("Broken for numpy 2")
 def test_adjust_text():
     p = (
         ggplot(mtcars.tail(2), aes("mpg", "disp", label="name"))
@@ -97,6 +98,7 @@ def test_adjust_text():
     assert p == "adjust_text"
 
 
+@pytest.mark.skip("Broken for numpy 2")
 def test_adjust_label():
     p = (
         ggplot(mtcars.tail(2), aes("mpg", "disp", label="name"))
@@ -106,6 +108,7 @@ def test_adjust_label():
     assert p == "adjust_label"
 
 
+@pytest.mark.skip("Broken for numpy 2")
 def test_adjust_text_default_color():
     adjust_text2 = adjust_text.copy()
     del adjust_text2["arrowprops"]["color"]
