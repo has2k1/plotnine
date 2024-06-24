@@ -16,22 +16,24 @@ title: Changelog
 - [](:class:`~plotnine.ggtitle`) now accepts `title` and `subtitle` as
   keyword arguments. ({{<issue 804 >}})
 
+- Gained the option [](:attr:`~plotnine.options.limitsize`) that makes
+  it possible to display plots of any size.
+
+  ```python
+  from plotnine.options import set_option
+
+  set_option("figure_format", False)
+  ```
+
 ### New Features
 
 - [](:class:`~plotnine.geom_text`) has gained new aesthetics
   `fontvariant` and `fontstretch`.
 
-- [](:stat:`~plotnine.stat_density`) has gained a new parameter `bounds`
-  that you can use remove asymptotic boundary effects that arise from
-  density estimates on an infinite domain. ({{< issue 796 >}})
-
 ### Bug Fixes
 
 - Fix layers 3 and above not to overlap the axis lines if there are any
   ({{< issue 798 >}}).
-
-- Fix [](:stat:`~plotnine.stat_pointdensity`) to work with facetting. It is
-  possible aftected other stats. ({{< issue 808 >}})
 
 ## v0.13.6
 (2024-05-09)
