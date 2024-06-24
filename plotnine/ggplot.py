@@ -1,13 +1,12 @@
 from __future__ import annotations
 
-import typing
 from collections.abc import Sequence
 from copy import copy, deepcopy
 from io import BytesIO
 from itertools import chain
 from pathlib import Path
 from types import SimpleNamespace as NS
-from typing import Any, Dict, Iterable, Optional
+from typing import TYPE_CHECKING, Any, Dict, Iterable, Optional, cast
 from warnings import warn
 
 from ._utils import (
@@ -36,7 +35,7 @@ from .options import get_option
 from .scales.scales import Scales
 from .themes.theme import theme, theme_get
 
-if typing.TYPE_CHECKING:
+if TYPE_CHECKING:
     from matplotlib.axes import Axes
     from matplotlib.figure import Figure
     from typing_extensions import Self
@@ -551,7 +550,7 @@ class ggplot:
         height: Optional[float] = None,
         units: str = "in",
         dpi: Optional[float] = None,
-        limitsize: bool = True,
+        limitsize: bool | None = None,
         verbose: bool = True,
         **kwargs: Any,
     ) -> mpl_save_view:
@@ -564,6 +563,9 @@ class ggplot:
         Use it to get access to the figure that will be saved.
         """
         fig_kwargs: Dict[str, Any] = {"format": format, **kwargs}
+
+        if limitsize is None:
+            limitsize = cast(bool, get_option("limitsize"))
 
         # filename, depends on the object
         if filename is None:
@@ -587,10 +589,10 @@ class ggplot:
             width is not None and height is None
         ):
             raise PlotnineError("You must specify both width and height")
-
-        width, height = self.theme.getp("figure_size")
-        assert width is not None
-        assert height is not None
+        else:
+            width, height = cast(
+                tuple[float, float], self.theme.getp("figure_size")
+            )
 
         if limitsize and (width > 25 or height > 25):
             raise PlotnineError(
@@ -621,7 +623,7 @@ class ggplot:
         height: Optional[float] = None,
         units: str = "in",
         dpi: Optional[int] = None,
-        limitsize: bool = True,
+        limitsize: bool | None = None,
         verbose: bool = True,
         **kwargs: Any,
     ):
@@ -652,9 +654,10 @@ class ggplot:
             DPI to use for raster graphics. If None, defaults to using
             the `dpi` of theme, if none is set then a `dpi` of 100.
         limitsize :
-            If `True` (the default), ggsave will not save images
-            larger than 50x50 inches, to prevent the common error
-            of specifying dimensions in pixels.
+            If `True` (the default), save will not save images
+            larger than 25x25 inches, to prevent the common error
+            of specifying dimensions in pixels. The default value
+            is from the option `plotine.options.limitsize`.
         verbose :
             If `True`, print the saving information.
         kwargs :

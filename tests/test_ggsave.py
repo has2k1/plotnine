@@ -16,6 +16,7 @@ from plotnine import (
 )
 from plotnine.data import mtcars
 from plotnine.exceptions import PlotnineError, PlotnineWarning
+from plotnine.options import set_option
 
 p = ggplot(mtcars, aes(x="wt", y="mpg", label="name")) + geom_text()
 
@@ -90,6 +91,13 @@ class TestArguments:
         # printing it first! 26 is the current limit, just go
         # over it to not use too much memory
         p.save(fn, width=26, height=26, limitsize=False, verbose=False)
+        assert_exist_and_clean(fn, "big height and width")
+
+        # Using the global option
+        fn = next(filename_gen)
+        set_option("limitsize", False)
+        p.save(fn, width=26, height=26, verbose=False)
+        set_option("limitsize", True)
         assert_exist_and_clean(fn, "big height and width")
 
     def test_dpi_theme_xkcd(self):

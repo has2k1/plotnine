@@ -37,7 +37,7 @@ Default DPI used by the themes
 
 figure_size: tuple[float, float] = (640 / dpi, 480 / dpi)
 """
-Default figure size inches
+Default figure size in inches
 """
 
 figure_format: Optional[FigureFormat] = None
@@ -58,6 +58,13 @@ base_margin: float = 0.01
 """
 A size that is proportional of the figure width and
 is used by some themes to determine other margins
+"""
+
+limitsize: bool = True
+"""
+If `True` (the default), images larger than 25x25 inches will not
+be drawn or saved. This is to  prevent the common error of specifying
+dimensions in pixels.
 """
 
 
