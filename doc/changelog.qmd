@@ -30,6 +30,9 @@ title: Changelog
 - Fix layers 3 and above not to overlap the axis lines if there are any
   ({{< issue 798 >}}).
 
+- Fix [](:stat:`~plotnine.stat_pointdensity`) to work with facetting. It is
+  possible aftected other stats. ({{< issue 808 >}})
+
 ## v0.13.6
 (2024-05-09)
 
