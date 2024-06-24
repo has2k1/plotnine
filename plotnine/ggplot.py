@@ -139,14 +139,14 @@ class ggplot:
         """
         self._display()
 
-    def show(self):
+    def show(self, num=None):
         """
         Show plot using the matplotlib backend set by the user
 
         Users should prefer this method instead of printing or repring
         the object.
         """
-        self._display() if is_inline_backend() else self.draw(show=True)
+        self._display() if is_inline_backend() else self.draw(show=True, num=num)
 
     def _display(self):
         """
@@ -241,7 +241,7 @@ class ggplot:
             raise TypeError(msg.format(type(other)))
         return self
 
-    def draw(self, show: bool = False) -> Figure:
+    def draw(self, show: bool = False, num: int = None) -> Figure:
         """
         Render the complete plot
 
@@ -271,7 +271,7 @@ class ggplot:
             self._build()
 
             # setup
-            self.figure, self.axs = self.facet.setup(self)
+            self.figure, self.axs = self.facet.setup(self,num=num)
             self.guides._setup(self)
             self.theme.setup(self)
 
