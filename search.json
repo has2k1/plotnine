@@ -2692,14 +2692,14 @@
     "href": "changelog.html",
     "title": "Changelog",
     "section": "",
-    "text": "(not-yet-released)\n\n\n\nThe family, fontstyle and fontweight parameters of geom_text are now aesthetics (#790).\nplotnine now responds to the fig-width, fig-height and fig-format settings in the meta section of a quarto document.\nggtitle now accepts title and subtitle as keyword arguments. (#804)\n\n\n\n\n\ngeom_text has gained new aesthetics fontvariant and fontstretch.\nstat_density has gained a new parameter bounds that you can use remove asymptotic boundary effects that arise from density estimates on an infinite domain. (#796)\n\n\n\n\n\nFix layers 3 and above not to overlap the axis lines if there are any (#798)."
+    "text": "(not-yet-released)\n\n\n\nThe family, fontstyle and fontweight parameters of geom_text are now aesthetics (#790).\nplotnine now responds to the fig-width, fig-height and fig-format settings in the meta section of a quarto document.\nggtitle now accepts title and subtitle as keyword arguments. (#804)\n\n\n\n\n\ngeom_text has gained new aesthetics fontvariant and fontstretch.\nstat_density has gained a new parameter bounds that you can use remove asymptotic boundary effects that arise from density estimates on an infinite domain. (#796)\n\n\n\n\n\nFix layers 3 and above not to overlap the axis lines if there are any (#798).\nFix stat_pointdensity to work with facetting. It is possible aftected other stats. (#808)"
   },
   {
     "objectID": "changelog.html#v0.14.0",
     "href": "changelog.html#v0.14.0",
     "title": "Changelog",
     "section": "",
-    "text": "(not-yet-released)\n\n\n\nThe family, fontstyle and fontweight parameters of geom_text are now aesthetics (#790).\nplotnine now responds to the fig-width, fig-height and fig-format settings in the meta section of a quarto document.\nggtitle now accepts title and subtitle as keyword arguments. (#804)\n\n\n\n\n\ngeom_text has gained new aesthetics fontvariant and fontstretch.\nstat_density has gained a new parameter bounds that you can use remove asymptotic boundary effects that arise from density estimates on an infinite domain. (#796)\n\n\n\n\n\nFix layers 3 and above not to overlap the axis lines if there are any (#798)."
+    "text": "(not-yet-released)\n\n\n\nThe family, fontstyle and fontweight parameters of geom_text are now aesthetics (#790).\nplotnine now responds to the fig-width, fig-height and fig-format settings in the meta section of a quarto document.\nggtitle now accepts title and subtitle as keyword arguments. (#804)\n\n\n\n\n\ngeom_text has gained new aesthetics fontvariant and fontstretch.\nstat_density has gained a new parameter bounds that you can use remove asymptotic boundary effects that arise from density estimates on an infinite domain. (#796)\n\n\n\n\n\nFix layers 3 and above not to overlap the axis lines if there are any (#798).\nFix stat_pointdensity to work with facetting. It is possible aftected other stats. (#808)"
   },
   {
     "objectID": "changelog.html#v0.13.6",
