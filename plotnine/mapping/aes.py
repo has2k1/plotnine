@@ -87,7 +87,7 @@ class aes(Dict[str, Any]):
         x aesthetic mapping
     y : str | array_like | scalar
         y aesthetic mapping
-    **kwargs : dict
+    **kwargs : Any
         Other aesthetic mappings
 
     Notes
