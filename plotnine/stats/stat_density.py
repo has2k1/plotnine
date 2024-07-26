@@ -227,7 +227,11 @@ def compute_density(x, weight, range, **params):
         # Evaluating values beyond the ptp range helps us calculate a
         # boundary corrections. So we widen the range over which we will
         # evaluate, so that it contains all points supported by the grid.
-        x2 = np.linspace(kde.support[0], kde.support[-1], params["n"])
+        x2 = np.linspace(
+            kde.support[0],  # pyright: ignore
+            kde.support[-1],  # pyright: ignore
+            params["n"],
+        )
     else:
         x2 = np.linspace(range[0], range[1], params["n"])
 
@@ -294,7 +298,7 @@ def nrd0(x: FloatArrayLike) -> float:
         )
 
     std: float = np.std(x, ddof=1)  # pyright: ignore
-    std_estimate: float = iqr(x) / 1.349  # pyright: ignore
+    std_estimate: float = iqr(x) / 1.349
     low_std = min(std, std_estimate)
     if low_std == 0:
         low_std = std_estimate or np.abs(np.asarray(x)[0]) or 1

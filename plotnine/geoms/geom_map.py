@@ -293,7 +293,7 @@ def PolygonPatch(
         # and the interiors
         _exterior = []
         _interior = []
-        for p in obj.geoms:
+        for p in obj.geoms:  # type: ignore
             _exterior.append(Path(cw_coords(p.exterior)))
             _interior.extend([Path(ccw_coords(ring)) for ring in p.interiors])
 
