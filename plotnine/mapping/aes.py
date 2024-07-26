@@ -593,9 +593,7 @@ def is_valid_aesthetic(value: Any, ae: str) -> bool:
             len(value[1]) % 2 == 0,
             all(isinstance(x, int) for x in value[1]),
         ]
-        if all(conditions):
-            return True
-        return False
+        return all(conditions)
 
     elif ae == "shape":
         if isinstance(value, str):
@@ -609,9 +607,7 @@ def is_valid_aesthetic(value: Any, ae: str) -> bool:
             all(isinstance(x, int) for x in value),
             0 <= value[1] < 3,
         ]
-        if all(conditions):
-            return True
-        return False
+        return all(conditions)
 
     elif ae in {"color", "fill"}:
         if isinstance(value, str):
