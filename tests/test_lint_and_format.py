@@ -14,7 +14,7 @@ is_CI = os.environ.get("CI") is not None
 def test_lint():
     plotnine_dir = str(Path(__file__).parent.parent.absolute())
     p = subprocess.Popen(
-        ["ruff", plotnine_dir],
+        ["ruff", "check", plotnine_dir],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
     )
