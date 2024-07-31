@@ -20,23 +20,16 @@ if TYPE_CHECKING:
 
     from mizani.transforms import trans
 
-    from plotnine.typing import (
-        CoordRange,
-        ScaleDiscreteBreaks,
-        ScaleDiscreteLimits,
-        ScaleLabels,
-    )
+    from plotnine.typing import CoordRange
 
 
 AnyArrayLike: TypeAlias = "NDArray[Any] | pd.Series[Any] | Sequence[Any]"
 DiscretePalette: TypeAlias = "Callable[[int], AnyArrayLike | dict[Any, Any]]"
-DiscreteBreaks: TypeAlias = Sequence[str]
-DiscreteLimits: TypeAlias = Sequence[str]
 DiscreteBreaksUser: TypeAlias = (
-    bool | None | DiscreteBreaks | Callable[[DiscreteLimits], DiscreteBreaks]
+    bool | None | Sequence[str] | Callable[[Sequence[str]], Sequence[str]]
 )
 DiscreteLimitsUser: TypeAlias = (
-    None | DiscreteLimits | Callable[[DiscreteLimits], DiscreteLimits]
+    None | Sequence[str] | Callable[[Sequence[str]], Sequence[str]]
 )
 
 
@@ -93,7 +86,7 @@ class scale_discrete(
         self._range = RangeDiscrete()
 
     @property
-    def final_limits(self) -> ScaleDiscreteLimits:
+    def final_limits(self) -> Sequence[str]:
         if self.is_empty():
             return ("0", "1")
 
@@ -136,7 +129,7 @@ class scale_discrete(
 
     def expand_limits(
         self,
-        limits: ScaleDiscreteLimits,
+        limits: Sequence[str],
         expand: tuple[float, float] | tuple[float, float, float, float],
         coord_limits: tuple[float, float],
         trans: trans,
@@ -160,7 +153,7 @@ class scale_discrete(
 
     def view(
         self,
-        limits: Optional[ScaleDiscreteLimits] = None,
+        limits: Optional[Sequence[str]] = None,
         range: Optional[CoordRange] = None,
     ) -> scale_view:
         """
@@ -201,9 +194,7 @@ class scale_discrete(
         """
         return none_pal()(n)
 
-    def map(
-        self, x, limits: Optional[ScaleDiscreteLimits] = None
-    ) -> Sequence[Any]:
+    def map(self, x, limits: Optional[Sequence[str]] = None) -> Sequence[Any]:
         """
         Map values in x to a palette
         """
@@ -248,8 +239,8 @@ class scale_discrete(
         return pal_match
 
     def get_breaks(
-        self, limits: Optional[ScaleDiscreteLimits] = None
-    ) -> ScaleDiscreteBreaks:
+        self, limits: Optional[Sequence[str]] = None
+    ) -> Sequence[str]:
         """
         Return an ordered list of breaks
 
@@ -274,8 +265,8 @@ class scale_discrete(
         return breaks
 
     def get_bounded_breaks(
-        self, limits: Optional[ScaleDiscreteLimits] = None
-    ) -> ScaleDiscreteBreaks:
+        self, limits: Optional[Sequence[str]] = None
+    ) -> Sequence[str]:
         """
         Return Breaks that are within limits
         """
@@ -286,8 +277,8 @@ class scale_discrete(
         return [b for b in self.get_breaks() if b in lookup_limits]
 
     def get_labels(
-        self, breaks: Optional[ScaleDiscreteBreaks] = None
-    ) -> ScaleLabels:
+        self, breaks: Optional[Sequence[str]] = None
+    ) -> Sequence[str]:
         """
         Generate labels for the legend/guide breaks
         """

@@ -111,55 +111,42 @@ ScaledAestheticsName: TypeAlias = Literal[
 ]
 
 # limits
-ScaleContinuousLimits: TypeAlias = tuple[float, float]
-ScaleDiscreteLimits: TypeAlias = Sequence[str]
-ScaleLimits: TypeAlias = ScaleContinuousLimits | ScaleDiscreteLimits
-
 ScaleLimitsUser: TypeAlias = (
-    None | ScaleLimits | Callable[[ScaleLimits], ScaleLimits]
+    None
+    | (tuple[float, float] | Sequence[str])
+    | Callable[
+        [(tuple[float, float] | Sequence[str])],
+        (tuple[float, float] | Sequence[str]),
+    ]
 )
 ScaleContinuousLimitsUser: TypeAlias = (
     None
-    | ScaleContinuousLimits
-    | Callable[[ScaleContinuousLimits], ScaleContinuousLimits]
+    | tuple[float, float]
+    | Callable[[tuple[float, float]], tuple[float, float]]
 )
 ScaleDiscreteLimitsUser: TypeAlias = (
-    None
-    | ScaleDiscreteLimits
-    | Callable[[ScaleDiscreteLimits], ScaleDiscreteLimits]
+    None | Sequence[str] | Callable[[Sequence[str]], Sequence[str]]
 )
 
 # Breaks
-ScaleContinuousBreaks: TypeAlias = Sequence[float]
-ScaleDiscreteBreaks: TypeAlias = Sequence[str]
-ScaleBreaks: TypeAlias = ScaleContinuousBreaks | ScaleDiscreteBreaks
-
-ScaleBreaksUser: TypeAlias = (
-    bool | None | ScaleBreaks | Callable[[ScaleLimits], ScaleBreaks]
-)
 ScaleContinuousBreaksUser: TypeAlias = (
     bool
     | None
-    | ScaleContinuousBreaks
-    | Callable[[ScaleContinuousLimits], ScaleContinuousBreaks]
+    | Sequence[float]
+    | Callable[[tuple[float, float]], Sequence[float]]
 )
 ScaleDiscreteBreaksUser: TypeAlias = (
-    bool
-    | None
-    | ScaleDiscreteBreaks
-    | Callable[[ScaleDiscreteLimits], ScaleDiscreteBreaks]
+    bool | None | Sequence[str] | Callable[[Sequence[str]], Sequence[str]]
 )
-ScaleMinorBreaksUser: TypeAlias = ScaleContinuousBreaksUser | int
 
 # Labels
 ScaleLabelsUser: TypeAlias = (
     bool
     | None
     | Sequence[str]
-    | Callable[[ScaleBreaks], Sequence[str]]
+    | Callable[[Sequence[float] | Sequence[str]], Sequence[str]]
     | dict[str, str]
 )
-ScaleLabels: TypeAlias = Sequence[str]
 
 ## Coords
 CoordRange: TypeAlias = tuple[float, float]

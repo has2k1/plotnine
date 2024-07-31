@@ -13,17 +13,14 @@ from ..mapping.aes import is_position_aes, rename_aesthetics
 from .range import Range
 
 if TYPE_CHECKING:
-    from typing import Any
+    from typing import Any, Sequence
 
     import pandas as pd
     from numpy.typing import NDArray
 
     from plotnine.typing import (
-        ScaleBreaks,
         ScaledAestheticsName,
-        ScaleLabels,
         ScaleLabelsUser,
-        ScaleLimits,
     )
 
     from ..iapi import range_view, scale_view
@@ -288,7 +285,7 @@ class scale(
         return self._range.is_empty() and self.limits is None
 
     @property
-    def final_limits(self) -> ScaleLimits:
+    def final_limits(self) -> Any:
         raise NotImplementedError
 
     def train_df(self, df: pd.DataFrame):
@@ -312,28 +309,19 @@ class scale(
 
         return df
 
-    def get_labels(
-        self,
-        breaks=None,  # : Optional[ScaleBreaks]
-    ) -> ScaleLabels:
+    def get_labels(self, breaks=None) -> Sequence[str]:
         """
         Get labels, calculating them if required
         """
         raise NotImplementedError
 
-    def get_breaks(
-        self,
-        limits=None,  # : Optional[ScaleLimits]
-    ) -> ScaleBreaks:
+    def get_breaks(self, limits=None):
         """
         Get Breaks
         """
         raise NotImplementedError
 
-    def get_bounded_breaks(
-        self,
-        limits=None,  # : Optional[ScaleLimits]
-    ) -> ScaleBreaks:
+    def get_bounded_breaks(self, limits=None):
         """
         Return Breaks that are within the limits
         """

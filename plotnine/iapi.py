@@ -22,9 +22,7 @@ if TYPE_CHECKING:
     from plotnine.typing import (
         CoordRange,
         FloatArrayLike,
-        ScaleBreaks,
         ScaledAestheticsName,
-        ScaleLimits,
         StripPosition,
     )
 
@@ -41,10 +39,10 @@ class scale_view:
     aesthetics: list[ScaledAestheticsName]
     name: Optional[str]
     # Trained limits of the scale
-    limits: ScaleLimits
+    limits: tuple[float, float] | Sequence[str]
     # Physical size of scale, including expansions
     range: CoordRange
-    breaks: ScaleBreaks
+    breaks: Sequence[float] | Sequence[str]
     minor_breaks: FloatArrayLike
     labels: Sequence[str]
 

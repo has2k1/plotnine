@@ -4,7 +4,6 @@ from contextlib import suppress
 from dataclasses import dataclass
 from typing import (
     TYPE_CHECKING,
-    Any,
     Callable,
     Sequence,
     Type,
@@ -18,7 +17,6 @@ import pandas as pd
 from mizani.bounds import censor, expand_range_distinct, rescale, zero_range
 from mizani.palettes import identity_pal
 from mizani.transforms import trans
-from numpy.typing import NDArray  # noqa: TCH002
 
 from .._utils import match
 from ..exceptions import PlotnineError, PlotnineWarning
@@ -34,27 +32,22 @@ if TYPE_CHECKING:
 
     from plotnine.typing import (
         CoordRange,
-        ScaleLabels,
-        ScaleMinorBreaksUser,
+        FloatArrayLike,
         TFloatArrayLike,
     )
 
 GuideTypeT = TypeVar("GuideTypeT")
-AnyArrayLike: TypeAlias = "NDArray[Any] | pd.Series[Any] | Sequence[Any]"
-FloatArrayLike: TypeAlias = (
-    "NDArray[np.float64] | pd.Series[float] | Sequence[float]"  # noqa: E501
-)
-ContinuousPalette: TypeAlias = "Callable[[FloatArrayLike], AnyArrayLike]"
-ContinuousBreaks: TypeAlias = Sequence[float]
-ContinuousLimits: TypeAlias = tuple[float, float]
 ContinuousBreaksUser: TypeAlias = (
     bool
     | None
-    | ContinuousBreaks
-    | Callable[[ContinuousLimits], ContinuousBreaks]
+    | Sequence[float]
+    | Callable[[tuple[float, float]], Sequence[float]]
 )
+MinorBreaksUser: TypeAlias = ContinuousBreaksUser
 ContinuousLimitsUser: TypeAlias = (
-    None | ContinuousLimits | Callable[[ContinuousLimits], ContinuousLimits]
+    None
+    | tuple[float, float]
+    | Callable[[tuple[float, float]], tuple[float, float]]
 )
 TransUser: TypeAlias = trans | str | Type[trans] | None
 
@@ -105,7 +98,7 @@ class scale_continuous(
     Major breaks
     """
 
-    minor_breaks: ScaleMinorBreaksUser = True
+    minor_breaks: MinorBreaksUser = True
     """
     If a list-like, it is the minor breaks points. If an integer, it is the
     number of minor breaks between any set of major breaks.
@@ -192,7 +185,7 @@ class scale_continuous(
         return t
 
     @property
-    def final_limits(self) -> ContinuousLimits:
+    def final_limits(self) -> tuple[float, float]:
         if self.is_empty():
             return (0, 1)
 
@@ -310,7 +303,7 @@ class scale_continuous(
 
     def expand_limits(
         self,
-        limits: ContinuousLimits,
+        limits: tuple[float, float],
         expand: tuple[float, float] | tuple[float, float, float, float],
         coord_limits: CoordRange | None,
         trans: trans,
@@ -374,7 +367,7 @@ class scale_continuous(
         return identity_pal()(x)
 
     def map(
-        self, x: FloatArrayLike, limits: Optional[ContinuousLimits] = None
+        self, x: FloatArrayLike, limits: Optional[tuple[float, float]] = None
     ) -> FloatArrayLike:
         if limits is None:
             limits = self.final_limits
@@ -391,8 +384,8 @@ class scale_continuous(
         return scaled
 
     def get_breaks(
-        self, limits: Optional[ContinuousLimits] = None
-    ) -> ContinuousBreaks:
+        self, limits: Optional[tuple[float, float]] = None
+    ) -> Sequence[float]:
         """
         Generate breaks for the axis or legend
 
@@ -425,7 +418,7 @@ class scale_continuous(
             # TODO: Fix this type mismatch in mizani with
             # a typevar so that type-in = type-out
             _tlimits = self._trans.breaks(_limits)
-            breaks: ContinuousBreaks = _tlimits  # pyright: ignore
+            breaks: Sequence[float] = _tlimits  # pyright: ignore
         elif zero_range(_limits):
             breaks = [_limits[0]]
         elif callable(self.breaks):
@@ -437,8 +430,8 @@ class scale_continuous(
         return breaks
 
     def get_bounded_breaks(
-        self, limits: Optional[ContinuousLimits] = None
-    ) -> ContinuousBreaks:
+        self, limits: Optional[tuple[float, float]] = None
+    ) -> Sequence[float]:
         """
         Return Breaks that are within limits
         """
@@ -450,9 +443,9 @@ class scale_continuous(
 
     def get_minor_breaks(
         self,
-        major: ContinuousBreaks,
-        limits: Optional[ContinuousLimits] = None,
-    ) -> ContinuousBreaks:
+        major: Sequence[float],
+        limits: Optional[tuple[float, float]] = None,
+    ) -> Sequence[float]:
         """
         Return minor breaks
         """
@@ -462,11 +455,11 @@ class scale_continuous(
         if self.minor_breaks is False or self.minor_breaks is None:
             minor_breaks = []
         elif self.minor_breaks is True:
-            minor_breaks: ContinuousBreaks = self._trans.minor_breaks(
+            minor_breaks: Sequence[float] = self._trans.minor_breaks(
                 major, limits
             )  # pyright: ignore
         elif isinstance(self.minor_breaks, int):
-            minor_breaks: ContinuousBreaks = self._trans.minor_breaks(
+            minor_breaks: Sequence[float] = self._trans.minor_breaks(
                 major,
                 limits,
                 self.minor_breaks,  # pyright: ignore
@@ -482,8 +475,8 @@ class scale_continuous(
         return minor_breaks
 
     def get_labels(
-        self, breaks: Optional[ContinuousBreaks] = None
-    ) -> ScaleLabels:
+        self, breaks: Optional[Sequence[float]] = None
+    ) -> Sequence[str]:
         """
         Generate labels for the axis or legend
 
