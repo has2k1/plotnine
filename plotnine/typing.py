@@ -115,15 +115,15 @@ ScaleContinuousLimits: TypeAlias = tuple[float, float]
 ScaleDiscreteLimits: TypeAlias = Sequence[str]
 ScaleLimits: TypeAlias = ScaleContinuousLimits | ScaleDiscreteLimits
 
-ScaleLimitsRaw: TypeAlias = (
+ScaleLimitsUser: TypeAlias = (
     None | ScaleLimits | Callable[[ScaleLimits], ScaleLimits]
 )
-ScaleContinuousLimitsRaw: TypeAlias = (
+ScaleContinuousLimitsUser: TypeAlias = (
     None
     | ScaleContinuousLimits
     | Callable[[ScaleContinuousLimits], ScaleContinuousLimits]
 )
-ScaleDiscreteLimitsRaw: TypeAlias = (
+ScaleDiscreteLimitsUser: TypeAlias = (
     None
     | ScaleDiscreteLimits
     | Callable[[ScaleDiscreteLimits], ScaleDiscreteLimits]
@@ -134,25 +134,25 @@ ScaleContinuousBreaks: TypeAlias = Sequence[float]
 ScaleDiscreteBreaks: TypeAlias = Sequence[str]
 ScaleBreaks: TypeAlias = ScaleContinuousBreaks | ScaleDiscreteBreaks
 
-ScaleBreaksRaw: TypeAlias = (
+ScaleBreaksUser: TypeAlias = (
     bool | None | ScaleBreaks | Callable[[ScaleLimits], ScaleBreaks]
 )
-ScaleContinuousBreaksRaw: TypeAlias = (
+ScaleContinuousBreaksUser: TypeAlias = (
     bool
     | None
     | ScaleContinuousBreaks
     | Callable[[ScaleContinuousLimits], ScaleContinuousBreaks]
 )
-ScaleDiscreteBreaksRaw: TypeAlias = (
+ScaleDiscreteBreaksUser: TypeAlias = (
     bool
     | None
     | ScaleDiscreteBreaks
     | Callable[[ScaleDiscreteLimits], ScaleDiscreteBreaks]
 )
-ScaleMinorBreaksRaw: TypeAlias = ScaleContinuousBreaksRaw | int
+ScaleMinorBreaksUser: TypeAlias = ScaleContinuousBreaksUser | int
 
 # Labels
-ScaleLabelsRaw: TypeAlias = (
+ScaleLabelsUser: TypeAlias = (
     bool
     | None
     | Sequence[str]
@@ -182,11 +182,11 @@ TextJustification: TypeAlias = (
 # A array variable we can pass to a transforming function and expect
 # result to be of the same type
 TFloatArrayLike = TypeVar("TFloatArrayLike", bound=FloatArrayLike)
-BreaksRawT = TypeVar(
-    "BreaksRawT", ScaleDiscreteBreaksRaw, ScaleContinuousBreaksRaw
+BreaksUserT = TypeVar(
+    "BreaksUserT", ScaleDiscreteBreaksUser, ScaleContinuousBreaksUser
 )
-LimitsRawT = TypeVar(
-    "LimitsRawT", ScaleDiscreteLimitsRaw, ScaleContinuousLimitsRaw
+LimitsUserT = TypeVar(
+    "LimitsUserT", ScaleDiscreteLimitsUser, ScaleContinuousLimitsUser
 )
 GuideTypeT = TypeVar(
     "GuideTypeT",
@@ -203,8 +203,6 @@ TDiscreteDomainDType = TypeVar("TDiscreteDomainDType", bound=str)
 TContinuousDomainDType = TypeVar(
     "TContinuousDomainDType", float, datetime, timedelta
 )
-
-# TBreaksRaw = TDiscreteBreaksRaw | TContinuousBreaksRaw
 
 # Column transformation function
 TransformCol: TypeAlias = Callable[[FloatSeries], FloatSeries | FloatArray]

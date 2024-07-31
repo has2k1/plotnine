@@ -22,21 +22,21 @@ if TYPE_CHECKING:
         ScaleBreaks,
         ScaledAestheticsName,
         ScaleLabels,
-        ScaleLabelsRaw,
+        ScaleLabelsUser,
         ScaleLimits,
     )
 
     from ..iapi import range_view, scale_view
 
 RangeT = TypeVar("RangeT", bound=Range)
-BreaksRawT = TypeVar("BreaksRawT")
-LimitsRawT = TypeVar("LimitsRawT")
+BreaksUserT = TypeVar("BreaksUserT")
+LimitsUserT = TypeVar("LimitsUserT")
 GuideTypeT = TypeVar("GuideTypeT")
 
 
 @dataclass(kw_only=True)
 class scale(
-    Generic[RangeT, BreaksRawT, LimitsRawT, GuideTypeT],
+    Generic[RangeT, BreaksUserT, LimitsUserT, GuideTypeT],
     ABC,
     metaclass=Register,
 ):
@@ -52,14 +52,14 @@ class scale(
     """
 
     # # major breaks
-    breaks: BreaksRawT
+    breaks: BreaksUserT
     """
     List of major break points. Or a callable that takes a tuple of limits
     and returns a list of breaks. If `True`, automatically calculate the
     breaks.
     """
 
-    limits: LimitsRawT
+    limits: LimitsUserT
     """
     Limits of the scale. Most commonly, these are the min & max values
     for the scales. For scales that deal with categoricals, these may be a
@@ -67,7 +67,7 @@ class scale(
     """
 
     # labels at the breaks
-    labels: ScaleLabelsRaw = True
+    labels: ScaleLabelsUser = True
     """
     Labels at the `breaks`. Alternatively, a callable that takes an
     array_like of break points as input and returns a list of strings.
