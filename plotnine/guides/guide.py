@@ -24,7 +24,6 @@ if TYPE_CHECKING:
         LegendPosition,
         Orientation,
         SidePosition,
-        TupleFloat2,
     )
 
     from .guides import GuidesElements
@@ -123,7 +122,10 @@ class guide(ABC, metaclass=Register):
     @property
     def _resolved_position_justification(
         self,
-    ) -> tuple[SidePosition, float] | tuple[TupleFloat2, TupleFloat2]:
+    ) -> (
+        tuple[SidePosition, float]
+        | tuple[tuple[float, float], tuple[float, float]]
+    ):
         """
         Return the final position & justification to draw the guide
         """
@@ -240,7 +242,7 @@ class GuideElements:
         return direction
 
     @cached_property
-    def position(self) -> SidePosition | TupleFloat2:
+    def position(self) -> SidePosition | tuple[float, float]:
         if (guide_pos := self.guide.position) == "inside":
             guide_pos = self._position_inside
 
@@ -252,7 +254,7 @@ class GuideElements:
         return pos
 
     @cached_property
-    def _position_inside(self) -> SidePosition | TupleFloat2:
+    def _position_inside(self) -> SidePosition | tuple[float, float]:
         pos = self.theme.getp("legend_position_inside")
         if isinstance(pos, tuple):
             return pos

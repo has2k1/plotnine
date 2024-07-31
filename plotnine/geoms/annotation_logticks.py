@@ -23,12 +23,7 @@ if typing.TYPE_CHECKING:
     from plotnine.facets.layout import Layout
     from plotnine.geoms.geom import geom
     from plotnine.iapi import panel_view
-    from plotnine.typing import (
-        AnyArray,
-        TupleFloat2,
-        TupleFloat3,
-        TupleFloat4,
-    )
+    from plotnine.typing import AnyArray
 
 
 class _geom_logticks(geom_rug):
@@ -69,7 +64,7 @@ class _geom_logticks(geom_rug):
         sides: str,
         panel_params: panel_view,
         coord: coord,
-    ) -> TupleFloat2:
+    ) -> tuple[float, float]:
         """
         Check the log transforms
 
@@ -135,7 +130,7 @@ class _geom_logticks(geom_rug):
 
     @staticmethod
     def _calc_ticks(
-        value_range: TupleFloat2, base: float
+        value_range: tuple[float, float], base: float
     ) -> tuple[AnyArray, AnyArray, AnyArray]:
         """
         Calculate tick marks within a range
@@ -268,11 +263,13 @@ class annotation_logticks(annotate):
         self,
         sides: str = "bl",
         alpha: float = 1,
-        color: str | TupleFloat3 | TupleFloat4 = "black",
+        color: str
+        | tuple[float, float, float]
+        | tuple[float, float, float, float] = "black",
         size: float = 0.5,
         linetype: Literal["solid", "dashed", "dashdot", "dotted"]
         | Sequence[float] = "solid",
-        lengths: TupleFloat3 = (0.036, 0.0225, 0.012),
+        lengths: tuple[float, float, float] = (0.036, 0.0225, 0.012),
         base: float | None = None,
     ):
         if len(lengths) != 3:

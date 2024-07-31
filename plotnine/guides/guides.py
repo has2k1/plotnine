@@ -37,7 +37,6 @@ if TYPE_CHECKING:
         ScaledAestheticsName,
         SidePosition,
         TextJustification,
-        TupleFloat2,
     )
 
     LegendOrColorbar: TypeAlias = (
@@ -327,7 +326,8 @@ class guides:
 
         # Group together guides for each position
         groups: dict[
-            tuple[SidePosition, float] | tuple[TupleFloat2, TupleFloat2],
+            tuple[SidePosition, float]
+            | tuple[tuple[float, float], tuple[float, float]],
             list[PackerBase],
         ] = defaultdict(list)
 

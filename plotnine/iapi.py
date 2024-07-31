@@ -26,7 +26,6 @@ if TYPE_CHECKING:
         ScaledAestheticsName,
         ScaleLimits,
         StripPosition,
-        TupleFloat2,
     )
 
     from ._mpl.offsetbox import FlexibleAnchoredOffsetbox
@@ -56,8 +55,8 @@ class range_view:
     Range information after training
     """
 
-    range: TupleFloat2
-    range_coord: TupleFloat2
+    range: tuple[float, float]
+    range_coord: tuple[float, float]
 
 
 @dataclass
@@ -147,8 +146,8 @@ class panel_ranges:
     Ranges for the panel
     """
 
-    x: TupleFloat2
-    y: TupleFloat2
+    x: tuple[float, float]
+    y: tuple[float, float]
 
 
 @dataclass
@@ -316,7 +315,7 @@ class legend_justifications_view:
     right: float = 0.5
     top: float = 0.5
     bottom: float = 0.5
-    inside: Optional[TupleFloat2] = None
+    inside: Optional[tuple[float, float]] = None
 
 
 @dataclass
@@ -336,8 +335,8 @@ class inside_legend:
     """
 
     box: FlexibleAnchoredOffsetbox
-    justification: TupleFloat2
-    position: TupleFloat2
+    justification: tuple[float, float]
+    position: tuple[float, float]
 
 
 @dataclass

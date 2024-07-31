@@ -22,7 +22,7 @@ from .themes import theme
 if typing.TYPE_CHECKING:
     from typing import Any, Iterable, Literal, Optional
 
-    from plotnine.typing import DataLike, TupleFloat2
+    from plotnine.typing import DataLike
 
 __all__ = ("qplot",)
 
@@ -34,8 +34,8 @@ def qplot(
     facets: str = "",
     margins: bool | list[str] = False,
     geom: str | list[str] | tuple[str] = "auto",
-    xlim: Optional[TupleFloat2] = None,
-    ylim: Optional[TupleFloat2] = None,
+    xlim: Optional[tuple[float, float]] = None,
+    ylim: Optional[tuple[float, float]] = None,
     log: Optional[Literal["x", "y", "xy"]] = None,
     main: Optional[str] = None,
     xlab: Optional[str] = None,

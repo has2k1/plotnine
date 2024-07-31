@@ -8,7 +8,6 @@ if typing.TYPE_CHECKING:
     from typing import Optional
 
     from plotnine.iapi import panel_view
-    from plotnine.typing import TupleFloat2
 
 
 class coord_fixed(coord_cartesian):
@@ -47,8 +46,8 @@ class coord_fixed(coord_cartesian):
     def __init__(
         self,
         ratio: float = 1,
-        xlim: Optional[TupleFloat2] = None,
-        ylim: Optional[TupleFloat2] = None,
+        xlim: Optional[tuple[float, float]] = None,
+        ylim: Optional[tuple[float, float]] = None,
         expand: bool = True,
     ):
         super().__init__(xlim=xlim, ylim=ylim, expand=expand)

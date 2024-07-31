@@ -21,7 +21,6 @@ if typing.TYPE_CHECKING:
     from plotnine.coords.coord import coord
     from plotnine.facets.layout import Layout
     from plotnine.iapi import panel_view
-    from plotnine.typing import TupleFloat2
 
 
 class annotation_stripes(annotate):
@@ -62,7 +61,7 @@ class annotation_stripes(annotate):
         fill: Sequence[str] = ("#AAAAAA", "#CCCCCC"),
         fill_range: Literal["auto", "cycle", "no", "nocycle"] = "auto",
         direction: Literal["horizontal", "vertical"] = "vertical",
-        extend: TupleFloat2 = (0, 1),
+        extend: tuple[float, float] = (0, 1),
         **kwargs: Any,
     ):
         allowed = ("vertical", "horizontal")

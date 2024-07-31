@@ -25,8 +25,6 @@ if TYPE_CHECKING:
         ScaleDiscreteBreaks,
         ScaleDiscreteLimits,
         ScaleLabels,
-        TupleFloat2,
-        TupleFloat4,
     )
 
 
@@ -70,7 +68,7 @@ class scale_discrete(
     breaks.
     """
 
-    drop: bool = True  # drop unused factor levels from the scale
+    drop: bool = True
     """
     Whether to drop unused categories from the scale
     """
@@ -139,8 +137,8 @@ class scale_discrete(
     def expand_limits(
         self,
         limits: ScaleDiscreteLimits,
-        expand: TupleFloat2 | TupleFloat4,
-        coord_limits: TupleFloat2,
+        expand: tuple[float, float] | tuple[float, float, float, float],
+        coord_limits: tuple[float, float],
         trans: trans,
     ) -> range_view:
         """

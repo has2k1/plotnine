@@ -35,12 +35,6 @@ class DataFrameConvertible(Protocol):
         ...
 
 
-# Tuples
-TupleInt2: TypeAlias = tuple[int, int]
-TupleFloat2: TypeAlias = tuple[float, float]
-TupleFloat3: TypeAlias = tuple[float, float, float]
-TupleFloat4: TypeAlias = tuple[float, float, float, float]
-
 # Arrays (strictly numpy)
 AnyArray: TypeAlias = NDArray[Any]
 BoolArray: TypeAlias = NDArray[np.bool_]
@@ -117,7 +111,7 @@ ScaledAestheticsName: TypeAlias = Literal[
 ]
 
 # limits
-ScaleContinuousLimits: TypeAlias = TupleFloat2
+ScaleContinuousLimits: TypeAlias = tuple[float, float]
 ScaleDiscreteLimits: TypeAlias = Sequence[str]
 ScaleLimits: TypeAlias = ScaleContinuousLimits | ScaleDiscreteLimits
 
@@ -168,7 +162,7 @@ ScaleLabelsRaw: TypeAlias = (
 ScaleLabels: TypeAlias = Sequence[str]
 
 ## Coords
-CoordRange: TypeAlias = TupleFloat2
+CoordRange: TypeAlias = tuple[float, float]
 
 # Guide
 SidePosition: TypeAlias = Literal["left", "right", "top", "bottom"]

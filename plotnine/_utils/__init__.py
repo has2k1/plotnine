@@ -37,7 +37,6 @@ if TYPE_CHECKING:
         FloatArrayLike,
         IntArray,
         SidePosition,
-        TupleFloat2,
     )
 
     T = TypeVar("T")
@@ -50,7 +49,7 @@ SIZE_FACTOR = np.sqrt(np.pi)
 
 # A lookup for the coordinates of specific named positions on
 # a unit square.
-BOX_LOCATIONS: dict[str, TupleFloat2] = {
+BOX_LOCATIONS: dict[str, tuple[float, float]] = {
     "left": (0, 0.5),
     "right": (1, 0.5),
     "top": (0.5, 1),
@@ -1263,8 +1262,8 @@ def get_opposite_side(s: SidePosition) -> SidePosition:
 
 
 def ensure_xy_location(
-    loc: SidePosition | Literal["center"] | float | TupleFloat2,
-) -> TupleFloat2:
+    loc: SidePosition | Literal["center"] | float | tuple[float, float],
+) -> tuple[float, float]:
     """
     Convert input into (x, y) location
 
