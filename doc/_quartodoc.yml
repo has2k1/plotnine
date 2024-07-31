@@ -10,6 +10,7 @@ quartodoc:
     style: _renderer.py
     typing_module_paths:
       - plotnine.typing
+      - plotnine.scales._runtime_typing
 
   sections:
     - title: Creating a Plot

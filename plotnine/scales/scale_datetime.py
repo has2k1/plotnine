@@ -2,7 +2,8 @@ from __future__ import annotations
 
 from dataclasses import KW_ONLY, InitVar, dataclass
 
-from .scale_continuous import TransUser, scale_continuous
+from ._runtime_typing import TransUser  # noqa: TCH001
+from .scale_continuous import scale_continuous
 
 
 @dataclass
