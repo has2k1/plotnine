@@ -35,7 +35,7 @@ if TYPE_CHECKING:
     from plotnine.typing import (
         CoordRange,
         ScaleLabels,
-        ScaleMinorBreaksRaw,
+        ScaleMinorBreaksUser,
         TFloatArrayLike,
     )
 
@@ -47,13 +47,13 @@ FloatArrayLike: TypeAlias = (
 ContinuousPalette: TypeAlias = "Callable[[FloatArrayLike], AnyArrayLike]"
 ContinuousBreaks: TypeAlias = Sequence[float]
 ContinuousLimits: TypeAlias = tuple[float, float]
-ContinuousBreaksRaw: TypeAlias = (
+ContinuousBreaksUser: TypeAlias = (
     bool
     | None
     | ContinuousBreaks
     | Callable[[ContinuousLimits], ContinuousBreaks]
 )
-ContinuousLimitsRaw: TypeAlias = (
+ContinuousLimitsUser: TypeAlias = (
     None | ContinuousLimits | Callable[[ContinuousLimits], ContinuousLimits]
 )
 TransUser: TypeAlias = trans | str | Type[trans] | None
@@ -63,8 +63,8 @@ TransUser: TypeAlias = trans | str | Type[trans] | None
 class scale_continuous(
     scale[
         RangeContinuous,
-        ContinuousBreaksRaw,
-        ContinuousLimitsRaw,
+        ContinuousBreaksUser,
+        ContinuousLimitsUser,
         # subclasses are still generic and must specify the
         # type of the guide
         GuideTypeT,
@@ -79,7 +79,7 @@ class scale_continuous(
     keyword arguments.
     """
 
-    limits: ContinuousLimitsRaw = None
+    limits: ContinuousLimitsUser = None
     """
     Limits of the scale. Most commonly, these are the minimum & maximum
     values for the scale. If not specified they are derived from the data.
@@ -100,12 +100,12 @@ class scale_continuous(
     is to turn them into `np.nan`, which then get dropped.
     """
 
-    breaks: ContinuousBreaksRaw = True
+    breaks: ContinuousBreaksUser = True
     """
     Major breaks
     """
 
-    minor_breaks: ScaleMinorBreaksRaw = True
+    minor_breaks: ScaleMinorBreaksUser = True
     """
     If a list-like, it is the minor breaks points. If an integer, it is the
     number of minor breaks between any set of major breaks.
@@ -127,7 +127,9 @@ class scale_continuous(
         self._trans = self._make_trans()
         self.limits = self._prep_limits(self.limits)
 
-    def _prep_limits(self, value: ContinuousLimitsRaw) -> ContinuousLimitsRaw:
+    def _prep_limits(
+        self, value: ContinuousLimitsUser
+    ) -> ContinuousLimitsUser:
         """
         Limits for the continuous scale
 

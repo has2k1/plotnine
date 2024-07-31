@@ -32,10 +32,10 @@ AnyArrayLike: TypeAlias = "NDArray[Any] | pd.Series[Any] | Sequence[Any]"
 DiscretePalette: TypeAlias = "Callable[[int], AnyArrayLike | dict[Any, Any]]"
 DiscreteBreaks: TypeAlias = Sequence[str]
 DiscreteLimits: TypeAlias = Sequence[str]
-DiscreteBreaksRaw: TypeAlias = (
+DiscreteBreaksUser: TypeAlias = (
     bool | None | DiscreteBreaks | Callable[[DiscreteLimits], DiscreteBreaks]
 )
-DiscreteLimitsRaw: TypeAlias = (
+DiscreteLimitsUser: TypeAlias = (
     None | DiscreteLimits | Callable[[DiscreteLimits], DiscreteLimits]
 )
 
@@ -44,8 +44,8 @@ DiscreteLimitsRaw: TypeAlias = (
 class scale_discrete(
     scale[
         RangeDiscrete,
-        DiscreteBreaksRaw,
-        DiscreteLimitsRaw,
+        DiscreteBreaksUser,
+        DiscreteLimitsUser,
         Literal["legend"] | None,
     ]
 ):
@@ -53,7 +53,7 @@ class scale_discrete(
     Base class for all discrete scales
     """
 
-    limits: DiscreteLimitsRaw = None
+    limits: DiscreteLimitsUser = None
     """
     Limits of the scale. These are the categories (unique values) of
     the variables. If is only a subset of the values, those that are
@@ -61,7 +61,7 @@ class scale_discrete(
     `na_value`.
     """
 
-    breaks: DiscreteBreaksRaw = True
+    breaks: DiscreteBreaksUser = True
     """
     List of major break points. Or a callable that takes a tuple of limits
     and returns a list of breaks. If `True`, automatically calculate the
