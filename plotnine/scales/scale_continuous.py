@@ -2,32 +2,32 @@ from __future__ import annotations
 
 from contextlib import suppress
 from dataclasses import dataclass
-from typing import (
-    TYPE_CHECKING,
-    Callable,
-    Sequence,
-    Type,
-    TypeAlias,
-    TypeVar,
-)
+from typing import TYPE_CHECKING, Sequence
 from warnings import warn
 
 import numpy as np
 import pandas as pd
 from mizani.bounds import censor, expand_range_distinct, rescale, zero_range
 from mizani.palettes import identity_pal
-from mizani.transforms import trans
 
 from .._utils import match
 from ..exceptions import PlotnineError, PlotnineWarning
 from ..iapi import range_view, scale_view
 from ._expand import expand_range
+from ._runtime_typing import (
+    ContinuousBreaksUser,
+    ContinuousLimitsUser,
+    GuideTypeT,
+    MinorBreaksUser,
+    TransUser,
+)
 from .range import RangeContinuous
 from .scale import scale
 
 if TYPE_CHECKING:
-    from typing import Optional, TypeAlias
+    from typing import Optional
 
+    from mizani.transforms import trans
     from mizani.typing import PCensor, PRescale
 
     from plotnine.typing import (
@@ -35,21 +35,6 @@ if TYPE_CHECKING:
         FloatArrayLike,
         TFloatArrayLike,
     )
-
-GuideTypeT = TypeVar("GuideTypeT")
-ContinuousBreaksUser: TypeAlias = (
-    bool
-    | None
-    | Sequence[float]
-    | Callable[[tuple[float, float]], Sequence[float]]
-)
-MinorBreaksUser: TypeAlias = ContinuousBreaksUser
-ContinuousLimitsUser: TypeAlias = (
-    None
-    | tuple[float, float]
-    | Callable[[tuple[float, float]], tuple[float, float]]
-)
-TransUser: TypeAlias = trans | str | Type[trans] | None
 
 
 @dataclass(kw_only=True)

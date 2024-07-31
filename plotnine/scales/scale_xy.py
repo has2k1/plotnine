@@ -12,8 +12,9 @@ from .._utils.registry import alias
 from ..exceptions import PlotnineError
 from ..iapi import range_view
 from ._expand import expand_range
+from ._runtime_typing import TransUser  # noqa: TCH001
 from .range import RangeContinuous
-from .scale_continuous import TransUser, scale_continuous
+from .scale_continuous import scale_continuous
 from .scale_datetime import scale_datetime
 from .scale_discrete import scale_discrete
 

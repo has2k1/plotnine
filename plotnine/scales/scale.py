@@ -3,14 +3,20 @@ from __future__ import annotations
 from abc import ABC
 from copy import copy, deepcopy
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Generic, TypeVar
+from typing import TYPE_CHECKING, Generic
 
 import numpy as np
 
 from .._utils.registry import Register
 from ..exceptions import PlotnineError
 from ..mapping.aes import is_position_aes, rename_aesthetics
-from .range import Range
+from ._runtime_typing import (
+    BreaksUserT,
+    GuideTypeT,
+    LimitsUserT,
+    RangeT,
+    ScaleLabelsUser,
+)
 
 if TYPE_CHECKING:
     from typing import Any, Sequence
@@ -18,17 +24,9 @@ if TYPE_CHECKING:
     import pandas as pd
     from numpy.typing import NDArray
 
-    from plotnine.typing import (
-        ScaledAestheticsName,
-        ScaleLabelsUser,
-    )
+    from plotnine.typing import ScaledAestheticsName
 
     from ..iapi import range_view, scale_view
-
-RangeT = TypeVar("RangeT", bound=Range)
-BreaksUserT = TypeVar("BreaksUserT")
-LimitsUserT = TypeVar("LimitsUserT")
-GuideTypeT = TypeVar("GuideTypeT")
 
 
 @dataclass(kw_only=True)
@@ -71,9 +69,14 @@ class scale(
     """
 
     # multiplicative and additive expansion constants
-    expand: tuple[float, float] | tuple[float, float, float, float] | None = (
-        None
-    )
+    # fmt: off
+    expand: (
+        tuple[float, float]
+        | tuple[float, float, float, float]
+        | None
+    ) = None
+    # fmt: on
+
     """
     Multiplicative and additive expansion constants
     that determine how the scale is expanded. If

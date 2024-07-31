@@ -110,44 +110,6 @@ ScaledAestheticsName: TypeAlias = Literal[
     "upper",
 ]
 
-# limits
-ScaleLimitsUser: TypeAlias = (
-    None
-    | (tuple[float, float] | Sequence[str])
-    | Callable[
-        [(tuple[float, float] | Sequence[str])],
-        (tuple[float, float] | Sequence[str]),
-    ]
-)
-ScaleContinuousLimitsUser: TypeAlias = (
-    None
-    | tuple[float, float]
-    | Callable[[tuple[float, float]], tuple[float, float]]
-)
-ScaleDiscreteLimitsUser: TypeAlias = (
-    None | Sequence[str] | Callable[[Sequence[str]], Sequence[str]]
-)
-
-# Breaks
-ScaleContinuousBreaksUser: TypeAlias = (
-    bool
-    | None
-    | Sequence[float]
-    | Callable[[tuple[float, float]], Sequence[float]]
-)
-ScaleDiscreteBreaksUser: TypeAlias = (
-    bool | None | Sequence[str] | Callable[[Sequence[str]], Sequence[str]]
-)
-
-# Labels
-ScaleLabelsUser: TypeAlias = (
-    bool
-    | None
-    | Sequence[str]
-    | Callable[[Sequence[float] | Sequence[str]], Sequence[str]]
-    | dict[str, str]
-)
-
 ## Coords
 CoordRange: TypeAlias = tuple[float, float]
 
@@ -169,27 +131,6 @@ TextJustification: TypeAlias = (
 # A array variable we can pass to a transforming function and expect
 # result to be of the same type
 TFloatArrayLike = TypeVar("TFloatArrayLike", bound=FloatArrayLike)
-BreaksUserT = TypeVar(
-    "BreaksUserT", ScaleDiscreteBreaksUser, ScaleContinuousBreaksUser
-)
-LimitsUserT = TypeVar(
-    "LimitsUserT", ScaleDiscreteLimitsUser, ScaleContinuousLimitsUser
-)
-GuideTypeT = TypeVar(
-    "GuideTypeT",
-    Literal["legend"] | None,
-    Literal["colorbar"] | None,
-    Literal["legend", "colorbar"] | None,
-    None,
-)
-
-TDomainDType = TypeVar(
-    "TDomainDType", float, int, bool, str, datetime, timedelta
-)
-TDiscreteDomainDType = TypeVar("TDiscreteDomainDType", bound=str)
-TContinuousDomainDType = TypeVar(
-    "TContinuousDomainDType", float, datetime, timedelta
-)
 
 # Column transformation function
 TransformCol: TypeAlias = Callable[[FloatSeries], FloatSeries | FloatArray]

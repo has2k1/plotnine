@@ -1,36 +1,26 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Any, Callable, Literal, Sequence, TypeAlias
+from typing import TYPE_CHECKING, Any, Literal, Sequence
 
 import numpy as np
 import pandas as pd
 from mizani.bounds import expand_range_distinct
 from mizani.palettes import none_pal
-from numpy.typing import NDArray  # noqa: TCH002
 
 from .._utils import match
 from ..iapi import range_view, scale_view
 from ._expand import expand_range
+from ._runtime_typing import DiscreteBreaksUser, DiscreteLimitsUser
 from .range import RangeDiscrete
 from .scale import scale
 
 if TYPE_CHECKING:
-    from typing import Optional, TypeAlias
+    from typing import Optional
 
     from mizani.transforms import trans
 
-    from plotnine.typing import CoordRange
-
-
-AnyArrayLike: TypeAlias = "NDArray[Any] | pd.Series[Any] | Sequence[Any]"
-DiscretePalette: TypeAlias = "Callable[[int], AnyArrayLike | dict[Any, Any]]"
-DiscreteBreaksUser: TypeAlias = (
-    bool | None | Sequence[str] | Callable[[Sequence[str]], Sequence[str]]
-)
-DiscreteLimitsUser: TypeAlias = (
-    None | Sequence[str] | Callable[[Sequence[str]], Sequence[str]]
-)
+    from plotnine.typing import AnyArrayLike, CoordRange
 
 
 @dataclass(kw_only=True)
