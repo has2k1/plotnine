@@ -14,7 +14,6 @@ if TYPE_CHECKING:
     from typing import Any, Literal, Optional, Sequence
 
     from plotnine import theme
-    from plotnine.typing import TupleFloat3, TupleFloat4
 
 
 class element_text(element_base):
@@ -69,9 +68,13 @@ class element_text(element_base):
         weight: Optional[int | str | Sequence[int | str]] = None,
         color: Optional[
             str
-            | TupleFloat3
-            | TupleFloat4
-            | Sequence[str | TupleFloat3 | TupleFloat4]
+            | tuple[float, float, float]
+            | tuple[float, float, float, float]
+            | Sequence[
+                str
+                | tuple[float, float, float]
+                | tuple[float, float, float, float]
+            ]
         ] = None,
         size: Optional[float | Sequence[float]] = None,
         ha: Optional[Literal["center", "left", "right"] | float] = None,
@@ -88,9 +91,13 @@ class element_text(element_base):
         linespacing: Optional[float] = None,
         backgroundcolor: Optional[
             str
-            | TupleFloat3
-            | TupleFloat4
-            | Sequence[str | TupleFloat3 | TupleFloat4]
+            | tuple[float, float, float]
+            | tuple[float, float, float, float]
+            | Sequence[
+                str
+                | tuple[float, float, float]
+                | tuple[float, float, float, float]
+            ]
         ] = None,
         margin: Optional[
             dict[Literal["t", "b", "l", "r", "units"], Any]

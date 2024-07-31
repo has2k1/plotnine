@@ -11,7 +11,7 @@ from ..scales.scale_discrete import scale_discrete
 if typing.TYPE_CHECKING:
     from typing import Literal, Optional
 
-    from plotnine.typing import FloatArray, FloatArrayLike, TupleFloat2
+    from plotnine.typing import FloatArray, FloatArrayLike
 
 
 __all__ = (
@@ -43,7 +43,7 @@ def freedman_diaconis_bins(a):
 
 
 def breaks_from_binwidth(
-    x_range: TupleFloat2,
+    x_range: tuple[float, float],
     binwidth: float,
     center: Optional[float] = None,
     boundary: Optional[float] = None,
@@ -94,7 +94,7 @@ def breaks_from_binwidth(
 
 
 def breaks_from_bins(
-    x_range: TupleFloat2,
+    x_range: tuple[float, float],
     bins: int = 30,
     center: Optional[float] = None,
     boundary: Optional[float] = None,

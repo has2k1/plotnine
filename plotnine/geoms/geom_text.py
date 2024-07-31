@@ -23,7 +23,7 @@ if typing.TYPE_CHECKING:
     from plotnine.coords.coord import coord
     from plotnine.iapi import panel_view
     from plotnine.layer import layer
-    from plotnine.typing import DataLike, TupleInt2
+    from plotnine.typing import DataLike
 
 
 # Note: hjust & vjust are parameters instead of aesthetics
@@ -361,8 +361,8 @@ class geom_text(geom):
 
     @staticmethod
     def legend_key_size(
-        data: pd.Series[Any], min_size: TupleInt2, lyr: layer
-    ) -> TupleInt2:
+        data: pd.Series[Any], min_size: tuple[int, int], lyr: layer
+    ) -> tuple[int, int]:
         w, h = min_size
         _w = _h = data["size"]
         if data["color"] is not None:

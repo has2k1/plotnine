@@ -37,8 +37,6 @@ if TYPE_CHECKING:
     from matplotlib.axis import Tick
     from matplotlib.text import Text
 
-    from plotnine.typing import TupleFloat2
-
     from .layout_engine import LayoutPack
 
     AxesLocation: TypeAlias = Literal[
@@ -113,7 +111,7 @@ class _side_spaces(ABC):
         return sum(getattr(self, f.name) for f in _fields_upto(item))
 
     @cached_property
-    def _legend_size(self) -> TupleFloat2:
+    def _legend_size(self) -> tuple[float, float]:
         """
         Return size of legend in figure coordinates
 
@@ -184,7 +182,7 @@ class left_spaces(_side_spaces):
             self.plot_margin += adjustment
 
     @cached_property
-    def _legend_size(self) -> TupleFloat2:
+    def _legend_size(self) -> tuple[float, float]:
         if not (self.pack.legends and self.pack.legends.left):
             return (0, 0)
 
@@ -233,7 +231,7 @@ class right_spaces(_side_spaces):
             self.plot_margin += adjustment
 
     @cached_property
-    def _legend_size(self) -> TupleFloat2:
+    def _legend_size(self) -> tuple[float, float]:
         if not (self.pack.legends and self.pack.legends.right):
             return (0, 0)
 
@@ -304,7 +302,7 @@ class top_spaces(_side_spaces):
             self.plot_margin += adjustment
 
     @cached_property
-    def _legend_size(self) -> TupleFloat2:
+    def _legend_size(self) -> tuple[float, float]:
         if not (self.pack.legends and self.pack.legends.top):
             return (0, 0)
 
@@ -379,7 +377,7 @@ class bottom_spaces(_side_spaces):
             self.plot_margin += adjustment
 
     @cached_property
-    def _legend_size(self) -> TupleFloat2:
+    def _legend_size(self) -> tuple[float, float]:
         if not (self.pack.legends and self.pack.legends.bottom):
             return (0, 0)
 

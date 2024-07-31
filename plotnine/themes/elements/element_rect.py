@@ -11,8 +11,6 @@ from .element_base import element_base
 if TYPE_CHECKING:
     from typing import Any, Optional, Sequence
 
-    from plotnine.typing import TupleFloat3, TupleFloat4
-
 
 class element_rect(element_base):
     """
@@ -39,11 +37,23 @@ class element_rect(element_base):
 
     def __init__(
         self,
-        fill: Optional[str | TupleFloat3 | TupleFloat4] = None,
-        color: Optional[str | TupleFloat3 | TupleFloat4] = None,
+        fill: Optional[
+            str
+            | tuple[float, float, float]
+            | tuple[float, float, float, float]
+        ] = None,
+        color: Optional[
+            str
+            | tuple[float, float, float]
+            | tuple[float, float, float, float]
+        ] = None,
         size: Optional[float] = None,
         linetype: Optional[str | Sequence[int]] = None,
-        colour: Optional[str | TupleFloat3 | TupleFloat4] = None,
+        colour: Optional[
+            str
+            | tuple[float, float, float]
+            | tuple[float, float, float, float]
+        ] = None,
         **kwargs: Any,
     ):
         super().__init__()

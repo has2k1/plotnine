@@ -28,7 +28,6 @@ if typing.TYPE_CHECKING:
     from plotnine._mpl.offsetbox import FlexibleAnchoredOffsetbox
     from plotnine.facets.facet import facet
     from plotnine.iapi import legend_artists
-    from plotnine.typing import TupleFloat2
 
     from .layout_engine import LayoutPack
 
@@ -252,8 +251,8 @@ def set_legends_position(
 
     def set_position(
         aob: FlexibleAnchoredOffsetbox,
-        anchor_point: TupleFloat2,
-        xy_loc: TupleFloat2,
+        anchor_point: tuple[float, float],
+        xy_loc: tuple[float, float],
         transform: Transform = fig.transFigure,
     ):
         """

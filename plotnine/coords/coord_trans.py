@@ -21,7 +21,6 @@ if typing.TYPE_CHECKING:
         FloatArray,
         FloatSeries,
         TFloatArrayLike,
-        TupleFloat2,
     )
 
 
@@ -51,8 +50,8 @@ class coord_trans(coord):
         self,
         x: str | trans = "identity",
         y: str | trans = "identity",
-        xlim: Optional[TupleFloat2] = None,
-        ylim: Optional[TupleFloat2] = None,
+        xlim: Optional[tuple[float, float]] = None,
+        ylim: Optional[tuple[float, float]] = None,
         expand: bool = True,
     ):
         from mizani.transforms import gettrans
@@ -105,7 +104,7 @@ class coord_trans(coord):
         """
 
         def get_scale_view(
-            scale: scale, coord_limits: TupleFloat2, trans: trans
+            scale: scale, coord_limits: tuple[float, float], trans: trans
         ) -> scale_view:
             if coord_limits:
                 coord_limits = trans.transform(coord_limits)
@@ -150,7 +149,7 @@ class coord_trans(coord):
 
 
 def transform_value(
-    trans: trans, value: TFloatArrayLike, range: TupleFloat2
+    trans: trans, value: TFloatArrayLike, range: tuple[float, float]
 ) -> TFloatArrayLike:
     """
     Transform value

@@ -17,7 +17,6 @@ if typing.TYPE_CHECKING:
     from plotnine.typing import (
         FloatArray,
         FloatSeries,
-        TupleFloat2,
     )
 
 
@@ -40,8 +39,8 @@ class coord_cartesian(coord):
 
     def __init__(
         self,
-        xlim: Optional[TupleFloat2] = None,
-        ylim: Optional[TupleFloat2] = None,
+        xlim: Optional[tuple[float, float]] = None,
+        ylim: Optional[tuple[float, float]] = None,
         expand: bool = True,
     ):
         self.limits = SimpleNamespace(x=xlim, y=ylim)
@@ -67,7 +66,7 @@ class coord_cartesian(coord):
         from mizani.transforms import identity_trans
 
         def get_scale_view(
-            scale: scale, coord_limits: TupleFloat2
+            scale: scale, coord_limits: tuple[float, float]
         ) -> scale_view:
             expansion = scale.default_expansion(expand=self.expand)
             ranges = scale.expand_limits(

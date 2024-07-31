@@ -13,17 +13,13 @@ if typing.TYPE_CHECKING:
 
     from mizani.transforms import trans
 
-    from plotnine.typing import (
-        CoordRange,
-        TupleFloat2,
-        TupleFloat4,
-    )
+    from plotnine.typing import CoordRange
 
 
 def _expand_range_distinct(
-    x: TupleFloat2,
-    expand: TupleFloat2 | TupleFloat4,
-) -> TupleFloat2:
+    x: tuple[float, float],
+    expand: tuple[float, float] | tuple[float, float, float, float],
+) -> tuple[float, float]:
     # Expand ascending and descending order range
     a, b = x
     if a > b:
@@ -35,7 +31,7 @@ def _expand_range_distinct(
 
 def expand_range(
     x: CoordRange,
-    expand: TupleFloat2 | TupleFloat4,
+    expand: tuple[float, float] | tuple[float, float, float, float],
     trans: trans | Type[trans],
 ) -> range_view:
     """

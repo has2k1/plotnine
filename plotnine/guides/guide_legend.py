@@ -25,7 +25,7 @@ if TYPE_CHECKING:
 
     from plotnine.geoms.geom import geom
     from plotnine.layer import layer
-    from plotnine.typing import SidePosition, TupleFloat2, TupleInt2
+    from plotnine.typing import SidePosition
 
 
 # See guides.py for terminology
@@ -208,7 +208,7 @@ class guide_legend(guide):
 
     def _calculate_rows_and_cols(
         self, elements: GuideElementsLegend
-    ) -> TupleInt2:
+    ) -> tuple[int, int]:
         nrow, ncol = self.nrow, self.ncol
         nbreak = len(self.key)
 
@@ -395,7 +395,7 @@ class GuideElementsLegend(GuideElements):
         return self.theme.getp("legend_key_spacing_y", 0)
 
     @cached_property
-    def _key_dimensions(self) -> list[TupleFloat2]:
+    def _key_dimensions(self) -> list[tuple[float, float]]:
         """
         key width and key height for each legend entry
 
@@ -410,7 +410,7 @@ class GuideElementsLegend(GuideElements):
         )
 
         # Find the size that fits each key in the legend,
-        sizes: list[list[TupleFloat2]] = []
+        sizes: list[list[tuple[float, float]]] = []
         for params in guide._layer_parameters:
             sizes.append([])
             get_key_size = params.geom.legend_key_size

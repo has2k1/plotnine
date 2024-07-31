@@ -37,8 +37,6 @@ if TYPE_CHECKING:
         ScaleLabels,
         ScaleMinorBreaksRaw,
         TFloatArrayLike,
-        TupleFloat2,
-        TupleFloat4,
     )
 
 GuideTypeT = TypeVar("GuideTypeT")
@@ -311,7 +309,7 @@ class scale_continuous(
     def expand_limits(
         self,
         limits: ContinuousLimits,
-        expand: TupleFloat2 | TupleFloat4,
+        expand: tuple[float, float] | tuple[float, float, float, float],
         coord_limits: CoordRange | None,
         trans: trans,
     ) -> range_view:

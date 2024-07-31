@@ -7,8 +7,6 @@ from .element_base import element_base
 if TYPE_CHECKING:
     from typing import Any, Literal, Optional, Sequence
 
-    from plotnine.typing import TupleFloat3, TupleFloat4
-
 
 class element_line(element_base):
     """
@@ -35,11 +33,19 @@ class element_line(element_base):
     def __init__(
         self,
         *,
-        color: Optional[str | TupleFloat3 | TupleFloat4] = None,
+        color: Optional[
+            str
+            | tuple[float, float, float]
+            | tuple[float, float, float, float]
+        ] = None,
         size: Optional[float] = None,
         linetype: Optional[str | Sequence[int]] = None,
         lineend: Optional[Literal["butt", "projecting", "round"]] = None,
-        colour: Optional[str | TupleFloat3 | TupleFloat4] = None,
+        colour: Optional[
+            str
+            | tuple[float, float, float]
+            | tuple[float, float, float, float]
+        ] = None,
         **kwargs: Any,
     ):
         super().__init__()

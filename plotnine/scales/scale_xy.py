@@ -22,8 +22,6 @@ if TYPE_CHECKING:
 
     from mizani.transforms import trans
 
-    from plotnine.typing import TupleFloat2, TupleFloat4
-
 
 # positions scales have a couple of differences (quirks) that
 # make necessary to override some of the scale_discrete and
@@ -140,8 +138,8 @@ class scale_position_discrete(scale_discrete):
     def expand_limits(
         self,
         limits: Sequence[str],
-        expand: TupleFloat2 | TupleFloat4,
-        coord_limits: TupleFloat2,
+        expand: tuple[float, float] | tuple[float, float, float, float],
+        coord_limits: tuple[float, float],
         trans: trans,
     ) -> range_view:
         # Turn discrete limits into a tuple of continuous limits

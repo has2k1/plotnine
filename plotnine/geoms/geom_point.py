@@ -19,7 +19,6 @@ if typing.TYPE_CHECKING:
     from plotnine.coords.coord import coord
     from plotnine.iapi import panel_view
     from plotnine.layer import layer
-    from plotnine.typing import TupleInt2
 
 
 @document
@@ -164,8 +163,8 @@ class geom_point(geom):
 
     @staticmethod
     def legend_key_size(
-        data: pd.Series[Any], min_size: TupleInt2, lyr: layer
-    ) -> TupleInt2:
+        data: pd.Series[Any], min_size: tuple[int, int], lyr: layer
+    ) -> tuple[int, int]:
         w, h = min_size
         pad_w, pad_h = w * 0.5, h * 0.5
         _size = data["size"] * SIZE_FACTOR

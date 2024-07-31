@@ -31,7 +31,7 @@ if typing.TYPE_CHECKING:
     from plotnine.facets.layout import Layout
     from plotnine.iapi import panel_view
     from plotnine.mapping import Environment
-    from plotnine.typing import DataLike, TupleInt2
+    from plotnine.typing import DataLike
 
 
 class geom(ABC, metaclass=Register):
@@ -534,8 +534,8 @@ class geom(ABC, metaclass=Register):
 
     @staticmethod
     def legend_key_size(
-        data: pd.Series[Any], min_size: TupleInt2, lyr: layer
-    ) -> TupleInt2:
+        data: pd.Series[Any], min_size: tuple[int, int], lyr: layer
+    ) -> tuple[int, int]:
         """
         Calculate the size of key that would fit the layer contents
 

@@ -24,8 +24,6 @@ if TYPE_CHECKING:
         ScaleLabels,
         ScaleLabelsRaw,
         ScaleLimits,
-        TupleFloat2,
-        TupleFloat4,
     )
 
     from ..iapi import range_view, scale_view
@@ -76,7 +74,9 @@ class scale(
     """
 
     # multiplicative and additive expansion constants
-    expand: TupleFloat2 | TupleFloat4 | None = None
+    expand: tuple[float, float] | tuple[float, float, float, float] | None = (
+        None
+    )
     """
     Multiplicative and additive expansion constants
     that determine how the scale is expanded. If
@@ -185,7 +185,7 @@ class scale(
     def expand_limits(
         self,
         limits,  # : ScaleLimits
-        expand,  # : TupleFloat2 | TupleFloat4
+        expand,  # : tuple[float, float] | tuple[float, float, float, float]
         coord_limits,  # : CoordRange | None
         trans,  # : Trans | Type[Trans]
     ) -> range_view:
@@ -230,10 +230,10 @@ class scale(
 
     def default_expansion(
         self,
-        mult: float | TupleFloat2 = 0,
-        add: float | TupleFloat2 = 0,
+        mult: float | tuple[float, float] = 0,
+        add: float | tuple[float, float] = 0,
         expand=True,
-    ) -> TupleFloat4:
+    ) -> tuple[float, float, float, float]:
         """
         Get default expansion for this scale
         """
