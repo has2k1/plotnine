@@ -31,6 +31,10 @@ title: Changelog
   set_option("figure_format", False)
   ```
 
+- For [](:class:`~plotnine.geom_boxplot`) when the outliers are made invisible
+  by giving them no shape, now they do not affect the limits of the plot.
+  ({{< issue 814 >}})
+
 ### New Features
 
 - [](:class:`~plotnine.geom_text`) has gained new aesthetics
