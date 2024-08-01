@@ -141,6 +141,7 @@ class stat_summary_bin(stat):
         )
 
         breaks = fuzzybreaks(scales.x, breaks, boundary, binwidth, bins)
+        bins = len(breaks) - 1
         data["bin"] = pd.cut(
             data["x"],
             bins=breaks,  # pyright: ignore

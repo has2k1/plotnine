@@ -48,6 +48,9 @@ title: Changelog
 - Fixed bug in [](:class:`~plotnine.geoms.geom_segment`) where the lineend
   parameter was ignored. ({{< issue 727 >}})
 
+- Fixed [](:class:`~plotnine.stat_summary_bin`) to work with continuous `x`
+  aesthetic when specifying the `binwidth` or `breaks`. ({{< issue 824 >}})
+
 ## v0.13.6
 (2024-05-09)
 
