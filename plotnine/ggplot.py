@@ -125,34 +125,12 @@ class ggplot:
 
     def __str__(self) -> str:
         """
-        Print/show the plot
-        """
-        msg = (
-            "Using print(plot) to draw and show the plot figure is "
-            "deprecated and will be removed in a future version. "
-            "Use plot.show()."
-        )
-        warn(msg, category=FutureWarning, stacklevel=2)
-        self.show()
-        # Return and empty string so that print(p) is as clean as possible
-        return ""
-
-    def __repr__(self) -> str:
-        """
-        Print/show the plot
+        Return a wrapped pixel size of the plot
         """
         dpi = self.theme.getp("dpi")
         width, height = self.theme.getp("figure_size")
         W, H = int(width * dpi), int(height * dpi)
-
-        msg = (
-            "Using repr(plot) to draw and show the plot figure is "
-            "deprecated and will be removed in a future version. "
-            "Use plot.show()."
-        )
-        warn(msg, category=FutureWarning, stacklevel=2)
-        self.show()
-        return f"<Figure Size: ({W} x {H})>"
+        return f"<ggplot: ({W} x {H})>"
 
     def _ipython_display_(self):
         """
