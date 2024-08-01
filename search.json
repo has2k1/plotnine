@@ -2923,7 +2923,7 @@
     "href": "reference/aes.html#parameters",
     "title": " plotnine.aes",
     "section": "Parameters",
-    "text": "Parameters\n\n\nx : str | array_like | scalar\n\nx aesthetic mapping\n\ny : str | array_like | scalar\n\ny aesthetic mapping\n\n**kwargs : Any = {}\n\nOther aesthetic mappings"
+    "text": "Parameters\n\n\nx : str | array_like | scalar\n\nx aesthetic mapping\n\ny : str | array_like | scalar\n\ny aesthetic mapping\n\n**kwargs : dict = {}\n\nOther aesthetic mappings"
   },
   {
     "objectID": "reference/aes.html#notes",
