@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.47">
+<meta name="generator" content="quarto-1.6.4">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -113,7 +113,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine 0.0.post1+g6bf7fe7</span>
+    <span class="navbar-title">plotnine 0.0.post1+g0171823</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -150,6 +150,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#plotnine.scale_fill_discrete" id="toc-plotnine.scale_fill_discrete" class="nav-link active" data-scroll-target="#plotnine.scale_fill_discrete"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.scale_fill_discrete</span></a></li>
+  <li><a href="#init-parameters" id="toc-init-parameters" class="nav-link" data-scroll-target="#init-parameters">Init Parameters</a></li>
+  <li><a href="#parameter-attributes" id="toc-parameter-attributes" class="nav-link" data-scroll-target="#parameter-attributes">Parameter Attributes</a></li>
   </ul>
 </nav>
     </div>
@@ -165,13 +167,112 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 </header>
 <div class="doc-signature doc-class">
-<div class="sourceCode" id="cb1"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>scale_fill_discrete(h<span class="op">=</span><span class="fl">0.01</span>, l<span class="op">=</span><span class="fl">0.6</span>, s<span class="op">=</span><span class="fl">0.65</span>, color_space<span class="op">=</span><span class="st">"hls"</span>, <span class="op">**</span>kwargs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>scale_fill_discrete(</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    h<span class="op">=</span><span class="fl">0.01</span>,</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    l<span class="op">=</span><span class="fl">0.6</span>,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    s<span class="op">=</span><span class="fl">0.65</span>,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    color_space<span class="op">=</span><span class="st">"hls"</span>,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span>,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    name<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    breaks<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    limits<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    labels<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    expand<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    guide<span class="op">=</span><span class="st">"legend"</span>,</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    na_value<span class="op">=</span><span class="st">"#7F7F7F"</span>,</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    aesthetics<span class="op">=</span><span class="bu">list</span>(),</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    drop<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    na_translate<span class="op">=</span><span class="va">True</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="doc-text">
 <p>alias of <a href="../reference/scale_fill_hue.html#plotnine.scale_fill_hue">scale_fill_hue</a></p>
 </div>
+<section id="init-parameters" class="level2 doc-init-parameters">
+<h2 class="doc-init-parameters anchored" data-anchor-id="init-parameters">Init Parameters</h2>
+<div class="doc-definition-items">
+<dl>
+<dt><code>h: <a href="https://docs.python.org/3/library/functions.html#float">float</a> = 0.01</code></dt>
+<dd>
+<p>Hue. Must be in the range [0, 1]</p>
+</dd>
+<dt><code>l: <a href="https://docs.python.org/3/library/functions.html#float">float</a> = 0.6</code></dt>
+<dd>
+<p>Lightness. Must be in the range [0, 1]</p>
+</dd>
+<dt><code>s: <a href="https://docs.python.org/3/library/functions.html#float">float</a> = 0.65</code></dt>
+<dd>
+<p>Saturation. Must be in the range [0, 1]</p>
+</dd>
+<dt><code>color_space: <a href="https://docs.python.org/3/library/typing.html#typing.Literal">Literal</a>[<span class="st">'hls'</span>, <span class="st">'husl'</span>] = <span class="st">'hls'</span></code></dt>
+<dd>
+<p>Color space to use. Should be one of <a href="https://en.wikipedia.org/wiki/HSL_and_HSV">hls</a> or <a href="http://www.husl-colors.org/">husl</a>.</p>
+</dd>
+</dl>
+</div>
+</section>
+<section id="parameter-attributes" class="level2 doc-parameter-attributes">
+<h2 class="doc-parameter-attributes anchored" data-anchor-id="parameter-attributes">Parameter Attributes</h2>
+<div class="doc-definition-items">
+<dl>
+<dt><code>name: <a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> | None = None</code></dt>
+<dd>
+<p>The name of the scale. It is used as the label of the axis or the title of the guide. Suitable defaults are chosen depending on the type of scale.</p>
+</dd>
+<dt><code>breaks: <a href="../reference/scales._runtime_typing.html#plotnine.scales._runtime_typing.DiscreteBreaksUser">DiscreteBreaksUser</a> = True</code></dt>
+<dd>
+<p>List of major break points. Or a callable that takes a tuple of limits and returns a list of breaks. If <code>True</code>, automatically calculate the breaks.</p>
+</dd>
+<dt><code>limits: <a href="../reference/scales._runtime_typing.html#plotnine.scales._runtime_typing.DiscreteLimitsUser">DiscreteLimitsUser</a> = None</code></dt>
+<dd>
+<p>Limits of the scale. These are the categories (unique values) of the variables. If is only a subset of the values, those that are left out will be treated as missing data and represented with a <code>na_value</code>.</p>
+</dd>
+<dt><code>labels: <a href="../reference/scales._runtime_typing.html#plotnine.scales._runtime_typing.ScaleLabelsUser">ScaleLabelsUser</a> = True</code></dt>
+<dd>
+<p>Labels at the <code>breaks</code>. Alternatively, a callable that takes an array_like of break points as input and returns a list of strings.</p>
+</dd>
+<dt><code>expand: (<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://docs.python.org/3/library/stdtypes.html#tuple">tuple</a>[<a href="https://docs.python.org/3/library/functions.html#float">float</a>, <a href="https://docs.python.org/3/library/functions.html#float">float</a>]<br>&nbsp;&nbsp;&nbsp;&nbsp;| <a href="https://docs.python.org/3/library/stdtypes.html#tuple">tuple</a>[<a href="https://docs.python.org/3/library/functions.html#float">float</a>, <a href="https://docs.python.org/3/library/functions.html#float">float</a>, <a href="https://docs.python.org/3/library/functions.html#float">float</a>, <a href="https://docs.python.org/3/library/functions.html#float">float</a>]<br>&nbsp;&nbsp;&nbsp;&nbsp;| None<br>) = None</code></dt>
+<dd>
+<p>Multiplicative and additive expansion constants that determine how the scale is expanded. If specified must be of length 2 or 4. Specifically the values are in this order:</p>
+<pre><code>(mul, add)
+(mul_low, add_low, mul_high, add_high)</code></pre>
+<p>For example,</p>
+<ul>
+<li><code>(0, 0)</code> - Do not expand.</li>
+<li><code>(0, 1)</code> - Expand lower and upper limits by 1 unit.</li>
+<li><code>(1, 0)</code> - Expand lower and upper limits by 100%.</li>
+<li><code>(0, 0, 0, 0)</code> - Do not expand, as <code>(0, 0)</code>.</li>
+<li><code>(0, 0, 0, 1)</code> - Expand upper limit by 1 unit.</li>
+<li><code>(0, 1, 0.1, 0)</code> - Expand lower limit by 1 unit and upper limit by 10%.</li>
+<li><code>(0, 0, 0.1, 2)</code> - Expand upper limit by 10% plus 2 units.</li>
+</ul>
+<p>If not specified, suitable defaults are chosen.</p>
+</dd>
+<dt><code>guide: <a href="https://docs.python.org/3/library/typing.html#typing.Literal">Literal</a>[<span class="st">"legend"</span>] | None = <span class="st">"legend"</span></code></dt>
+<dd>
+
+</dd>
+<dt><code>na_value: <a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> = <span class="st">"#7F7F7F"</span></code></dt>
+<dd>
+<p>Color of missing values.</p>
+</dd>
+<dt><code>aesthetics: <a href="https://docs.python.org/3/library/stdtypes.html#list">list</a>[<a href="../reference/typing.html#plotnine.typing.ScaledAestheticsName">ScaledAestheticsName</a>] = field(default_factory=<a href="https://docs.python.org/3/library/stdtypes.html#list">list</a>)</code></dt>
+<dd>
+<p>Aesthetics affected by this scale. These are defined by each scale and the user should probably not change them. Have fun.</p>
+</dd>
+<dt><code>drop: <a href="https://docs.python.org/3/library/functions.html#bool">bool</a> = True</code></dt>
+<dd>
+<p>Whether to drop unused categories from the scale</p>
+</dd>
+<dt><code>na_translate: <a href="https://docs.python.org/3/library/functions.html#bool">bool</a> = True</code></dt>
+<dd>
+<p>If <code>True</code> translate missing values and show them. If <code>False</code> remove missing values.</p>
+</dd>
+</dl>
+</div>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

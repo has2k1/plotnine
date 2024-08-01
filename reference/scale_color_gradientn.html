@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.47">
+<meta name="generator" content="quarto-1.6.4">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -113,7 +113,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine 0.0.post1+g6bf7fe7</span>
+    <span class="navbar-title">plotnine 0.0.post1+g0171823</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -150,7 +150,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#plotnine.scale_color_gradientn" id="toc-plotnine.scale_color_gradientn" class="nav-link active" data-scroll-target="#plotnine.scale_color_gradientn"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.scale_color_gradientn</span></a></li>
-  <li><a href="#parameters" id="toc-parameters" class="nav-link" data-scroll-target="#parameters">Parameters</a></li>
+  <li><a href="#init-parameters" id="toc-init-parameters" class="nav-link" data-scroll-target="#init-parameters">Init Parameters</a></li>
+  <li><a href="#parameter-attributes" id="toc-parameter-attributes" class="nav-link" data-scroll-target="#parameter-attributes">Parameter Attributes</a></li>
   <li><a href="#see-also" id="toc-see-also" class="nav-link" data-scroll-target="#see-also">See Also</a></li>
   </ul>
 </nav>
@@ -167,28 +168,63 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 </header>
 <div class="doc-signature doc-class">
-<div class="sourceCode" id="cb1"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>scale_color_gradientn(colors, values<span class="op">=</span><span class="va">None</span>, <span class="op">**</span>kwargs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>scale_color_gradientn(</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    colors<span class="op">=</span><span class="st">"#832424"</span>,</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    values<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span>,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    name<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    breaks<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    limits<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    labels<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    expand<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    guide<span class="op">=</span><span class="st">"colorbar"</span>,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    na_value<span class="op">=</span><span class="st">"#7F7F7F"</span>,</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    aesthetics<span class="op">=</span><span class="bu">list</span>(),</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    rescaler<span class="op">=</span>rescale,</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    oob<span class="op">=</span>censor,</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    minor_breaks<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    trans<span class="op">=</span><span class="va">None</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="doc-text">
 <p>Create a n color gradient</p>
 </div>
-<section id="parameters" class="level2 doc-parameters">
-<h2 class="doc-parameters anchored" data-anchor-id="parameters">Parameters</h2>
+<section id="init-parameters" class="level2 doc-init-parameters">
+<h2 class="doc-init-parameters anchored" data-anchor-id="init-parameters">Init Parameters</h2>
 <div class="doc-definition-items">
 <dl>
-<dt><code><span class="doc-parameter-name">colors</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#list">list</a></span></code></dt>
+<dt><code>colors: <a href="https://docs.python.org/3/library/typing.html#typing.Sequence">Sequence</a>[<a href="https://docs.python.org/3/library/stdtypes.html#str">str</a>] = <span class="st">'#832424'</span></code></dt>
 <dd>
-<p>list of colors</p>
+<p>List of colors</p>
 </dd>
-<dt><code><span class="doc-parameter-name">values</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#list">list</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
+<dt><code>values: <a href="https://docs.python.org/3/library/typing.html#typing.Sequence">Sequence</a>[<a href="https://docs.python.org/3/library/functions.html#float">float</a>] | None = None</code></dt>
 <dd>
 <p>list of points in the range [0, 1] at which to place each color. Must be the same size as <code>colors</code>. Default to evenly space the colors</p>
 </dd>
-<dt><code><span class="doc-parameter-name">breaks</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#bool">bool</a> | <a href="https://docs.python.org/3/library/stdtypes.html#list">list</a> | <a href="https://docs.python.org/3/library/functions.html#callable">callable</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">True</span></code></dt>
+</dl>
+</div>
+</section>
+<section id="parameter-attributes" class="level2 doc-parameter-attributes">
+<h2 class="doc-parameter-attributes anchored" data-anchor-id="parameter-attributes">Parameter Attributes</h2>
+<div class="doc-definition-items">
+<dl>
+<dt><code>name: <a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> | None = None</code></dt>
 <dd>
-<p>List of major break points. Or a callable that takes a tuple of limits and returns a list of breaks. If <code>True</code>, automatically calculate the breaks.</p>
+<p>The name of the scale. It is used as the label of the axis or the title of the guide. Suitable defaults are chosen depending on the type of scale.</p>
 </dd>
-<dt><code><span class="doc-parameter-name">expand</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#tuple">tuple</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
+<dt><code>breaks: <a href="../reference/scales._runtime_typing.html#plotnine.scales._runtime_typing.ContinuousBreaksUser">ContinuousBreaksUser</a> = True</code></dt>
+<dd>
+<p>Major breaks</p>
+</dd>
+<dt><code>limits: <a href="../reference/scales._runtime_typing.html#plotnine.scales._runtime_typing.ContinuousLimitsUser">ContinuousLimitsUser</a> = None</code></dt>
+<dd>
+<p>Limits of the scale. Most commonly, these are the minimum &amp; maximum values for the scale. If not specified they are derived from the data. It may also be a function that takes the derived limits and transforms them into the final limits.</p>
+</dd>
+<dt><code>labels: <a href="../reference/scales._runtime_typing.html#plotnine.scales._runtime_typing.ScaleLabelsUser">ScaleLabelsUser</a> = True</code></dt>
+<dd>
+<p>Labels at the <code>breaks</code>. Alternatively, a callable that takes an array_like of break points as input and returns a list of strings.</p>
+</dd>
+<dt><code>expand: (<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://docs.python.org/3/library/stdtypes.html#tuple">tuple</a>[<a href="https://docs.python.org/3/library/functions.html#float">float</a>, <a href="https://docs.python.org/3/library/functions.html#float">float</a>]<br>&nbsp;&nbsp;&nbsp;&nbsp;| <a href="https://docs.python.org/3/library/stdtypes.html#tuple">tuple</a>[<a href="https://docs.python.org/3/library/functions.html#float">float</a>, <a href="https://docs.python.org/3/library/functions.html#float">float</a>, <a href="https://docs.python.org/3/library/functions.html#float">float</a>, <a href="https://docs.python.org/3/library/functions.html#float">float</a>]<br>&nbsp;&nbsp;&nbsp;&nbsp;| None<br>) = None</code></dt>
 <dd>
 <p>Multiplicative and additive expansion constants that determine how the scale is expanded. If specified must be of length 2 or 4. Specifically the values are in this order:</p>
 <pre><code>(mul, add)
@@ -205,45 +241,33 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <p>If not specified, suitable defaults are chosen.</p>
 </dd>
-<dt><code><span class="doc-parameter-name">name</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#str">str</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
+<dt><code>guide: <a href="https://docs.python.org/3/library/typing.html#typing.Literal">Literal</a>[<span class="st">"legend"</span>, <span class="st">"colorbar"</span>] | None = <span class="st">"colorbar"</span></code></dt>
 <dd>
-<p>Name used as the label of the scale. This is what shows up as the axis label or legend title. Suitable defaults are chosen depending on the type of scale.</p>
+
 </dd>
-<dt><code><span class="doc-parameter-name">labels</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#bool">bool</a> | <a href="https://docs.python.org/3/library/stdtypes.html#list">list</a> | <a href="https://docs.python.org/3/library/functions.html#callable">callable</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">True</span></code></dt>
+<dt><code>na_value: <a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> = <span class="st">"#7F7F7F"</span></code></dt>
 <dd>
-<p>List of <a href="https://docs.python.org/3/library/stdtypes.html#str"><code>str</code></a>. Labels at the <code>breaks</code>. Alternatively, a callable that takes an array_like of break points as input and returns a list of strings.</p>
+<p>Color of missing values.</p>
 </dd>
-<dt><code><span class="doc-parameter-name">limits</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://numpy.org/doc/stable/glossary.html#term-array_like">array_like</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
+<dt><code>aesthetics: <a href="https://docs.python.org/3/library/stdtypes.html#list">list</a>[<a href="../reference/typing.html#plotnine.typing.ScaledAestheticsName">ScaledAestheticsName</a>] = field(default_factory=<a href="https://docs.python.org/3/library/stdtypes.html#list">list</a>)</code></dt>
 <dd>
-<p>Limits of the scale. Most commonly, these are the min &amp; max values for the scales. For scales that deal with categoricals, these may be a subset or superset of the categories.</p>
+<p>Aesthetics affected by this scale. These are defined by each scale and the user should probably not change them. Have fun.</p>
 </dd>
-<dt><code><span class="doc-parameter-name">palette</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#callable">callable</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
-<dd>
-<p>Function to map data points onto the scale. Most scales define their own palettes.</p>
-</dd>
-<dt><code><span class="doc-parameter-name">aesthetics</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#list">list</a> | <a href="https://docs.python.org/3/library/stdtypes.html#str">str</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
-<dd>
-<p>list of <a href="https://docs.python.org/3/library/stdtypes.html#str"><code>str</code></a>. Aesthetics covered by the scale. These are defined by each scale and the user should probably not change them. Have fun.</p>
-</dd>
-<dt><code><span class="doc-parameter-name">trans</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> | <a href="https://docs.python.org/3/library/functions.html#callable">callable</a></span></code></dt>
-<dd>
-<p>Name of a trans function or a trans function. See <a href="https://mizani.readthedocs.io/en/stable/transforms.html#module-mizani.transforms"><code>mizani.transforms</code></a> for possible options.</p>
-</dd>
-<dt><code><span class="doc-parameter-name">oob</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#callable">callable</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">mizani.bounds.censor</span></code></dt>
-<dd>
-<p>Function to deal with out of bounds (limits) data points. Default is to turn them into <code>np.nan</code>, which then get dropped.</p>
-</dd>
-<dt><code><span class="doc-parameter-name">minor_breaks</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#list">list</a> | <a href="https://docs.python.org/3/library/functions.html#int">int</a> | <a href="https://docs.python.org/3/library/functions.html#callable">callable</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
-<dd>
-<p>If a list-like, it is the minor breaks points. If an integer, it is the number of minor breaks between any set of major breaks. If a function, it should have the signature <code>func(limits)</code> and return a list-like of consisting of the minor break points. If <code>None</code>, no minor breaks are calculated. The default is to automatically calculate them.</p>
-</dd>
-<dt><code><span class="doc-parameter-name">rescaler</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#callable">callable</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">mizani.bounds.rescale</span></code></dt>
+<dt><code>rescaler: PRescale = rescale</code></dt>
 <dd>
 <p>Function to rescale data points so that they can be handled by the palette. Default is to rescale them onto the [0, 1] range. Scales that inherit from this class may have another default.</p>
 </dd>
-<dt><code><span class="doc-parameter-name">na_value</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#str">str</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default"><span class="st">"#7F7F7F"</span></span></code></dt>
+<dt><code>oob: PCensor = censor</code></dt>
 <dd>
-<p>Color of missing values</p>
+<p>Function to deal with out of bounds (limits) data points. Default is to turn them into <code>np.nan</code>, which then get dropped.</p>
+</dd>
+<dt><code>minor_breaks: <a href="../reference/scales._runtime_typing.html#plotnine.scales._runtime_typing.MinorBreaksUser">MinorBreaksUser</a> = True</code></dt>
+<dd>
+<p>If a list-like, it is the minor breaks points. If an integer, it is the number of minor breaks between any set of major breaks. If a function, it should have the signature <code>func(limits)</code> and return a list-like of consisting of the minor break points. If <code>None</code>, no minor breaks are calculated. The default is to automatically calculate them.</p>
+</dd>
+<dt><code>trans: <a href="../reference/scales._runtime_typing.html#plotnine.scales._runtime_typing.TransUser">TransUser</a> = None</code></dt>
+<dd>
+<p>The transformation of the scale. Either name of a trans function or a trans function. See <a href="https://mizani.readthedocs.io/en/stable/transforms.html#module-mizani.transforms"><code>mizani.transforms</code></a> for possible options.</p>
 </dd>
 </dl>
 </div>
