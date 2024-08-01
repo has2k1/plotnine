@@ -35,6 +35,9 @@ title: Changelog
 - Fix layers 3 and above not to overlap the axis lines if there are any
   ({{< issue 798 >}}).
 
+- Fixed bug in [](:class:`~plotnine.geoms.geom_segment`) where the lineend
+  parameter was ignored. ({{< issue 727 >}})
+
 ## v0.13.6
 (2024-05-09)
 
