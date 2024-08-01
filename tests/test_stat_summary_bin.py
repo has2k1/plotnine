@@ -26,3 +26,8 @@ def test_continuous_x():
     )
 
     assert p == "continuous_x"
+
+
+def test_setting_binwidth():
+    p = ggplot(data, aes("xc", "y")) + stat_summary_bin(binwidth=3, geom="bar")
+    assert p == "setting_binwidth"
