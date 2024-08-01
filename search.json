@@ -2923,7 +2923,7 @@
     "href": "reference/aes.html#parameters",
     "title": " plotnine.aes",
     "section": "Parameters",
-    "text": "Parameters\n\n\nx : str | array_like | scalar\n\nx aesthetic mapping\n\ny : str | array_like | scalar\n\ny aesthetic mapping\n\n**kwargs : dict = {}\n\nOther aesthetic mappings"
+    "text": "Parameters\n\n\nx : str | array_like | scalar\n\nx aesthetic mapping\n\ny : str | array_like | scalar\n\ny aesthetic mapping\n\n**kwargs : Any = {}\n\nOther aesthetic mappings"
   },
   {
     "objectID": "reference/aes.html#notes",
@@ -2944,14 +2944,14 @@
     "href": "changelog.html",
     "title": "Changelog",
     "section": "",
-    "text": "(not-yet-released)\n\n\n\nThe family, fontstyle and fontweight parameters of geom_text are now aesthetics (#790).\nplotnine now responds to the fig-width, fig-height and fig-format settings in the meta section of a quarto document.\nggtitle now accepts title and subtitle as keyword arguments. (#804)\nGained the option limitsize that makes it possible to display plots of any size.\nfrom plotnine.options import set_option\n\nset_option(\"figure_format\", False)\n\n\n\n\n\ngeom_text has gained new aesthetics fontvariant and fontstretch.\n\n\n\n\n\nFix layers 3 and above not to overlap the axis lines if there are any (#798).\nFixed bug in geom_segment where the lineend parameter was ignored. (#727)"
+    "text": "(not-yet-released)\n\n\n\nYou cannot call print on a ggplot object to show it. This was deprecated in v0.13.0 and it has now been removed. Use ggplot.show()\n\n\n\n\n\nThe family, fontstyle and fontweight parameters of geom_text are now aesthetics (#790).\nplotnine now responds to the fig-width, fig-height and fig-format settings in the meta section of a quarto document.\nggtitle now accepts title and subtitle as keyword arguments. (#804)\nGained the option limitsize that makes it possible to display plots of any size.\nfrom plotnine.options import set_option\n\nset_option(\"figure_format\", False)\nFor geom_boxplot when the outliers are made invisible by giving them no shape, now they do not affect the limits of the plot. (#814)\n\n\n\n\n\ngeom_text has gained new aesthetics fontvariant and fontstretch.\n\n\n\n\n\nFix layers 3 and above not to overlap the axis lines if there are any (#798).\nFixed bug in geom_segment where the lineend parameter was ignored. (#727)"
   },
   {
     "objectID": "changelog.html#v0.14.0",
     "href": "changelog.html#v0.14.0",
     "title": "Changelog",
     "section": "",
-    "text": "(not-yet-released)\n\n\n\nThe family, fontstyle and fontweight parameters of geom_text are now aesthetics (#790).\nplotnine now responds to the fig-width, fig-height and fig-format settings in the meta section of a quarto document.\nggtitle now accepts title and subtitle as keyword arguments. (#804)\nGained the option limitsize that makes it possible to display plots of any size.\nfrom plotnine.options import set_option\n\nset_option(\"figure_format\", False)\n\n\n\n\n\ngeom_text has gained new aesthetics fontvariant and fontstretch.\n\n\n\n\n\nFix layers 3 and above not to overlap the axis lines if there are any (#798).\nFixed bug in geom_segment where the lineend parameter was ignored. (#727)"
+    "text": "(not-yet-released)\n\n\n\nYou cannot call print on a ggplot object to show it. This was deprecated in v0.13.0 and it has now been removed. Use ggplot.show()\n\n\n\n\n\nThe family, fontstyle and fontweight parameters of geom_text are now aesthetics (#790).\nplotnine now responds to the fig-width, fig-height and fig-format settings in the meta section of a quarto document.\nggtitle now accepts title and subtitle as keyword arguments. (#804)\nGained the option limitsize that makes it possible to display plots of any size.\nfrom plotnine.options import set_option\n\nset_option(\"figure_format\", False)\nFor geom_boxplot when the outliers are made invisible by giving them no shape, now they do not affect the limits of the plot. (#814)\n\n\n\n\n\ngeom_text has gained new aesthetics fontvariant and fontstretch.\n\n\n\n\n\nFix layers 3 and above not to overlap the axis lines if there are any (#798).\nFixed bug in geom_segment where the lineend parameter was ignored. (#727)"
   },
   {
     "objectID": "changelog.html#v0.13.6",

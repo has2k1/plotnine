@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Changelog – plotnine 0.0.post1+g0171823</title>
+<title>Changelog – plotnine 0.0.post1+g29c77f3</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -113,7 +113,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">plotnine 0.0.post1+g0171823</span>
+    <span class="navbar-title">plotnine 0.0.post1+g29c77f3</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -151,6 +151,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#v0.14.0" id="toc-v0.14.0" class="nav-link active" data-scroll-target="#v0.14.0">v0.14.0</a>
   <ul class="collapse">
+  <li><a href="#api-changes" id="toc-api-changes" class="nav-link" data-scroll-target="#api-changes">API Changes</a></li>
   <li><a href="#enhancements" id="toc-enhancements" class="nav-link" data-scroll-target="#enhancements">Enhancements</a></li>
   <li><a href="#new-features" id="toc-new-features" class="nav-link" data-scroll-target="#new-features">New Features</a></li>
   <li><a href="#bug-fixes" id="toc-bug-fixes" class="nav-link" data-scroll-target="#bug-fixes">Bug Fixes</a></li>
@@ -184,7 +185,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </ul></li>
   <li><a href="#v0.13.0" id="toc-v0.13.0" class="nav-link" data-scroll-target="#v0.13.0">v0.13.0</a>
   <ul class="collapse">
-  <li><a href="#api-changes" id="toc-api-changes" class="nav-link" data-scroll-target="#api-changes">API Changes</a></li>
+  <li><a href="#api-changes-1" id="toc-api-changes-1" class="nav-link" data-scroll-target="#api-changes-1">API Changes</a></li>
   <li><a href="#new-1" id="toc-new-1" class="nav-link" data-scroll-target="#new-1">New</a></li>
   <li><a href="#bug-fixes-6" id="toc-bug-fixes-6" class="nav-link" data-scroll-target="#bug-fixes-6">Bug Fixes</a></li>
   <li><a href="#enhancements-4" id="toc-enhancements-4" class="nav-link" data-scroll-target="#enhancements-4">Enhancements</a></li>
@@ -203,7 +204,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#new-features-1" id="toc-new-features-1" class="nav-link" data-scroll-target="#new-features-1">New Features</a></li>
   <li><a href="#enhancements-7" id="toc-enhancements-7" class="nav-link" data-scroll-target="#enhancements-7">Enhancements</a></li>
-  <li><a href="#api-changes-1" id="toc-api-changes-1" class="nav-link" data-scroll-target="#api-changes-1">API Changes</a></li>
+  <li><a href="#api-changes-2" id="toc-api-changes-2" class="nav-link" data-scroll-target="#api-changes-2">API Changes</a></li>
   <li><a href="#bug-fixes-8" id="toc-bug-fixes-8" class="nav-link" data-scroll-target="#bug-fixes-8">Bug Fixes</a></li>
   </ul></li>
   <li><a href="#v0.10.1" id="toc-v0.10.1" class="nav-link" data-scroll-target="#v0.10.1">v0.10.1</a></li>
@@ -211,18 +212,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#bug-fixes-9" id="toc-bug-fixes-9" class="nav-link" data-scroll-target="#bug-fixes-9">Bug Fixes</a></li>
   <li><a href="#new-features-2" id="toc-new-features-2" class="nav-link" data-scroll-target="#new-features-2">New Features</a></li>
-  <li><a href="#api-changes-2" id="toc-api-changes-2" class="nav-link" data-scroll-target="#api-changes-2">API Changes</a></li>
+  <li><a href="#api-changes-3" id="toc-api-changes-3" class="nav-link" data-scroll-target="#api-changes-3">API Changes</a></li>
   </ul></li>
   <li><a href="#v0.9.0" id="toc-v0.9.0" class="nav-link" data-scroll-target="#v0.9.0">v0.9.0</a>
   <ul class="collapse">
-  <li><a href="#api-changes-3" id="toc-api-changes-3" class="nav-link" data-scroll-target="#api-changes-3">API Changes</a></li>
+  <li><a href="#api-changes-4" id="toc-api-changes-4" class="nav-link" data-scroll-target="#api-changes-4">API Changes</a></li>
   <li><a href="#new-features-3" id="toc-new-features-3" class="nav-link" data-scroll-target="#new-features-3">New Features</a></li>
   <li><a href="#bug-fixes-10" id="toc-bug-fixes-10" class="nav-link" data-scroll-target="#bug-fixes-10">Bug Fixes</a></li>
   <li><a href="#enhancements-8" id="toc-enhancements-8" class="nav-link" data-scroll-target="#enhancements-8">Enhancements</a></li>
   </ul></li>
   <li><a href="#v0.8.0" id="toc-v0.8.0" class="nav-link" data-scroll-target="#v0.8.0">v0.8.0</a>
   <ul class="collapse">
-  <li><a href="#api-changes-4" id="toc-api-changes-4" class="nav-link" data-scroll-target="#api-changes-4">API Changes</a></li>
+  <li><a href="#api-changes-5" id="toc-api-changes-5" class="nav-link" data-scroll-target="#api-changes-5">API Changes</a></li>
   <li><a href="#new-features-4" id="toc-new-features-4" class="nav-link" data-scroll-target="#new-features-4">New Features</a></li>
   <li><a href="#bug-fixes-11" id="toc-bug-fixes-11" class="nav-link" data-scroll-target="#bug-fixes-11">Bug Fixes</a></li>
   <li><a href="#enhancements-9" id="toc-enhancements-9" class="nav-link" data-scroll-target="#enhancements-9">Enhancements</a></li>
@@ -233,14 +234,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </ul></li>
   <li><a href="#v0.7.0" id="toc-v0.7.0" class="nav-link" data-scroll-target="#v0.7.0">v0.7.0</a>
   <ul class="collapse">
-  <li><a href="#api-changes-5" id="toc-api-changes-5" class="nav-link" data-scroll-target="#api-changes-5">API Changes</a></li>
+  <li><a href="#api-changes-6" id="toc-api-changes-6" class="nav-link" data-scroll-target="#api-changes-6">API Changes</a></li>
   <li><a href="#new-features-5" id="toc-new-features-5" class="nav-link" data-scroll-target="#new-features-5">New Features</a></li>
   <li><a href="#bug-fixes-13" id="toc-bug-fixes-13" class="nav-link" data-scroll-target="#bug-fixes-13">Bug Fixes</a></li>
   <li><a href="#enhancements-10" id="toc-enhancements-10" class="nav-link" data-scroll-target="#enhancements-10">Enhancements</a></li>
   </ul></li>
   <li><a href="#v0.6.0" id="toc-v0.6.0" class="nav-link" data-scroll-target="#v0.6.0">v0.6.0</a>
   <ul class="collapse">
-  <li><a href="#api-changes-6" id="toc-api-changes-6" class="nav-link" data-scroll-target="#api-changes-6">API Changes</a></li>
+  <li><a href="#api-changes-7" id="toc-api-changes-7" class="nav-link" data-scroll-target="#api-changes-7">API Changes</a></li>
   <li><a href="#new-features-6" id="toc-new-features-6" class="nav-link" data-scroll-target="#new-features-6">New Features</a></li>
   <li><a href="#bug-fixes-14" id="toc-bug-fixes-14" class="nav-link" data-scroll-target="#bug-fixes-14">Bug Fixes</a></li>
   <li><a href="#enhancements-11" id="toc-enhancements-11" class="nav-link" data-scroll-target="#enhancements-11">Enhancements</a></li>
@@ -251,19 +252,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </ul></li>
   <li><a href="#v0.5.0" id="toc-v0.5.0" class="nav-link" data-scroll-target="#v0.5.0">v0.5.0</a>
   <ul class="collapse">
-  <li><a href="#api-changes-7" id="toc-api-changes-7" class="nav-link" data-scroll-target="#api-changes-7">API Changes</a></li>
+  <li><a href="#api-changes-8" id="toc-api-changes-8" class="nav-link" data-scroll-target="#api-changes-8">API Changes</a></li>
   <li><a href="#bug-fixes-16" id="toc-bug-fixes-16" class="nav-link" data-scroll-target="#bug-fixes-16">Bug Fixes</a></li>
   <li><a href="#enhancements-12" id="toc-enhancements-12" class="nav-link" data-scroll-target="#enhancements-12">Enhancements</a></li>
   </ul></li>
   <li><a href="#v0.4.0" id="toc-v0.4.0" class="nav-link" data-scroll-target="#v0.4.0">v0.4.0</a>
   <ul class="collapse">
-  <li><a href="#api-changes-8" id="toc-api-changes-8" class="nav-link" data-scroll-target="#api-changes-8">API Changes</a></li>
+  <li><a href="#api-changes-9" id="toc-api-changes-9" class="nav-link" data-scroll-target="#api-changes-9">API Changes</a></li>
   <li><a href="#new-features-7" id="toc-new-features-7" class="nav-link" data-scroll-target="#new-features-7">New Features</a></li>
   <li><a href="#bug-fixes-17" id="toc-bug-fixes-17" class="nav-link" data-scroll-target="#bug-fixes-17">Bug Fixes</a></li>
   </ul></li>
   <li><a href="#v0.3.0" id="toc-v0.3.0" class="nav-link" data-scroll-target="#v0.3.0">v0.3.0</a>
   <ul class="collapse">
-  <li><a href="#api-changes-9" id="toc-api-changes-9" class="nav-link" data-scroll-target="#api-changes-9">API Changes</a></li>
+  <li><a href="#api-changes-10" id="toc-api-changes-10" class="nav-link" data-scroll-target="#api-changes-10">API Changes</a></li>
   <li><a href="#new-features-8" id="toc-new-features-8" class="nav-link" data-scroll-target="#new-features-8">New Features</a></li>
   <li><a href="#enhancements-13" id="toc-enhancements-13" class="nav-link" data-scroll-target="#enhancements-13">Enhancements</a></li>
   <li><a href="#bug-fixes-18" id="toc-bug-fixes-18" class="nav-link" data-scroll-target="#bug-fixes-18">Bug Fixes</a></li>
@@ -271,7 +272,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#v0.2.1" id="toc-v0.2.1" class="nav-link" data-scroll-target="#v0.2.1">v0.2.1</a></li>
   <li><a href="#v0.2.0" id="toc-v0.2.0" class="nav-link" data-scroll-target="#v0.2.0">v0.2.0</a>
   <ul class="collapse">
-  <li><a href="#api-changes-10" id="toc-api-changes-10" class="nav-link" data-scroll-target="#api-changes-10">API Changes</a></li>
+  <li><a href="#api-changes-11" id="toc-api-changes-11" class="nav-link" data-scroll-target="#api-changes-11">API Changes</a></li>
   </ul></li>
   <li><a href="#v0.1.0" id="toc-v0.1.0" class="nav-link" data-scroll-target="#v0.1.0">v0.1.0</a></li>
   </ul>
@@ -302,6 +303,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="v0.14.0" class="level2">
 <h2 class="anchored" data-anchor-id="v0.14.0">v0.14.0</h2>
 <p>(not-yet-released)</p>
+<section id="api-changes" class="level3">
+<h3 class="anchored" data-anchor-id="api-changes">API Changes</h3>
+<ul>
+<li>You cannot call <code>print</code> on a ggplot object to show it. This was deprecated in <code>v0.13.0</code> and it has now been removed. Use <a href="./reference/ggplot.html#plotnine.ggplot.show">ggplot.show()</a></li>
+</ul>
+</section>
 <section id="enhancements" class="level3">
 <h3 class="anchored" data-anchor-id="enhancements">Enhancements</h3>
 <ul>
@@ -312,6 +319,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine.options <span class="im">import</span> set_option</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>set_option(<span class="st">"figure_format"</span>, <span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+<li><p>For <a href="./reference/geom_boxplot.html#plotnine.geom_boxplot"><code>geom_boxplot</code></a> when the outliers are made invisible by giving them no shape, now they do not affect the limits of the plot. (<a href="https://github.com/has2k1/plotnine/issues/814" title="Issue: #814">#814</a>)</p></li>
 </ul>
 </section>
 <section id="new-features" class="level3">
@@ -422,8 +430,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="v0.13.0">v0.13.0</h2>
 <p>(2024-02-20)</p>
 <p><a href="https://doi.org/10.5281/zenodo.10684553"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.10684553.svg" class="img-fluid"></a></p>
-<section id="api-changes" class="level3">
-<h3 class="anchored" data-anchor-id="api-changes">API Changes</h3>
+<section id="api-changes-1" class="level3">
+<h3 class="anchored" data-anchor-id="api-changes-1">API Changes</h3>
 <ul>
 <li><p>Requires python &gt;= 3.9</p></li>
 <li><p>Using the <code>print</code> or <code>repr</code> functions to draw and show the plot has been deprecated. Use <a href="./reference/ggplot.html#plotnine.ggplot.show">ggplot.show()</a>.</p></li>
@@ -593,8 +601,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>In an interactive setting, after drawing an image. The size of the figure (in pixels) is printed e.g.&nbsp;<code>&lt;Figure Size: (640 x 480)&gt;</code>. Previously, something like <code>&lt;ggplot: (336175301)&gt;</code> was printed.</p></li>
 </ul>
 </section>
-<section id="api-changes-1" class="level3">
-<h3 class="anchored" data-anchor-id="api-changes-1">API Changes</h3>
+<section id="api-changes-2" class="level3">
+<h3 class="anchored" data-anchor-id="api-changes-2">API Changes</h3>
 <ul>
 <li><p><a href="./reference/ggplot.html#plotnine.ggplot.__add__"><code>__add__</code></a> and <a href="./reference/ggplot.html#plotnine.ggplot.__iadd__"><code>__iadd__</code></a> now accept the same types of objects. In this change <a href="./reference/ggplot.html#plotnine.ggplot.__iadd__"><code>__iadd__</code></a> has gained the ability to accept a list of objects.</p></li>
 <li><p><a href="./reference/ggplot.html#plotnine.ggplot.draw"><code>draw</code></a> no longer accepts the argument <code>return_ggplot</code> and the return value is always a matplolib figure.</p></li>
@@ -643,8 +651,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p><a href="./reference/geom_ribbon.html#plotnine.geom_ribbon"><code>geom_ribbon</code></a> acquired new parameter <code>outline_type</code> which controls how to stroke the boundaries of the shaded area. This parameter is also available to <a href="./reference/geom_area.html#plotnine.geom_area"><code>geom_area</code></a> and <a href="./reference/geom_density.html#plotnine.geom_density"><code>geom_density</code></a>. (<a href="https://github.com/has2k1/plotnine/issues/605" title="Issue: #605">#605</a>)</p></li>
 </ul>
 </section>
-<section id="api-changes-2" class="level3">
-<h3 class="anchored" data-anchor-id="api-changes-2">API Changes</h3>
+<section id="api-changes-3" class="level3">
+<h3 class="anchored" data-anchor-id="api-changes-3">API Changes</h3>
 <ul>
 <li><p>The automatic groups generated by the system and depending on the aesthetic mappings now only depend those aesthetics that have scales. This is more strict than has been, should affect very few cases of code that has been written and it should be less surprising to the users.</p></li>
 <li><p><a href="./reference/geom_area.html#plotnine.geom_area"><code>geom_area</code></a> and <a href="./reference/geom_density.html#plotnine.geom_density"><code>geom_density</code></a> now default to showing only the upper outline/boundary of the area. Use <code>outline_type="full"</code> for the old behaviour.</p></li>
@@ -655,8 +663,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="v0.9.0">v0.9.0</h2>
 <p>(2022-07-01)</p>
 <p><a href="https://doi.org/10.5281/zenodo.7124918"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.7124918.svg" class="img-fluid"></a></p>
-<section id="api-changes-3" class="level3">
-<h3 class="anchored" data-anchor-id="api-changes-3">API Changes</h3>
+<section id="api-changes-4" class="level3">
+<h3 class="anchored" data-anchor-id="api-changes-4">API Changes</h3>
 <ul>
 <li>For the calls to <code>ggplot</code>, the order of the positional arguments is <code>(data, mapping)</code> and for calls <code>geoms</code> and <code>stats</code> the order is <code>(mapping, data)</code>. In practice, you can still provide one/two positional arguments in any order. However, the are a few cases where old code will breaks due to duplicate parameters.</li>
 </ul>
@@ -710,8 +718,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="v0.8.0">v0.8.0</h2>
 <p>(2021-03-24)</p>
 <p><a href="https://doi.org/10.5281/zenodo.4636791"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.4636791.svg" class="img-fluid"></a></p>
-<section id="api-changes-4" class="level3">
-<h3 class="anchored" data-anchor-id="api-changes-4">API Changes</h3>
+<section id="api-changes-5" class="level3">
+<h3 class="anchored" data-anchor-id="api-changes-5">API Changes</h3>
 <ul>
 <li>How you map to calculated aesthetics has changed. Use the <a href="./reference/after_stat.html#plotnine.after_stat"><code>after_stat</code></a> function. The old methods <code>'stat(name)'</code> and <code>'..name..'</code> have been deprecated.</li>
 </ul>
@@ -770,8 +778,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="v0.7.0">v0.7.0</h2>
 <p>(2020-06-05)</p>
 <p><a href="https://doi.org/10.5281/zenodo.3878645"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.3878645.svg" class="img-fluid"></a></p>
-<section id="api-changes-5" class="level3">
-<h3 class="anchored" data-anchor-id="api-changes-5">API Changes</h3>
+<section id="api-changes-6" class="level3">
+<h3 class="anchored" data-anchor-id="api-changes-6">API Changes</h3>
 <ul>
 <li><p>Changed the default method of calculating bandwidth for all stats that use kernel density estimation. The affected stats are <a href="./reference/stat_density.html#plotnine.stat_density"><code>stat_density</code></a>, <a href="./reference/stat_ydensity.html#plotnine.stat_ydensity"><code>stat_ydensity</code></a>, and <a href="./reference/stat_sina.html#plotnine.stat_sina"><code>stat_sina</code></a>. These stats can now work with groups that have a single unique value.</p></li>
 <li><p>Changed <code>scale_colour_continuous</code> to refer to the same scale as <a href="./reference/scale_color_continuous.html#plotnine.scale_color_continuous"><code>scale_color_continuous</code></a>.</p></li>
@@ -816,8 +824,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="v0.6.0">v0.6.0</h2>
 <p>(2019-08-21)</p>
 <p><a href="https://doi.org/10.5281/zenodo.3373970"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.3373970.svg" class="img-fluid"></a></p>
-<section id="api-changes-6" class="level3">
-<h3 class="anchored" data-anchor-id="api-changes-6">API Changes</h3>
+<section id="api-changes-7" class="level3">
+<h3 class="anchored" data-anchor-id="api-changes-7">API Changes</h3>
 <ul>
 <li><p>The <code>draw</code> parameter of <a href="./reference/geom_map.html#plotnine.geom_map"><code>geom_map</code></a> has been removed. Shapefiles should contain only one type of geometry and that is the geometry that is drawn.</p></li>
 <li><p>Ordinal (Ordered categorical) columns are now mapped to ordinal scales. This creates different plots.</p></li>
@@ -889,8 +897,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="v0.5.0">v0.5.0</h2>
 <p>(2018-10-16)</p>
 <p><a href="https://doi.org/10.5281/zenodo.1464204"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.1464204.svg" class="img-fluid"></a></p>
-<section id="api-changes-7" class="level3">
-<h3 class="anchored" data-anchor-id="api-changes-7">API Changes</h3>
+<section id="api-changes-8" class="level3">
+<h3 class="anchored" data-anchor-id="api-changes-8">API Changes</h3>
 <ul>
 <li>Plotnine 0.5.0 only supports Python 3.5 and higher</li>
 <li>geopandas has been removed as a requirement for installation. Users of <a href="./reference/geom_map.html#plotnine.geom_map"><code>geom_map</code></a> will have to install it separately. (<a href="https://github.com/has2k1/plotnine/issues/178" title="Issue: #178">#178</a>)</li>
@@ -919,8 +927,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="v0.4.0">v0.4.0</h2>
 <p><em>2018-01-08</em></p>
 <p><a href="https://doi.org/10.5281/zenodo.1325309"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.1325309.svg" class="img-fluid"></a></p>
-<section id="api-changes-8" class="level3">
-<h3 class="anchored" data-anchor-id="api-changes-8">API Changes</h3>
+<section id="api-changes-9" class="level3">
+<h3 class="anchored" data-anchor-id="api-changes-9">API Changes</h3>
 <ul>
 <li><p>Calculated aesthetics are accessed using the <code>plotnine.aes.stat</code> function. The old method (double dots <code>..name..</code>) still works.</p></li>
 <li><p><a href="./reference/stat_qq.html#plotnine.stat_qq"><code>stat_qq</code></a> calculates slightly different points for the theoretical quantiles.</p></li>
@@ -968,8 +976,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="v0.3.0" class="level2">
 <h2 class="anchored" data-anchor-id="v0.3.0">v0.3.0</h2>
 <p><em>(2017-11-08)</em></p>
-<section id="api-changes-9" class="level3">
-<h3 class="anchored" data-anchor-id="api-changes-9">API Changes</h3>
+<section id="api-changes-10" class="level3">
+<h3 class="anchored" data-anchor-id="api-changes-10">API Changes</h3>
 <ul>
 <li><p><a href="./reference/geom_smooth.html#plotnine.geom_smooth"><code>geom_smooth</code></a> gained an extra parameter <code>legend_fill_ratio</code> that control the area of the legend that is filled to indicate confidence intervals. (<a href="https://github.com/has2k1/plotnine/issues/32" title="Issue: #32">#32</a>)</p></li>
 <li><p><a href="./reference/ggplot.html#plotnine.ggplot.save"><code>save</code></a> gained an extra parameter <code>verbose</code>. It no longer guesses when to print information and when not to.</p></li>
@@ -1047,8 +1055,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>Fixed exceptions when using <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.pivot_table.html#pandas.pivot_table"><code>pandas.pivot_table</code></a> for Pandas v0.20.0. The API was <a href="http://pandas.pydata.org/pandas-docs/version/0.20/whatsnew.html#pivot-table-always-returns-a-dataframe">fixed</a>.</p></li>
 <li><p>Fixed issues where lines/paths with segments that all belonged in the same group had joins that in some cases were “butted”.</p></li>
 </ul>
-<section id="api-changes-10" class="level3">
-<h3 class="anchored" data-anchor-id="api-changes-10">API Changes</h3>
+<section id="api-changes-11" class="level3">
+<h3 class="anchored" data-anchor-id="api-changes-11">API Changes</h3>
 <ul>
 <li><p><a href="./reference/geom_text.html#plotnine.geom_text"><code>geom_text</code></a> now uses <code>ha</code> and <code>va</code> as parameter names for the horizontal and vertical alignment. This is what matplotlib users expect. The previous names <code>hjust</code> and <code>vjust</code> are silently accepted.</p></li>
 <li><p><code>plotnine.layer.Layers</code> can now be used to bundle up <code>geoms</code> and <code>stats</code>. This makes it easy to reuse <code>geoms</code> and <code>stats</code> or organise them in sensible bundles when making complex plots.</p></li>
