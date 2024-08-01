@@ -337,7 +337,7 @@ class theme:
         try:
             rcParams = deepcopy(self._rcParams)
         except NotImplementedError:
-            # deepcopy raises an error for objects that are drived from or
+            # deepcopy raises an error for objects that are derived from or
             # composed of matplotlib.transform.TransformNode.
             # Not desirable, but probably requires upstream fix.
             # In particular, XKCD uses matplotlib.patheffects.withStrok

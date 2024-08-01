@@ -68,7 +68,7 @@ class geom_rug(geom):
         sides = params["sides"]
 
         # coord_flip does not flip the side(s) on which the rugs
-        # are plotted. We do the fliping here
+        # are plotted. We do the flipping here
         if isinstance(coord, coord_flip):
             t = str.maketrans("tblr", "rlbt")
             sides = sides.translate(t)
