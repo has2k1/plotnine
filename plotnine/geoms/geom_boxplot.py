@@ -134,7 +134,12 @@ class geom_boxplot(geom):
             else:
                 data["width"] = resolution(data["x"], False) * 0.9
 
-        if "outliers" not in data:
+        if (
+            "outliers" not in data
+            # Remove outliers if they will not show so that the scale
+            # limits do not recognise them.
+            or self.params["outlier_shape"] in (None, "")
+        ):
             data["outliers"] = [[] for i in range(len(data))]
 
         # min and max outlier values
