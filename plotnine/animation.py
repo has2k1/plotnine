@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import typing
-from copy import copy
+from copy import deepcopy
 
 import pandas as pd
 from matplotlib.animation import ArtistAnimation
@@ -212,9 +212,9 @@ class PlotnineAnimation(ArtistAnimation):
                 scales = p._build_objs.scales
                 set_scale_limits(scales)
             else:
-                p = copy(p)
-                plot = p._draw_using_figure(figure, axs)
+                plot = self._draw_animation_plot(p, figure, axs)
                 check_scale_limits(plot.scales, frame_no)
+
             artists.append(get_frame_artists(axs))
 
         if figure is None:
@@ -224,3 +224,22 @@ class PlotnineAnimation(ArtistAnimation):
         # Prevent Jupyter from plotting any static figure
         plt.close(figure)
         return figure, artists
+
+    def _draw_animation_plot(
+        self, plot: ggplot, figure: Figure, axs: list[Axes]
+    ) -> ggplot:
+        """
+        Draw a plot/frame of the animation
+
+        This methods draws plots from the 2nd onwards
+        """
+        from ._utils.context import plot_context
+
+        plot = deepcopy(plot)
+        plot.figure = figure
+        plot.axs = axs
+        with plot_context(plot):
+            plot._build()
+            plot.figure, plot.axs = plot.facet.setup(plot)
+            plot._draw_layers()
+        return plot
