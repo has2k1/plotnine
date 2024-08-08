@@ -4,6 +4,9 @@ on:
   workflow_dispatch:
   workflow_call:
 
+env:
+  HEAD_COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+
 jobs:
   parse_commit_info:
     runs-on: ubuntu-latest
@@ -30,7 +33,7 @@ jobs:
           # The message string is directly substituted in before the command is run.
           # We use a HereDoc to avoid quotation issues if the message has quotes as well.
           TITLE=$(cat <<EOF | head -n 1
-          ${{ github.event.head_commit.message }}
+          $HEAD_COMMIT_MESSAGE
           EOF
           )
 
