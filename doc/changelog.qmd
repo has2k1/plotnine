@@ -11,6 +11,10 @@ title: Changelog
   in `v0.13.0` and it has now been removed.
   Use [ggplot.show()](`plotnine.ggplot.show`)
 
+- The color_space parameter of [](:class:`~plotnine.scale_color_hue`) now
+  accepts the value `"hlsuv"` instead of `"husl"`. The meaning of has
+  not changed, and `"husl"` is silently accepted.
+
 ### Enhancements
 
 - The `family`, `fontstyle` and `fontweight` parameters of

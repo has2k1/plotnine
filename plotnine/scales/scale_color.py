@@ -65,11 +65,12 @@ class scale_color_hue(_scale_color_discrete):
     Saturation. Must be in the range [0, 1]
     """
 
-    color_space: InitVar[Literal["hls", "husl"]] = "hls"
+    color_space: InitVar[Literal["hls", "hsluv"]] = "hls"
     """
     Color space to use. Should be one of
     [hls](https://en.wikipedia.org/wiki/HSL_and_HSV)
-    or [husl](http://www.husl-colors.org/).
+    or [hsluv](https://www.hsluv.org/).
+    https://www.hsluv.org/
     """
 
     def __post_init__(self, h, l, s, color_space):
