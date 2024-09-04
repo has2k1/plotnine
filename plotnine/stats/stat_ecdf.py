@@ -63,6 +63,6 @@ class stat_ecdf(stat):
         if params["pad"]:
             x = np.hstack([-np.inf, x, np.inf])
 
-        ecdf = ECDF(data["x"])(x)
+        ecdf = ECDF(data["x"].to_numpy())(x)
         res = pd.DataFrame({"x": x, "ecdf": ecdf})
         return res
