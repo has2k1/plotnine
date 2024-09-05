@@ -63,14 +63,31 @@ class StripText(Text):
         self.patch.set_transform(info.ax.transAxes)
         self.patch.set_mutation_scale(0)
 
+        info.ha = "right"
+        margin = 0.05
+
         # Put text in center of patch
-        self._x = l + w / 2
+        if isinstance(info.ha, str):
+            lookup = {
+                "left": 0.0,
+                "center": 0.5,
+                "right": 1.0,
+            }
+            f = lookup[info.ha]
+            anchor = info.ha
+            if anchor == "right":
+                margin = -margin
+        else:
+            f = info.ha
+            anchor = "left" if info.ha < 0.5 else "right"
+
+        self._x = l + (w * f) + (w * margin)
         self._y = b + h / 2
 
         # "anchor" aligns before rotation so the right-strip get properly
         # centered text
         self.set_rotation_mode("anchor")
-        self.set_horizontalalignment("center")  # right-strip
+        self.set_horizontalalignment(anchor)  # right-strip
         self.set_verticalalignment("center_baseline")  # top-strip
 
         # Draw spatch
