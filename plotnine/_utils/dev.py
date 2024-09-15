@@ -10,7 +10,6 @@ def get_plotnine_all(use_clipboard=True) -> Optional[str]:
     The contents of __all__ in plotnine/__init__.py
     """
     from importlib import import_module
-    from textwrap import indent
 
     modules = (
         "coords",
@@ -29,22 +28,28 @@ def get_plotnine_all(use_clipboard=True) -> Optional[str]:
         "watermark",
     )
 
-    comma_join = ",\n".join
-
-    def get_all_from_module(name):
+    def get_all_from_module(name, quote=False):
         """
         Module level imports
         """
         qname = f"plotnine.{name}"
-        comment = f"# {qname}\n"
         m = import_module(qname)
-        return comment + comma_join(f'"{x}"' for x in sorted(m.__all__))
+        fmt = ('"{}",' if quote else "{},").format
+        return "\n    ".join(fmt(x) for x in sorted(m.__all__))
 
-    _imports = "\n".join(f"from .{name} import *" for name in modules)
-    lst = indent(
-        comma_join(get_all_from_module(name) for name in modules), " " * 4
+    _imports = "\n".join(
+        f"from .{name} import (\n    {get_all_from_module(name)}\n)"
+        for name in modules
     )
-    _all = f"__all__ = (\n{lst},\n)"
+    _all = "\n".join(
+        [
+            "__all__ = (",
+            "\n".join(
+                f"    {get_all_from_module(name, True)}" for name in modules
+            ),
+            ")",
+        ]
+    )
     content = f"{_imports}\n\n{_all}"
     if use_clipboard:
         from pandas.io import clipboard
