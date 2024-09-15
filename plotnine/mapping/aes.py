@@ -211,9 +211,12 @@ class aes(Dict[str, Any]):
         aesthetics at more than one stage of the plot building pipeline.
     """
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, x=None, y=None, **kwargs):
         kwargs = rename_aesthetics(kwargs)
-        kwargs.update(zip(("x", "y"), args))
+        if x is not None:
+            kwargs["x"] = x
+        if y is not None:
+            kwargs["y"] = y
         kwargs = self._convert_deprecated_expr(kwargs)
         self.update(kwargs)
 
