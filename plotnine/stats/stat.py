@@ -7,7 +7,6 @@ import pandas as pd
 
 from .._utils import (
     check_required_aesthetics,
-    copy_keys,
     data_mapping_as_kwargs,
     groupby_apply,
     remove_missing,
@@ -75,10 +74,12 @@ class stat(ABC, metaclass=Register):
     ):
         kwargs = data_mapping_as_kwargs((data, mapping), kwargs)
         self._kwargs = kwargs  # Will be used to create the geom
-        self.params = copy_keys(kwargs, deepcopy(self.DEFAULT_PARAMS))
+        self.params = self.DEFAULT_PARAMS | {
+            k: v for k, v in kwargs.items() if k in self.DEFAULT_PARAMS
+        }
         self.DEFAULT_AES = aes(**self.DEFAULT_AES)
         self.aes_params = {
-            ae: kwargs[ae] for ae in (self.aesthetics() & kwargs.keys())
+            ae: kwargs[ae] for ae in self.aesthetics() & set(kwargs)
         }
 
     @staticmethod

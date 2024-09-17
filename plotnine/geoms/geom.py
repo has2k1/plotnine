@@ -6,7 +6,6 @@ from copy import deepcopy
 from itertools import chain, repeat
 
 from .._utils import (
-    copy_keys,
     data_mapping_as_kwargs,
     is_list_like,
     remove_missing,
@@ -83,8 +82,12 @@ class geom(ABC, metaclass=Register):
         self._kwargs = kwargs  # Will be used to create stat & layer
 
         # separate aesthetics and parameters
-        self.aes_params = copy_keys(kwargs, {}, self.aesthetics())
-        self.params = copy_keys(kwargs, deepcopy(self.DEFAULT_PARAMS))
+        self.aes_params = {
+            ae: kwargs[ae] for ae in self.aesthetics() & set(kwargs)
+        }
+        self.params = self.DEFAULT_PARAMS | {
+            k: v for k, v in kwargs.items() if k in self.DEFAULT_PARAMS
+        }
         self.mapping = kwargs["mapping"]
         self.data = kwargs["data"]
         self._stat = stat.from_geom(self)
