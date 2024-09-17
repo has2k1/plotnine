@@ -733,27 +733,6 @@ def make_line_segments(
     return segments
 
 
-def copy_keys(source, destination, keys=None):
-    """
-    Add keys in source to destination
-
-    Parameters
-    ----------
-    source : dict
-
-    destination: dict
-
-    keys : None | iterable
-        The keys in source to be copied into destination. If
-        None, then `keys = destination.keys()`
-    """
-    if keys is None:
-        keys = destination.keys()
-    for k in set(source) & set(keys):
-        destination[k] = source[k]
-    return destination
-
-
 def get_kwarg_names(func):
     """
     Return a list of valid kwargs to function func
