@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.4">
+<meta name="generator" content="quarto-1.6.10">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -70,10 +70,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-79bb3942e891885f9f7af119cd221462.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-ba5b42dac1c6caaca85be57360ca5e27.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -187,7 +187,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="api-changes" class="level3">
 <h3 class="anchored" data-anchor-id="api-changes">API Changes</h3>
 <ul>
-<li>You cannot call <code>print</code> on a ggplot object to show it. This was deprecated in <code>v0.13.0</code> and it has now been removed. Use <a href="./reference/ggplot.html#plotnine.ggplot.show">ggplot.show()</a></li>
+<li><p>You cannot call <code>print</code> on a ggplot object to show it. This was deprecated in <code>v0.13.0</code> and it has now been removed. Use <a href="./reference/ggplot.html#plotnine.ggplot.show">ggplot.show()</a></p></li>
+<li><p>The color_space parameter of <a href="./reference/scale_color_hue.html#plotnine.scale_color_hue"><code>scale_color_hue</code></a> now accepts the value <code>"hlsuv"</code> instead of <code>"husl"</code>. The meaning of has not changed, and <code>"husl"</code> is silently accepted.</p></li>
 </ul>
 </section>
 <section id="enhancements" class="level3">
