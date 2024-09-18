@@ -74,8 +74,11 @@ class strip:
             # TODO: Allow two unique paddings for either side.
             # Requires implementing an mpl.patches.boxstyle that recognises
             # two padding values.
-            strip_text_margin = theme.getp(("strip_text_x", "margin")).get_as(
-                "b", "lines"
+
+            strip_text_margin = (
+                margin.get_as("b", "lines")
+                if (margin := theme.getp(("strip_text_x", "margin")))
+                else 0
             )
             strip_align = theme.getp("strip_align_x")
 
@@ -94,8 +97,10 @@ class strip:
             # TODO: Allow two unique paddings for either side.
             # Requires implementing an mpl.patches.boxstyle that recognises
             # two padding values.
-            strip_text_margin = theme.getp(("strip_text_y", "margin")).get_as(
-                "r", "lines"
+            strip_text_margin = (
+                margin.get_as("r", "lines")
+                if (margin := theme.getp(("strip_text_y", "margin")))
+                else 0
             )
             strip_align = theme.getp("strip_align_y")
 

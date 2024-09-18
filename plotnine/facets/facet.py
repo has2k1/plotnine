@@ -346,11 +346,17 @@ class facet:
         ax.xaxis.set_major_formatter(MyFixedFormatter(panel_params.x.labels))
         ax.yaxis.set_major_formatter(MyFixedFormatter(panel_params.y.labels))
 
-        margin = theme.getp(("axis_text_x", "margin"))
-        pad_x = margin.get_as("t", "pt")
+        pad_x = (
+            margin.get_as("t", "pt")
+            if (margin := theme.getp(("axis_text_x", "margin")))
+            else 0
+        )
 
-        margin = theme.getp(("axis_text_y", "margin"))
-        pad_y = margin.get_as("r", "pt")
+        pad_y = (
+            margin.get_as("r", "pt")
+            if (margin := theme.getp(("axis_text_y", "margin")))
+            else 0
+        )
 
         ax.tick_params(axis="x", which="major", pad=pad_x)
         ax.tick_params(axis="y", which="major", pad=pad_y)
