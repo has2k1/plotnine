@@ -58,6 +58,8 @@ title: Changelog
 - Fixed [](:class:`~plotnine.PlotnineAnimation`) not to draw a second legend
   at the bottom-left corner. ({{< issue 816 }}>)
 
+- Fixed bug where setting `theme(text=element_blank())` would raise and exception.
+
 ## v0.13.6
 (2024-05-09)
 
