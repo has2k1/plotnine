@@ -41,9 +41,9 @@ class theme_tufte(theme_bw):
 
     def __init__(self, base_size=11, base_family=None, ticks=True):
         theme_bw.__init__(self, base_size, base_family)
-        d = {} if ticks else {"axis_ticks": element_blank()}
         self += theme(
             axis_line=element_blank(),
+            axis_ticks=None if ticks else element_blank(),
             legend_background=element_blank(),
             legend_key=element_blank(),
             panel_background=element_blank(),
@@ -51,5 +51,4 @@ class theme_tufte(theme_bw):
             panel_grid=element_blank(),
             plot_background=element_blank(),
             strip_background=element_blank(),
-            **d,  # pyright: ignore
         )
