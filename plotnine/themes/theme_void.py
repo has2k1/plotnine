@@ -83,14 +83,12 @@ class theme_void(theme):
             plot_margin=0,
             plot_subtitle=element_text(
                 size=base_size * 1,
-                ha="left",
                 va="top",
                 ma="left",
                 margin={"b": m, "units": "fig"},
             ),
             plot_title=element_text(
                 size=base_size * 1.2,
-                ha="center",
                 va="top",
                 ma="left",
                 margin={"b": m, "units": "fig"},
