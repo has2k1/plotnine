@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import warnings
 from contextlib import suppress
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Callable, cast
 
 import numpy as np
 import pandas as pd
@@ -17,14 +17,14 @@ if TYPE_CHECKING:
     from plotnine.mapping import Environment
 
 
-def predictdf(data, xseq, **params):
+def predictdf(data, xseq, **params) -> pd.DataFrame:
     """
     Make prediction on the data
 
     This is a general function responsible for dispatching
     to functions that do predictions for the specific models.
     """
-    methods = {
+    methods: dict[str, Callable[..., pd.DataFrame]] = {
         "lm": lm,
         "ols": lm,
         "wls": lm,
@@ -37,7 +37,7 @@ def predictdf(data, xseq, **params):
         "gpr": gpr,
     }
 
-    method = params["method"]
+    method = cast(str | Callable[..., pd.DataFrame], params["method"])
 
     if isinstance(method, str):
         try:
@@ -56,7 +56,7 @@ def predictdf(data, xseq, **params):
     return method(data, xseq, **params)
 
 
-def lm(data, xseq, **params):
+def lm(data, xseq, **params) -> pd.DataFrame:
     """
     Fit OLS / WLS if data has weight
     """
@@ -96,7 +96,7 @@ def lm(data, xseq, **params):
     return data
 
 
-def lm_formula(data, xseq, **params):
+def lm_formula(data, xseq, **params) -> pd.DataFrame:
     """
     Fit OLS / WLS using a formula
     """
@@ -140,7 +140,7 @@ def lm_formula(data, xseq, **params):
     return data
 
 
-def rlm(data, xseq, **params):
+def rlm(data, xseq, **params) -> pd.DataFrame:
     """
     Fit RLM
     """
@@ -171,7 +171,7 @@ def rlm(data, xseq, **params):
     return data
 
 
-def rlm_formula(data, xseq, **params):
+def rlm_formula(data, xseq, **params) -> pd.DataFrame:
     """
     Fit RLM using a formula
     """
@@ -198,7 +198,7 @@ def rlm_formula(data, xseq, **params):
     return data
 
 
-def gls(data, xseq, **params):
+def gls(data, xseq, **params) -> pd.DataFrame:
     """
     Fit GLS
     """
@@ -260,7 +260,7 @@ def gls_formula(data, xseq, **params):
     return data
 
 
-def glm(data, xseq, **params):
+def glm(data, xseq, **params) -> pd.DataFrame:
     """
     Fit GLM
     """
@@ -323,7 +323,7 @@ def glm_formula(data, xseq, **params):
     return data
 
 
-def lowess(data, xseq, **params):
+def lowess(data, xseq, **params) -> pd.DataFrame:
     """
     Lowess fitting
     """
@@ -353,7 +353,7 @@ def lowess(data, xseq, **params):
     return data
 
 
-def loess(data, xseq, **params):
+def loess(data, xseq, **params) -> pd.DataFrame:
     """
     Loess smoothing
     """
@@ -404,7 +404,7 @@ def loess(data, xseq, **params):
     return data
 
 
-def mavg(data, xseq, **params):
+def mavg(data, xseq, **params) -> pd.DataFrame:
     """
     Fit moving average
     """
