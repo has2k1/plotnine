@@ -39,6 +39,8 @@ title: Changelog
   by giving them no shape, now they do not affect the limits of the plot.
   ({{< issue 814 >}})
 
+- Made it possile to map an aesthetic value to `None`. ({{< issue 791 >}})
+
 ### New Features
 
 - [](:class:`~plotnine.geom_text`) has gained new aesthetics

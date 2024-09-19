@@ -242,7 +242,7 @@ def evaluate(
                 )
                 raise PlotnineError(msg)
             evaled[ae] = col
-        elif is_known_scalar(col):
+        elif is_known_scalar(col) or col is None:
             if not len(evaled):
                 col = [col]
             evaled[ae] = col
