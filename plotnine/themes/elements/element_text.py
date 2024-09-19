@@ -39,7 +39,13 @@ class element_text(element_base):
     va :
         Vertical alignment.
     rotation :
-        Rotation angle in the range [0, 360]
+        Rotation angle in the range [0, 360]. The `rotation` is affected
+        by the `rotation_mode`.
+    rotation_mode :
+        How to do the rotation. If `None` or `"default"`, first rotate
+        the text then align the bounding box of the rotated text.
+        If `"anchor"`, first align the unrotated text then rotate the
+        text around the point of alignment.
     linespacing : float
         Line spacing
     backgroundcolor :
@@ -102,6 +108,7 @@ class element_text(element_base):
         margin: Optional[
             dict[Literal["t", "b", "l", "r", "units"], Any]
         ] = None,
+        rotation_mode: Literal["default", "anchor"] | None = None,
         **kwargs: Any,
     ):
         # ggplot2 translation
@@ -144,6 +151,7 @@ class element_text(element_base):
             "style",
             "va",
             "weight",
+            "rotation_mode",
         )
         variables = locals()
         for name in names:
