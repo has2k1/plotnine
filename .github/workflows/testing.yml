@@ -24,35 +24,44 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.10", 3.12]
-
+        resolution:
+          - highest
+        include:
+          - python-version: "3.10"
+            resolution: "lowest-direct"
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v5
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
 
+      - name: Install a specific version of uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          version: "latest"
+
+      - name: Make uv use system python
+        run: echo "UV_SYSTEM_PYTHON=true" >> $GITHUB_ENV
+
       - name: Install Packages
-        shell: bash
         run: |
           # Install as an editable so that the coverage path
           # is predicable
-          pip install -e ".[extra,test]"
+          uv pip install --resolution=${{ matrix.resolution }} -e ".[extra,test]"
 
       - name: Environment Information
-        shell: bash
         run: |
-          pip list
+          uv pip list
 
       - name: Run Tests
-        shell: bash
         run: |
           coverage erase
           make test
 
       - name: List Directory
-        shell: bash
         run: |
           ls -la
 
@@ -93,14 +102,19 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
+      - name: Install a specific version of uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          version: "latest"
+
+      - name: Make uv use system python
+        run: echo "UV_SYSTEM_PYTHON=true" >> $GITHUB_ENV
+
       - name: Install Packages
-        shell: bash
-        run: |
-          pip install ruff
+        run: uv tool install ruff
 
       - name: Environment Information
-        shell: bash
-        run: pip list
+        run: uv pip list
 
       - name: Check lint with Ruff
         shell: bash
@@ -132,17 +146,22 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
+      - name: Install a specific version of uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          version: "latest"
+
+      - name: Make uv use system python
+        run: echo "UV_SYSTEM_PYTHON=true" >> $GITHUB_ENV
+
       - name: Install Packages
-        shell: bash
         run: |
-          pip install ".[extra, typing]"
+          uv pip install ".[extra, typing]"
 
       - name: Environment Information
-        shell: bash
-        run: pip list
+        run: uv pip list
 
       - name: Run Tests
-        shell: bash
         run: make typecheck
 
   call-build-documentation:

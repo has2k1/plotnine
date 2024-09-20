@@ -29,9 +29,17 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Python
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-        uses: actions/setup-python@v5
+
+      - name: Install a specific version of uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          version: "latest"
+
+      - name: Make uv use system python
+        run: echo "UV_SYSTEM_PYTHON=true" >> $GITHUB_ENV
 
       - name: Check for semantic version tag
         id: check-tag
@@ -71,8 +79,16 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
+      - name: Install a specific version of uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          version: "latest"
+
+      - name: Make uv use system python
+        run: echo "UV_SYSTEM_PYTHON=true" >> $GITHUB_ENV
+
       - name: Install Packages
-        run: python -m pip install build
+        run: uv pip install build
 
       - name: Build a wheel and a source tarball
         run: make dist

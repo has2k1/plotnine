@@ -19,24 +19,29 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v5
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
 
+      - name: Install a specific version of uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          version: "latest"
+
+      - name: Make uv use system python
+        run: echo "UV_SYSTEM_PYTHON=true" >> $GITHUB_ENV
+
       - name: Install Packages
-        shell: bash
         run: |
-          pip install --upgrade pip
-          pip install ".[extra,test]"
-          pip install --upgrade git+https://github.com/matplotlib/matplotlib
+          uv pip install ".[extra,test]"
+          uv pip install --upgrade git+https://github.com/matplotlib/matplotlib
 
       - name: Environment Information
-        shell: bash
         run: |
-          pip list
+          uv pip list
 
       - name: Run Tests
-        shell: bash
         run: |
           make test
 
@@ -58,21 +63,29 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v5
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+
+      - name: Install a specific version of uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          version: "latest"
+
+      - name: Make uv use system python
+        run: echo "UV_SYSTEM_PYTHON=true" >> $GITHUB_ENV
 
       - name: Install Packages
         shell: bash
         run: |
-          pip install --upgrade pip
-          pip install ".[extra,test]"
-          pip install --upgrade git+https://github.com/pandas-dev/pandas
+          uv pip install ".[extra,test]"
+          uv pip install --upgrade git+https://github.com/pandas-dev/pandas
 
       - name: Environment Information
         shell: bash
         run: |
-          pip list
+          uv pip list
 
       # to do: think about catching deprecations earlier
       - name: Run Tests
@@ -111,21 +124,29 @@ jobs:
         with:
           ref: ${{ steps.latestrelease.outputs.latestrelease }}
 
-      - uses: actions/setup-python@v5
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+
+      - name: Install a specific version of uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          version: "latest"
+
+      - name: Make uv use system python
+        run: echo "UV_SYSTEM_PYTHON=true" >> $GITHUB_ENV
 
       - name: Install Packages
         shell: bash
         run: |
-          pip install --upgrade pip
-          pip install --upgrade git+https://github.com/matplotlib/matplotlib
-          pip install ".[extra,test]"
+          uv pip install --upgrade git+https://github.com/matplotlib/matplotlib
+          uv pip install ".[extra,test]"
 
       - name: Environment Information
         shell: bash
         run: |
-          pip list
+          uv pip list
 
       - name: Run Tests
         shell: bash
@@ -163,21 +184,29 @@ jobs:
         with:
           ref: ${{ steps.latestrelease.outputs.latestrelease }}
 
-      - uses: actions/setup-python@v5
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+
+      - name: Install a specific version of uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          version: "latest"
+
+      - name: Make uv use system python
+        run: echo "UV_SYSTEM_PYTHON=true" >> $GITHUB_ENV
 
       - name: Install Packages
         shell: bash
         run: |
-          pip install --upgrade pip
-          pip install --upgrade git+https://github.com/pandas-dev/pandas
-          pip install ".[extra,test]"
+          uv pip install --upgrade git+https://github.com/pandas-dev/pandas
+          uv pip install ".[extra,test]"
 
       - name: Environment Information
         shell: bash
         run: |
-          pip list
+          uv pip list
 
       # to do: think about catching deprecations earlier
       - name: Run Tests
@@ -203,21 +232,29 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v5
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+
+      - name: Install a specific version of uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          version: "latest"
+
+      - name: Make uv use system python
+        run: echo "UV_SYSTEM_PYTHON=true" >> $GITHUB_ENV
 
       - name: Install Packages
         shell: bash
         run: |
-          pip install --upgrade pip
-          pip install ".[extra,typing]"
-          pip install --upgrade git+https://github.com/matplotlib/matplotlib
+          uv pip install ".[extra,typing]"
+          uv pip install --upgrade git+https://github.com/matplotlib/matplotlib
 
       - name: Environment Information
         shell: bash
         run: |
-          pip list
+          uv pip list
 
       - name: Run Tests
         shell: bash
@@ -235,21 +272,29 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v5
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+
+      - name: Install a specific version of uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          version: "latest"
+
+      - name: Make uv use system python
+        run: echo "UV_SYSTEM_PYTHON=true" >> $GITHUB_ENV
 
       - name: Install Packages
         shell: bash
         run: |
-          pip install --upgrade pip
-          pip install ".[extra,typing]"
-          pip install --upgrade git+https://github.com/pandas-dev/pandas
+          uv pip install ".[extra,typing]"
+          uv pip install --upgrade git+https://github.com/pandas-dev/pandas
 
       - name: Environment Information
         shell: bash
         run: |
-          pip list
+          uv pip list
 
       # to do: think about catching deprecations earlier
       - name: Run Tests
