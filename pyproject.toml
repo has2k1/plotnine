@@ -42,9 +42,9 @@ all = [
 ]
 
 extra = [
-    "adjustText",
-    "geopandas",
-    "scikit-learn",
+    "adjustText>=1.2.0",
+    "geopandas>=1.0.0",
+    "scikit-learn>1.2.0",
     "scikit-misc>=0.4.0"
 ]
 
@@ -61,7 +61,7 @@ lint = [
 ]
 
 test = [
-    "pytest-cov"
+    "pytest-cov>=4.0.0"
 ]
 
 build = [

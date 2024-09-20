@@ -87,16 +87,16 @@ dist: clean
 build: dist
 
 install: clean
-	pip install ".[extra]"
+	uv pip install ".[extra]"
 
 doc-deps:
-	pip install -e ".[doc]"
-	pip install -r requirements/doc.txt
+	uv pip install -e ".[doc]"
+	uv pip install -r requirements/doc.txt
 	cd doc && make deps
 
 develop: clean-cache
-	pip install -e ".[all]"
+	uv pip install -e ".[all]"
 
 develop-update: clean-cache
-	pip install --upgrade -e ".[all]"
+	uv pip install --upgrade -e ".[all]"
 	pre-commit autoupdate

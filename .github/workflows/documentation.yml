@@ -56,6 +56,14 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
+      - name: Install a specific version of uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          version: "latest"
+
+      - name: Make uv use system python
+        run: echo "UV_SYSTEM_PYTHON=true" >> $GITHUB_ENV
+
       - name: Install Quarto
         uses: quarto-dev/quarto-actions/setup@v2
         with:
@@ -71,10 +79,7 @@ jobs:
         run: |
           ls -la
           ls -la doc
-          pip list
-
-      - name: Get Commit Title
-        run: |
+          uv pip list
 
       - name: Build docs
         shell: bash
