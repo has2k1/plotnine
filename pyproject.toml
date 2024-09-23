@@ -22,11 +22,11 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Visualization"
 ]
 dependencies = [
-    "matplotlib>=3.7.0",
+    "matplotlib>=3.8.0",
     "pandas>=2.2.0",
     "mizani~=0.12.2",
     "numpy>=1.23.5",
-    "scipy>=1.7.0",
+    "scipy>=1.8.0",
     "statsmodels>=0.14.0",
 ]
 requires-python = ">=3.10"
@@ -45,7 +45,7 @@ extra = [
     "adjustText>=1.2.0",
     "geopandas>=1.0.0",
     "scikit-learn>1.2.0",
-    "scikit-misc>=0.4.0"
+    "scikit-misc>=0.5.1"
 ]
 
 doc = [
