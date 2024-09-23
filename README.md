@@ -1,4 +1,4 @@
-# plotnine
+# plotnine <img width="20%" align="right" src="https://github.com/has2k1/plotnine/blob/logos/doc/images/logo-512.png?raw=true">
 
 [![Release](https://img.shields.io/pypi/v/plotnine.svg)](https://pypi.python.org/pypi/plotnine)
 [![License](https://img.shields.io/pypi/l/plotnine.svg)](https://pypi.python.org/pypi/plotnine)
@@ -10,8 +10,6 @@ plotnine is an implementation of a *grammar of graphics* in Python
 based on [ggplot2](https://github.com/tidyverse/ggplot2).
 The grammar allows you to compose plots by explicitly mapping variables in a
 dataframe to the visual characteristics (position, color, size etc.) of objects that make up the plot.
-
-<img width="33%" align="right" src="https://github.com/has2k1/plotnine/blob/logos/doc/images/logo-512.png?raw=true">
 
 Plotting with a *grammar of graphics* is powerful. Custom (and otherwise
 complex) plots are easy to think about and build incrementally, while the
