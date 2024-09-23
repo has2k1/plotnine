@@ -11,7 +11,7 @@ based on [ggplot2](https://github.com/tidyverse/ggplot2).
 The grammar allows you to compose plots by explicitly mapping variables in a
 dataframe to the visual characteristics (position, color, size etc.) of objects that make up the plot.
 
-<img width="33%" align="right" src="./doc/images/logo-540.png">
+<img width="33%" align="right" src="https://github.com/has2k1/plotnine/blob/main/doc/images/logo-512.png?raw=true">
 
 Plotting with a *grammar of graphics* is powerful. Custom (and otherwise
 complex) plots are easy to think about and build incrementally, while the
@@ -42,7 +42,7 @@ Building a complex plot piece by piece.
    )
    ```
 
-   <img width="90%" align="center" src="./doc/images/readme-image-1.png">
+   <img width="90%" align="center" src="https://github.com/has2k1/plotnine/blob/main/doc/images/readme-image-1.png?raw=true">
 
 2. Scatter plot colored according some variable
 
@@ -53,7 +53,7 @@ Building a complex plot piece by piece.
    )
    ```
 
-   <img width="90%" align="center" src="./doc/images/readme-image-2.png">
+   <img width="90%" align="center" src="https://github.com/has2k1/plotnine/blob/main/doc/images/readme-image-2.png?raw=true">
 
 3. Scatter plot colored according some variable and
    smoothed with a linear model with confidence intervals.
@@ -66,7 +66,7 @@ Building a complex plot piece by piece.
    )
    ```
 
-   <img width="90%" align="center" src="./doc/images/readme-image-3.png">
+   <img width="90%" align="center" src="https://github.com/has2k1/plotnine/blob/main/doc/images/readme-image-3.png?raw=true">
 
 4. Scatter plot colored according some variable,
    smoothed with a linear model with confidence intervals and
@@ -81,9 +81,10 @@ Building a complex plot piece by piece.
    )
    ```
 
-   <img width="90%" align="center" src="./doc/images/readme-image-4.png">
+   <img width="90%" align="center" src="https://github.com/has2k1/plotnine/blob/main/doc/images/readme-image-4.png?raw=true">
 
 5. Adjust the themes
+
 
    I) Make it playful
 
@@ -97,7 +98,7 @@ Building a complex plot piece by piece.
    )
    ```
 
-   <img width="90%" align="center" src="./doc/images/readme-image-5.png">
+   <img width="90%" align="center" src="https://github.com/has2k1/plotnine/blob/main/doc/images/readme-image-5.png?raw=true">
 
    II) Or professional
 
@@ -111,8 +112,7 @@ Building a complex plot piece by piece.
    )
    ```
 
-   <img width="90%" align="center" src="./doc/images/readme-image-5alt.png">
-
+   <img width="90%" align="center" src="https://github.com/has2k1/plotnine/blob/main/doc/images/readme-image-5alt.png?raw=true">
 
 ## Installation
 
