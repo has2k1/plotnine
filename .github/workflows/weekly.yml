@@ -8,12 +8,12 @@ on:
     - cron: "40 06 * * WED"
 
 jobs:
-  plotnine_latest_matplotlib_latest:
+  latest p9, latest matplotlib:
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        python-version: [3.12]
+        python-version: 3.12
 
     steps:
       - name: Checkout Code
@@ -52,12 +52,12 @@ jobs:
           path: result_images/
           if-no-files-found: ignore
 
-  plotnine_latest_pandas_latest:
+  latest p9, latest pandas:
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        python-version: [3.12]
+        python-version: 3.12
 
     steps:
       - name: Checkout Code
@@ -79,8 +79,8 @@ jobs:
       - name: Install Packages
         shell: bash
         run: |
-          uv pip install ".[extra,test]"
           uv pip install --upgrade git+https://github.com/pandas-dev/pandas
+          uv pip install ".[extra,test]"
 
       - name: Environment Information
         shell: bash
@@ -100,12 +100,12 @@ jobs:
           path: result_images/
           if-no-files-found: ignore
 
-  plotnine_pypi_matplotlib_latest:
+  stable p9, latest matplotlib:
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        python-version: ["3.10"]
+        python-version: 3.12
 
     steps:
       - name: Get latest release with tag from GitHub API
@@ -160,12 +160,12 @@ jobs:
           path: result_images/
           if-no-files-found: ignore
 
-  plotnine_pypi_pandas_latest:
+  stable p9, latest pandas:
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        python-version: ["3.10"]
+        python-version: 3.12
 
     steps:
       - name: Get latest release with tag from GitHub API
@@ -221,12 +221,12 @@ jobs:
           path: tests/result_images/
           if-no-files-found: ignore
 
-  typecheck_plotnine_latest_matplotlib_latest:
+  TYP latest p9, latest matplotlib:
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        python-version: [3.11]
+        python-version: [3.12]
 
     steps:
       - name: Checkout Code
@@ -261,12 +261,12 @@ jobs:
         run: |
           make typecheck
 
-  typecheck_plotnine_latest_pandas_latest:
+  TYP latest p9, latest pandas:
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        python-version: [3.11]
+        python-version: [3.12]
 
     steps:
       - name: Checkout Code

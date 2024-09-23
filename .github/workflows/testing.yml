@@ -23,12 +23,11 @@ jobs:
 
     strategy:
       matrix:
-        python-version: ["3.10", 3.12]
-        resolution:
-          - highest
         include:
           - python-version: "3.10"
             resolution: "lowest-direct"
+          - python-version: 3.12
+            resolution: "highest"
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
