@@ -383,9 +383,6 @@ quartodoc:
         - axis_text_x
         - axis_text_y
         - axis_ticks
-        - axis_ticks_direction
-        - axis_ticks_direction_x
-        - axis_ticks_direction_y
         - axis_ticks_length
         - axis_ticks_length_major
         - axis_ticks_length_major_x
