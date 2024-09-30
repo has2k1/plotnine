@@ -2748,7 +2748,7 @@
     "href": "reference/axis_ticks_length_minor_x.html#parameters",
     "title": " plotnine.themes.themeable.axis_ticks_length_minor_x",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : float\n\nValue in points."
+    "text": "Parameters\n\n\ntheme_element : float | complex\n\nValue in points. A negative value creates the ticks inside the plot panel. A complex value (e.g. 3j) creates ticks that span both in and out of the panel."
   },
   {
     "objectID": "reference/axis_ticks_length_major_y.html",
@@ -2762,7 +2762,7 @@
     "href": "reference/axis_ticks_length_major_y.html#parameters",
     "title": " plotnine.themes.themeable.axis_ticks_length_major_y",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : float\n\nValue in points."
+    "text": "Parameters\n\n\ntheme_element : float | complex\n\nValue in points. A negative value creates the ticks inside the plot panel. A complex value (e.g. 3j) creates ticks that span both in and out of the panel."
   },
   {
     "objectID": "reference/axis_ticks_length_major.html",
@@ -2776,210 +2776,203 @@
     "href": "reference/axis_ticks_length_major.html#parameters",
     "title": " plotnine.themes.themeable.axis_ticks_length_major",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : float\n\nValue in points."
+    "text": "Parameters\n\n\ntheme_element : float\n\nValue in points. A negative value creates the ticks inside the plot panel. A complex value (e.g. 3j) creates ticks that span both in and out of the panel."
   },
   {
-    "objectID": "reference/axis_ticks_direction_y.html",
-    "href": "reference/axis_ticks_direction_y.html",
-    "title": " plotnine.themes.themeable.axis_ticks_direction_y",
+    "objectID": "reference/axis_ticks.html",
+    "href": "reference/axis_ticks.html",
+    "title": " plotnine.themes.themeable.axis_ticks",
     "section": "",
-    "text": "axis_ticks_direction_y(theme_element)"
+    "text": "axis_ticks(theme_element)"
   },
   {
-    "objectID": "reference/axis_ticks_direction_y.html#parameters",
-    "href": "reference/axis_ticks_direction_y.html#parameters",
-    "title": " plotnine.themes.themeable.axis_ticks_direction_y",
-    "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : Literal[\"in\", \"out\", \"inout\"]\n\nin for ticks inside the panel. out for ticks outside the panel. inout for ticks inside and outside the panel."
-  },
-  {
-    "objectID": "reference/axis_ticks_direction.html",
-    "href": "reference/axis_ticks_direction.html",
-    "title": " plotnine.themes.themeable.axis_ticks_direction",
-    "section": "",
-    "text": "axis_ticks_direction(theme_element)"
-  },
-  {
-    "objectID": "reference/axis_ticks_direction.html#parameters",
-    "href": "reference/axis_ticks_direction.html#parameters",
-    "title": " plotnine.themes.themeable.axis_ticks_direction",
-    "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : Literal[\"in\", \"out\", \"inout\"]\n\nin for ticks inside the panel. out for ticks outside the panel. inout for ticks inside and outside the panel."
-  },
-  {
-    "objectID": "reference/axis_text_y.html",
-    "href": "reference/axis_text_y.html",
-    "title": " plotnine.themes.themeable.axis_text_y",
-    "section": "",
-    "text": "axis_text_y(theme_element)"
-  },
-  {
-    "objectID": "reference/axis_text_y.html#parameters",
-    "href": "reference/axis_text_y.html#parameters",
-    "title": " plotnine.themes.themeable.axis_text_y",
-    "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : element_text"
-  },
-  {
-    "objectID": "reference/axis_text.html",
-    "href": "reference/axis_text.html",
-    "title": " plotnine.themes.themeable.axis_text",
-    "section": "",
-    "text": "axis_text(theme_element)"
-  },
-  {
-    "objectID": "reference/axis_text.html#parameters",
-    "href": "reference/axis_text.html#parameters",
-    "title": " plotnine.themes.themeable.axis_text",
-    "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : element_text"
-  },
-  {
-    "objectID": "reference/axis_line_x.html",
-    "href": "reference/axis_line_x.html",
-    "title": " plotnine.themes.themeable.axis_line_x",
-    "section": "",
-    "text": "axis_line_x(theme_element)"
-  },
-  {
-    "objectID": "reference/axis_line_x.html#parameters",
-    "href": "reference/axis_line_x.html#parameters",
-    "title": " plotnine.themes.themeable.axis_line_x",
+    "objectID": "reference/axis_ticks.html#parameters",
+    "href": "reference/axis_ticks.html#parameters",
+    "title": " plotnine.themes.themeable.axis_ticks",
     "section": "Parameters",
     "text": "Parameters\n\n\ntheme_element : element_line"
   },
   {
-    "objectID": "reference/axis_line_x.html#attributes",
-    "href": "reference/axis_line_x.html#attributes",
-    "title": " plotnine.themes.themeable.axis_line_x",
+    "objectID": "reference/axis_text_x.html",
+    "href": "reference/axis_text_x.html",
+    "title": " plotnine.themes.themeable.axis_text_x",
+    "section": "",
+    "text": "axis_text_x(theme_element)"
+  },
+  {
+    "objectID": "reference/axis_text_x.html#parameters",
+    "href": "reference/axis_text_x.html#parameters",
+    "title": " plotnine.themes.themeable.axis_text_x",
+    "section": "Parameters",
+    "text": "Parameters\n\n\ntheme_element : element_text"
+  },
+  {
+    "objectID": "reference/axis_line_y.html",
+    "href": "reference/axis_line_y.html",
+    "title": " plotnine.themes.themeable.axis_line_y",
+    "section": "",
+    "text": "axis_line_y(theme_element)"
+  },
+  {
+    "objectID": "reference/axis_line_y.html#parameters",
+    "href": "reference/axis_line_y.html#parameters",
+    "title": " plotnine.themes.themeable.axis_line_y",
+    "section": "Parameters",
+    "text": "Parameters\n\n\ntheme_element : element_line"
+  },
+  {
+    "objectID": "reference/axis_line_y.html#attributes",
+    "href": "reference/axis_line_y.html#attributes",
+    "title": " plotnine.themes.themeable.axis_line_y",
     "section": "Attributes",
-    "text": "Attributes\n\n\n\nName\nDescription\n\n\n\n\nposition\nstr(object=’’) -&gt; str\n\n\n\n\n position\n\nposition = \"bottom\"\n\n\nstr(object=’’) -&gt; str str(bytes_or_buffer[, encoding[, errors]]) -&gt; str\nCreate a new string object from the given object. If encoding or errors is specified, then the object must expose a data buffer that will be decoded using the given encoding and error handler. Otherwise, returns the result of object.__str__() (if defined) or repr(object). encoding defaults to sys.getdefaultencoding(). errors defaults to ‘strict’."
+    "text": "Attributes\n\n\n\nName\nDescription\n\n\n\n\nposition\nstr(object=’’) -&gt; str\n\n\n\n\n position\n\nposition = \"left\"\n\n\nstr(object=’’) -&gt; str str(bytes_or_buffer[, encoding[, errors]]) -&gt; str\nCreate a new string object from the given object. If encoding or errors is specified, then the object must expose a data buffer that will be decoded using the given encoding and error handler. Otherwise, returns the result of object.__str__() (if defined) or repr(object). encoding defaults to sys.getdefaultencoding(). errors defaults to ‘strict’."
   },
   {
-    "objectID": "reference/aspect_ratio.html",
-    "href": "reference/aspect_ratio.html",
-    "title": " plotnine.options.aspect_ratio",
+    "objectID": "reference/axis_line.html",
+    "href": "reference/axis_line.html",
+    "title": " plotnine.themes.themeable.axis_line",
     "section": "",
-    "text": "aspect_ratio : Literal[\"auto\"] | float = \"auto\"\n\n\nDefault aspect ratio used by the themes"
+    "text": "axis_line(theme_element)"
   },
   {
-    "objectID": "reference/arrow.html",
-    "href": "reference/arrow.html",
-    "title": " plotnine.arrow",
-    "section": "",
-    "text": "arrow(angle=30, length=0.2, ends=\"last\", type=\"open\")"
-  },
-  {
-    "objectID": "reference/arrow.html#parameters",
-    "href": "reference/arrow.html#parameters",
-    "title": " plotnine.arrow",
+    "objectID": "reference/axis_line.html#parameters",
+    "href": "reference/axis_line.html#parameters",
+    "title": " plotnine.themes.themeable.axis_line",
     "section": "Parameters",
-    "text": "Parameters\n\n\nangle : float = 30\n\nangle in degrees between the tail a single edge.\n\nlength : float = 0.2\n\nof the edge in “inches”\n\nends : Literal[\"first\", \"last\", \"both\"] = \"last\"\n\nAt which end of the line to draw the arrowhead\n\ntype : Literal[\"open\", \"closed\"] = \"open\"\n\nWhen it is closed, it is also filled"
+    "text": "Parameters\n\n\ntheme_element : element_line"
   },
   {
-    "objectID": "reference/annotation_logticks.html",
-    "href": "reference/annotation_logticks.html",
-    "title": " plotnine.annotation_logticks",
+    "objectID": "reference/as_labeller.html",
+    "href": "reference/as_labeller.html",
+    "title": " plotnine.as_labeller",
     "section": "",
-    "text": "annotation_logticks(\n    sides=\"bl\",\n    alpha=1,\n    color=\"black\",\n    size=0.5,\n    linetype=\"solid\",\n    lengths=(0.036, 0.0225, 0.012),\n    base=None\n)"
+    "text": "as_labeller(x=None, default=label_value, multi_line=True)"
   },
   {
-    "objectID": "reference/annotation_logticks.html#parameters",
-    "href": "reference/annotation_logticks.html#parameters",
-    "title": " plotnine.annotation_logticks",
+    "objectID": "reference/as_labeller.html#parameters",
+    "href": "reference/as_labeller.html#parameters",
+    "title": " plotnine.as_labeller",
     "section": "Parameters",
-    "text": "Parameters\n\n\nsides : str = \"bl\"\n\nSides onto which to draw the marks. Any combination chosen from the characters btlr, for bottom, top, left or right side marks. If coord_flip() is used, these are the sides after the flip.\n\nalpha : float = 1\n\nTransparency of the ticks\n\ncolor : str | tuple[float, float, float] | tuple[float, float, float, float] = \"black\"\n\nColour of the ticks\n\nsize : float = 0.5\n\nThickness of the ticks\n\nlinetype : Literal[\"solid\", \"dashed\", \"dashdot\", \"dotted\"] | Sequence[float] = \"solid\"\n\nType of line\n\nlengths : tuple[float, float, float] = (0.036, 0.0225, 0.012)\n\nlength of the ticks drawn for full / half / tenth ticks relative to panel size\n\nbase : float | None = None\n\nBase of the logarithm in which the ticks will be calculated. If None, the base used to log transform the scale will be used."
+    "text": "Parameters\n\n\nx : callable | dict = None\n\nObject to coerce\n\ndefault : str | callable = label_value\n\nDefault labeller. If it is a string, it should be the name of one the labelling functions provided by plotnine.\n\nmulti_line : bool = True\n\nWhether to place each variable on a separate line"
   },
   {
-    "objectID": "reference/after_stat.html",
-    "href": "reference/after_stat.html",
-    "title": " plotnine.after_stat",
+    "objectID": "reference/as_labeller.html#returns",
+    "href": "reference/as_labeller.html#returns",
+    "title": " plotnine.as_labeller",
+    "section": "Returns",
+    "text": "Returns\n\n\nout : labeller\n\nLabelling function"
+  },
+  {
+    "objectID": "reference/annotation_stripes.html",
+    "href": "reference/annotation_stripes.html",
+    "title": " plotnine.annotation_stripes",
     "section": "",
-    "text": "after_stat(x)"
+    "text": "annotation_stripes(\n    fill=(\"#AAAAAA\", \"#CCCCCC\"),\n    fill_range=\"auto\",\n    direction=\"vertical\",\n    extend=(0, 1),\n    kwargs={}\n)"
   },
   {
-    "objectID": "reference/after_stat.html#parameters",
-    "href": "reference/after_stat.html#parameters",
-    "title": " plotnine.after_stat",
+    "objectID": "reference/annotation_stripes.html#parameters",
+    "href": "reference/annotation_stripes.html#parameters",
+    "title": " plotnine.annotation_stripes",
+    "section": "Parameters",
+    "text": "Parameters\n\n\nfill : Sequence[str] = (\"#AAAAAA\", \"#CCCCCC\")\n\nList of colors for the strips.\n\nfill_range : Literal[\"auto\", \"cycle\", \"no\", \"nocycle\"] = \"auto\"\n\nHow to fill stripes beyond the range of scale:\n\"cycle\"      # keep cycling the colors of the\n             # stripes after the range ends\n\"nocycle\"    # stop cycling the colors of the\n             # stripes after the range ends\n\"auto\"       # \"cycle\" for continuous scales and\n             # \"nocycle\" for discrete scales.\n\"no\"         # Do not add stripes passed the range\n             # passed the range of the scales\n\ndirection : Literal[\"horizontal\", \"vertical\"] = \"vertical\"\n\nOrientation of the stripes\n\nextend : tuple[float, float] = (0, 1)\n\nRange of the stripes. The default is (0, 1), top to bottom. The values should be in the range [0, 1].\n\n**kwargs : Any = {}\n\nOther aesthetic parameters for the rectangular stripes. They include; alpha, color, linetype, and size."
+  },
+  {
+    "objectID": "reference/annotate.html",
+    "href": "reference/annotate.html",
+    "title": " plotnine.annotate",
+    "section": "",
+    "text": "annotate(\n    geom,\n    x=None,\n    y=None,\n    xmin=None,\n    xmax=None,\n    xend=None,\n    xintercept=None,\n    ymin=None,\n    ymax=None,\n    yend=None,\n    yintercept=None,\n    kwargs={}\n)"
+  },
+  {
+    "objectID": "reference/annotate.html#parameters",
+    "href": "reference/annotate.html#parameters",
+    "title": " plotnine.annotate",
+    "section": "Parameters",
+    "text": "Parameters\n\n\ngeom : str | type[geom_base_class]\n\ngeom to use for annotation, or name of geom (e.g. ‘point’).\n\nx : float | None = None\n\nPosition\n\ny : float | None = None\n\nPosition\n\nxmin : float | None = None\n\nPosition\n\nymin : float | None = None\n\nPosition\n\nxmax : float | None = None\n\nPosition\n\nymax : float | None = None\n\nPosition\n\nxend : float | None = None\n\nPosition\n\nyend : float | None = None\n\nPosition\n\nxintercept : float | None = None\n\nPosition\n\nyintercept : float | None = None\n\nPosition\n\nkwargs : Any = {}\n\nOther aesthetics or parameters to the geom."
+  },
+  {
+    "objectID": "reference/annotate.html#notes",
+    "href": "reference/annotate.html#notes",
+    "title": " plotnine.annotate",
+    "section": "Notes",
+    "text": "Notes\nThe positioning aethetics x, y, xmin, ymin, xmax, ymax, xend, yend, xintercept, yintercept depend on which geom is used.\nYou should choose or ignore accordingly.\nAll geoms are created with stat=\"identity\"."
+  },
+  {
+    "objectID": "reference/after_scale.html",
+    "href": "reference/after_scale.html",
+    "title": " plotnine.after_scale",
+    "section": "",
+    "text": "after_scale(x)"
+  },
+  {
+    "objectID": "reference/after_scale.html#parameters",
+    "href": "reference/after_scale.html#parameters",
+    "title": " plotnine.after_scale",
     "section": "Parameters",
     "text": "Parameters\n\n\nx : str\n\nAn expression"
   },
   {
-    "objectID": "reference/after_stat.html#see-also",
-    "href": "reference/after_stat.html#see-also",
-    "title": " plotnine.after_stat",
+    "objectID": "reference/after_scale.html#see-also",
+    "href": "reference/after_scale.html#see-also",
+    "title": " plotnine.after_scale",
     "section": "See Also",
-    "text": "See Also\n\nafter_scale\n\n\n\nstage"
+    "text": "See Also\n\nafter_stat\n\n\n\nstage"
   },
   {
-    "objectID": "reference/aes.html",
-    "href": "reference/aes.html",
-    "title": " plotnine.aes",
+    "objectID": "reference/PlotnineAnimation.html",
+    "href": "reference/PlotnineAnimation.html",
+    "title": " plotnine.animation.PlotnineAnimation",
     "section": "",
-    "text": "aes(x=None, y=None, kwargs={})"
+    "text": "PlotnineAnimation(\n    plots, interval=200, repeat_delay=None, repeat=True, blit=False\n)"
   },
   {
-    "objectID": "reference/aes.html#parameters",
-    "href": "reference/aes.html#parameters",
-    "title": " plotnine.aes",
+    "objectID": "reference/PlotnineAnimation.html#parameters",
+    "href": "reference/PlotnineAnimation.html#parameters",
+    "title": " plotnine.animation.PlotnineAnimation",
     "section": "Parameters",
-    "text": "Parameters\n\n\nx : str | array_like | scalar = None\n\nx aesthetic mapping\n\ny : str | array_like | scalar = None\n\ny aesthetic mapping\n\n**kwargs : Any = {}\n\nOther aesthetic mappings"
+    "text": "Parameters\n\n\nplots : Iterable[ggplot]\n\nggplot objects that make up the the frames of the animation\n\ninterval : int = 200\n\nDelay between frames in milliseconds. Defaults to 200.\n\nrepeat_delay : int = None\n\nIf the animation in repeated, adds a delay in milliseconds before repeating the animation. Defaults to None.\n\nrepeat : bool = True\n\nControls whether the animation should repeat when the sequence of frames is completed. Defaults to True.\n\nblit : bool = False\n\nControls whether blitting is used to optimize drawing. Defaults to False."
   },
   {
-    "objectID": "reference/aes.html#notes",
-    "href": "reference/aes.html#notes",
-    "title": " plotnine.aes",
+    "objectID": "reference/PlotnineAnimation.html#notes",
+    "href": "reference/PlotnineAnimation.html#notes",
+    "title": " plotnine.animation.PlotnineAnimation",
     "section": "Notes",
-    "text": "Notes\nOnly the x and y aesthetic mappings can be specified as positional arguments. All the rest must be keyword arguments.\nThe value of each mapping must be one of:\n\nstr\n import pandas as pd\n import numpy as np\n\n arr = [11, 12, 13]\n df = pd.DataFrame({\n     \"alpha\": [1, 2, 3],\n     \"beta\": [1, 2, 3],\n     \"gam ma\": [1, 2, 3]\n })\n\n # Refer to a column in a dataframe\n ggplot(df, aes(x=\"alpha\", y=\"beta\"))\narray_like\n# A variable\nggplot(df, aes(x=\"alpha\", y=arr))\n\n# or an inplace list\nggplot(df, aes(x=\"alpha\", y=[4, 5, 6]))\nscalar\n# A scalar value/variable\nggplot(df, aes(x=\"alpha\", y=4))\n\n# The above statement is equivalent to\nggplot(df, aes(x=\"alpha\", y=[4, 4, 4]))\nString expression\nggplot(df, aes(x=\"alpha\", y=\"2*beta\"))\nggplot(df, aes(x=\"alpha\", y=\"np.sin(beta)\"))\nggplot(df, aes(x=\"df.index\", y=\"beta\"))\n\n# If `count` is an aesthetic calculated by a stat\nggplot(df, aes(x=\"alpha\", y=after_stat(\"count\")))\nggplot(df, aes(x=\"alpha\", y=after_stat(\"count/np.max(count)\")))\nThe strings in the expression can refer to;\n\ncolumns in the dataframe\nvariables in the namespace\naesthetic values (columns) calculated by the stat\n\nwith the column names having precedence over the variables. For expressions, columns in the dataframe that are mapped to must have names that would be valid python variable names.\nThis is okay:\n# \"gam ma\" is a column in the dataframe\nggplot(df, aes(x=\"df.index\", y=\"gam ma\"))\nWhile this is not:\n# \"gam ma\" is a column in the dataframe, but not\n# valid python variable name\nggplot(df, aes(x=\"df.index\", y=\"np.sin(gam ma)\"))\n\naes has 2 internal methods you can use to transform variables being mapped.\n\nfactor - This function turns the variable into a factor. It is just an alias to pandas.Categorical:\nggplot(mtcars, aes(x=\"factor(cyl)\")) + geom_bar()\nreorder - This function changes the order of first variable based on values of the second variable:\ndf = pd.DataFrame({\n    \"x\": [\"b\", \"d\", \"c\", \"a\"],\n    \"y\": [1, 2, 3, 4]\n})\n\nggplot(df, aes(\"reorder(x, y)\", \"y\")) + geom_col()\n\nThe group aesthetic\ngroup is a special aesthetic that the user can map to. It is used to group the plotted items. If not specified, it is automatically computed and in most cases the computed groups are sufficient. However, there may be cases were it is handy to map to it."
+    "text": "Notes\n\nThe plots should have the same facet and the facet should not have fixed x and y scales.\nThe scales of all the plots should have the same limits. It is a good idea to create a scale (with limits) for each aesthetic and add them to all the plots."
   },
   {
-    "objectID": "reference/aes.html#see-also",
-    "href": "reference/aes.html#see-also",
-    "title": " plotnine.aes",
-    "section": "See Also",
-    "text": "See Also\n\nafter_stat\n\nFor how to map aesthetics to variable calculated by the stat\n\nafter_scale\n\nFor how to alter aesthetics after the data has been mapped by the scale.\n\nstage\n\nFor how to map to evaluate the mapping to aesthetics at more than one stage of the plot building pipeline."
-  },
-  {
-    "objectID": "changelog.html",
-    "href": "changelog.html",
-    "title": "Changelog",
-    "section": "",
-    "text": "(not-yet-released)\n\n\n\nYou cannot call print on a ggplot object to show it. This was deprecated in v0.13.0 and it has now been removed. Use ggplot.show()\nThe color_space parameter of scale_color_hue now accepts the value \"hlsuv\" instead of \"husl\". The meaning of has not changed, and \"husl\" is silently accepted.\n\n\n\n\n\nThe family, fontstyle and fontweight parameters of geom_text are now aesthetics (#790).\nplotnine now responds to the fig-width, fig-height and fig-format settings in the meta section of a quarto document.\nggtitle now accepts title and subtitle as keyword arguments. (#804)\nGained the option limitsize that makes it possible to display plots of any size.\nfrom plotnine.options import set_option\n\nset_option(\"figure_format\", False)\nFor geom_boxplot when the outliers are made invisible by giving them no shape, now they do not affect the limits of the plot. (#814)\nMade it possile to map an aesthetic value to None. (#791)\n\n\n\n\n\ngeom_text has gained new aesthetics fontvariant and fontstretch.\n\n\n\n\n\nFix layers 3 and above not to overlap the axis lines if there are any (#798).\nFixed bug in geom_segment where the lineend parameter was ignored. (#727)\nFixed stat_summary_bin to work with continuous x aesthetic when specifying the binwidth or breaks. (#824)\nFixed PlotnineAnimation not to draw a second legend at the bottom-left corner. ("
-  },
-  {
-    "objectID": "changelog.html#v0.14.0",
-    "href": "changelog.html#v0.14.0",
-    "title": "Changelog",
-    "section": "",
-    "text": "(not-yet-released)\n\n\n\nYou cannot call print on a ggplot object to show it. This was deprecated in v0.13.0 and it has now been removed. Use ggplot.show()\nThe color_space parameter of scale_color_hue now accepts the value \"hlsuv\" instead of \"husl\". The meaning of has not changed, and \"husl\" is silently accepted.\n\n\n\n\n\nThe family, fontstyle and fontweight parameters of geom_text are now aesthetics (#790).\nplotnine now responds to the fig-width, fig-height and fig-format settings in the meta section of a quarto document.\nggtitle now accepts title and subtitle as keyword arguments. (#804)\nGained the option limitsize that makes it possible to display plots of any size.\nfrom plotnine.options import set_option\n\nset_option(\"figure_format\", False)\nFor geom_boxplot when the outliers are made invisible by giving them no shape, now they do not affect the limits of the plot. (#814)\nMade it possile to map an aesthetic value to None. (#791)\n\n\n\n\n\ngeom_text has gained new aesthetics fontvariant and fontstretch.\n\n\n\n\n\nFix layers 3 and above not to overlap the axis lines if there are any (#798).\nFixed bug in geom_segment where the lineend parameter was ignored. (#727)\nFixed stat_summary_bin to work with continuous x aesthetic when specifying the binwidth or breaks. (#824)\nFixed PlotnineAnimation not to draw a second legend at the bottom-left corner. ("
-  },
-  {
-    "objectID": "reference/scales._runtime_typing.html",
-    "href": "reference/scales._runtime_typing.html",
+    "objectID": "reference/typing.html",
+    "href": "reference/typing.html",
     "title": "Typing Information",
     "section": "",
-    "text": "TypeVar(\"RangeT\", bound=Range)\n\n\n\n\n\nTypeVar(\"BreaksUserT\")\n\n\n\n\n\nTypeVar(\"LimitsUserT\")\n\n\n\n\n\nTypeVar(\"GuideTypeT\")"
+    "text": "DataFrameConvertible()\n\n\nObject that can be converted to a DataFrame\n\n\n\n\n\n\nto_pandas()\n\n\nConvert to pandas dataframe\n\n\n\n\n\npd.DataFrame\n\nPandas representation of this object.\n\n\n\n\n\n\n\n\n\n\nPTransform()\n\n\nTransform function\n\n\n\n\n\n\n__call__(x)"
   },
   {
-    "objectID": "reference/scales._runtime_typing.html#type-variables",
-    "href": "reference/scales._runtime_typing.html#type-variables",
+    "objectID": "reference/typing.html#protocols",
+    "href": "reference/typing.html#protocols",
     "title": "Typing Information",
     "section": "",
-    "text": "TypeVar(\"RangeT\", bound=Range)\n\n\n\n\n\nTypeVar(\"BreaksUserT\")\n\n\n\n\n\nTypeVar(\"LimitsUserT\")\n\n\n\n\n\nTypeVar(\"GuideTypeT\")"
+    "text": "DataFrameConvertible()\n\n\nObject that can be converted to a DataFrame\n\n\n\n\n\n\nto_pandas()\n\n\nConvert to pandas dataframe\n\n\n\n\n\npd.DataFrame\n\nPandas representation of this object.\n\n\n\n\n\n\n\n\n\n\nPTransform()\n\n\nTransform function\n\n\n\n\n\n\n__call__(x)"
   },
   {
-    "objectID": "reference/scales._runtime_typing.html#type-aliases",
-    "href": "reference/scales._runtime_typing.html#type-aliases",
+    "objectID": "reference/typing.html#type-variables",
+    "href": "reference/typing.html#type-variables",
+    "title": "Typing Information",
+    "section": "Type Variables",
+    "text": "Type Variables\n\n TFloatArrayLike\n\nTypeVar(\"TFloatArrayLike\", bound=FloatArrayLike)"
+  },
+  {
+    "objectID": "reference/typing.html#type-aliases",
+    "href": "reference/typing.html#type-aliases",
     "title": "Typing Information",
     "section": "Type Aliases",
-    "text": "Type Aliases\n\n DiscreteBreaksUser\n\n(    bool    | None    | Sequence[str]    | Callable[[Sequence[str]], Sequence[str]])\n\n\n\n DiscreteLimitsUser\n\n(    None    | Sequence[str]    | Callable[[Sequence[str]], Sequence[str]])\n\n\n\n ContinuousBreaksUser\n\n(    bool    | None    | Sequence[float]    | Callable[[tuple[float, float]], Sequence[float]])\n\n\n\n MinorBreaksUser\n\nContinuousBreaksUser\n\n\n\n ContinuousLimitsUser\n\n(    None    | tuple[float, float]    | Callable[[tuple[float, float]], tuple[float, float]])\n\n\n\n ScaleLabelsUser\n\n(    bool    | None    | Sequence[str]    | Callable[[Sequence[float] | Sequence[str]], Sequence[str]]    | dict[str, str])\n\n\n\n TransUser\n\ntrans | str | Type[trans] | None"
+    "text": "Type Aliases\n\n AnyArray\n\nNDArray[Any]\n\n\n\n BoolArray\n\nNDArray[np.bool_]\n\n\n\n FloatArray\n\nNDArray[np.float64]\n\n\n\n IntArray\n\nNDArray[np.int64]\n\n\n\n StrArray\n\nNDArray[np.str_]\n\n\n\n AnySeries\n\npd.Series[Any]\n\n\n\n IntSeries\n\npd.Series[int]\n\n\n\n FloatSeries\n\npd.Series[float]\n\n\n\n AnyArrayLike\n\nAnyArray | pd.Series[Any] | Sequence[Any]\n\n\n\n IntArrayLike\n\nIntArray | IntSeries | Sequence[int]\n\n\n\n FloatArrayLike\n\nFloatArray | FloatSeries | Sequence[float]\n\n\n\n Data\n\npd.DataFrame | Callable[[pd.DataFrame], pd.DataFrame]\n\n\n\n DataLike\n\nData | DataFrameConvertible\n\n\n\n LayerData\n\npd.DataFrame | Callable[[pd.DataFrame], pd.DataFrame]\n\n\n\n LayerDataLike\n\nLayerData | DataFrameConvertible\n\n\n\n ColorLike\n\nstr\n\n\n\n ColorsLike\n\n(    ColorLike | list[ColorLike] | pd.Series[ColorLike] | StrArray)\n\n\n\n FigureFormat\n\nLiteral[\"png\", \"retina\", \"jpeg\", \"jpg\", \"svg\", \"pdf\"]\n\n\n\n FacetSpaceRatios\n\ndict[Literal[\"x\", \"y\"], Sequence[float]]\n\n\n\n StripPosition\n\nLiteral[\"top\", \"right\"]\n\n\n\n ScaledAestheticsName\n\nLiteral[    \"x\",    \"xmin\",    \"xmax\",    \"xend\",    \"xintercept\",    \"y\",    \"ymin\",    \"ymax\",    \"yend\",    \"yintercept\",    \"alpha\",    \"color\",    \"colour\",    \"fill\",    \"linetype\",    \"shape\",    \"size\",    \"stroke\",    # boxplot    \"ymax_final\",    \"ymin_final\",    \"lower\",    \"middle\",    \"upper\",]\n\n\n\n CoordRange\n\ntuple[float, float]\n\n\n\n SidePosition\n\nLiteral[\"left\", \"right\", \"top\", \"bottom\"]\n\n\n\n LegendPosition\n\n(    Literal[\"left\", \"right\", \"top\", \"bottom\", \"inside\"] | tuple[float, float])\n\n\n\n Orientation\n\nLiteral[\"horizontal\", \"vertical\"]\n\n\n\n GuideKind\n\nLiteral[\"legend\", \"colorbar\", \"colourbar\"]\n\n\n\n NoGuide\n\nLiteral[\"none\", False]\n\n\n\n VerticalJustification\n\nLiteral[\"bottom\", \"center\", \"top\"]\n\n\n\n HorizontalJustification\n\nLiteral[\"left\", \"center\", \"right\"]\n\n\n\n TextJustification\n\n(    VerticalJustification | HorizontalJustification | Literal[\"baseline\"])\n\n\n\n TransformCol\n\nCallable[[FloatSeries], FloatSeries | FloatArray]"
   },
   {
     "objectID": "reference/index.html",
     "href": "reference/index.html",
     "title": "API Reference",
     "section": "",
-    "text": "ggplot\nCreate a new ggplot object\n\n\nqplot\nQuick plot\n\n\nwatermark\nAdd watermark to plot\n\n\nlayer\nLayer\n\n\nPlotnineAnimation\nAnimation using ggplot objects\n\n\nsave_as_pdf_pages\nSave multiple ggplot objects to a PDF file, one per page.\n\n\n\n\n\n\n\nAesthetics are the visual properties of a plot. The following functions control how the data (and calculations based on the data) is mapped to the aesthetics.\n\n\n\n\naes\nCreate aesthetic mappings\n\n\nafter_stat\nEvaluate mapping after statistic has been calculated\n\n\nafter_scale\nEvaluate mapping after variable has been mapped to the scale\n\n\nstage\nStage allows you evaluating mapping at more than one stage\n\n\n\n\n\n\n\nGeometric objects (geoms) are responsible for the visual representation of data points. geom_* classes determine the kind of geometric objects and every plot must have at least one geom added to it. The distinct visual aspects of the representation are controlled by the aes mapping.\n\n\n\n\ngeom\nBase class of all Geoms\n\n\n\n\n\n\n\n\ngeom_abline\nLines specified by slope and intercept\n\n\ngeom_area\nArea plot\n\n\ngeom_bar\nBar plot\n\n\ngeom_blank\nAn empty plot\n\n\ngeom_boxplot\nBox and whiskers plot\n\n\ngeom_col\nBar plot with base on the x-axis\n\n\ngeom_count\nPlot overlapping points\n\n\ngeom_crossbar\nVertical interval represented by a crossbar\n\n\ngeom_density\nSmooth density estimate\n\n\ngeom_density_2d\n2D density estimate\n\n\ngeom_dotplot\nDot plot\n\n\ngeom_errorbar\nVertical interval represented as an errorbar\n\n\ngeom_errorbarh\nHorizontal interval represented as an errorbar\n\n\ngeom_freqpoly\nFrequency polygon\n\n\ngeom_bin_2d\nHeatmap of 2d bin counts\n\n\ngeom_histogram\nHistogram\n\n\ngeom_hline\nHorizontal line\n\n\ngeom_jitter\nScatter plot with points jittered to reduce overplotting\n\n\ngeom_label\nTextual annotations with a background\n\n\ngeom_line\nConnected points\n\n\ngeom_linerange\nVertical interval represented by lines\n\n\ngeom_map\nDraw map feature\n\n\ngeom_path\nConnected points\n\n\ngeom_point\nPlot points (Scatter plot)\n\n\ngeom_pointdensity\nScatterplot with density estimation at each point\n\n\ngeom_pointrange\nVertical interval represented by a line with a point\n\n\ngeom_polygon\nPolygon, a filled path\n\n\ngeom_quantile\nQuantile lines from a quantile regression\n\n\ngeom_qq\nQuantile-Quantile plot\n\n\ngeom_qq_line\nQuantile-Quantile Line plot\n\n\ngeom_raster\nRasterized Rectangles specified using center points\n\n\ngeom_rect\nRectangles\n\n\ngeom_ribbon\nRibbon plot\n\n\ngeom_rug\nMarginal rug plot\n\n\ngeom_segment\nLine segments\n\n\ngeom_sina\nDraw a sina plot\n\n\ngeom_smooth\nA smoothed conditional mean\n\n\ngeom_spoke\nLine segment parameterised by location, direction and distance\n\n\ngeom_step\nStepped connected points\n\n\ngeom_text\nTextual annotations\n\n\ngeom_tile\nRectangles specified using a center points\n\n\ngeom_violin\nViolin Plot\n\n\ngeom_vline\nVertical line\n\n\n\n\n\n\n\n\n\n\nannotate\nCreate an annotation layer\n\n\nannotation_logticks\nMarginal log ticks.\n\n\nannotation_stripes\nAlternating stripes, centered around each label.\n\n\narrow\nDefine arrow (actually an arrowhead)\n\n\n\n\n\n\n\n\n\n\n\nlabs\nAdd labels for any aesthetics with a scale or title, subtitle & caption\n\n\nxlab\nLabel/name for the x aesthetic\n\n\nylab\nLabel/name for the y aesthetic\n\n\nggtitle\nCreate plot title\n\n\n\n\n\n\n\n\nStatistical transformations (stats) do aggregations and other computations on data before it is drawn out. stat_* determine the type of computation done on the data. Different types of computations yield varied results, so a stat must be paired with a geom that can represent all or some of the computations.\n\n\n\n\nstat\nBase class of all stats\n\n\n\n\n\n\n\n\nstat_bin\nCount cases in each interval\n\n\nstat_bin_2d\n2 Dimensional bin counts\n\n\nstat_bindot\nBinning for a dot plot\n\n\nstat_boxplot\nCompute boxplot statistics\n\n\nstat_count\nCounts the number of cases at each x position\n\n\nstat_density\nCompute density estimate\n\n\nstat_density_2d\nCompute 2D kernel density estimation\n\n\nstat_ecdf\nEmpirical Cumulative Density Function\n\n\nstat_ellipse\nCalculate normal confidence interval ellipse\n\n\nstat_function\nSuperimpose a function onto a plot\n\n\nstat_hull\n2 Dimensional Convex Hull\n\n\nstat_identity\nIdentity (do nothing) statistic\n\n\nstat_qq\nCalculation for quantile-quantile plot\n\n\nstat_qq_line\nCalculate line through quantile-quantile plot\n\n\nstat_quantile\nCompute quantile regression lines\n\n\nstat_sina\nCompute Sina plot values\n\n\nstat_smooth\nCalculate a smoothed conditional mean\n\n\nstat_sum\nSum unique values\n\n\nstat_summary\nCalculate summary statistics depending on x\n\n\nstat_summary_bin\nSummarise y values at x intervals\n\n\nstat_unique\nRemove duplicates\n\n\nstat_ydensity\nDensity estimate\n\n\n\n\n\n\n\nFaceting is a way to subset data and plot it on different panels.\n\n\n\n\nfacet\nBase class for all facets\n\n\n\n\n\n\n\n\nfacet_grid\nWrap 1D Panels onto 2D surface\n\n\nfacet_null\nA single Panel\n\n\nfacet_wrap\nWrap 1D Panels onto 2D surface\n\n\nlabeller\nFacet Strip Labelling\n\n\nas_labeller\nCoerse to labeller\n\n\nlabel_value\nKeep value as the label\n\n\nlabel_both\nConcatenate the facet variable with the value\n\n\nlabel_context\nCreate an unabiguous label string\n\n\n\n\n\n\n\nScales control the mapping from data to aesthetics. They take data and adjust it to fit the different aspects of the visual sense i.e. length, colour, size and shape.\n\n\n\n\n\n\nscale\nBase class for all scales\n\n\nscale_discrete\nBase class for all discrete scales\n\n\nscale_continuous\nBase class for all continuous scales\n\n\nscale_datetime\nBase class for all date/datetime scales\n\n\n\n\n\n\n\n\n\n\n\nscale_alpha\nContinuous Alpha Scale\n\n\nscale_alpha_discrete\nDiscrete Alpha Scale\n\n\nscale_alpha_continuous\nalias of scale_alpha\n\n\nscale_alpha_datetime\nDatetime Alpha Scale\n\n\n\n\n\n\n\n\n\n\n\nscale_alpha_identity\nNo alpha scaling\n\n\nscale_color_identity\nNo color scaling\n\n\nscale_colour_identity\nalias of scale_color_identity\n\n\nscale_fill_identity\nNo color scaling\n\n\nscale_linetype_identity\nNo linetype scaling\n\n\nscale_shape_identity\nNo shape scaling\n\n\nscale_size_identity\nNo size scaling\n\n\n\n\n\n\n\n\n\n\n\nscale_color_brewer\nSequential, diverging and qualitative discrete color scales\n\n\nscale_color_continuous\nalias of scale_color_cmap\n\n\nscale_color_cmap\nCreate color scales using Matplotlib colormaps\n\n\nscale_color_desaturate\nCreate a desaturated color gradient\n\n\nscale_color_datetime\nDatetime color scale\n\n\nscale_color_discrete\nalias of scale_color_hue\n\n\nscale_color_distiller\nSequential and diverging continuous color scales\n\n\nscale_color_gradient\nCreate a 2 point color gradient\n\n\nscale_color_gradient2\nCreate a 3 point diverging color gradient\n\n\nscale_color_gradientn\nCreate a n color gradient\n\n\nscale_color_gray\nalias of scale_color_grey\n\n\nscale_color_grey\nSequential grey color scale.\n\n\nscale_color_hue\nQualitative color scale with evenly spaced hues\n\n\nscale_fill_brewer\nSequential, diverging and qualitative color scales\n\n\nscale_fill_cmap\nCreate color scales using Matplotlib colormaps\n\n\nscale_fill_continuous\nalias of scale_fill_cmap\n\n\nscale_fill_datetime\nDatetime fill scale\n\n\nscale_fill_desaturate\nCreate a desaturated color gradient\n\n\nscale_fill_discrete\nalias of scale_fill_hue\n\n\nscale_fill_distiller\nSequential, diverging continuous color scales\n\n\nscale_fill_gradient\nCreate a 2 point color gradient\n\n\nscale_fill_gradient2\nCreate a 3 point diverging color gradient\n\n\nscale_fill_gradientn\nCreate a n color gradient\n\n\nscale_fill_gray\nalias of scale_fill_grey\n\n\nscale_fill_grey\nSequential grey color scale.\n\n\nscale_fill_hue\nQualitative color scale with evenly spaced hues\n\n\n\n\n\n\n\n\n\n\n\nscale_alpha_manual\nCustom discrete alpha scale\n\n\nscale_color_manual\nCustom discrete color scale\n\n\nscale_colour_manual\nalias of scale_color_manual\n\n\nscale_fill_manual\nCustom discrete fill scale\n\n\nscale_linetype_manual\nCustom discrete linetype scale\n\n\nscale_shape_manual\nCustom discrete shape scale\n\n\nscale_size_manual\nCustom discrete size scale\n\n\n\n\n\n\n\n\n\n\n\nscale_linetype\nScale for line patterns\n\n\nscale_linetype_discrete\nalias of scale_linetype\n\n\n\n\n\n\n\n\n\n\n\nscale_shape\nScale for shapes\n\n\nscale_shape_discrete\nalias of scale_shape\n\n\n\n\n\n\n\n\n\n\n\nscale_size\nalias of scale_size_continuous\n\n\nscale_size_area\nContinuous area size scale\n\n\nscale_size_continuous\nContinuous area size scale\n\n\nscale_size_discrete\nDiscrete area size scale\n\n\nscale_size_radius\nContinuous radius size scale\n\n\nscale_size_datetime\nDatetime area-size scale\n\n\n\n\n\n\n\n\n\n\n\nscale_x_continuous\nContinuous x position\n\n\nscale_x_date\nalias of scale_x_datetime\n\n\nscale_x_datetime\nContinuous x position for datetime data points\n\n\nscale_x_discrete\nDiscrete x position\n\n\nscale_x_log10\nContinuous x position log10 transformed scale\n\n\nscale_x_reverse\nContinuous x position reverse transformed scale\n\n\nscale_x_sqrt\nContinuous x position sqrt transformed scale\n\n\nscale_x_symlog\nContinuous x position symmetric logarithm transformed scale\n\n\nscale_x_timedelta\nContinuous x position for timedelta data points\n\n\nscale_y_continuous\nContinuous y position\n\n\nscale_y_date\nalias of scale_y_datetime\n\n\nscale_y_datetime\nContinuous y position for datetime data points\n\n\nscale_y_discrete\nDiscrete y position\n\n\nscale_y_log10\nContinuous y position log10 transformed scale\n\n\nscale_y_reverse\nContinuous y position reverse transformed scale\n\n\nscale_y_sqrt\nContinuous y position sqrt transformed scale\n\n\nscale_y_symlog\nContinuous y position symmetric logarithm transformed scale\n\n\nscale_y_timedelta\nContinuous y position for timedelta data points\n\n\n\n\n\n\n\n\n\n\n\nlims\nSet aesthetic limits\n\n\nxlim\nSet x-axis limits\n\n\nylim\nSet y-axis limits\n\n\nexpand_limits\nExpand the limits any aesthetic using data\n\n\n\n\n\n\n\n\nGuides allow you to interpret data represented on a scales. Guides include the x and y axes, legends and colorbars.\n\n\n\n\nguide\nBase class for all guides\n\n\n\n\n\n\n\n\nguides\nGuides for each scale\n\n\nguide_legend\nLegend guide\n\n\nguide_colorbar\nGuide colorbar\n\n\n\n\n\n\n\nOverlapping objects can be visualized better if their positions are adjusted. That is what the position_* class do. Each geom is associated with one position adjustment class.\n\n\n\n\nposition\nBase class for all positions\n\n\n\n\n\n\n\n\nposition_dodge\nDodge overlaps and place objects side-by-side\n\n\nposition_dodge2\nDodge overlaps and place objects side-by-side\n\n\nposition_fill\nNormalise stacked objects to unit height\n\n\nposition_identity\nDo not adjust the position\n\n\nposition_jitter\nJitter points to avoid overplotting\n\n\nposition_jitterdodge\nDodge and jitter to minimise overlap\n\n\nposition_nudge\nNudge points\n\n\nposition_stack\nStack plotted objects on top of each other\n\n\n\n\n\n\n\nThemes control the visual appearance of the non-data elements the plot.\n\n\n\n\ntheme\nBase class for themes\n\n\n\n\n\n\n\n\ntheme_538\nTheme in the likeness of fivethirtyeight.com plots\n\n\ntheme_bw\nWhite background with black gridlines\n\n\ntheme_classic\nA classic-looking theme, with x & y axis lines and no gridlines\n\n\ntheme_dark\nThe dark cousin of theme_light\n\n\ntheme_gray\nA gray background with white gridlines.\n\n\ntheme_grey\nalias of theme_gray\n\n\ntheme_light\nA theme similar to theme_linedraw\n\n\ntheme_linedraw\nA theme with only black lines of various widths on white backgrounds\n\n\ntheme_matplotlib\nThe default matplotlib look and feel.\n\n\ntheme_minimal\nA minimalistic theme with no background annotations\n\n\ntheme_seaborn\nTheme for seaborn.\n\n\ntheme_tufte\nTufte Maximal Data, Minimal Ink Theme\n\n\ntheme_void\nA classic-looking theme, with x & y axis lines and\n\n\ntheme_xkcd\nxkcd theme\n\n\n\n\n\n\nThese define aspects of a plot that can be themed. They can be used to create a new theme or modify an existing theme. They define the keyword arguments to theme. Users should never create instances of themeable.\n\n\n\n\nthemeable\nAbstract class of things that can be themed.\n\n\n\n\n\n\n\n\naspect_ratio\nAspect ratio of the panel(s)\n\n\naxis_line\nx & y axis lines\n\n\naxis_line_x\nx-axis line\n\n\naxis_line_y\ny-axis line\n\n\naxis_text\nAxis tick labels\n\n\naxis_text_x\nx-axis tick labels\n\n\naxis_text_y\ny-axis tick labels\n\n\naxis_ticks\nx & y major and minor axis tick lines\n\n\naxis_ticks_direction\naxis tick direction\n\n\naxis_ticks_direction_x\nx-axis tick direction\n\n\naxis_ticks_direction_y\ny-axis tick direction\n\n\naxis_ticks_length\nAxis tick length\n\n\naxis_ticks_length_major\nAxis major-tick length\n\n\naxis_ticks_length_major_x\nx-axis major-tick length\n\n\naxis_ticks_length_major_y\ny-axis major-tick length\n\n\naxis_ticks_length_minor\nAxis minor-tick length\n\n\naxis_ticks_length_minor_x\nx-axis minor-tick length\n\n\naxis_ticks_length_minor_y\nx-axis minor-tick length\n\n\naxis_ticks_major\nx & y axis major tick lines\n\n\naxis_ticks_major_x\nx-axis major tick lines\n\n\naxis_ticks_major_y\ny-axis major tick lines\n\n\naxis_ticks_minor\nx & y axis minor tick lines\n\n\naxis_ticks_minor_x\nx-axis tick lines\n\n\naxis_ticks_minor_y\ny-axis minor tick lines\n\n\naxis_ticks_pad\nAxis tick padding\n\n\naxis_ticks_pad_major\nAxis major-tick padding\n\n\naxis_ticks_pad_major_x\nx-axis major-tick padding\n\n\naxis_ticks_pad_major_y\ny-axis major-tick padding\n\n\naxis_ticks_pad_minor\nAxis minor-tick padding\n\n\naxis_ticks_pad_minor_x\nx-axis minor-tick padding\n\n\naxis_ticks_pad_minor_y\ny-axis minor-tick padding\n\n\naxis_ticks_x\nx major and minor axis tick lines\n\n\naxis_ticks_y\ny major and minor axis tick lines\n\n\naxis_title\nAxis labels\n\n\naxis_title_x\nx axis label\n\n\naxis_title_y\ny axis label\n\n\ndpi\nDPI with which to draw/save the figure\n\n\nfigure_size\nFigure size in inches\n\n\nlegend_background\nLegend background\n\n\nlegend_box\nHow to box up multiple legends\n\n\nlegend_box_background\nLegend box background\n\n\nlegend_box_just\nJustification of guide boxes\n\n\nlegend_box_margin\nPadding between the legends and the box\n\n\nlegend_box_spacing\nSpacing between the legend and the plotting area\n\n\nlegend_direction\nLayout items in the legend\n\n\nlegend_key_spacing\nSpacing between two entries in a legend\n\n\nlegend_key_spacing_x\nHorizontal spacing between two entries in a legend\n\n\nlegend_key_spacing_y\nVertical spacing between two entries in a legend\n\n\nlegend_frame\nFrame around colorbar\n\n\nlegend_justification\nJustification of any legend\n\n\nlegend_justification_bottom\nJustification of legends placed at the bottom\n\n\nlegend_justification_inside\nJustification of legends placed inside the axes\n\n\nlegend_justification_left\nJustification of legends placed on the left\n\n\nlegend_justification_right\nJustification of legends placed on the right\n\n\nlegend_justification_top\nJustification of legends placed at the top\n\n\nlegend_key\nLegend key background\n\n\nlegend_key_height\nLegend key background height\n\n\nlegend_key_size\nLegend key background width and height\n\n\nlegend_key_width\nLegend key background width\n\n\nlegend_margin\nPadding between the legend and the inner box\n\n\nlegend_position\nLocation of legend\n\n\nlegend_position_inside\nLocation of legend\n\n\nlegend_spacing\nSpacing between two adjacent legends\n\n\nlegend_text\nLegend text\n\n\nlegend_text_colorbar\nColorbar text\n\n\nlegend_text_legend\nLegend text for the common legend\n\n\nlegend_text_position\nPosition of the legend text\n\n\nlegend_ticks_length\nLength of ticks in the legend\n\n\nlegend_title\nLegend title\n\n\nlegend_title_position\nPosition of legend title\n\n\nline\nAll line elements\n\n\npanel_background\nPanel background\n\n\npanel_border\nPanel border\n\n\npanel_grid\nGrid lines\n\n\npanel_grid_major\nMajor grid lines\n\n\npanel_grid_major_x\nVertical major grid lines\n\n\npanel_grid_major_y\nHorizontal major grid lines\n\n\npanel_grid_minor\nMinor grid lines\n\n\npanel_grid_minor_x\nVertical minor grid lines\n\n\npanel_grid_minor_y\nHorizontal minor grid lines\n\n\npanel_ontop\nPlace panel background & gridlines over/under the data layers\n\n\npanel_spacing\nSpacing between the facet panels\n\n\npanel_spacing_x\nHorizontal spacing between the facet panels\n\n\npanel_spacing_y\nVertical spacing between the facet panels\n\n\nplot_background\nPlot background\n\n\nplot_caption\nPlot caption\n\n\nplot_margin\nPlot Margin\n\n\nplot_margin_bottom\nPlot Margin at the bottom\n\n\nplot_margin_left\nPlot Margin on the left\n\n\nplot_margin_right\nPlot Margin on the right\n\n\nplot_margin_top\nPlot Margin at the top\n\n\nplot_subtitle\nPlot subtitle\n\n\nplot_title\nPlot title\n\n\nrect\nAll rectangle elements\n\n\nstrip_align\nAlignment of the strip & its background w.r.t the panel border\n\n\nstrip_align_x\nVertical alignment of the strip & its background w.r.t the panel border\n\n\nstrip_align_y\nHorizontal alignment of the strip & its background w.r.t the panel border\n\n\nstrip_background\nFacet label background\n\n\nstrip_background_x\nHorizontal facet label background\n\n\nstrip_background_y\nVertical facet label background\n\n\nstrip_text\nFacet labels along both axes\n\n\nstrip_text_x\nFacet labels along the horizontal axis\n\n\nstrip_text_y\nFacet labels along the vertical axis\n\n\nsubplots_adjust\n\n\n\nsvg_usefonts\nHow to renderer fonts for svg images\n\n\ntext\nAll text elements in the plot\n\n\ntitle\nAll titles on the plot\n\n\n\n\n\n\n\n\n\n\n\ntheme_set\nChange the current(default) theme\n\n\ntheme_get\nReturn the default theme\n\n\ntheme_update\nModify elements of the current theme\n\n\n\n\n\n\n\n\nelement_line\ntheme element: line\n\n\nelement_rect\nTheme element: Rectangle\n\n\nelement_text\nTheme element: Text\n\n\nelement_blank\nTheme element: Blank\n\n\n\n\n\n\n\n\nCoordinate systems put together the two position scales to produce a 2d location.\n\n\n\n\ncoord\nBase class for all coordinate systems\n\n\n\n\n\n\n\n\ncoord_cartesian\nCartesian coordinate system\n\n\ncoord_equal\nCartesian coordinates with fixed relationship between x and y scales\n\n\ncoord_fixed\nCartesian coordinates with fixed relationship between x and y scales\n\n\ncoord_flip\nFlipped cartesian coordinates\n\n\ncoord_trans\nTransformed cartesian coordinate system\n\n\n\n\n\n\n\nWhen working interactively, some of the options make it convenient to create plots that have a common look and feel. Another way to do it, to set a default theme using theme_set().\n\n\n\n\naspect_ratio\nDefault aspect ratio used by the themes\n\n\nbase_family\nThe base font family for all text that is part of the theme.\n\n\nbase_margin\nA size that is proportional of the figure width and\n\n\nclose_all_figures\nDevelopment flag, e.g. set to True to prevent\n\n\ncurrent_theme\nTheme used when none is added to the ggplot object\n\n\ndpi\nDefault DPI used by the themes\n\n\nfigure_size\nDefault figure size in inches\n\n\nfigure_format\nThe format for the inline figures outputted by the jupyter kernel.\n\n\nget_option\nGet package option\n\n\nset_option\nSet package option\n\n\n\n\n\n\n\nThese datasets ship with the plotnine and you can import them with from the plotnine.data sub-package.\n\n\n\n\ndiamonds\nPrices of 50,000 round cut diamonds\n\n\neconomics\nUS economic time series.\n\n\neconomics_long\nUS economic time series.\n\n\nfaithful\nOld Faithful Geyser Data\n\n\nfaithfuld\nOld Faithful Geyser Data\n\n\nhuron\nLevel of Lake Huron 1875–1972\n\n\nluv_colours\ncolors in Luv space.\n\n\nmeat\nUS Meat Production\n\n\nmidwest\nMidwest demographics.\n\n\nmpg\nFuel economy data from 1999 and 2008 for 38 popular models of car\n\n\nmsleep\nAn updated and expanded version of the mammals sleep dataset.\n\n\nmtcars\nMotor Trend Car Road Tests\n\n\npageviews\n\n\n\npresidential\nTerms of 11 presidents from Eisenhower to Obama.\n\n\nseals\nVector field of seal movements.\n\n\ntxhousing\nHousing sales in TX."
+    "text": "ggplot\nCreate a new ggplot object\n\n\nqplot\nQuick plot\n\n\nwatermark\nAdd watermark to plot\n\n\nlayer\nLayer\n\n\nPlotnineAnimation\nAnimation using ggplot objects\n\n\nsave_as_pdf_pages\nSave multiple ggplot objects to a PDF file, one per page.\n\n\n\n\n\n\n\nAesthetics are the visual properties of a plot. The following functions control how the data (and calculations based on the data) is mapped to the aesthetics.\n\n\n\n\naes\nCreate aesthetic mappings\n\n\nafter_stat\nEvaluate mapping after statistic has been calculated\n\n\nafter_scale\nEvaluate mapping after variable has been mapped to the scale\n\n\nstage\nStage allows you evaluating mapping at more than one stage\n\n\n\n\n\n\n\nGeometric objects (geoms) are responsible for the visual representation of data points. geom_* classes determine the kind of geometric objects and every plot must have at least one geom added to it. The distinct visual aspects of the representation are controlled by the aes mapping.\n\n\n\n\ngeom\nBase class of all Geoms\n\n\n\n\n\n\n\n\ngeom_abline\nLines specified by slope and intercept\n\n\ngeom_area\nArea plot\n\n\ngeom_bar\nBar plot\n\n\ngeom_blank\nAn empty plot\n\n\ngeom_boxplot\nBox and whiskers plot\n\n\ngeom_col\nBar plot with base on the x-axis\n\n\ngeom_count\nPlot overlapping points\n\n\ngeom_crossbar\nVertical interval represented by a crossbar\n\n\ngeom_density\nSmooth density estimate\n\n\ngeom_density_2d\n2D density estimate\n\n\ngeom_dotplot\nDot plot\n\n\ngeom_errorbar\nVertical interval represented as an errorbar\n\n\ngeom_errorbarh\nHorizontal interval represented as an errorbar\n\n\ngeom_freqpoly\nFrequency polygon\n\n\ngeom_bin_2d\nHeatmap of 2d bin counts\n\n\ngeom_histogram\nHistogram\n\n\ngeom_hline\nHorizontal line\n\n\ngeom_jitter\nScatter plot with points jittered to reduce overplotting\n\n\ngeom_label\nTextual annotations with a background\n\n\ngeom_line\nConnected points\n\n\ngeom_linerange\nVertical interval represented by lines\n\n\ngeom_map\nDraw map feature\n\n\ngeom_path\nConnected points\n\n\ngeom_point\nPlot points (Scatter plot)\n\n\ngeom_pointdensity\nScatterplot with density estimation at each point\n\n\ngeom_pointrange\nVertical interval represented by a line with a point\n\n\ngeom_polygon\nPolygon, a filled path\n\n\ngeom_quantile\nQuantile lines from a quantile regression\n\n\ngeom_qq\nQuantile-Quantile plot\n\n\ngeom_qq_line\nQuantile-Quantile Line plot\n\n\ngeom_raster\nRasterized Rectangles specified using center points\n\n\ngeom_rect\nRectangles\n\n\ngeom_ribbon\nRibbon plot\n\n\ngeom_rug\nMarginal rug plot\n\n\ngeom_segment\nLine segments\n\n\ngeom_sina\nDraw a sina plot\n\n\ngeom_smooth\nA smoothed conditional mean\n\n\ngeom_spoke\nLine segment parameterised by location, direction and distance\n\n\ngeom_step\nStepped connected points\n\n\ngeom_text\nTextual annotations\n\n\ngeom_tile\nRectangles specified using a center points\n\n\ngeom_violin\nViolin Plot\n\n\ngeom_vline\nVertical line\n\n\n\n\n\n\n\n\n\n\nannotate\nCreate an annotation layer\n\n\nannotation_logticks\nMarginal log ticks.\n\n\nannotation_stripes\nAlternating stripes, centered around each label.\n\n\narrow\nDefine arrow (actually an arrowhead)\n\n\n\n\n\n\n\n\n\n\n\nlabs\nAdd labels for any aesthetics with a scale or title, subtitle & caption\n\n\nxlab\nLabel/name for the x aesthetic\n\n\nylab\nLabel/name for the y aesthetic\n\n\nggtitle\nCreate plot title\n\n\n\n\n\n\n\n\nStatistical transformations (stats) do aggregations and other computations on data before it is drawn out. stat_* determine the type of computation done on the data. Different types of computations yield varied results, so a stat must be paired with a geom that can represent all or some of the computations.\n\n\n\n\nstat\nBase class of all stats\n\n\n\n\n\n\n\n\nstat_bin\nCount cases in each interval\n\n\nstat_bin_2d\n2 Dimensional bin counts\n\n\nstat_bindot\nBinning for a dot plot\n\n\nstat_boxplot\nCompute boxplot statistics\n\n\nstat_count\nCounts the number of cases at each x position\n\n\nstat_density\nCompute density estimate\n\n\nstat_density_2d\nCompute 2D kernel density estimation\n\n\nstat_ecdf\nEmpirical Cumulative Density Function\n\n\nstat_ellipse\nCalculate normal confidence interval ellipse\n\n\nstat_function\nSuperimpose a function onto a plot\n\n\nstat_hull\n2 Dimensional Convex Hull\n\n\nstat_identity\nIdentity (do nothing) statistic\n\n\nstat_qq\nCalculation for quantile-quantile plot\n\n\nstat_qq_line\nCalculate line through quantile-quantile plot\n\n\nstat_quantile\nCompute quantile regression lines\n\n\nstat_sina\nCompute Sina plot values\n\n\nstat_smooth\nCalculate a smoothed conditional mean\n\n\nstat_sum\nSum unique values\n\n\nstat_summary\nCalculate summary statistics depending on x\n\n\nstat_summary_bin\nSummarise y values at x intervals\n\n\nstat_unique\nRemove duplicates\n\n\nstat_ydensity\nDensity estimate\n\n\n\n\n\n\n\nFaceting is a way to subset data and plot it on different panels.\n\n\n\n\nfacet\nBase class for all facets\n\n\n\n\n\n\n\n\nfacet_grid\nWrap 1D Panels onto 2D surface\n\n\nfacet_null\nA single Panel\n\n\nfacet_wrap\nWrap 1D Panels onto 2D surface\n\n\nlabeller\nFacet Strip Labelling\n\n\nas_labeller\nCoerse to labeller\n\n\nlabel_value\nKeep value as the label\n\n\nlabel_both\nConcatenate the facet variable with the value\n\n\nlabel_context\nCreate an unabiguous label string\n\n\n\n\n\n\n\nScales control the mapping from data to aesthetics. They take data and adjust it to fit the different aspects of the visual sense i.e. length, colour, size and shape.\n\n\n\n\n\n\nscale\nBase class for all scales\n\n\nscale_discrete\nBase class for all discrete scales\n\n\nscale_continuous\nBase class for all continuous scales\n\n\nscale_datetime\nBase class for all date/datetime scales\n\n\n\n\n\n\n\n\n\n\n\nscale_alpha\nContinuous Alpha Scale\n\n\nscale_alpha_discrete\nDiscrete Alpha Scale\n\n\nscale_alpha_continuous\nalias of scale_alpha\n\n\nscale_alpha_datetime\nDatetime Alpha Scale\n\n\n\n\n\n\n\n\n\n\n\nscale_alpha_identity\nNo alpha scaling\n\n\nscale_color_identity\nNo color scaling\n\n\nscale_colour_identity\nalias of scale_color_identity\n\n\nscale_fill_identity\nNo color scaling\n\n\nscale_linetype_identity\nNo linetype scaling\n\n\nscale_shape_identity\nNo shape scaling\n\n\nscale_size_identity\nNo size scaling\n\n\n\n\n\n\n\n\n\n\n\nscale_color_brewer\nSequential, diverging and qualitative discrete color scales\n\n\nscale_color_continuous\nalias of scale_color_cmap\n\n\nscale_color_cmap\nCreate color scales using Matplotlib colormaps\n\n\nscale_color_desaturate\nCreate a desaturated color gradient\n\n\nscale_color_datetime\nDatetime color scale\n\n\nscale_color_discrete\nalias of scale_color_hue\n\n\nscale_color_distiller\nSequential and diverging continuous color scales\n\n\nscale_color_gradient\nCreate a 2 point color gradient\n\n\nscale_color_gradient2\nCreate a 3 point diverging color gradient\n\n\nscale_color_gradientn\nCreate a n color gradient\n\n\nscale_color_gray\nalias of scale_color_grey\n\n\nscale_color_grey\nSequential grey color scale.\n\n\nscale_color_hue\nQualitative color scale with evenly spaced hues\n\n\nscale_fill_brewer\nSequential, diverging and qualitative color scales\n\n\nscale_fill_cmap\nCreate color scales using Matplotlib colormaps\n\n\nscale_fill_continuous\nalias of scale_fill_cmap\n\n\nscale_fill_datetime\nDatetime fill scale\n\n\nscale_fill_desaturate\nCreate a desaturated color gradient\n\n\nscale_fill_discrete\nalias of scale_fill_hue\n\n\nscale_fill_distiller\nSequential, diverging continuous color scales\n\n\nscale_fill_gradient\nCreate a 2 point color gradient\n\n\nscale_fill_gradient2\nCreate a 3 point diverging color gradient\n\n\nscale_fill_gradientn\nCreate a n color gradient\n\n\nscale_fill_gray\nalias of scale_fill_grey\n\n\nscale_fill_grey\nSequential grey color scale.\n\n\nscale_fill_hue\nQualitative color scale with evenly spaced hues\n\n\n\n\n\n\n\n\n\n\n\nscale_alpha_manual\nCustom discrete alpha scale\n\n\nscale_color_manual\nCustom discrete color scale\n\n\nscale_colour_manual\nalias of scale_color_manual\n\n\nscale_fill_manual\nCustom discrete fill scale\n\n\nscale_linetype_manual\nCustom discrete linetype scale\n\n\nscale_shape_manual\nCustom discrete shape scale\n\n\nscale_size_manual\nCustom discrete size scale\n\n\n\n\n\n\n\n\n\n\n\nscale_linetype\nScale for line patterns\n\n\nscale_linetype_discrete\nalias of scale_linetype\n\n\n\n\n\n\n\n\n\n\n\nscale_shape\nScale for shapes\n\n\nscale_shape_discrete\nalias of scale_shape\n\n\n\n\n\n\n\n\n\n\n\nscale_size\nalias of scale_size_continuous\n\n\nscale_size_area\nContinuous area size scale\n\n\nscale_size_continuous\nContinuous area size scale\n\n\nscale_size_discrete\nDiscrete area size scale\n\n\nscale_size_radius\nContinuous radius size scale\n\n\nscale_size_datetime\nDatetime area-size scale\n\n\n\n\n\n\n\n\n\n\n\nscale_x_continuous\nContinuous x position\n\n\nscale_x_date\nalias of scale_x_datetime\n\n\nscale_x_datetime\nContinuous x position for datetime data points\n\n\nscale_x_discrete\nDiscrete x position\n\n\nscale_x_log10\nContinuous x position log10 transformed scale\n\n\nscale_x_reverse\nContinuous x position reverse transformed scale\n\n\nscale_x_sqrt\nContinuous x position sqrt transformed scale\n\n\nscale_x_symlog\nContinuous x position symmetric logarithm transformed scale\n\n\nscale_x_timedelta\nContinuous x position for timedelta data points\n\n\nscale_y_continuous\nContinuous y position\n\n\nscale_y_date\nalias of scale_y_datetime\n\n\nscale_y_datetime\nContinuous y position for datetime data points\n\n\nscale_y_discrete\nDiscrete y position\n\n\nscale_y_log10\nContinuous y position log10 transformed scale\n\n\nscale_y_reverse\nContinuous y position reverse transformed scale\n\n\nscale_y_sqrt\nContinuous y position sqrt transformed scale\n\n\nscale_y_symlog\nContinuous y position symmetric logarithm transformed scale\n\n\nscale_y_timedelta\nContinuous y position for timedelta data points\n\n\n\n\n\n\n\n\n\n\n\nlims\nSet aesthetic limits\n\n\nxlim\nSet x-axis limits\n\n\nylim\nSet y-axis limits\n\n\nexpand_limits\nExpand the limits any aesthetic using data\n\n\n\n\n\n\n\n\nGuides allow you to interpret data represented on a scales. Guides include the x and y axes, legends and colorbars.\n\n\n\n\nguide\nBase class for all guides\n\n\n\n\n\n\n\n\nguides\nGuides for each scale\n\n\nguide_legend\nLegend guide\n\n\nguide_colorbar\nGuide colorbar\n\n\n\n\n\n\n\nOverlapping objects can be visualized better if their positions are adjusted. That is what the position_* class do. Each geom is associated with one position adjustment class.\n\n\n\n\nposition\nBase class for all positions\n\n\n\n\n\n\n\n\nposition_dodge\nDodge overlaps and place objects side-by-side\n\n\nposition_dodge2\nDodge overlaps and place objects side-by-side\n\n\nposition_fill\nNormalise stacked objects to unit height\n\n\nposition_identity\nDo not adjust the position\n\n\nposition_jitter\nJitter points to avoid overplotting\n\n\nposition_jitterdodge\nDodge and jitter to minimise overlap\n\n\nposition_nudge\nNudge points\n\n\nposition_stack\nStack plotted objects on top of each other\n\n\n\n\n\n\n\nThemes control the visual appearance of the non-data elements the plot.\n\n\n\n\ntheme\nBase class for themes\n\n\n\n\n\n\n\n\ntheme_538\nTheme in the likeness of fivethirtyeight.com plots\n\n\ntheme_bw\nWhite background with black gridlines\n\n\ntheme_classic\nA classic-looking theme, with x & y axis lines and no gridlines\n\n\ntheme_dark\nThe dark cousin of theme_light\n\n\ntheme_gray\nA gray background with white gridlines.\n\n\ntheme_grey\nalias of theme_gray\n\n\ntheme_light\nA theme similar to theme_linedraw\n\n\ntheme_linedraw\nA theme with only black lines of various widths on white backgrounds\n\n\ntheme_matplotlib\nThe default matplotlib look and feel.\n\n\ntheme_minimal\nA minimalistic theme with no background annotations\n\n\ntheme_seaborn\nTheme for seaborn.\n\n\ntheme_tufte\nTufte Maximal Data, Minimal Ink Theme\n\n\ntheme_void\nA classic-looking theme, with x & y axis lines and\n\n\ntheme_xkcd\nxkcd theme\n\n\n\n\n\n\nThese define aspects of a plot that can be themed. They can be used to create a new theme or modify an existing theme. They define the keyword arguments to theme. Users should never create instances of themeable.\n\n\n\n\nthemeable\nAbstract class of things that can be themed.\n\n\n\n\n\n\n\n\naspect_ratio\nAspect ratio of the panel(s)\n\n\naxis_line\nx & y axis lines\n\n\naxis_line_x\nx-axis line\n\n\naxis_line_y\ny-axis line\n\n\naxis_text\nAxis tick labels\n\n\naxis_text_x\nx-axis tick labels\n\n\naxis_text_y\ny-axis tick labels\n\n\naxis_ticks\nx & y major and minor axis tick lines\n\n\naxis_ticks_length\nAxis tick length\n\n\naxis_ticks_length_major\nAxis major-tick length\n\n\naxis_ticks_length_major_x\nx-axis major-tick length\n\n\naxis_ticks_length_major_y\ny-axis major-tick length\n\n\naxis_ticks_length_minor\nAxis minor-tick length\n\n\naxis_ticks_length_minor_x\nx-axis minor-tick length\n\n\naxis_ticks_length_minor_y\nx-axis minor-tick length\n\n\naxis_ticks_major\nx & y axis major tick lines\n\n\naxis_ticks_major_x\nx-axis major tick lines\n\n\naxis_ticks_major_y\ny-axis major tick lines\n\n\naxis_ticks_minor\nx & y axis minor tick lines\n\n\naxis_ticks_minor_x\nx-axis tick lines\n\n\naxis_ticks_minor_y\ny-axis minor tick lines\n\n\naxis_ticks_pad\nAxis tick padding\n\n\naxis_ticks_pad_major\nAxis major-tick padding\n\n\naxis_ticks_pad_major_x\nx-axis major-tick padding\n\n\naxis_ticks_pad_major_y\ny-axis major-tick padding\n\n\naxis_ticks_pad_minor\nAxis minor-tick padding\n\n\naxis_ticks_pad_minor_x\nx-axis minor-tick padding\n\n\naxis_ticks_pad_minor_y\ny-axis minor-tick padding\n\n\naxis_ticks_x\nx major and minor axis tick lines\n\n\naxis_ticks_y\ny major and minor axis tick lines\n\n\naxis_title\nAxis labels\n\n\naxis_title_x\nx axis label\n\n\naxis_title_y\ny axis label\n\n\ndpi\nDPI with which to draw/save the figure\n\n\nfigure_size\nFigure size in inches\n\n\nlegend_background\nLegend background\n\n\nlegend_box\nHow to box up multiple legends\n\n\nlegend_box_background\nLegend box background\n\n\nlegend_box_just\nJustification of guide boxes\n\n\nlegend_box_margin\nPadding between the legends and the box\n\n\nlegend_box_spacing\nSpacing between the legend and the plotting area\n\n\nlegend_direction\nLayout items in the legend\n\n\nlegend_key_spacing\nSpacing between two entries in a legend\n\n\nlegend_key_spacing_x\nHorizontal spacing between two entries in a legend\n\n\nlegend_key_spacing_y\nVertical spacing between two entries in a legend\n\n\nlegend_frame\nFrame around colorbar\n\n\nlegend_justification\nJustification of any legend\n\n\nlegend_justification_bottom\nJustification of legends placed at the bottom\n\n\nlegend_justification_inside\nJustification of legends placed inside the axes\n\n\nlegend_justification_left\nJustification of legends placed on the left\n\n\nlegend_justification_right\nJustification of legends placed on the right\n\n\nlegend_justification_top\nJustification of legends placed at the top\n\n\nlegend_key\nLegend key background\n\n\nlegend_key_height\nLegend key background height\n\n\nlegend_key_size\nLegend key background width and height\n\n\nlegend_key_width\nLegend key background width\n\n\nlegend_margin\nPadding between the legend and the inner box\n\n\nlegend_position\nLocation of legend\n\n\nlegend_position_inside\nLocation of legend\n\n\nlegend_spacing\nSpacing between two adjacent legends\n\n\nlegend_text\nLegend text\n\n\nlegend_text_colorbar\nColorbar text\n\n\nlegend_text_legend\nLegend text for the common legend\n\n\nlegend_text_position\nPosition of the legend text\n\n\nlegend_ticks_length\nLength of ticks in the legend\n\n\nlegend_title\nLegend title\n\n\nlegend_title_position\nPosition of legend title\n\n\nline\nAll line elements\n\n\npanel_background\nPanel background\n\n\npanel_border\nPanel border\n\n\npanel_grid\nGrid lines\n\n\npanel_grid_major\nMajor grid lines\n\n\npanel_grid_major_x\nVertical major grid lines\n\n\npanel_grid_major_y\nHorizontal major grid lines\n\n\npanel_grid_minor\nMinor grid lines\n\n\npanel_grid_minor_x\nVertical minor grid lines\n\n\npanel_grid_minor_y\nHorizontal minor grid lines\n\n\npanel_ontop\nPlace panel background & gridlines over/under the data layers\n\n\npanel_spacing\nSpacing between the facet panels\n\n\npanel_spacing_x\nHorizontal spacing between the facet panels\n\n\npanel_spacing_y\nVertical spacing between the facet panels\n\n\nplot_background\nPlot background\n\n\nplot_caption\nPlot caption\n\n\nplot_margin\nPlot Margin\n\n\nplot_margin_bottom\nPlot Margin at the bottom\n\n\nplot_margin_left\nPlot Margin on the left\n\n\nplot_margin_right\nPlot Margin on the right\n\n\nplot_margin_top\nPlot Margin at the top\n\n\nplot_subtitle\nPlot subtitle\n\n\nplot_title\nPlot title\n\n\nrect\nAll rectangle elements\n\n\nstrip_align\nAlignment of the strip & its background w.r.t the panel border\n\n\nstrip_align_x\nVertical alignment of the strip & its background w.r.t the panel border\n\n\nstrip_align_y\nHorizontal alignment of the strip & its background w.r.t the panel border\n\n\nstrip_background\nFacet label background\n\n\nstrip_background_x\nHorizontal facet label background\n\n\nstrip_background_y\nVertical facet label background\n\n\nstrip_text\nFacet labels along both axes\n\n\nstrip_text_x\nFacet labels along the horizontal axis\n\n\nstrip_text_y\nFacet labels along the vertical axis\n\n\nsubplots_adjust\n\n\n\nsvg_usefonts\nHow to renderer fonts for svg images\n\n\ntext\nAll text elements in the plot\n\n\ntitle\nAll titles on the plot\n\n\n\n\n\n\n\n\n\n\n\ntheme_set\nChange the current(default) theme\n\n\ntheme_get\nReturn the default theme\n\n\ntheme_update\nModify elements of the current theme\n\n\n\n\n\n\n\n\nelement_line\ntheme element: line\n\n\nelement_rect\nTheme element: Rectangle\n\n\nelement_text\nTheme element: Text\n\n\nelement_blank\nTheme element: Blank\n\n\n\n\n\n\n\n\nCoordinate systems put together the two position scales to produce a 2d location.\n\n\n\n\ncoord\nBase class for all coordinate systems\n\n\n\n\n\n\n\n\ncoord_cartesian\nCartesian coordinate system\n\n\ncoord_equal\nCartesian coordinates with fixed relationship between x and y scales\n\n\ncoord_fixed\nCartesian coordinates with fixed relationship between x and y scales\n\n\ncoord_flip\nFlipped cartesian coordinates\n\n\ncoord_trans\nTransformed cartesian coordinate system\n\n\n\n\n\n\n\nWhen working interactively, some of the options make it convenient to create plots that have a common look and feel. Another way to do it, to set a default theme using theme_set().\n\n\n\n\naspect_ratio\nDefault aspect ratio used by the themes\n\n\nbase_family\nThe base font family for all text that is part of the theme.\n\n\nbase_margin\nA size that is proportional of the figure width and\n\n\nclose_all_figures\nDevelopment flag, e.g. set to True to prevent\n\n\ncurrent_theme\nTheme used when none is added to the ggplot object\n\n\ndpi\nDefault DPI used by the themes\n\n\nfigure_size\nDefault figure size in inches\n\n\nfigure_format\nThe format for the inline figures outputted by the jupyter kernel.\n\n\nget_option\nGet package option\n\n\nset_option\nSet package option\n\n\n\n\n\n\n\nThese datasets ship with the plotnine and you can import them with from the plotnine.data sub-package.\n\n\n\n\ndiamonds\nPrices of 50,000 round cut diamonds\n\n\neconomics\nUS economic time series.\n\n\neconomics_long\nUS economic time series.\n\n\nfaithful\nOld Faithful Geyser Data\n\n\nfaithfuld\nOld Faithful Geyser Data\n\n\nhuron\nLevel of Lake Huron 1875–1972\n\n\nluv_colours\ncolors in Luv space.\n\n\nmeat\nUS Meat Production\n\n\nmidwest\nMidwest demographics.\n\n\nmpg\nFuel economy data from 1999 and 2008 for 38 popular models of car\n\n\nmsleep\nAn updated and expanded version of the mammals sleep dataset.\n\n\nmtcars\nMotor Trend Car Road Tests\n\n\npageviews\n\n\n\npresidential\nTerms of 11 presidents from Eisenhower to Obama.\n\n\nseals\nVector field of seal movements.\n\n\ntxhousing\nHousing sales in TX."
   },
   {
     "objectID": "reference/index.html#creating-a-plot",
@@ -3042,7 +3035,7 @@
     "href": "reference/index.html#themes",
     "title": "API Reference",
     "section": "",
-    "text": "Themes control the visual appearance of the non-data elements the plot.\n\n\n\n\ntheme\nBase class for themes\n\n\n\n\n\n\n\n\ntheme_538\nTheme in the likeness of fivethirtyeight.com plots\n\n\ntheme_bw\nWhite background with black gridlines\n\n\ntheme_classic\nA classic-looking theme, with x & y axis lines and no gridlines\n\n\ntheme_dark\nThe dark cousin of theme_light\n\n\ntheme_gray\nA gray background with white gridlines.\n\n\ntheme_grey\nalias of theme_gray\n\n\ntheme_light\nA theme similar to theme_linedraw\n\n\ntheme_linedraw\nA theme with only black lines of various widths on white backgrounds\n\n\ntheme_matplotlib\nThe default matplotlib look and feel.\n\n\ntheme_minimal\nA minimalistic theme with no background annotations\n\n\ntheme_seaborn\nTheme for seaborn.\n\n\ntheme_tufte\nTufte Maximal Data, Minimal Ink Theme\n\n\ntheme_void\nA classic-looking theme, with x & y axis lines and\n\n\ntheme_xkcd\nxkcd theme\n\n\n\n\n\n\nThese define aspects of a plot that can be themed. They can be used to create a new theme or modify an existing theme. They define the keyword arguments to theme. Users should never create instances of themeable.\n\n\n\n\nthemeable\nAbstract class of things that can be themed.\n\n\n\n\n\n\n\n\naspect_ratio\nAspect ratio of the panel(s)\n\n\naxis_line\nx & y axis lines\n\n\naxis_line_x\nx-axis line\n\n\naxis_line_y\ny-axis line\n\n\naxis_text\nAxis tick labels\n\n\naxis_text_x\nx-axis tick labels\n\n\naxis_text_y\ny-axis tick labels\n\n\naxis_ticks\nx & y major and minor axis tick lines\n\n\naxis_ticks_direction\naxis tick direction\n\n\naxis_ticks_direction_x\nx-axis tick direction\n\n\naxis_ticks_direction_y\ny-axis tick direction\n\n\naxis_ticks_length\nAxis tick length\n\n\naxis_ticks_length_major\nAxis major-tick length\n\n\naxis_ticks_length_major_x\nx-axis major-tick length\n\n\naxis_ticks_length_major_y\ny-axis major-tick length\n\n\naxis_ticks_length_minor\nAxis minor-tick length\n\n\naxis_ticks_length_minor_x\nx-axis minor-tick length\n\n\naxis_ticks_length_minor_y\nx-axis minor-tick length\n\n\naxis_ticks_major\nx & y axis major tick lines\n\n\naxis_ticks_major_x\nx-axis major tick lines\n\n\naxis_ticks_major_y\ny-axis major tick lines\n\n\naxis_ticks_minor\nx & y axis minor tick lines\n\n\naxis_ticks_minor_x\nx-axis tick lines\n\n\naxis_ticks_minor_y\ny-axis minor tick lines\n\n\naxis_ticks_pad\nAxis tick padding\n\n\naxis_ticks_pad_major\nAxis major-tick padding\n\n\naxis_ticks_pad_major_x\nx-axis major-tick padding\n\n\naxis_ticks_pad_major_y\ny-axis major-tick padding\n\n\naxis_ticks_pad_minor\nAxis minor-tick padding\n\n\naxis_ticks_pad_minor_x\nx-axis minor-tick padding\n\n\naxis_ticks_pad_minor_y\ny-axis minor-tick padding\n\n\naxis_ticks_x\nx major and minor axis tick lines\n\n\naxis_ticks_y\ny major and minor axis tick lines\n\n\naxis_title\nAxis labels\n\n\naxis_title_x\nx axis label\n\n\naxis_title_y\ny axis label\n\n\ndpi\nDPI with which to draw/save the figure\n\n\nfigure_size\nFigure size in inches\n\n\nlegend_background\nLegend background\n\n\nlegend_box\nHow to box up multiple legends\n\n\nlegend_box_background\nLegend box background\n\n\nlegend_box_just\nJustification of guide boxes\n\n\nlegend_box_margin\nPadding between the legends and the box\n\n\nlegend_box_spacing\nSpacing between the legend and the plotting area\n\n\nlegend_direction\nLayout items in the legend\n\n\nlegend_key_spacing\nSpacing between two entries in a legend\n\n\nlegend_key_spacing_x\nHorizontal spacing between two entries in a legend\n\n\nlegend_key_spacing_y\nVertical spacing between two entries in a legend\n\n\nlegend_frame\nFrame around colorbar\n\n\nlegend_justification\nJustification of any legend\n\n\nlegend_justification_bottom\nJustification of legends placed at the bottom\n\n\nlegend_justification_inside\nJustification of legends placed inside the axes\n\n\nlegend_justification_left\nJustification of legends placed on the left\n\n\nlegend_justification_right\nJustification of legends placed on the right\n\n\nlegend_justification_top\nJustification of legends placed at the top\n\n\nlegend_key\nLegend key background\n\n\nlegend_key_height\nLegend key background height\n\n\nlegend_key_size\nLegend key background width and height\n\n\nlegend_key_width\nLegend key background width\n\n\nlegend_margin\nPadding between the legend and the inner box\n\n\nlegend_position\nLocation of legend\n\n\nlegend_position_inside\nLocation of legend\n\n\nlegend_spacing\nSpacing between two adjacent legends\n\n\nlegend_text\nLegend text\n\n\nlegend_text_colorbar\nColorbar text\n\n\nlegend_text_legend\nLegend text for the common legend\n\n\nlegend_text_position\nPosition of the legend text\n\n\nlegend_ticks_length\nLength of ticks in the legend\n\n\nlegend_title\nLegend title\n\n\nlegend_title_position\nPosition of legend title\n\n\nline\nAll line elements\n\n\npanel_background\nPanel background\n\n\npanel_border\nPanel border\n\n\npanel_grid\nGrid lines\n\n\npanel_grid_major\nMajor grid lines\n\n\npanel_grid_major_x\nVertical major grid lines\n\n\npanel_grid_major_y\nHorizontal major grid lines\n\n\npanel_grid_minor\nMinor grid lines\n\n\npanel_grid_minor_x\nVertical minor grid lines\n\n\npanel_grid_minor_y\nHorizontal minor grid lines\n\n\npanel_ontop\nPlace panel background & gridlines over/under the data layers\n\n\npanel_spacing\nSpacing between the facet panels\n\n\npanel_spacing_x\nHorizontal spacing between the facet panels\n\n\npanel_spacing_y\nVertical spacing between the facet panels\n\n\nplot_background\nPlot background\n\n\nplot_caption\nPlot caption\n\n\nplot_margin\nPlot Margin\n\n\nplot_margin_bottom\nPlot Margin at the bottom\n\n\nplot_margin_left\nPlot Margin on the left\n\n\nplot_margin_right\nPlot Margin on the right\n\n\nplot_margin_top\nPlot Margin at the top\n\n\nplot_subtitle\nPlot subtitle\n\n\nplot_title\nPlot title\n\n\nrect\nAll rectangle elements\n\n\nstrip_align\nAlignment of the strip & its background w.r.t the panel border\n\n\nstrip_align_x\nVertical alignment of the strip & its background w.r.t the panel border\n\n\nstrip_align_y\nHorizontal alignment of the strip & its background w.r.t the panel border\n\n\nstrip_background\nFacet label background\n\n\nstrip_background_x\nHorizontal facet label background\n\n\nstrip_background_y\nVertical facet label background\n\n\nstrip_text\nFacet labels along both axes\n\n\nstrip_text_x\nFacet labels along the horizontal axis\n\n\nstrip_text_y\nFacet labels along the vertical axis\n\n\nsubplots_adjust\n\n\n\nsvg_usefonts\nHow to renderer fonts for svg images\n\n\ntext\nAll text elements in the plot\n\n\ntitle\nAll titles on the plot\n\n\n\n\n\n\n\n\n\n\n\ntheme_set\nChange the current(default) theme\n\n\ntheme_get\nReturn the default theme\n\n\ntheme_update\nModify elements of the current theme\n\n\n\n\n\n\n\n\nelement_line\ntheme element: line\n\n\nelement_rect\nTheme element: Rectangle\n\n\nelement_text\nTheme element: Text\n\n\nelement_blank\nTheme element: Blank"
+    "text": "Themes control the visual appearance of the non-data elements the plot.\n\n\n\n\ntheme\nBase class for themes\n\n\n\n\n\n\n\n\ntheme_538\nTheme in the likeness of fivethirtyeight.com plots\n\n\ntheme_bw\nWhite background with black gridlines\n\n\ntheme_classic\nA classic-looking theme, with x & y axis lines and no gridlines\n\n\ntheme_dark\nThe dark cousin of theme_light\n\n\ntheme_gray\nA gray background with white gridlines.\n\n\ntheme_grey\nalias of theme_gray\n\n\ntheme_light\nA theme similar to theme_linedraw\n\n\ntheme_linedraw\nA theme with only black lines of various widths on white backgrounds\n\n\ntheme_matplotlib\nThe default matplotlib look and feel.\n\n\ntheme_minimal\nA minimalistic theme with no background annotations\n\n\ntheme_seaborn\nTheme for seaborn.\n\n\ntheme_tufte\nTufte Maximal Data, Minimal Ink Theme\n\n\ntheme_void\nA classic-looking theme, with x & y axis lines and\n\n\ntheme_xkcd\nxkcd theme\n\n\n\n\n\n\nThese define aspects of a plot that can be themed. They can be used to create a new theme or modify an existing theme. They define the keyword arguments to theme. Users should never create instances of themeable.\n\n\n\n\nthemeable\nAbstract class of things that can be themed.\n\n\n\n\n\n\n\n\naspect_ratio\nAspect ratio of the panel(s)\n\n\naxis_line\nx & y axis lines\n\n\naxis_line_x\nx-axis line\n\n\naxis_line_y\ny-axis line\n\n\naxis_text\nAxis tick labels\n\n\naxis_text_x\nx-axis tick labels\n\n\naxis_text_y\ny-axis tick labels\n\n\naxis_ticks\nx & y major and minor axis tick lines\n\n\naxis_ticks_length\nAxis tick length\n\n\naxis_ticks_length_major\nAxis major-tick length\n\n\naxis_ticks_length_major_x\nx-axis major-tick length\n\n\naxis_ticks_length_major_y\ny-axis major-tick length\n\n\naxis_ticks_length_minor\nAxis minor-tick length\n\n\naxis_ticks_length_minor_x\nx-axis minor-tick length\n\n\naxis_ticks_length_minor_y\nx-axis minor-tick length\n\n\naxis_ticks_major\nx & y axis major tick lines\n\n\naxis_ticks_major_x\nx-axis major tick lines\n\n\naxis_ticks_major_y\ny-axis major tick lines\n\n\naxis_ticks_minor\nx & y axis minor tick lines\n\n\naxis_ticks_minor_x\nx-axis tick lines\n\n\naxis_ticks_minor_y\ny-axis minor tick lines\n\n\naxis_ticks_pad\nAxis tick padding\n\n\naxis_ticks_pad_major\nAxis major-tick padding\n\n\naxis_ticks_pad_major_x\nx-axis major-tick padding\n\n\naxis_ticks_pad_major_y\ny-axis major-tick padding\n\n\naxis_ticks_pad_minor\nAxis minor-tick padding\n\n\naxis_ticks_pad_minor_x\nx-axis minor-tick padding\n\n\naxis_ticks_pad_minor_y\ny-axis minor-tick padding\n\n\naxis_ticks_x\nx major and minor axis tick lines\n\n\naxis_ticks_y\ny major and minor axis tick lines\n\n\naxis_title\nAxis labels\n\n\naxis_title_x\nx axis label\n\n\naxis_title_y\ny axis label\n\n\ndpi\nDPI with which to draw/save the figure\n\n\nfigure_size\nFigure size in inches\n\n\nlegend_background\nLegend background\n\n\nlegend_box\nHow to box up multiple legends\n\n\nlegend_box_background\nLegend box background\n\n\nlegend_box_just\nJustification of guide boxes\n\n\nlegend_box_margin\nPadding between the legends and the box\n\n\nlegend_box_spacing\nSpacing between the legend and the plotting area\n\n\nlegend_direction\nLayout items in the legend\n\n\nlegend_key_spacing\nSpacing between two entries in a legend\n\n\nlegend_key_spacing_x\nHorizontal spacing between two entries in a legend\n\n\nlegend_key_spacing_y\nVertical spacing between two entries in a legend\n\n\nlegend_frame\nFrame around colorbar\n\n\nlegend_justification\nJustification of any legend\n\n\nlegend_justification_bottom\nJustification of legends placed at the bottom\n\n\nlegend_justification_inside\nJustification of legends placed inside the axes\n\n\nlegend_justification_left\nJustification of legends placed on the left\n\n\nlegend_justification_right\nJustification of legends placed on the right\n\n\nlegend_justification_top\nJustification of legends placed at the top\n\n\nlegend_key\nLegend key background\n\n\nlegend_key_height\nLegend key background height\n\n\nlegend_key_size\nLegend key background width and height\n\n\nlegend_key_width\nLegend key background width\n\n\nlegend_margin\nPadding between the legend and the inner box\n\n\nlegend_position\nLocation of legend\n\n\nlegend_position_inside\nLocation of legend\n\n\nlegend_spacing\nSpacing between two adjacent legends\n\n\nlegend_text\nLegend text\n\n\nlegend_text_colorbar\nColorbar text\n\n\nlegend_text_legend\nLegend text for the common legend\n\n\nlegend_text_position\nPosition of the legend text\n\n\nlegend_ticks_length\nLength of ticks in the legend\n\n\nlegend_title\nLegend title\n\n\nlegend_title_position\nPosition of legend title\n\n\nline\nAll line elements\n\n\npanel_background\nPanel background\n\n\npanel_border\nPanel border\n\n\npanel_grid\nGrid lines\n\n\npanel_grid_major\nMajor grid lines\n\n\npanel_grid_major_x\nVertical major grid lines\n\n\npanel_grid_major_y\nHorizontal major grid lines\n\n\npanel_grid_minor\nMinor grid lines\n\n\npanel_grid_minor_x\nVertical minor grid lines\n\n\npanel_grid_minor_y\nHorizontal minor grid lines\n\n\npanel_ontop\nPlace panel background & gridlines over/under the data layers\n\n\npanel_spacing\nSpacing between the facet panels\n\n\npanel_spacing_x\nHorizontal spacing between the facet panels\n\n\npanel_spacing_y\nVertical spacing between the facet panels\n\n\nplot_background\nPlot background\n\n\nplot_caption\nPlot caption\n\n\nplot_margin\nPlot Margin\n\n\nplot_margin_bottom\nPlot Margin at the bottom\n\n\nplot_margin_left\nPlot Margin on the left\n\n\nplot_margin_right\nPlot Margin on the right\n\n\nplot_margin_top\nPlot Margin at the top\n\n\nplot_subtitle\nPlot subtitle\n\n\nplot_title\nPlot title\n\n\nrect\nAll rectangle elements\n\n\nstrip_align\nAlignment of the strip & its background w.r.t the panel border\n\n\nstrip_align_x\nVertical alignment of the strip & its background w.r.t the panel border\n\n\nstrip_align_y\nHorizontal alignment of the strip & its background w.r.t the panel border\n\n\nstrip_background\nFacet label background\n\n\nstrip_background_x\nHorizontal facet label background\n\n\nstrip_background_y\nVertical facet label background\n\n\nstrip_text\nFacet labels along both axes\n\n\nstrip_text_x\nFacet labels along the horizontal axis\n\n\nstrip_text_y\nFacet labels along the vertical axis\n\n\nsubplots_adjust\n\n\n\nsvg_usefonts\nHow to renderer fonts for svg images\n\n\ntext\nAll text elements in the plot\n\n\ntitle\nAll titles on the plot\n\n\n\n\n\n\n\n\n\n\n\ntheme_set\nChange the current(default) theme\n\n\ntheme_get\nReturn the default theme\n\n\ntheme_update\nModify elements of the current theme\n\n\n\n\n\n\n\n\nelement_line\ntheme element: line\n\n\nelement_rect\nTheme element: Rectangle\n\n\nelement_text\nTheme element: Text\n\n\nelement_blank\nTheme element: Blank"
   },
   {
     "objectID": "reference/index.html#coordinates",
@@ -3066,207 +3059,172 @@
     "text": "These datasets ship with the plotnine and you can import them with from the plotnine.data sub-package.\n\n\n\n\ndiamonds\nPrices of 50,000 round cut diamonds\n\n\neconomics\nUS economic time series.\n\n\neconomics_long\nUS economic time series.\n\n\nfaithful\nOld Faithful Geyser Data\n\n\nfaithfuld\nOld Faithful Geyser Data\n\n\nhuron\nLevel of Lake Huron 1875–1972\n\n\nluv_colours\ncolors in Luv space.\n\n\nmeat\nUS Meat Production\n\n\nmidwest\nMidwest demographics.\n\n\nmpg\nFuel economy data from 1999 and 2008 for 38 popular models of car\n\n\nmsleep\nAn updated and expanded version of the mammals sleep dataset.\n\n\nmtcars\nMotor Trend Car Road Tests\n\n\npageviews\n\n\n\npresidential\nTerms of 11 presidents from Eisenhower to Obama.\n\n\nseals\nVector field of seal movements.\n\n\ntxhousing\nHousing sales in TX."
   },
   {
-    "objectID": "reference/typing.html",
-    "href": "reference/typing.html",
+    "objectID": "reference/scales._runtime_typing.html",
+    "href": "reference/scales._runtime_typing.html",
     "title": "Typing Information",
     "section": "",
-    "text": "DataFrameConvertible()\n\n\nObject that can be converted to a DataFrame\n\n\n\n\n\n\nto_pandas()\n\n\nConvert to pandas dataframe\n\n\n\n\n\npd.DataFrame\n\nPandas representation of this object.\n\n\n\n\n\n\n\n\n\n\nPTransform()\n\n\nTransform function\n\n\n\n\n\n\n__call__(x)"
+    "text": "TypeVar(\"RangeT\", bound=Range)\n\n\n\n\n\nTypeVar(\"BreaksUserT\")\n\n\n\n\n\nTypeVar(\"LimitsUserT\")\n\n\n\n\n\nTypeVar(\"GuideTypeT\")"
   },
   {
-    "objectID": "reference/typing.html#protocols",
-    "href": "reference/typing.html#protocols",
+    "objectID": "reference/scales._runtime_typing.html#type-variables",
+    "href": "reference/scales._runtime_typing.html#type-variables",
     "title": "Typing Information",
     "section": "",
-    "text": "DataFrameConvertible()\n\n\nObject that can be converted to a DataFrame\n\n\n\n\n\n\nto_pandas()\n\n\nConvert to pandas dataframe\n\n\n\n\n\npd.DataFrame\n\nPandas representation of this object.\n\n\n\n\n\n\n\n\n\n\nPTransform()\n\n\nTransform function\n\n\n\n\n\n\n__call__(x)"
+    "text": "TypeVar(\"RangeT\", bound=Range)\n\n\n\n\n\nTypeVar(\"BreaksUserT\")\n\n\n\n\n\nTypeVar(\"LimitsUserT\")\n\n\n\n\n\nTypeVar(\"GuideTypeT\")"
   },
   {
-    "objectID": "reference/typing.html#type-variables",
-    "href": "reference/typing.html#type-variables",
-    "title": "Typing Information",
-    "section": "Type Variables",
-    "text": "Type Variables\n\n TFloatArrayLike\n\nTypeVar(\"TFloatArrayLike\", bound=FloatArrayLike)"
-  },
-  {
-    "objectID": "reference/typing.html#type-aliases",
-    "href": "reference/typing.html#type-aliases",
+    "objectID": "reference/scales._runtime_typing.html#type-aliases",
+    "href": "reference/scales._runtime_typing.html#type-aliases",
     "title": "Typing Information",
     "section": "Type Aliases",
-    "text": "Type Aliases\n\n AnyArray\n\nNDArray[Any]\n\n\n\n BoolArray\n\nNDArray[np.bool_]\n\n\n\n FloatArray\n\nNDArray[np.float64]\n\n\n\n IntArray\n\nNDArray[np.int64]\n\n\n\n StrArray\n\nNDArray[np.str_]\n\n\n\n AnySeries\n\npd.Series[Any]\n\n\n\n IntSeries\n\npd.Series[int]\n\n\n\n FloatSeries\n\npd.Series[float]\n\n\n\n AnyArrayLike\n\nAnyArray | pd.Series[Any] | Sequence[Any]\n\n\n\n IntArrayLike\n\nIntArray | IntSeries | Sequence[int]\n\n\n\n FloatArrayLike\n\nFloatArray | FloatSeries | Sequence[float]\n\n\n\n Data\n\npd.DataFrame | Callable[[pd.DataFrame], pd.DataFrame]\n\n\n\n DataLike\n\nData | DataFrameConvertible\n\n\n\n LayerData\n\npd.DataFrame | Callable[[pd.DataFrame], pd.DataFrame]\n\n\n\n LayerDataLike\n\nLayerData | DataFrameConvertible\n\n\n\n ColorLike\n\nstr\n\n\n\n ColorsLike\n\n(    ColorLike | list[ColorLike] | pd.Series[ColorLike] | StrArray)\n\n\n\n FigureFormat\n\nLiteral[\"png\", \"retina\", \"jpeg\", \"jpg\", \"svg\", \"pdf\"]\n\n\n\n FacetSpaceRatios\n\ndict[Literal[\"x\", \"y\"], Sequence[float]]\n\n\n\n StripPosition\n\nLiteral[\"top\", \"right\"]\n\n\n\n ScaledAestheticsName\n\nLiteral[    \"x\",    \"xmin\",    \"xmax\",    \"xend\",    \"xintercept\",    \"y\",    \"ymin\",    \"ymax\",    \"yend\",    \"yintercept\",    \"alpha\",    \"color\",    \"colour\",    \"fill\",    \"linetype\",    \"shape\",    \"size\",    \"stroke\",    # boxplot    \"ymax_final\",    \"ymin_final\",    \"lower\",    \"middle\",    \"upper\",]\n\n\n\n CoordRange\n\ntuple[float, float]\n\n\n\n SidePosition\n\nLiteral[\"left\", \"right\", \"top\", \"bottom\"]\n\n\n\n LegendPosition\n\n(    Literal[\"left\", \"right\", \"top\", \"bottom\", \"inside\"] | tuple[float, float])\n\n\n\n Orientation\n\nLiteral[\"horizontal\", \"vertical\"]\n\n\n\n GuideKind\n\nLiteral[\"legend\", \"colorbar\", \"colourbar\"]\n\n\n\n NoGuide\n\nLiteral[\"none\", False]\n\n\n\n VerticalJustification\n\nLiteral[\"bottom\", \"center\", \"top\"]\n\n\n\n HorizontalJustification\n\nLiteral[\"left\", \"center\", \"right\"]\n\n\n\n TextJustification\n\n(    VerticalJustification | HorizontalJustification | Literal[\"baseline\"])\n\n\n\n TransformCol\n\nCallable[[FloatSeries], FloatSeries | FloatArray]"
+    "text": "Type Aliases\n\n DiscreteBreaksUser\n\n(    bool    | None    | Sequence[str]    | Callable[[Sequence[str]], Sequence[str]])\n\n\n\n DiscreteLimitsUser\n\n(    None    | Sequence[str]    | Callable[[Sequence[str]], Sequence[str]])\n\n\n\n ContinuousBreaksUser\n\n(    bool    | None    | Sequence[float]    | Callable[[tuple[float, float]], Sequence[float]])\n\n\n\n MinorBreaksUser\n\nContinuousBreaksUser\n\n\n\n ContinuousLimitsUser\n\n(    None    | tuple[float, float]    | Callable[[tuple[float, float]], tuple[float, float]])\n\n\n\n ScaleLabelsUser\n\n(    bool    | None    | Sequence[str]    | Callable[[Sequence[float] | Sequence[str]], Sequence[str]]    | dict[str, str])\n\n\n\n TransUser\n\ntrans | str | Type[trans] | None"
   },
   {
-    "objectID": "reference/PlotnineAnimation.html",
-    "href": "reference/PlotnineAnimation.html",
-    "title": " plotnine.animation.PlotnineAnimation",
+    "objectID": "changelog.html",
+    "href": "changelog.html",
+    "title": "Changelog",
     "section": "",
-    "text": "PlotnineAnimation(\n    plots, interval=200, repeat_delay=None, repeat=True, blit=False\n)"
+    "text": "(not-yet-released)\n\n\n\nYou cannot call print on a ggplot object to show it. This was deprecated in v0.13.0 and it has now been removed. Use ggplot.show()\nThe color_space parameter of scale_color_hue now accepts the value \"hlsuv\" instead of \"husl\". The meaning of has not changed, and \"husl\" is silently accepted.\nThemeables axis_ticks_direction, axis_ticks_direction_x and axis_ticks_direction_y have be deprecated. In their place, the direction of the ticks can be controlled by using +ve, -ve or complex values for the axis_ticks_length, axis_ticks_length_major, axis_ticks_length_major_x, axis_ticks_length_major_y, axis_ticks_length_minor, axis_ticks_length_minor_x, or axis_ticks_length_minor_y.\n\n\n\n\n\nThe family, fontstyle and fontweight parameters of geom_text are now aesthetics (#790).\nplotnine now responds to the fig-width, fig-height and fig-format settings in the meta section of a quarto document.\nggtitle now accepts title and subtitle as keyword arguments. (#804)\nGained the option limitsize that makes it possible to display plots of any size.\nfrom plotnine.options import set_option\n\nset_option(\"figure_format\", False)\nFor geom_boxplot when the outliers are made invisible by giving them no shape, now they do not affect the limits of the plot. (#814)\nMade it possile to map an aesthetic value to None. (#791)\n\n\n\n\n\ngeom_text has gained new aesthetics fontvariant and fontstretch.\n\n\n\n\n\nFix layers 3 and above not to overlap the axis lines if there are any (#798).\nFixed bug in geom_segment where the lineend parameter was ignored. (#727)\nFixed stat_summary_bin to work with continuous x aesthetic when specifying the binwidth or breaks. (#824)\nFixed PlotnineAnimation not to draw a second legend at the bottom-left corner. ("
   },
   {
-    "objectID": "reference/PlotnineAnimation.html#parameters",
-    "href": "reference/PlotnineAnimation.html#parameters",
-    "title": " plotnine.animation.PlotnineAnimation",
+    "objectID": "changelog.html#v0.14.0",
+    "href": "changelog.html#v0.14.0",
+    "title": "Changelog",
+    "section": "",
+    "text": "(not-yet-released)\n\n\n\nYou cannot call print on a ggplot object to show it. This was deprecated in v0.13.0 and it has now been removed. Use ggplot.show()\nThe color_space parameter of scale_color_hue now accepts the value \"hlsuv\" instead of \"husl\". The meaning of has not changed, and \"husl\" is silently accepted.\nThemeables axis_ticks_direction, axis_ticks_direction_x and axis_ticks_direction_y have be deprecated. In their place, the direction of the ticks can be controlled by using +ve, -ve or complex values for the axis_ticks_length, axis_ticks_length_major, axis_ticks_length_major_x, axis_ticks_length_major_y, axis_ticks_length_minor, axis_ticks_length_minor_x, or axis_ticks_length_minor_y.\n\n\n\n\n\nThe family, fontstyle and fontweight parameters of geom_text are now aesthetics (#790).\nplotnine now responds to the fig-width, fig-height and fig-format settings in the meta section of a quarto document.\nggtitle now accepts title and subtitle as keyword arguments. (#804)\nGained the option limitsize that makes it possible to display plots of any size.\nfrom plotnine.options import set_option\n\nset_option(\"figure_format\", False)\nFor geom_boxplot when the outliers are made invisible by giving them no shape, now they do not affect the limits of the plot. (#814)\nMade it possile to map an aesthetic value to None. (#791)\n\n\n\n\n\ngeom_text has gained new aesthetics fontvariant and fontstretch.\n\n\n\n\n\nFix layers 3 and above not to overlap the axis lines if there are any (#798).\nFixed bug in geom_segment where the lineend parameter was ignored. (#727)\nFixed stat_summary_bin to work with continuous x aesthetic when specifying the binwidth or breaks. (#824)\nFixed PlotnineAnimation not to draw a second legend at the bottom-left corner. ("
+  },
+  {
+    "objectID": "reference/aes.html",
+    "href": "reference/aes.html",
+    "title": " plotnine.aes",
+    "section": "",
+    "text": "aes(x=None, y=None, kwargs={})"
+  },
+  {
+    "objectID": "reference/aes.html#parameters",
+    "href": "reference/aes.html#parameters",
+    "title": " plotnine.aes",
     "section": "Parameters",
-    "text": "Parameters\n\n\nplots : Iterable[ggplot]\n\nggplot objects that make up the the frames of the animation\n\ninterval : int = 200\n\nDelay between frames in milliseconds. Defaults to 200.\n\nrepeat_delay : int = None\n\nIf the animation in repeated, adds a delay in milliseconds before repeating the animation. Defaults to None.\n\nrepeat : bool = True\n\nControls whether the animation should repeat when the sequence of frames is completed. Defaults to True.\n\nblit : bool = False\n\nControls whether blitting is used to optimize drawing. Defaults to False."
+    "text": "Parameters\n\n\nx : str | array_like | scalar = None\n\nx aesthetic mapping\n\ny : str | array_like | scalar = None\n\ny aesthetic mapping\n\n**kwargs : Any = {}\n\nOther aesthetic mappings"
   },
   {
-    "objectID": "reference/PlotnineAnimation.html#notes",
-    "href": "reference/PlotnineAnimation.html#notes",
-    "title": " plotnine.animation.PlotnineAnimation",
+    "objectID": "reference/aes.html#notes",
+    "href": "reference/aes.html#notes",
+    "title": " plotnine.aes",
     "section": "Notes",
-    "text": "Notes\n\nThe plots should have the same facet and the facet should not have fixed x and y scales.\nThe scales of all the plots should have the same limits. It is a good idea to create a scale (with limits) for each aesthetic and add them to all the plots."
+    "text": "Notes\nOnly the x and y aesthetic mappings can be specified as positional arguments. All the rest must be keyword arguments.\nThe value of each mapping must be one of:\n\nstr\n import pandas as pd\n import numpy as np\n\n arr = [11, 12, 13]\n df = pd.DataFrame({\n     \"alpha\": [1, 2, 3],\n     \"beta\": [1, 2, 3],\n     \"gam ma\": [1, 2, 3]\n })\n\n # Refer to a column in a dataframe\n ggplot(df, aes(x=\"alpha\", y=\"beta\"))\narray_like\n# A variable\nggplot(df, aes(x=\"alpha\", y=arr))\n\n# or an inplace list\nggplot(df, aes(x=\"alpha\", y=[4, 5, 6]))\nscalar\n# A scalar value/variable\nggplot(df, aes(x=\"alpha\", y=4))\n\n# The above statement is equivalent to\nggplot(df, aes(x=\"alpha\", y=[4, 4, 4]))\nString expression\nggplot(df, aes(x=\"alpha\", y=\"2*beta\"))\nggplot(df, aes(x=\"alpha\", y=\"np.sin(beta)\"))\nggplot(df, aes(x=\"df.index\", y=\"beta\"))\n\n# If `count` is an aesthetic calculated by a stat\nggplot(df, aes(x=\"alpha\", y=after_stat(\"count\")))\nggplot(df, aes(x=\"alpha\", y=after_stat(\"count/np.max(count)\")))\nThe strings in the expression can refer to;\n\ncolumns in the dataframe\nvariables in the namespace\naesthetic values (columns) calculated by the stat\n\nwith the column names having precedence over the variables. For expressions, columns in the dataframe that are mapped to must have names that would be valid python variable names.\nThis is okay:\n# \"gam ma\" is a column in the dataframe\nggplot(df, aes(x=\"df.index\", y=\"gam ma\"))\nWhile this is not:\n# \"gam ma\" is a column in the dataframe, but not\n# valid python variable name\nggplot(df, aes(x=\"df.index\", y=\"np.sin(gam ma)\"))\n\naes has 2 internal methods you can use to transform variables being mapped.\n\nfactor - This function turns the variable into a factor. It is just an alias to pandas.Categorical:\nggplot(mtcars, aes(x=\"factor(cyl)\")) + geom_bar()\nreorder - This function changes the order of first variable based on values of the second variable:\ndf = pd.DataFrame({\n    \"x\": [\"b\", \"d\", \"c\", \"a\"],\n    \"y\": [1, 2, 3, 4]\n})\n\nggplot(df, aes(\"reorder(x, y)\", \"y\")) + geom_col()\n\nThe group aesthetic\ngroup is a special aesthetic that the user can map to. It is used to group the plotted items. If not specified, it is automatically computed and in most cases the computed groups are sufficient. However, there may be cases were it is handy to map to it."
   },
   {
-    "objectID": "reference/after_scale.html",
-    "href": "reference/after_scale.html",
-    "title": " plotnine.after_scale",
+    "objectID": "reference/aes.html#see-also",
+    "href": "reference/aes.html#see-also",
+    "title": " plotnine.aes",
+    "section": "See Also",
+    "text": "See Also\n\nafter_stat\n\nFor how to map aesthetics to variable calculated by the stat\n\nafter_scale\n\nFor how to alter aesthetics after the data has been mapped by the scale.\n\nstage\n\nFor how to map to evaluate the mapping to aesthetics at more than one stage of the plot building pipeline."
+  },
+  {
+    "objectID": "reference/after_stat.html",
+    "href": "reference/after_stat.html",
+    "title": " plotnine.after_stat",
     "section": "",
-    "text": "after_scale(x)"
+    "text": "after_stat(x)"
   },
   {
-    "objectID": "reference/after_scale.html#parameters",
-    "href": "reference/after_scale.html#parameters",
-    "title": " plotnine.after_scale",
+    "objectID": "reference/after_stat.html#parameters",
+    "href": "reference/after_stat.html#parameters",
+    "title": " plotnine.after_stat",
     "section": "Parameters",
     "text": "Parameters\n\n\nx : str\n\nAn expression"
   },
   {
-    "objectID": "reference/after_scale.html#see-also",
-    "href": "reference/after_scale.html#see-also",
-    "title": " plotnine.after_scale",
+    "objectID": "reference/after_stat.html#see-also",
+    "href": "reference/after_stat.html#see-also",
+    "title": " plotnine.after_stat",
     "section": "See Also",
-    "text": "See Also\n\nafter_stat\n\n\n\nstage"
+    "text": "See Also\n\nafter_scale\n\n\n\nstage"
   },
   {
-    "objectID": "reference/annotate.html",
-    "href": "reference/annotate.html",
-    "title": " plotnine.annotate",
+    "objectID": "reference/annotation_logticks.html",
+    "href": "reference/annotation_logticks.html",
+    "title": " plotnine.annotation_logticks",
     "section": "",
-    "text": "annotate(\n    geom,\n    x=None,\n    y=None,\n    xmin=None,\n    xmax=None,\n    xend=None,\n    xintercept=None,\n    ymin=None,\n    ymax=None,\n    yend=None,\n    yintercept=None,\n    kwargs={}\n)"
+    "text": "annotation_logticks(\n    sides=\"bl\",\n    alpha=1,\n    color=\"black\",\n    size=0.5,\n    linetype=\"solid\",\n    lengths=(0.036, 0.0225, 0.012),\n    base=None\n)"
   },
   {
-    "objectID": "reference/annotate.html#parameters",
-    "href": "reference/annotate.html#parameters",
-    "title": " plotnine.annotate",
+    "objectID": "reference/annotation_logticks.html#parameters",
+    "href": "reference/annotation_logticks.html#parameters",
+    "title": " plotnine.annotation_logticks",
     "section": "Parameters",
-    "text": "Parameters\n\n\ngeom : str | type[geom_base_class]\n\ngeom to use for annotation, or name of geom (e.g. ‘point’).\n\nx : float | None = None\n\nPosition\n\ny : float | None = None\n\nPosition\n\nxmin : float | None = None\n\nPosition\n\nymin : float | None = None\n\nPosition\n\nxmax : float | None = None\n\nPosition\n\nymax : float | None = None\n\nPosition\n\nxend : float | None = None\n\nPosition\n\nyend : float | None = None\n\nPosition\n\nxintercept : float | None = None\n\nPosition\n\nyintercept : float | None = None\n\nPosition\n\nkwargs : Any = {}\n\nOther aesthetics or parameters to the geom."
+    "text": "Parameters\n\n\nsides : str = \"bl\"\n\nSides onto which to draw the marks. Any combination chosen from the characters btlr, for bottom, top, left or right side marks. If coord_flip() is used, these are the sides after the flip.\n\nalpha : float = 1\n\nTransparency of the ticks\n\ncolor : str | tuple[float, float, float] | tuple[float, float, float, float] = \"black\"\n\nColour of the ticks\n\nsize : float = 0.5\n\nThickness of the ticks\n\nlinetype : Literal[\"solid\", \"dashed\", \"dashdot\", \"dotted\"] | Sequence[float] = \"solid\"\n\nType of line\n\nlengths : tuple[float, float, float] = (0.036, 0.0225, 0.012)\n\nlength of the ticks drawn for full / half / tenth ticks relative to panel size\n\nbase : float | None = None\n\nBase of the logarithm in which the ticks will be calculated. If None, the base used to log transform the scale will be used."
   },
   {
-    "objectID": "reference/annotate.html#notes",
-    "href": "reference/annotate.html#notes",
-    "title": " plotnine.annotate",
-    "section": "Notes",
-    "text": "Notes\nThe positioning aethetics x, y, xmin, ymin, xmax, ymax, xend, yend, xintercept, yintercept depend on which geom is used.\nYou should choose or ignore accordingly.\nAll geoms are created with stat=\"identity\"."
-  },
-  {
-    "objectID": "reference/annotation_stripes.html",
-    "href": "reference/annotation_stripes.html",
-    "title": " plotnine.annotation_stripes",
+    "objectID": "reference/arrow.html",
+    "href": "reference/arrow.html",
+    "title": " plotnine.arrow",
     "section": "",
-    "text": "annotation_stripes(\n    fill=(\"#AAAAAA\", \"#CCCCCC\"),\n    fill_range=\"auto\",\n    direction=\"vertical\",\n    extend=(0, 1),\n    kwargs={}\n)"
+    "text": "arrow(angle=30, length=0.2, ends=\"last\", type=\"open\")"
   },
   {
-    "objectID": "reference/annotation_stripes.html#parameters",
-    "href": "reference/annotation_stripes.html#parameters",
-    "title": " plotnine.annotation_stripes",
+    "objectID": "reference/arrow.html#parameters",
+    "href": "reference/arrow.html#parameters",
+    "title": " plotnine.arrow",
     "section": "Parameters",
-    "text": "Parameters\n\n\nfill : Sequence[str] = (\"#AAAAAA\", \"#CCCCCC\")\n\nList of colors for the strips.\n\nfill_range : Literal[\"auto\", \"cycle\", \"no\", \"nocycle\"] = \"auto\"\n\nHow to fill stripes beyond the range of scale:\n\"cycle\"      # keep cycling the colors of the\n             # stripes after the range ends\n\"nocycle\"    # stop cycling the colors of the\n             # stripes after the range ends\n\"auto\"       # \"cycle\" for continuous scales and\n             # \"nocycle\" for discrete scales.\n\"no\"         # Do not add stripes passed the range\n             # passed the range of the scales\n\ndirection : Literal[\"horizontal\", \"vertical\"] = \"vertical\"\n\nOrientation of the stripes\n\nextend : tuple[float, float] = (0, 1)\n\nRange of the stripes. The default is (0, 1), top to bottom. The values should be in the range [0, 1].\n\n**kwargs : Any = {}\n\nOther aesthetic parameters for the rectangular stripes. They include; alpha, color, linetype, and size."
+    "text": "Parameters\n\n\nangle : float = 30\n\nangle in degrees between the tail a single edge.\n\nlength : float = 0.2\n\nof the edge in “inches”\n\nends : Literal[\"first\", \"last\", \"both\"] = \"last\"\n\nAt which end of the line to draw the arrowhead\n\ntype : Literal[\"open\", \"closed\"] = \"open\"\n\nWhen it is closed, it is also filled"
   },
   {
-    "objectID": "reference/as_labeller.html",
-    "href": "reference/as_labeller.html",
-    "title": " plotnine.as_labeller",
+    "objectID": "reference/aspect_ratio.html",
+    "href": "reference/aspect_ratio.html",
+    "title": " plotnine.options.aspect_ratio",
     "section": "",
-    "text": "as_labeller(x=None, default=label_value, multi_line=True)"
+    "text": "aspect_ratio : Literal[\"auto\"] | float = \"auto\"\n\n\nDefault aspect ratio used by the themes"
   },
   {
-    "objectID": "reference/as_labeller.html#parameters",
-    "href": "reference/as_labeller.html#parameters",
-    "title": " plotnine.as_labeller",
-    "section": "Parameters",
-    "text": "Parameters\n\n\nx : callable | dict = None\n\nObject to coerce\n\ndefault : str | callable = label_value\n\nDefault labeller. If it is a string, it should be the name of one the labelling functions provided by plotnine.\n\nmulti_line : bool = True\n\nWhether to place each variable on a separate line"
-  },
-  {
-    "objectID": "reference/as_labeller.html#returns",
-    "href": "reference/as_labeller.html#returns",
-    "title": " plotnine.as_labeller",
-    "section": "Returns",
-    "text": "Returns\n\n\nout : labeller\n\nLabelling function"
-  },
-  {
-    "objectID": "reference/axis_line.html",
-    "href": "reference/axis_line.html",
-    "title": " plotnine.themes.themeable.axis_line",
+    "objectID": "reference/axis_line_x.html",
+    "href": "reference/axis_line_x.html",
+    "title": " plotnine.themes.themeable.axis_line_x",
     "section": "",
-    "text": "axis_line(theme_element)"
+    "text": "axis_line_x(theme_element)"
   },
   {
-    "objectID": "reference/axis_line.html#parameters",
-    "href": "reference/axis_line.html#parameters",
-    "title": " plotnine.themes.themeable.axis_line",
+    "objectID": "reference/axis_line_x.html#parameters",
+    "href": "reference/axis_line_x.html#parameters",
+    "title": " plotnine.themes.themeable.axis_line_x",
     "section": "Parameters",
     "text": "Parameters\n\n\ntheme_element : element_line"
   },
   {
-    "objectID": "reference/axis_line_y.html",
-    "href": "reference/axis_line_y.html",
-    "title": " plotnine.themes.themeable.axis_line_y",
-    "section": "",
-    "text": "axis_line_y(theme_element)"
-  },
-  {
-    "objectID": "reference/axis_line_y.html#parameters",
-    "href": "reference/axis_line_y.html#parameters",
-    "title": " plotnine.themes.themeable.axis_line_y",
-    "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : element_line"
-  },
-  {
-    "objectID": "reference/axis_line_y.html#attributes",
-    "href": "reference/axis_line_y.html#attributes",
-    "title": " plotnine.themes.themeable.axis_line_y",
+    "objectID": "reference/axis_line_x.html#attributes",
+    "href": "reference/axis_line_x.html#attributes",
+    "title": " plotnine.themes.themeable.axis_line_x",
     "section": "Attributes",
-    "text": "Attributes\n\n\n\nName\nDescription\n\n\n\n\nposition\nstr(object=’’) -&gt; str\n\n\n\n\n position\n\nposition = \"left\"\n\n\nstr(object=’’) -&gt; str str(bytes_or_buffer[, encoding[, errors]]) -&gt; str\nCreate a new string object from the given object. If encoding or errors is specified, then the object must expose a data buffer that will be decoded using the given encoding and error handler. Otherwise, returns the result of object.__str__() (if defined) or repr(object). encoding defaults to sys.getdefaultencoding(). errors defaults to ‘strict’."
+    "text": "Attributes\n\n\n\nName\nDescription\n\n\n\n\nposition\nstr(object=’’) -&gt; str\n\n\n\n\n position\n\nposition = \"bottom\"\n\n\nstr(object=’’) -&gt; str str(bytes_or_buffer[, encoding[, errors]]) -&gt; str\nCreate a new string object from the given object. If encoding or errors is specified, then the object must expose a data buffer that will be decoded using the given encoding and error handler. Otherwise, returns the result of object.__str__() (if defined) or repr(object). encoding defaults to sys.getdefaultencoding(). errors defaults to ‘strict’."
   },
   {
-    "objectID": "reference/axis_text_x.html",
-    "href": "reference/axis_text_x.html",
-    "title": " plotnine.themes.themeable.axis_text_x",
+    "objectID": "reference/axis_text.html",
+    "href": "reference/axis_text.html",
+    "title": " plotnine.themes.themeable.axis_text",
     "section": "",
-    "text": "axis_text_x(theme_element)"
+    "text": "axis_text(theme_element)"
   },
   {
-    "objectID": "reference/axis_text_x.html#parameters",
-    "href": "reference/axis_text_x.html#parameters",
-    "title": " plotnine.themes.themeable.axis_text_x",
+    "objectID": "reference/axis_text.html#parameters",
+    "href": "reference/axis_text.html#parameters",
+    "title": " plotnine.themes.themeable.axis_text",
     "section": "Parameters",
     "text": "Parameters\n\n\ntheme_element : element_text"
   },
   {
-    "objectID": "reference/axis_ticks.html",
-    "href": "reference/axis_ticks.html",
-    "title": " plotnine.themes.themeable.axis_ticks",
+    "objectID": "reference/axis_text_y.html",
+    "href": "reference/axis_text_y.html",
+    "title": " plotnine.themes.themeable.axis_text_y",
     "section": "",
-    "text": "axis_ticks(theme_element)"
+    "text": "axis_text_y(theme_element)"
   },
   {
-    "objectID": "reference/axis_ticks.html#parameters",
-    "href": "reference/axis_ticks.html#parameters",
-    "title": " plotnine.themes.themeable.axis_ticks",
+    "objectID": "reference/axis_text_y.html#parameters",
+    "href": "reference/axis_text_y.html#parameters",
+    "title": " plotnine.themes.themeable.axis_text_y",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : element_line"
-  },
-  {
-    "objectID": "reference/axis_ticks_direction_x.html",
-    "href": "reference/axis_ticks_direction_x.html",
-    "title": " plotnine.themes.themeable.axis_ticks_direction_x",
-    "section": "",
-    "text": "axis_ticks_direction_x(theme_element)"
-  },
-  {
-    "objectID": "reference/axis_ticks_direction_x.html#parameters",
-    "href": "reference/axis_ticks_direction_x.html#parameters",
-    "title": " plotnine.themes.themeable.axis_ticks_direction_x",
-    "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : Literal[\"in\", \"out\", \"inout\"]\n\nin for ticks inside the panel. out for ticks outside the panel. inout for ticks inside and outside the panel."
+    "text": "Parameters\n\n\ntheme_element : element_text"
   },
   {
     "objectID": "reference/axis_ticks_length.html",
@@ -3280,7 +3238,7 @@
     "href": "reference/axis_ticks_length.html#parameters",
     "title": " plotnine.themes.themeable.axis_ticks_length",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : float\n\nValue in points."
+    "text": "Parameters\n\n\ntheme_element : float | complex\n\nValue in points. A negative value creates the ticks inside the plot panel. A complex value (e.g. 3j) creates ticks that span both in and out of the panel."
   },
   {
     "objectID": "reference/axis_ticks_length_major_x.html",
@@ -3294,7 +3252,7 @@
     "href": "reference/axis_ticks_length_major_x.html#parameters",
     "title": " plotnine.themes.themeable.axis_ticks_length_major_x",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : float\n\nValue in points."
+    "text": "Parameters\n\n\ntheme_element : float | complex\n\nValue in points. A negative value creates the ticks inside the plot panel. A complex value (e.g. 3j) creates ticks that span both in and out of the panel."
   },
   {
     "objectID": "reference/axis_ticks_length_minor.html",
@@ -3308,7 +3266,7 @@
     "href": "reference/axis_ticks_length_minor.html#parameters",
     "title": " plotnine.themes.themeable.axis_ticks_length_minor",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : float\n\nValue in points."
+    "text": "Parameters\n\n\ntheme_element : float | complex\n\nValue in points. A negative value creates the ticks inside the plot panel. A complex value (e.g. 3j) creates ticks that span both in and out of the panel."
   },
   {
     "objectID": "reference/axis_ticks_length_minor_y.html",
@@ -3322,7 +3280,7 @@
     "href": "reference/axis_ticks_length_minor_y.html#parameters",
     "title": " plotnine.themes.themeable.axis_ticks_length_minor_y",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : float\n\nValue in points."
+    "text": "Parameters\n\n\ntheme_element : float | complex\n\nValue in points. A negative value creates the ticks inside the plot panel. A complex value (e.g. 3j) creates ticks that span both in and out of the panel."
   },
   {
     "objectID": "reference/axis_ticks_major_x.html",
@@ -5863,7 +5821,7 @@
     "href": "reference/theme.html",
     "title": " plotnine.theme",
     "section": "",
-    "text": "theme(\n    complete=False,\n    axis_title_x=None,\n    axis_title_y=None,\n    axis_title=None,\n    legend_title=None,\n    legend_text_legend=None,\n    legend_text_colorbar=None,\n    legend_text=None,\n    plot_title=None,\n    plot_subtitle=None,\n    plot_caption=None,\n    strip_text_x=None,\n    strip_text_y=None,\n    strip_text=None,\n    title=None,\n    axis_text_x=None,\n    axis_text_y=None,\n    axis_text=None,\n    text=None,\n    axis_line_x=None,\n    axis_line_y=None,\n    axis_line=None,\n    axis_ticks_minor_x=None,\n    axis_ticks_minor_y=None,\n    axis_ticks_major_x=None,\n    axis_ticks_major_y=None,\n    axis_ticks_major=None,\n    axis_ticks_minor=None,\n    axis_ticks_x=None,\n    axis_ticks_y=None,\n    axis_ticks=None,\n    legend_ticks=None,\n    panel_grid_major_x=None,\n    panel_grid_major_y=None,\n    panel_grid_minor_x=None,\n    panel_grid_minor_y=None,\n    panel_grid_major=None,\n    panel_grid_minor=None,\n    panel_grid=None,\n    line=None,\n    legend_key=None,\n    legend_frame=None,\n    legend_background=None,\n    legend_box_background=None,\n    panel_background=None,\n    panel_border=None,\n    plot_background=None,\n    strip_background_x=None,\n    strip_background_y=None,\n    strip_background=None,\n    rect=None,\n    axis_ticks_length_major_x=None,\n    axis_ticks_length_major_y=None,\n    axis_ticks_length_major=None,\n    axis_ticks_length_minor_x=None,\n    axis_ticks_length_minor_y=None,\n    axis_ticks_length_minor=None,\n    axis_ticks_length=None,\n    axis_ticks_pad_major_x=None,\n    axis_ticks_pad_major_y=None,\n    axis_ticks_pad_major=None,\n    axis_ticks_pad_minor_x=None,\n    axis_ticks_pad_minor_y=None,\n    axis_ticks_pad_minor=None,\n    axis_ticks_pad=None,\n    axis_ticks_direction_x=None,\n    axis_ticks_direction_y=None,\n    axis_ticks_direction=None,\n    panel_spacing_x=None,\n    panel_spacing_y=None,\n    panel_spacing=None,\n    plot_margin_left=None,\n    plot_margin_right=None,\n    plot_margin_top=None,\n    plot_margin_bottom=None,\n    plot_margin=None,\n    panel_ontop=None,\n    aspect_ratio=None,\n    dpi=None,\n    figure_size=None,\n    legend_box=None,\n    legend_box_margin=None,\n    legend_box_just=None,\n    legend_justification_right=None,\n    legend_justification_left=None,\n    legend_justification_top=None,\n    legend_justification_bottom=None,\n    legend_justification_inside=None,\n    legend_justification=None,\n    legend_direction=None,\n    legend_key_width=None,\n    legend_key_height=None,\n    legend_key_size=None,\n    legend_ticks_length=None,\n    legend_margin=None,\n    legend_box_spacing=None,\n    legend_spacing=None,\n    legend_position_inside=None,\n    legend_position=None,\n    legend_title_position=None,\n    legend_text_position=None,\n    legend_key_spacing_x=None,\n    legend_key_spacing_y=None,\n    legend_key_spacing=None,\n    strip_align_x=None,\n    strip_align_y=None,\n    strip_align=None,\n    svg_usefonts=None,\n    kwargs={}\n)"
+    "text": "theme(\n    complete=False,\n    axis_title_x=None,\n    axis_title_y=None,\n    axis_title=None,\n    legend_title=None,\n    legend_text_legend=None,\n    legend_text_colorbar=None,\n    legend_text=None,\n    plot_title=None,\n    plot_subtitle=None,\n    plot_caption=None,\n    strip_text_x=None,\n    strip_text_y=None,\n    strip_text=None,\n    title=None,\n    axis_text_x=None,\n    axis_text_y=None,\n    axis_text=None,\n    text=None,\n    axis_line_x=None,\n    axis_line_y=None,\n    axis_line=None,\n    axis_ticks_minor_x=None,\n    axis_ticks_minor_y=None,\n    axis_ticks_major_x=None,\n    axis_ticks_major_y=None,\n    axis_ticks_major=None,\n    axis_ticks_minor=None,\n    axis_ticks_x=None,\n    axis_ticks_y=None,\n    axis_ticks=None,\n    legend_ticks=None,\n    panel_grid_major_x=None,\n    panel_grid_major_y=None,\n    panel_grid_minor_x=None,\n    panel_grid_minor_y=None,\n    panel_grid_major=None,\n    panel_grid_minor=None,\n    panel_grid=None,\n    line=None,\n    legend_key=None,\n    legend_frame=None,\n    legend_background=None,\n    legend_box_background=None,\n    panel_background=None,\n    panel_border=None,\n    plot_background=None,\n    strip_background_x=None,\n    strip_background_y=None,\n    strip_background=None,\n    rect=None,\n    axis_ticks_length_major_x=None,\n    axis_ticks_length_major_y=None,\n    axis_ticks_length_major=None,\n    axis_ticks_length_minor_x=None,\n    axis_ticks_length_minor_y=None,\n    axis_ticks_length_minor=None,\n    axis_ticks_length=None,\n    axis_ticks_pad_major_x=None,\n    axis_ticks_pad_major_y=None,\n    axis_ticks_pad_major=None,\n    axis_ticks_pad_minor_x=None,\n    axis_ticks_pad_minor_y=None,\n    axis_ticks_pad_minor=None,\n    axis_ticks_pad=None,\n    panel_spacing_x=None,\n    panel_spacing_y=None,\n    panel_spacing=None,\n    plot_margin_left=None,\n    plot_margin_right=None,\n    plot_margin_top=None,\n    plot_margin_bottom=None,\n    plot_margin=None,\n    panel_ontop=None,\n    aspect_ratio=None,\n    dpi=None,\n    figure_size=None,\n    legend_box=None,\n    legend_box_margin=None,\n    legend_box_just=None,\n    legend_justification_right=None,\n    legend_justification_left=None,\n    legend_justification_top=None,\n    legend_justification_bottom=None,\n    legend_justification_inside=None,\n    legend_justification=None,\n    legend_direction=None,\n    legend_key_width=None,\n    legend_key_height=None,\n    legend_key_size=None,\n    legend_ticks_length=None,\n    legend_margin=None,\n    legend_box_spacing=None,\n    legend_spacing=None,\n    legend_position_inside=None,\n    legend_position=None,\n    legend_title_position=None,\n    legend_text_position=None,\n    legend_key_spacing_x=None,\n    legend_key_spacing_y=None,\n    legend_key_spacing=None,\n    strip_align_x=None,\n    strip_align_y=None,\n    strip_align=None,\n    svg_usefonts=None,\n    kwargs={}\n)"
   },
   {
     "objectID": "reference/theme.html#parameters",

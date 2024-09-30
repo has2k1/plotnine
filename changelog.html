@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.12">
+<meta name="generator" content="quarto-1.6.15">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -73,7 +73,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-018089954d508eae8a473f0b7f0491f0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-17a5b03d9e7739a493159ad9e8146f16.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-1a7469856d55faa434c568513415eac3.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -189,6 +189,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ul>
 <li><p>You cannot call <code>print</code> on a ggplot object to show it. This was deprecated in <code>v0.13.0</code> and it has now been removed. Use <a href="./reference/ggplot.html#plotnine.ggplot.show">ggplot.show()</a></p></li>
 <li><p>The color_space parameter of <a href="./reference/scale_color_hue.html#plotnine.scale_color_hue"><code>scale_color_hue</code></a> now accepts the value <code>"hlsuv"</code> instead of <code>"husl"</code>. The meaning of has not changed, and <code>"husl"</code> is silently accepted.</p></li>
+<li><p>Themeables <code>axis_ticks_direction</code>, <code>axis_ticks_direction_x</code> and <code>axis_ticks_direction_y</code> have be deprecated. In their place, the direction of the ticks can be controlled by using +ve, -ve or complex values for the <code>axis_ticks_length</code>, <code>axis_ticks_length_major</code>, <code>axis_ticks_length_major_x</code>, <code>axis_ticks_length_major_y</code>, <code>axis_ticks_length_minor</code>, <code>axis_ticks_length_minor_x</code>, or <code>axis_ticks_length_minor_y</code>.</p></li>
 </ul>
 </section>
 <section id="enhancements" class="level3">
