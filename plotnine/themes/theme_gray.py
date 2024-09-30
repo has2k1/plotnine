@@ -50,7 +50,6 @@ class theme_gray(theme):
             axis_text_x=element_text(va="top", margin={"t": fifth_line}),
             axis_text_y=element_text(ha="right", margin={"r": fifth_line}),
             axis_ticks=element_line(color="#333333"),
-            axis_ticks_direction="out",
             axis_ticks_length=0,
             axis_ticks_length_major=quarter_line,
             axis_ticks_length_minor=eighth_line,

@@ -15,6 +15,13 @@ title: Changelog
   accepts the value `"hlsuv"` instead of `"husl"`. The meaning of has
   not changed, and `"husl"` is silently accepted.
 
+- Themeables `axis_ticks_direction`, `axis_ticks_direction_x` and
+  `axis_ticks_direction_y` have be deprecated. In their place, the direction
+  of the ticks can be controlled by using +ve, -ve or complex values for
+  the `axis_ticks_length`, `axis_ticks_length_major`, `axis_ticks_length_major_x`,
+  `axis_ticks_length_major_y`, `axis_ticks_length_minor`, `axis_ticks_length_minor_x`,
+  or `axis_ticks_length_minor_y`.
+
 ### Enhancements
 
 - The `family`, `fontstyle` and `fontweight` parameters of

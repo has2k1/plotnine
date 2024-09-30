@@ -1548,7 +1548,7 @@ class rect(
     """
 
 
-# value base themeables
+# themeables with scalar values
 
 
 class axis_ticks_length_major_x(themeable):
@@ -1557,20 +1557,32 @@ class axis_ticks_length_major_x(themeable):
 
     Parameters
     ----------
-    theme_element : float
-        Value in points.
+    theme_element : float | complex
+        Value in points. A negative value creates the ticks
+        inside the plot panel. A complex value (e.g. `3j`)
+        creates ticks that span both in and out of the panel.
     """
 
     def apply_ax(self, ax: Axes):
         super().apply_ax(ax)
-        try:
-            t = ax.xaxis.get_major_ticks()[0]
-        except IndexError:
-            val = 0
-        else:
-            val = self.properties["value"] if t.tick1line.get_visible() else 0
+        value: float | complex = self.properties["value"]
 
-        ax.xaxis.set_tick_params(which="major", size=val)
+        try:
+            visible = ax.xaxis.get_major_ticks()[0].tick1line.get_visible()
+        except IndexError:
+            value = 0
+        else:
+            if not visible:
+                value = 0
+
+        if isinstance(value, (float, int)):
+            tickdir = "in" if value < 0 else "out"
+        else:
+            tickdir = "inout"
+
+        ax.xaxis.set_tick_params(
+            which="major", length=abs(value), tickdir=tickdir
+        )
 
 
 class axis_ticks_length_major_y(themeable):
@@ -1579,20 +1591,32 @@ class axis_ticks_length_major_y(themeable):
 
     Parameters
     ----------
-    theme_element : float
-        Value in points.
+    theme_element : float | complex
+        Value in points. A negative value creates the ticks
+        inside the plot panel. A complex value (e.g. `3j`)
+        creates ticks that span both in and out of the panel.
     """
 
     def apply_ax(self, ax: Axes):
         super().apply_ax(ax)
-        try:
-            t = ax.yaxis.get_major_ticks()[0]
-        except IndexError:
-            val = 0
-        else:
-            val = self.properties["value"] if t.tick1line.get_visible() else 0
+        value: float | complex = self.properties["value"]
 
-        ax.yaxis.set_tick_params(which="major", size=val)
+        try:
+            visible = ax.yaxis.get_major_ticks()[0].tick1line.get_visible()
+        except IndexError:
+            value = 0
+        else:
+            if not visible:
+                value = 0
+
+        if isinstance(value, (float, int)):
+            tickdir = "in" if value < 0 else "out"
+        else:
+            tickdir = "inout"
+
+        ax.yaxis.set_tick_params(
+            which="major", length=abs(value), tickdir=tickdir
+        )
 
 
 class axis_ticks_length_major(
@@ -1604,7 +1628,9 @@ class axis_ticks_length_major(
     Parameters
     ----------
     theme_element : float
-        Value in points.
+        Value in points. A negative value creates the ticks
+        inside the plot panel. A complex value (e.g. `3j`)
+        creates ticks that span both in and out of the panel.
     """
 
 
@@ -1614,14 +1640,23 @@ class axis_ticks_length_minor_x(themeable):
 
     Parameters
     ----------
-    theme_element : float
-        Value in points.
+    theme_element : float | complex
+        Value in points. A negative value creates the ticks
+        inside the plot panel. A complex value (e.g. `3j`)
+        creates ticks that span both in and out of the panel.
     """
 
     def apply_ax(self, ax: Axes):
         super().apply_ax(ax)
+        value: float | complex = self.properties["value"]
+
+        if isinstance(value, (float, int)):
+            tickdir = "in" if value < 0 else "out"
+        else:
+            tickdir = "inout"
+
         ax.xaxis.set_tick_params(
-            which="minor", length=self.properties["value"]
+            which="minor", length=abs(value), tickdir=tickdir
         )
 
 
@@ -1631,14 +1666,23 @@ class axis_ticks_length_minor_y(themeable):
 
     Parameters
     ----------
-    theme_element : float
-        Value in points.
+    theme_element : float | complex
+        Value in points. A negative value creates the ticks
+        inside the plot panel. A complex value (e.g. `3j`)
+        creates ticks that span both in and out of the panel.
     """
 
     def apply_ax(self, ax: Axes):
         super().apply_ax(ax)
+        value: float | complex = self.properties["value"]
+
+        if isinstance(value, (float, int)):
+            tickdir = "in" if value < 0 else "out"
+        else:
+            tickdir = "inout"
+
         ax.yaxis.set_tick_params(
-            which="minor", length=self.properties["value"]
+            which="minor", length=abs(value), tickdir=tickdir
         )
 
 
@@ -1650,8 +1694,10 @@ class axis_ticks_length_minor(
 
     Parameters
     ----------
-    theme_element : float
-        Value in points.
+    theme_element : float | complex
+        Value in points. A negative value creates the ticks
+        inside the plot panel. A complex value (e.g. `3j`)
+        creates ticks that span both in and out of the panel.
     """
 
 
@@ -1661,8 +1707,10 @@ class axis_ticks_length(axis_ticks_length_major, axis_ticks_length_minor):
 
     Parameters
     ----------
-    theme_element : float
-        Value in points.
+    theme_element : float | complex
+        Value in points. A negative value creates the ticks
+        inside the plot panel. A complex value (e.g. `3j`)
+        creates ticks that span both in and out of the panel.
     """
 
 
@@ -1813,57 +1861,6 @@ class axis_ticks_pad(axis_ticks_pad_major, axis_ticks_pad_minor):
     [](`~plotnine.theme.themeables.axis_ticks`) are blank,
     but it does apply when the
     [](`~plotnine.theme.themeables.axis_ticks_length`) is zero.
-    """
-
-
-class axis_ticks_direction_x(themeable):
-    """
-    x-axis tick direction
-
-    Parameters
-    ----------
-    theme_element : Literal["in", "out", "inout"]
-        `in` for ticks inside the panel.
-        `out` for ticks outside the panel.
-        `inout` for ticks inside and outside the panel.
-    """
-
-    def apply_ax(self, ax: Axes):
-        super().apply_ax(ax)
-        ax.xaxis.set_tick_params(
-            which="major", tickdir=self.properties["value"]
-        )
-
-
-class axis_ticks_direction_y(themeable):
-    """
-    y-axis tick direction
-
-    Parameters
-    ----------
-    theme_element : Literal["in", "out", "inout"]
-        `in` for ticks inside the panel.
-        `out` for ticks outside the panel.
-        `inout` for ticks inside and outside the panel.
-    """
-
-    def apply_ax(self, ax: Axes):
-        super().apply_ax(ax)
-        ax.yaxis.set_tick_params(
-            which="major", tickdir=self.properties["value"]
-        )
-
-
-class axis_ticks_direction(axis_ticks_direction_x, axis_ticks_direction_y):
-    """
-    axis tick direction
-
-    Parameters
-    ----------
-    theme_element : Literal["in", "out", "inout"]
-        `in` for ticks inside the panel.
-        `out` for ticks outside the panel.
-        `inout` for ticks inside and outside the panel.
     """
 
 
@@ -2458,3 +2455,71 @@ class legend_title_align(themeable):
             "of 'element_text' with 'lenged_title'."
         )
         warn(msg, FutureWarning, stacklevel=1)
+
+
+class axis_ticks_direction_x(themeable):
+    """
+    x-axis tick direction
+
+    Parameters
+    ----------
+    theme_element : Literal["in", "out"]
+        `in` for ticks inside the panel.
+        `out` for ticks outside the panel.
+    """
+
+    def __init__(self, theme_element):
+        msg = (
+            f"Themeable '{self.__class__.__name__}' is deprecated and"
+            "will be removed in a future version. "
+            "Use +ve or -ve values of the axis_ticks_length"
+            "to affect the direction of the ticks."
+        )
+        warn(msg, FutureWarning, stacklevel=1)
+        super().__init__(theme_element)
+
+    def apply_ax(self, ax: Axes):
+        super().apply_ax(ax)
+        ax.xaxis.set_tick_params(
+            which="major", tickdir=self.properties["value"]
+        )
+
+
+class axis_ticks_direction_y(themeable):
+    """
+    y-axis tick direction
+
+    Parameters
+    ----------
+    theme_element : Literal["in", "out"]
+        `in` for ticks inside the panel.
+        `out` for ticks outside the panel.
+    """
+
+    def __init__(self, theme_element):
+        msg = (
+            f"Themeable '{self.__class__.__name__}' is deprecated and"
+            "will be removed in a future version. "
+            "Use +ve/-ve/complex values of the axis_ticks_length"
+            "to affect the direction of the ticks."
+        )
+        warn(msg, FutureWarning, stacklevel=1)
+        super().__init__(theme_element)
+
+    def apply_ax(self, ax: Axes):
+        super().apply_ax(ax)
+        ax.yaxis.set_tick_params(
+            which="major", tickdir=self.properties["value"]
+        )
+
+
+class axis_ticks_direction(axis_ticks_direction_x, axis_ticks_direction_y):
+    """
+    axis tick direction
+
+    Parameters
+    ----------
+    theme_element : Literal["in", "out"]
+        `in` for ticks inside the panel.
+        `out` for ticks outside the panel.
+    """
