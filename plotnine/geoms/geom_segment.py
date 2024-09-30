@@ -82,7 +82,7 @@ class geom_segment(geom):
             edgecolor=color,
             linewidth=linewidth,
             linestyle=data["linetype"][0],
-            capstyle=params.get("lineend", None),
+            capstyle=params.get("lineend"),
             zorder=params["zorder"],
             rasterized=params["raster"],
         )

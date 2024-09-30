@@ -104,7 +104,7 @@ class geom_raster(geom):
         #    2. bool values for interpolation
         if "interpolate" in kwargs:
             kwargs["interpolation"] = kwargs.pop("interpolate")
-        if isinstance(kwargs.get("interpolation", None), bool):
+        if isinstance(kwargs.get("interpolation"), bool):
             if kwargs["interpolation"] is True:
                 kwargs["interpolation"] = "bilinear"
             else:
