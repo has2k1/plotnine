@@ -485,7 +485,7 @@ def _draw_segments(data: pd.DataFrame, ax: Axes, **params: Any):
         edgecolor=edgecolor,
         linewidth=linewidth,
         linestyle=linestyle,
-        capstyle=params.get("lineend", None),
+        capstyle=params.get("lineend"),
         zorder=params["zorder"],
         rasterized=params["raster"],
     )

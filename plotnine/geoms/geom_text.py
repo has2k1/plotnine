@@ -175,7 +175,7 @@ class geom_text(geom):
     ):
         data, mapping = order_as_data_mapping(data, mapping)
         nudge_kwargs = {}
-        adjust_text = kwargs.get("adjust_text", None)
+        adjust_text = kwargs.get("adjust_text")
         if adjust_text is None:
             with suppress(KeyError):
                 nudge_kwargs["x"] = kwargs["nudge_x"]
