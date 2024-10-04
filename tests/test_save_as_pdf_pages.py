@@ -57,7 +57,7 @@ class TestArguments:
         with warnings.catch_warnings(record=True) as record:
             save_as_pdf_pages(p(), fn, verbose=False)
             assert_exist_and_clean(fn, "save method")
-            assert not record, "Issued an unexpected warning"
+            assert not record, "Unexpected warnings"
 
         res = ("filename" in str(item.message).lower() for item in record)
         assert not any(res)
@@ -90,6 +90,10 @@ class TestExceptions:
         plots[0] += aes(color="unknown")
         with pytest.raises(PlotnineError):
             save_as_pdf_pages(plots, fn, verbose=False)
+
+        # TODO: Remove when MPL>=3.10.0
+        if fn.exists():
+            fn.unlink()
 
         assert not fn.exists()
 
