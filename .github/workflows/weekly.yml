@@ -8,7 +8,7 @@ on:
     - cron: "40 06 * * SAT"
 
 jobs:
-  latest p9, latest matplotlib:
+  latest-p9_latest-matplotlib:
     runs-on: ubuntu-latest
 
     strategy:
@@ -52,7 +52,7 @@ jobs:
           path: result_images/
           if-no-files-found: ignore
 
-  latest p9, latest pandas:
+  latest-p9_latest-pandas:
     runs-on: ubuntu-latest
 
     strategy:
@@ -77,19 +77,16 @@ jobs:
         run: echo "UV_SYSTEM_PYTHON=true" >> $GITHUB_ENV
 
       - name: Install Packages
-        shell: bash
         run: |
-          uv pip install --upgrade git+https://github.com/pandas-dev/pandas
           uv pip install ".[extra,test]"
+          uv pip install --upgrade git+https://github.com/pandas-dev/pandas
 
       - name: Environment Information
-        shell: bash
         run: |
           uv pip list
 
       # to do: think about catching deprecations earlier
       - name: Run Tests
-        shell: bash
         run: |
           make test
 
@@ -100,7 +97,7 @@ jobs:
           path: result_images/
           if-no-files-found: ignore
 
-  stable p9, latest matplotlib:
+  stable-p9_latest-matplotlib:
     runs-on: ubuntu-latest
 
     strategy:
@@ -110,12 +107,10 @@ jobs:
     steps:
       - name: Get latest release with tag from GitHub API
         id: latestrelease
-        shell: bash
         run: |
           echo "::set-output name=releasetag::$(curl -s https://api.github.com/repos/has2k1/plotnine/releases/latest | jq '.tag_name' | sed 's/\"//g')"
 
       - name: Confirm Release Tag
-        shell: bash
         run: |
           echo ${{ steps.latestrelease.outputs.latestrelease }}
 
@@ -138,18 +133,15 @@ jobs:
         run: echo "UV_SYSTEM_PYTHON=true" >> $GITHUB_ENV
 
       - name: Install Packages
-        shell: bash
         run: |
           uv pip install --upgrade git+https://github.com/matplotlib/matplotlib
           uv pip install ".[extra,test]"
 
       - name: Environment Information
-        shell: bash
         run: |
           uv pip list
 
       - name: Run Tests
-        shell: bash
         run: |
           make test
 
@@ -160,7 +152,7 @@ jobs:
           path: result_images/
           if-no-files-found: ignore
 
-  stable p9, latest pandas:
+  stable-p9_latest-pandas:
     runs-on: ubuntu-latest
 
     strategy:
@@ -170,12 +162,10 @@ jobs:
     steps:
       - name: Get latest release with tag from GitHub API
         id: latestrelease
-        shell: bash
         run: |
           echo "::set-output name=releasetag::$(curl -s https://api.github.com/repos/has2k1/plotnine/releases/latest | jq '.tag_name' | sed 's/\"//g')"
 
       - name: Confirm Release Tag
-        shell: bash
         run: |
           echo ${{ steps.latestrelease.outputs.latestrelease }}
 
@@ -198,19 +188,16 @@ jobs:
         run: echo "UV_SYSTEM_PYTHON=true" >> $GITHUB_ENV
 
       - name: Install Packages
-        shell: bash
         run: |
           uv pip install --upgrade git+https://github.com/pandas-dev/pandas
           uv pip install ".[extra,test]"
 
       - name: Environment Information
-        shell: bash
         run: |
           uv pip list
 
       # to do: think about catching deprecations earlier
       - name: Run Tests
-        shell: bash
         run: |
           make test
 
@@ -221,7 +208,9 @@ jobs:
           path: tests/result_images/
           if-no-files-found: ignore
 
-  TYP latest p9, latest matplotlib:
+  # Should mark this as can fail when feature is implemented
+  # https://github.com/actions/runner/issues/2347
+  TYP_latest-p9_latest-matplotlib:
     runs-on: ubuntu-latest
 
     strategy:
@@ -246,22 +235,21 @@ jobs:
         run: echo "UV_SYSTEM_PYTHON=true" >> $GITHUB_ENV
 
       - name: Install Packages
-        shell: bash
         run: |
           uv pip install ".[extra,typing]"
           uv pip install --upgrade git+https://github.com/matplotlib/matplotlib
 
       - name: Environment Information
-        shell: bash
         run: |
           uv pip list
 
       - name: Run Tests
-        shell: bash
         run: |
           make typecheck
 
-  TYP latest p9, latest pandas:
+  # Should mark this as can fail when feature is implemented
+  # https://github.com/actions/runner/issues/2347
+  TYP_latest-p9_latest-pandas:
     runs-on: ubuntu-latest
 
     strategy:
@@ -286,21 +274,18 @@ jobs:
         run: echo "UV_SYSTEM_PYTHON=true" >> $GITHUB_ENV
 
       - name: Install Packages
-        shell: bash
         run: |
           uv pip install ".[extra,typing]"
           uv pip install --upgrade git+https://github.com/pandas-dev/pandas
 
       - name: Environment Information
-        shell: bash
         run: |
           uv pip list
 
       # to do: think about catching deprecations earlier
       - name: Run Tests
-        shell: bash
         run: |
-          make test
+          make typecheck
 
       - uses: actions/upload-artifact@v3
         if: failure()
