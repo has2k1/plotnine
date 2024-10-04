@@ -5,7 +5,7 @@ on:
     branches: ['weekly-tests']
   schedule:
     # At 00:00 on Monday
-    - cron: "40 06 * * WED"
+    - cron: "40 06 * * SAT"
 
 jobs:
   latest p9, latest matplotlib:
@@ -13,7 +13,7 @@ jobs:
 
     strategy:
       matrix:
-        python-version: 3.12
+        python-version: [3.12]
 
     steps:
       - name: Checkout Code
@@ -57,7 +57,7 @@ jobs:
 
     strategy:
       matrix:
-        python-version: 3.12
+        python-version: [3.12]
 
     steps:
       - name: Checkout Code
@@ -105,7 +105,7 @@ jobs:
 
     strategy:
       matrix:
-        python-version: 3.12
+        python-version: [3.12]
 
     steps:
       - name: Get latest release with tag from GitHub API
@@ -165,7 +165,7 @@ jobs:
 
     strategy:
       matrix:
-        python-version: 3.12
+        python-version: [3.12]
 
     steps:
       - name: Get latest release with tag from GitHub API
