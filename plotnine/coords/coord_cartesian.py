@@ -8,7 +8,7 @@ from ..positions.position import transform_position
 from .coord import coord, dist_euclidean
 
 if typing.TYPE_CHECKING:
-    from typing import Optional
+    from typing import Any
 
     import pandas as pd
 
@@ -26,11 +26,13 @@ class coord_cartesian(coord):
 
     Parameters
     ----------
-    xlim : tuple[float, float], default=None
-        Limits for x axis. If None, then they are automatically computed.
-    ylim : tuple[float, float], default=None
-        Limits for y axis. If None, then they are automatically computed.
-    expand : bool, default=True
+    xlim :
+        Limits (in data type of the x-aesthetic) for x axis.
+        If None, then they are automatically computed.
+    ylim :
+        Limits (in data type of the x-aesthetic) for y axis.
+        If None, then they are automatically computed.
+    expand :
         If `True`, expand the coordinate axes by some factor. If `False`,
         use the limits from the data.
     """
@@ -39,8 +41,8 @@ class coord_cartesian(coord):
 
     def __init__(
         self,
-        xlim: Optional[tuple[float, float]] = None,
-        ylim: Optional[tuple[float, float]] = None,
+        xlim: tuple[Any, Any] | None = None,
+        ylim: tuple[Any, Any] | None = None,
         expand: bool = True,
     ):
         self.limits = SimpleNamespace(x=xlim, y=ylim)
@@ -65,12 +67,19 @@ class coord_cartesian(coord):
         """
         from mizani.transforms import identity_trans
 
+        from plotnine.scales.scale_continuous import scale_continuous
+
         def get_scale_view(
-            scale: scale, coord_limits: tuple[float, float]
+            scale: scale, limits: tuple[Any, Any]
         ) -> scale_view:
+            coord_limits = (
+                scale.transform(limits)
+                if limits and isinstance(scale, scale_continuous)
+                else limits
+            )
             expansion = scale.default_expansion(expand=self.expand)
             ranges = scale.expand_limits(
-                scale.final_limits, expansion, coord_limits, identity_trans
+                scale.final_limits, expansion, coord_limits, identity_trans()
             )
             sv = scale.view(limits=coord_limits, range=ranges.range)
             return sv

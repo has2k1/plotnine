@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-import typing
 from types import SimpleNamespace as NS
+from typing import TYPE_CHECKING, cast
 from warnings import warn
 
 from ..exceptions import PlotnineWarning
@@ -9,7 +9,7 @@ from ..iapi import panel_ranges, panel_view
 from ..positions.position import transform_position
 from .coord import coord, dist_euclidean
 
-if typing.TYPE_CHECKING:
+if TYPE_CHECKING:
     from typing import Optional
 
     import pandas as pd
@@ -70,7 +70,7 @@ class coord_trans(coord):
             data = self.munch(data, panel_params)
 
         def trans_x(col: FloatSeries) -> FloatSeries:
-            result = transform_value(self.trans_x, col, panel_params.x.range)
+            result = transform_value(self.trans_x, col)
             if any(result.isna()):
                 warn(
                     "Coordinate transform of x aesthetic "
@@ -80,7 +80,7 @@ class coord_trans(coord):
             return result
 
         def trans_y(col: FloatSeries) -> FloatSeries:
-            result = transform_value(self.trans_y, col, panel_params.y.range)
+            result = transform_value(self.trans_y, col)
             if any(result.isna()):
                 warn(
                     "Coordinate transform of y aesthetic "
@@ -104,28 +104,22 @@ class coord_trans(coord):
         """
 
         def get_scale_view(
-            scale: scale, coord_limits: tuple[float, float], trans: trans
+            scale: scale, limits: tuple[float, float], trans: trans
         ) -> scale_view:
-            if coord_limits:
-                coord_limits = trans.transform(coord_limits)
+            coord_limits = trans.transform(limits) if limits else limits
 
             expansion = scale.default_expansion(expand=self.expand)
             ranges = scale.expand_limits(
                 scale.final_limits, expansion, coord_limits, trans
             )
-            sv = scale.view(limits=coord_limits, range=ranges.range)
+            sv = scale.view(
+                limits=coord_limits,
+                range=ranges.range,
+            )
             sv.range = tuple(sorted(ranges.range_coord))  # type: ignore
-            sv.breaks = transform_value(
-                trans,
-                # TODO: fix typecheck
-                sv.breaks,  # type: ignore
-                sv.range,
-            )
-            sv.minor_breaks = transform_value(
-                trans,
-                sv.minor_breaks,
-                sv.range,
-            )
+            breaks = cast(tuple[float, float], sv.breaks)
+            sv.breaks = transform_value(trans, breaks)
+            sv.minor_breaks = transform_value(trans, sv.minor_breaks)
             return sv
 
         out = panel_view(
@@ -148,9 +142,7 @@ class coord_trans(coord):
         return dist_euclidean(xt, yt) / max_dist
 
 
-def transform_value(
-    trans: trans, value: TFloatArrayLike, range: tuple[float, float]
-) -> TFloatArrayLike:
+def transform_value(trans: trans, value: TFloatArrayLike) -> TFloatArrayLike:
     """
     Transform value
     """

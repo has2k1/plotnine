@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from contextlib import suppress
 from dataclasses import dataclass
+from functools import cached_property
 from typing import TYPE_CHECKING, Sequence
 from warnings import warn
 
@@ -343,7 +344,34 @@ class scale_continuous(
         """
         Get the default expansion for continuous scale
         """
-        return super().default_expansion(mult, add, expand)
+        # Continuous scales have transforms, some of which may be on
+        # domains that are not numeric, and the diffs on these domains
+        # are not numeric as well. To do arithmetic (+/-) that uses diff
+        # value, we need diff values represented as suitable numerical
+        # values.
+        if not expand:
+            return (0, 0, 0, 0)
+
+        def to_num(x) -> float:
+            # For now this function assume that if the user passes in
+            # a numeric value (for any kind for scale), they know what
+            # they are doing. Usually this will be a 0.
+            return (
+                x
+                if isinstance(x, (float, int))
+                else self._trans.diff_type_to_num([x])[0]
+            )
+
+        if (exp := self.expand) is None:
+            m1, m2 = mult if isinstance(mult, (tuple, list)) else (mult, mult)
+            _add = add if isinstance(add, (tuple, list)) else (add, add)
+            a1, a2 = to_num(_add[0]), to_num(_add[1])
+            exp = (m1, a1, m2, a2)
+        elif len(exp) == 2:
+            exp = exp[0], to_num(exp[1])
+            exp = (*exp, *exp)
+
+        return exp
 
     def palette(self, x):
         """

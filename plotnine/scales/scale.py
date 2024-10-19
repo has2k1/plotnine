@@ -3,7 +3,8 @@ from __future__ import annotations
 from abc import ABC
 from copy import copy, deepcopy
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Generic
+from functools import cached_property
+from typing import TYPE_CHECKING, Generic, cast
 
 import numpy as np
 
@@ -231,7 +232,7 @@ class scale(
     def default_expansion(
         self,
         mult: float | tuple[float, float] = 0,
-        add: float | tuple[float, float] = 0,
+        add: Any | tuple[Any, Any] = 0,
         expand=True,
     ) -> tuple[float, float, float, float]:
         """
@@ -240,33 +241,17 @@ class scale(
         if not expand:
             return (0, 0, 0, 0)
 
-        if self.expand:
-            if len(self.expand) == 2:
-                mult, add = self.expand
-            else:
-                # n == 4:
-                mult = self.expand[0], self.expand[2]
-                add = self.expand[1], self.expand[3]
-
-        if isinstance(mult, (float, int)):
-            mult = (mult, mult)
-
-        if isinstance(add, (float, int)):
-            add = (add, add)
-
-        if len(mult) != 2:
-            raise ValueError(
-                "The scale expansion multiplication factor should "
-                "either be a single float, or a tuple of two floats. "
+        if not (exp := self.expand):
+            m1, m2 = mult if isinstance(mult, (tuple, list)) else (mult, mult)
+            a1, a2 = cast(
+                tuple[float, float],
+                (add if isinstance(add, (tuple, list)) else (add, add)),
             )
+            exp = (m1, a1, m2, a2)
+        elif len(exp) == 2:
+            exp = (*exp, *exp)
 
-        if len(add) != 2:
-            raise ValueError(
-                "The scale expansion addition constant should "
-                "either be a single float, or a tuple of two floats. "
-            )
-
-        return (mult[0], add[0], mult[1], add[1])
+        return exp
 
     def clone(self):
         return deepcopy(self)
