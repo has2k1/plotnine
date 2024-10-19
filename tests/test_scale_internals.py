@@ -1,5 +1,5 @@
 import warnings
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import numpy as np
 import numpy.testing as npt
@@ -49,6 +49,7 @@ from plotnine.scales.scale_size import (
 )
 from plotnine.scales.scale_xy import (
     scale_x_continuous,
+    scale_x_datetime,
     scale_x_discrete,
     scale_x_log10,
     scale_y_continuous,
@@ -793,6 +794,25 @@ def test_datetime_scale_limits():
     )
 
     assert p == "datetime_scale_limits"
+
+
+def test_datetime_scale_expansion():
+    n = 6
+
+    data = pd.DataFrame(
+        {
+            "x": [datetime(x, 1, 1) for x in range(2000, 2000 + n)],
+            "y": range(n),
+        }
+    )
+
+    p = (
+        ggplot(data, aes("x", "y"))
+        + geom_point()
+        + scale_x_datetime(expand=(0, timedelta(days=60)))
+    )
+
+    assert p == "datetime_scale_expansion"
 
 
 def test_ordinal_scale():

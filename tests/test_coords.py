@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import numpy as np
 import pandas as pd
 import pytest
@@ -5,11 +7,13 @@ from mizani.transforms import trans_new
 
 from plotnine import (
     aes,
+    coord_cartesian,
     coord_fixed,
     coord_flip,
     coord_trans,
     geom_bar,
     geom_line,
+    geom_point,
     ggplot,
     xlim,
 )
@@ -62,3 +66,22 @@ def test_coord_trans_backtransforms():
         + coord_trans(x="log10")
     )
     assert p == "coord_trans_backtransform"
+
+
+def test_datetime_coord_limits():
+    n = 6
+
+    data = pd.DataFrame(
+        {
+            "x": [datetime(x, 1, 1) for x in range(2000, 2000 + n)],
+            "y": range(n),
+        }
+    )
+
+    p = (
+        ggplot(data, aes("x", "y"))
+        + geom_point()
+        + coord_cartesian(xlim=(datetime(1999, 1, 1), datetime(2006, 1, 1)))
+    )
+
+    assert p == "datetime_scale_limits"

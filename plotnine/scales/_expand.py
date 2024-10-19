@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-import typing
+from typing import TYPE_CHECKING
 
 import numpy as np
 from mizani.bounds import expand_range_distinct
@@ -8,7 +8,7 @@ from mizani.bounds import expand_range_distinct
 from .._utils import ignore_warnings
 from ..iapi import range_view
 
-if typing.TYPE_CHECKING:
+if TYPE_CHECKING:
     from typing import Type
 
     from mizani.transforms import trans
