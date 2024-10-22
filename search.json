@@ -2566,7 +2566,7 @@
     "href": "reference/coord_cartesian.html#parameters",
     "title": " plotnine.coord_cartesian",
     "section": "Parameters",
-    "text": "Parameters\n\n\nxlim : tuple[float, float] = None\n\nLimits for x axis. If None, then they are automatically computed.\n\nylim : tuple[float, float] = None\n\nLimits for y axis. If None, then they are automatically computed.\n\nexpand : bool = True\n\nIf True, expand the coordinate axes by some factor. If False, use the limits from the data."
+    "text": "Parameters\n\n\nxlim : tuple[Any, Any] | None = None\n\nLimits (in data type of the x-aesthetic) for x axis. If None, then they are automatically computed.\n\nylim : tuple[Any, Any] | None = None\n\nLimits (in data type of the x-aesthetic) for y axis. If None, then they are automatically computed.\n\nexpand : bool = True\n\nIf True, expand the coordinate axes by some factor. If False, use the limits from the data."
   },
   {
     "objectID": "reference/close_all_figures.html",
