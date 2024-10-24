@@ -3,7 +3,7 @@ from datetime import datetime
 import numpy as np
 import pandas as pd
 import pytest
-from mizani.transforms import trans_new
+from mizani.transforms import trans
 
 from plotnine import (
     aes,
@@ -40,11 +40,17 @@ def test_coord_fixed():
 
 
 def test_coord_trans():
-    double_trans = trans_new("double", np.square, np.sqrt)
+    class double_trans(trans):
+        def transform(self, x):
+            return np.square(x)
+
+        def inverse(self, x):
+            return np.sqrt(x)
+
     # Warns probably because of a bad value around the left
     # edge of the domain.
     with pytest.warns(RuntimeWarning):
-        assert p + coord_trans(y=double_trans) == "coord_trans"
+        assert p + coord_trans(y=double_trans()) == "coord_trans"
 
 
 def test_coord_trans_reverse():

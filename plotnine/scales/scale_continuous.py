@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from contextlib import suppress
 from dataclasses import dataclass
-from functools import cached_property
 from typing import TYPE_CHECKING, Sequence
 from warnings import warn
 
@@ -507,7 +506,7 @@ class scale_continuous(
         if self.labels is False or self.labels is None:
             labels = []
         elif self.labels is True:
-            labels = self._trans.format(breaks)  # type: ignore
+            labels = self._trans.format(breaks)
         elif callable(self.labels):
             labels = self.labels(breaks)
         elif isinstance(self.labels, dict):
