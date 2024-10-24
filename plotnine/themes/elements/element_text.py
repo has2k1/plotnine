@@ -38,6 +38,8 @@ class element_text(element_base):
         Horizontal Alignment.
     va :
         Vertical alignment.
+    ma :
+        Horizontal Alignment for multiline text.
     rotation :
         Rotation angle in the range [0, 360]. The `rotation` is affected
         by the `rotation_mode`.
@@ -88,6 +90,7 @@ class element_text(element_base):
             Literal["center", "top", "bottom", "baseline", "center_baseline"]
             | float
         ] = None,
+        ma: Optional[Literal["center", "left", "right"] | float] = None,
         rotation: Optional[
             Literal["vertical", "horizontal"]
             | float
