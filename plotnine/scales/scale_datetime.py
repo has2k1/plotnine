@@ -1,20 +1,9 @@
 from __future__ import annotations
 
 from dataclasses import KW_ONLY, InitVar, dataclass
-from datetime import timedelta
-from typing import TYPE_CHECKING, overload
-
-import numpy as np
 
 from ._runtime_typing import TransUser  # noqa: TCH001
 from .scale_continuous import scale_continuous
-
-if TYPE_CHECKING:
-    from typing import Sequence
-
-    import pandas as pd
-
-    from plotnine.typing import FloatArray
 
 
 @dataclass
