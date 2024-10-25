@@ -13,7 +13,7 @@ jobs:
 
     strategy:
       matrix:
-        python-version: [3.12]
+        python-version: [3.13]
 
     steps:
       - name: Checkout Code
@@ -57,7 +57,7 @@ jobs:
 
     strategy:
       matrix:
-        python-version: [3.12]
+        python-version: [3.13]
 
     steps:
       - name: Checkout Code
@@ -102,7 +102,7 @@ jobs:
 
     strategy:
       matrix:
-        python-version: [3.12]
+        python-version: [3.13]
 
     steps:
       - name: Get latest release with tag from GitHub API
@@ -157,7 +157,7 @@ jobs:
 
     strategy:
       matrix:
-        python-version: [3.12]
+        python-version: [3.13]
 
     steps:
       - name: Get latest release with tag from GitHub API
@@ -215,7 +215,7 @@ jobs:
 
     strategy:
       matrix:
-        python-version: [3.12]
+        python-version: [3.13]
 
     steps:
       - name: Checkout Code
@@ -254,7 +254,7 @@ jobs:
 
     strategy:
       matrix:
-        python-version: [3.12]
+        python-version: [3.13]
 
     steps:
       - name: Checkout Code
