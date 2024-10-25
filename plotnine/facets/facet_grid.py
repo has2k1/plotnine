@@ -83,7 +83,7 @@ class facet_grid(facet):
         rows: Optional[str | Sequence[str]] = None,
         cols: Optional[str | Sequence[str]] = None,
         *,
-        margins: bool | list[str] = False,
+        margins: bool | Sequence[str] = False,
         scales: Literal["fixed", "free", "free_x", "free_y"] = "fixed",
         space: (
             Literal["fixed", "free", "free_x", "free_y"] | FacetSpaceRatios

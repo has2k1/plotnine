@@ -93,7 +93,7 @@ class themeable(metaclass=RegistryHierarchyMeta):
     [](`~plotnine.themes.themeable.Themeable`) or subclasses of it.
     """
 
-    _omit: list[str] = []
+    _omit: Sequence[str] = ()
     """
     Properties to ignore during the apply stage.
 
