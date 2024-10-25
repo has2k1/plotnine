@@ -48,6 +48,9 @@ title: Changelog
 
 - Made it possile to map an aesthetic value to `None`. ({{< issue 791 >}})
 
+- The signatures for the scale classes now list all the allowed parameters.
+
+
 ### New Features
 
 - [](:class:`~plotnine.geom_text`) has gained new aesthetics

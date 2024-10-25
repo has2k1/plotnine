@@ -8,7 +8,7 @@ from ..iapi import labels_view, panel_ranges, panel_view
 from .coord_cartesian import coord_cartesian
 
 if typing.TYPE_CHECKING:
-    from typing import TypeVar
+    from typing import Sequence, TypeVar
 
     from plotnine.scales.scale import scale
 
@@ -77,7 +77,7 @@ def flip_labels(obj: THasLabels) -> THasLabels:
         """
         Substitute all keys that start with a to b
         """
-        columns: list[str] = df.columns.tolist()
+        columns: Sequence[str] = df.columns.tolist()
         for label in columns:
             if label.startswith(a):
                 new_label = b + label[1:]

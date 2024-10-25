@@ -518,15 +518,15 @@ def add_group(data: pd.DataFrame) -> pd.DataFrame:
 
 def discrete_columns(
     df: pd.DataFrame, ignore: Sequence[str] | pd.Index
-) -> list[str]:
+) -> Sequence[str]:
     """
     Return a list of the discrete columns in the dataframe
 
     Parameters
     ----------
-    df : dataframe
+    df :
         Data
-    ignore : list[str]
+    ignore :
         A list|set|tuple with the names of the columns to skip.
     """
     lst = []

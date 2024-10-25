@@ -8,7 +8,7 @@ from functools import lru_cache
 from textwrap import dedent, indent
 
 if typing.TYPE_CHECKING:
-    from typing import Any, Type, TypeVar
+    from typing import Any, Sequence, Type, TypeVar
 
     from plotnine.geoms.geom import geom
     from plotnine.stats.stat import stat
@@ -197,7 +197,7 @@ def dict_to_table(header: tuple[str, str], contents: dict[str, str]) -> str:
 def make_signature(
     name: str,
     params: dict[str, Any],
-    common_params: list[str],
+    common_params: Sequence[str],
     common_param_values: dict[str, Any],
 ) -> str:
     """
@@ -360,7 +360,7 @@ def parameters_str_to_dict(param_section: str) -> dict[str, str]:
     """
     d = {}
     previous_param = ""
-    param_desc: list[str] = []
+    param_desc: Sequence[str] = []
     for line in param_section.split("\n"):
         param = param_spec(line)
         if param:

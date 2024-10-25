@@ -116,7 +116,7 @@ class scale(
     is to assign `np.nan`.
     """
 
-    aesthetics: list[ScaledAestheticsName] = field(default_factory=list)
+    aesthetics: Sequence[ScaledAestheticsName] = ()
     """
     Aesthetics affected by this scale. These are defined by each scale
     and the user should probably not change them. Have fun.
@@ -125,7 +125,7 @@ class scale(
     _range: RangeT = field(init=False, repr=False)
 
     # Defined aesthetics for the scale
-    _aesthetics: list[ScaledAestheticsName] = field(init=False, repr=False)
+    _aesthetics: Sequence[ScaledAestheticsName] = field(init=False, repr=False)
 
     def __post_init__(self):
         breaks = getattr(self, "breaks")

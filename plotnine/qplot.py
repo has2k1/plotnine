@@ -20,7 +20,7 @@ from .scales import lims, scale_x_log10, scale_y_log10
 from .themes import theme
 
 if typing.TYPE_CHECKING:
-    from typing import Any, Iterable, Literal, Optional
+    from typing import Any, Iterable, Literal, Optional, Sequence
 
     from plotnine.typing import DataLike
 
@@ -32,8 +32,8 @@ def qplot(
     y: Optional[str | Iterable[Any] | range] = None,
     data: Optional[DataLike] = None,
     facets: str = "",
-    margins: bool | list[str] = False,
-    geom: str | list[str] | tuple[str] = "auto",
+    margins: bool | Sequence[str] = False,
+    geom: str | Sequence[str] = "auto",
     xlim: Optional[tuple[float, float]] = None,
     ylim: Optional[tuple[float, float]] = None,
     log: Optional[Literal["x", "y", "xy"]] = None,
@@ -126,18 +126,15 @@ def qplot(
         data = pd.DataFrame()
 
     # Work out plot data, and modify aesthetics, if necessary
-    def replace_auto(lst: list[str], str2: str) -> list[str]:
+    def replace_auto(lst: Sequence[str], str2: str) -> Sequence[str]:
         """
         Replace all occurrences of 'auto' in with str2
         """
-        for i, value in enumerate(lst):
-            if value == "auto":
-                lst[i] = str2
-        return lst
+        return tuple(str2 if x == "auto" else x for x in lst)
 
     if "auto" in geom:
         if "sample" in aesthetics:
-            replace_auto(geom, "qq")
+            geom = replace_auto(geom, "qq")
         elif y is None:
             # If x is discrete we choose geom_bar &
             # geom_histogram otherwise. But we need to
@@ -156,11 +153,8 @@ def qplot(
             elif not hasattr(aesthetics["x"], "dtype"):
                 x = np.asarray(aesthetics["x"])
 
-            if array_kind.discrete(x):
-                replace_auto(geom, "bar")
-            else:
-                replace_auto(geom, "histogram")
-
+            name = "bar" if array_kind.discrete(x) else "histogram"
+            geom = replace_auto(geom, name)
         else:
             if x is None:
                 if isinstance(aesthetics["y"], typing.Sized):
@@ -171,7 +165,7 @@ def qplot(
                     # We could solve the issue in layer.compute_aesthetics
                     # but it is not worth the extra complexity
                     raise PlotnineError("Cannot infer how long x should be.")
-            replace_auto(geom, "point")
+            geom = replace_auto(geom, "point")
 
     p: ggplot = ggplot(data, aes(**aesthetics))
     p.environment = environment

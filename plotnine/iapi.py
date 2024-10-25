@@ -36,7 +36,7 @@ class scale_view:
     """
 
     scale: scale
-    aesthetics: list[ScaledAestheticsName]
+    aesthetics: Sequence[ScaledAestheticsName]
     name: Optional[str]
     # Trained limits of the scale
     limits: tuple[float, float] | Sequence[str]
