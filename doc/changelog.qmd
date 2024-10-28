@@ -2,6 +2,7 @@
 title: Changelog
 ---
 ## v0.14.0
+(2024-10-28)
 
 (not-yet-released)
 
