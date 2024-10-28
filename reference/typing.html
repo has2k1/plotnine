@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.33">
+<meta name="generator" content="quarto-1.6.30">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>plotnine {{&lt; var version &gt;}} – Typing Information</title>
+<title>Typing Information – plotnine 0.14.0</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -70,10 +70,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-3a01e2046221230fdceeea94b1ec5d67.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-d74b1272af8ec7740288d36796c25a25.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -113,7 +113,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine 0.13.6</span>
+    <span class="navbar-title">plotnine 0.14.0</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -151,8 +151,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#protocols" id="toc-protocols" class="nav-link active" data-scroll-target="#protocols">Protocols</a>
   <ul class="collapse">
-  <li><a href="#plotnine.typing.PlotAddable" id="toc-plotnine.typing.PlotAddable" class="nav-link" data-scroll-target="#plotnine.typing.PlotAddable"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">PlotAddable</span> <span class="doc-labels"><code class="doc-label doc-label-protocol"></code></span></a></li>
   <li><a href="#plotnine.typing.DataFrameConvertible" id="toc-plotnine.typing.DataFrameConvertible" class="nav-link" data-scroll-target="#plotnine.typing.DataFrameConvertible"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">DataFrameConvertible</span> <span class="doc-labels"><code class="doc-label doc-label-protocol"></code></span></a></li>
+  <li><a href="#plotnine.typing.PTransform" id="toc-plotnine.typing.PTransform" class="nav-link" data-scroll-target="#plotnine.typing.PTransform"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">PTransform</span> <span class="doc-labels"><code class="doc-label doc-label-protocol"></code></span></a></li>
   </ul></li>
   <li><a href="#type-variables" id="toc-type-variables" class="nav-link" data-scroll-target="#type-variables">Type Variables</a>
   <ul class="collapse">
@@ -160,10 +160,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </ul></li>
   <li><a href="#type-aliases" id="toc-type-aliases" class="nav-link" data-scroll-target="#type-aliases">Type Aliases</a>
   <ul class="collapse">
-  <li><a href="#plotnine.typing.TupleInt2" id="toc-plotnine.typing.TupleInt2" class="nav-link" data-scroll-target="#plotnine.typing.TupleInt2"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">TupleInt2</span></a></li>
-  <li><a href="#plotnine.typing.TupleFloat2" id="toc-plotnine.typing.TupleFloat2" class="nav-link" data-scroll-target="#plotnine.typing.TupleFloat2"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">TupleFloat2</span></a></li>
-  <li><a href="#plotnine.typing.TupleFloat3" id="toc-plotnine.typing.TupleFloat3" class="nav-link" data-scroll-target="#plotnine.typing.TupleFloat3"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">TupleFloat3</span></a></li>
-  <li><a href="#plotnine.typing.TupleFloat4" id="toc-plotnine.typing.TupleFloat4" class="nav-link" data-scroll-target="#plotnine.typing.TupleFloat4"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">TupleFloat4</span></a></li>
   <li><a href="#plotnine.typing.AnyArray" id="toc-plotnine.typing.AnyArray" class="nav-link" data-scroll-target="#plotnine.typing.AnyArray"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">AnyArray</span></a></li>
   <li><a href="#plotnine.typing.BoolArray" id="toc-plotnine.typing.BoolArray" class="nav-link" data-scroll-target="#plotnine.typing.BoolArray"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">BoolArray</span></a></li>
   <li><a href="#plotnine.typing.FloatArray" id="toc-plotnine.typing.FloatArray" class="nav-link" data-scroll-target="#plotnine.typing.FloatArray"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">FloatArray</span></a></li>
@@ -175,7 +171,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#plotnine.typing.AnyArrayLike" id="toc-plotnine.typing.AnyArrayLike" class="nav-link" data-scroll-target="#plotnine.typing.AnyArrayLike"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">AnyArrayLike</span></a></li>
   <li><a href="#plotnine.typing.IntArrayLike" id="toc-plotnine.typing.IntArrayLike" class="nav-link" data-scroll-target="#plotnine.typing.IntArrayLike"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">IntArrayLike</span></a></li>
   <li><a href="#plotnine.typing.FloatArrayLike" id="toc-plotnine.typing.FloatArrayLike" class="nav-link" data-scroll-target="#plotnine.typing.FloatArrayLike"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">FloatArrayLike</span></a></li>
-  <li><a href="#plotnine.typing.TransformCol" id="toc-plotnine.typing.TransformCol" class="nav-link" data-scroll-target="#plotnine.typing.TransformCol"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">TransformCol</span></a></li>
   <li><a href="#plotnine.typing.Data" id="toc-plotnine.typing.Data" class="nav-link" data-scroll-target="#plotnine.typing.Data"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">Data</span></a></li>
   <li><a href="#plotnine.typing.DataLike" id="toc-plotnine.typing.DataLike" class="nav-link" data-scroll-target="#plotnine.typing.DataLike"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">DataLike</span></a></li>
   <li><a href="#plotnine.typing.LayerData" id="toc-plotnine.typing.LayerData" class="nav-link" data-scroll-target="#plotnine.typing.LayerData"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">LayerData</span></a></li>
@@ -183,39 +178,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#plotnine.typing.ColorLike" id="toc-plotnine.typing.ColorLike" class="nav-link" data-scroll-target="#plotnine.typing.ColorLike"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">ColorLike</span></a></li>
   <li><a href="#plotnine.typing.ColorsLike" id="toc-plotnine.typing.ColorsLike" class="nav-link" data-scroll-target="#plotnine.typing.ColorsLike"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">ColorsLike</span></a></li>
   <li><a href="#plotnine.typing.FigureFormat" id="toc-plotnine.typing.FigureFormat" class="nav-link" data-scroll-target="#plotnine.typing.FigureFormat"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">FigureFormat</span></a></li>
-  <li><a href="#plotnine.typing.StripLabellingFuncNames" id="toc-plotnine.typing.StripLabellingFuncNames" class="nav-link" data-scroll-target="#plotnine.typing.StripLabellingFuncNames"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">StripLabellingFuncNames</span></a></li>
   <li><a href="#plotnine.typing.FacetSpaceRatios" id="toc-plotnine.typing.FacetSpaceRatios" class="nav-link" data-scroll-target="#plotnine.typing.FacetSpaceRatios"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">FacetSpaceRatios</span></a></li>
-  <li><a href="#plotnine.typing.StripLabellingFunc" id="toc-plotnine.typing.StripLabellingFunc" class="nav-link" data-scroll-target="#plotnine.typing.StripLabellingFunc"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">StripLabellingFunc</span></a></li>
-  <li><a href="#plotnine.typing.StripLabellingDict" id="toc-plotnine.typing.StripLabellingDict" class="nav-link" data-scroll-target="#plotnine.typing.StripLabellingDict"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">StripLabellingDict</span></a></li>
-  <li><a href="#plotnine.typing.CanBeStripLabellingFunc" id="toc-plotnine.typing.CanBeStripLabellingFunc" class="nav-link" data-scroll-target="#plotnine.typing.CanBeStripLabellingFunc"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">CanBeStripLabellingFunc</span></a></li>
   <li><a href="#plotnine.typing.StripPosition" id="toc-plotnine.typing.StripPosition" class="nav-link" data-scroll-target="#plotnine.typing.StripPosition"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">StripPosition</span></a></li>
   <li><a href="#plotnine.typing.ScaledAestheticsName" id="toc-plotnine.typing.ScaledAestheticsName" class="nav-link" data-scroll-target="#plotnine.typing.ScaledAestheticsName"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">ScaledAestheticsName</span></a></li>
-  <li><a href="#plotnine.typing.ScaleContinuousLimits" id="toc-plotnine.typing.ScaleContinuousLimits" class="nav-link" data-scroll-target="#plotnine.typing.ScaleContinuousLimits"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">ScaleContinuousLimits</span></a></li>
-  <li><a href="#plotnine.typing.ScaleDiscreteLimits" id="toc-plotnine.typing.ScaleDiscreteLimits" class="nav-link" data-scroll-target="#plotnine.typing.ScaleDiscreteLimits"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">ScaleDiscreteLimits</span></a></li>
-  <li><a href="#plotnine.typing.ScaleLimits" id="toc-plotnine.typing.ScaleLimits" class="nav-link" data-scroll-target="#plotnine.typing.ScaleLimits"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">ScaleLimits</span></a></li>
-  <li><a href="#plotnine.typing.ScaleLimitsRaw" id="toc-plotnine.typing.ScaleLimitsRaw" class="nav-link" data-scroll-target="#plotnine.typing.ScaleLimitsRaw"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">ScaleLimitsRaw</span></a></li>
-  <li><a href="#plotnine.typing.ScaleContinuousLimitsRaw" id="toc-plotnine.typing.ScaleContinuousLimitsRaw" class="nav-link" data-scroll-target="#plotnine.typing.ScaleContinuousLimitsRaw"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">ScaleContinuousLimitsRaw</span></a></li>
-  <li><a href="#plotnine.typing.ScaleDiscreteLimitsRaw" id="toc-plotnine.typing.ScaleDiscreteLimitsRaw" class="nav-link" data-scroll-target="#plotnine.typing.ScaleDiscreteLimitsRaw"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">ScaleDiscreteLimitsRaw</span></a></li>
-  <li><a href="#plotnine.typing.ScaleContinuousBreaks" id="toc-plotnine.typing.ScaleContinuousBreaks" class="nav-link" data-scroll-target="#plotnine.typing.ScaleContinuousBreaks"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">ScaleContinuousBreaks</span></a></li>
-  <li><a href="#plotnine.typing.ScaleDiscreteBreaks" id="toc-plotnine.typing.ScaleDiscreteBreaks" class="nav-link" data-scroll-target="#plotnine.typing.ScaleDiscreteBreaks"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">ScaleDiscreteBreaks</span></a></li>
-  <li><a href="#plotnine.typing.ScaleBreaks" id="toc-plotnine.typing.ScaleBreaks" class="nav-link" data-scroll-target="#plotnine.typing.ScaleBreaks"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">ScaleBreaks</span></a></li>
-  <li><a href="#plotnine.typing.ScaleBreaksRaw" id="toc-plotnine.typing.ScaleBreaksRaw" class="nav-link" data-scroll-target="#plotnine.typing.ScaleBreaksRaw"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">ScaleBreaksRaw</span></a></li>
-  <li><a href="#plotnine.typing.ScaleContinuousBreaksRaw" id="toc-plotnine.typing.ScaleContinuousBreaksRaw" class="nav-link" data-scroll-target="#plotnine.typing.ScaleContinuousBreaksRaw"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">ScaleContinuousBreaksRaw</span></a></li>
-  <li><a href="#plotnine.typing.ScaleDiscreteBreaksRaw" id="toc-plotnine.typing.ScaleDiscreteBreaksRaw" class="nav-link" data-scroll-target="#plotnine.typing.ScaleDiscreteBreaksRaw"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">ScaleDiscreteBreaksRaw</span></a></li>
-  <li><a href="#plotnine.typing.ScaleMinorBreaksRaw" id="toc-plotnine.typing.ScaleMinorBreaksRaw" class="nav-link" data-scroll-target="#plotnine.typing.ScaleMinorBreaksRaw"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">ScaleMinorBreaksRaw</span></a></li>
-  <li><a href="#plotnine.typing.ScaleLabelsRaw" id="toc-plotnine.typing.ScaleLabelsRaw" class="nav-link" data-scroll-target="#plotnine.typing.ScaleLabelsRaw"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">ScaleLabelsRaw</span></a></li>
-  <li><a href="#plotnine.typing.ScaleLabels" id="toc-plotnine.typing.ScaleLabels" class="nav-link" data-scroll-target="#plotnine.typing.ScaleLabels"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">ScaleLabels</span></a></li>
   <li><a href="#plotnine.typing.CoordRange" id="toc-plotnine.typing.CoordRange" class="nav-link" data-scroll-target="#plotnine.typing.CoordRange"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">CoordRange</span></a></li>
   <li><a href="#plotnine.typing.SidePosition" id="toc-plotnine.typing.SidePosition" class="nav-link" data-scroll-target="#plotnine.typing.SidePosition"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">SidePosition</span></a></li>
   <li><a href="#plotnine.typing.LegendPosition" id="toc-plotnine.typing.LegendPosition" class="nav-link" data-scroll-target="#plotnine.typing.LegendPosition"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">LegendPosition</span></a></li>
   <li><a href="#plotnine.typing.Orientation" id="toc-plotnine.typing.Orientation" class="nav-link" data-scroll-target="#plotnine.typing.Orientation"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">Orientation</span></a></li>
   <li><a href="#plotnine.typing.GuideKind" id="toc-plotnine.typing.GuideKind" class="nav-link" data-scroll-target="#plotnine.typing.GuideKind"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">GuideKind</span></a></li>
-  <li><a href="#plotnine.typing.LegendOrColorbar" id="toc-plotnine.typing.LegendOrColorbar" class="nav-link" data-scroll-target="#plotnine.typing.LegendOrColorbar"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">LegendOrColorbar</span></a></li>
   <li><a href="#plotnine.typing.NoGuide" id="toc-plotnine.typing.NoGuide" class="nav-link" data-scroll-target="#plotnine.typing.NoGuide"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">NoGuide</span></a></li>
-  <li><a href="#plotnine.typing.LegendOnly" id="toc-plotnine.typing.LegendOnly" class="nav-link" data-scroll-target="#plotnine.typing.LegendOnly"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">LegendOnly</span></a></li>
   <li><a href="#plotnine.typing.VerticalJustification" id="toc-plotnine.typing.VerticalJustification" class="nav-link" data-scroll-target="#plotnine.typing.VerticalJustification"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">VerticalJustification</span></a></li>
   <li><a href="#plotnine.typing.HorizontalJustification" id="toc-plotnine.typing.HorizontalJustification" class="nav-link" data-scroll-target="#plotnine.typing.HorizontalJustification"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">HorizontalJustification</span></a></li>
   <li><a href="#plotnine.typing.TextJustification" id="toc-plotnine.typing.TextJustification" class="nav-link" data-scroll-target="#plotnine.typing.TextJustification"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">TextJustification</span></a></li>
+  <li><a href="#plotnine.typing.TransformCol" id="toc-plotnine.typing.TransformCol" class="nav-link" data-scroll-target="#plotnine.typing.TransformCol"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">TransformCol</span></a></li>
   </ul></li>
   </ul>
 </nav>
@@ -244,69 +219,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="protocols" class="level2">
 <h2 class="anchored" data-anchor-id="protocols">Protocols</h2>
-<section id="plotnine.typing.PlotAddable" class="level3 title doc-object doc-class doc-has-member-docs">
-<h3 class="title doc-object doc-class doc-has-member-docs anchored" data-anchor-id="plotnine.typing.PlotAddable"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">PlotAddable</span> <span class="doc-labels"><code class="doc-label doc-label-protocol"></code></span></h3>
-<div class="doc-signature doc-class">
-<div class="sourceCode" id="cb1"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>PlotAddable()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="doc-text">
-<p>Object that can be added to a ggplot object</p>
-</div>
-<section id="methods" class="level4 doc-methods">
-<h4 class="doc-methods anchored" data-anchor-id="methods">Methods</h4>
-<section id="plotnine.typing.PlotAddable.__radd__" class="level5 title doc-object doc-method">
-<h5 class="title doc-object doc-method anchored" data-anchor-id="plotnine.typing.PlotAddable.__radd__"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">__radd__</span></h5>
-<div class="doc-signature doc-method">
-<div class="sourceCode" id="cb2"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">__radd__</span>(plot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="doc-text">
-<p>Add to ggplot object</p>
-</div>
-<section id="parameters" class="level6 doc-parameters">
-<h6 class="doc-parameters anchored" data-anchor-id="parameters">Parameters</h6>
-<div class="doc-definition-items">
-<dl>
-<dt><code><span class="doc-parameter-name">other</span></code></dt>
-<dd>
-<p>ggplot object</p>
-</dd>
-</dl>
-</div>
-</section>
-<section id="returns" class="level6 doc-returns">
-<h6 class="doc-returns anchored" data-anchor-id="returns">Returns</h6>
-<div class="doc-definition-items">
-<dl>
-<dt><code><span class="doc-parameter-annotation"><a href="../reference/ggplot.html#plotnine.ggplot">ggplot</a></span></code></dt>
-<dd>
-<p>ggplot object</p>
-</dd>
-</dl>
-</div>
-</section>
-</section>
-</section>
-</section>
 <section id="plotnine.typing.DataFrameConvertible" class="level3 title doc-object doc-class doc-has-member-docs">
 <h3 class="title doc-object doc-class doc-has-member-docs anchored" data-anchor-id="plotnine.typing.DataFrameConvertible"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">DataFrameConvertible</span> <span class="doc-labels"><code class="doc-label doc-label-protocol"></code></span></h3>
 <div class="doc-signature doc-class">
-<div class="sourceCode" id="cb3"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>DataFrameConvertible()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>DataFrameConvertible()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="doc-text">
 <p>Object that can be converted to a DataFrame</p>
 </div>
-<section id="methods-1" class="level4 doc-methods">
-<h4 class="doc-methods anchored" data-anchor-id="methods-1">Methods</h4>
+<section id="methods" class="level4 doc-methods">
+<h4 class="doc-methods anchored" data-anchor-id="methods">Methods</h4>
 <section id="plotnine.typing.DataFrameConvertible.to_pandas" class="level5 title doc-object doc-method">
 <h5 class="title doc-object doc-method anchored" data-anchor-id="plotnine.typing.DataFrameConvertible.to_pandas"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">to_pandas</span></h5>
 <div class="doc-signature doc-method">
-<div class="sourceCode" id="cb4"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>to_pandas()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>to_pandas()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="doc-text">
 <p>Convert to pandas dataframe</p>
 </div>
-<section id="returns-1" class="level6 doc-returns">
-<h6 class="doc-returns anchored" data-anchor-id="returns-1">Returns</h6>
+<section id="returns" class="level6 doc-returns">
+<h6 class="doc-returns anchored" data-anchor-id="returns">Returns</h6>
 <div class="doc-definition-items">
 <dl>
 <dt><code><span class="doc-parameter-annotation"><a href="https://pandas.pydata.org/pandas-docs/stable/index.html#module-pandas">pd</a>.<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span></code></dt>
@@ -316,6 +248,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </dl>
 </div>
 </section>
+</section>
+</section>
+</section>
+<section id="plotnine.typing.PTransform" class="level3 title doc-object doc-class doc-has-member-docs">
+<h3 class="title doc-object doc-class doc-has-member-docs anchored" data-anchor-id="plotnine.typing.PTransform"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">PTransform</span> <span class="doc-labels"><code class="doc-label doc-label-protocol"></code></span></h3>
+<div class="doc-signature doc-class">
+<div class="sourceCode" id="cb3"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>PTransform()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="doc-text">
+<p>Transform function</p>
+</div>
+<section id="methods-1" class="level4 doc-methods">
+<h4 class="doc-methods anchored" data-anchor-id="methods-1">Methods</h4>
+<section id="plotnine.typing.PTransform.__call__" class="level5 title doc-object doc-method">
+<h5 class="title doc-object doc-method anchored" data-anchor-id="plotnine.typing.PTransform.__call__"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">__call__</span></h5>
+<div class="doc-signature doc-method">
+<div class="sourceCode" id="cb4"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">__call__</span>(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
 </section>
 </section>
@@ -331,30 +281,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="type-aliases" class="level2">
 <h2 class="anchored" data-anchor-id="type-aliases">Type Aliases</h2>
-<section id="plotnine.typing.TupleInt2" class="level3 title doc-object doc-type">
-<h3 class="title doc-object doc-type anchored" data-anchor-id="plotnine.typing.TupleInt2"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">TupleInt2</span></h3>
-<div class="doc-signature doc-type">
-<p><code><a href="https://docs.python.org/3/library/stdtypes.html#tuple">tuple</a>[<a href="https://docs.python.org/3/library/functions.html#int">int</a>, <a href="https://docs.python.org/3/library/functions.html#int">int</a>]</code></p>
-</div>
-</section>
-<section id="plotnine.typing.TupleFloat2" class="level3 title doc-object doc-type">
-<h3 class="title doc-object doc-type anchored" data-anchor-id="plotnine.typing.TupleFloat2"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">TupleFloat2</span></h3>
-<div class="doc-signature doc-type">
-<p><code><a href="https://docs.python.org/3/library/stdtypes.html#tuple">tuple</a>[<a href="https://docs.python.org/3/library/functions.html#float">float</a>, <a href="https://docs.python.org/3/library/functions.html#float">float</a>]</code></p>
-</div>
-</section>
-<section id="plotnine.typing.TupleFloat3" class="level3 title doc-object doc-type">
-<h3 class="title doc-object doc-type anchored" data-anchor-id="plotnine.typing.TupleFloat3"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">TupleFloat3</span></h3>
-<div class="doc-signature doc-type">
-<p><code><a href="https://docs.python.org/3/library/stdtypes.html#tuple">tuple</a>[<a href="https://docs.python.org/3/library/functions.html#float">float</a>, <a href="https://docs.python.org/3/library/functions.html#float">float</a>, <a href="https://docs.python.org/3/library/functions.html#float">float</a>]</code></p>
-</div>
-</section>
-<section id="plotnine.typing.TupleFloat4" class="level3 title doc-object doc-type">
-<h3 class="title doc-object doc-type anchored" data-anchor-id="plotnine.typing.TupleFloat4"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">TupleFloat4</span></h3>
-<div class="doc-signature doc-type">
-<p><code><a href="https://docs.python.org/3/library/stdtypes.html#tuple">tuple</a>[<a href="https://docs.python.org/3/library/functions.html#float">float</a>, <a href="https://docs.python.org/3/library/functions.html#float">float</a>, <a href="https://docs.python.org/3/library/functions.html#float">float</a>, <a href="https://docs.python.org/3/library/functions.html#float">float</a>]</code></p>
-</div>
-</section>
 <section id="plotnine.typing.AnyArray" class="level3 title doc-object doc-type">
 <h3 class="title doc-object doc-type anchored" data-anchor-id="plotnine.typing.AnyArray"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">AnyArray</span></h3>
 <div class="doc-signature doc-type">
@@ -421,12 +347,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><code><a href="../reference/typing.html#plotnine.typing.FloatArray">FloatArray</a> | <a href="../reference/typing.html#plotnine.typing.FloatSeries">FloatSeries</a> | <a href="https://docs.python.org/3/library/typing.html#typing.Sequence">Sequence</a>[<a href="https://docs.python.org/3/library/functions.html#float">float</a>]</code></p>
 </div>
 </section>
-<section id="plotnine.typing.TransformCol" class="level3 title doc-object doc-type">
-<h3 class="title doc-object doc-type anchored" data-anchor-id="plotnine.typing.TransformCol"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">TransformCol</span></h3>
-<div class="doc-signature doc-type">
-<p><code><a href="https://docs.python.org/3/library/typing.html#typing.Callable">Callable</a>[[<a href="../reference/typing.html#plotnine.typing.FloatSeries">FloatSeries</a>], <a href="../reference/typing.html#plotnine.typing.FloatSeries">FloatSeries</a> | <a href="../reference/typing.html#plotnine.typing.FloatArray">FloatArray</a>]</code></p>
-</div>
-</section>
 <section id="plotnine.typing.Data" class="level3 title doc-object doc-type">
 <h3 class="title doc-object doc-type anchored" data-anchor-id="plotnine.typing.Data"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">Data</span></h3>
 <div class="doc-signature doc-type">
@@ -469,34 +389,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><code><a href="https://docs.python.org/3/library/typing.html#typing.Literal">Literal</a>[<span class="st">"png"</span>, <span class="st">"retina"</span>, <span class="st">"jpeg"</span>, <span class="st">"jpg"</span>, <span class="st">"svg"</span>, <span class="st">"pdf"</span>]</code></p>
 </div>
 </section>
-<section id="plotnine.typing.StripLabellingFuncNames" class="level3 title doc-object doc-type">
-<h3 class="title doc-object doc-type anchored" data-anchor-id="plotnine.typing.StripLabellingFuncNames"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">StripLabellingFuncNames</span></h3>
-<div class="doc-signature doc-type">
-<p><code><a href="https://docs.python.org/3/library/typing.html#typing.Literal">Literal</a>[<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="st">"label_value"</span>, <span class="st">"label_both"</span>, <span class="st">"label_context"</span><br>]</code></p>
-</div>
-</section>
 <section id="plotnine.typing.FacetSpaceRatios" class="level3 title doc-object doc-type">
 <h3 class="title doc-object doc-type anchored" data-anchor-id="plotnine.typing.FacetSpaceRatios"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">FacetSpaceRatios</span></h3>
 <div class="doc-signature doc-type">
 <p><code><a href="https://docs.python.org/3/library/stdtypes.html#dict">dict</a>[<a href="https://docs.python.org/3/library/typing.html#typing.Literal">Literal</a>[<span class="st">"x"</span>, <span class="st">"y"</span>], <a href="https://docs.python.org/3/library/typing.html#typing.Sequence">Sequence</a>[<a href="https://docs.python.org/3/library/functions.html#float">float</a>]]</code></p>
-</div>
-</section>
-<section id="plotnine.typing.StripLabellingFunc" class="level3 title doc-object doc-type">
-<h3 class="title doc-object doc-type anchored" data-anchor-id="plotnine.typing.StripLabellingFunc"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">StripLabellingFunc</span></h3>
-<div class="doc-signature doc-type">
-<p><code><a href="https://docs.python.org/3/library/typing.html#typing.Callable">Callable</a>[<br>&nbsp;&nbsp;&nbsp;&nbsp;[strip_label_details], strip_label_details<br>]</code></p>
-</div>
-</section>
-<section id="plotnine.typing.StripLabellingDict" class="level3 title doc-object doc-type">
-<h3 class="title doc-object doc-type anchored" data-anchor-id="plotnine.typing.StripLabellingDict"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">StripLabellingDict</span></h3>
-<div class="doc-signature doc-type">
-<p><code>(<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://docs.python.org/3/library/stdtypes.html#dict">dict</a>[<a href="https://docs.python.org/3/library/stdtypes.html#str">str</a>, <a href="https://docs.python.org/3/library/stdtypes.html#str">str</a>] | <a href="https://docs.python.org/3/library/stdtypes.html#dict">dict</a>[<a href="https://docs.python.org/3/library/stdtypes.html#str">str</a>, <a href="https://docs.python.org/3/library/typing.html#typing.Callable">Callable</a>[[<a href="https://docs.python.org/3/library/stdtypes.html#str">str</a>], <a href="https://docs.python.org/3/library/stdtypes.html#str">str</a>]]<br>)</code></p>
-</div>
-</section>
-<section id="plotnine.typing.CanBeStripLabellingFunc" class="level3 title doc-object doc-type">
-<h3 class="title doc-object doc-type anchored" data-anchor-id="plotnine.typing.CanBeStripLabellingFunc"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">CanBeStripLabellingFunc</span></h3>
-<div class="doc-signature doc-type">
-<p><code>(<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="../reference/typing.html#plotnine.typing.StripLabellingFuncNames">StripLabellingFuncNames</a><br>&nbsp;&nbsp;&nbsp;&nbsp;| <a href="../reference/typing.html#plotnine.typing.StripLabellingFunc">StripLabellingFunc</a><br>&nbsp;&nbsp;&nbsp;&nbsp;| <a href="https://docs.python.org/3/library/typing.html#typing.Callable">Callable</a>[[<a href="https://docs.python.org/3/library/stdtypes.html#str">str</a>], <a href="https://docs.python.org/3/library/stdtypes.html#str">str</a>]<br>&nbsp;&nbsp;&nbsp;&nbsp;| <a href="../reference/typing.html#plotnine.typing.StripLabellingDict">StripLabellingDict</a><br>)</code></p>
 </div>
 </section>
 <section id="plotnine.typing.StripPosition" class="level3 title doc-object doc-type">
@@ -508,103 +404,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="plotnine.typing.ScaledAestheticsName" class="level3 title doc-object doc-type">
 <h3 class="title doc-object doc-type anchored" data-anchor-id="plotnine.typing.ScaledAestheticsName"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">ScaledAestheticsName</span></h3>
 <div class="doc-signature doc-type">
-<p><code><a href="https://docs.python.org/3/library/typing.html#typing.Literal">Literal</a>[<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="st">"x"</span>,<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="st">"xmin"</span>,<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="st">"xmax"</span>,<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="st">"xend"</span>,<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="st">"xintercept"</span>,<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="st">"y"</span>,<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="st">"ymin"</span>,<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="st">"ymax"</span>,<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="st">"yend"</span>,<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="st">"yintercept"</span>,<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="st">"alpha"</span>,<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="st">"color"</span>,<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="st">"colour"</span>,<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="st">"fill"</span>,<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="st">"linetype"</span>,<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="st">"shape"</span>,<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="st">"size"</span>,<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="st">"stroke"</span>,<br>]</code></p>
-</div>
-</section>
-<section id="plotnine.typing.ScaleContinuousLimits" class="level3 title doc-object doc-type">
-<h3 class="title doc-object doc-type anchored" data-anchor-id="plotnine.typing.ScaleContinuousLimits"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">ScaleContinuousLimits</span></h3>
-<div class="doc-signature doc-type">
-<p><code><a href="../reference/typing.html#plotnine.typing.TupleFloat2">TupleFloat2</a></code></p>
-</div>
-</section>
-<section id="plotnine.typing.ScaleDiscreteLimits" class="level3 title doc-object doc-type">
-<h3 class="title doc-object doc-type anchored" data-anchor-id="plotnine.typing.ScaleDiscreteLimits"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">ScaleDiscreteLimits</span></h3>
-<div class="doc-signature doc-type">
-<p><code><a href="https://docs.python.org/3/library/typing.html#typing.Sequence">Sequence</a>[<a href="https://docs.python.org/3/library/stdtypes.html#str">str</a>]</code></p>
-</div>
-</section>
-<section id="plotnine.typing.ScaleLimits" class="level3 title doc-object doc-type">
-<h3 class="title doc-object doc-type anchored" data-anchor-id="plotnine.typing.ScaleLimits"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">ScaleLimits</span></h3>
-<div class="doc-signature doc-type">
-<p><code><a href="../reference/typing.html#plotnine.typing.ScaleContinuousLimits">ScaleContinuousLimits</a> | <a href="../reference/typing.html#plotnine.typing.ScaleDiscreteLimits">ScaleDiscreteLimits</a></code></p>
-</div>
-</section>
-<section id="plotnine.typing.ScaleLimitsRaw" class="level3 title doc-object doc-type">
-<h3 class="title doc-object doc-type anchored" data-anchor-id="plotnine.typing.ScaleLimitsRaw"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">ScaleLimitsRaw</span></h3>
-<div class="doc-signature doc-type">
-<p><code>(<br>&nbsp;&nbsp;&nbsp;&nbsp;None | <a href="../reference/typing.html#plotnine.typing.ScaleLimits">ScaleLimits</a> | <a href="https://docs.python.org/3/library/typing.html#typing.Callable">Callable</a>[[<a href="../reference/typing.html#plotnine.typing.ScaleLimits">ScaleLimits</a>], <a href="../reference/typing.html#plotnine.typing.ScaleLimits">ScaleLimits</a>]<br>)</code></p>
-</div>
-</section>
-<section id="plotnine.typing.ScaleContinuousLimitsRaw" class="level3 title doc-object doc-type">
-<h3 class="title doc-object doc-type anchored" data-anchor-id="plotnine.typing.ScaleContinuousLimitsRaw"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">ScaleContinuousLimitsRaw</span></h3>
-<div class="doc-signature doc-type">
-<p><code>(<br>&nbsp;&nbsp;&nbsp;&nbsp;None<br>&nbsp;&nbsp;&nbsp;&nbsp;| <a href="../reference/typing.html#plotnine.typing.ScaleContinuousLimits">ScaleContinuousLimits</a><br>&nbsp;&nbsp;&nbsp;&nbsp;| <a href="https://docs.python.org/3/library/typing.html#typing.Callable">Callable</a>[[<a href="../reference/typing.html#plotnine.typing.ScaleContinuousLimits">ScaleContinuousLimits</a>], <a href="../reference/typing.html#plotnine.typing.ScaleContinuousLimits">ScaleContinuousLimits</a>]<br>)</code></p>
-</div>
-</section>
-<section id="plotnine.typing.ScaleDiscreteLimitsRaw" class="level3 title doc-object doc-type">
-<h3 class="title doc-object doc-type anchored" data-anchor-id="plotnine.typing.ScaleDiscreteLimitsRaw"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">ScaleDiscreteLimitsRaw</span></h3>
-<div class="doc-signature doc-type">
-<p><code>(<br>&nbsp;&nbsp;&nbsp;&nbsp;None<br>&nbsp;&nbsp;&nbsp;&nbsp;| <a href="../reference/typing.html#plotnine.typing.ScaleDiscreteLimits">ScaleDiscreteLimits</a><br>&nbsp;&nbsp;&nbsp;&nbsp;| <a href="https://docs.python.org/3/library/typing.html#typing.Callable">Callable</a>[[<a href="../reference/typing.html#plotnine.typing.ScaleDiscreteLimits">ScaleDiscreteLimits</a>], <a href="../reference/typing.html#plotnine.typing.ScaleDiscreteLimits">ScaleDiscreteLimits</a>]<br>)</code></p>
-</div>
-</section>
-<section id="plotnine.typing.ScaleContinuousBreaks" class="level3 title doc-object doc-type">
-<h3 class="title doc-object doc-type anchored" data-anchor-id="plotnine.typing.ScaleContinuousBreaks"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">ScaleContinuousBreaks</span></h3>
-<div class="doc-signature doc-type">
-<p><code><a href="https://docs.python.org/3/library/typing.html#typing.Sequence">Sequence</a>[<a href="https://docs.python.org/3/library/functions.html#float">float</a>]</code></p>
-</div>
-</section>
-<section id="plotnine.typing.ScaleDiscreteBreaks" class="level3 title doc-object doc-type">
-<h3 class="title doc-object doc-type anchored" data-anchor-id="plotnine.typing.ScaleDiscreteBreaks"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">ScaleDiscreteBreaks</span></h3>
-<div class="doc-signature doc-type">
-<p><code><a href="https://docs.python.org/3/library/typing.html#typing.Sequence">Sequence</a>[<a href="https://docs.python.org/3/library/stdtypes.html#str">str</a>]</code></p>
-</div>
-</section>
-<section id="plotnine.typing.ScaleBreaks" class="level3 title doc-object doc-type">
-<h3 class="title doc-object doc-type anchored" data-anchor-id="plotnine.typing.ScaleBreaks"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">ScaleBreaks</span></h3>
-<div class="doc-signature doc-type">
-<p><code><a href="../reference/typing.html#plotnine.typing.ScaleContinuousBreaks">ScaleContinuousBreaks</a> | <a href="../reference/typing.html#plotnine.typing.ScaleDiscreteBreaks">ScaleDiscreteBreaks</a></code></p>
-</div>
-</section>
-<section id="plotnine.typing.ScaleBreaksRaw" class="level3 title doc-object doc-type">
-<h3 class="title doc-object doc-type anchored" data-anchor-id="plotnine.typing.ScaleBreaksRaw"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">ScaleBreaksRaw</span></h3>
-<div class="doc-signature doc-type">
-<p><code>(<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://docs.python.org/3/library/functions.html#bool">bool</a> | None | <a href="../reference/typing.html#plotnine.typing.ScaleBreaks">ScaleBreaks</a> | <a href="https://docs.python.org/3/library/typing.html#typing.Callable">Callable</a>[[<a href="../reference/typing.html#plotnine.typing.ScaleLimits">ScaleLimits</a>], <a href="../reference/typing.html#plotnine.typing.ScaleBreaks">ScaleBreaks</a>]<br>)</code></p>
-</div>
-</section>
-<section id="plotnine.typing.ScaleContinuousBreaksRaw" class="level3 title doc-object doc-type">
-<h3 class="title doc-object doc-type anchored" data-anchor-id="plotnine.typing.ScaleContinuousBreaksRaw"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">ScaleContinuousBreaksRaw</span></h3>
-<div class="doc-signature doc-type">
-<p><code>(<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://docs.python.org/3/library/functions.html#bool">bool</a><br>&nbsp;&nbsp;&nbsp;&nbsp;| None<br>&nbsp;&nbsp;&nbsp;&nbsp;| <a href="../reference/typing.html#plotnine.typing.ScaleContinuousBreaks">ScaleContinuousBreaks</a><br>&nbsp;&nbsp;&nbsp;&nbsp;| <a href="https://docs.python.org/3/library/typing.html#typing.Callable">Callable</a>[[<a href="../reference/typing.html#plotnine.typing.ScaleContinuousLimits">ScaleContinuousLimits</a>], <a href="../reference/typing.html#plotnine.typing.ScaleContinuousBreaks">ScaleContinuousBreaks</a>]<br>)</code></p>
-</div>
-</section>
-<section id="plotnine.typing.ScaleDiscreteBreaksRaw" class="level3 title doc-object doc-type">
-<h3 class="title doc-object doc-type anchored" data-anchor-id="plotnine.typing.ScaleDiscreteBreaksRaw"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">ScaleDiscreteBreaksRaw</span></h3>
-<div class="doc-signature doc-type">
-<p><code>(<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://docs.python.org/3/library/functions.html#bool">bool</a><br>&nbsp;&nbsp;&nbsp;&nbsp;| None<br>&nbsp;&nbsp;&nbsp;&nbsp;| <a href="../reference/typing.html#plotnine.typing.ScaleDiscreteBreaks">ScaleDiscreteBreaks</a><br>&nbsp;&nbsp;&nbsp;&nbsp;| <a href="https://docs.python.org/3/library/typing.html#typing.Callable">Callable</a>[[<a href="../reference/typing.html#plotnine.typing.ScaleDiscreteLimits">ScaleDiscreteLimits</a>], <a href="../reference/typing.html#plotnine.typing.ScaleDiscreteBreaks">ScaleDiscreteBreaks</a>]<br>)</code></p>
-</div>
-</section>
-<section id="plotnine.typing.ScaleMinorBreaksRaw" class="level3 title doc-object doc-type">
-<h3 class="title doc-object doc-type anchored" data-anchor-id="plotnine.typing.ScaleMinorBreaksRaw"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">ScaleMinorBreaksRaw</span></h3>
-<div class="doc-signature doc-type">
-<p><code><a href="../reference/typing.html#plotnine.typing.ScaleContinuousBreaksRaw">ScaleContinuousBreaksRaw</a> | <a href="https://docs.python.org/3/library/functions.html#int">int</a></code></p>
-</div>
-</section>
-<section id="plotnine.typing.ScaleLabelsRaw" class="level3 title doc-object doc-type">
-<h3 class="title doc-object doc-type anchored" data-anchor-id="plotnine.typing.ScaleLabelsRaw"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">ScaleLabelsRaw</span></h3>
-<div class="doc-signature doc-type">
-<p><code>(<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://docs.python.org/3/library/functions.html#bool">bool</a><br>&nbsp;&nbsp;&nbsp;&nbsp;| None<br>&nbsp;&nbsp;&nbsp;&nbsp;| <a href="https://docs.python.org/3/library/typing.html#typing.Sequence">Sequence</a>[<a href="https://docs.python.org/3/library/stdtypes.html#str">str</a>]<br>&nbsp;&nbsp;&nbsp;&nbsp;| <a href="https://docs.python.org/3/library/typing.html#typing.Callable">Callable</a>[[<a href="../reference/typing.html#plotnine.typing.ScaleBreaks">ScaleBreaks</a>], <a href="https://docs.python.org/3/library/typing.html#typing.Sequence">Sequence</a>[<a href="https://docs.python.org/3/library/stdtypes.html#str">str</a>]]<br>&nbsp;&nbsp;&nbsp;&nbsp;| <a href="https://docs.python.org/3/library/stdtypes.html#dict">dict</a>[<a href="https://docs.python.org/3/library/stdtypes.html#str">str</a>, <a href="https://docs.python.org/3/library/stdtypes.html#str">str</a>]<br>)</code></p>
-</div>
-</section>
-<section id="plotnine.typing.ScaleLabels" class="level3 title doc-object doc-type">
-<h3 class="title doc-object doc-type anchored" data-anchor-id="plotnine.typing.ScaleLabels"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">ScaleLabels</span></h3>
-<div class="doc-signature doc-type">
-<p><code><a href="https://docs.python.org/3/library/typing.html#typing.Sequence">Sequence</a>[<a href="https://docs.python.org/3/library/stdtypes.html#str">str</a>]</code></p>
+<p><code><a href="https://docs.python.org/3/library/typing.html#typing.Literal">Literal</a>[<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="st">"x"</span>,<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="st">"xmin"</span>,<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="st">"xmax"</span>,<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="st">"xend"</span>,<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="st">"xintercept"</span>,<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="st">"y"</span>,<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="st">"ymin"</span>,<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="st">"ymax"</span>,<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="st">"yend"</span>,<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="st">"yintercept"</span>,<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="st">"alpha"</span>,<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="st">"color"</span>,<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="st">"colour"</span>,<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="st">"fill"</span>,<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="st">"linetype"</span>,<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="st">"shape"</span>,<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="st">"size"</span>,<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="st">"stroke"</span>,<br>&nbsp;&nbsp;&nbsp;&nbsp;# boxplot<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="st">"ymax_final"</span>,<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="st">"ymin_final"</span>,<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="st">"lower"</span>,<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="st">"middle"</span>,<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="st">"upper"</span>,<br>]</code></p>
 </div>
 </section>
 <section id="plotnine.typing.CoordRange" class="level3 title doc-object doc-type">
 <h3 class="title doc-object doc-type anchored" data-anchor-id="plotnine.typing.CoordRange"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">CoordRange</span></h3>
 <div class="doc-signature doc-type">
-<p><code><a href="../reference/typing.html#plotnine.typing.TupleFloat2">TupleFloat2</a></code></p>
+<p><code><a href="https://docs.python.org/3/library/stdtypes.html#tuple">tuple</a>[<a href="https://docs.python.org/3/library/functions.html#float">float</a>, <a href="https://docs.python.org/3/library/functions.html#float">float</a>]</code></p>
 </div>
 </section>
 <section id="plotnine.typing.SidePosition" class="level3 title doc-object doc-type">
@@ -631,22 +437,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><code><a href="https://docs.python.org/3/library/typing.html#typing.Literal">Literal</a>[<span class="st">"legend"</span>, <span class="st">"colorbar"</span>, <span class="st">"colourbar"</span>]</code></p>
 </div>
 </section>
-<section id="plotnine.typing.LegendOrColorbar" class="level3 title doc-object doc-type">
-<h3 class="title doc-object doc-type anchored" data-anchor-id="plotnine.typing.LegendOrColorbar"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">LegendOrColorbar</span></h3>
-<div class="doc-signature doc-type">
-<p><code>(<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="../reference/guide_legend.html#plotnine.guide_legend">guide_legend</a> | <a href="../reference/guide_colorbar.html#plotnine.guide_colorbar">guide_colorbar</a> | <a href="https://docs.python.org/3/library/typing.html#typing.Literal">Literal</a>[<span class="st">"legend"</span>, <span class="st">"colorbar"</span>]<br>)</code></p>
-</div>
-</section>
 <section id="plotnine.typing.NoGuide" class="level3 title doc-object doc-type">
 <h3 class="title doc-object doc-type anchored" data-anchor-id="plotnine.typing.NoGuide"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">NoGuide</span></h3>
 <div class="doc-signature doc-type">
 <p><code><a href="https://docs.python.org/3/library/typing.html#typing.Literal">Literal</a>[<span class="st">"none"</span>, False]</code></p>
-</div>
-</section>
-<section id="plotnine.typing.LegendOnly" class="level3 title doc-object doc-type">
-<h3 class="title doc-object doc-type anchored" data-anchor-id="plotnine.typing.LegendOnly"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">LegendOnly</span></h3>
-<div class="doc-signature doc-type">
-<p><code><a href="../reference/guide_legend.html#plotnine.guide_legend">guide_legend</a> | <a href="https://docs.python.org/3/library/typing.html#typing.Literal">Literal</a>[<span class="st">"legend"</span>]</code></p>
 </div>
 </section>
 <section id="plotnine.typing.VerticalJustification" class="level3 title doc-object doc-type">
@@ -665,6 +459,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="title doc-object doc-type anchored" data-anchor-id="plotnine.typing.TextJustification"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">TextJustification</span></h3>
 <div class="doc-signature doc-type">
 <p><code>(<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="../reference/typing.html#plotnine.typing.VerticalJustification">VerticalJustification</a> | <a href="../reference/typing.html#plotnine.typing.HorizontalJustification">HorizontalJustification</a> | <a href="https://docs.python.org/3/library/typing.html#typing.Literal">Literal</a>[<span class="st">"baseline"</span>]<br>)</code></p>
+</div>
+</section>
+<section id="plotnine.typing.TransformCol" class="level3 title doc-object doc-type">
+<h3 class="title doc-object doc-type anchored" data-anchor-id="plotnine.typing.TransformCol"><code class="doc-symbol doc-symbol-type"></code> <span class="doc-object-name doc-type-name">TransformCol</span></h3>
+<div class="doc-signature doc-type">
+<p><code><a href="https://docs.python.org/3/library/typing.html#typing.Callable">Callable</a>[[<a href="../reference/typing.html#plotnine.typing.FloatSeries">FloatSeries</a>], <a href="../reference/typing.html#plotnine.typing.FloatSeries">FloatSeries</a> | <a href="../reference/typing.html#plotnine.typing.FloatArray">FloatArray</a>]</code></p>
 </div>
 
 
