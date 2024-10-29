@@ -4,7 +4,7 @@ title: Changelog
 ## v0.14.0
 (2024-10-28)
 
-(not-yet-released)
+[![](https://zenodo.org/badge/DOI/10.5281/zenodo.14006850.svg)](https://doi.org/10.5281/zenodo.14006850)
 
 ### API Changes
 
@@ -69,7 +69,7 @@ title: Changelog
   aesthetic when specifying the `binwidth` or `breaks`. ({{< issue 824 >}})
 
 - Fixed [](:class:`~plotnine.PlotnineAnimation`) not to draw a second legend
-  at the bottom-left corner. ({{< issue 816 }}>)
+  at the bottom-left corner. ({{< issue 816 >}})
 
 - Fixed bug where setting `theme(text=element_blank())` would raise and exception.
 
