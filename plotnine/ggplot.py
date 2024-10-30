@@ -125,7 +125,7 @@ class ggplot:
 
     def __str__(self) -> str:
         """
-        Return a wrapped pixel size of the plot
+        Return a wrapped display size (in pixels) of the plot
         """
         dpi = self.theme.getp("dpi")
         width, height = self.theme.getp("figure_size")
