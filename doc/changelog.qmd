@@ -1,6 +1,15 @@
 ---
 title: Changelog
 ---
+## v0.14.1
+(not-yet-released)
+
+### Bug Fixes
+
+- Fix expansion of datetime and timedelta scales when using both the lower
+  and upper addition constants.
+
+
 ## v0.14.0
 (2024-10-28)
 
