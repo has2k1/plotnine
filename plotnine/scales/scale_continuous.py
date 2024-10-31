@@ -369,6 +369,8 @@ class scale_continuous(
         elif len(exp) == 2:
             exp = exp[0], to_num(exp[1])
             exp = (*exp, *exp)
+        else:  # exp is a tuple with 4 elements
+            exp = exp[0], to_num(exp[1]), exp[2], to_num(exp[3])
 
         return exp
 
