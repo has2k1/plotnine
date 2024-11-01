@@ -127,18 +127,6 @@ class geom_text(geom):
     `fontvariant`
 
     :   Font variant. One of `{"normal", "small-caps"}`{.py}.
-
-    `fontstretch`
-
-    :   Font Stretch. A numeric value in range 0-1000, or one of:
-
-        ```python
-        {
-            "ultra-condensed", "extra-condensed", "condensed",
-            "semi-condensed", "normal", "semi-expanded", "expanded",
-            "extra-expanded", "ultra-expanded"
-        }
-        ```
     """
     DEFAULT_AES = {
         "alpha": 1,
@@ -152,7 +140,6 @@ class geom_text(geom):
         "fontweight": "normal",
         "fontstyle": "normal",
         "fontvariant": None,
-        "fontstretch": None,
     }
     REQUIRED_AES = {"label", "x", "y"}
     DEFAULT_PARAMS = {
