@@ -267,7 +267,7 @@ class scale_y_continuous(scale_position_continuous):
 
 # Transformed scales
 @dataclass(kw_only=True)
-class scale_x_datetime(scale_datetime, scale_x_continuous):
+class scale_x_datetime(scale_datetime, scale_x_continuous):  # pyright: ignore[reportIncompatibleVariableOverride]
     """
     Continuous x position for datetime data points
     """
@@ -276,7 +276,7 @@ class scale_x_datetime(scale_datetime, scale_x_continuous):
 
 
 @dataclass(kw_only=True)
-class scale_y_datetime(scale_datetime, scale_y_continuous):
+class scale_y_datetime(scale_datetime, scale_y_continuous):  # pyright: ignore[reportIncompatibleVariableOverride]
     """
     Continuous y position for datetime data points
     """
