@@ -12,7 +12,6 @@ such cases as when left or right margin are affected by xlabel.
 from __future__ import annotations
 
 import typing
-from copy import deepcopy
 from dataclasses import dataclass
 
 from ._plot_side_space import LRTBSpaces, WHSpaceParts, calculate_panel_spacing
@@ -56,6 +55,7 @@ class TightParams:
     All parameters computed for the plotnine tight layout engine
     """
 
+    facet: facet
     sides: LRTBSpaces
     gullies: WHSpaceParts
 
@@ -69,32 +69,26 @@ class TightParams:
             hspace=self.gullies.hspace,
         )
 
-    def to_aspect_ratio(
-        self, facet: facet, ratio: float, parts: WHSpaceParts
-    ) -> TightParams:
-        """
-        Modify TightParams to get a given aspect ratio
-        """
-        current_ratio = (parts.h * parts.H) / (parts.w * parts.W)
-        increase_aspect_ratio = ratio > current_ratio
-        if increase_aspect_ratio:  # Taller panel
-            return self._reduce_width(facet, ratio, parts)
-        else:
-            return self._reduce_height(facet, ratio, parts)
+        if (ratio := self.facet._aspect_ratio()) is not None:
+            current_ratio = self.gullies.aspect_ratio
+            if ratio > current_ratio:
+                # Increase aspect ratio, taller panels
+                self._reduce_width(ratio)
+            elif ratio < current_ratio:
+                # Increase aspect ratio, wider panels
+                self._reduce_height(ratio)
 
-    def _reduce_height(
-        self, facet: facet, ratio: float, parts: WHSpaceParts
-    ) -> TightParams:
+    def _reduce_height(self, ratio: float):
         """
         Reduce the height of axes to get the aspect ratio
         """
-        self = deepcopy(self)
+        parts = self.gullies
 
         # New height w.r.t figure height
         h1 = ratio * parts.w * (parts.W / parts.H)
 
         # Half of the total vertical reduction w.r.t figure height
-        dh = (parts.h - h1) * facet.nrow / 2
+        dh = (parts.h - h1) * self.facet.nrow / 2
 
         # Reduce plot area height
         self.params.top -= dh
@@ -104,21 +98,18 @@ class TightParams:
         # Add more vertical plot margin
         self.sides.t.plot_margin += dh
         self.sides.b.plot_margin += dh
-        return self
 
-    def _reduce_width(
-        self, facet: facet, ratio: float, parts: WHSpaceParts
-    ) -> TightParams:
+    def _reduce_width(self, ratio: float):
         """
         Reduce the width of axes to get the aspect ratio
         """
-        self = deepcopy(self)
+        parts = self.gullies
 
         # New width w.r.t figure width
         w1 = (parts.h * parts.H) / (ratio * parts.W)
 
         # Half of the total horizontal reduction w.r.t figure width
-        dw = (parts.w - w1) * facet.ncol / 2
+        dw = (parts.w - w1) * self.facet.ncol / 2
 
         # Reduce width
         self.params.left += dw
@@ -128,7 +119,6 @@ class TightParams:
         # Add more horizontal margin
         self.sides.l.plot_margin += dw
         self.sides.r.plot_margin += dw
-        return self
 
 
 def get_plotnine_tight_layout(pack: LayoutPack) -> TightParams:
@@ -137,10 +127,7 @@ def get_plotnine_tight_layout(pack: LayoutPack) -> TightParams:
     """
     sides = LRTBSpaces(pack)
     gullies = calculate_panel_spacing(pack, sides)
-    tight_params = TightParams(sides, gullies)
-    ratio = pack.facet._aspect_ratio()
-    if ratio is not None:
-        tight_params = tight_params.to_aspect_ratio(pack.facet, ratio, gullies)
+    tight_params = TightParams(pack.facet, sides, gullies)
     return tight_params
 
 

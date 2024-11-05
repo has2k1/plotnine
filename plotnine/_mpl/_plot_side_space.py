@@ -67,6 +67,13 @@ class WHSpaceParts:
     wspace: float  # mpl.subplotpars.wspace
     hspace: float  # mpl.subplotpars.hspace
 
+    @property
+    def aspect_ratio(self) -> float:
+        """
+        Aspect ratio of the panels
+        """
+        return (self.h * self.H) / (self.w * self.W)
+
 
 @dataclass
 class _side_spaces(ABC):
