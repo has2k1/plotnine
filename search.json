@@ -4,14 +4,14 @@
     "href": "changelog.html",
     "title": "Changelog",
     "section": "",
-    "text": "(not-yet-released)\n\n\n\nFix expansion of datetime and timedelta scales when using both the lower and upper addition constants.\nIn quarto documents make the output retina even if the fig-format is png."
+    "text": "(not-yet-released)\n\n\n\nFix expansion of datetime and timedelta scales when using both the lower and upper addition constants.\nIn quarto documents make the output retina even if the fig-format is png.\nFixed bug where you could not save as pdf if also specifying the aspect_ratio. (#885)"
   },
   {
     "objectID": "changelog.html#v0.14.1",
     "href": "changelog.html#v0.14.1",
     "title": "Changelog",
     "section": "",
-    "text": "(not-yet-released)\n\n\n\nFix expansion of datetime and timedelta scales when using both the lower and upper addition constants.\nIn quarto documents make the output retina even if the fig-format is png."
+    "text": "(not-yet-released)\n\n\n\nFix expansion of datetime and timedelta scales when using both the lower and upper addition constants.\nIn quarto documents make the output retina even if the fig-format is png.\nFixed bug where you could not save as pdf if also specifying the aspect_ratio. (#885)"
   },
   {
     "objectID": "changelog.html#v0.14.0",
