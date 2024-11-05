@@ -12,6 +12,9 @@ title: Changelog
 - In quarto documents make the output `retina` even if the `fig-format` is
   `png`.
 
+- Fixed bug where you could not save as pdf if also specifying the
+  `aspect_ratio`. ({{< issue 885 >}})
+
 ## v0.14.0
 (2024-10-28)
 
