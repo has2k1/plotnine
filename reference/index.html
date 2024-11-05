@@ -1,0 +1,2272 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>index – plotnine {{&lt; var version &gt;}}</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../images/favicon.ico" rel="icon">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-2486e1f0a3ee9ee1fc393803a1361cdb.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-e1e10312c182e4cb58f1afab43d6e67e.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">plotnine 0.14.1a1</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="../reference/index.html" aria-current="page"> 
+<span class="menu-text">Reference</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/has2k1/plotnine"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#api-reference" id="toc-api-reference" class="nav-link active" data-scroll-target="#api-reference">API Reference</a>
+  <ul class="collapse">
+  <li><a href="#creating-a-plot" id="toc-creating-a-plot" class="nav-link" data-scroll-target="#creating-a-plot">Creating a Plot</a></li>
+  <li><a href="#mapping-aesthetics" id="toc-mapping-aesthetics" class="nav-link" data-scroll-target="#mapping-aesthetics">Mapping Aesthetics</a></li>
+  <li><a href="#geoms" id="toc-geoms" class="nav-link" data-scroll-target="#geoms">Geoms</a>
+  <ul class="collapse">
+  <li><a href="#annotations" id="toc-annotations" class="nav-link" data-scroll-target="#annotations">Annotations</a></li>
+  <li><a href="#labels" id="toc-labels" class="nav-link" data-scroll-target="#labels">Labels</a></li>
+  </ul></li>
+  <li><a href="#stats" id="toc-stats" class="nav-link" data-scroll-target="#stats">Stats</a></li>
+  <li><a href="#facets" id="toc-facets" class="nav-link" data-scroll-target="#facets">Facets</a></li>
+  <li><a href="#scales" id="toc-scales" class="nav-link" data-scroll-target="#scales">Scales</a>
+  <ul class="collapse">
+  <li><a href="#base-scales" id="toc-base-scales" class="nav-link" data-scroll-target="#base-scales">Base Scales</a></li>
+  <li><a href="#alpha-scales" id="toc-alpha-scales" class="nav-link" data-scroll-target="#alpha-scales">Alpha Scales</a></li>
+  <li><a href="#identity-scales" id="toc-identity-scales" class="nav-link" data-scroll-target="#identity-scales">Identity Scales</a></li>
+  <li><a href="#color-and-fill-scales" id="toc-color-and-fill-scales" class="nav-link" data-scroll-target="#color-and-fill-scales">Color and Fill Scales</a></li>
+  <li><a href="#manual-scales" id="toc-manual-scales" class="nav-link" data-scroll-target="#manual-scales">Manual Scales</a></li>
+  <li><a href="#linetype-scales" id="toc-linetype-scales" class="nav-link" data-scroll-target="#linetype-scales">Linetype Scales</a></li>
+  <li><a href="#shape-scales" id="toc-shape-scales" class="nav-link" data-scroll-target="#shape-scales">Shape Scales</a></li>
+  <li><a href="#size-scales" id="toc-size-scales" class="nav-link" data-scroll-target="#size-scales">Size Scales</a></li>
+  <li><a href="#position-scales" id="toc-position-scales" class="nav-link" data-scroll-target="#position-scales">Position Scales</a></li>
+  <li><a href="#scale-limits" id="toc-scale-limits" class="nav-link" data-scroll-target="#scale-limits">Scale Limits</a></li>
+  </ul></li>
+  <li><a href="#scale-guides" id="toc-scale-guides" class="nav-link" data-scroll-target="#scale-guides">Scale Guides</a></li>
+  <li><a href="#positions" id="toc-positions" class="nav-link" data-scroll-target="#positions">Positions</a></li>
+  <li><a href="#themes" id="toc-themes" class="nav-link" data-scroll-target="#themes">Themes</a>
+  <ul class="collapse">
+  <li><a href="#themeables" id="toc-themeables" class="nav-link" data-scroll-target="#themeables">Themeables</a></li>
+  <li><a href="#helpful-functions-classes-for-theming" id="toc-helpful-functions-classes-for-theming" class="nav-link" data-scroll-target="#helpful-functions-classes-for-theming">Helpful Functions &amp; Classes for Theming</a></li>
+  </ul></li>
+  <li><a href="#coordinates" id="toc-coordinates" class="nav-link" data-scroll-target="#coordinates">Coordinates</a></li>
+  <li><a href="#options" id="toc-options" class="nav-link" data-scroll-target="#options">Options</a></li>
+  <li><a href="#datasets" id="toc-datasets" class="nav-link" data-scroll-target="#datasets">Datasets</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+
+
+<section id="api-reference" class="level1 doc doc-index">
+<h1 class="doc doc-index">API Reference</h1>
+<section id="creating-a-plot" class="level2 doc-summary">
+<h2 class="doc-summary anchored" data-anchor-id="creating-a-plot">Creating a Plot</h2>
+<div class="doc-summary-table">
+<table class="caption-top table">
+<tbody>
+<tr class="odd">
+<td><a href="../reference/ggplot.html#plotnine.ggplot">ggplot</a></td>
+<td>Create a new ggplot object</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/qplot.html#plotnine.qplot">qplot</a></td>
+<td>Quick plot</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/watermark.html#plotnine.watermark">watermark</a></td>
+<td>Add watermark to plot</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/layer.html#plotnine.layer.layer">layer</a></td>
+<td>Layer</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/PlotnineAnimation.html#plotnine.animation.PlotnineAnimation">PlotnineAnimation</a></td>
+<td>Animation using ggplot objects</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/save_as_pdf_pages.html#plotnine.save_as_pdf_pages">save_as_pdf_pages</a></td>
+<td>Save multiple <a href="../reference/ggplot.html#plotnine.ggplot"><code>ggplot</code></a> objects to a PDF file, one per page.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="mapping-aesthetics" class="level2 doc-summary">
+<h2 class="doc-summary anchored" data-anchor-id="mapping-aesthetics">Mapping Aesthetics</h2>
+<p>Aesthetics are the visual properties of a plot. The following functions control how the data (and calculations based on the data) is mapped to the aesthetics.</p>
+<div class="doc-summary-table">
+<table class="caption-top table">
+<tbody>
+<tr class="odd">
+<td><a href="../reference/aes.html#plotnine.aes">aes</a></td>
+<td>Create aesthetic mappings</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/after_stat.html#plotnine.after_stat">after_stat</a></td>
+<td>Evaluate mapping after statistic has been calculated</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/after_scale.html#plotnine.after_scale">after_scale</a></td>
+<td>Evaluate mapping after variable has been mapped to the scale</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/stage.html#plotnine.stage">stage</a></td>
+<td>Stage allows you evaluating mapping at more than one stage</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="geoms" class="level2 doc-summary">
+<h2 class="doc-summary anchored" data-anchor-id="geoms">Geoms</h2>
+<p>Geometric objects (geoms) are responsible for the visual representation of data points. geom_* classes determine the kind of geometric objects and every plot must have at least one geom added to it. The distinct visual aspects of the representation are controlled by the aes mapping.</p>
+<div class="doc-summary-table">
+<table class="caption-top table">
+<tbody>
+<tr class="odd">
+<td><a href="../reference/geom.html#plotnine.geoms.geom.geom">geom</a></td>
+<td>Base class of all Geoms</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="doc-summary-table">
+<table class="caption-top table">
+<tbody>
+<tr class="odd">
+<td><a href="../reference/geom_abline.html#plotnine.geom_abline">geom_abline</a></td>
+<td>Lines specified by slope and intercept</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/geom_area.html#plotnine.geom_area">geom_area</a></td>
+<td>Area plot</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/geom_bar.html#plotnine.geom_bar">geom_bar</a></td>
+<td>Bar plot</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/geom_blank.html#plotnine.geom_blank">geom_blank</a></td>
+<td>An empty plot</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/geom_boxplot.html#plotnine.geom_boxplot">geom_boxplot</a></td>
+<td>Box and whiskers plot</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/geom_col.html#plotnine.geom_col">geom_col</a></td>
+<td>Bar plot with base on the x-axis</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/geom_count.html#plotnine.geom_count">geom_count</a></td>
+<td>Plot overlapping points</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/geom_crossbar.html#plotnine.geom_crossbar">geom_crossbar</a></td>
+<td>Vertical interval represented by a crossbar</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/geom_density.html#plotnine.geom_density">geom_density</a></td>
+<td>Smooth density estimate</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/geom_density_2d.html#plotnine.geom_density_2d">geom_density_2d</a></td>
+<td>2D density estimate</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/geom_dotplot.html#plotnine.geom_dotplot">geom_dotplot</a></td>
+<td>Dot plot</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/geom_errorbar.html#plotnine.geom_errorbar">geom_errorbar</a></td>
+<td>Vertical interval represented as an errorbar</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/geom_errorbarh.html#plotnine.geom_errorbarh">geom_errorbarh</a></td>
+<td>Horizontal interval represented as an errorbar</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/geom_freqpoly.html#plotnine.geom_freqpoly">geom_freqpoly</a></td>
+<td>Frequency polygon</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/geom_bin_2d.html#plotnine.geom_bin_2d">geom_bin_2d</a></td>
+<td>Heatmap of 2d bin counts</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/geom_histogram.html#plotnine.geom_histogram">geom_histogram</a></td>
+<td>Histogram</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/geom_hline.html#plotnine.geom_hline">geom_hline</a></td>
+<td>Horizontal line</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/geom_jitter.html#plotnine.geom_jitter">geom_jitter</a></td>
+<td>Scatter plot with points jittered to reduce overplotting</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/geom_label.html#plotnine.geom_label">geom_label</a></td>
+<td>Textual annotations with a background</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/geom_line.html#plotnine.geom_line">geom_line</a></td>
+<td>Connected points</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/geom_linerange.html#plotnine.geom_linerange">geom_linerange</a></td>
+<td>Vertical interval represented by lines</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/geom_map.html#plotnine.geom_map">geom_map</a></td>
+<td>Draw map feature</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/geom_path.html#plotnine.geom_path">geom_path</a></td>
+<td>Connected points</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/geom_point.html#plotnine.geom_point">geom_point</a></td>
+<td>Plot points (Scatter plot)</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/geom_pointdensity.html#plotnine.geom_pointdensity">geom_pointdensity</a></td>
+<td>Scatterplot with density estimation at each point</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/geom_pointrange.html#plotnine.geom_pointrange">geom_pointrange</a></td>
+<td>Vertical interval represented by a line with a point</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/geom_polygon.html#plotnine.geom_polygon">geom_polygon</a></td>
+<td>Polygon, a filled path</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/geom_quantile.html#plotnine.geom_quantile">geom_quantile</a></td>
+<td>Quantile lines from a quantile regression</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/geom_qq.html#plotnine.geom_qq">geom_qq</a></td>
+<td>Quantile-Quantile plot</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/geom_qq_line.html#plotnine.geom_qq_line">geom_qq_line</a></td>
+<td>Quantile-Quantile Line plot</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/geom_raster.html#plotnine.geom_raster">geom_raster</a></td>
+<td>Rasterized Rectangles specified using center points</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/geom_rect.html#plotnine.geom_rect">geom_rect</a></td>
+<td>Rectangles</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/geom_ribbon.html#plotnine.geom_ribbon">geom_ribbon</a></td>
+<td>Ribbon plot</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/geom_rug.html#plotnine.geom_rug">geom_rug</a></td>
+<td>Marginal rug plot</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/geom_segment.html#plotnine.geom_segment">geom_segment</a></td>
+<td>Line segments</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/geom_sina.html#plotnine.geom_sina">geom_sina</a></td>
+<td>Draw a sina plot</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/geom_smooth.html#plotnine.geom_smooth">geom_smooth</a></td>
+<td>A smoothed conditional mean</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/geom_spoke.html#plotnine.geom_spoke">geom_spoke</a></td>
+<td>Line segment parameterised by location, direction and distance</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/geom_step.html#plotnine.geom_step">geom_step</a></td>
+<td>Stepped connected points</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/geom_text.html#plotnine.geom_text">geom_text</a></td>
+<td>Textual annotations</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/geom_tile.html#plotnine.geom_tile">geom_tile</a></td>
+<td>Rectangles specified using a center points</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/geom_violin.html#plotnine.geom_violin">geom_violin</a></td>
+<td>Violin Plot</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/geom_vline.html#plotnine.geom_vline">geom_vline</a></td>
+<td>Vertical line</td>
+</tr>
+</tbody>
+</table>
+</div>
+<section id="annotations" class="level3 doc-summary-subgroup">
+<h3 class="doc-summary-subgroup anchored" data-anchor-id="annotations">Annotations</h3>
+<div class="doc-summary-table">
+<table class="caption-top table">
+<tbody>
+<tr class="odd">
+<td><a href="../reference/annotate.html#plotnine.annotate">annotate</a></td>
+<td>Create an annotation layer</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/annotation_logticks.html#plotnine.annotation_logticks">annotation_logticks</a></td>
+<td>Marginal log ticks.</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/annotation_stripes.html#plotnine.annotation_stripes">annotation_stripes</a></td>
+<td>Alternating stripes, centered around each label.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/arrow.html#plotnine.arrow">arrow</a></td>
+<td>Define arrow (actually an arrowhead)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="labels" class="level3 doc-summary-subgroup">
+<h3 class="doc-summary-subgroup anchored" data-anchor-id="labels">Labels</h3>
+<div class="doc-summary-table">
+<table class="caption-top table">
+<tbody>
+<tr class="odd">
+<td><a href="../reference/labs.html#plotnine.labs">labs</a></td>
+<td>Add labels for any aesthetics with a scale or title, subtitle &amp; caption</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/xlab.html#plotnine.xlab">xlab</a></td>
+<td>Label/name for the x aesthetic</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/ylab.html#plotnine.ylab">ylab</a></td>
+<td>Label/name for the y aesthetic</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/ggtitle.html#plotnine.ggtitle">ggtitle</a></td>
+<td>Create plot title</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+<section id="stats" class="level2 doc-summary">
+<h2 class="doc-summary anchored" data-anchor-id="stats">Stats</h2>
+<p>Statistical transformations (stats) do aggregations and other computations on data before it is drawn out. <code>stat_*</code> determine the type of computation done on the data. Different types of computations yield varied results, so a <code>stat</code> must be paired with a <code>geom</code> that can represent all or some of the computations.</p>
+<div class="doc-summary-table">
+<table class="caption-top table">
+<tbody>
+<tr class="odd">
+<td><a href="../reference/stat.html#plotnine.stats.stat.stat">stat</a></td>
+<td>Base class of all stats</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="doc-summary-table">
+<table class="caption-top table">
+<tbody>
+<tr class="odd">
+<td><a href="../reference/stat_bin.html#plotnine.stat_bin">stat_bin</a></td>
+<td>Count cases in each interval</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/stat_bin_2d.html#plotnine.stat_bin_2d">stat_bin_2d</a></td>
+<td>2 Dimensional bin counts</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/stat_bindot.html#plotnine.stat_bindot">stat_bindot</a></td>
+<td>Binning for a dot plot</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/stat_boxplot.html#plotnine.stat_boxplot">stat_boxplot</a></td>
+<td>Compute boxplot statistics</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/stat_count.html#plotnine.stat_count">stat_count</a></td>
+<td>Counts the number of cases at each x position</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/stat_density.html#plotnine.stat_density">stat_density</a></td>
+<td>Compute density estimate</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/stat_density_2d.html#plotnine.stat_density_2d">stat_density_2d</a></td>
+<td>Compute 2D kernel density estimation</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/stat_ecdf.html#plotnine.stat_ecdf">stat_ecdf</a></td>
+<td>Empirical Cumulative Density Function</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/stat_ellipse.html#plotnine.stat_ellipse">stat_ellipse</a></td>
+<td>Calculate normal confidence interval ellipse</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/stat_function.html#plotnine.stat_function">stat_function</a></td>
+<td>Superimpose a function onto a plot</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/stat_hull.html#plotnine.stat_hull">stat_hull</a></td>
+<td>2 Dimensional Convex Hull</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/stat_identity.html#plotnine.stat_identity">stat_identity</a></td>
+<td>Identity (do nothing) statistic</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/stat_qq.html#plotnine.stat_qq">stat_qq</a></td>
+<td>Calculation for quantile-quantile plot</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/stat_qq_line.html#plotnine.stat_qq_line">stat_qq_line</a></td>
+<td>Calculate line through quantile-quantile plot</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/stat_quantile.html#plotnine.stat_quantile">stat_quantile</a></td>
+<td>Compute quantile regression lines</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/stat_sina.html#plotnine.stat_sina">stat_sina</a></td>
+<td>Compute Sina plot values</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/stat_smooth.html#plotnine.stat_smooth">stat_smooth</a></td>
+<td>Calculate a smoothed conditional mean</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/stat_sum.html#plotnine.stat_sum">stat_sum</a></td>
+<td>Sum unique values</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/stat_summary.html#plotnine.stat_summary">stat_summary</a></td>
+<td>Calculate summary statistics depending on x</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/stat_summary_bin.html#plotnine.stat_summary_bin">stat_summary_bin</a></td>
+<td>Summarise y values at x intervals</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/stat_unique.html#plotnine.stat_unique">stat_unique</a></td>
+<td>Remove duplicates</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/stat_ydensity.html#plotnine.stat_ydensity">stat_ydensity</a></td>
+<td>Density estimate</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="facets" class="level2 doc-summary">
+<h2 class="doc-summary anchored" data-anchor-id="facets">Facets</h2>
+<p>Faceting is a way to subset data and plot it on different panels.</p>
+<div class="doc-summary-table">
+<table class="caption-top table">
+<tbody>
+<tr class="odd">
+<td><a href="../reference/facet.html#plotnine.facets.facet.facet">facet</a></td>
+<td>Base class for all facets</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="doc-summary-table">
+<table class="caption-top table">
+<tbody>
+<tr class="odd">
+<td><a href="../reference/facet_grid.html#plotnine.facet_grid">facet_grid</a></td>
+<td>Wrap 1D Panels onto 2D surface</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/facet_null.html#plotnine.facet_null">facet_null</a></td>
+<td>A single Panel</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/facet_wrap.html#plotnine.facet_wrap">facet_wrap</a></td>
+<td>Wrap 1D Panels onto 2D surface</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/labeller.html#plotnine.labeller">labeller</a></td>
+<td>Facet Strip Labelling</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/as_labeller.html#plotnine.as_labeller">as_labeller</a></td>
+<td>Coerse to labeller</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/label_value.html#plotnine.label_value">label_value</a></td>
+<td>Keep value as the label</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/label_both.html#plotnine.label_both">label_both</a></td>
+<td>Concatenate the facet variable with the value</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/label_context.html#plotnine.label_context">label_context</a></td>
+<td>Create an unabiguous label string</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="scales" class="level2 doc-summary">
+<h2 class="doc-summary anchored" data-anchor-id="scales">Scales</h2>
+<p>Scales control the mapping from data to aesthetics. They take data and adjust it to fit the different aspects of the visual sense i.e.&nbsp;length, colour, size and shape.</p>
+<section id="base-scales" class="level3 doc-summary-subgroup">
+<h3 class="doc-summary-subgroup anchored" data-anchor-id="base-scales">Base Scales</h3>
+<div class="doc-summary-table">
+<table class="caption-top table">
+<tbody>
+<tr class="odd">
+<td><a href="../reference/scale.html#plotnine.scales.scale.scale">scale</a></td>
+<td>Base class for all scales</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/scale_discrete.html#plotnine.scales.scale_discrete.scale_discrete">scale_discrete</a></td>
+<td>Base class for all discrete scales</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/scale_continuous.html#plotnine.scales.scale_continuous.scale_continuous">scale_continuous</a></td>
+<td>Base class for all continuous scales</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/scale_datetime.html#plotnine.scales.scale_datetime.scale_datetime">scale_datetime</a></td>
+<td>Base class for all date/datetime scales</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="alpha-scales" class="level3 doc-summary-subgroup">
+<h3 class="doc-summary-subgroup anchored" data-anchor-id="alpha-scales">Alpha Scales</h3>
+<div class="doc-summary-table">
+<table class="caption-top table">
+<tbody>
+<tr class="odd">
+<td><a href="../reference/scale_alpha.html#plotnine.scale_alpha">scale_alpha</a></td>
+<td>Continuous Alpha Scale</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/scale_alpha_discrete.html#plotnine.scale_alpha_discrete">scale_alpha_discrete</a></td>
+<td>Discrete Alpha Scale</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/scale_alpha_continuous.html#plotnine.scale_alpha_continuous">scale_alpha_continuous</a></td>
+<td>alias of <a href="../reference/scale_alpha.html#plotnine.scale_alpha">scale_alpha</a></td>
+</tr>
+<tr class="even">
+<td><a href="../reference/scale_alpha_datetime.html#plotnine.scale_alpha_datetime">scale_alpha_datetime</a></td>
+<td>Datetime Alpha Scale</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="identity-scales" class="level3 doc-summary-subgroup">
+<h3 class="doc-summary-subgroup anchored" data-anchor-id="identity-scales">Identity Scales</h3>
+<div class="doc-summary-table">
+<table class="caption-top table">
+<tbody>
+<tr class="odd">
+<td><a href="../reference/scale_alpha_identity.html#plotnine.scale_alpha_identity">scale_alpha_identity</a></td>
+<td>No alpha scaling</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/scale_color_identity.html#plotnine.scale_color_identity">scale_color_identity</a></td>
+<td>No color scaling</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/scale_colour_identity.html#plotnine.scale_colour_identity">scale_colour_identity</a></td>
+<td>alias of <a href="../reference/scale_color_identity.html#plotnine.scale_color_identity">scale_color_identity</a></td>
+</tr>
+<tr class="even">
+<td><a href="../reference/scale_fill_identity.html#plotnine.scale_fill_identity">scale_fill_identity</a></td>
+<td>No color scaling</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/scale_linetype_identity.html#plotnine.scale_linetype_identity">scale_linetype_identity</a></td>
+<td>No linetype scaling</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/scale_shape_identity.html#plotnine.scale_shape_identity">scale_shape_identity</a></td>
+<td>No shape scaling</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/scale_size_identity.html#plotnine.scale_size_identity">scale_size_identity</a></td>
+<td>No size scaling</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="color-and-fill-scales" class="level3 doc-summary-subgroup">
+<h3 class="doc-summary-subgroup anchored" data-anchor-id="color-and-fill-scales">Color and Fill Scales</h3>
+<div class="doc-summary-table">
+<table class="caption-top table">
+<tbody>
+<tr class="odd">
+<td><a href="../reference/scale_color_brewer.html#plotnine.scale_color_brewer">scale_color_brewer</a></td>
+<td>Sequential, diverging and qualitative discrete color scales</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/scale_color_continuous.html#plotnine.scale_color_continuous">scale_color_continuous</a></td>
+<td>alias of <a href="../reference/scale_color_cmap.html#plotnine.scale_color_cmap">scale_color_cmap</a></td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/scale_color_cmap.html#plotnine.scale_color_cmap">scale_color_cmap</a></td>
+<td>Create color scales using Matplotlib colormaps</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/scale_color_desaturate.html#plotnine.scale_color_desaturate">scale_color_desaturate</a></td>
+<td>Create a desaturated color gradient</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/scale_color_datetime.html#plotnine.scale_color_datetime">scale_color_datetime</a></td>
+<td>Datetime color scale</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/scale_color_discrete.html#plotnine.scale_color_discrete">scale_color_discrete</a></td>
+<td>alias of <a href="../reference/scale_color_hue.html#plotnine.scale_color_hue">scale_color_hue</a></td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/scale_color_distiller.html#plotnine.scale_color_distiller">scale_color_distiller</a></td>
+<td>Sequential and diverging continuous color scales</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/scale_color_gradient.html#plotnine.scale_color_gradient">scale_color_gradient</a></td>
+<td>Create a 2 point color gradient</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/scale_color_gradient2.html#plotnine.scale_color_gradient2">scale_color_gradient2</a></td>
+<td>Create a 3 point diverging color gradient</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/scale_color_gradientn.html#plotnine.scale_color_gradientn">scale_color_gradientn</a></td>
+<td>Create a n color gradient</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/scale_color_gray.html#plotnine.scale_color_gray">scale_color_gray</a></td>
+<td>alias of <a href="../reference/scale_color_grey.html#plotnine.scale_color_grey">scale_color_grey</a></td>
+</tr>
+<tr class="even">
+<td><a href="../reference/scale_color_grey.html#plotnine.scale_color_grey">scale_color_grey</a></td>
+<td>Sequential grey color scale.</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/scale_color_hue.html#plotnine.scale_color_hue">scale_color_hue</a></td>
+<td>Qualitative color scale with evenly spaced hues</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/scale_fill_brewer.html#plotnine.scale_fill_brewer">scale_fill_brewer</a></td>
+<td>Sequential, diverging and qualitative color scales</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/scale_fill_cmap.html#plotnine.scale_fill_cmap">scale_fill_cmap</a></td>
+<td>Create color scales using Matplotlib colormaps</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/scale_fill_continuous.html#plotnine.scale_fill_continuous">scale_fill_continuous</a></td>
+<td>alias of <a href="../reference/scale_fill_cmap.html#plotnine.scale_fill_cmap">scale_fill_cmap</a></td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/scale_fill_datetime.html#plotnine.scale_fill_datetime">scale_fill_datetime</a></td>
+<td>Datetime fill scale</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/scale_fill_desaturate.html#plotnine.scale_fill_desaturate">scale_fill_desaturate</a></td>
+<td>Create a desaturated color gradient</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/scale_fill_discrete.html#plotnine.scale_fill_discrete">scale_fill_discrete</a></td>
+<td>alias of <a href="../reference/scale_fill_hue.html#plotnine.scale_fill_hue">scale_fill_hue</a></td>
+</tr>
+<tr class="even">
+<td><a href="../reference/scale_fill_distiller.html#plotnine.scale_fill_distiller">scale_fill_distiller</a></td>
+<td>Sequential, diverging continuous color scales</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/scale_fill_gradient.html#plotnine.scale_fill_gradient">scale_fill_gradient</a></td>
+<td>Create a 2 point color gradient</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/scale_fill_gradient2.html#plotnine.scale_fill_gradient2">scale_fill_gradient2</a></td>
+<td>Create a 3 point diverging color gradient</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/scale_fill_gradientn.html#plotnine.scale_fill_gradientn">scale_fill_gradientn</a></td>
+<td>Create a n color gradient</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/scale_fill_gray.html#plotnine.scale_fill_gray">scale_fill_gray</a></td>
+<td>alias of <a href="../reference/scale_fill_grey.html#plotnine.scale_fill_grey">scale_fill_grey</a></td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/scale_fill_grey.html#plotnine.scale_fill_grey">scale_fill_grey</a></td>
+<td>Sequential grey color scale.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/scale_fill_hue.html#plotnine.scale_fill_hue">scale_fill_hue</a></td>
+<td>Qualitative color scale with evenly spaced hues</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="manual-scales" class="level3 doc-summary-subgroup">
+<h3 class="doc-summary-subgroup anchored" data-anchor-id="manual-scales">Manual Scales</h3>
+<div class="doc-summary-table">
+<table class="caption-top table">
+<tbody>
+<tr class="odd">
+<td><a href="../reference/scale_alpha_manual.html#plotnine.scale_alpha_manual">scale_alpha_manual</a></td>
+<td>Custom discrete alpha scale</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/scale_color_manual.html#plotnine.scale_color_manual">scale_color_manual</a></td>
+<td>Custom discrete color scale</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/scale_colour_manual.html#plotnine.scale_colour_manual">scale_colour_manual</a></td>
+<td>alias of <a href="../reference/scale_color_manual.html#plotnine.scale_color_manual">scale_color_manual</a></td>
+</tr>
+<tr class="even">
+<td><a href="../reference/scale_fill_manual.html#plotnine.scale_fill_manual">scale_fill_manual</a></td>
+<td>Custom discrete fill scale</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/scale_linetype_manual.html#plotnine.scale_linetype_manual">scale_linetype_manual</a></td>
+<td>Custom discrete linetype scale</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/scale_shape_manual.html#plotnine.scale_shape_manual">scale_shape_manual</a></td>
+<td>Custom discrete shape scale</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/scale_size_manual.html#plotnine.scale_size_manual">scale_size_manual</a></td>
+<td>Custom discrete size scale</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="linetype-scales" class="level3 doc-summary-subgroup">
+<h3 class="doc-summary-subgroup anchored" data-anchor-id="linetype-scales">Linetype Scales</h3>
+<div class="doc-summary-table">
+<table class="caption-top table">
+<tbody>
+<tr class="odd">
+<td><a href="../reference/scale_linetype.html#plotnine.scale_linetype">scale_linetype</a></td>
+<td>Scale for line patterns</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/scale_linetype_discrete.html#plotnine.scale_linetype_discrete">scale_linetype_discrete</a></td>
+<td>alias of <a href="../reference/scale_linetype.html#plotnine.scale_linetype">scale_linetype</a></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="shape-scales" class="level3 doc-summary-subgroup">
+<h3 class="doc-summary-subgroup anchored" data-anchor-id="shape-scales">Shape Scales</h3>
+<div class="doc-summary-table">
+<table class="caption-top table">
+<tbody>
+<tr class="odd">
+<td><a href="../reference/scale_shape.html#plotnine.scale_shape">scale_shape</a></td>
+<td>Scale for shapes</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/scale_shape_discrete.html#plotnine.scale_shape_discrete">scale_shape_discrete</a></td>
+<td>alias of <a href="../reference/scale_shape.html#plotnine.scale_shape">scale_shape</a></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="size-scales" class="level3 doc-summary-subgroup">
+<h3 class="doc-summary-subgroup anchored" data-anchor-id="size-scales">Size Scales</h3>
+<div class="doc-summary-table">
+<table class="caption-top table">
+<tbody>
+<tr class="odd">
+<td><a href="../reference/scale_size.html#plotnine.scale_size">scale_size</a></td>
+<td>alias of <a href="../reference/scale_size_continuous.html#plotnine.scale_size_continuous">scale_size_continuous</a></td>
+</tr>
+<tr class="even">
+<td><a href="../reference/scale_size_area.html#plotnine.scale_size_area">scale_size_area</a></td>
+<td>Continuous area size scale</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/scale_size_continuous.html#plotnine.scale_size_continuous">scale_size_continuous</a></td>
+<td>Continuous area size scale</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/scale_size_discrete.html#plotnine.scale_size_discrete">scale_size_discrete</a></td>
+<td>Discrete area size scale</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/scale_size_radius.html#plotnine.scale_size_radius">scale_size_radius</a></td>
+<td>Continuous radius size scale</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/scale_size_datetime.html#plotnine.scale_size_datetime">scale_size_datetime</a></td>
+<td>Datetime area-size scale</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="position-scales" class="level3 doc-summary-subgroup">
+<h3 class="doc-summary-subgroup anchored" data-anchor-id="position-scales">Position Scales</h3>
+<div class="doc-summary-table">
+<table class="caption-top table">
+<tbody>
+<tr class="odd">
+<td><a href="../reference/scale_x_continuous.html#plotnine.scale_x_continuous">scale_x_continuous</a></td>
+<td>Continuous x position</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/scale_x_date.html#plotnine.scale_x_date">scale_x_date</a></td>
+<td>alias of <a href="../reference/scale_x_datetime.html#plotnine.scale_x_datetime">scale_x_datetime</a></td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/scale_x_datetime.html#plotnine.scale_x_datetime">scale_x_datetime</a></td>
+<td>Continuous x position for datetime data points</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/scale_x_discrete.html#plotnine.scale_x_discrete">scale_x_discrete</a></td>
+<td>Discrete x position</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/scale_x_log10.html#plotnine.scale_x_log10">scale_x_log10</a></td>
+<td>Continuous x position log10 transformed scale</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/scale_x_reverse.html#plotnine.scale_x_reverse">scale_x_reverse</a></td>
+<td>Continuous x position reverse transformed scale</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/scale_x_sqrt.html#plotnine.scale_x_sqrt">scale_x_sqrt</a></td>
+<td>Continuous x position sqrt transformed scale</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/scale_x_symlog.html#plotnine.scale_x_symlog">scale_x_symlog</a></td>
+<td>Continuous x position symmetric logarithm transformed scale</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/scale_x_timedelta.html#plotnine.scale_x_timedelta">scale_x_timedelta</a></td>
+<td>Continuous x position for timedelta data points</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/scale_y_continuous.html#plotnine.scale_y_continuous">scale_y_continuous</a></td>
+<td>Continuous y position</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/scale_y_date.html#plotnine.scale_y_date">scale_y_date</a></td>
+<td>alias of <a href="../reference/scale_y_datetime.html#plotnine.scale_y_datetime">scale_y_datetime</a></td>
+</tr>
+<tr class="even">
+<td><a href="../reference/scale_y_datetime.html#plotnine.scale_y_datetime">scale_y_datetime</a></td>
+<td>Continuous y position for datetime data points</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/scale_y_discrete.html#plotnine.scale_y_discrete">scale_y_discrete</a></td>
+<td>Discrete y position</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/scale_y_log10.html#plotnine.scale_y_log10">scale_y_log10</a></td>
+<td>Continuous y position log10 transformed scale</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/scale_y_reverse.html#plotnine.scale_y_reverse">scale_y_reverse</a></td>
+<td>Continuous y position reverse transformed scale</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/scale_y_sqrt.html#plotnine.scale_y_sqrt">scale_y_sqrt</a></td>
+<td>Continuous y position sqrt transformed scale</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/scale_y_symlog.html#plotnine.scale_y_symlog">scale_y_symlog</a></td>
+<td>Continuous y position symmetric logarithm transformed scale</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/scale_y_timedelta.html#plotnine.scale_y_timedelta">scale_y_timedelta</a></td>
+<td>Continuous y position for timedelta data points</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="scale-limits" class="level3 doc-summary-subgroup">
+<h3 class="doc-summary-subgroup anchored" data-anchor-id="scale-limits">Scale Limits</h3>
+<div class="doc-summary-table">
+<table class="caption-top table">
+<tbody>
+<tr class="odd">
+<td><a href="../reference/lims.html#plotnine.lims">lims</a></td>
+<td>Set aesthetic limits</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/xlim.html#plotnine.xlim">xlim</a></td>
+<td>Set x-axis limits</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/ylim.html#plotnine.ylim">ylim</a></td>
+<td>Set y-axis limits</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/expand_limits.html#plotnine.expand_limits">expand_limits</a></td>
+<td>Expand the limits any aesthetic using data</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+<section id="scale-guides" class="level2 doc-summary">
+<h2 class="doc-summary anchored" data-anchor-id="scale-guides">Scale Guides</h2>
+<p>Guides allow you to interpret data represented on a scales. Guides include the <code>x</code> and <code>y</code> axes, legends and colorbars.</p>
+<div class="doc-summary-table">
+<table class="caption-top table">
+<tbody>
+<tr class="odd">
+<td><a href="../reference/guide.html#plotnine.guides.guide.guide">guide</a></td>
+<td>Base class for all guides</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="doc-summary-table">
+<table class="caption-top table">
+<tbody>
+<tr class="odd">
+<td><a href="../reference/guides.html#plotnine.guides">guides</a></td>
+<td>Guides for each scale</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/guide_legend.html#plotnine.guide_legend">guide_legend</a></td>
+<td>Legend guide</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/guide_colorbar.html#plotnine.guide_colorbar">guide_colorbar</a></td>
+<td>Guide colorbar</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="positions" class="level2 doc-summary">
+<h2 class="doc-summary anchored" data-anchor-id="positions">Positions</h2>
+<p>Overlapping objects can be visualized better if their positions are adjusted. That is what the <code>position_*</code> class do. Each <code>geom</code> is associated with one position adjustment class.</p>
+<div class="doc-summary-table">
+<table class="caption-top table">
+<tbody>
+<tr class="odd">
+<td><a href="../reference/position.html#plotnine.positions.position.position">position</a></td>
+<td>Base class for all positions</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="doc-summary-table">
+<table class="caption-top table">
+<tbody>
+<tr class="odd">
+<td><a href="../reference/position_dodge.html#plotnine.position_dodge">position_dodge</a></td>
+<td>Dodge overlaps and place objects side-by-side</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/position_dodge2.html#plotnine.position_dodge2">position_dodge2</a></td>
+<td>Dodge overlaps and place objects side-by-side</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/position_fill.html#plotnine.position_fill">position_fill</a></td>
+<td>Normalise stacked objects to unit height</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/position_identity.html#plotnine.position_identity">position_identity</a></td>
+<td>Do not adjust the position</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/position_jitter.html#plotnine.position_jitter">position_jitter</a></td>
+<td>Jitter points to avoid overplotting</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/position_jitterdodge.html#plotnine.position_jitterdodge">position_jitterdodge</a></td>
+<td>Dodge and jitter to minimise overlap</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/position_nudge.html#plotnine.position_nudge">position_nudge</a></td>
+<td>Nudge points</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/position_stack.html#plotnine.position_stack">position_stack</a></td>
+<td>Stack plotted objects on top of each other</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="themes" class="level2 doc-summary">
+<h2 class="doc-summary anchored" data-anchor-id="themes">Themes</h2>
+<p>Themes control the visual appearance of the non-data elements the plot.</p>
+<div class="doc-summary-table">
+<table class="caption-top table">
+<tbody>
+<tr class="odd">
+<td><a href="../reference/theme.html#plotnine.theme">theme</a></td>
+<td>Base class for themes</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="doc-summary-table">
+<table class="caption-top table">
+<tbody>
+<tr class="odd">
+<td><a href="../reference/theme_538.html#plotnine.theme_538">theme_538</a></td>
+<td>Theme in the likeness of fivethirtyeight.com plots</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/theme_bw.html#plotnine.theme_bw">theme_bw</a></td>
+<td>White background with black gridlines</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/theme_classic.html#plotnine.theme_classic">theme_classic</a></td>
+<td>A classic-looking theme, with x &amp; y axis lines and no gridlines</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/theme_dark.html#plotnine.theme_dark">theme_dark</a></td>
+<td>The dark cousin of <a href="../reference/theme_light.html#plotnine.theme_light"><code>theme_light</code></a></td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/theme_gray.html#plotnine.theme_gray">theme_gray</a></td>
+<td>A gray background with white gridlines.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/theme_grey.html#plotnine.theme_grey">theme_grey</a></td>
+<td>alias of <a href="../reference/theme_gray.html#plotnine.theme_gray">theme_gray</a></td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/theme_light.html#plotnine.theme_light">theme_light</a></td>
+<td>A theme similar to <a href="../reference/theme_linedraw.html#plotnine.theme_linedraw"><code>theme_linedraw</code></a></td>
+</tr>
+<tr class="even">
+<td><a href="../reference/theme_linedraw.html#plotnine.theme_linedraw">theme_linedraw</a></td>
+<td>A theme with only black lines of various widths on white backgrounds</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/theme_matplotlib.html#plotnine.theme_matplotlib">theme_matplotlib</a></td>
+<td>The default matplotlib look and feel.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/theme_minimal.html#plotnine.theme_minimal">theme_minimal</a></td>
+<td>A minimalistic theme with no background annotations</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/theme_seaborn.html#plotnine.theme_seaborn">theme_seaborn</a></td>
+<td>Theme for seaborn.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/theme_tufte.html#plotnine.theme_tufte">theme_tufte</a></td>
+<td>Tufte Maximal Data, Minimal Ink Theme</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/theme_void.html#plotnine.theme_void">theme_void</a></td>
+<td>A classic-looking theme, with x &amp; y axis lines and</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/theme_xkcd.html#plotnine.theme_xkcd">theme_xkcd</a></td>
+<td>xkcd theme</td>
+</tr>
+</tbody>
+</table>
+</div>
+<section id="themeables" class="level3 doc-summary-subgroup">
+<h3 class="doc-summary-subgroup anchored" data-anchor-id="themeables">Themeables</h3>
+<p>These define aspects of a plot that can be themed. They can be used to create a new theme or modify an existing theme. They define the keyword arguments to <code>theme</code>. Users should never create instances of themeable.</p>
+<div class="doc-summary-table">
+<table class="caption-top table">
+<tbody>
+<tr class="odd">
+<td><a href="../reference/themeable.html#plotnine.themes.themeable.themeable">themeable</a></td>
+<td>Abstract class of things that can be themed.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="doc-summary-table">
+<table class="caption-top table">
+<tbody>
+<tr class="odd">
+<td><a href="../reference/aspect_ratio.html#plotnine.themes.themeable.aspect_ratio">aspect_ratio</a></td>
+<td>Aspect ratio of the panel(s)</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/axis_line.html#plotnine.themes.themeable.axis_line">axis_line</a></td>
+<td>x &amp; y axis lines</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/axis_line_x.html#plotnine.themes.themeable.axis_line_x">axis_line_x</a></td>
+<td>x-axis line</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/axis_line_y.html#plotnine.themes.themeable.axis_line_y">axis_line_y</a></td>
+<td>y-axis line</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/axis_text.html#plotnine.themes.themeable.axis_text">axis_text</a></td>
+<td>Axis tick labels</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/axis_text_x.html#plotnine.themes.themeable.axis_text_x">axis_text_x</a></td>
+<td>x-axis tick labels</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/axis_text_y.html#plotnine.themes.themeable.axis_text_y">axis_text_y</a></td>
+<td>y-axis tick labels</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/axis_ticks.html#plotnine.themes.themeable.axis_ticks">axis_ticks</a></td>
+<td>x &amp; y major and minor axis tick lines</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/axis_ticks_length.html#plotnine.themes.themeable.axis_ticks_length">axis_ticks_length</a></td>
+<td>Axis tick length</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/axis_ticks_length_major.html#plotnine.themes.themeable.axis_ticks_length_major">axis_ticks_length_major</a></td>
+<td>Axis major-tick length</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/axis_ticks_length_major_x.html#plotnine.themes.themeable.axis_ticks_length_major_x">axis_ticks_length_major_x</a></td>
+<td>x-axis major-tick length</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/axis_ticks_length_major_y.html#plotnine.themes.themeable.axis_ticks_length_major_y">axis_ticks_length_major_y</a></td>
+<td>y-axis major-tick length</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/axis_ticks_length_minor.html#plotnine.themes.themeable.axis_ticks_length_minor">axis_ticks_length_minor</a></td>
+<td>Axis minor-tick length</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/axis_ticks_length_minor_x.html#plotnine.themes.themeable.axis_ticks_length_minor_x">axis_ticks_length_minor_x</a></td>
+<td>x-axis minor-tick length</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/axis_ticks_length_minor_y.html#plotnine.themes.themeable.axis_ticks_length_minor_y">axis_ticks_length_minor_y</a></td>
+<td>x-axis minor-tick length</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/axis_ticks_major.html#plotnine.themes.themeable.axis_ticks_major">axis_ticks_major</a></td>
+<td>x &amp; y axis major tick lines</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/axis_ticks_major_x.html#plotnine.themes.themeable.axis_ticks_major_x">axis_ticks_major_x</a></td>
+<td>x-axis major tick lines</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/axis_ticks_major_y.html#plotnine.themes.themeable.axis_ticks_major_y">axis_ticks_major_y</a></td>
+<td>y-axis major tick lines</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/axis_ticks_minor.html#plotnine.themes.themeable.axis_ticks_minor">axis_ticks_minor</a></td>
+<td>x &amp; y axis minor tick lines</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/axis_ticks_minor_x.html#plotnine.themes.themeable.axis_ticks_minor_x">axis_ticks_minor_x</a></td>
+<td>x-axis tick lines</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/axis_ticks_minor_y.html#plotnine.themes.themeable.axis_ticks_minor_y">axis_ticks_minor_y</a></td>
+<td>y-axis minor tick lines</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/axis_ticks_pad.html#plotnine.themes.themeable.axis_ticks_pad">axis_ticks_pad</a></td>
+<td>Axis tick padding</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/axis_ticks_pad_major.html#plotnine.themes.themeable.axis_ticks_pad_major">axis_ticks_pad_major</a></td>
+<td>Axis major-tick padding</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/axis_ticks_pad_major_x.html#plotnine.themes.themeable.axis_ticks_pad_major_x">axis_ticks_pad_major_x</a></td>
+<td>x-axis major-tick padding</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/axis_ticks_pad_major_y.html#plotnine.themes.themeable.axis_ticks_pad_major_y">axis_ticks_pad_major_y</a></td>
+<td>y-axis major-tick padding</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/axis_ticks_pad_minor.html#plotnine.themes.themeable.axis_ticks_pad_minor">axis_ticks_pad_minor</a></td>
+<td>Axis minor-tick padding</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/axis_ticks_pad_minor_x.html#plotnine.themes.themeable.axis_ticks_pad_minor_x">axis_ticks_pad_minor_x</a></td>
+<td>x-axis minor-tick padding</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/axis_ticks_pad_minor_y.html#plotnine.themes.themeable.axis_ticks_pad_minor_y">axis_ticks_pad_minor_y</a></td>
+<td>y-axis minor-tick padding</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/axis_ticks_x.html#plotnine.themes.themeable.axis_ticks_x">axis_ticks_x</a></td>
+<td>x major and minor axis tick lines</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/axis_ticks_y.html#plotnine.themes.themeable.axis_ticks_y">axis_ticks_y</a></td>
+<td>y major and minor axis tick lines</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/axis_title.html#plotnine.themes.themeable.axis_title">axis_title</a></td>
+<td>Axis labels</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/axis_title_x.html#plotnine.themes.themeable.axis_title_x">axis_title_x</a></td>
+<td>x axis label</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/axis_title_y.html#plotnine.themes.themeable.axis_title_y">axis_title_y</a></td>
+<td>y axis label</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/dpi.html#plotnine.themes.themeable.dpi">dpi</a></td>
+<td>DPI with which to draw/save the figure</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/figure_size.html#plotnine.themes.themeable.figure_size">figure_size</a></td>
+<td>Figure size in inches</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/legend_background.html#plotnine.themes.themeable.legend_background">legend_background</a></td>
+<td>Legend background</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/legend_box.html#plotnine.themes.themeable.legend_box">legend_box</a></td>
+<td>How to box up multiple legends</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/legend_box_background.html#plotnine.themes.themeable.legend_box_background">legend_box_background</a></td>
+<td>Legend box background</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/legend_box_just.html#plotnine.themes.themeable.legend_box_just">legend_box_just</a></td>
+<td>Justification of guide boxes</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/legend_box_margin.html#plotnine.themes.themeable.legend_box_margin">legend_box_margin</a></td>
+<td>Padding between the legends and the box</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/legend_box_spacing.html#plotnine.themes.themeable.legend_box_spacing">legend_box_spacing</a></td>
+<td>Spacing between the legend and the plotting area</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/legend_direction.html#plotnine.themes.themeable.legend_direction">legend_direction</a></td>
+<td>Layout items in the legend</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/legend_key_spacing.html#plotnine.themes.themeable.legend_key_spacing">legend_key_spacing</a></td>
+<td>Spacing between two entries in a legend</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/legend_key_spacing_x.html#plotnine.themes.themeable.legend_key_spacing_x">legend_key_spacing_x</a></td>
+<td>Horizontal spacing between two entries in a legend</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/legend_key_spacing_y.html#plotnine.themes.themeable.legend_key_spacing_y">legend_key_spacing_y</a></td>
+<td>Vertical spacing between two entries in a legend</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/legend_frame.html#plotnine.themes.themeable.legend_frame">legend_frame</a></td>
+<td>Frame around colorbar</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/legend_justification.html#plotnine.themes.themeable.legend_justification">legend_justification</a></td>
+<td>Justification of any legend</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/legend_justification_bottom.html#plotnine.themes.themeable.legend_justification_bottom">legend_justification_bottom</a></td>
+<td>Justification of legends placed at the bottom</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/legend_justification_inside.html#plotnine.themes.themeable.legend_justification_inside">legend_justification_inside</a></td>
+<td>Justification of legends placed inside the axes</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/legend_justification_left.html#plotnine.themes.themeable.legend_justification_left">legend_justification_left</a></td>
+<td>Justification of legends placed on the left</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/legend_justification_right.html#plotnine.themes.themeable.legend_justification_right">legend_justification_right</a></td>
+<td>Justification of legends placed on the right</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/legend_justification_top.html#plotnine.themes.themeable.legend_justification_top">legend_justification_top</a></td>
+<td>Justification of legends placed at the top</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/legend_key.html#plotnine.themes.themeable.legend_key">legend_key</a></td>
+<td>Legend key background</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/legend_key_height.html#plotnine.themes.themeable.legend_key_height">legend_key_height</a></td>
+<td>Legend key background height</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/legend_key_size.html#plotnine.themes.themeable.legend_key_size">legend_key_size</a></td>
+<td>Legend key background width and height</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/legend_key_width.html#plotnine.themes.themeable.legend_key_width">legend_key_width</a></td>
+<td>Legend key background width</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/legend_margin.html#plotnine.themes.themeable.legend_margin">legend_margin</a></td>
+<td>Padding between the legend and the inner box</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/legend_position.html#plotnine.themes.themeable.legend_position">legend_position</a></td>
+<td>Location of legend</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/legend_position_inside.html#plotnine.themes.themeable.legend_position_inside">legend_position_inside</a></td>
+<td>Location of legend</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/legend_spacing.html#plotnine.themes.themeable.legend_spacing">legend_spacing</a></td>
+<td>Spacing between two adjacent legends</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/legend_text.html#plotnine.themes.themeable.legend_text">legend_text</a></td>
+<td>Legend text</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/legend_text_colorbar.html#plotnine.themes.themeable.legend_text_colorbar">legend_text_colorbar</a></td>
+<td>Colorbar text</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/legend_text_legend.html#plotnine.themes.themeable.legend_text_legend">legend_text_legend</a></td>
+<td>Legend text for the common legend</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/legend_text_position.html#plotnine.themes.themeable.legend_text_position">legend_text_position</a></td>
+<td>Position of the legend text</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/legend_ticks_length.html#plotnine.themes.themeable.legend_ticks_length">legend_ticks_length</a></td>
+<td>Length of ticks in the legend</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/legend_title.html#plotnine.themes.themeable.legend_title">legend_title</a></td>
+<td>Legend title</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/legend_title_position.html#plotnine.themes.themeable.legend_title_position">legend_title_position</a></td>
+<td>Position of legend title</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/line.html#plotnine.themes.themeable.line">line</a></td>
+<td>All line elements</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/panel_background.html#plotnine.themes.themeable.panel_background">panel_background</a></td>
+<td>Panel background</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/panel_border.html#plotnine.themes.themeable.panel_border">panel_border</a></td>
+<td>Panel border</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/panel_grid.html#plotnine.themes.themeable.panel_grid">panel_grid</a></td>
+<td>Grid lines</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/panel_grid_major.html#plotnine.themes.themeable.panel_grid_major">panel_grid_major</a></td>
+<td>Major grid lines</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/panel_grid_major_x.html#plotnine.themes.themeable.panel_grid_major_x">panel_grid_major_x</a></td>
+<td>Vertical major grid lines</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/panel_grid_major_y.html#plotnine.themes.themeable.panel_grid_major_y">panel_grid_major_y</a></td>
+<td>Horizontal major grid lines</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/panel_grid_minor.html#plotnine.themes.themeable.panel_grid_minor">panel_grid_minor</a></td>
+<td>Minor grid lines</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/panel_grid_minor_x.html#plotnine.themes.themeable.panel_grid_minor_x">panel_grid_minor_x</a></td>
+<td>Vertical minor grid lines</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/panel_grid_minor_y.html#plotnine.themes.themeable.panel_grid_minor_y">panel_grid_minor_y</a></td>
+<td>Horizontal minor grid lines</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/panel_ontop.html#plotnine.themes.themeable.panel_ontop">panel_ontop</a></td>
+<td>Place panel background &amp; gridlines over/under the data layers</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/panel_spacing.html#plotnine.themes.themeable.panel_spacing">panel_spacing</a></td>
+<td>Spacing between the facet panels</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/panel_spacing_x.html#plotnine.themes.themeable.panel_spacing_x">panel_spacing_x</a></td>
+<td>Horizontal spacing between the facet panels</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/panel_spacing_y.html#plotnine.themes.themeable.panel_spacing_y">panel_spacing_y</a></td>
+<td>Vertical spacing between the facet panels</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/plot_background.html#plotnine.themes.themeable.plot_background">plot_background</a></td>
+<td>Plot background</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/plot_caption.html#plotnine.themes.themeable.plot_caption">plot_caption</a></td>
+<td>Plot caption</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/plot_margin.html#plotnine.themes.themeable.plot_margin">plot_margin</a></td>
+<td>Plot Margin</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/plot_margin_bottom.html#plotnine.themes.themeable.plot_margin_bottom">plot_margin_bottom</a></td>
+<td>Plot Margin at the bottom</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/plot_margin_left.html#plotnine.themes.themeable.plot_margin_left">plot_margin_left</a></td>
+<td>Plot Margin on the left</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/plot_margin_right.html#plotnine.themes.themeable.plot_margin_right">plot_margin_right</a></td>
+<td>Plot Margin on the right</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/plot_margin_top.html#plotnine.themes.themeable.plot_margin_top">plot_margin_top</a></td>
+<td>Plot Margin at the top</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/plot_subtitle.html#plotnine.themes.themeable.plot_subtitle">plot_subtitle</a></td>
+<td>Plot subtitle</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/plot_title.html#plotnine.themes.themeable.plot_title">plot_title</a></td>
+<td>Plot title</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/rect.html#plotnine.themes.themeable.rect">rect</a></td>
+<td>All rectangle elements</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/strip_align.html#plotnine.themes.themeable.strip_align">strip_align</a></td>
+<td>Alignment of the strip &amp; its background w.r.t the panel border</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/strip_align_x.html#plotnine.themes.themeable.strip_align_x">strip_align_x</a></td>
+<td>Vertical alignment of the strip &amp; its background w.r.t the panel border</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/strip_align_y.html#plotnine.themes.themeable.strip_align_y">strip_align_y</a></td>
+<td>Horizontal alignment of the strip &amp; its background w.r.t the panel border</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/strip_background.html#plotnine.themes.themeable.strip_background">strip_background</a></td>
+<td>Facet label background</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/strip_background_x.html#plotnine.themes.themeable.strip_background_x">strip_background_x</a></td>
+<td>Horizontal facet label background</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/strip_background_y.html#plotnine.themes.themeable.strip_background_y">strip_background_y</a></td>
+<td>Vertical facet label background</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/strip_text.html#plotnine.themes.themeable.strip_text">strip_text</a></td>
+<td>Facet labels along both axes</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/strip_text_x.html#plotnine.themes.themeable.strip_text_x">strip_text_x</a></td>
+<td>Facet labels along the horizontal axis</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/strip_text_y.html#plotnine.themes.themeable.strip_text_y">strip_text_y</a></td>
+<td>Facet labels along the vertical axis</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/subplots_adjust.html#plotnine.themes.themeable.subplots_adjust">subplots_adjust</a></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><a href="../reference/svg_usefonts.html#plotnine.themes.themeable.svg_usefonts">svg_usefonts</a></td>
+<td>How to renderer fonts for svg images</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/text.html#plotnine.themes.themeable.text">text</a></td>
+<td>All text elements in the plot</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/title.html#plotnine.themes.themeable.title">title</a></td>
+<td>All titles on the plot</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="helpful-functions-classes-for-theming" class="level3 doc-summary-subgroup">
+<h3 class="doc-summary-subgroup anchored" data-anchor-id="helpful-functions-classes-for-theming">Helpful Functions &amp; Classes for Theming</h3>
+<div class="doc-summary-table">
+<table class="caption-top table">
+<tbody>
+<tr class="odd">
+<td><a href="../reference/theme_set.html#plotnine.theme_set">theme_set</a></td>
+<td>Change the current(default) theme</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/theme_get.html#plotnine.theme_get">theme_get</a></td>
+<td>Return the default theme</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/theme_update.html#plotnine.theme_update">theme_update</a></td>
+<td>Modify elements of the current theme</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="doc-summary-table">
+<table class="caption-top table">
+<tbody>
+<tr class="odd">
+<td><a href="../reference/element_line.html#plotnine.element_line">element_line</a></td>
+<td>theme element: line</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/element_rect.html#plotnine.element_rect">element_rect</a></td>
+<td>Theme element: Rectangle</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/element_text.html#plotnine.element_text">element_text</a></td>
+<td>Theme element: Text</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/element_blank.html#plotnine.element_blank">element_blank</a></td>
+<td>Theme element: Blank</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+<section id="coordinates" class="level2 doc-summary">
+<h2 class="doc-summary anchored" data-anchor-id="coordinates">Coordinates</h2>
+<p>Coordinate systems put together the two position scales to produce a 2d location.</p>
+<div class="doc-summary-table">
+<table class="caption-top table">
+<tbody>
+<tr class="odd">
+<td><a href="../reference/coord.html#plotnine.coords.coord.coord">coord</a></td>
+<td>Base class for all coordinate systems</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="doc-summary-table">
+<table class="caption-top table">
+<tbody>
+<tr class="odd">
+<td><a href="../reference/coord_cartesian.html#plotnine.coord_cartesian">coord_cartesian</a></td>
+<td>Cartesian coordinate system</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/coord_equal.html#plotnine.coord_equal">coord_equal</a></td>
+<td>Cartesian coordinates with fixed relationship between x and y scales</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/coord_fixed.html#plotnine.coord_fixed">coord_fixed</a></td>
+<td>Cartesian coordinates with fixed relationship between x and y scales</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/coord_flip.html#plotnine.coord_flip">coord_flip</a></td>
+<td>Flipped cartesian coordinates</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/coord_trans.html#plotnine.coord_trans">coord_trans</a></td>
+<td>Transformed cartesian coordinate system</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="options" class="level2 doc-summary">
+<h2 class="doc-summary anchored" data-anchor-id="options">Options</h2>
+<p>When working interactively, some of the options make it convenient to create plots that have a common look and feel. Another way to do it, to set a default theme using <code>theme_set()</code>.</p>
+<div class="doc-summary-table">
+<table class="caption-top table">
+<tbody>
+<tr class="odd">
+<td><a href="../reference/aspect_ratio.html#plotnine.options.aspect_ratio">aspect_ratio</a></td>
+<td>Default aspect ratio used by the themes</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/base_family.html#plotnine.options.base_family">base_family</a></td>
+<td>The base font family for all text that is part of the theme.</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/base_margin.html#plotnine.options.base_margin">base_margin</a></td>
+<td>A size that is proportional of the figure width and</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/close_all_figures.html#plotnine.options.close_all_figures">close_all_figures</a></td>
+<td>Development flag, e.g.&nbsp;set to <code>True</code> to prevent</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/current_theme.html#plotnine.options.current_theme">current_theme</a></td>
+<td>Theme used when none is added to the ggplot object</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/dpi.html#plotnine.options.dpi">dpi</a></td>
+<td>Default DPI used by the themes</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/figure_size.html#plotnine.options.figure_size">figure_size</a></td>
+<td>Default figure size in inches</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/figure_format.html#plotnine.options.figure_format">figure_format</a></td>
+<td>The format for the inline figures outputted by the jupyter kernel.</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/get_option.html#plotnine.options.get_option">get_option</a></td>
+<td>Get package option</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/set_option.html#plotnine.options.set_option">set_option</a></td>
+<td>Set package option</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="datasets" class="level2 doc-summary">
+<h2 class="doc-summary anchored" data-anchor-id="datasets">Datasets</h2>
+<p>These datasets ship with the plotnine and you can import them with from the <code>plotnine.data</code> sub-package.</p>
+<div class="doc-summary-table">
+<table class="caption-top table">
+<tbody>
+<tr class="odd">
+<td><a href="../reference/diamonds.html#plotnine.data.diamonds">diamonds</a></td>
+<td>Prices of 50,000 round cut diamonds</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/economics.html#plotnine.data.economics">economics</a></td>
+<td>US economic time series.</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/economics_long.html#plotnine.data.economics_long">economics_long</a></td>
+<td>US economic time series.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/faithful.html#plotnine.data.faithful">faithful</a></td>
+<td>Old Faithful Geyser Data</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/faithfuld.html#plotnine.data.faithfuld">faithfuld</a></td>
+<td>Old Faithful Geyser Data</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/huron.html#plotnine.data.huron">huron</a></td>
+<td>Level of Lake Huron 1875–1972</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/luv_colours.html#plotnine.data.luv_colours">luv_colours</a></td>
+<td>colors in Luv space.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/meat.html#plotnine.data.meat">meat</a></td>
+<td>US Meat Production</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/midwest.html#plotnine.data.midwest">midwest</a></td>
+<td>Midwest demographics.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/mpg.html#plotnine.data.mpg">mpg</a></td>
+<td>Fuel economy data from 1999 and 2008 for 38 popular models of car</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/msleep.html#plotnine.data.msleep">msleep</a></td>
+<td>An updated and expanded version of the mammals sleep dataset.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/mtcars.html#plotnine.data.mtcars">mtcars</a></td>
+<td>Motor Trend Car Road Tests</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/pageviews.html#plotnine.data.pageviews">pageviews</a></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><a href="../reference/presidential.html#plotnine.data.presidential">presidential</a></td>
+<td>Terms of 11 presidents from Eisenhower to Obama.</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/seals.html#plotnine.data.seals">seals</a></td>
+<td>Vector field of seal movements.</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/txhousing.html#plotnine.data.txhousing">txhousing</a></td>
+<td>Housing sales in TX.</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
