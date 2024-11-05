@@ -22,6 +22,7 @@ from ._utils.ipython import (
     get_ipython,
     is_inline_backend,
 )
+from ._utils.quarto import is_quarto_environment
 from .coords import coord_cartesian
 from .exceptions import PlotnineError, PlotnineWarning
 from .facets import facet_null
@@ -127,10 +128,8 @@ class ggplot:
         """
         Return a wrapped display size (in pixels) of the plot
         """
-        dpi = self.theme.getp("dpi")
-        width, height = self.theme.getp("figure_size")
-        W, H = int(width * dpi), int(height * dpi)
-        return f"<ggplot: ({W} x {H})>"
+        w, h = self.theme._figure_size_px
+        return f"<ggplot: ({w} x {h})>"
 
     def _ipython_display_(self):
         """
@@ -148,7 +147,12 @@ class ggplot:
         Users should prefer this method instead of printing or repring
         the object.
         """
-        self._display() if is_inline_backend() else self.draw(show=True)
+        if is_inline_backend() or is_quarto_environment():
+            # Take charge of the display because we have to make
+            # adjustments for retina output.
+            self._display()
+        else:
+            self.draw(show=True)
 
     def _display(self):
         """
@@ -172,9 +176,10 @@ class ggplot:
             self.theme = self.theme.to_retina()
             save_format = "png"
 
+        figure_size_px = self.theme._figure_size_px
         buf = BytesIO()
         self.save(buf, format=save_format, verbose=False)
-        display_func = get_display_function(format)
+        display_func = get_display_function(format, figure_size_px)
         display_func(buf.getvalue())
 
     def __deepcopy__(self, memo: dict[Any, Any]) -> ggplot:

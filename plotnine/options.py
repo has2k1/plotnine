@@ -1,7 +1,8 @@
 from __future__ import annotations
 
-import os
 from typing import TYPE_CHECKING
+
+from ._utils import quarto
 
 if TYPE_CHECKING:
     from typing import Any, Literal, Optional, Type
@@ -125,23 +126,5 @@ def set_option(name: str, value: Any) -> Any:
 # Note that, reading the variables and setting them in a context manager
 # cannot not work since the option values would be set after the original
 # defaults have been used by the theme.
-if "QUARTO_FIG_WIDTH" in os.environ:
-
-    def _set_options_from_quarto():
-        """
-        Set options from quarto
-        """
-        global dpi, figure_size, figure_format
-
-        dpi = int(os.environ["QUARTO_FIG_DPI"])
-        figure_size = (
-            float(os.environ["QUARTO_FIG_WIDTH"]),
-            float(os.environ["QUARTO_FIG_HEIGHT"]),
-        )
-
-        # quarto verifies the format
-        # If is retina, it doubles the original dpi and changes the
-        # format to png
-        figure_format = os.environ["QUARTO_FIG_FORMAT"]  # pyright: ignore
-
-    _set_options_from_quarto()
+if quarto.is_quarto_environment():
+    quarto.set_options_from_quarto()

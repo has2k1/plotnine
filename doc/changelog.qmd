@@ -9,6 +9,8 @@ title: Changelog
 - Fix expansion of datetime and timedelta scales when using both the lower
   and upper addition constants.
 
+- In quarto documents make the output `retina` even if the `fig-format` is
+  `png`.
 
 ## v0.14.0
 (2024-10-28)
