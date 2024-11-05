@@ -492,7 +492,7 @@ class scale_fill_cmap_d(scale_color_cmap_d):
 
 
 @dataclass
-class scale_color_datetime(scale_datetime, scale_color_cmap):
+class scale_color_datetime(scale_datetime, scale_color_cmap):  # pyright: ignore[reportIncompatibleVariableOverride]
     """
     Datetime color scale
     """
