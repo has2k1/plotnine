@@ -39,7 +39,9 @@ def is_inline_backend():
     return "matplotlib_inline.backend_inline" in mpl.get_backend()
 
 
-def get_display_function(format: FigureFormat) -> Callable[[bytes], None]:
+def get_display_function(
+    format: FigureFormat, figure_size_px: tuple[int, int]
+) -> Callable[[bytes], None]:
     """
     Return a function that will display the plot image
     """
@@ -52,14 +54,16 @@ def get_display_function(format: FigureFormat) -> Callable[[bytes], None]:
         display_svg,
     )
 
+    w, h = figure_size_px
+
     def png(b: bytes):
-        display_png(Image(b, format="png"))
+        display_png(Image(b, format="png", width=w, height=h))
 
     def retina(b: bytes):
         display_png(Image(b, format="png", retina=True))
 
     def jpeg(b: bytes):
-        display_jpeg(Image(b, format="jpeg"))
+        display_jpeg(Image(b, format="jpeg", width=w, height=h))
 
     def svg(b: bytes):
         display_svg(SVG(b))

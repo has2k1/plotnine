@@ -485,6 +485,15 @@ class theme:
         if kwargs:
             self += theme(**kwargs)
 
+    @property
+    def _figure_size_px(self) -> tuple[int, int]:
+        """
+        Return the size of the output in pixels
+        """
+        dpi = self.getp("dpi")
+        width, height = self.getp("figure_size")
+        return (int(width * dpi), int(height * dpi))
+
 
 def theme_get() -> theme:
     """
