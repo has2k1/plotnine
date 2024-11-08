@@ -384,9 +384,9 @@ class bottom_spaces(_side_spaces):
 
 
 @dataclass
-class LRTBSpaces:
+class EdgeSpaces:
     """
-    Space for components in all directions around the panels
+    Space for components along the edges of the panels
     """
 
     pack: LayoutPack
@@ -427,7 +427,7 @@ class LRTBSpaces:
 
 
 def calculate_panel_spacing(
-    pack: LayoutPack, spaces: LRTBSpaces
+    pack: LayoutPack, spaces: EdgeSpaces
 ) -> WHSpaceParts:
     """
     Spacing between the panels (wspace & hspace)
@@ -446,7 +446,7 @@ def calculate_panel_spacing(
 
 
 def _calculate_panel_spacing_facet_grid(
-    pack: LayoutPack, spaces: LRTBSpaces
+    pack: LayoutPack, spaces: EdgeSpaces
 ) -> WHSpaceParts:
     """
     Calculate spacing parts for facet_grid
@@ -477,7 +477,7 @@ def _calculate_panel_spacing_facet_grid(
 
 
 def _calculate_panel_spacing_facet_wrap(
-    pack: LayoutPack, spaces: LRTBSpaces
+    pack: LayoutPack, spaces: EdgeSpaces
 ) -> WHSpaceParts:
     """
     Calculate spacing parts for facet_wrap
@@ -527,7 +527,7 @@ def _calculate_panel_spacing_facet_wrap(
 
 
 def _calculate_panel_spacing_facet_null(
-    pack: LayoutPack, spaces: LRTBSpaces
+    pack: LayoutPack, spaces: EdgeSpaces
 ) -> WHSpaceParts:
     """
     Calculate spacing parts for facet_null

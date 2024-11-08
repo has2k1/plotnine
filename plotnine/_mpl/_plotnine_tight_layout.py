@@ -11,15 +11,13 @@ such cases as when left or right margin are affected by xlabel.
 
 from __future__ import annotations
 
-import typing
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
-from ._plot_side_space import LRTBSpaces, WHSpaceParts, calculate_panel_spacing
-from .utils import bbox_in_figure_space, get_transPanels
+from ._plot_side_space import EdgeSpaces, WHSpaceParts, calculate_panel_spacing
+from .utils import get_transPanels
 
-if typing.TYPE_CHECKING:
-    from typing import Literal, TypeAlias
-
+if TYPE_CHECKING:
     from matplotlib.figure import Figure
     from matplotlib.text import Text
     from matplotlib.transforms import Transform
@@ -29,10 +27,6 @@ if typing.TYPE_CHECKING:
     from plotnine.iapi import legend_artists
 
     from ._layout_pack import LayoutPack
-
-    AxesLocation: TypeAlias = Literal[
-        "all", "first_row", "last_row", "first_col", "last_col"
-    ]
 
 
 @dataclass
@@ -56,7 +50,7 @@ class TightParams:
     """
 
     facet: facet
-    sides: LRTBSpaces
+    sides: EdgeSpaces
     gullies: WHSpaceParts
 
     def __post_init__(self):
@@ -125,7 +119,7 @@ def get_plotnine_tight_layout(pack: LayoutPack) -> TightParams:
     """
     Compute tight layout parameters
     """
-    sides = LRTBSpaces(pack)
+    sides = EdgeSpaces(pack)
     gullies = calculate_panel_spacing(pack, sides)
     tight_params = TightParams(pack.facet, sides, gullies)
     return tight_params
@@ -195,8 +189,8 @@ def horizontally_align_text_with_panels(
     else:
         f = ha
 
-    box = bbox_in_figure_space(text, pack.figure, pack.renderer)
-    x = params.left * (1 - f) + (params.right - box.width) * f
+    width = pack.calc.width(text)
+    x = params.left * (1 - f) + (params.right - width) * f
     text.set_x(x)
     text.set_horizontalalignment("left")
 
@@ -221,8 +215,8 @@ def vertically_align_text_with_panels(
     else:
         f = va
 
-    box = bbox_in_figure_space(text, pack.figure, pack.renderer)
-    y = params.bottom * (1 - f) + (params.top - box.height) * f
+    height = pack.calc.height(text)
+    y = params.bottom * (1 - f) + (params.top - height) * f
     text.set_y(y)
     text.set_verticalalignment("bottom")
 
