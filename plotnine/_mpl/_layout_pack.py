@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from itertools import chain
 from typing import TYPE_CHECKING, cast
 
+from matplotlib._tight_layout import get_subplotspec_list
 from matplotlib.backend_bases import RendererBase
 from matplotlib.text import Text
 
@@ -13,6 +14,8 @@ if TYPE_CHECKING:
     from typing import (
         Any,
         Iterator,
+        Literal,
+        TypeAlias,
     )
 
     from matplotlib.axes import Axes
@@ -22,6 +25,10 @@ if TYPE_CHECKING:
     from plotnine._mpl.text import StripText
     from plotnine.iapi import legend_artists
     from plotnine.typing import StripPosition
+
+    AxesLocation: TypeAlias = Literal[
+        "all", "first_row", "last_row", "first_col", "last_col"
+    ]
 
 
 @dataclass
@@ -67,7 +74,22 @@ class LayoutPack:
     def _is_blank(self, name: str) -> bool:
         return self.theme.T.is_blank(name)
 
-    def get_axis_labels_x(self, ax: Axes) -> Iterator[Text]:
+    def _filter_axes(self, location: AxesLocation = "all") -> list[Axes]:
+        """
+        Return subset of axes
+        """
+        if location == "all":
+            return self.axs
+
+        # e.g. is_first_row, is_last_row, ..
+        pred_method = f"is_{location}"
+        return [
+            ax
+            for spec, ax in zip(get_subplotspec_list(self.axs), self.axs)
+            if getattr(spec, pred_method)()
+        ]
+
+    def axis_labels_x(self, ax: Axes) -> Iterator[Text]:
         """
         Return all x-axis labels for an axes that will be shown
         """
@@ -83,7 +105,7 @@ class LayoutPack:
             if _text_is_visible(tick.label1)
         )
 
-    def get_axis_labels_y(self, ax: Axes) -> Iterator[Text]:
+    def axis_labels_y(self, ax: Axes) -> Iterator[Text]:
         """
         Return all y-axis labels for an axes that will be shown
         """
@@ -99,7 +121,7 @@ class LayoutPack:
             if _text_is_visible(tick.label1)
         )
 
-    def get_axis_ticks_x(self, ax: Axes) -> Iterator[Tick]:
+    def axis_ticks_x(self, ax: Axes) -> Iterator[Tick]:
         """
         Return all XTicks that will be shown
         """
@@ -113,7 +135,7 @@ class LayoutPack:
 
         return chain(major, minor)
 
-    def get_axis_ticks_y(self, ax: Axes) -> Iterator[Tick]:
+    def axis_ticks_y(self, ax: Axes) -> Iterator[Tick]:
         """
         Return all YTicks that will be shown
         """
@@ -127,7 +149,7 @@ class LayoutPack:
 
         return chain(major, minor)
 
-    def get_axis_ticks_pad_x(self, ax: Axes) -> Iterator[float]:
+    def axis_ticks_pad_x(self, ax: Axes) -> Iterator[float]:
         """
         Return XTicks paddings
         """
@@ -144,7 +166,7 @@ class LayoutPack:
             ]
         return chain(major, minor)
 
-    def get_axis_ticks_pad_y(self, ax: Axes) -> Iterator[float]:
+    def axis_ticks_pad_y(self, ax: Axes) -> Iterator[float]:
         """
         Return YTicks paddings
         """
@@ -161,9 +183,7 @@ class LayoutPack:
             ]
         return chain(major, minor)
 
-    def get_strip_text_x_height(
-        self, position: StripPosition = "top"
-    ) -> float:
+    def strip_text_x_height(self, position: StripPosition) -> float:
         """
         Height taken up by the top strips
         """
@@ -177,9 +197,7 @@ class LayoutPack:
         ]
         return self.calc.max_height(artists)
 
-    def get_strip_text_y_width(
-        self, position: StripPosition = "right"
-    ) -> float:
+    def strip_text_y_width(self, position: StripPosition) -> float:
         """
         Width taken up by the right strips
         """
@@ -192,6 +210,108 @@ class LayoutPack:
             if st.patch.position == position
         ]
         return self.calc.max_width(artists)
+
+    def axis_ticks_x_max_height(self, location: AxesLocation) -> float:
+        """
+        Return maximum height[inches] of x ticks
+        """
+        heights = [
+            self.calc.tight_height(tick.tick1line)
+            for ax in self._filter_axes(location)
+            for tick in self.axis_ticks_x(ax)
+        ]
+        return max(heights) if len(heights) else 0
+
+    def axis_text_x_max_height(self, location: AxesLocation) -> float:
+        """
+        Return maximum height[inches] of x tick labels
+        """
+        heights = [
+            self.calc.tight_height(label) + pad
+            for ax in self._filter_axes(location)
+            for label, pad in zip(
+                self.axis_labels_x(ax), self.axis_ticks_pad_x(ax)
+            )
+        ]
+        return max(heights) if len(heights) else 0
+
+    def axis_ticks_y_max_width(self, location: AxesLocation) -> float:
+        """
+        Return maximum width[inches] of y ticks
+        """
+        widths = [
+            self.calc.tight_width(tick.tick1line)
+            for ax in self._filter_axes(location)
+            for tick in self.axis_ticks_y(ax)
+        ]
+        return max(widths) if len(widths) else 0
+
+    def axis_text_y_max_width(self, location: AxesLocation) -> float:
+        """
+        Return maximum width[inches] of y tick labels
+        """
+        widths = [
+            self.calc.tight_width(label) + pad
+            for ax in self._filter_axes(location)
+            for label, pad in zip(
+                self.axis_labels_y(ax), self.axis_ticks_pad_y(ax)
+            )
+        ]
+        return max(widths) if len(widths) else 0
+
+    def axis_text_y_top_protrusion(self, location: AxesLocation) -> float:
+        """
+        Return maximum height[inches] above the axes of y tick labels
+        """
+        extras = []
+        for ax in self._filter_axes(location):
+            ax_top_y = self.calc.top_y(ax)
+            for label in self.axis_labels_y(ax):
+                label_top_y = self.calc.top_y(label)
+                extras.append(max(0, label_top_y - ax_top_y))
+
+        return max(extras) if len(extras) else 0
+
+    def axis_text_y_bottom_protrusion(self, location: AxesLocation) -> float:
+        """
+        Return maximum height[inches] below the axes of y tick labels
+        """
+        extras = []
+        for ax in self._filter_axes(location):
+            ax_bottom_y = self.calc.bottom_y(ax)
+            for label in self.axis_labels_y(ax):
+                label_bottom_y = self.calc.bottom_y(label)
+                protrusion = abs(min(label_bottom_y - ax_bottom_y, 0))
+                extras.append(protrusion)
+
+        return max(extras) if len(extras) else 0
+
+    def axis_text_x_left_protrusion(self, location: AxesLocation) -> float:
+        """
+        Return maximum width[inches] of x tick labels to the left of the axes
+        """
+        extras = []
+        for ax in self._filter_axes(location):
+            ax_left_x = self.calc.left_x(ax)
+            for label in self.axis_labels_x(ax):
+                label_left_x = self.calc.left_x(label)
+                protrusion = abs(min(label_left_x - ax_left_x, 0))
+                extras.append(protrusion)
+
+        return max(extras) if len(extras) else 0
+
+    def axis_text_x_right_protrusion(self, location: AxesLocation) -> float:
+        """
+        Return maximum width[inches] of x tick labels to the right of the axes
+        """
+        extras = []
+        for ax in self._filter_axes(location):
+            ax_right_x = self.calc.right_x(ax)
+            for label in self.axis_labels_x(ax):
+                label_right_x = self.calc.right_x(label)
+                extras.append(max(0, label_right_x - ax_right_x))
+
+        return max(extras) if len(extras) else 0
 
 
 def _text_is_visible(text: Text) -> bool:

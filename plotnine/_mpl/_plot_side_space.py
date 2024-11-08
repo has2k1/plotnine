@@ -16,28 +16,15 @@ from dataclasses import dataclass, fields
 from functools import cached_property
 from typing import TYPE_CHECKING, cast
 
-from matplotlib._tight_layout import get_subplotspec_list
-
 from ..facets import facet_grid, facet_null, facet_wrap
-from .utils import bbox_in_figure_space, tight_bbox_in_figure_space
+from .utils import bbox_in_figure_space
 
 if TYPE_CHECKING:
     from dataclasses import Field
-    from typing import (
-        Generator,
-        Literal,
-        TypeAlias,
-    )
-
-    from matplotlib.artist import Artist
-    from matplotlib.axes import Axes
-    from matplotlib.text import Text
+    from typing import Generator
 
     from ._layout_pack import LayoutPack
 
-    AxesLocation: TypeAlias = Literal[
-        "all", "first_row", "last_row", "first_col", "last_col"
-    ]
 
 # Note
 # Margins around the plot are specified in figure coordinates
@@ -152,8 +139,8 @@ class left_spaces(_side_spaces):
     legend_box_spacing: float = 0
     axis_title_y: float = 0
     axis_title_y_margin_right: float = 0
-    axis_ylabels: float = 0
-    axis_yticks: float = 0
+    axis_text_y: float = 0
+    axis_ticks_y: float = 0
 
     def _calculate(self):
         theme = self.pack.theme
@@ -173,13 +160,13 @@ class left_spaces(_side_spaces):
             ).width
 
         # Account for the space consumed by the axis
-        self.axis_ylabels = max_ylabels_width(pack, "first_col")
-        self.axis_yticks = max_yticks_width(pack, "first_col")
+        self.axis_text_y = pack.axis_text_y_max_width("first_col")
+        self.axis_ticks_y = pack.axis_ticks_y_max_width("first_col")
 
         # Adjust plot_margin to make room for ylabels that protude well
         # beyond the axes
         # NOTE: This adjustment breaks down when the protrusion is large
-        protrusion = max_xlabels_left_protrusion(pack)
+        protrusion = pack.axis_text_x_left_protrusion("all")
         adjustment = protrusion - (self.total - self.plot_margin)
         if adjustment > 0:
             self.plot_margin += adjustment
@@ -223,12 +210,12 @@ class right_spaces(_side_spaces):
             self.legend = self._legend_width
             self.legend_box_spacing = theme.getp("legend_box_spacing")
 
-        self.strip_text_y_width_right = pack.get_strip_text_y_width("right")
+        self.strip_text_y_width_right = pack.strip_text_y_width("right")
 
         # Adjust plot_margin to make room for ylabels that protude well
         # beyond the axes
         # NOTE: This adjustment breaks down when the protrusion is large
-        protrusion = max_xlabels_right_protrusion(pack)
+        protrusion = pack.axis_text_x_right_protrusion("all")
         adjustment = protrusion - (self.total - self.plot_margin)
         if adjustment > 0:
             self.plot_margin += adjustment
@@ -294,12 +281,12 @@ class top_spaces(_side_spaces):
             self.legend = self._legend_height
             self.legend_box_spacing = theme.getp("legend_box_spacing") * F
 
-        self.strip_text_x_height_top = pack.get_strip_text_x_height("top")
+        self.strip_text_x_height_top = pack.strip_text_x_height("top")
 
         # Adjust plot_margin to make room for ylabels that protude well
         # beyond the axes
         # NOTE: This adjustment breaks down when the protrusion is large
-        protrusion = max_ylabels_top_protrusion(pack)
+        protrusion = pack.axis_text_y_top_protrusion("all")
         adjustment = protrusion - (self.total - self.plot_margin)
         if adjustment > 0:
             self.plot_margin += adjustment
@@ -336,8 +323,8 @@ class bottom_spaces(_side_spaces):
     legend_box_spacing: float = 0
     axis_title_x: float = 0
     axis_title_x_margin_top: float = 0
-    axis_xlabels: float = 0
-    axis_xticks: float = 0
+    axis_text_x: float = 0
+    axis_ticks_x: float = 0
 
     def _calculate(self):
         pack = self.pack
@@ -368,13 +355,13 @@ class bottom_spaces(_side_spaces):
             )
 
         # Account for the space consumed by the axis
-        self.axis_xticks = max_xticks_height(pack, "last_row")
-        self.axis_xlabels = max_xlabels_height(pack, "last_row")
+        self.axis_ticks_x = pack.axis_ticks_x_max_height("last_row")
+        self.axis_text_x = pack.axis_text_x_max_height("last_row")
 
         # Adjust plot_margin to make room for ylabels that protude well
         # beyond the axes
         # NOTE: This adjustment breaks down when the protrusion is large
-        protrusion = max_ylabels_bottom_protrusion(pack)
+        protrusion = pack.axis_text_y_bottom_protrusion("all")
         adjustment = protrusion - (self.total - self.plot_margin)
         if adjustment > 0:
             self.plot_margin += adjustment
@@ -522,11 +509,11 @@ def _calculate_panel_spacing_facet_wrap(
         sh += spaces.t.strip_text_x_height_top * (1 + strip_align_x)
 
     if pack.facet.free["x"]:
-        sh += max_xlabels_height(pack)
-        sh += max_xticks_height(pack)
+        sh += pack.axis_text_x_max_height("all")
+        sh += pack.axis_ticks_x_max_height("all")
     if pack.facet.free["y"]:
-        sw += max_ylabels_width(pack)
-        sw += max_yticks_width(pack)
+        sw += pack.axis_text_y_max_width("all")
+        sw += pack.axis_ticks_y_max_width("all")
 
     # width and height of axes as fraction of figure width & height
     w = ((spaces.right - spaces.left) - sw * (ncol - 1)) / ncol
@@ -549,186 +536,3 @@ def _calculate_panel_spacing_facet_null(
     w = spaces.right - spaces.left
     h = spaces.top - spaces.bottom
     return WHSpaceParts(W, H, w, h, 0, 0, 0, 0)
-
-
-def filter_axes(axs: list[Axes], location: AxesLocation = "all") -> list[Axes]:
-    """
-    Return subset of axes
-    """
-    if location == "all":
-        return axs
-
-    # e.g. is_first_row, is_last_row, ..
-    pred_method = f"is_{location}"
-    return [
-        ax
-        for spec, ax in zip(get_subplotspec_list(axs), axs)
-        if getattr(spec, pred_method)()
-    ]
-
-
-def _text_is_visible(text: Text) -> bool:
-    """
-    Return True if text is visible and is not empty
-    """
-    return text.get_visible() and text._text  # type: ignore
-
-
-def max_xticks_height(
-    pack: LayoutPack,
-    location: AxesLocation = "all",
-) -> float:
-    """
-    Return maximum height[inches] of x ticks
-    """
-    heights = [
-        tight_bbox_in_figure_space(
-            tick.tick1line, pack.figure, pack.renderer
-        ).height
-        for ax in filter_axes(pack.axs, location)
-        for tick in pack.get_axis_ticks_x(ax)
-    ]
-    return max(heights) if len(heights) else 0
-
-
-def max_xlabels_height(
-    pack: LayoutPack,
-    location: AxesLocation = "all",
-) -> float:
-    """
-    Return maximum height[inches] of x tick labels
-    """
-    heights = [
-        tight_bbox_in_figure_space(label, pack.figure, pack.renderer).height
-        + pad
-        for ax in filter_axes(pack.axs, location)
-        for label, pad in zip(
-            pack.get_axis_labels_x(ax), pack.get_axis_ticks_pad_x(ax)
-        )
-    ]
-    return max(heights) if len(heights) else 0
-
-
-def max_yticks_width(
-    pack: LayoutPack,
-    location: AxesLocation = "all",
-) -> float:
-    """
-    Return maximum width[inches] of y ticks
-    """
-    widths = [
-        tight_bbox_in_figure_space(
-            tick.tick1line, pack.figure, pack.renderer
-        ).width
-        for ax in filter_axes(pack.axs, location)
-        for tick in pack.get_axis_ticks_y(ax)
-    ]
-    return max(widths) if len(widths) else 0
-
-
-def max_ylabels_width(
-    pack: LayoutPack,
-    location: AxesLocation = "all",
-) -> float:
-    """
-    Return maximum width[inches] of y tick labels
-    """
-    widths = [
-        tight_bbox_in_figure_space(label, pack.figure, pack.renderer).width
-        + pad
-        for ax in filter_axes(pack.axs, location)
-        for label, pad in zip(
-            pack.get_axis_labels_y(ax), pack.get_axis_ticks_pad_y(ax)
-        )
-    ]
-    return max(widths) if len(widths) else 0
-
-
-def max_ylabels_top_protrusion(
-    pack: LayoutPack,
-    location: AxesLocation = "all",
-) -> float:
-    """
-    Return maximum height[inches] above the axes of y tick labels
-    """
-
-    def get_artist_top_y(a: Artist) -> float:
-        xy = bbox_in_figure_space(a, pack.figure, pack.renderer).max
-        return xy[1]
-
-    extras = []
-    for ax in filter_axes(pack.axs, location):
-        ax_top = get_artist_top_y(ax)
-        for label in pack.get_axis_labels_y(ax):
-            label_top = get_artist_top_y(label)
-            extras.append(max(0, label_top - ax_top))
-
-    return max(extras) if len(extras) else 0
-
-
-def max_ylabels_bottom_protrusion(
-    pack: LayoutPack,
-    location: AxesLocation = "all",
-) -> float:
-    """
-    Return maximum height[inches] below the axes of y tick labels
-    """
-
-    def get_artist_bottom_y(a: Artist) -> float:
-        xy = bbox_in_figure_space(a, pack.figure, pack.renderer).min
-        return xy[1]
-
-    extras = []
-    for ax in filter_axes(pack.axs, location):
-        ax_bottom = get_artist_bottom_y(ax)
-        for label in pack.get_axis_labels_y(ax):
-            label_bottom = get_artist_bottom_y(label)
-            protrusion = abs(min(label_bottom - ax_bottom, 0))
-            extras.append(protrusion)
-
-    return max(extras) if len(extras) else 0
-
-
-def max_xlabels_left_protrusion(
-    pack: LayoutPack,
-    location: AxesLocation = "all",
-) -> float:
-    """
-    Return maximum width[inches] of x tick labels to the left of the axes
-    """
-
-    def get_artist_left_x(a: Artist) -> float:
-        xy = bbox_in_figure_space(a, pack.figure, pack.renderer).min
-        return xy[0]
-
-    extras = []
-    for ax in filter_axes(pack.axs, location):
-        ax_left = get_artist_left_x(ax)
-        for label in pack.get_axis_labels_x(ax):
-            label_left = get_artist_left_x(label)
-            protrusion = abs(min(label_left - ax_left, 0))
-            extras.append(protrusion)
-
-    return max(extras) if len(extras) else 0
-
-
-def max_xlabels_right_protrusion(
-    pack: LayoutPack,
-    location: AxesLocation = "all",
-) -> float:
-    """
-    Return maximum width[inches] of x tick labels to the right of the axes
-    """
-
-    def get_artist_right_x(a: Artist) -> float:
-        xy = bbox_in_figure_space(a, pack.figure, pack.renderer).max
-        return xy[0]
-
-    extras = []
-    for ax in filter_axes(pack.axs, location):
-        ax_right = get_artist_right_x(ax)
-        for label in pack.get_axis_labels_x(ax):
-            label_right = get_artist_right_x(label)
-            extras.append(max(0, label_right - ax_right))
-
-    return max(extras) if len(extras) else 0
