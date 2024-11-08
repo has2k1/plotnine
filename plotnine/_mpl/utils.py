@@ -87,22 +87,54 @@ class Calc:
     renderer: RendererBase
 
     def bbox(self, artist: Artist) -> Bbox:
+        """
+        Bounding box of artist in figure coordinates
+        """
         return bbox_in_figure_space(artist, self.fig, self.renderer)
 
     def tight_bbox(self, artist: Artist) -> Bbox:
+        """
+        Bounding box of artist and its children in figure coordinates
+        """
         return tight_bbox_in_figure_space(artist, self.fig, self.renderer)
 
     def width(self, artist: Artist) -> float:
+        """
+        Width of artist in figure space
+        """
         return self.bbox(artist).width
 
     def tight_width(self, artist: Artist) -> float:
+        """
+        Width of artist and its children in figure space
+        """
         return self.tight_bbox(artist).width
 
     def height(self, artist: Artist) -> float:
+        """
+        Height of artist in figure space
+        """
         return self.bbox(artist).height
 
     def tight_height(self, artist: Artist) -> float:
+        """
+        Height of artist and its children in figure space
+        """
         return self.tight_bbox(artist).height
+
+    def size(self, artist: Artist) -> tuple[float, float]:
+        """
+        (width, height) of artist in figure space
+        """
+        bbox = self.bbox(artist)
+        return (bbox.width, bbox.height)
+
+    def tight_size(self, artist: Artist) -> tuple[float, float]:
+        """
+        (width, height) of artist and its children in figure space
+        """
+        bbox = self.tight_bbox(artist)
+        return (bbox.width, bbox.height)
 
     def left_x(self, artist: Artist) -> float:
         """
