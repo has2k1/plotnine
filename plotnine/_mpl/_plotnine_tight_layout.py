@@ -28,7 +28,7 @@ if typing.TYPE_CHECKING:
     from plotnine.facets.facet import facet
     from plotnine.iapi import legend_artists
 
-    from .layout_engine import LayoutPack
+    from ._layout_pack import LayoutPack
 
     AxesLocation: TypeAlias = Literal[
         "all", "first_row", "last_row", "first_col", "last_col"
