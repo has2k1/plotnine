@@ -1,12 +1,15 @@
 from __future__ import annotations
 
-import typing
+from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
 from matplotlib.transforms import Affine2D, Bbox
 
 from .transforms import ZEROS_BBOX
 
-if typing.TYPE_CHECKING:
+if TYPE_CHECKING:
+    from typing import Sequence
+
     from matplotlib.artist import Artist
     from matplotlib.axes import Axes
     from matplotlib.backend_bases import RendererBase
@@ -76,3 +79,47 @@ def get_transPanels(fig: Figure) -> Transform:
     dx, dy = params.left * W, params.bottom * H
     transFiguretoPanels = Affine2D().scale(sx, sy).translate(dx, dy)
     return fig.transFigure + transFiguretoPanels
+
+
+@dataclass
+class Calc:
+    fig: Figure
+    renderer: RendererBase
+
+    def bbox(self, artist: Artist) -> Bbox:
+        return bbox_in_figure_space(artist, self.fig, self.renderer)
+
+    def tight_bbox(self, artist: Artist) -> Bbox:
+        return tight_bbox_in_figure_space(artist, self.fig, self.renderer)
+
+    def width(self, artist: Artist) -> float:
+        return self.bbox(artist).width
+
+    def tight_width(self, artist: Artist) -> float:
+        return self.tight_bbox(artist).width
+
+    def height(self, artist: Artist) -> float:
+        return self.bbox(artist).height
+
+    def tight_height(self, artist: Artist) -> float:
+        return self.tight_bbox(artist).height
+
+    def max_width(self, artists: Sequence[Artist]) -> float:
+        """
+        Return the maximum width of list of artists
+        """
+        widths = [
+            bbox_in_figure_space(a, self.fig, self.renderer).width
+            for a in artists
+        ]
+        return max(widths) if len(widths) else 0
+
+    def max_height(self, artists: Sequence[Artist]) -> float:
+        """
+        Return the maximum height of list of artists
+        """
+        heights = [
+            bbox_in_figure_space(a, self.fig, self.renderer).height
+            for a in artists
+        ]
+        return max(heights) if len(heights) else 0
