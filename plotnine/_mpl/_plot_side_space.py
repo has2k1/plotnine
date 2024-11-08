@@ -14,7 +14,6 @@ from __future__ import annotations
 from abc import ABC
 from dataclasses import dataclass, fields
 from functools import cached_property
-from itertools import chain
 from typing import TYPE_CHECKING, cast
 
 from matplotlib._tight_layout import get_subplotspec_list
@@ -26,15 +25,12 @@ if TYPE_CHECKING:
     from dataclasses import Field
     from typing import (
         Generator,
-        Iterator,
         Literal,
-        Sequence,
         TypeAlias,
     )
 
     from matplotlib.artist import Artist
     from matplotlib.axes import Axes
-    from matplotlib.axis import Tick
     from matplotlib.text import Text
 
     from ._layout_pack import LayoutPack
@@ -216,7 +212,7 @@ class right_spaces(_side_spaces):
     plot_margin: float = 0
     legend: float = 0
     legend_box_spacing: float = 0
-    right_strip_width: float = 0
+    strip_text_y_width_right: float = 0
 
     def _calculate(self):
         pack = self.pack
@@ -227,7 +223,7 @@ class right_spaces(_side_spaces):
             self.legend = self._legend_width
             self.legend_box_spacing = theme.getp("legend_box_spacing")
 
-        self.right_strip_width = get_right_strip_width(pack)
+        self.strip_text_y_width_right = pack.get_strip_text_y_width("right")
 
         # Adjust plot_margin to make room for ylabels that protude well
         # beyond the axes
@@ -269,7 +265,7 @@ class top_spaces(_side_spaces):
     plot_subtitle_margin_bottom: float = 0
     legend: float = 0
     legend_box_spacing: float = 0
-    top_strip_height: float = 0
+    strip_text_x_height_top: float = 0
 
     def _calculate(self):
         pack = self.pack
@@ -298,7 +294,7 @@ class top_spaces(_side_spaces):
             self.legend = self._legend_height
             self.legend_box_spacing = theme.getp("legend_box_spacing") * F
 
-        self.top_strip_height = get_top_strip_height(pack)
+        self.strip_text_x_height_top = pack.get_strip_text_x_height("top")
 
         # Adjust plot_margin to make room for ylabels that protude well
         # beyond the axes
@@ -523,7 +519,7 @@ def _calculate_panel_spacing_facet_wrap(
     # Only interested in the proportion of the strip that
     # does not overlap with the panel
     if strip_align_x > -1:
-        sh += spaces.t.top_strip_height * (1 + strip_align_x)
+        sh += spaces.t.strip_text_x_height_top * (1 + strip_align_x)
 
     if pack.facet.free["x"]:
         sh += max_xlabels_height(pack)
@@ -571,161 +567,11 @@ def filter_axes(axs: list[Axes], location: AxesLocation = "all") -> list[Axes]:
     ]
 
 
-def max_width(pack: LayoutPack, artists: Sequence[Artist]) -> float:
-    """
-    Return the maximum width of list of artists
-    """
-    widths = [
-        bbox_in_figure_space(a, pack.figure, pack.renderer).width
-        for a in artists
-    ]
-    return max(widths) if len(widths) else 0
-
-
-def max_height(pack: LayoutPack, artists: Sequence[Artist]) -> float:
-    """
-    Return the maximum height of list of artists
-    """
-    heights = [
-        bbox_in_figure_space(a, pack.figure, pack.renderer).height
-        for a in artists
-    ]
-    return max(heights) if len(heights) else 0
-
-
-def get_top_strip_height(pack: LayoutPack) -> float:
-    """
-    Height taken up by the top strips
-    """
-    if not pack.strip_text_x:
-        return 0
-
-    artists = [
-        st.patch if st.patch.get_visible() else st
-        for st in pack.strip_text_x
-        if st.patch.position == "top"
-    ]
-    return max_height(pack, artists)
-
-
-def get_right_strip_width(pack: LayoutPack) -> float:
-    """
-    Width taken up by the right strips
-    """
-    if not pack.strip_text_y:
-        return 0
-
-    artists = [
-        st.patch if st.patch.get_visible() else st
-        for st in pack.strip_text_y
-        if st.patch.position == "right"
-    ]
-    return max_width(pack, artists)
-
-
-def get_xaxis_ticks(pack: LayoutPack, ax: Axes) -> Iterator[Tick]:
-    """
-    Return all XTicks that will be shown
-    """
-    is_blank = pack.theme.T.is_blank
-    major, minor = [], []
-
-    if not is_blank("axis_ticks_major_x"):
-        major = ax.xaxis.get_major_ticks()
-
-    if not is_blank("axis_ticks_minor_x"):
-        minor = ax.xaxis.get_minor_ticks()
-
-    return chain(major, minor)
-
-
-def get_yaxis_ticks(pack: LayoutPack, ax: Axes) -> Iterator[Tick]:
-    """
-    Return all YTicks that will be shown
-    """
-    is_blank = pack.theme.T.is_blank
-    major, minor = [], []
-
-    if not is_blank("axis_ticks_major_y"):
-        major = ax.yaxis.get_major_ticks()
-
-    if not is_blank("axis_ticks_minor_y"):
-        minor = ax.yaxis.get_minor_ticks()
-
-    return chain(major, minor)
-
-
-def get_xaxis_tick_pads(pack: LayoutPack, ax: Axes) -> Iterator[float]:
-    """
-    Return XTicks paddings
-    """
-    # In plotnine tick padding are specified as a margin to the
-    # the axis_text.
-    is_blank = pack.theme.T.is_blank
-    major, minor = [], []
-    if not is_blank("axis_text_y"):
-        h = pack.figure.get_figheight() * 72
-        major = [(t.get_pad() or 0) / h for t in ax.xaxis.get_major_ticks()]
-        minor = [(t.get_pad() or 0) / h for t in ax.xaxis.get_minor_ticks()]
-    return chain(major, minor)
-
-
-def get_yaxis_tick_pads(pack: LayoutPack, ax: Axes) -> Iterator[float]:
-    """
-    Return YTicks paddings
-    """
-    # In plotnine tick padding are specified as a margin to the
-    # the axis_text.
-    is_blank = pack.theme.T.is_blank
-    major, minor = [], []
-    if not is_blank("axis_text_y"):
-        w = pack.figure.get_figwidth() * 72
-        major = [(t.get_pad() or 0) / w for t in ax.yaxis.get_major_ticks()]
-        minor = [(t.get_pad() or 0) / w for t in ax.yaxis.get_minor_ticks()]
-    return chain(major, minor)
-
-
 def _text_is_visible(text: Text) -> bool:
     """
     Return True if text is visible and is not empty
     """
     return text.get_visible() and text._text  # type: ignore
-
-
-def get_xaxis_labels(pack: LayoutPack, ax: Axes) -> Iterator[Text]:
-    """
-    Return all x-axis labels that will be shown
-    """
-    is_blank = pack.theme.T.is_blank
-    major, minor = [], []
-
-    if not is_blank("axis_text_x"):
-        major = ax.xaxis.get_major_ticks()
-        minor = ax.xaxis.get_minor_ticks()
-
-    return (
-        tick.label1
-        for tick in chain(major, minor)
-        if _text_is_visible(tick.label1)
-    )
-
-
-def get_yaxis_labels(pack: LayoutPack, ax: Axes) -> Iterator[Text]:
-    """
-    Return all y-axis labels that will be shown
-    """
-    is_blank = pack.theme.T.is_blank
-    major, minor = [], []
-
-    if not is_blank("axis_text_y"):
-        major = ax.yaxis.get_major_ticks()
-        minor = ax.yaxis.get_minor_ticks()
-
-    return (
-        tick.label1
-        for tick in chain(major, minor)
-        if _text_is_visible(tick.label1)
-    )
 
 
 def max_xticks_height(
@@ -740,7 +586,7 @@ def max_xticks_height(
             tick.tick1line, pack.figure, pack.renderer
         ).height
         for ax in filter_axes(pack.axs, location)
-        for tick in get_xaxis_ticks(pack, ax)
+        for tick in pack.get_axis_ticks_x(ax)
     ]
     return max(heights) if len(heights) else 0
 
@@ -757,7 +603,7 @@ def max_xlabels_height(
         + pad
         for ax in filter_axes(pack.axs, location)
         for label, pad in zip(
-            get_xaxis_labels(pack, ax), get_xaxis_tick_pads(pack, ax)
+            pack.get_axis_labels_x(ax), pack.get_axis_ticks_pad_x(ax)
         )
     ]
     return max(heights) if len(heights) else 0
@@ -775,7 +621,7 @@ def max_yticks_width(
             tick.tick1line, pack.figure, pack.renderer
         ).width
         for ax in filter_axes(pack.axs, location)
-        for tick in get_yaxis_ticks(pack, ax)
+        for tick in pack.get_axis_ticks_y(ax)
     ]
     return max(widths) if len(widths) else 0
 
@@ -792,7 +638,7 @@ def max_ylabels_width(
         + pad
         for ax in filter_axes(pack.axs, location)
         for label, pad in zip(
-            get_yaxis_labels(pack, ax), get_yaxis_tick_pads(pack, ax)
+            pack.get_axis_labels_y(ax), pack.get_axis_ticks_pad_y(ax)
         )
     ]
     return max(widths) if len(widths) else 0
@@ -813,7 +659,7 @@ def max_ylabels_top_protrusion(
     extras = []
     for ax in filter_axes(pack.axs, location):
         ax_top = get_artist_top_y(ax)
-        for label in get_yaxis_labels(pack, ax):
+        for label in pack.get_axis_labels_y(ax):
             label_top = get_artist_top_y(label)
             extras.append(max(0, label_top - ax_top))
 
@@ -835,7 +681,7 @@ def max_ylabels_bottom_protrusion(
     extras = []
     for ax in filter_axes(pack.axs, location):
         ax_bottom = get_artist_bottom_y(ax)
-        for label in get_yaxis_labels(pack, ax):
+        for label in pack.get_axis_labels_y(ax):
             label_bottom = get_artist_bottom_y(label)
             protrusion = abs(min(label_bottom - ax_bottom, 0))
             extras.append(protrusion)
@@ -858,7 +704,7 @@ def max_xlabels_left_protrusion(
     extras = []
     for ax in filter_axes(pack.axs, location):
         ax_left = get_artist_left_x(ax)
-        for label in get_xaxis_labels(pack, ax):
+        for label in pack.get_axis_labels_x(ax):
             label_left = get_artist_left_x(label)
             protrusion = abs(min(label_left - ax_left, 0))
             extras.append(protrusion)
@@ -881,7 +727,7 @@ def max_xlabels_right_protrusion(
     extras = []
     for ax in filter_axes(pack.axs, location):
         ax_right = get_artist_right_x(ax)
-        for label in get_xaxis_labels(pack, ax):
+        for label in pack.get_axis_labels_x(ax):
             label_right = get_artist_right_x(label)
             extras.append(max(0, label_right - ax_right))
 
