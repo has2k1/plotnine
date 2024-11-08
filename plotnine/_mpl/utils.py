@@ -104,6 +104,46 @@ class Calc:
     def tight_height(self, artist: Artist) -> float:
         return self.tight_bbox(artist).height
 
+    def left_x(self, artist: Artist) -> float:
+        """
+        x value of the left edge of the artist
+
+         ---
+        x   |
+         ---
+        """
+        return self.bbox(artist).min[0]
+
+    def right_x(self, artist: Artist) -> float:
+        """
+        x value of the left edge of the artist
+
+         ---
+        |   x
+         ---
+        """
+        return self.bbox(artist).max[0]
+
+    def top_y(self, artist: Artist) -> float:
+        """
+        y value of the top edge of the artist
+
+         -y-
+        |   |
+         ---
+        """
+        return self.bbox(artist).max[1]
+
+    def bottom_y(self, artist: Artist) -> float:
+        """
+        y value of the bottom edge of the artist
+
+         ---
+        |   |
+         -y-
+        """
+        return self.bbox(artist).min[1]
+
     def max_width(self, artists: Sequence[Artist]) -> float:
         """
         Return the maximum width of list of artists
