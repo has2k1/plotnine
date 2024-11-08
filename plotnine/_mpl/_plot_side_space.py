@@ -17,7 +17,6 @@ from functools import cached_property
 from typing import TYPE_CHECKING, cast
 
 from ..facets import facet_grid, facet_null, facet_wrap
-from .utils import bbox_in_figure_space
 
 if TYPE_CHECKING:
     from dataclasses import Field
@@ -155,9 +154,7 @@ class left_spaces(_side_spaces):
             self.axis_title_y_margin_right = theme.getp(
                 ("axis_title_y", "margin")
             ).get_as("r", "fig")
-            self.axis_title_y = bbox_in_figure_space(
-                pack.axis_title_y, pack.figure, pack.renderer
-            ).width
+            self.axis_title_y = pack.calc.width(pack.axis_title_y)
 
         # Account for the space consumed by the axis
         self.axis_text_y = pack.axis_text_y_max_width("first_col")
@@ -176,10 +173,7 @@ class left_spaces(_side_spaces):
         if not (self.pack.legends and self.pack.legends.left):
             return (0, 0)
 
-        bbox = bbox_in_figure_space(
-            self.pack.legends.left.box, self.pack.figure, self.pack.renderer
-        )
-        return bbox.width, bbox.height
+        return self.pack.calc.size(self.pack.legends.left.box)
 
     def edge(self, item: str) -> float:
         """
@@ -225,10 +219,7 @@ class right_spaces(_side_spaces):
         if not (self.pack.legends and self.pack.legends.right):
             return (0, 0)
 
-        bbox = bbox_in_figure_space(
-            self.pack.legends.right.box, self.pack.figure, self.pack.renderer
-        )
-        return bbox.width, bbox.height
+        return self.pack.calc.size(self.pack.legends.right.box)
 
     def edge(self, item: str) -> float:
         """
@@ -262,17 +253,13 @@ class top_spaces(_side_spaces):
 
         self.plot_margin = theme.getp("plot_margin_top") * F
         if pack.plot_title:
-            self.plot_title = bbox_in_figure_space(
-                pack.plot_title, pack.figure, pack.renderer
-            ).height
+            self.plot_title = pack.calc.height(pack.plot_title)
             self.plot_title_margin_bottom = (
                 theme.getp(("plot_title", "margin")).get_as("b", "fig") * F
             )
 
         if pack.plot_subtitle:
-            self.plot_subtitle = bbox_in_figure_space(
-                pack.plot_subtitle, pack.figure, pack.renderer
-            ).height
+            self.plot_subtitle = pack.calc.height(pack.plot_subtitle)
             self.plot_subtitle_margin_bottom = (
                 theme.getp(("plot_subtitle", "margin")).get_as("b", "fig") * F
             )
@@ -296,10 +283,7 @@ class top_spaces(_side_spaces):
         if not (self.pack.legends and self.pack.legends.top):
             return (0, 0)
 
-        bbox = bbox_in_figure_space(
-            self.pack.legends.top.box, self.pack.figure, self.pack.renderer
-        )
-        return bbox.width, bbox.height
+        return self.pack.calc.size(self.pack.legends.top.box)
 
     def edge(self, item: str) -> float:
         """
@@ -335,9 +319,7 @@ class bottom_spaces(_side_spaces):
         self.plot_margin = theme.getp("plot_margin_bottom") * F
 
         if pack.plot_caption:
-            self.plot_caption = bbox_in_figure_space(
-                pack.plot_caption, pack.figure, pack.renderer
-            ).height
+            self.plot_caption = pack.calc.height(pack.plot_caption)
             self.plot_caption_margin_top = (
                 theme.getp(("plot_caption", "margin")).get_as("t", "fig") * F
             )
@@ -347,9 +329,7 @@ class bottom_spaces(_side_spaces):
             self.legend_box_spacing = theme.getp("legend_box_spacing") * F
 
         if pack.axis_title_x:
-            self.axis_title_x = bbox_in_figure_space(
-                pack.axis_title_x, pack.figure, pack.renderer
-            ).height
+            self.axis_title_x = pack.calc.height(pack.axis_title_x)
             self.axis_title_x_margin_top = (
                 theme.getp(("axis_title_x", "margin")).get_as("t", "fig") * F
             )
@@ -371,10 +351,7 @@ class bottom_spaces(_side_spaces):
         if not (self.pack.legends and self.pack.legends.bottom):
             return (0, 0)
 
-        bbox = bbox_in_figure_space(
-            self.pack.legends.bottom.box, self.pack.figure, self.pack.renderer
-        )
-        return bbox.width, bbox.height
+        return self.pack.calc.size(self.pack.legends.bottom.box)
 
     def edge(self, item: str) -> float:
         """
