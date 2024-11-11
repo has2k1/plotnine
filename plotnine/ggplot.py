@@ -262,7 +262,7 @@ class ggplot:
         :
             Matplotlib figure
         """
-        from ._mpl.layout_engine import PlotnineLayoutEngine
+        from ._mpl.layout_manager import PlotnineLayoutEngine
 
         # Do not draw if drawn already.
         # This prevents a needless error when reusing
@@ -311,7 +311,7 @@ class ggplot:
         axs :
             Array of Axes onto which to draw the plots
         """
-        from ._mpl.layout_engine import PlotnineLayoutEngine
+        from ._mpl.layout_manager import PlotnineLayoutEngine
 
         self = deepcopy(self)
         self.figure = figure
