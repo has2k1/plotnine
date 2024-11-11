@@ -16,7 +16,7 @@ from dataclasses import dataclass, fields
 from functools import cached_property
 from typing import TYPE_CHECKING, cast
 
-from ..facets import facet_grid, facet_null, facet_wrap
+from plotnine.facets import facet_grid, facet_null, facet_wrap
 
 if TYPE_CHECKING:
     from dataclasses import Field
@@ -37,7 +37,7 @@ class WHSpaceParts:
     """
     Width-Height Spaces
 
-    We need these in one places for easy access
+    We need these in one place for easy access
     """
 
     W: float  # Figure width

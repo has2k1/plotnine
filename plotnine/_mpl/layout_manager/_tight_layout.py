@@ -14,8 +14,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
+from ..utils import get_transPanels
 from ._plot_side_space import EdgeSpaces, WHSpaceParts, calculate_panel_spacing
-from .utils import get_transPanels
 
 if TYPE_CHECKING:
     from matplotlib.figure import Figure

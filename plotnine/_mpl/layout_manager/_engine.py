@@ -33,7 +33,7 @@ class PlotnineLayoutEngine(LayoutEngine):
     def execute(self, fig: Figure):
         from contextlib import nullcontext
 
-        from ._plotnine_tight_layout import (
+        from ._tight_layout import (
             get_plotnine_tight_layout,
             set_figure_artist_positions,
         )
