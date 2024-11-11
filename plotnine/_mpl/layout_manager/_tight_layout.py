@@ -50,15 +50,15 @@ class TightParams:
     """
 
     facet: facet
-    sides: EdgeSpaces
+    edges: EdgeSpaces
     gullies: WHSpaceParts
 
     def __post_init__(self):
         self.params = GridSpecParams(
-            left=self.sides.left,
-            right=self.sides.right,
-            top=self.sides.top,
-            bottom=self.sides.bottom,
+            left=self.edges.left,
+            right=self.edges.right,
+            top=self.edges.top,
+            bottom=self.edges.bottom,
             wspace=self.gullies.wspace,
             hspace=self.gullies.hspace,
         )
@@ -90,8 +90,7 @@ class TightParams:
         self.params.hspace = parts.sh / h1
 
         # Add more vertical plot margin
-        self.sides.t.plot_margin += dh
-        self.sides.b.plot_margin += dh
+        self.edges.make_taller(dh)
 
     def _reduce_width(self, ratio: float):
         """
@@ -111,64 +110,62 @@ class TightParams:
         self.params.wspace = parts.sw / w1
 
         # Add more horizontal margin
-        self.sides.l.plot_margin += dw
-        self.sides.r.plot_margin += dw
+        self.edges.make_wider(dw)
 
 
-def get_plotnine_tight_layout(pack: LayoutPack) -> TightParams:
+def compute_layout(pack: LayoutPack) -> TightParams:
     """
     Compute tight layout parameters
     """
-    sides = EdgeSpaces(pack)
-    gullies = calculate_panel_spacing(pack, sides)
-    tight_params = TightParams(pack.facet, sides, gullies)
+    edges = EdgeSpaces(pack)
+    gullies = calculate_panel_spacing(pack, edges)
+    tight_params = TightParams(pack.facet, edges, gullies)
     return tight_params
 
 
-def set_figure_artist_positions(
+def adjust_figure_artists(
     pack: LayoutPack,
-    tparams: TightParams,
+    params: GridSpecParams,
+    edges: EdgeSpaces,
 ):
     """
     Set the x,y position of the artists around the panels
     """
     theme = pack.theme
-    sides = tparams.sides
-    params = tparams.params
 
     if pack.plot_title:
         ha = theme.getp(("plot_title", "ha"))
-        pack.plot_title.set_y(sides.t.edge("plot_title"))
+        pack.plot_title.set_y(edges.t.edge("plot_title"))
         horizontally_align_text_with_panels(pack.plot_title, params, ha, pack)
 
     if pack.plot_subtitle:
         ha = theme.getp(("plot_subtitle", "ha"))
-        pack.plot_subtitle.set_y(sides.t.edge("plot_subtitle"))
+        pack.plot_subtitle.set_y(edges.t.edge("plot_subtitle"))
         horizontally_align_text_with_panels(
             pack.plot_subtitle, params, ha, pack
         )
 
     if pack.plot_caption:
         ha = theme.getp(("plot_caption", "ha"), "right")
-        pack.plot_caption.set_y(sides.b.edge("plot_caption"))
+        pack.plot_caption.set_y(edges.b.edge("plot_caption"))
         horizontally_align_text_with_panels(
             pack.plot_caption, params, ha, pack
         )
 
     if pack.axis_title_x:
         ha = theme.getp(("axis_title_x", "ha"), "center")
-        pack.axis_title_x.set_y(sides.b.edge("axis_title_x"))
+        pack.axis_title_x.set_y(edges.b.edge("axis_title_x"))
         horizontally_align_text_with_panels(
             pack.axis_title_x, params, ha, pack
         )
 
     if pack.axis_title_y:
         va = theme.getp(("axis_title_y", "va"), "center")
-        pack.axis_title_y.set_x(sides.l.edge("axis_title_y"))
+        pack.axis_title_y.set_x(edges.l.edge("axis_title_y"))
         vertically_align_text_with_panels(pack.axis_title_y, params, va, pack)
 
     if pack.legends:
-        set_legends_position(pack.legends, tparams, pack.figure)
+        set_legends_position(pack.legends, edges, pack.figure)
 
 
 def horizontally_align_text_with_panels(
@@ -223,7 +220,7 @@ def vertically_align_text_with_panels(
 
 def set_legends_position(
     legends: legend_artists,
-    tparams: TightParams,
+    edges: EdgeSpaces,
     fig: Figure,
 ):
     """
@@ -253,31 +250,29 @@ def set_legends_position(
         aob.xy_loc = xy_loc
         aob.set_bbox_to_anchor(anchor_point, transform)  # type: ignore
 
-    sides = tparams.sides
     params = fig.subplotpars
-
     if legends.right:
         j = legends.right.justification
-        y = params.bottom * (1 - j) + (params.top - sides.r._legend_height) * j
-        x = sides.r.edge("legend")
+        y = params.bottom * (1 - j) + (params.top - edges.r._legend_height) * j
+        x = edges.r.edge("legend")
         set_position(legends.right.box, (x, y), (1, 0))
 
     if legends.left:
         j = legends.left.justification
-        y = params.bottom * (1 - j) + (params.top - sides.l._legend_height) * j
-        x = sides.l.edge("legend")
+        y = params.bottom * (1 - j) + (params.top - edges.l._legend_height) * j
+        x = edges.l.edge("legend")
         set_position(legends.left.box, (x, y), (0, 0))
 
     if legends.top:
         j = legends.top.justification
-        x = params.left * (1 - j) + (params.right - sides.t._legend_width) * j
-        y = sides.t.edge("legend")
+        x = params.left * (1 - j) + (params.right - edges.t._legend_width) * j
+        y = edges.t.edge("legend")
         set_position(legends.top.box, (x, y), (0, 1))
 
     if legends.bottom:
         j = legends.bottom.justification
-        x = params.left * (1 - j) + (params.right - sides.b._legend_width) * j
-        y = sides.b.edge("legend")
+        x = params.left * (1 - j) + (params.right - edges.b._legend_width) * j
+        y = edges.b.edge("legend")
         set_position(legends.bottom.box, (x, y), (0, 0))
 
     # Inside legends are placed using the panels coordinate system
