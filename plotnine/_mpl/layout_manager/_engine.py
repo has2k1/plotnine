@@ -33,15 +33,12 @@ class PlotnineLayoutEngine(LayoutEngine):
     def execute(self, fig: Figure):
         from contextlib import nullcontext
 
-        from ._tight_layout import (
-            get_plotnine_tight_layout,
-            set_figure_artist_positions,
-        )
+        from ._tight_layout import adjust_figure_artists, compute_layout
 
         pack = LayoutPack(self.plot)
 
         with getattr(pack.renderer, "_draw_disabled", nullcontext)():
-            tparams = get_plotnine_tight_layout(pack)
+            tparams = compute_layout(pack)
 
         fig.subplots_adjust(**asdict(tparams.params))
-        set_figure_artist_positions(pack, tparams)
+        adjust_figure_artists(pack, tparams.params, tparams.edges)
