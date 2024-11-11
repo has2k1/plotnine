@@ -8,7 +8,7 @@ from matplotlib._tight_layout import get_subplotspec_list
 from matplotlib.backend_bases import RendererBase
 from matplotlib.text import Text
 
-from .utils import (
+from ..utils import (
     bbox_in_figure_space,
     tight_bbox_in_figure_space,
 )
