@@ -38,7 +38,7 @@ class PlotnineLayoutEngine(LayoutEngine):
         pack = LayoutPack(self.plot)
 
         with getattr(pack.renderer, "_draw_disabled", nullcontext)():
-            tparams = compute_layout(pack)
+            spaces = compute_layout(pack)
 
-        fig.subplots_adjust(**asdict(tparams.params))
-        adjust_figure_artists(pack, tparams.params, tparams.edges)
+        fig.subplots_adjust(**asdict(spaces.gsparams))
+        adjust_figure_artists(pack, spaces)
