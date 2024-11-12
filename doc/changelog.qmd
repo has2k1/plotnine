@@ -5,6 +5,22 @@ title: Changelog
 
 (not-yet-released)
 
+### New Features
+
+- Using
+  [](:class:`~plotnine.themes.themeables.plot_title_position`) and
+  [](:class:`~plotnine.themes.themeables.plot_caption_position`) e.g.
+
+  ```python
+  theme(
+     plot_title_position="plot",
+     plot_caption_position="plot",
+  )
+  ```
+
+  You can now position the `plot_title`, `plot_subtitle` and `plot_caption`
+  by alignment them with respect to the plot. ({{< issue 838 >}})
+
 ### Enhancements
 
 - Included datasets [](:attr:`~plotnine.data.mpg`), [](:attr:`~plotnine.data.msleep`) and

@@ -742,6 +742,32 @@ class strip_text_x(MixinSequenceOfValues):
                 text.set_visible(False)
 
 
+class plot_title_position(themeable):
+    """
+    How to align the plot title and plot subtitle
+
+    Parameters
+    ----------
+    theme_element : Literal["panel", "plot"], default = "panel"
+        If "panel", the title / subtitle are aligned with respect
+        to the panels. If "plot", they are aligned with the plot,
+        excluding the margin space
+    """
+
+
+class plot_caption_position(themeable):
+    """
+    How to align the plot caption
+
+    Parameters
+    ----------
+    theme_element : Literal["panel", "plot"], default = "panel"
+        If "panel", the caption is aligned with respect to the
+        panels. If "plot", it is aligned with the plot, excluding
+        the margin space.
+    """
+
+
 class strip_text_y(MixinSequenceOfValues):
     """
     Facet labels along the vertical axis
