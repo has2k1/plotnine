@@ -644,4 +644,4 @@ def has_groups(data: pd.DataFrame) -> bool:
     """
     # If any row in the group column is equal to NO_GROUP, then
     # the data all of them are and the data has no groups
-    return data.loc[0, "group"] != NO_GROUP
+    return data["group"].iloc[0] != NO_GROUP

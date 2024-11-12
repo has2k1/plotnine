@@ -1,6 +1,15 @@
 ---
 title: Changelog
 ---
+## v0.14.2
+(not-yet-released)
+
+### Bug Fixes
+
+- Fixed bugs that affected [](:class:`~plotnine.geom_dotplot`) and
+  [](:class:`~plotnine.geom_sina`) where data with an index that
+  did not include 0 led to a crash. ({{< issue 888 >}})
+
 ## v0.14.1
 (2024-11-05)
 
