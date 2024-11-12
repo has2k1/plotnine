@@ -122,6 +122,8 @@ class theme:
         plot_title=None,
         plot_subtitle=None,
         plot_caption=None,
+        plot_title_position=None,
+        plot_caption_position=None,
         strip_text_x=None,
         strip_text_y=None,
         strip_text=None,
