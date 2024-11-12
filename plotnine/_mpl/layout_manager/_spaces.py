@@ -12,9 +12,9 @@ such cases as when left or right margin are affected by xlabel.
 from __future__ import annotations
 
 from abc import ABC
-from dataclasses import dataclass, fields
+from dataclasses import dataclass, field, fields
 from functools import cached_property
-from typing import TYPE_CHECKING, cast
+from typing import TYPE_CHECKING
 
 from plotnine.facets import facet_grid, facet_null, facet_wrap
 
@@ -33,28 +33,17 @@ if TYPE_CHECKING:
 
 
 @dataclass
-class WHSpaceParts:
+class GridSpecParams:
     """
-    Width-Height Spaces
-
-    We need these in one place for easy access
+    Gridspec Parameters
     """
 
-    W: float  # Figure width
-    H: float  # Figure height
-    w: float  # Axes width w.r.t figure in [0, 1]
-    h: float  # Axes height w.r.t figure in [0, 1]
-    sw: float  # horizontal spacing btn panels w.r.t figure
-    sh: float  # vertical spacing btn panels w.r.t figure
-    wspace: float  # mpl.subplotpars.wspace
-    hspace: float  # mpl.subplotpars.hspace
-
-    @property
-    def aspect_ratio(self) -> float:
-        """
-        Aspect ratio of the panels
-        """
-        return (self.h * self.H) / (self.w * self.W)
+    left: float
+    right: float
+    top: float
+    bottom: float
+    wspace: float
+    hspace: float
 
 
 @dataclass
@@ -143,6 +132,7 @@ class left_spaces(_side_spaces):
 
     def _calculate(self):
         theme = self.pack.theme
+        calc = self.pack.calc
         pack = self.pack
 
         self.plot_margin = theme.getp("plot_margin_left")
@@ -154,7 +144,7 @@ class left_spaces(_side_spaces):
             self.axis_title_y_margin_right = theme.getp(
                 ("axis_title_y", "margin")
             ).get_as("r", "fig")
-            self.axis_title_y = pack.calc.width(pack.axis_title_y)
+            self.axis_title_y = calc.width(pack.axis_title_y)
 
         # Account for the space consumed by the axis
         self.axis_text_y = pack.axis_text_y_max_width("first_col")
@@ -248,18 +238,19 @@ class top_spaces(_side_spaces):
     def _calculate(self):
         pack = self.pack
         theme = self.pack.theme
+        calc = self.pack.calc
         W, H = theme.getp("figure_size")
         F = W / H
 
         self.plot_margin = theme.getp("plot_margin_top") * F
         if pack.plot_title:
-            self.plot_title = pack.calc.height(pack.plot_title)
+            self.plot_title = calc.height(pack.plot_title)
             self.plot_title_margin_bottom = (
                 theme.getp(("plot_title", "margin")).get_as("b", "fig") * F
             )
 
         if pack.plot_subtitle:
-            self.plot_subtitle = pack.calc.height(pack.plot_subtitle)
+            self.plot_subtitle = calc.height(pack.plot_subtitle)
             self.plot_subtitle_margin_bottom = (
                 theme.getp(("plot_subtitle", "margin")).get_as("b", "fig") * F
             )
@@ -313,13 +304,14 @@ class bottom_spaces(_side_spaces):
     def _calculate(self):
         pack = self.pack
         theme = self.pack.theme
+        calc = self.pack.calc
         W, H = theme.getp("figure_size")
         F = W / H
 
         self.plot_margin = theme.getp("plot_margin_bottom") * F
 
         if pack.plot_caption:
-            self.plot_caption = pack.calc.height(pack.plot_caption)
+            self.plot_caption = calc.height(pack.plot_caption)
             self.plot_caption_margin_top = (
                 theme.getp(("plot_caption", "margin")).get_as("t", "fig") * F
             )
@@ -329,7 +321,7 @@ class bottom_spaces(_side_spaces):
             self.legend_box_spacing = theme.getp("legend_box_spacing") * F
 
         if pack.axis_title_x:
-            self.axis_title_x = pack.calc.height(pack.axis_title_x)
+            self.axis_title_x = calc.height(pack.axis_title_x)
             self.axis_title_x_margin_top = (
                 theme.getp(("axis_title_x", "margin")).get_as("t", "fig") * F
             )
@@ -361,32 +353,72 @@ class bottom_spaces(_side_spaces):
 
 
 @dataclass
-class EdgeSpaces:
+class LayoutSpaces:
     """
-    Space for components along the outer edges of the combined panel area
+    Space created by the layout management
     """
 
     pack: LayoutPack
 
+    l: left_spaces = field(init=False)
+    """All subspaces to the left of the panels"""
+
+    r: right_spaces = field(init=False)
+    """All subspaces to the right of the panels"""
+
+    t: top_spaces = field(init=False)
+    """All subspaces above the top of the panels"""
+
+    b: bottom_spaces = field(init=False)
+    """All subspaces below the bottom of the panels"""
+
+    W: float = field(init=False)
+    """Figure Width [inches]"""
+
+    H: float = field(init=False)
+    """Figure Height [inches]"""
+
+    w: float = field(init=False)
+    """Axes width w.r.t figure in [0, 1]"""
+
+    h: float = field(init=False)
+    """Axes height w.r.t figure in [0, 1]"""
+
+    sw: float = field(init=False)
+    """horizontal spacing btn panels w.r.t figure"""
+
+    sh: float = field(init=False)
+    """vertical spacing btn panels w.r.t figure"""
+
+    gsparams: GridSpecParams = field(init=False)
+    """Grid spacing btn panels w.r.t figure"""
+
     def __post_init__(self):
+        self.W, self.H = self.pack.theme.getp("figure_size")
+
+        # Calculate the spacing along the edges of the panel area
+        # (spacing required by plotnine)
         self.l = left_spaces(self.pack)
         self.r = right_spaces(self.pack)
         self.t = top_spaces(self.pack)
         self.b = bottom_spaces(self.pack)
 
-    def make_wider(self, dw: float):
-        """
-        Increase the horizontal edge space
-        """
-        self.l.plot_margin += dw
-        self.r.plot_margin += dw
+        # Calculate the gridspec params
+        # (spacing required by mpl)
+        self.gsparams = self._calculate_panel_spacing()
 
-    def make_taller(self, dh: float):
-        """
-        Increase the vertical edge space
-        """
-        self.t.plot_margin += dh
-        self.b.plot_margin += dh
+        # Adjust the spacing parameters for the desired aspect ratio
+        # It is simpler to adjust for the aspect ratio than to calculate
+        # the final parameters that are true to the aspect ratio in
+        # one-short
+        if (ratio := self.pack.facet._aspect_ratio()) is not None:
+            current_ratio = self.aspect_ratio
+            if ratio > current_ratio:
+                # Increase aspect ratio, taller panels
+                self._reduce_width(ratio)
+            elif ratio < current_ratio:
+                # Increase aspect ratio, wider panels
+                self._reduce_height(ratio)
 
     @property
     def left(self):
@@ -416,114 +448,163 @@ class EdgeSpaces:
         """
         return self.b.total
 
+    def increase_horizontal_plot_margin(self, dw: float):
+        """
+        Increase the plot_margin to the right & left of the panels
+        """
+        self.l.plot_margin += dw
+        self.r.plot_margin += dw
 
-def calculate_panel_spacing(
-    pack: LayoutPack, edges: EdgeSpaces
-) -> WHSpaceParts:
-    """
-    Spacing between the panels (wspace & hspace)
+    def increase_vertical_plot_margin(self, dh: float):
+        """
+        Increase the plot_margin to the above & below of the panels
+        """
+        self.t.plot_margin += dh
+        self.b.plot_margin += dh
 
-    Both spaces are calculated from a fraction of the width.
-    This ensures that the same fraction gives equals space
-    in both directions.
-    """
-    if isinstance(pack.facet, facet_wrap):
-        return _calculate_panel_spacing_facet_wrap(pack, edges)
-    elif isinstance(pack.facet, facet_grid):
-        return _calculate_panel_spacing_facet_grid(pack, edges)
-    elif isinstance(pack.facet, facet_null):
-        return _calculate_panel_spacing_facet_null(pack, edges)
-    return WHSpaceParts(0, 0, 0, 0, 0, 0, 0, 0)
+    def _calculate_panel_spacing(self) -> GridSpecParams:
+        """
+        Spacing between the panels (wspace & hspace)
 
+        Both spaces are calculated from a fraction of the width.
+        This ensures that the same fraction gives equals space
+        in both directions.
+        """
+        if isinstance(self.pack.facet, facet_wrap):
+            wspace, hspace = self._calculate_panel_spacing_facet_wrap()
+        elif isinstance(self.pack.facet, facet_grid):
+            wspace, hspace = self._calculate_panel_spacing_facet_grid()
+        elif isinstance(self.pack.facet, facet_null):
+            wspace, hspace = self._calculate_panel_spacing_facet_null()
+        else:
+            raise TypeError(f"Unknown type of facet: {type(self.pack.facet)}")
 
-def _calculate_panel_spacing_facet_grid(
-    pack: LayoutPack, edges: EdgeSpaces
-) -> WHSpaceParts:
-    """
-    Calculate spacing parts for facet_grid
-    """
-    pack.facet = cast("facet_grid", pack.facet)
-    theme = pack.theme
+        return GridSpecParams(
+             self.left, self.right, self.top, self.bottom, wspace, hspace
+         )
 
-    ncol = pack.facet.ncol
-    nrow = pack.facet.nrow
+    def _calculate_panel_spacing_facet_grid(self) -> tuple[float, float]:
+        """
+        Calculate spacing parts for facet_grid
+        """
+        theme = self.pack.theme
 
-    W, H = theme.getp("figure_size")
+        ncol = self.pack.facet.ncol
+        nrow = self.pack.facet.nrow
 
-    # Both spacings are specified as fractions of the figure width
-    # Multiply the vertical by (W/H) so that the gullies along both
-    # directions are equally spaced.
-    sw = theme.getp("panel_spacing_x")
-    sh = theme.getp("panel_spacing_y") * W / H
+        W, H = theme.getp("figure_size")
 
-    # width and height of axes as fraction of figure width & height
-    w = ((edges.right - edges.left) - sw * (ncol - 1)) / ncol
-    h = ((edges.top - edges.bottom) - sh * (nrow - 1)) / nrow
+        # Both spacings are specified as fractions of the figure width
+        # Multiply the vertical by (W/H) so that the gullies along both
+        # directions are equally spaced.
+        self.sw = theme.getp("panel_spacing_x")
+        self.sh = theme.getp("panel_spacing_y") * W / H
 
-    # Spacing as fraction of axes width & height
-    wspace = sw / w
-    hspace = sh / h
+        # width and height of axes as fraction of figure width & height
+        self.w = ((self.right - self.left) - self.sw * (ncol - 1)) / ncol
+        self.h = ((self.top - self.bottom) - self.sh * (nrow - 1)) / nrow
 
-    return WHSpaceParts(W, H, w, h, sw, sh, wspace, hspace)
+        # Spacing as fraction of axes width & height
+        wspace = self.sw / self.w
+        hspace = self.sh / self.h
+        return (wspace, hspace)
 
+    def _calculate_panel_spacing_facet_wrap(self) -> tuple[float, float]:
+        """
+        Calculate spacing parts for facet_wrap
+        """
+        facet = self.pack.facet
+        theme = self.pack.theme
 
-def _calculate_panel_spacing_facet_wrap(
-    pack: LayoutPack, edges: EdgeSpaces
-) -> WHSpaceParts:
-    """
-    Calculate spacing parts for facet_wrap
-    """
-    pack.facet = cast("facet_wrap", pack.facet)
-    theme = pack.theme
+        ncol = facet.ncol
+        nrow = facet.nrow
+        W, H = theme.getp("figure_size")
 
-    ncol = pack.facet.ncol
-    nrow = pack.facet.nrow
+        # Both spacings are specified as fractions of the figure width
+        self.sw = theme.getp("panel_spacing_x")
+        self.sh = theme.getp("panel_spacing_y") * W / H
 
-    W, H = theme.getp("figure_size")
+        # A fraction of the strip height
+        # Effectively slides the strip
+        #   +ve: Away from the panel
+        #    0:  Top of the panel
+        #   -ve: Into the panel
+        # Where values <= -1, put the strip completely into
+        # the panel. We do not worry about larger -ves.
+        strip_align_x = theme.getp("strip_align_x")
 
-    # Both spacings are specified as fractions of the figure width
-    sw = theme.getp("panel_spacing_x")
-    sh = theme.getp("panel_spacing_y") * W / H
+        # Only interested in the proportion of the strip that
+        # does not overlap with the panel
+        if strip_align_x > -1:
+            self.sh += self.t.strip_text_x_height_top * (1 + strip_align_x)
 
-    # A fraction of the strip height
-    # Effectively slides the strip
-    #   +ve: Away from the panel
-    #    0:  Top of the panel
-    #   -ve: Into the panel
-    # Where values <= -1, put the strip completely into
-    # the panel. We do not worry about larger -ves.
-    strip_align_x = theme.getp("strip_align_x")
+        if facet.free["x"]:
+            self.sh += self.pack.axis_text_x_max_height(
+                "all"
+            ) + self.pack.axis_ticks_x_max_height("all")
+        if facet.free["y"]:
+            self.sw += self.pack.axis_text_y_max_width(
+                "all"
+            ) + self.pack.axis_ticks_y_max_width("all")
 
-    # Only interested in the proportion of the strip that
-    # does not overlap with the panel
-    if strip_align_x > -1:
-        sh += edges.t.strip_text_x_height_top * (1 + strip_align_x)
+        # width and height of axes as fraction of figure width & height
+        self.w = ((self.right - self.left) - self.sw * (ncol - 1)) / ncol
+        self.h = ((self.top - self.bottom) - self.sh * (nrow - 1)) / nrow
 
-    if pack.facet.free["x"]:
-        sh += pack.axis_text_x_max_height("all")
-        sh += pack.axis_ticks_x_max_height("all")
-    if pack.facet.free["y"]:
-        sw += pack.axis_text_y_max_width("all")
-        sw += pack.axis_ticks_y_max_width("all")
+        # Spacing as fraction of axes width & height
+        wspace = self.sw / self.w
+        hspace = self.sh / self.h
+        return (wspace, hspace)
 
-    # width and height of axes as fraction of figure width & height
-    w = ((edges.right - edges.left) - sw * (ncol - 1)) / ncol
-    h = ((edges.top - edges.bottom) - sh * (nrow - 1)) / nrow
+    def _calculate_panel_spacing_facet_null(self) -> tuple[float, float]:
+        """
+        Calculate spacing parts for facet_null
+        """
+        self.w = self.right - self.left
+        self.h = self.top - self.bottom
+        self.sw = 0
+        self.sh = 0
+        return 0, 0
 
-    # Spacing as fraction of axes width & height
-    wspace = sw / w
-    hspace = sh / h
+    def _reduce_height(self, ratio: float):
+        """
+        Reduce the height of axes to get the aspect ratio
+        """
+        # New height w.r.t figure height
+        h1 = ratio * self.w * (self.W / self.H)
 
-    return WHSpaceParts(W, H, w, h, sw, sh, wspace, hspace)
+        # Half of the total vertical reduction w.r.t figure height
+        dh = (self.h - h1) * self.pack.facet.nrow / 2
 
+        # Reduce plot area height
+        self.gsparams.top -= dh
+        self.gsparams.bottom += dh
+        self.gsparams.hspace = self.sh / h1
 
-def _calculate_panel_spacing_facet_null(
-    pack: LayoutPack, egdes: EdgeSpaces
-) -> WHSpaceParts:
-    """
-    Calculate spacing parts for facet_null
-    """
-    W, H = pack.theme.getp("figure_size")
-    w = egdes.right - egdes.left
-    h = egdes.top - egdes.bottom
-    return WHSpaceParts(W, H, w, h, 0, 0, 0, 0)
+        # Add more vertical plot margin
+        self.increase_vertical_plot_margin(dh)
+
+    def _reduce_width(self, ratio: float):
+        """
+        Reduce the width of axes to get the aspect ratio
+        """
+        # New width w.r.t figure width
+        w1 = (self.h * self.H) / (ratio * self.W)
+
+        # Half of the total horizontal reduction w.r.t figure width
+        dw = (self.w - w1) * self.pack.facet.ncol / 2
+
+        # Reduce width
+        self.gsparams.left += dw
+        self.gsparams.right -= dw
+        self.gsparams.wspace = self.sw / w1
+
+        # Add more horizontal margin
+        self.increase_horizontal_plot_margin(dw)
+
+    @property
+    def aspect_ratio(self) -> float:
+        """
+        Default aspect ratio of the panels
+        """
+        return (self.h * self.H) / (self.w * self.W)
