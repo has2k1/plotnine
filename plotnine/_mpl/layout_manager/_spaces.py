@@ -18,11 +18,13 @@ from typing import TYPE_CHECKING
 
 from plotnine.facets import facet_grid, facet_null, facet_wrap
 
+from ._layout_items import LayoutItems
+
 if TYPE_CHECKING:
     from dataclasses import Field
     from typing import Generator
 
-    from ._layout_pack import LayoutPack
+    from plotnine import ggplot
 
 
 # Note
@@ -56,7 +58,7 @@ class _side_spaces(ABC):
     side classes (e.g. legend).
     """
 
-    pack: LayoutPack
+    items: LayoutItems
 
     def __post_init__(self):
         self._calculate()
@@ -131,39 +133,39 @@ class left_spaces(_side_spaces):
     axis_ticks_y: float = 0
 
     def _calculate(self):
-        theme = self.pack.theme
-        calc = self.pack.calc
-        pack = self.pack
+        theme = self.items.plot.theme
+        calc = self.items.calc
+        items = self.items
 
         self.plot_margin = theme.getp("plot_margin_left")
-        if pack.legends and pack.legends.left:
+        if items.legends and items.legends.left:
             self.legend = self._legend_width
             self.legend_box_spacing = theme.getp("legend_box_spacing")
 
-        if pack.axis_title_y:
+        if items.axis_title_y:
             self.axis_title_y_margin_right = theme.getp(
                 ("axis_title_y", "margin")
             ).get_as("r", "fig")
-            self.axis_title_y = calc.width(pack.axis_title_y)
+            self.axis_title_y = calc.width(items.axis_title_y)
 
         # Account for the space consumed by the axis
-        self.axis_text_y = pack.axis_text_y_max_width("first_col")
-        self.axis_ticks_y = pack.axis_ticks_y_max_width("first_col")
+        self.axis_text_y = items.axis_text_y_max_width("first_col")
+        self.axis_ticks_y = items.axis_ticks_y_max_width("first_col")
 
         # Adjust plot_margin to make room for ylabels that protude well
         # beyond the axes
         # NOTE: This adjustment breaks down when the protrusion is large
-        protrusion = pack.axis_text_x_left_protrusion("all")
+        protrusion = items.axis_text_x_left_protrusion("all")
         adjustment = protrusion - (self.total - self.plot_margin)
         if adjustment > 0:
             self.plot_margin += adjustment
 
     @cached_property
     def _legend_size(self) -> tuple[float, float]:
-        if not (self.pack.legends and self.pack.legends.left):
+        if not (self.items.legends and self.items.legends.left):
             return (0, 0)
 
-        return self.pack.calc.size(self.pack.legends.left.box)
+        return self.items.calc.size(self.items.legends.left.box)
 
     def edge(self, item: str) -> float:
         """
@@ -186,30 +188,30 @@ class right_spaces(_side_spaces):
     strip_text_y_width_right: float = 0
 
     def _calculate(self):
-        pack = self.pack
-        theme = self.pack.theme
+        items = self.items
+        theme = self.items.plot.theme
 
         self.plot_margin = theme.getp("plot_margin_right")
-        if pack.legends and pack.legends.right:
+        if items.legends and items.legends.right:
             self.legend = self._legend_width
             self.legend_box_spacing = theme.getp("legend_box_spacing")
 
-        self.strip_text_y_width_right = pack.strip_text_y_width("right")
+        self.strip_text_y_width_right = items.strip_text_y_width("right")
 
         # Adjust plot_margin to make room for ylabels that protude well
         # beyond the axes
         # NOTE: This adjustment breaks down when the protrusion is large
-        protrusion = pack.axis_text_x_right_protrusion("all")
+        protrusion = items.axis_text_x_right_protrusion("all")
         adjustment = protrusion - (self.total - self.plot_margin)
         if adjustment > 0:
             self.plot_margin += adjustment
 
     @cached_property
     def _legend_size(self) -> tuple[float, float]:
-        if not (self.pack.legends and self.pack.legends.right):
+        if not (self.items.legends and self.items.legends.right):
             return (0, 0)
 
-        return self.pack.calc.size(self.pack.legends.right.box)
+        return self.items.calc.size(self.items.legends.right.box)
 
     def edge(self, item: str) -> float:
         """
@@ -236,45 +238,45 @@ class top_spaces(_side_spaces):
     strip_text_x_height_top: float = 0
 
     def _calculate(self):
-        pack = self.pack
-        theme = self.pack.theme
-        calc = self.pack.calc
+        items = self.items
+        theme = self.items.plot.theme
+        calc = self.items.calc
         W, H = theme.getp("figure_size")
         F = W / H
 
         self.plot_margin = theme.getp("plot_margin_top") * F
-        if pack.plot_title:
-            self.plot_title = calc.height(pack.plot_title)
+        if items.plot_title:
+            self.plot_title = calc.height(items.plot_title)
             self.plot_title_margin_bottom = (
                 theme.getp(("plot_title", "margin")).get_as("b", "fig") * F
             )
 
-        if pack.plot_subtitle:
-            self.plot_subtitle = calc.height(pack.plot_subtitle)
+        if items.plot_subtitle:
+            self.plot_subtitle = calc.height(items.plot_subtitle)
             self.plot_subtitle_margin_bottom = (
                 theme.getp(("plot_subtitle", "margin")).get_as("b", "fig") * F
             )
 
-        if pack.legends and pack.legends.top:
+        if items.legends and items.legends.top:
             self.legend = self._legend_height
             self.legend_box_spacing = theme.getp("legend_box_spacing") * F
 
-        self.strip_text_x_height_top = pack.strip_text_x_height("top")
+        self.strip_text_x_height_top = items.strip_text_x_height("top")
 
         # Adjust plot_margin to make room for ylabels that protude well
         # beyond the axes
         # NOTE: This adjustment breaks down when the protrusion is large
-        protrusion = pack.axis_text_y_top_protrusion("all")
+        protrusion = items.axis_text_y_top_protrusion("all")
         adjustment = protrusion - (self.total - self.plot_margin)
         if adjustment > 0:
             self.plot_margin += adjustment
 
     @cached_property
     def _legend_size(self) -> tuple[float, float]:
-        if not (self.pack.legends and self.pack.legends.top):
+        if not (self.items.legends and self.items.legends.top):
             return (0, 0)
 
-        return self.pack.calc.size(self.pack.legends.top.box)
+        return self.items.calc.size(self.items.legends.top.box)
 
     def edge(self, item: str) -> float:
         """
@@ -302,48 +304,48 @@ class bottom_spaces(_side_spaces):
     axis_ticks_x: float = 0
 
     def _calculate(self):
-        pack = self.pack
-        theme = self.pack.theme
-        calc = self.pack.calc
+        items = self.items
+        theme = self.items.plot.theme
+        calc = self.items.calc
         W, H = theme.getp("figure_size")
         F = W / H
 
         self.plot_margin = theme.getp("plot_margin_bottom") * F
 
-        if pack.plot_caption:
-            self.plot_caption = calc.height(pack.plot_caption)
+        if items.plot_caption:
+            self.plot_caption = calc.height(items.plot_caption)
             self.plot_caption_margin_top = (
                 theme.getp(("plot_caption", "margin")).get_as("t", "fig") * F
             )
 
-        if pack.legends and pack.legends.bottom:
+        if items.legends and items.legends.bottom:
             self.legend = self._legend_height
             self.legend_box_spacing = theme.getp("legend_box_spacing") * F
 
-        if pack.axis_title_x:
-            self.axis_title_x = calc.height(pack.axis_title_x)
+        if items.axis_title_x:
+            self.axis_title_x = calc.height(items.axis_title_x)
             self.axis_title_x_margin_top = (
                 theme.getp(("axis_title_x", "margin")).get_as("t", "fig") * F
             )
 
         # Account for the space consumed by the axis
-        self.axis_ticks_x = pack.axis_ticks_x_max_height("last_row")
-        self.axis_text_x = pack.axis_text_x_max_height("last_row")
+        self.axis_ticks_x = items.axis_ticks_x_max_height("last_row")
+        self.axis_text_x = items.axis_text_x_max_height("last_row")
 
         # Adjust plot_margin to make room for ylabels that protude well
         # beyond the axes
         # NOTE: This adjustment breaks down when the protrusion is large
-        protrusion = pack.axis_text_y_bottom_protrusion("all")
+        protrusion = items.axis_text_y_bottom_protrusion("all")
         adjustment = protrusion - (self.total - self.plot_margin)
         if adjustment > 0:
             self.plot_margin += adjustment
 
     @cached_property
     def _legend_size(self) -> tuple[float, float]:
-        if not (self.pack.legends and self.pack.legends.bottom):
+        if not (self.items.legends and self.items.legends.bottom):
             return (0, 0)
 
-        return self.pack.calc.size(self.pack.legends.bottom.box)
+        return self.items.calc.size(self.items.legends.bottom.box)
 
     def edge(self, item: str) -> float:
         """
@@ -355,10 +357,21 @@ class bottom_spaces(_side_spaces):
 @dataclass
 class LayoutSpaces:
     """
-    Space created by the layout management
+    Compute the all the spaces required in the layout
+
+    These are:
+
+    1. The space of each artist between the panel and the edge of the
+       figure.
+    2. The space in-between the panels
+
+    From these values, we put together the grid-spec parameters required
+    by matplotblib to position the axes. We also use the values to adjust
+    the coordinates of all the artists that occupy these spaces, placing
+    them in their final positions.
     """
 
-    pack: LayoutPack
+    plot: ggplot
 
     l: left_spaces = field(init=False)
     """All subspaces to the left of the panels"""
@@ -394,14 +407,15 @@ class LayoutSpaces:
     """Grid spacing btn panels w.r.t figure"""
 
     def __post_init__(self):
-        self.W, self.H = self.pack.theme.getp("figure_size")
+        self.items = LayoutItems(self.plot)
+        self.W, self.H = self.plot.theme.getp("figure_size")
 
         # Calculate the spacing along the edges of the panel area
         # (spacing required by plotnine)
-        self.l = left_spaces(self.pack)
-        self.r = right_spaces(self.pack)
-        self.t = top_spaces(self.pack)
-        self.b = bottom_spaces(self.pack)
+        self.l = left_spaces(self.items)
+        self.r = right_spaces(self.items)
+        self.t = top_spaces(self.items)
+        self.b = bottom_spaces(self.items)
 
         # Calculate the gridspec params
         # (spacing required by mpl)
@@ -411,7 +425,7 @@ class LayoutSpaces:
         # It is simpler to adjust for the aspect ratio than to calculate
         # the final parameters that are true to the aspect ratio in
         # one-short
-        if (ratio := self.pack.facet._aspect_ratio()) is not None:
+        if (ratio := self.plot.facet._aspect_ratio()) is not None:
             current_ratio = self.aspect_ratio
             if ratio > current_ratio:
                 # Increase aspect ratio, taller panels
@@ -470,14 +484,14 @@ class LayoutSpaces:
         This ensures that the same fraction gives equals space
         in both directions.
         """
-        if isinstance(self.pack.facet, facet_wrap):
+        if isinstance(self.plot.facet, facet_wrap):
             wspace, hspace = self._calculate_panel_spacing_facet_wrap()
-        elif isinstance(self.pack.facet, facet_grid):
+        elif isinstance(self.plot.facet, facet_grid):
             wspace, hspace = self._calculate_panel_spacing_facet_grid()
-        elif isinstance(self.pack.facet, facet_null):
+        elif isinstance(self.plot.facet, facet_null):
             wspace, hspace = self._calculate_panel_spacing_facet_null()
         else:
-            raise TypeError(f"Unknown type of facet: {type(self.pack.facet)}")
+            raise TypeError(f"Unknown type of facet: {type(self.plot.facet)}")
 
         return GridSpecParams(
             self.left, self.right, self.top, self.bottom, wspace, hspace
@@ -487,18 +501,16 @@ class LayoutSpaces:
         """
         Calculate spacing parts for facet_grid
         """
-        theme = self.pack.theme
+        theme = self.plot.theme
 
-        ncol = self.pack.facet.ncol
-        nrow = self.pack.facet.nrow
-
-        W, H = theme.getp("figure_size")
+        ncol = self.plot.facet.ncol
+        nrow = self.plot.facet.nrow
 
         # Both spacings are specified as fractions of the figure width
         # Multiply the vertical by (W/H) so that the gullies along both
         # directions are equally spaced.
         self.sw = theme.getp("panel_spacing_x")
-        self.sh = theme.getp("panel_spacing_y") * W / H
+        self.sh = theme.getp("panel_spacing_y") * self.W / self.H
 
         # width and height of axes as fraction of figure width & height
         self.w = ((self.right - self.left) - self.sw * (ncol - 1)) / ncol
@@ -513,16 +525,15 @@ class LayoutSpaces:
         """
         Calculate spacing parts for facet_wrap
         """
-        facet = self.pack.facet
-        theme = self.pack.theme
+        facet = self.plot.facet
+        theme = self.plot.theme
 
         ncol = facet.ncol
         nrow = facet.nrow
-        W, H = theme.getp("figure_size")
 
         # Both spacings are specified as fractions of the figure width
         self.sw = theme.getp("panel_spacing_x")
-        self.sh = theme.getp("panel_spacing_y") * W / H
+        self.sh = theme.getp("panel_spacing_y") * self.W / self.H
 
         # A fraction of the strip height
         # Effectively slides the strip
@@ -539,13 +550,13 @@ class LayoutSpaces:
             self.sh += self.t.strip_text_x_height_top * (1 + strip_align_x)
 
         if facet.free["x"]:
-            self.sh += self.pack.axis_text_x_max_height(
+            self.sh += self.items.axis_text_x_max_height(
                 "all"
-            ) + self.pack.axis_ticks_x_max_height("all")
+            ) + self.items.axis_ticks_x_max_height("all")
         if facet.free["y"]:
-            self.sw += self.pack.axis_text_y_max_width(
+            self.sw += self.items.axis_text_y_max_width(
                 "all"
-            ) + self.pack.axis_ticks_y_max_width("all")
+            ) + self.items.axis_ticks_y_max_width("all")
 
         # width and height of axes as fraction of figure width & height
         self.w = ((self.right - self.left) - self.sw * (ncol - 1)) / ncol
@@ -574,7 +585,7 @@ class LayoutSpaces:
         h1 = ratio * self.w * (self.W / self.H)
 
         # Half of the total vertical reduction w.r.t figure height
-        dh = (self.h - h1) * self.pack.facet.nrow / 2
+        dh = (self.h - h1) * self.plot.facet.nrow / 2
 
         # Reduce plot area height
         self.gsparams.top -= dh
@@ -592,7 +603,7 @@ class LayoutSpaces:
         w1 = (self.h * self.H) / (ratio * self.W)
 
         # Half of the total horizontal reduction w.r.t figure width
-        dw = (self.w - w1) * self.pack.facet.ncol / 2
+        dw = (self.w - w1) * self.plot.facet.ncol / 2
 
         # Reduce width
         self.gsparams.left += dw
