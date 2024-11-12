@@ -126,6 +126,8 @@ class theme_gray(theme):
                 ma="left",
                 margin={"b": m, "units": "fig"},
             ),
+            plot_title_position="panel",
+            plot_caption_position="panel",
             strip_align=0,
             strip_background=element_rect(color="none", fill="#D9D9D9"),
             strip_background_x=element_rect(width=1),

@@ -450,31 +450,39 @@ class LayoutItems:
         Set the x,y position of the artists around the panels
         """
         theme = self.plot.theme
+        plot_title_position = theme.getp("plot_title_position", "panel")
+        plot_caption_position = theme.getp("plot_caption_position", "panel")
 
         if self.plot_title:
             ha = theme.getp(("plot_title", "ha"))
             self.plot_title.set_y(spaces.t.edge("plot_title"))
-            horizontally_align_text_with_panels(self.plot_title, ha, spaces)
+            horizontally_align_text(
+                self.plot_title, ha, spaces, plot_title_position
+            )
 
         if self.plot_subtitle:
             ha = theme.getp(("plot_subtitle", "ha"))
             self.plot_subtitle.set_y(spaces.t.edge("plot_subtitle"))
-            horizontally_align_text_with_panels(self.plot_subtitle, ha, spaces)
+            horizontally_align_text(
+                self.plot_subtitle, ha, spaces, plot_title_position
+            )
 
         if self.plot_caption:
             ha = theme.getp(("plot_caption", "ha"), "right")
             self.plot_caption.set_y(spaces.b.edge("plot_caption"))
-            horizontally_align_text_with_panels(self.plot_caption, ha, spaces)
+            horizontally_align_text(
+                self.plot_caption, ha, spaces, plot_caption_position
+            )
 
         if self.axis_title_x:
             ha = theme.getp(("axis_title_x", "ha"), "center")
             self.axis_title_x.set_y(spaces.b.edge("axis_title_x"))
-            horizontally_align_text_with_panels(self.axis_title_x, ha, spaces)
+            horizontally_align_text(self.axis_title_x, ha, spaces)
 
         if self.axis_title_y:
             va = theme.getp(("axis_title_y", "va"), "center")
             self.axis_title_y.set_x(spaces.l.edge("axis_title_y"))
-            vertically_align_text_with_panels(self.axis_title_y, va, spaces)
+            vertically_align_text(self.axis_title_y, va, spaces)
 
         if self.legends:
             set_legends_position(self.legends, spaces)
@@ -487,13 +495,17 @@ def _text_is_visible(text: Text) -> bool:
     return text.get_visible() and text._text  # type: ignore
 
 
-def horizontally_align_text_with_panels(
-    text: Text, ha: str | float, spaces: LayoutSpaces
+def horizontally_align_text(
+    text: Text,
+    ha: str | float,
+    spaces: LayoutSpaces,
+    how: Literal["panel", "plot"] = "panel",
 ):
     """
     Horizontal justification
 
-    Reinterpret horizontal alignment to be justification about the panels.
+    Reinterpret horizontal alignment to be justification about the panels or
+    the plot (depending on the how parameter)
     """
     if isinstance(ha, str):
         lookup = {
@@ -505,20 +517,30 @@ def horizontally_align_text_with_panels(
     else:
         f = ha
 
-    params = spaces.gsparams
+    if how == "panel":
+        left = spaces.l.left
+        right = spaces.r.right
+    else:
+        left = spaces.l.plot_left
+        right = spaces.r.plot_right
+
     width = spaces.items.calc.width(text)
-    x = params.left * (1 - f) + (params.right - width) * f
+    x = left * (1 - f) + (right - width) * f
     text.set_x(x)
     text.set_horizontalalignment("left")
 
 
-def vertically_align_text_with_panels(
-    text: Text, va: str | float, spaces: LayoutSpaces
+def vertically_align_text(
+    text: Text,
+    va: str | float,
+    spaces: LayoutSpaces,
+    how: Literal["panel", "plot"] = "panel",
 ):
     """
     Vertical justification
 
-    Reinterpret vertical alignment to be justification about the panels.
+    Reinterpret vertical alignment to be justification about the panels or
+    the plot (depending on the how parameter).
     """
     if isinstance(va, str):
         lookup = {
@@ -532,9 +554,15 @@ def vertically_align_text_with_panels(
     else:
         f = va
 
-    params = spaces.gsparams
+    if how == "panel":
+        top = spaces.t.top
+        bottom = spaces.b.bottom
+    else:
+        top = spaces.t.plot_top
+        bottom = spaces.b.plot_bottom
+
     height = spaces.items.calc.height(text)
-    y = params.bottom * (1 - f) + (params.top - height) * f
+    y = bottom * (1 - f) + (top - height) * f
     text.set_y(y)
     text.set_verticalalignment("bottom")
 

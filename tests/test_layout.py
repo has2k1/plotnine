@@ -154,6 +154,13 @@ class TestLayout:
 
         assert p == "different_colorbar_themes"
 
+    def test_plot_titles_and_caption_positioning(self):
+        p = self.g + theme(
+            plot_title_position="plot",
+            plot_caption_position="plot",
+        )
+        assert p == "plot_titles_and_caption_positioning"
+
 
 class TestLegendPositioning:
     g = ggplot(mtcars, aes(x="wt", y="mpg", color="gear")) + geom_point()

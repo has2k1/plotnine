@@ -93,6 +93,8 @@ class theme_void(theme):
                 ma="left",
                 margin={"b": m, "units": "fig"},
             ),
+            plot_title_position="panel",
+            plot_caption_position="panel",
             strip_align=0,
             strip_text=element_text(
                 color="#1A1A1A",
