@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING
 
 from matplotlib.layout_engine import LayoutEngine
 
-from ._layout_pack import LayoutPack
+from ._spaces import LayoutSpaces
 
 if TYPE_CHECKING:
     from matplotlib.figure import Figure
@@ -33,12 +33,10 @@ class PlotnineLayoutEngine(LayoutEngine):
     def execute(self, fig: Figure):
         from contextlib import nullcontext
 
-        from ._tight_layout import adjust_figure_artists, compute_layout
+        renderer = fig._get_renderer()  # pyright: ignore[reportAttributeAccessIssue]
 
-        pack = LayoutPack(self.plot)
-
-        with getattr(pack.renderer, "_draw_disabled", nullcontext)():
-            spaces = compute_layout(pack)
+        with getattr(renderer, "_draw_disabled", nullcontext)():
+            spaces = LayoutSpaces(self.plot)
 
         fig.subplots_adjust(**asdict(spaces.gsparams))
-        adjust_figure_artists(pack, spaces)
+        spaces.items._adjust_positions(spaces)
