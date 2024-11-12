@@ -116,6 +116,8 @@ class theme_seaborn(theme):
                 ma="left",
                 margin={"b": m, "units": "fig"},
             ),
+            plot_title_position="panel",
+            plot_caption_position="panel",
             strip_align=0,
             strip_background=element_rect(color="none", fill="#D1CDDF"),
             strip_text=element_text(

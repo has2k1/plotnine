@@ -173,6 +173,20 @@ class left_spaces(_side_spaces):
         """
         return self.sum_upto(item)
 
+    @property
+    def left(self):
+        """
+        Left of the panels in figure space
+        """
+        return self.total
+
+    @property
+    def plot_left(self):
+        """
+        Distance in figure space from left edge upto where artists start
+        """
+        return self.edge("legend")
+
 
 @dataclass
 class right_spaces(_side_spaces):
@@ -218,6 +232,20 @@ class right_spaces(_side_spaces):
         Distance w.r.t figure width from the right edge of the figure
         """
         return 1 - self.sum_upto(item)
+
+    @property
+    def right(self):
+        """
+        Right of the panels in figure space
+        """
+        return 1 - self.total
+
+    @property
+    def plot_right(self):
+        """
+        Distance in figure space from right edge upto where artists start
+        """
+        return self.edge("legend")
 
 
 @dataclass
@@ -283,6 +311,20 @@ class top_spaces(_side_spaces):
         Distance w.r.t figure height from the top edge of the figure
         """
         return 1 - self.sum_upto(item)
+
+    @property
+    def top(self):
+        """
+        Top of the panels in figure space
+        """
+        return 1 - self.total
+
+    @property
+    def plot_top(self):
+        """
+        Distance in figure space from top edge upto where artists start
+        """
+        return self.edge("legend")
 
 
 @dataclass
@@ -352,6 +394,20 @@ class bottom_spaces(_side_spaces):
         Distance w.r.t figure height from the bottom edge of the figure
         """
         return self.sum_upto(item)
+
+    @property
+    def bottom(self):
+        """
+        Bottom of the panels in figure space
+        """
+        return self.total
+
+    @property
+    def plot_bottom(self):
+        """
+        Distance in figure space from bottom edge upto where artists start
+        """
+        return self.edge("legend")
 
 
 @dataclass
@@ -434,34 +490,6 @@ class LayoutSpaces:
                 # Increase aspect ratio, wider panels
                 self._reduce_height(ratio)
 
-    @property
-    def left(self):
-        """
-        Left of the panels in figure space
-        """
-        return self.l.total
-
-    @property
-    def right(self):
-        """
-        Right of the panels in figure space
-        """
-        return 1 - self.r.total
-
-    @property
-    def top(self):
-        """
-        Top of the panels in figure space
-        """
-        return 1 - self.t.total
-
-    @property
-    def bottom(self):
-        """
-        Bottom of the panels in figure space
-        """
-        return self.b.total
-
     def increase_horizontal_plot_margin(self, dw: float):
         """
         Increase the plot_margin to the right & left of the panels
@@ -494,7 +522,12 @@ class LayoutSpaces:
             raise TypeError(f"Unknown type of facet: {type(self.plot.facet)}")
 
         return GridSpecParams(
-            self.left, self.right, self.top, self.bottom, wspace, hspace
+            self.l.left,
+            self.r.right,
+            self.t.top,
+            self.b.bottom,
+            wspace,
+            hspace,
         )
 
     def _calculate_panel_spacing_facet_grid(self) -> tuple[float, float]:
@@ -513,8 +546,8 @@ class LayoutSpaces:
         self.sh = theme.getp("panel_spacing_y") * self.W / self.H
 
         # width and height of axes as fraction of figure width & height
-        self.w = ((self.right - self.left) - self.sw * (ncol - 1)) / ncol
-        self.h = ((self.top - self.bottom) - self.sh * (nrow - 1)) / nrow
+        self.w = ((self.r.right - self.l.left) - self.sw * (ncol - 1)) / ncol
+        self.h = ((self.t.top - self.b.bottom) - self.sh * (nrow - 1)) / nrow
 
         # Spacing as fraction of axes width & height
         wspace = self.sw / self.w
@@ -559,8 +592,8 @@ class LayoutSpaces:
             ) + self.items.axis_ticks_y_max_width("all")
 
         # width and height of axes as fraction of figure width & height
-        self.w = ((self.right - self.left) - self.sw * (ncol - 1)) / ncol
-        self.h = ((self.top - self.bottom) - self.sh * (nrow - 1)) / nrow
+        self.w = ((self.r.right - self.l.left) - self.sw * (ncol - 1)) / ncol
+        self.h = ((self.t.top - self.b.bottom) - self.sh * (nrow - 1)) / nrow
 
         # Spacing as fraction of axes width & height
         wspace = self.sw / self.w
@@ -571,8 +604,8 @@ class LayoutSpaces:
         """
         Calculate spacing parts for facet_null
         """
-        self.w = self.right - self.left
-        self.h = self.top - self.bottom
+        self.w = self.r.right - self.l.left
+        self.h = self.t.top - self.b.bottom
         self.sw = 0
         self.sh = 0
         return 0, 0
