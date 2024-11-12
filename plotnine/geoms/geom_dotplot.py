@@ -204,7 +204,7 @@ class geom_dotplot(geom):
         ax_width, ax_height = bbox.width, bbox.height
 
         factor = (ax_width / ax_height) * np.ptp(ranges.y) / np.ptp(ranges.x)
-        size = data.loc[0, "binwidth"] * params["dotsize"]
+        size = data["binwidth"].iloc[0] * params["dotsize"]
         offsets = data["stackpos"] * params["stackratio"]
 
         if params["binaxis"] == "x":

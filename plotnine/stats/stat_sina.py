@@ -98,7 +98,7 @@ class stat_sina(stat):
         if (
             array_kind.continuous(data["x"])
             and not has_groups(data)
-            and (data["x"] != data.loc["x", 0]).any()
+            and (data["x"] != data["x"].iloc[0]).any()
         ):
             raise TypeError(
                 "Continuous x aesthetic -- did you forget " "aes(group=...)?"
