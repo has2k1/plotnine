@@ -54,7 +54,6 @@ class theme_gray(theme):
             axis_ticks_length_major=quarter_line,
             axis_ticks_length_minor=eighth_line,
             axis_ticks_minor=element_blank(),
-            axis_ticks_pad=2,
             axis_title_x=element_text(
                 va="bottom", ha="center", margin={"t": m, "units": "fig"}
             ),

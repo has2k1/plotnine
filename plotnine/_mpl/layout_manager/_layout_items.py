@@ -281,7 +281,7 @@ class LayoutItems:
 
         return chain(major, minor)
 
-    def axis_ticks_pad_x(self, ax: Axes) -> Iterator[float]:
+    def axis_text_x_margin(self, ax: Axes) -> Iterator[float]:
         """
         Return XTicks paddings
         """
@@ -298,7 +298,7 @@ class LayoutItems:
             ]
         return chain(major, minor)
 
-    def axis_ticks_pad_y(self, ax: Axes) -> Iterator[float]:
+    def axis_text_y_margin(self, ax: Axes) -> Iterator[float]:
         """
         Return YTicks paddings
         """
@@ -362,7 +362,7 @@ class LayoutItems:
             self.calc.tight_height(label) + pad
             for ax in self._filter_axes(location)
             for label, pad in zip(
-                self.axis_text_x(ax), self.axis_ticks_pad_x(ax)
+                self.axis_text_x(ax), self.axis_text_x_margin(ax)
             )
         ]
         return max(heights) if len(heights) else 0
@@ -386,7 +386,7 @@ class LayoutItems:
             self.calc.tight_width(label) + pad
             for ax in self._filter_axes(location)
             for label, pad in zip(
-                self.axis_text_y(ax), self.axis_ticks_pad_y(ax)
+                self.axis_text_y(ax), self.axis_text_y_margin(ax)
             )
         ]
         return max(widths) if len(widths) else 0
