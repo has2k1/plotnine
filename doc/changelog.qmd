@@ -5,6 +5,20 @@ title: Changelog
 ## v0.15.0
 (not-yet-released)
 
+### API Changes
+
+-  Themeables
+   `axis_ticks_pad`,
+   `axis_ticks_pad_minor`,
+   `axis_ticks_pad_major`,
+   `axis_ticks_pad_minor_x`,
+   `axis_ticks_pad_minor_y`,
+   `axis_ticks_pad_major_x` and
+   `axis_ticks_pad_major_y` have been deprecated. Use the `margin` parameter
+   of [](:class:`~plotnine.element_text`) with `axis_text`, `axis_text_x`
+   or `axis_text_y` to control the spacing between the axis text and the ticks.
+   ({{< issue 843 >}})
+
 ### New Features
 
 - Using
