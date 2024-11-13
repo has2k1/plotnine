@@ -221,7 +221,7 @@ class LayoutItems:
             if getattr(spec, pred_method)()
         ]
 
-    def axis_labels_x(self, ax: Axes) -> Iterator[Text]:
+    def axis_text_x(self, ax: Axes) -> Iterator[Text]:
         """
         Return all x-axis labels for an axes that will be shown
         """
@@ -237,7 +237,7 @@ class LayoutItems:
             if _text_is_visible(tick.label1)
         )
 
-    def axis_labels_y(self, ax: Axes) -> Iterator[Text]:
+    def axis_text_y(self, ax: Axes) -> Iterator[Text]:
         """
         Return all y-axis labels for an axes that will be shown
         """
@@ -362,7 +362,7 @@ class LayoutItems:
             self.calc.tight_height(label) + pad
             for ax in self._filter_axes(location)
             for label, pad in zip(
-                self.axis_labels_x(ax), self.axis_ticks_pad_x(ax)
+                self.axis_text_x(ax), self.axis_ticks_pad_x(ax)
             )
         ]
         return max(heights) if len(heights) else 0
@@ -386,7 +386,7 @@ class LayoutItems:
             self.calc.tight_width(label) + pad
             for ax in self._filter_axes(location)
             for label, pad in zip(
-                self.axis_labels_y(ax), self.axis_ticks_pad_y(ax)
+                self.axis_text_y(ax), self.axis_ticks_pad_y(ax)
             )
         ]
         return max(widths) if len(widths) else 0
@@ -398,7 +398,7 @@ class LayoutItems:
         extras = []
         for ax in self._filter_axes(location):
             ax_top_y = self.calc.top_y(ax)
-            for label in self.axis_labels_y(ax):
+            for label in self.axis_text_y(ax):
                 label_top_y = self.calc.top_y(label)
                 extras.append(max(0, label_top_y - ax_top_y))
 
@@ -411,7 +411,7 @@ class LayoutItems:
         extras = []
         for ax in self._filter_axes(location):
             ax_bottom_y = self.calc.bottom_y(ax)
-            for label in self.axis_labels_y(ax):
+            for label in self.axis_text_y(ax):
                 label_bottom_y = self.calc.bottom_y(label)
                 protrusion = abs(min(label_bottom_y - ax_bottom_y, 0))
                 extras.append(protrusion)
@@ -425,7 +425,7 @@ class LayoutItems:
         extras = []
         for ax in self._filter_axes(location):
             ax_left_x = self.calc.left_x(ax)
-            for label in self.axis_labels_x(ax):
+            for label in self.axis_text_x(ax):
                 label_left_x = self.calc.left_x(label)
                 protrusion = abs(min(label_left_x - ax_left_x, 0))
                 extras.append(protrusion)
@@ -439,7 +439,7 @@ class LayoutItems:
         extras = []
         for ax in self._filter_axes(location):
             ax_right_x = self.calc.right_x(ax)
-            for label in self.axis_labels_x(ax):
+            for label in self.axis_text_x(ax):
                 label_right_x = self.calc.right_x(label)
                 extras.append(max(0, label_right_x - ax_right_x))
 
