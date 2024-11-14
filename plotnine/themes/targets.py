@@ -37,6 +37,7 @@ class ThemeTargets:
     panel_border: list[Rectangle] = field(default_factory=list)
     plot_caption: Optional[Text] = None
     plot_subtitle: Optional[Text] = None
+    plot_tag: Optional[Text] = None
     plot_title: Optional[Text] = None
     strip_background_x: list[StripTextPatch] = field(default_factory=list)
     strip_background_y: list[StripTextPatch] = field(default_factory=list)

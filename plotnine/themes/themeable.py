@@ -719,27 +719,33 @@ class plot_caption(themeable):
             text.set_visible(False)
 
 
-class strip_text_x(MixinSequenceOfValues):
+class plot_tag(themeable):
     """
-    Facet labels along the horizontal axis
+    Plot tag
 
     Parameters
     ----------
     theme_element : element_text
+
+    Notes
+    -----
+    The `ha` & `va` of element_text will only have an effect if the
+    have no effect if the
+    [](:class:`~plotnine.themes.themeable.plot_tag_position`)
+    is given as x-y coordinates.
     """
 
     _omit = ["margin"]
 
     def apply_figure(self, figure: Figure, targets: ThemeTargets):
         super().apply_figure(figure, targets)
-        if texts := targets.strip_text_x:
-            self.set(texts)
+        if text := targets.plot_tag:
+            text.set(**self.properties)
 
     def blank_figure(self, figure: Figure, targets: ThemeTargets):
         super().blank_figure(figure, targets)
-        if texts := targets.strip_text_x:
-            for text in texts:
-                text.set_visible(False)
+        if text := targets.plot_tag:
+            text.set_visible(False)
 
 
 class plot_title_position(themeable):
@@ -766,6 +772,57 @@ class plot_caption_position(themeable):
         panels. If "plot", it is aligned with the plot, excluding
         the margin space.
     """
+
+
+class plot_tag_location(themeable):
+    """
+    The area where the tag will be positioned
+
+    Parameters
+    ----------
+    theme_element : Literal["margin", "plot", "panel"], default = "margin"
+        If "margin", it is placed within the plot_margin.
+        If "plot", it is placed in the figure, ignoring any margins.
+        If "panel", it is placed within the panel area.
+    """
+
+
+class plot_tag_position(themeable):
+    """
+    Position of the tag
+
+    Parameters
+    ----------
+    theme_element : Literal["topleft", "top", "topright", "left" \
+                    "right", "bottomleft", "bottom", "bottomleft"] \
+                    | tuple[float, float], default = "topleft"
+        If the value is a string, the tag will be managed by the layout
+        manager. If it is a tuple of (x, y) coordinates, they should be
+        in figure space and the tag will be ignored by the layout manager.
+    """
+
+
+class strip_text_x(MixinSequenceOfValues):
+    """
+    Facet labels along the horizontal axis
+
+    Parameters
+    ----------
+    theme_element : element_text
+    """
+
+    _omit = ["margin"]
+
+    def apply_figure(self, figure: Figure, targets: ThemeTargets):
+        super().apply_figure(figure, targets)
+        if texts := targets.strip_text_x:
+            self.set(texts)
+
+    def blank_figure(self, figure: Figure, targets: ThemeTargets):
+        super().blank_figure(figure, targets)
+        if texts := targets.strip_text_x:
+            for text in texts:
+                text.set_visible(False)
 
 
 class strip_text_y(MixinSequenceOfValues):
@@ -801,7 +858,9 @@ class strip_text(strip_text_x, strip_text_y):
     """
 
 
-class title(axis_title, legend_title, plot_title, plot_subtitle, plot_caption):
+class title(
+    axis_title, legend_title, plot_title, plot_subtitle, plot_caption, plot_tag
+):
     """
     All titles on the plot
 
