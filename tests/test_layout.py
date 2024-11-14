@@ -264,3 +264,56 @@ class TestLegendPositioning:
             )
         )
         assert p == "justification_with_blank_title_and_text"
+
+
+class TestPlotTagLayout:
+    g = (
+        ggplot(mtcars, aes(x="wt", y="mpg", color="gear"))
+        + geom_point()
+        + labs(
+            tag="ABC",
+            title="The Title of the Plot",
+            subtitle="The Subtitle of the Plot is Longer than the title",
+        )
+        + theme(
+            plot_tag=element_text(color="red"),
+        )
+    )
+
+    def test_default_tag_location(self):
+        assert self.g == "default_tag_location"
+
+    def test_margin_bottom(self):
+        p = self.g + theme(
+            plot_tag_location="margin",
+            plot_tag_position="bottom",
+        )
+        assert p == "margin_bottom"
+
+    def test_plot_topright(self):
+        p = self.g + theme(
+            plot_tag_location="plot",
+            plot_tag_position="topright",
+        )
+        assert p == "plot_topright"
+
+    def test_panel_bottomleft(self):
+        p = self.g + theme(
+            plot_tag_location="panel",
+            plot_tag_position="bottomleft",
+        )
+        assert p == "panel_bottomleft"
+
+    def test_plot_xycoords(self):
+        p = self.g + theme(
+            plot_tag_location="plot",
+            plot_tag_position=(0.15, 0.95),
+        )
+        assert p == "plot_xycoords"
+
+    def test_panel_xycoords(self):
+        p = self.g + theme(
+            plot_tag_location="panel",
+            plot_tag_position=(0.15, 0.95),
+        )
+        assert p == "panel_xycoords"

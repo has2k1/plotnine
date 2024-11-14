@@ -8,6 +8,8 @@ from matplotlib._tight_layout import get_subplotspec_list
 from matplotlib.backend_bases import RendererBase
 from matplotlib.text import Text
 
+from plotnine.exceptions import PlotnineError
+
 from ..utils import (
     bbox_in_figure_space,
     get_transPanels,
@@ -198,6 +200,7 @@ class LayoutItems:
         self.plot_caption: Text | None = get("plot_caption")
         self.plot_subtitle: Text | None = get("plot_subtitle")
         self.plot_title: Text | None = get("plot_title")
+        self.plot_tag: Text | None = get("plot_tag")
         self.strip_text_x: list[StripText] | None = get("strip_text_x")
         self.strip_text_y: list[StripText] | None = get("strip_text_y")
 
@@ -453,6 +456,9 @@ class LayoutItems:
         plot_title_position = theme.getp("plot_title_position", "panel")
         plot_caption_position = theme.getp("plot_caption_position", "panel")
 
+        if self.plot_tag:
+            set_plot_tag_position(self.plot_tag, spaces)
+
         if self.plot_title:
             ha = theme.getp(("plot_title", "ha"))
             self.plot_title.set_y(spaces.t.y2("plot_title"))
@@ -632,3 +638,47 @@ def set_legends_position(legends: legend_artists, spaces: LayoutSpaces):
         transPanels = get_transPanels(figure)
         for l in legends.inside:
             set_position(l.box, l.position, l.justification, transPanels)
+
+
+def set_plot_tag_position(tag: Text, spaces: LayoutSpaces):
+    figure = spaces.plot.figure
+    theme = spaces.plot.theme
+    location = theme.getp("plot_tag_location")
+    position = theme.getp("plot_tag_position")
+
+    lookup = {
+        "topleft": (0, 1),
+        "top": (0.5, 1),
+        "topright": (1, 1),
+        "left": (0, 0.5),
+        "right": (1, 0.5),
+        "bottomleft": (0, 0),
+        "bottom": (0.5, 0),
+        "bottomright": (1, 0),
+    }
+
+    if isinstance(position, str):
+        if location == "margin":
+            (x1, y1), (x2, y2) = spaces.margin_area_coordinates
+        elif location == "plot":
+            (x1, y1), (x2, y2) = spaces.plot_area_coordinates
+        else:
+            (x1, y1), (x2, y2) = spaces.panel_area_coordinates
+
+        fx, fy = lookup[position]
+        width, height = spaces.items.calc.size(tag)
+        x = x1 * (1 - fx) + (x2 - width) * fx
+        y = y1 * (1 - fy) + (y2 - height) * fy
+
+        tag.set_position((x, y))
+        tag.set_horizontalalignment("left")
+        tag.set_verticalalignment("bottom")
+    else:
+        if location == "panel":
+            tag.set_transform(get_transPanels(figure))
+        elif location == "margin":
+            raise PlotnineError(
+                f"Cannot have plot_tag_location={location!r} if "
+                f"plot_tag_position={position!r}."
+            )
+        tag.set_position(position)

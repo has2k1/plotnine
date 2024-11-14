@@ -35,6 +35,28 @@ title: Changelog
   You can now position the `plot_title`, `plot_subtitle` and `plot_caption`
   by alignment them with respect to the plot. ({{< issue 838 >}})
 
+- Gained new label `tag` to create a tag for a plot. You can set it with
+  [](:class:`~plotnine.labs`) e.g.
+
+  ```python
+  labs(tag="A")
+  ```
+  and customise it using these themeables
+
+  [](:class:`~plotnine.themes.themeables.plot_tag`) and
+  [](:class:`~plotnine.themes.themeables.plot_tag_position`) and
+  [](:class:`~plotnine.themes.themeables.plot_tag_location`)
+
+  e.g.
+
+  ```python
+  theme(
+     plot_tag="plot",
+     plot_tag_location="plot",
+     plot_tag_position="topright",
+  )
+  ```
+
 ## v0.14.5
 (2025-01-02)
 [![](https://zenodo.org/badge/DOI/10.5281/zenodo.14587381.svg)](https://doi.org/10.5281/zenodo.14587381)
