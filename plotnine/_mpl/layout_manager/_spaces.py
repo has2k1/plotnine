@@ -79,7 +79,7 @@ class _side_spaces(ABC):
         """
         Sum of space upto but not including item
 
-        Sums starting at the edge of the figure i.e. the "plot_margin".
+        Sums from the edge of the figure i.e. the "plot_margin".
         """
 
         def _fields_upto(item: str) -> Generator[Field, None, None]:
@@ -87,6 +87,21 @@ class _side_spaces(ABC):
                 if f.name == item:
                     break
                 yield f
+
+        return sum(getattr(self, f.name) for f in _fields_upto(item))
+
+    def sum_incl(self, item: str) -> float:
+        """
+        Sum of space upto and including the item
+
+        Sums from the edge of the figure i.e. the "plot_margin".
+        """
+
+        def _fields_upto(item: str) -> Generator[Field, None, None]:
+            for f in fields(self)[1:]:
+                yield f
+                if f.name == item:
+                    break
 
         return sum(getattr(self, f.name) for f in _fields_upto(item))
 
@@ -167,11 +182,17 @@ class left_spaces(_side_spaces):
 
         return self.items.calc.size(self.items.legends.left.box)
 
-    def edge(self, item: str) -> float:
+    def x1(self, item: str) -> float:
         """
-        Distance w.r.t figure width from the left edge of the figure
+        Lower x-coordinate in figure space of the item
         """
         return self.sum_upto(item)
+
+    def x2(self, item: str) -> float:
+        """
+        Higher x-coordinate in figure space of the item
+        """
+        return self.sum_incl(item)
 
     @property
     def left(self):
@@ -183,9 +204,9 @@ class left_spaces(_side_spaces):
     @property
     def plot_left(self):
         """
-        Distance in figure space from left edge upto where artists start
+        Distance in figure space up to the left-most artist
         """
-        return self.edge("legend")
+        return self.x1("legend")
 
 
 @dataclass
@@ -227,9 +248,15 @@ class right_spaces(_side_spaces):
 
         return self.items.calc.size(self.items.legends.right.box)
 
-    def edge(self, item: str) -> float:
+    def x1(self, item: str) -> float:
         """
-        Distance w.r.t figure width from the right edge of the figure
+        Lower x-coordinate in figure space of the item
+        """
+        return 1 - self.sum_incl(item)
+
+    def x2(self, item: str) -> float:
+        """
+        Higher x-coordinate in figure space of the item
         """
         return 1 - self.sum_upto(item)
 
@@ -243,9 +270,9 @@ class right_spaces(_side_spaces):
     @property
     def plot_right(self):
         """
-        Distance in figure space from right edge upto where artists start
+        Distance in figure space upto the right-most artist
         """
-        return self.edge("legend")
+        return self.x2("legend")
 
 
 @dataclass
@@ -306,9 +333,15 @@ class top_spaces(_side_spaces):
 
         return self.items.calc.size(self.items.legends.top.box)
 
-    def edge(self, item: str) -> float:
+    def y1(self, item: str) -> float:
         """
-        Distance w.r.t figure height from the top edge of the figure
+        Lower y-coordinate in figure space of the item
+        """
+        return 1 - self.sum_incl(item)
+
+    def y2(self, item: str) -> float:
+        """
+        Higher y-coordinate in figure space of the item
         """
         return 1 - self.sum_upto(item)
 
@@ -322,9 +355,9 @@ class top_spaces(_side_spaces):
     @property
     def plot_top(self):
         """
-        Distance in figure space from top edge upto where artists start
+        Distance in figure space up to the top-most artist
         """
-        return self.edge("legend")
+        return self.y2("legend")
 
 
 @dataclass
@@ -389,11 +422,17 @@ class bottom_spaces(_side_spaces):
 
         return self.items.calc.size(self.items.legends.bottom.box)
 
-    def edge(self, item: str) -> float:
+    def y1(self, item: str) -> float:
         """
-        Distance w.r.t figure height from the bottom edge of the figure
+        Lower y-coordinate in figure space of the item
         """
         return self.sum_upto(item)
+
+    def y2(self, item: str) -> float:
+        """
+        Higher y-coordinate in figure space of the item
+        """
+        return self.sum_incl(item)
 
     @property
     def bottom(self):
@@ -405,9 +444,9 @@ class bottom_spaces(_side_spaces):
     @property
     def plot_bottom(self):
         """
-        Distance in figure space from bottom edge upto where artists start
+        Distance in figure space up to the bottom-most artist
         """
-        return self.edge("legend")
+        return self.y1("legend")
 
 
 @dataclass
