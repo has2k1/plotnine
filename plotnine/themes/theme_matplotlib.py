@@ -104,8 +104,15 @@ class theme_matplotlib(theme):
                 ma="left",
                 margin={"b": m, "units": "fig"},
             ),
+            plot_tag=element_text(
+                size=base_size * 1.2,
+                va="center",
+                ha="center",
+            ),
             plot_title_position="panel",
             plot_caption_position="panel",
+            plot_tag_location="margin",
+            plot_tag_position="topleft",
             strip_align=0,
             strip_background=element_rect(
                 fill="#D9D9D9", color="black", size=linewidth

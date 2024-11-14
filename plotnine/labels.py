@@ -90,6 +90,11 @@ class labs:
     The caption at the bottom of the plot.
     """
 
+    tag: str | None = None
+    """
+    A plot tag
+    """
+
     def __post_init__(self):
         kwargs: dict[str, str] = {
             f.name: value

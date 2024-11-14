@@ -140,6 +140,7 @@ class left_spaces(_side_spaces):
     """
 
     plot_margin: float = 0
+    plot_tag: float = 0
     legend: float = 0
     legend_box_spacing: float = 0
     axis_title_y: float = 0
@@ -151,8 +152,17 @@ class left_spaces(_side_spaces):
         theme = self.items.plot.theme
         calc = self.items.calc
         items = self.items
+        has_margin_for_plot_tag = theme.getp(
+            "plot_tag_location"
+        ) in "margin" and "left" in theme.getp("plot_tag_position")
 
         self.plot_margin = theme.getp("plot_margin_left")
+
+        if items.plot_tag and has_margin_for_plot_tag:
+            self.plot_tag = calc.width(items.plot_tag) + theme.getp(
+                ("plot_tag", "margin")
+            ).get_as("r", "fig")
+
         if items.legends and items.legends.left:
             self.legend = self._legend_width
             self.legend_box_spacing = theme.getp("legend_box_spacing")
@@ -218,6 +228,7 @@ class right_spaces(_side_spaces):
     """
 
     plot_margin: float = 0
+    plot_tag: float = 0
     legend: float = 0
     legend_box_spacing: float = 0
     strip_text_y_width_right: float = 0
@@ -225,8 +236,18 @@ class right_spaces(_side_spaces):
     def _calculate(self):
         items = self.items
         theme = self.items.plot.theme
+        calc = self.items.calc
+        has_margin_for_plot_tag = theme.getp(
+            "plot_tag_location"
+        ) in "margin" and "right" in theme.getp("plot_tag_position")
 
         self.plot_margin = theme.getp("plot_margin_right")
+
+        if items.plot_tag and has_margin_for_plot_tag:
+            self.plot_tag = calc.width(items.plot_tag) + theme.getp(
+                ("plot_tag", "margin")
+            ).get_as("l", "fig")
+
         if items.legends and items.legends.right:
             self.legend = self._legend_width
             self.legend_box_spacing = theme.getp("legend_box_spacing")
@@ -284,6 +305,7 @@ class top_spaces(_side_spaces):
     """
 
     plot_margin: float = 0
+    plot_tag: float = 0
     plot_title: float = 0
     plot_title_margin_bottom: float = 0
     plot_subtitle: float = 0
@@ -298,8 +320,18 @@ class top_spaces(_side_spaces):
         calc = self.items.calc
         W, H = theme.getp("figure_size")
         F = W / H
+        has_margin_for_plot_tag = theme.getp(
+            "plot_tag_location"
+        ) in "margin" and "top" in theme.getp("plot_tag_position")
 
         self.plot_margin = theme.getp("plot_margin_top") * F
+
+        if items.plot_tag and has_margin_for_plot_tag:
+            self.plot_tag = (
+                calc.height(items.plot_tag)
+                + theme.getp(("plot_tag", "margin")).get_as("b", "fig") * F
+            )
+
         if items.plot_title:
             self.plot_title = calc.height(items.plot_title)
             self.plot_title_margin_bottom = (
@@ -369,6 +401,7 @@ class bottom_spaces(_side_spaces):
     """
 
     plot_margin: float = 0
+    plot_tag: float = 0
     plot_caption: float = 0
     plot_caption_margin_top: float = 0
     legend: float = 0
@@ -384,8 +417,17 @@ class bottom_spaces(_side_spaces):
         calc = self.items.calc
         W, H = theme.getp("figure_size")
         F = W / H
+        has_margin_for_plot_tag = theme.getp(
+            "plot_tag_location"
+        ) in "margin" and "bottom" in theme.getp("plot_tag_position")
 
         self.plot_margin = theme.getp("plot_margin_bottom") * F
+
+        if items.plot_tag and has_margin_for_plot_tag:
+            self.plot_tag = (
+                calc.height(items.plot_tag)
+                + theme.getp(("plot_tag", "margin")).get_as("t", "fig") * F
+            )
 
         if items.plot_caption:
             self.plot_caption = calc.height(items.plot_caption)
@@ -542,6 +584,46 @@ class LayoutSpaces:
         """
         self.t.plot_margin += dh
         self.b.plot_margin += dh
+
+    @property
+    def margin_area_coordinates(
+        self,
+    ) -> tuple[tuple[float, float], tuple[float, float]]:
+        """
+        Lower-left and upper-right coordinates of the margin area
+
+        This is the area surrounded by the plot_margin and extended
+        to make space for the plot_tag.
+        """
+        # Note the plot_area calculation will account the area
+        # taken up by the tag.
+        return self.plot_area_coordinates
+
+    @property
+    def plot_area_coordinates(
+        self,
+    ) -> tuple[tuple[float, float], tuple[float, float]]:
+        """
+        Lower-left and upper-right coordinates of the plot area
+
+        This is the area surrounded by the plot_margin.
+        """
+        x1, x2 = self.l.x2("plot_margin"), self.r.x1("plot_margin")
+        y1, y2 = self.b.y2("plot_margin"), self.t.y1("plot_margin")
+        return ((x1, y1), (x2, y2))
+
+    @property
+    def panel_area_coordinates(
+        self,
+    ) -> tuple[tuple[float, float], tuple[float, float]]:
+        """
+        Lower-left and upper-right coordinates of the panel area
+
+        This is the area in which the panels are drawn.
+        """
+        x1, x2 = self.l.left, self.r.right
+        y1, y2 = self.b.bottom, self.t.top
+        return ((x1, y1), (x2, y2))
 
     def _calculate_panel_spacing(self) -> GridSpecParams:
         """

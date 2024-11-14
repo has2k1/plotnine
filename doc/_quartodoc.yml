@@ -470,6 +470,9 @@ quartodoc:
         - plot_margin_right
         - plot_margin_top
         - plot_subtitle
+        - plot_tag
+        - plot_tag_location
+        - plot_tag_position
         - plot_title
         - plot_title_position
         - rect

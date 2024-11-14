@@ -76,6 +76,7 @@ class labels_view:
     title: Optional[str] = None
     caption: Optional[str] = None
     subtitle: Optional[str] = None
+    tag: Optional[str] = None
 
     def update(self, other: labels_view):
         """
