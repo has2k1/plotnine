@@ -455,33 +455,33 @@ class LayoutItems:
 
         if self.plot_title:
             ha = theme.getp(("plot_title", "ha"))
-            self.plot_title.set_y(spaces.t.edge("plot_title"))
+            self.plot_title.set_y(spaces.t.y2("plot_title"))
             horizontally_align_text(
                 self.plot_title, ha, spaces, plot_title_position
             )
 
         if self.plot_subtitle:
             ha = theme.getp(("plot_subtitle", "ha"))
-            self.plot_subtitle.set_y(spaces.t.edge("plot_subtitle"))
+            self.plot_subtitle.set_y(spaces.t.y2("plot_subtitle"))
             horizontally_align_text(
                 self.plot_subtitle, ha, spaces, plot_title_position
             )
 
         if self.plot_caption:
             ha = theme.getp(("plot_caption", "ha"), "right")
-            self.plot_caption.set_y(spaces.b.edge("plot_caption"))
+            self.plot_caption.set_y(spaces.b.y1("plot_caption"))
             horizontally_align_text(
                 self.plot_caption, ha, spaces, plot_caption_position
             )
 
         if self.axis_title_x:
             ha = theme.getp(("axis_title_x", "ha"), "center")
-            self.axis_title_x.set_y(spaces.b.edge("axis_title_x"))
+            self.axis_title_x.set_y(spaces.b.y1("axis_title_x"))
             horizontally_align_text(self.axis_title_x, ha, spaces)
 
         if self.axis_title_y:
             va = theme.getp(("axis_title_y", "va"), "center")
-            self.axis_title_y.set_x(spaces.l.edge("axis_title_y"))
+            self.axis_title_y.set_x(spaces.l.x1("axis_title_y"))
             vertically_align_text(self.axis_title_y, va, spaces)
 
         if self.legends:
@@ -597,16 +597,13 @@ def set_legends_position(legends: legend_artists, spaces: LayoutSpaces):
         aob.xy_loc = xy_loc
         aob.set_bbox_to_anchor(anchor_point, transform)  # type: ignore
 
-    def func(a, b, length, f):
-        return a * (1 - f) + (b - length) * f
-
     if legends.right:
         j = legends.right.justification
         y = (
             params.bottom * (1 - j)
             + (params.top - spaces.r._legend_height) * j
         )
-        x = spaces.r.edge("legend")
+        x = spaces.r.x2("legend")
         set_position(legends.right.box, (x, y), (1, 0))
 
     if legends.left:
@@ -615,19 +612,19 @@ def set_legends_position(legends: legend_artists, spaces: LayoutSpaces):
             params.bottom * (1 - j)
             + (params.top - spaces.l._legend_height) * j
         )
-        x = spaces.l.edge("legend")
+        x = spaces.l.x1("legend")
         set_position(legends.left.box, (x, y), (0, 0))
 
     if legends.top:
         j = legends.top.justification
         x = params.left * (1 - j) + (params.right - spaces.t._legend_width) * j
-        y = spaces.t.edge("legend")
+        y = spaces.t.y2("legend")
         set_position(legends.top.box, (x, y), (0, 1))
 
     if legends.bottom:
         j = legends.bottom.justification
         x = params.left * (1 - j) + (params.right - spaces.b._legend_width) * j
-        y = spaces.b.edge("legend")
+        y = spaces.b.y1("legend")
         set_position(legends.bottom.box, (x, y), (0, 0))
 
     # Inside legends are placed using the panels coordinate system
