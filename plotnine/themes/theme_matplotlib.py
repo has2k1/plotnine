@@ -1,5 +1,11 @@
 from ..options import get_option
-from .elements import element_blank, element_line, element_rect, element_text
+from .elements import (
+    element_blank,
+    element_line,
+    element_rect,
+    element_text,
+    margin,
+)
 from .theme import theme
 
 
@@ -38,16 +44,16 @@ class theme_matplotlib(theme):
                 margin={},
             ),
             aspect_ratio=get_option("aspect_ratio"),
-            axis_text=element_text(margin={"t": 2.4, "r": 2.4, "units": "pt"}),
+            axis_text=element_text(margin=margin(t=2.4, r=2.4, unit="pt")),
             axis_title_x=element_text(
-                va="bottom", ha="center", margin={"t": m, "units": "fig"}
+                va="bottom", ha="center", margin=margin(t=m, unit="fig")
             ),
             axis_line=element_blank(),
             axis_title_y=element_text(
                 angle=90,
                 va="center",
                 ha="left",
-                margin={"r": m, "units": "fig"},
+                margin=margin(r=m, unit="fig"),
             ),
             dpi=get_option("dpi"),
             figure_size=get_option("figure_size"),
@@ -64,24 +70,12 @@ class theme_matplotlib(theme):
             legend_position="right",
             legend_spacing=10,
             legend_text=element_text(
-                margin={
-                    "t": m / 2,
-                    "b": m / 2,
-                    "l": m / 2,
-                    "r": m / 2,
-                    "units": "fig",
-                }
+                margin=margin(m / 2, m / 2, m / 2, m / 2, "fig")
             ),
             legend_ticks=element_line(color="black"),
             legend_title=element_text(
                 ha="left",
-                margin={
-                    "t": m,
-                    "b": m / 2,
-                    "l": m * 2,
-                    "r": m * 2,
-                    "units": "fig",
-                },
+                margin=margin(t=m, l=m * 2, b=m / 2, r=m * 2, unit="fig"),
             ),
             panel_border=element_rect(color="black"),
             panel_grid=element_blank(),
@@ -90,19 +84,19 @@ class theme_matplotlib(theme):
                 ha="right",
                 va="bottom",
                 ma="left",
-                margin={"t": m, "units": "fig"},
+                margin=margin(t=m, unit="fig"),
             ),
             plot_margin=m,
             plot_subtitle=element_text(
                 size=base_size * 0.9,
                 va="top",
                 ma="left",
-                margin={"b": m, "units": "fig"},
+                margin=margin(b=m, unit="fig"),
             ),
             plot_title=element_text(
                 va="top",
                 ma="left",
-                margin={"b": m, "units": "fig"},
+                margin=margin(b=m, unit="fig"),
             ),
             plot_tag=element_text(
                 size=base_size * 1.2,
@@ -118,13 +112,7 @@ class theme_matplotlib(theme):
                 fill="#D9D9D9", color="black", size=linewidth
             ),
             strip_text=element_text(
-                margin={
-                    "t": 1 / 3,
-                    "b": 1 / 3,
-                    "l": 1 / 3,
-                    "r": 1 / 3,
-                    "units": "lines",
-                },
+                margin=margin(1 / 3, 1 / 3, 1 / 3, 1 / 3, "lines"),
             ),
             strip_text_y=element_text(rotation=-90),
             complete=True,
