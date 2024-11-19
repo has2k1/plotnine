@@ -191,7 +191,7 @@ class GuideElements:
     def title(self):
         ha = self.theme.getp(("legend_title", "ha"))
         va = self.theme.getp(("legend_title", "va"), "center")
-        _margin = self.theme.getp(("legend_title", "margin")).to("pt")
+        _margin = self.theme.getp(("legend_title", "margin")).pt
         _loc = get_opposite_side(self.title_position)[0]
         margin = getattr(_margin, _loc)
         top_or_bottom = self.title_position in ("top", "bottom")
@@ -220,7 +220,7 @@ class GuideElements:
     def _text_margin(self) -> float:
         _margin = self.theme.getp(
             (f"legend_text_{self.guide_kind}", "margin")
-        ).to("pt")
+        ).pt
         _loc = get_opposite_side(self.text_position)[0]
         return getattr(_margin, _loc)
 

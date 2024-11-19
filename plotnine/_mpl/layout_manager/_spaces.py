@@ -25,7 +25,6 @@ if TYPE_CHECKING:
     from typing import Generator
 
     from plotnine import ggplot
-    from plotnine.themes.elements import margin
 
 
 # Note
@@ -155,12 +154,12 @@ class left_spaces(_side_spaces):
         items = self.items
         has_margin_for_plot_tag = theme.getp(
             "plot_tag_location"
-        ) in "margin" and "left" in theme.getp("plot_tag_position")
+        ) == "margin" and "left" in theme.getp("plot_tag_position")
 
         self.plot_margin = theme.getp("plot_margin_left")
 
         if items.plot_tag and has_margin_for_plot_tag:
-            m = theme.getp(("plot_tag", "margin")).to("fig")
+            m = theme.get_margin("plot_tag").fig
             self.plot_tag = calc.width(items.plot_tag) + m.r
 
         if items.legends and items.legends.left:
@@ -168,7 +167,7 @@ class left_spaces(_side_spaces):
             self.legend_box_spacing = theme.getp("legend_box_spacing")
 
         if items.axis_title_y:
-            m = theme.getp(("axis_title_y", "margin")).to("fig")
+            m = theme.get_margin("axis_title_y").fig
             self.axis_title_y_margin_right = m.r
             self.axis_title_y = calc.width(items.axis_title_y)
 
@@ -238,12 +237,12 @@ class right_spaces(_side_spaces):
         calc = self.items.calc
         has_margin_for_plot_tag = theme.getp(
             "plot_tag_location"
-        ) in "margin" and "right" in theme.getp("plot_tag_position")
+        ) == "margin" and "right" in theme.getp("plot_tag_position")
 
         self.plot_margin = theme.getp("plot_margin_right")
 
         if items.plot_tag and has_margin_for_plot_tag:
-            m: margin = theme.getp(("plot_tag", "margin")).to("fig")
+            m = theme.get_margin("plot_tag").fig
             self.plot_tag = calc.width(items.plot_tag) + m.l
 
         if items.legends and items.legends.right:
@@ -320,21 +319,21 @@ class top_spaces(_side_spaces):
         F = W / H
         has_margin_for_plot_tag = theme.getp(
             "plot_tag_location"
-        ) in "margin" and "top" in theme.getp("plot_tag_position")
+        ) == "margin" and "top" in theme.getp("plot_tag_position")
 
         self.plot_margin = theme.getp("plot_margin_top") * F
 
         if items.plot_tag and has_margin_for_plot_tag:
-            m: margin = theme.getp(("plot_tag", "margin")).to("fig")
+            m = theme.get_margin("plot_tag").fig
             self.plot_tag = calc.height(items.plot_tag) + m.b * F
 
         if items.plot_title:
-            m = theme.getp(("plot_title", "margin")).to("fig")
+            m = theme.get_margin("plot_title").fig
             self.plot_title = calc.height(items.plot_title)
             self.plot_title_margin_bottom = m.b * F
 
         if items.plot_subtitle:
-            m = theme.getp(("plot_subtitle", "margin")).to("fig")
+            m = theme.get_margin("plot_subtitle").fig
             self.plot_subtitle = calc.height(items.plot_subtitle)
             self.plot_subtitle_margin_bottom = m.b * F
 
@@ -413,16 +412,16 @@ class bottom_spaces(_side_spaces):
         F = W / H
         has_margin_for_plot_tag = theme.getp(
             "plot_tag_location"
-        ) in "margin" and "bottom" in theme.getp("plot_tag_position")
+        ) == "margin" and "bottom" in theme.getp("plot_tag_position")
 
         self.plot_margin = theme.getp("plot_margin_bottom") * F
 
         if items.plot_tag and has_margin_for_plot_tag:
-            m: margin = theme.getp(("plot_tag", "margin")).to("fig")
+            m = theme.get_margin("plot_tag").fig
             self.plot_tag = calc.height(items.plot_tag) + m.t * F
 
         if items.plot_caption:
-            m = theme.getp(("plot_caption", "margin")).to("fig")
+            m = theme.get_margin("plot_caption").fig
             self.plot_caption = calc.height(items.plot_caption)
             self.plot_caption_margin_top = m.t * F
 
@@ -431,7 +430,7 @@ class bottom_spaces(_side_spaces):
             self.legend_box_spacing = theme.getp("legend_box_spacing") * F
 
         if items.axis_title_x:
-            m = theme.getp(("axis_title_x", "margin")).to("fig")
+            m = theme.get_margin("axis_title_x").fig
             self.axis_title_x = calc.height(items.axis_title_x)
             self.axis_title_x_margin_top = m.t * F
 
