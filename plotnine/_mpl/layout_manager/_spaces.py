@@ -25,6 +25,7 @@ if TYPE_CHECKING:
     from typing import Generator
 
     from plotnine import ggplot
+    from plotnine.themes.elements import margin
 
 
 # Note
@@ -159,18 +160,16 @@ class left_spaces(_side_spaces):
         self.plot_margin = theme.getp("plot_margin_left")
 
         if items.plot_tag and has_margin_for_plot_tag:
-            self.plot_tag = calc.width(items.plot_tag) + theme.getp(
-                ("plot_tag", "margin")
-            ).get_as("r", "fig")
+            m = theme.getp(("plot_tag", "margin")).to("fig")
+            self.plot_tag = calc.width(items.plot_tag) + m.r
 
         if items.legends and items.legends.left:
             self.legend = self._legend_width
             self.legend_box_spacing = theme.getp("legend_box_spacing")
 
         if items.axis_title_y:
-            self.axis_title_y_margin_right = theme.getp(
-                ("axis_title_y", "margin")
-            ).get_as("r", "fig")
+            m = theme.getp(("axis_title_y", "margin")).to("fig")
+            self.axis_title_y_margin_right = m.r
             self.axis_title_y = calc.width(items.axis_title_y)
 
         # Account for the space consumed by the axis
@@ -244,9 +243,8 @@ class right_spaces(_side_spaces):
         self.plot_margin = theme.getp("plot_margin_right")
 
         if items.plot_tag and has_margin_for_plot_tag:
-            self.plot_tag = calc.width(items.plot_tag) + theme.getp(
-                ("plot_tag", "margin")
-            ).get_as("l", "fig")
+            m: margin = theme.getp(("plot_tag", "margin")).to("fig")
+            self.plot_tag = calc.width(items.plot_tag) + m.l
 
         if items.legends and items.legends.right:
             self.legend = self._legend_width
@@ -327,22 +325,18 @@ class top_spaces(_side_spaces):
         self.plot_margin = theme.getp("plot_margin_top") * F
 
         if items.plot_tag and has_margin_for_plot_tag:
-            self.plot_tag = (
-                calc.height(items.plot_tag)
-                + theme.getp(("plot_tag", "margin")).get_as("b", "fig") * F
-            )
+            m: margin = theme.getp(("plot_tag", "margin")).to("fig")
+            self.plot_tag = calc.height(items.plot_tag) + m.b * F
 
         if items.plot_title:
+            m = theme.getp(("plot_title", "margin")).to("fig")
             self.plot_title = calc.height(items.plot_title)
-            self.plot_title_margin_bottom = (
-                theme.getp(("plot_title", "margin")).get_as("b", "fig") * F
-            )
+            self.plot_title_margin_bottom = m.b * F
 
         if items.plot_subtitle:
+            m = theme.getp(("plot_subtitle", "margin")).to("fig")
             self.plot_subtitle = calc.height(items.plot_subtitle)
-            self.plot_subtitle_margin_bottom = (
-                theme.getp(("plot_subtitle", "margin")).get_as("b", "fig") * F
-            )
+            self.plot_subtitle_margin_bottom = m.b * F
 
         if items.legends and items.legends.top:
             self.legend = self._legend_height
@@ -424,26 +418,22 @@ class bottom_spaces(_side_spaces):
         self.plot_margin = theme.getp("plot_margin_bottom") * F
 
         if items.plot_tag and has_margin_for_plot_tag:
-            self.plot_tag = (
-                calc.height(items.plot_tag)
-                + theme.getp(("plot_tag", "margin")).get_as("t", "fig") * F
-            )
+            m: margin = theme.getp(("plot_tag", "margin")).to("fig")
+            self.plot_tag = calc.height(items.plot_tag) + m.t * F
 
         if items.plot_caption:
+            m = theme.getp(("plot_caption", "margin")).to("fig")
             self.plot_caption = calc.height(items.plot_caption)
-            self.plot_caption_margin_top = (
-                theme.getp(("plot_caption", "margin")).get_as("t", "fig") * F
-            )
+            self.plot_caption_margin_top = m.t * F
 
         if items.legends and items.legends.bottom:
             self.legend = self._legend_height
             self.legend_box_spacing = theme.getp("legend_box_spacing") * F
 
         if items.axis_title_x:
+            m = theme.getp(("axis_title_x", "margin")).to("fig")
             self.axis_title_x = calc.height(items.axis_title_x)
-            self.axis_title_x_margin_top = (
-                theme.getp(("axis_title_x", "margin")).get_as("t", "fig") * F
-            )
+            self.axis_title_x_margin_top = m.t * F
 
         # Account for the space consumed by the axis
         self.axis_ticks_x = items.axis_ticks_x_max_height("last_row")
