@@ -143,6 +143,7 @@ class left_spaces(_side_spaces):
     plot_tag: float = 0
     legend: float = 0
     legend_box_spacing: float = 0
+    axis_title_y_margin_left: float = 0
     axis_title_y: float = 0
     axis_title_y_margin_right: float = 0
     axis_text_y: float = 0
@@ -168,8 +169,9 @@ class left_spaces(_side_spaces):
 
         if items.axis_title_y:
             m = theme.get_margin("axis_title_y").fig
-            self.axis_title_y_margin_right = m.r
+            self.axis_title_y_margin_left = m.l
             self.axis_title_y = calc.width(items.axis_title_y)
+            self.axis_title_y_margin_right = m.r
 
         # Account for the space consumed by the axis
         self.axis_text_y = items.axis_text_y_max_width("first_col")
@@ -303,8 +305,10 @@ class top_spaces(_side_spaces):
 
     plot_margin: float = 0
     plot_tag: float = 0
+    plot_title_margin_top: float = 0
     plot_title: float = 0
     plot_title_margin_bottom: float = 0
+    plot_subtitle_margin_top: float = 0
     plot_subtitle: float = 0
     plot_subtitle_margin_bottom: float = 0
     legend: float = 0
@@ -329,11 +333,13 @@ class top_spaces(_side_spaces):
 
         if items.plot_title:
             m = theme.get_margin("plot_title").fig
+            self.plot_title_margin_top = m.t * F
             self.plot_title = calc.height(items.plot_title)
             self.plot_title_margin_bottom = m.b * F
 
         if items.plot_subtitle:
             m = theme.get_margin("plot_subtitle").fig
+            self.plot_subtitle_margin_top = m.t * F
             self.plot_subtitle = calc.height(items.plot_subtitle)
             self.plot_subtitle_margin_bottom = m.b * F
 
@@ -395,10 +401,12 @@ class bottom_spaces(_side_spaces):
 
     plot_margin: float = 0
     plot_tag: float = 0
+    plot_caption_margin_bottom: float = 0
     plot_caption: float = 0
     plot_caption_margin_top: float = 0
     legend: float = 0
     legend_box_spacing: float = 0
+    axis_title_x_margin_bottom: float = 0
     axis_title_x: float = 0
     axis_title_x_margin_top: float = 0
     axis_text_x: float = 0
@@ -422,6 +430,7 @@ class bottom_spaces(_side_spaces):
 
         if items.plot_caption:
             m = theme.get_margin("plot_caption").fig
+            self.plot_caption_margin_bottom = m.b * F
             self.plot_caption = calc.height(items.plot_caption)
             self.plot_caption_margin_top = m.t * F
 
@@ -431,6 +440,7 @@ class bottom_spaces(_side_spaces):
 
         if items.axis_title_x:
             m = theme.get_margin("axis_title_x").fig
+            self.axis_title_x_margin_bottom = m.b * F
             self.axis_title_x = calc.height(items.axis_title_x)
             self.axis_title_x_margin_top = m.t * F
 
