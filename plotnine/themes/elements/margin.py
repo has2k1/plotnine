@@ -31,6 +31,34 @@ class margin:
         self.fontsize = theme.getp((themeable_name, "size"), 11)
         self.figure_size = theme.getp("figure_size")
 
+    @property
+    def pt(self) -> margin:
+        """
+        Return margin in points
+        """
+        return self.to("pt")
+
+    @property
+    def inch(self) -> margin:
+        """
+        Return margin in inches
+        """
+        return self.to("in")
+
+    @property
+    def lines(self) -> margin:
+        """
+        Return margin in lines units
+        """
+        return self.to("lines")
+
+    @property
+    def fig(self) -> margin:
+        """
+        Return margin in figure units
+        """
+        return self.to("fig")
+
     def to(self, unit: Literal["pt", "in", "lines", "fig"]) -> margin:
         """
         Return margin in request unit
@@ -43,17 +71,17 @@ class margin:
 
         t, r, b, l = 0, 0, 0, 0
         with suppress(ZeroDivisionError):
-            t = self.convert(conversion, W, self.t)
+            t = self._convert(conversion, W, self.t)
         with suppress(ZeroDivisionError):
-            r = self.convert(conversion, H, self.r)
+            r = self._convert(conversion, H, self.r)
         with suppress(ZeroDivisionError):
-            b = self.convert(conversion, W, self.b)
+            b = self._convert(conversion, W, self.b)
         with suppress(ZeroDivisionError):
-            l = self.convert(conversion, H, self.l)
+            l = self._convert(conversion, H, self.l)
 
         return margin(t, r, b, l, unit)
 
-    def convert(self, conversion: str, D: float, value: float) -> float:
+    def _convert(self, conversion: str, D: float, value: float) -> float:
         dpi = 72
         L = D * dpi  # pts
 
