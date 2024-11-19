@@ -8,10 +8,10 @@ from contextlib import suppress
 from typing import TYPE_CHECKING
 
 from .element_base import element_base
-from .margin import Margin
+from .margin import margin as Margin
 
 if TYPE_CHECKING:
-    from typing import Any, Literal, Optional, Sequence
+    from typing import Any, Literal, Sequence
 
     from plotnine import theme
 
@@ -56,7 +56,7 @@ class element_text(element_base):
         Margin around the text. The keys are
         `t`, `b`, `l`, `r` and `units`.
         The `tblr` keys are floats.
-        The `units` is one of `pt`, `lines` or `in`.
+        The `unit` is one of `pt`, `lines` or `in`.
         Not all text themeables support margin parameters and other
         than the `units`, only some of the other keys may apply.
     kwargs :
@@ -71,10 +71,10 @@ class element_text(element_base):
 
     def __init__(
         self,
-        family: Optional[str | list[str]] = None,
-        style: Optional[str | Sequence[str]] = None,
-        weight: Optional[int | str | Sequence[int | str]] = None,
-        color: Optional[
+        family: str | list[str] | None = None,
+        style: str | Sequence[str] | None = None,
+        weight: int | str | Sequence[int | str] | None = None,
+        color: (
             str
             | tuple[float, float, float]
             | tuple[float, float, float, float]
@@ -83,22 +83,25 @@ class element_text(element_base):
                 | tuple[float, float, float]
                 | tuple[float, float, float, float]
             ]
-        ] = None,
-        size: Optional[float | Sequence[float]] = None,
-        ha: Optional[Literal["center", "left", "right"] | float] = None,
-        va: Optional[
+            | None
+        ) = None,
+        size: float | Sequence[float] | None = None,
+        ha: Literal["center", "left", "right"] | float | None = None,
+        va: (
             Literal["center", "top", "bottom", "baseline", "center_baseline"]
             | float
-        ] = None,
-        ma: Optional[Literal["center", "left", "right"] | float] = None,
-        rotation: Optional[
+            | None
+        ) = None,
+        ma: Literal["center", "left", "right"] | float | None = None,
+        rotation: (
             Literal["vertical", "horizontal"]
             | float
             | Sequence[Literal["vertical", "horizontal"]]
             | Sequence[float]
-        ] = None,
-        linespacing: Optional[float] = None,
-        backgroundcolor: Optional[
+            | None
+        ) = None,
+        linespacing: float | None = None,
+        backgroundcolor: (
             str
             | tuple[float, float, float]
             | tuple[float, float, float, float]
@@ -107,10 +110,11 @@ class element_text(element_base):
                 | tuple[float, float, float]
                 | tuple[float, float, float, float]
             ]
-        ] = None,
-        margin: Optional[
-            dict[Literal["t", "b", "l", "r", "units"], Any]
-        ] = None,
+            | None
+        ) = None,
+        margin: (
+            Margin | dict[Literal["t", "b", "l", "r", "unit"], Any] | None
+        ) = None,
         rotation_mode: Literal["default", "anchor"] | None = None,
         **kwargs: Any,
     ):
@@ -139,8 +143,15 @@ class element_text(element_base):
 
         super().__init__()
         self.properties.update(**kwargs)
+
         if margin is not None:
-            self.properties["margin"] = Margin(self, **margin)
+            if isinstance(margin, dict):
+                if "units" in margin:
+                    # for backward compatibility
+                    margin["unit"] = margin.pop("units")  # pyright: ignore[reportArgumentType]
+                margin = Margin(**margin)
+
+            self.properties["margin"] = margin
 
         # Use the parameters that have been set
         names = (
@@ -166,8 +177,7 @@ class element_text(element_base):
         Setup the theme_element before drawing
         """
         if m := self.properties.get("margin"):
-            m.theme = theme
-            m.themeable_name = themeable_name
+            m = m.setup(theme, themeable_name)
 
     def _translate_hjust(
         self, just: float
