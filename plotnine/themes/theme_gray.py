@@ -1,6 +1,12 @@
 from .._utils.registry import alias
 from ..options import get_option
-from .elements import element_blank, element_line, element_rect, element_text
+from .elements import (
+    element_blank,
+    element_line,
+    element_rect,
+    element_text,
+    margin,
+)
 from .theme import theme
 
 
@@ -40,28 +46,28 @@ class theme_gray(theme):
                 size=base_size,
                 linespacing=0.9,
                 rotation=0,
-                margin={},
+                margin=margin(),
             ),
             aspect_ratio=get_option("aspect_ratio"),
             axis_line=element_line(),
             axis_line_x=element_blank(),
             axis_line_y=element_blank(),
             axis_text=element_text(size=base_size * 0.8, color="#4D4D4D"),
-            axis_text_x=element_text(va="top", margin={"t": fifth_line}),
-            axis_text_y=element_text(ha="right", margin={"r": fifth_line}),
+            axis_text_x=element_text(va="top", margin=margin(t=fifth_line)),
+            axis_text_y=element_text(ha="right", margin=margin(r=fifth_line)),
             axis_ticks=element_line(color="#333333"),
             axis_ticks_length=0,
             axis_ticks_length_major=quarter_line,
             axis_ticks_length_minor=eighth_line,
             axis_ticks_minor=element_blank(),
             axis_title_x=element_text(
-                va="bottom", ha="center", margin={"t": m, "units": "fig"}
+                va="bottom", ha="center", margin=margin(t=m, unit="fig")
             ),
             axis_title_y=element_text(
                 angle=90,
                 va="center",
                 ha="left",
-                margin={"r": m, "units": "fig"},
+                margin=margin(r=m, unit="fig"),
             ),
             dpi=get_option("dpi"),
             figure_size=get_option("figure_size"),
@@ -82,23 +88,11 @@ class theme_gray(theme):
             legend_spacing=10,  # points
             legend_text=element_text(
                 size=base_size * 0.8,
-                margin={
-                    "t": m / 1.5,
-                    "b": m / 1.5,
-                    "l": m / 1.5,
-                    "r": m / 1.5,
-                    "units": "fig",
-                },
+                margin=margin(m / 1.5, m / 1.5, m / 1.5, m / 1.5, "fig"),
             ),
             legend_ticks=element_line(color="#CCCCCC", size=1),
             legend_title=element_text(
-                margin={
-                    "t": m,
-                    "b": m / 2,
-                    "l": m * 2,
-                    "r": m * 2,
-                    "units": "fig",
-                },
+                margin=margin(t=m, l=m * 2, b=m / 2, r=m * 2, unit="fig")
             ),
             panel_background=element_rect(fill="#EBEBEB"),
             panel_border=element_blank(),
@@ -111,19 +105,19 @@ class theme_gray(theme):
                 ha="right",
                 va="bottom",
                 ma="left",
-                margin={"t": m, "units": "fig"},
+                margin=margin(t=m, unit="fig"),
             ),
             plot_margin=m,
             plot_subtitle=element_text(
                 va="top",
                 ma="left",
-                margin={"b": m, "units": "fig"},
+                margin=margin(b=m, unit="fig"),
             ),
             plot_title=element_text(
                 size=base_size * 1.2,
                 va="top",
                 ma="left",
-                margin={"b": m, "units": "fig"},
+                margin=margin(b=m, unit="fig"),
             ),
             plot_tag=element_text(
                 size=base_size * 1.2,
@@ -142,13 +136,7 @@ class theme_gray(theme):
                 color="#1A1A1A",
                 size=base_size * 0.8,
                 linespacing=1.0,
-                margin={
-                    "t": 1 / 3,
-                    "b": 1 / 3,
-                    "l": 1 / 3,
-                    "r": 1 / 3,
-                    "units": "lines",
-                },
+                margin=margin(1 / 3, 1 / 3, 1 / 3, 1 / 3, "lines"),
             ),
             strip_text_y=element_text(rotation=-90),
             complete=True,

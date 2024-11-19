@@ -1,5 +1,11 @@
 from ..options import get_option
-from .elements import element_blank, element_line, element_rect, element_text
+from .elements import (
+    element_blank,
+    element_line,
+    element_rect,
+    element_text,
+    margin,
+)
 from .theme import theme
 
 
@@ -49,22 +55,22 @@ class theme_seaborn(theme):
             text=element_text(size=base_size, rotation=0, margin={}),
             axis_text=element_text(
                 size=base_size * 0.8,
-                margin={
-                    "t": line_margin,
-                    "b": line_margin,
-                    "l": line_margin,
-                    "r": line_margin,
-                    "units": "pt",
-                },
+                margin=margin(
+                    t=line_margin,
+                    b=line_margin,
+                    l=line_margin,
+                    r=line_margin,
+                    unit="pt",
+                ),
             ),
             axis_title_x=element_text(
-                va="bottom", ha="center", margin={"t": m, "units": "fig"}
+                va="bottom", ha="center", margin=margin(t=m, unit="fig")
             ),
             axis_title_y=element_text(
                 angle=90,
                 va="center",
                 ha="left",
-                margin={"r": m, "units": "fig"},
+                margin=margin(r=m, unit="fig"),
             ),
             legend_box_margin=0,
             legend_box_spacing=m * 3,  # figure units
@@ -77,23 +83,11 @@ class theme_seaborn(theme):
             legend_position="right",
             legend_spacing=10,  # points
             legend_text=element_text(
-                margin={
-                    "t": m / 1.5,
-                    "b": m / 1.5,
-                    "l": m / 1.5,
-                    "r": m / 1.5,
-                    "units": "fig",
-                },
+                margin=margin(m / 1.5, m / 1.5, m / 1.5, m / 1.5, "fig")
             ),
             legend_ticks=element_line(color="#CCCCCC", size=1),
             legend_title=element_text(
-                margin={
-                    "t": m,
-                    "b": m / 2,
-                    "l": m * 2,
-                    "r": m * 2,
-                    "units": "fig",
-                },
+                margin=margin(t=m, l=m * 2, b=m / 2, r=m * 2, unit="fig")
             ),
             panel_spacing=m,
             plot_caption=element_text(
@@ -101,20 +95,20 @@ class theme_seaborn(theme):
                 ha="right",
                 va="bottom",
                 ma="left",
-                margin={"t": m, "units": "fig"},
+                margin=margin(t=m, unit="fig"),
             ),
             plot_margin=m,
             plot_subtitle=element_text(
                 size=base_size * 1,
                 va="top",
                 ma="left",
-                margin={"b": m, "units": "fig"},
+                margin=margin(b=m, unit="fig"),
             ),
             plot_title=element_text(
                 size=base_size * 1.2,
                 va="top",
                 ma="left",
-                margin={"b": m, "units": "fig"},
+                margin=margin(b=m, unit="fig"),
             ),
             plot_tag=element_text(
                 size=base_size * 1.2,
@@ -130,13 +124,7 @@ class theme_seaborn(theme):
             strip_text=element_text(
                 size=base_size * 0.8,
                 linespacing=1.0,
-                margin={
-                    "t": 1 / 3,
-                    "b": 1 / 3,
-                    "l": 1 / 3,
-                    "r": 1 / 3,
-                    "units": "lines",
-                },
+                margin=margin(1 / 3, 1 / 3, 1 / 3, 1 / 3, "lines"),
             ),
             strip_text_y=element_text(rotation=-90),
             complete=True,
