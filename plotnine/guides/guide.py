@@ -191,9 +191,9 @@ class GuideElements:
     def title(self):
         ha = self.theme.getp(("legend_title", "ha"))
         va = self.theme.getp(("legend_title", "va"), "center")
-        _margin = self.theme.getp(("legend_title", "margin"))
+        _margin = self.theme.getp(("legend_title", "margin")).to("pt")
         _loc = get_opposite_side(self.title_position)[0]
-        margin = _margin.get_as(_loc, "pt") if _margin else 0
+        margin = getattr(_margin, _loc)
         top_or_bottom = self.title_position in ("top", "bottom")
         is_blank = self.theme.T.is_blank("legend_title")
 
@@ -218,9 +218,11 @@ class GuideElements:
 
     @cached_property
     def _text_margin(self) -> float:
-        _margin = self.theme.getp((f"legend_text_{self.guide_kind}", "margin"))
-        _loc = get_opposite_side(self.text_position)
-        return _margin.get_as(_loc[0], "pt") if _margin else 0
+        _margin = self.theme.getp(
+            (f"legend_text_{self.guide_kind}", "margin")
+        ).to("pt")
+        _loc = get_opposite_side(self.text_position)[0]
+        return getattr(_margin, _loc)
 
     @cached_property
     def title_position(self) -> SidePosition:
