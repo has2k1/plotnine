@@ -71,13 +71,13 @@ class margin:
 
         t, r, b, l = 0, 0, 0, 0
         with suppress(ZeroDivisionError):
-            t = self._convert(conversion, W, self.t)
+            t = self._convert(conversion, H, self.t)
         with suppress(ZeroDivisionError):
-            r = self._convert(conversion, H, self.r)
+            r = self._convert(conversion, W, self.r)
         with suppress(ZeroDivisionError):
-            b = self._convert(conversion, W, self.b)
+            b = self._convert(conversion, H, self.b)
         with suppress(ZeroDivisionError):
-            l = self._convert(conversion, H, self.l)
+            l = self._convert(conversion, W, self.l)
 
         return margin(t, r, b, l, unit)
 
