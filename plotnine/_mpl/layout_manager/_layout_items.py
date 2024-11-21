@@ -34,6 +34,7 @@ if TYPE_CHECKING:
     from plotnine._mpl.offsetbox import FlexibleAnchoredOffsetbox
     from plotnine._mpl.text import StripText
     from plotnine.iapi import legend_artists
+    from plotnine.themes.elements import margin as Margin
     from plotnine.typing import StripPosition
 
     from ._spaces import LayoutSpaces
@@ -41,6 +42,20 @@ if TYPE_CHECKING:
     AxesLocation: TypeAlias = Literal[
         "all", "first_row", "last_row", "first_col", "last_col"
     ]
+    TagLocation: TypeAlias = Literal["margin", "plot", "panel"]
+    TagPosition: TypeAlias = (
+        Literal[
+            "topleft",
+            "top",
+            "topright",
+            "left",
+            "right",
+            "bottomleft",
+            "bottom",
+            "bottomright",
+        ]
+        | tuple[float, float]
+    )
 
 
 @dataclass
@@ -641,12 +656,19 @@ def set_legends_position(legends: legend_artists, spaces: LayoutSpaces):
 
 
 def set_plot_tag_position(tag: Text, spaces: LayoutSpaces):
+    """
+    Set the postion of the plot_tag
+    """
     figure = spaces.plot.figure
     theme = spaces.plot.theme
-    location = theme.getp("plot_tag_location")
-    position = theme.getp("plot_tag_position")
+    location: TagLocation = theme.getp("plot_tag_location")
+    position: TagPosition = theme.getp("plot_tag_position")
+    margin = theme.get_margin("plot_tag")
 
-    lookup = {
+    if location == "margin":
+        return set_plot_tag_position_in_margin(tag, spaces)
+
+    lookup: dict[str, tuple[float, float]] = {
         "topleft": (0, 1),
         "top": (0.5, 1),
         "topright": (1, 1),
@@ -658,27 +680,84 @@ def set_plot_tag_position(tag: Text, spaces: LayoutSpaces):
     }
 
     if isinstance(position, str):
-        if location == "margin":
-            (x1, y1), (x2, y2) = spaces.margin_area_coordinates
-        elif location == "plot":
+        # Coordinates of the space to place the tag
+        if location == "plot":
             (x1, y1), (x2, y2) = spaces.plot_area_coordinates
         else:
             (x1, y1), (x2, y2) = spaces.panel_area_coordinates
 
+        # Calculate the position when the tag has no margins
         fx, fy = lookup[position]
         width, height = spaces.items.calc.size(tag)
         x = x1 * (1 - fx) + (x2 - width) * fx
         y = y1 * (1 - fy) + (y2 - height) * fy
 
-        tag.set_position((x, y))
+        # Adjust the position to account for the margins
+        # When the units for the margin are in the figure coordinates,
+        # the adjustment is proportional to the size of the space.
+        # For points, inches and lines, the adjustment is absolute.
+        mx, my = _plot_tag_margin_adjustment(margin, position)
+        if margin.unit == "fig":
+            panel_width, panel_height = (x2 - x1), (y2 - y1)
+        else:
+            panel_width, panel_height = 1, 1
+
+        x += panel_width * mx
+        y += panel_height * my
+
+        position = (x, y)
         tag.set_horizontalalignment("left")
         tag.set_verticalalignment("bottom")
     else:
         if location == "panel":
             tag.set_transform(get_transPanels(figure))
-        elif location == "margin":
-            raise PlotnineError(
-                f"Cannot have plot_tag_location={location!r} if "
-                f"plot_tag_position={position!r}."
-            )
-        tag.set_position(position)
+
+    tag.set_position(position)
+
+
+def set_plot_tag_position_in_margin(tag: Text, spaces: LayoutSpaces):
+    """
+    Place the tag in the margin around the plot
+    """
+    position: TagPosition = spaces.plot.theme.getp("plot_tag_position")
+    if not isinstance(position, str):
+        raise PlotnineError(
+            f"Cannot have plot_tag_location='margin' if "
+            f"plot_tag_position={position!r}."
+        )
+
+    tag.set_position((0.5, 0.5))
+    if "top" in position:
+        tag.set_y(spaces.t.y2("plot_tag"))
+        tag.set_verticalalignment("top")
+    if "bottom" in position:
+        tag.set_y(spaces.b.y1("plot_tag"))
+        tag.set_verticalalignment("bottom")
+    if "left" in position:
+        tag.set_x(spaces.l.x1("plot_tag"))
+        tag.set_horizontalalignment("left")
+    if "right" in position:
+        tag.set_x(spaces.r.x2("plot_tag"))
+        tag.set_horizontalalignment("right")
+
+
+def _plot_tag_margin_adjustment(
+    margin: Margin, position: str
+) -> tuple[float, float]:
+    """
+    How to adjust the plot_tag to account for the margin
+    """
+    m = margin.fig
+    dx, dy = 0, 0
+
+    if "top" in position:
+        dy = -m.t
+    elif "bottom" in position:
+        dy = m.b
+
+    if "left" in position:
+        dx = m.l
+    elif "right" in position:
+        dx = -m.r
+
+    return (dx, dy)
