@@ -63,23 +63,24 @@ class margin:
         """
         Return margin in request unit
         """
+        m = copy(self)
         if self.unit == unit:
-            return copy(self)
+            return m
 
         conversion = f"{self.unit}-{unit}"
         W, H = self.figure_size
 
-        t, r, b, l = 0, 0, 0, 0
         with suppress(ZeroDivisionError):
-            t = self._convert(conversion, H, self.t)
+            m.t = self._convert(conversion, H, self.t)
         with suppress(ZeroDivisionError):
-            r = self._convert(conversion, W, self.r)
+            m.r = self._convert(conversion, W, self.r)
         with suppress(ZeroDivisionError):
-            b = self._convert(conversion, H, self.b)
+            m.b = self._convert(conversion, H, self.b)
         with suppress(ZeroDivisionError):
-            l = self._convert(conversion, W, self.l)
+            m.l = self._convert(conversion, W, self.l)
 
-        return margin(t, r, b, l, unit)
+        m.unit = unit
+        return m
 
     def _convert(self, conversion: str, D: float, value: float) -> float:
         dpi = 72

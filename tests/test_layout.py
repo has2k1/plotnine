@@ -3,6 +3,8 @@ import pandas as pd
 
 from plotnine import (
     aes,
+    annotate,
+    coord_cartesian,
     element_blank,
     element_line,
     element_rect,
@@ -18,6 +20,7 @@ from plotnine import (
     labs,
     scale_y_continuous,
     theme,
+    theme_matplotlib,
 )
 from plotnine.data import mtcars
 
@@ -30,6 +33,8 @@ red_frame = theme(
     legend_frame=element_rect(color="red"),
     legend_ticks=element_line(color="red"),
 )
+
+data = pd.DataFrame({"x": range(11), "y": range(11)})
 
 
 class TestLayout:
@@ -270,15 +275,37 @@ class TestLegendPositioning:
 
 class TestPlotTagLayout:
     g = (
-        ggplot(mtcars, aes(x="wt", y="mpg", color="gear"))
-        + geom_point()
+        ggplot(data)
+        + geom_point(aes("x", "y", color="x"))
+        + annotate(
+            "point", x=5, y=5, color="green", shape="s", size=10, alpha=0.5
+        )
+        + annotate("vline", xintercept=5, color="green", size=0.5, alpha=0.5)
+        + annotate("hline", yintercept=5, color="green", size=0.5, alpha=0.5)
+        + annotate(
+            "vline",
+            xintercept=[2.5, 7.5],
+            color="green",
+            size=0.5,
+            alpha=0.125,
+        )
+        + annotate(
+            "hline",
+            yintercept=[2.5, 7.5],
+            color="green",
+            size=0.5,
+            alpha=0.125,
+        )
         + labs(
             tag="ABC",
             title="The Title of the Plot",
             subtitle="The Subtitle of the Plot is Longer than the title",
         )
+        + coord_cartesian(expand=False)
+        + theme_matplotlib()
         + theme(
             plot_tag=element_text(color="red"),
+            plot_background=element_rect(color="black"),
         )
     )
 
@@ -299,12 +326,64 @@ class TestPlotTagLayout:
         )
         assert p == "plot_topright"
 
+    def test_plot_topright_margin_in_fig(self):
+        p = self.g + theme(
+            plot_tag=element_text(
+                margin={"t": 0.025, "r": 0.45, "unit": "fig"}
+            ),
+            plot_tag_location="plot",
+            plot_tag_position="topright",
+        )
+        assert p == "plot_topright_margin_in_fig"
+
+    def test_plot_topright_margin_in_pt(self):
+        p = self.g + theme(
+            plot_tag=element_text(margin={"t": 10, "r": 200, "unit": "pt"}),
+            plot_tag_location="plot",
+            plot_tag_position="topright",
+        )
+        assert p == "plot_topright_margin_in_pt"
+
     def test_panel_bottomleft(self):
         p = self.g + theme(
             plot_tag_location="panel",
             plot_tag_position="bottomleft",
         )
         assert p == "panel_bottomleft"
+
+    def test_panel_topleft_margin_in_fig(self):
+        # In the center of the bottom-left quadrant
+        p = self.g + theme(
+            plot_tag=element_text(
+                margin={"t": 0.75, "l": 0.75, "unit": "fig"}
+            ),
+            plot_tag_location="panel",
+            plot_tag_position="topleft",
+        )
+        assert p == "panel_topleft_margin_in_fig"
+
+    def test_panel_topleft_margin_in_pt(self):
+        # The topleft point fo the panel and that of the tag
+        # should define a square space. This is easier to confirm
+        # when the aspect_ratio = 1
+        p = self.g + theme(
+            plot_tag=element_text(margin={"t": 150, "l": 150, "unit": "pt"}),
+            plot_tag_location="panel",
+            plot_tag_position="topleft",
+        )
+        assert p == "panel_topleft_margin_in_pt"
+
+    def test_panel_topleft_margin_in_pt_ar1(self):
+        # The bottomleft point fo the panel and that of the tag
+        # should define a square space.
+        # When the margins are equal the tag should fall along the diagonal
+        p = self.g + theme(
+            aspect_ratio=1,
+            plot_tag=element_text(margin={"b": 150, "l": 150, "unit": "pt"}),
+            plot_tag_location="panel",
+            plot_tag_position="bottomleft",
+        )
+        assert p == "panel_topleft_margin_in_pt_ar1"
 
     def test_plot_xycoords(self):
         p = self.g + theme(
