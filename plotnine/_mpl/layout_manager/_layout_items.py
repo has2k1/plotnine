@@ -13,6 +13,7 @@ from plotnine.exceptions import PlotnineError
 from ..utils import (
     bbox_in_figure_space,
     get_transPanels,
+    rel_position,
     tight_bbox_in_figure_space,
 )
 
@@ -534,9 +535,9 @@ def horizontally_align_text(
             "center": 0.5,
             "right": 1.0,
         }
-        f = lookup[ha]
+        rel = lookup[ha]
     else:
-        f = ha
+        rel = ha
 
     if how == "panel":
         left = spaces.l.left
@@ -546,7 +547,7 @@ def horizontally_align_text(
         right = spaces.r.plot_right
 
     width = spaces.items.calc.width(text)
-    x = left * (1 - f) + (right - width) * f
+    x = rel_position(rel, width, left, right)
     text.set_x(x)
     text.set_horizontalalignment("left")
 
@@ -571,9 +572,9 @@ def vertically_align_text(
             "center_baseline": 0.5,
             "bottom": 0.0,
         }
-        f = lookup[va]
+        rel = lookup[va]
     else:
-        f = va
+        rel = va
 
     if how == "panel":
         top = spaces.t.top
@@ -583,7 +584,7 @@ def vertically_align_text(
         bottom = spaces.b.plot_bottom
 
     height = spaces.items.calc.height(text)
-    y = bottom * (1 - f) + (top - height) * f
+    y = rel_position(rel, height, bottom, top)
     text.set_y(y)
     text.set_verticalalignment("bottom")
 
@@ -619,32 +620,42 @@ def set_legends_position(legends: legend_artists, spaces: LayoutSpaces):
         aob.set_bbox_to_anchor(anchor_point, transform)  # type: ignore
 
     if legends.right:
-        j = legends.right.justification
-        y = (
-            params.bottom * (1 - j)
-            + (params.top - spaces.r._legend_height) * j
+        y = rel_position(
+            legends.right.justification,
+            spaces.r._legend_height,
+            params.bottom,
+            params.top,
         )
         x = spaces.r.x2("legend")
         set_position(legends.right.box, (x, y), (1, 0))
 
     if legends.left:
-        j = legends.left.justification
-        y = (
-            params.bottom * (1 - j)
-            + (params.top - spaces.l._legend_height) * j
+        y = rel_position(
+            legends.left.justification,
+            spaces.l._legend_height,
+            params.bottom,
+            params.top,
         )
         x = spaces.l.x1("legend")
         set_position(legends.left.box, (x, y), (0, 0))
 
     if legends.top:
-        j = legends.top.justification
-        x = params.left * (1 - j) + (params.right - spaces.t._legend_width) * j
+        x = rel_position(
+            legends.top.justification,
+            spaces.t._legend_width,
+            params.left,
+            params.right,
+        )
         y = spaces.t.y2("legend")
         set_position(legends.top.box, (x, y), (0, 1))
 
     if legends.bottom:
-        j = legends.bottom.justification
-        x = params.left * (1 - j) + (params.right - spaces.b._legend_width) * j
+        x = rel_position(
+            legends.bottom.justification,
+            spaces.b._legend_width,
+            params.left,
+            params.right,
+        )
         y = spaces.b.y1("legend")
         set_position(legends.bottom.box, (x, y), (0, 0))
 
@@ -680,17 +691,17 @@ def set_plot_tag_position(tag: Text, spaces: LayoutSpaces):
     }
 
     if isinstance(position, str):
-        # Coordinates of the space to place the tag
+        # Coordinates of the space in which to place the tag
         if location == "plot":
             (x1, y1), (x2, y2) = spaces.plot_area_coordinates
         else:
             (x1, y1), (x2, y2) = spaces.panel_area_coordinates
 
         # Calculate the position when the tag has no margins
-        fx, fy = lookup[position]
+        rel_x, rel_y = lookup[position]
         width, height = spaces.items.calc.size(tag)
-        x = x1 * (1 - fx) + (x2 - width) * fx
-        y = y1 * (1 - fy) + (y2 - height) * fy
+        x = rel_position(rel_x, width, x1, x2)
+        y = rel_position(rel_y, height, y1, y2)
 
         # Adjust the position to account for the margins
         # When the units for the margin are in the figure coordinates,
