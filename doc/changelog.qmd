@@ -4,6 +4,8 @@ title: Changelog
 ## v0.14.2
 (2024-11-21)
 
+[![](https://zenodo.org/badge/DOI/10.5281/zenodo.14198479.svg)](https://doi.org/10.5281/zenodo.14198479)
+
 ### Bug Fixes
 
 - Fixed bugs that affected [](:class:`~plotnine.geom_dotplot`) and
