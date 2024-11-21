@@ -4,14 +4,14 @@
     "href": "changelog.html",
     "title": "Changelog",
     "section": "",
-    "text": "(not-yet-released)\n\n\n\nFixed bugs that affected geom_dotplot and geom_sina where data with an index that did not include 0 led to a crash. (#888)"
+    "text": "(not-yet-released)\n\n\n\nFixed bugs that affected geom_dotplot and geom_sina where data with an index that did not include 0 led to a crash. (#888)\nFixed v0.14.0 regression that made scale_color_cmap_d unusable. (#890)"
   },
   {
     "objectID": "changelog.html#v0.14.2",
     "href": "changelog.html#v0.14.2",
     "title": "Changelog",
     "section": "",
-    "text": "(not-yet-released)\n\n\n\nFixed bugs that affected geom_dotplot and geom_sina where data with an index that did not include 0 led to a crash. (#888)"
+    "text": "(not-yet-released)\n\n\n\nFixed bugs that affected geom_dotplot and geom_sina where data with an index that did not include 0 led to a crash. (#888)\nFixed v0.14.0 regression that made scale_color_cmap_d unusable. (#890)"
   },
   {
     "objectID": "changelog.html#v0.14.1",
