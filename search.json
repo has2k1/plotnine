@@ -4,14 +4,21 @@
     "href": "changelog.html",
     "title": "Changelog",
     "section": "",
-    "text": "(2024-11-05)\n\n\n\nFix expansion of datetime and timedelta scales when using both the lower and upper addition constants.\nIn quarto documents make the output retina even if the fig-format is png.\nFixed bug where you could not save as pdf if also specifying the aspect_ratio. (#885)"
+    "text": "(2024-11-21)\n\n\n\nFixed bugs that affected geom_dotplot and geom_sina where data with an index that did not include 0 led to a crash. (#888)\nFixed v0.14.0 regression that made scale_color_cmap_d unusable. (#890)"
+  },
+  {
+    "objectID": "changelog.html#v0.14.2",
+    "href": "changelog.html#v0.14.2",
+    "title": "Changelog",
+    "section": "",
+    "text": "(2024-11-21)\n\n\n\nFixed bugs that affected geom_dotplot and geom_sina where data with an index that did not include 0 led to a crash. (#888)\nFixed v0.14.0 regression that made scale_color_cmap_d unusable. (#890)"
   },
   {
     "objectID": "changelog.html#v0.14.1",
     "href": "changelog.html#v0.14.1",
     "title": "Changelog",
-    "section": "",
-    "text": "(2024-11-05)\n\n\n\nFix expansion of datetime and timedelta scales when using both the lower and upper addition constants.\nIn quarto documents make the output retina even if the fig-format is png.\nFixed bug where you could not save as pdf if also specifying the aspect_ratio. (#885)"
+    "section": "v0.14.1",
+    "text": "v0.14.1\n(2024-11-05)\n\n\nBug Fixes\n\nFix expansion of datetime and timedelta scales when using both the lower and upper addition constants.\nIn quarto documents make the output retina even if the fig-format is png.\nFixed bug where you could not save as pdf if also specifying the aspect_ratio. (#885)"
   },
   {
     "objectID": "changelog.html#v0.14.0",
