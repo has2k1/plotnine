@@ -76,3 +76,21 @@ def get_transPanels(fig: Figure) -> Transform:
     dx, dy = params.left * W, params.bottom * H
     transFiguretoPanels = Affine2D().scale(sx, sy).translate(dx, dy)
     return fig.transFigure + transFiguretoPanels
+
+
+def rel_position(rel: float, length: float, low: float, high: float) -> float:
+    """
+    Relatively position an object of a given length between two position
+
+    Parameters
+    ----------
+    rel:
+        Relative position of the object between the limits.
+    length:
+        Length of the object
+    low:
+        Lower limit position
+    high:
+        Upper limit position
+    """
+    return low * (1 - rel) + (high - length) * rel
