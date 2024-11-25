@@ -317,7 +317,7 @@ class guides:
                 child=box,
                 pad=1,
                 frameon=False,
-                prop=FontProperties(size=0, stretch=0),
+                prop=FontProperties(size=1, stretch=0),
                 bbox_to_anchor=(0, 0),
                 bbox_transform=self.plot.figure.transFigure,
                 borderpad=0.0,
