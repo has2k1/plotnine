@@ -13,11 +13,12 @@ from ..positions import position_nudge
 from .geom import geom
 
 if typing.TYPE_CHECKING:
-    from typing import Any
+    from typing import Any, Sequence
 
     import pandas as pd
     from matplotlib.axes import Axes
     from matplotlib.offsetbox import DrawingArea
+    from matplotlib.text import Text
 
     from plotnine import aes
     from plotnine.coords.coord import coord
@@ -267,7 +268,7 @@ class geom_text(geom):
         else:
             bbox = {}
 
-        texts = []
+        texts: Sequence[Text] = []
 
         # For labels add a bbox
         for i in range(len(data)):
@@ -282,31 +283,20 @@ class geom_text(geom):
                 text_elem.set_path_effects(params["path_effects"])
 
         # TODO: Do adjust text per panel
-        if _adjust := params["adjust_text"]:
-            from adjustText import adjust_text
-
+        if params["adjust_text"] is not None:
             if params["zorder"] == 1:
                 warn(
                     "For better results with adjust_text, it should "
                     "not be the first layer or the only layer.",
                     PlotnineWarning,
                 )
-
-            _adjust = _adjust.copy()
-            arrowprops = _adjust.pop("arrowprops", {}).copy()
-            if "color" not in arrowprops:
-                arrowprops["color"] = color[0]
-
-            # The head_length, tail_length and tail_width of the arrow are
-            # specified on the same scale as the fontsize, but their default
-            # values are in the [0, 1] range. The true values are obtained by
-            # multiplying by the mutation_scale. The default value of
-            # mutation_scale is 1, so the arrow is effectively invisible.
-            # A good default for this usecase is the size of text.
-            if "mutation_scale" not in arrowprops:
-                arrowprops["mutation_scale"] = data["size"].mean()
-
-            adjust_text(texts, ax=ax, arrowprops=arrowprops, **_adjust)
+            do_adjust_text(
+                texts,
+                ax,
+                color[0],
+                float(data["size"].mean()),
+                params["adjust_text"],
+            )
 
     @staticmethod
     def draw_legend(
@@ -364,3 +354,33 @@ def check_adjust_text():
     except ImportError as err:
         msg = "To use adjust_text you must install the adjustText package."
         raise PlotnineError(msg) from err
+
+
+def do_adjust_text(
+    texts: Sequence[Text],
+    ax: Axes,
+    color: Any,
+    size: float,
+    params: dict[str, Any],
+):
+    from adjustText import adjust_text
+
+    _default_params = {"expand": (1.5, 1.5)}
+    # The default arrowprops that are passed to
+    # matplotlib.patches.FancyArrowPatch
+    _default_arrowprops = {
+        "arrowstyle": "->",
+        "linewidth": 0.5,
+        "color": color,
+        # The head_length, tail_length and tail_width of the arrow are
+        # specified on the same scale as the fontsize, but their
+        # default values are in the [0, 1] range. The true values are
+        # obtained by multiplying by the mutation_scale. The default
+        # value of mutation_scale is 1, so the arrow is effectively
+        # invisible. A good default for this usecase is the size of
+        # text.
+        "mutation_scale": size,
+    }
+    params = _default_params | params
+    params["arrowprops"] = _default_arrowprops | params.get("arrowprops", {})
+    adjust_text(texts, ax=ax, **params)
