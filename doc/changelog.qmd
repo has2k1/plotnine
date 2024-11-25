@@ -1,6 +1,14 @@
 ---
 title: Changelog
 ---
+## v0.14.3
+(not-yet-released)
+
+### Enhancements
+
+- Got rid of a logging information about the fontsize that is recorded for all
+  plots that have a legend. ({{< issue 889 >}})
+
 ## v0.14.2
 (2024-11-21)
 
