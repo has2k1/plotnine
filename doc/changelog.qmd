@@ -9,6 +9,9 @@ title: Changelog
 - Got rid of a logging information about the fontsize that is recorded for all
   plots that have a legend. ({{< issue 889 >}})
 
+- When using [](:class:`~plotnine.geom_text`) with `adjust_text`, some sensible
+  default arrow properties will be applied.
+
 ## v0.14.2
 (2024-11-21)
 

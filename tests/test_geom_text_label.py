@@ -39,8 +39,7 @@ data = pd.DataFrame(
 )
 
 adjust_text = {
-    "expand": (2, 2),
-    "arrowprops": {"arrowstyle": "->", "color": "red"},
+    "arrowprops": {"color": "red"},
 }
 
 
