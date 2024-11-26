@@ -2,7 +2,7 @@
 title: Changelog
 ---
 ## v0.14.3
-(not-yet-released)
+(2024-11-26)
 
 ### Enhancements
 
