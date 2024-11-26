@@ -12,6 +12,11 @@ title: Changelog
 - When using [](:class:`~plotnine.geom_text`) with `adjust_text`, some sensible
   default arrow properties will be applied.
 
+- Changed the threshold number of keys for when the legend is split into multiple
+  columns from 20 to 15. This only applies in the default case when the user does
+  not set the number of rows or columns i.e. `guide_legend(nrow=None, ncol=None).
+  ({{< issue 757 >}})
+
 ## v0.14.2
 (2024-11-21)
 

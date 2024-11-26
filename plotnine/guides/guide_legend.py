@@ -223,7 +223,7 @@ class guide_legend(guide):
             if elements.is_horizontal:
                 nrow = int(np.ceil(nbreak / 5))
             else:
-                ncol = int(np.ceil(nbreak / 20))
+                ncol = int(np.ceil(nbreak / 15))
 
         if nrow is None:
             ncol = cast(int, ncol)
