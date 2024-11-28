@@ -985,7 +985,7 @@ def cross_join(df1: pd.DataFrame, df2: pd.DataFrame) -> pd.DataFrame:
     if len(df2) == 0:
         return df1
 
-    return df1.join(df2, how="cross")  # type: ignore
+    return df1.join(df2, how="cross")
 
 
 def to_inches(value: float, units: str) -> float:

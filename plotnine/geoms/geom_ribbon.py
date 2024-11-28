@@ -181,10 +181,18 @@ class geom_ribbon(geom):
 
         if outline_type in ("lower", "both"):
             geom_path.draw_group(
-                data.eval(f"y = {y}min"), panel_params, coord, ax, **params
+                data.assign(y=data[f"{y}min"]),
+                panel_params,
+                coord,
+                ax,
+                **params,
             )
 
         if outline_type in ("upper", "both"):
             geom_path.draw_group(
-                data.eval(f"y = {y}max"), panel_params, coord, ax, **params
+                data.assign(y=data[f"{y}max"]),
+                panel_params,
+                coord,
+                ax,
+                **params,
             )
