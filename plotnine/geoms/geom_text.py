@@ -227,6 +227,7 @@ class geom_text(geom):
         **params: Any,
     ):
         data = coord.transform(data, panel_params)
+        zorder = params["zorder"]
 
         # Bind color and alpha
         color = to_rgba(data["color"], data["alpha"])
@@ -245,7 +246,7 @@ class geom_text(geom):
             inplace=True,
         )
         plot_data["color"] = color
-        plot_data["zorder"] = params["zorder"]
+        plot_data["zorder"] = zorder
         plot_data["rasterized"] = params["raster"]
         plot_data["clip_on"] = True
 
@@ -284,7 +285,7 @@ class geom_text(geom):
 
         # TODO: Do adjust text per panel
         if params["adjust_text"] is not None:
-            if params["zorder"] == 1:
+            if zorder == 1:
                 warn(
                     "For better results with adjust_text, it should "
                     "not be the first layer or the only layer.",
@@ -293,9 +294,10 @@ class geom_text(geom):
             do_adjust_text(
                 texts,
                 ax,
+                params["adjust_text"],
                 color[0],
                 float(data["size"].mean()),
-                params["adjust_text"],
+                zorder,
             )
 
     @staticmethod
@@ -359,13 +361,16 @@ def check_adjust_text():
 def do_adjust_text(
     texts: Sequence[Text],
     ax: Axes,
+    params: dict[str, Any],
     color: Any,
     size: float,
-    params: dict[str, Any],
+    zorder: float,
 ):
     from adjustText import adjust_text
 
-    _default_params = {"expand": (1.5, 1.5)}
+    _default_params = {
+        "expand": (1.5, 1.5),
+    }
     # The default arrowprops that are passed to
     # matplotlib.patches.FancyArrowPatch
     _default_arrowprops = {
@@ -380,6 +385,7 @@ def do_adjust_text(
         # invisible. A good default for this usecase is the size of
         # text.
         "mutation_scale": size,
+        "zorder": zorder,
     }
     params = _default_params | params
     params["arrowprops"] = _default_arrowprops | params.get("arrowprops", {})

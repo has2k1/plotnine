@@ -1,6 +1,15 @@
 ---
 title: Changelog
 ---
+
+## v0.14.4
+(not-yet-released)
+
+### Bug Fixes
+
+- Fixed [](:class:`~plotnine.geom_text`) with `adjust_text` so that the
+  the arrows are drawn at the same layer (zorder) as the text.
+
 ## v0.14.3
 (2024-11-26)
 [![](https://zenodo.org/badge/DOI/10.5281/zenodo.14224336.svg)](https://doi.org/10.5281/zenodo.14224336)
