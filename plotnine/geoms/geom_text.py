@@ -368,6 +368,14 @@ def do_adjust_text(
 ):
     from adjustText import adjust_text
 
+    # Mark all axis as stale
+    # When anything is drawn onto the axes, its limits become stable and
+    # have to be recalculated. When we use ax.add_collection directly, it is
+    # on us mark the axis limits as stale. For now the staleness only affects
+    # adjust_text, so we do a single "reset" here instead of all the places
+    # we use ax.add_collection.
+    ax._request_autoscale_view()  # pyright: ignore[reportAttributeAccessIssue]
+
     _default_params = {
         "expand": (1.5, 1.5),
     }
