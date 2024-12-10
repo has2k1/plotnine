@@ -10,6 +10,9 @@ title: Changelog
 - Fixed [](:class:`~plotnine.geom_text`) with `adjust_text` so that the
   the arrows are drawn at the same layer (zorder) as the text.
 
+- Fixed [](:class:`~plotnine.geom_text`) with `adjust_text` for some
+  cases where the text are placed outside the panels. {{< issue 899 >}}
+
 ## v0.14.3
 (2024-11-26)
 [![](https://zenodo.org/badge/DOI/10.5281/zenodo.14224336.svg)](https://doi.org/10.5281/zenodo.14224336)
