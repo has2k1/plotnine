@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-import typing
 from collections import Counter
 from contextlib import suppress
+from typing import TYPE_CHECKING
 from warnings import warn
 
 import numpy as np
@@ -12,7 +12,7 @@ from ..doctools import document
 from ..exceptions import PlotnineWarning
 from .geom import geom
 
-if typing.TYPE_CHECKING:
+if TYPE_CHECKING:
     from typing import Any, Literal, Sequence
 
     import numpy.typing as npt
@@ -24,6 +24,7 @@ if typing.TYPE_CHECKING:
     from plotnine.coords.coord import coord
     from plotnine.iapi import panel_view
     from plotnine.layer import layer
+    from plotnine.typing import BoolArray
 
 
 @document
@@ -66,7 +67,7 @@ class geom_path(geom):
     }
 
     def handle_na(self, data: pd.DataFrame) -> pd.DataFrame:
-        def keep(x: Sequence[float]) -> npt.NDArray[np.bool_]:
+        def keep(x: Sequence[float]) -> BoolArray:
             # first non-missing to last non-missing
             first = match([False], x, nomatch=1, start=0)[0]
             last = len(x) - match([False], x[::-1], nomatch=1, start=0)[0]
@@ -90,7 +91,7 @@ class geom_path(geom):
 
         # return data
         n1 = len(data)
-        data = data[bool_idx]
+        data = data.loc[bool_idx]  # pyright: ignore[reportCallIssue,reportArgumentType]
         data.reset_index(drop=True, inplace=True)
         n2 = len(data)
 
@@ -481,7 +482,7 @@ def _draw_segments(data: pd.DataFrame, ax: Axes, **params: Any):
     linestyle = data.loc[indices, "linetype"]
 
     coll = LineCollection(
-        segments,
+        segments,  # pyright: ignore[reportArgumentType]
         edgecolor=edgecolor,
         linewidth=linewidth,
         linestyle=linestyle,

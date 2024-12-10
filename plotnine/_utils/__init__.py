@@ -316,10 +316,10 @@ def ninteraction(df: pd.DataFrame, drop: bool = False) -> list[int]:
     if drop:
         return _id_var(res, drop)
     else:
-        return list(res)
+        return res
 
 
-def _id_var(x: pd.Series[Any], drop: bool = False) -> list[int]:
+def _id_var(x: AnyArrayLike, drop: bool = False) -> list[int]:
     """
     Assign ids to items in x. If two items
     are the same, they get the same id.
@@ -334,7 +334,7 @@ def _id_var(x: pd.Series[Any], drop: bool = False) -> list[int]:
     if len(x) == 0:
         return []
 
-    if array_kind.categorical(x):
+    if isinstance(x, pd.Series) and array_kind.categorical(x):
         if drop:
             x = x.cat.remove_unused_categories()
             lst = list(x.cat.codes + 1)
