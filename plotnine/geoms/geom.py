@@ -217,7 +217,7 @@ class geom(ABC, metaclass=Register):
         data :
             Data used for drawing the geom.
         aes_modifiers :
-            Aesthetics
+            Aesthetics to evaluate
 
         Returns
         -------

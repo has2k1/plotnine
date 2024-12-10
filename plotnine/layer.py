@@ -370,6 +370,7 @@ class layer:
         self,
         data: pd.DataFrame,
         aes_modifiers: dict[str, Any],
+        scales: Scales | None = None,
     ) -> pd.DataFrame:
         """
         Prepare/modify data for plotting
@@ -382,7 +383,17 @@ class layer:
             Expression to evaluate and replace aesthetics in
             the data.
         """
-        return self.geom.use_defaults(data, aes_modifiers)
+        old_columns = data.columns
+        data = self.geom.use_defaults(data, aes_modifiers)
+        if scales is not None:
+            # The default aesthetics and the aesthetic parameters are
+            # specified in userspace. When we add them we have to
+            # transform them.
+            new_columns = data.columns.difference(old_columns)
+            _data = scales.transform_df(self.data[new_columns])
+            for col in new_columns:
+                data[col] = _data[col]
+        return data
 
     def finish_statistics(self):
         """
@@ -468,9 +479,9 @@ class Layers(List[layer]):
         for l in self:
             l.compute_position(layout)
 
-    def use_defaults_after_scale(self):
+    def use_defaults_after_scale(self, scales: Scales):
         for l in self:
-            l.use_defaults(l.data, l.mapping._scaled)
+            l.data = l.use_defaults(l.data, l.mapping._scaled, scales)
 
     def transform(self, scales: Scales):
         for l in self:

@@ -13,6 +13,16 @@ title: Changelog
 - Fixed [](:class:`~plotnine.geom_text`) with `adjust_text` for some
   cases where the text are placed outside the panels. {{< issue 899 >}}
 
+- The default aesthetics and aesthetic parameters of geoms (and stats) are
+  now transformed. So you can now set date values as aesthetic parameters.
+  e.g.
+
+  ```python
+  geom_point(y=datetime(2024, 12, 11))
+  ```
+
+  if the `y` aesthetic is mapped to datetime column in another layer.
+
 ## v0.14.3
 (2024-11-26)
 [![](https://zenodo.org/badge/DOI/10.5281/zenodo.14224336.svg)](https://doi.org/10.5281/zenodo.14224336)
