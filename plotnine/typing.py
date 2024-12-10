@@ -38,7 +38,7 @@ class DataFrameConvertible(Protocol):
 # Arrays (strictly numpy)
 AnyArray: TypeAlias = NDArray[Any]
 BoolArray: TypeAlias = NDArray[np.bool_]
-FloatArray: TypeAlias = NDArray[np.float64]
+FloatArray: TypeAlias = NDArray[np.floating]
 IntArray: TypeAlias = NDArray[np.int64]
 StrArray: TypeAlias = NDArray[np.str_]
 

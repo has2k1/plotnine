@@ -77,7 +77,7 @@ dev = [
 ]
 
 typing = [
-    "pyright==1.1.389",
+    "pyright==1.1.390",
     "ipython",
     "pandas-stubs",
 ]

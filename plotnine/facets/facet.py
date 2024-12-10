@@ -405,7 +405,7 @@ class facet:
         # Create axes
         it = itertools.product(range(self.nrow), range(self.ncol))
         for i, (row, col) in enumerate(it):
-            axsarr[row, col] = figure.add_subplot(gs[i])
+            axsarr[row, col] = figure.add_subplot(gs[i])  # pyright: ignore[reportCallIssue,reportArgumentType]
 
         # axsarr = np.array([
         #     figure.add_subplot(gs[i])
