@@ -53,6 +53,7 @@ from plotnine.scales.scale_xy import (
     scale_x_discrete,
     scale_x_log10,
     scale_y_continuous,
+    scale_y_log10,
 )
 from plotnine.scales.scales import make_scale
 
@@ -876,3 +877,33 @@ def test_discrete_scale_for_empty_layer():
     )
 
     p.draw_test()
+
+
+def test_transform_aes_defaults_and_params():
+    data = pd.DataFrame({"x": range(5), "y": 10 ** np.arange(5)})
+    # Another set of points that should be inline with the first set
+    # both with and without the scale_y_log10.
+    data2 = pd.DataFrame({"x": [3.2, 3.4, 3.6, 3.8]})
+    yparam = list(10 ** data2["x"])
+
+    p = (
+        ggplot(data, aes("x", "y"))
+        + geom_point()
+        + geom_point(data=data2, y=yparam, color="red")
+        + scale_y_log10()
+    )
+    assert p == "transform_aes_defaults_and_params"
+
+
+def test_transform_datetime_aes_param():
+    data = pd.DataFrame(
+        {"x": range(5), "y": [datetime(2024, i, 1) for i in range(1, 6)]}
+    )
+    yparam: list[datetime] = list(data["y"] + timedelta(days=30))
+
+    p = (
+        ggplot(data, aes("x", "y"))
+        + geom_point()
+        + geom_point(y=yparam, color="red")
+    )
+    assert p == "transform_datetime_aes_param"
