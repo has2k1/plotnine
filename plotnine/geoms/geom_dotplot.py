@@ -199,7 +199,7 @@ class geom_dotplot(geom):
         # For perfect circles the width/height of the circle(ellipse)
         # should factor in the dimensions of axes
         bbox = ax.get_window_extent().transformed(
-            ax.figure.dpi_scale_trans.inverted()  # pyright: ignore
+            ax.figure.dpi_scale_trans.inverted()
         )
         ax_width, ax_height = bbox.width, bbox.height
 
