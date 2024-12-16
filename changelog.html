@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Changelog – plotnine 0.0.post1+g0ba0109</title>
+<title>Changelog – plotnine 0.0.post1+ged60126</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -113,7 +113,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">plotnine 0.0.post1+g0ba0109</span>
+    <span class="navbar-title">plotnine 0.0.post1+ged60126</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -327,6 +327,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>The default aesthetics and aesthetic parameters of geoms (and stats) are now transformed. So you can now set date values as aesthetic parameters. e.g.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>geom_point(y<span class="op">=</span>datetime(<span class="dv">2024</span>, <span class="dv">12</span>, <span class="dv">11</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>if the <code>y</code> aesthetic is mapped to datetime column in another layer.</p></li>
+<li><p>Fixed bug for matplotlib&gt;3.10 where the <code>axis_ticks_length</code> for the x-axis had no effect.</p></li>
 </ul>
 </section>
 </section>
