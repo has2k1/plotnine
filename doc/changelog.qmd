@@ -3,7 +3,8 @@ title: Changelog
 ---
 
 ## v0.14.4
-(not-yet-released)
+(2024-12-16)
+[![](https://zenodo.org/badge/DOI/10.5281/zenodo.14501317.svg)](https://doi.org/10.5281/zenodo.14501317)
 
 ### Bug Fixes
 
