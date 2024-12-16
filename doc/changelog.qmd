@@ -23,6 +23,9 @@ title: Changelog
 
   if the `y` aesthetic is mapped to datetime column in another layer.
 
+- Fixed bug for matplotlib>3.10 where the `axis_ticks_length` for the x-axis
+  had no effect.
+
 ## v0.14.3
 (2024-11-26)
 [![](https://zenodo.org/badge/DOI/10.5281/zenodo.14224336.svg)](https://doi.org/10.5281/zenodo.14224336)

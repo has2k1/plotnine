@@ -1037,8 +1037,20 @@ class axis_ticks_major_x(MixinSequenceOfValues):
     def apply_ax(self, ax: Axes):
         super().apply_ax(ax)
         params = ax.xaxis.get_tick_params(which="major")
-        if not params.get("left", False):
+
+        # TODO: Remove this code when the minimum matplotlib >= 3.10.0,
+        # and use the commented one below it
+        import matplotlib as mpl
+        from packaging import version
+
+        vinstalled = version.parse(mpl.__version__)
+        v310 = version.parse("3.10.0")
+        name = "bottom" if vinstalled >= v310 else "left"
+        if not params.get(name, False):
             return
+
+        # if not params.get("bottom", False):
+        #     return
 
         tick_params = {}
         properties = self.properties
