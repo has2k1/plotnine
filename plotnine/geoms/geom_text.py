@@ -393,7 +393,9 @@ def do_adjust_text(
         # invisible. A good default for this usecase is the size of
         # text.
         "mutation_scale": size,
-        "zorder": zorder,
+        # The zorder is of the text / label box, we want the arrow to
+        # be between the layer before the text and the text.
+        "zorder": zorder - 0.5,
     }
     params = _default_params | params
     params["arrowprops"] = _default_arrowprops | params.get("arrowprops", {})
