@@ -308,7 +308,7 @@ class LayoutItems:
         # the axis_text.
         major, minor = [], []
         if not self._is_blank("axis_text_x"):
-            h = self.plot.figure.get_figheight() * 72
+            h = self.plot.figure.bbox.height
             major = [
                 (t.get_pad() or 0) / h for t in ax.xaxis.get_major_ticks()
             ]
@@ -325,7 +325,7 @@ class LayoutItems:
         # the axis_text.
         major, minor = [], []
         if not self._is_blank("axis_text_y"):
-            w = self.plot.figure.get_figwidth() * 72
+            w = self.plot.figure.bbox.width
             major = [
                 (t.get_pad() or 0) / w for t in ax.yaxis.get_major_ticks()
             ]
