@@ -3,6 +3,7 @@ title: Changelog
 ---
 ## v0.14.5
 (2025-01-02)
+[![](https://zenodo.org/badge/DOI/10.5281/zenodo.14587381.svg)](https://doi.org/10.5281/zenodo.14587381)
 
 - Fixed [](:class:`~plotnine.geom_text`) with `adjust_text` so that the
   the arrows are drawn between layers with the text/label on top.
