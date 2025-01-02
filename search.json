@@ -4,14 +4,21 @@
     "href": "changelog.html",
     "title": "Changelog",
     "section": "",
-    "text": "(not-yet-released)\n\n\n\nFixed geom_text with adjust_text so that the the arrows are drawn at the same layer (zorder) as the text.\nFixed geom_text with adjust_text for some cases where the text are placed outside the panels. #899\nThe default aesthetics and aesthetic parameters of geoms (and stats) are now transformed. So you can now set date values as aesthetic parameters. e.g.\ngeom_point(y=datetime(2024, 12, 11))\nif the y aesthetic is mapped to datetime column in another layer.\nFixed bug for matplotlib&gt;3.10 where the axis_ticks_length for the x-axis had no effect."
+    "text": "(2025-01-02)\n\nFixed geom_text with adjust_text so that the the arrows are drawn between layers with the text/label on top."
+  },
+  {
+    "objectID": "changelog.html#v0.14.5",
+    "href": "changelog.html#v0.14.5",
+    "title": "Changelog",
+    "section": "",
+    "text": "(2025-01-02)\n\nFixed geom_text with adjust_text so that the the arrows are drawn between layers with the text/label on top."
   },
   {
     "objectID": "changelog.html#v0.14.4",
     "href": "changelog.html#v0.14.4",
     "title": "Changelog",
-    "section": "",
-    "text": "(not-yet-released)\n\n\n\nFixed geom_text with adjust_text so that the the arrows are drawn at the same layer (zorder) as the text.\nFixed geom_text with adjust_text for some cases where the text are placed outside the panels. #899\nThe default aesthetics and aesthetic parameters of geoms (and stats) are now transformed. So you can now set date values as aesthetic parameters. e.g.\ngeom_point(y=datetime(2024, 12, 11))\nif the y aesthetic is mapped to datetime column in another layer.\nFixed bug for matplotlib&gt;3.10 where the axis_ticks_length for the x-axis had no effect."
+    "section": "v0.14.4",
+    "text": "v0.14.4\n(2024-16-26)\n\nBug Fixes\n\nFixed geom_text with adjust_text so that the the arrows are drawn at the same layer (zorder) as the text.\nFixed geom_text with adjust_text for some cases where the text are placed outside the panels. #899\nThe default aesthetics and aesthetic parameters of geoms (and stats) are now transformed. So you can now set date values as aesthetic parameters. e.g.\ngeom_point(y=datetime(2024, 12, 11))\nif the y aesthetic is mapped to datetime column in another layer.\nFixed bug for matplotlib&gt;3.10 where the axis_ticks_length for the x-axis had no effect."
   },
   {
     "objectID": "changelog.html#v0.14.3",
