@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from contextlib import suppress
 from dataclasses import dataclass
+from functools import cached_property
 from typing import TYPE_CHECKING, Sequence
 from warnings import warn
 
@@ -169,7 +170,7 @@ class scale_continuous(
 
         return t
 
-    @property
+    @cached_property
     def final_limits(self) -> tuple[float, float]:
         if self.is_empty():
             return (0, 1)

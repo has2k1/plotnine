@@ -3,6 +3,7 @@ from __future__ import annotations
 from abc import ABC
 from copy import copy, deepcopy
 from dataclasses import dataclass, field
+from functools import cached_property
 from typing import TYPE_CHECKING, Generic, cast
 
 import numpy as np
@@ -271,7 +272,7 @@ class scale(
             return True
         return self._range.is_empty() and self.limits is None
 
-    @property
+    @cached_property
     def final_limits(self) -> Any:
         raise NotImplementedError
 

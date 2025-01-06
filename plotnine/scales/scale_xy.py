@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from functools import cached_property
 from itertools import chain
 from typing import TYPE_CHECKING
 
@@ -88,7 +89,7 @@ class scale_position_discrete(scale_discrete):
             return list(seq)
         return list(x)
 
-    @property
+    @cached_property
     def final_limits(self):
         if self.is_empty():
             return (0, 1)

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from functools import cached_property
 from typing import TYPE_CHECKING, Any, Literal, Sequence
 
 import numpy as np
@@ -75,7 +76,7 @@ class scale_discrete(
         super().__post_init__()
         self._range = RangeDiscrete()
 
-    @property
+    @cached_property
     def final_limits(self) -> Sequence[str]:
         if self.is_empty():
             return ("0", "1")
