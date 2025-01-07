@@ -380,7 +380,7 @@ class guides:
         self._apply_guide_themes(gdefs)
         legends = self._assemble_guides(gdefs, guide_boxes)
         for aob in legends.boxes:
-            self.plot.figure.add_artist(aob)
+            self.plot.subfigure.add_artist(aob)
 
         self.plot.theme.targets.legends = legends
 

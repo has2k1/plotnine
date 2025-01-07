@@ -19,7 +19,7 @@ if typing.TYPE_CHECKING:
 
     import numpy.typing as npt
     from matplotlib.axes import Axes
-    from matplotlib.figure import Figure
+    from matplotlib.figure import SubFigure
     from matplotlib.gridspec import GridSpec
 
     from plotnine import ggplot, theme
@@ -82,9 +82,6 @@ class facet:
     # Theme object, automatically updated before drawing the plot
     theme: theme
 
-    # Figure object on which the facet panels are created
-    figure: Figure
-
     # coord object, automatically updated before drawing the plot
     coordinates: coord
 
@@ -99,8 +96,6 @@ class facet:
 
     # Facet strips
     strips: Strips
-
-    grid_spec: GridSpec
 
     # The plot environment
     environment: Environment
@@ -138,16 +133,16 @@ class facet:
         self.plot = plot
         self.layout = plot.layout
 
-        if hasattr(plot, "figure"):
-            self.figure, self.axs = plot.figure, plot.axs
+        if hasattr(plot, "axs"):
+            self.axs = plot.axs
         else:
-            self.figure, self.axs = self.make_figure()
+            self.axs = self._make_axes(plot.subfigure)
 
         self.coordinates = plot.coordinates
         self.theme = plot.theme
         self.layout.axs = self.axs
         self.strips = Strips.from_facet(self)
-        return self.figure, self.axs
+        return self.axs
 
     def setup_data(self, data: list[pd.DataFrame]) -> list[pd.DataFrame]:
         """
@@ -363,7 +358,7 @@ class facet:
         new = result.__dict__
 
         # don't make a deepcopy of the figure & the axes
-        shallow = {"figure", "axs", "first_ax", "last_ax"}
+        shallow = {"axs", "first_ax", "last_ax"}
         for key, item in old.items():
             if key in shallow:
                 new[key] = item
@@ -373,35 +368,28 @@ class facet:
 
         return result
 
-    def _make_figure(self) -> tuple[Figure, GridSpec]:
+    def _get_gridspec(self) -> GridSpec:
         """
-        Create figure & gridspec
+        Create gridspec for the panels
         """
-        import matplotlib.pyplot as plt
         from matplotlib.gridspec import GridSpec
 
-        return plt.figure(), GridSpec(self.nrow, self.ncol)
+        return GridSpec(self.nrow, self.ncol)
 
-    def make_figure(self) -> tuple[Figure, list[Axes]]:
+    def _make_axes(self, subfigure: SubFigure) -> list[Axes]:
         """
-        Create and return Matplotlib figure and subplot axes
+        Create and return subplot axes
         """
         num_panels = len(self.layout.layout)
         axsarr = np.empty((self.nrow, self.ncol), dtype=object)
 
-        # Create figure & gridspec
-        figure, gs = self._make_figure()
-        self.grid_spec = gs
+        # Create gridspec
+        gs = self._get_gridspec()
 
         # Create axes
         it = itertools.product(range(self.nrow), range(self.ncol))
         for i, (row, col) in enumerate(it):
-            axsarr[row, col] = figure.add_subplot(gs[i])
-
-        # axsarr = np.array([
-        #     figure.add_subplot(gs[i])
-        #     for i in range(self.nrow * self.ncol)
-        # ]).reshape((self.nrow, self.ncol))
+            axsarr[row, col] = subfigure.add_subplot(gs[i])
 
         # Rearrange axes
         # They are ordered to match the positions in the layout table
@@ -420,9 +408,9 @@ class facet:
 
         # Delete unused axes
         for ax in axs[num_panels:]:
-            figure.delaxes(ax)
+            subfigure.delaxes(ax)
         axs = axs[:num_panels]
-        return figure, list(axs)
+        return list(axs)
 
     def _aspect_ratio(self) -> Optional[float]:
         """

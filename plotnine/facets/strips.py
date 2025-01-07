@@ -44,7 +44,6 @@ class strip:
         self.ax = ax
         self.position = position
         self.facet = facet
-        self.figure = facet.figure
         self.theme = facet.theme
         self.layout_info = layout_info
         label_info = strip_label_details.make(layout_info, vars, position)
@@ -135,7 +134,7 @@ class strip:
         text = StripText(draw_info)
         rect = text.patch
 
-        self.figure.add_artist(text)
+        self.facet.plot.subfigure.add_artist(text)
 
         if draw_info.position == "right":
             targets.strip_background_y.append(rect)

@@ -1,18 +1,18 @@
 from __future__ import annotations
 
-import typing
 from copy import deepcopy
+from typing import TYPE_CHECKING, cast
 
 from matplotlib.animation import ArtistAnimation
 
 from .exceptions import PlotnineError
 
-if typing.TYPE_CHECKING:
+if TYPE_CHECKING:
     from typing import Iterable
 
     from matplotlib.artist import Artist
     from matplotlib.axes import Axes
-    from matplotlib.figure import Figure
+    from matplotlib.figure import Figure, SubFigure
 
     from plotnine import ggplot
     from plotnine.scales.scale import scale
@@ -87,6 +87,7 @@ class PlotnineAnimation(ArtistAnimation):
             List of [](`Matplotlib.artist.Artist`)
         """
         import matplotlib.pyplot as plt
+        from matplotlib.figure import Figure, SubFigure
 
         # For keeping track of artists for each frame
         artist_offsets: dict[str, list[int]] = {
@@ -189,6 +190,7 @@ class PlotnineAnimation(ArtistAnimation):
                     )
 
         figure: Figure | None = None
+        subfigure: SubFigure | None = None
         axs: list[Axes] = []
         artists = []
         scales = None  # Will hold the scales of the first frame
@@ -198,14 +200,19 @@ class PlotnineAnimation(ArtistAnimation):
         # onto the figure and axes created by the first ggplot and
         # they create the subsequent frames.
         for frame_no, p in enumerate(plots):
-            if figure is None:
-                figure = p.draw()
-                axs = figure.get_axes()
+            if frame_no == 0:
+                p._create_figure()
+                p.draw()
+                figure, subfigure = p.figure, p.subfigure
+                axs = subfigure.get_axes()
                 initialise_artist_offsets(len(axs))
                 scales = p._build_objs.scales
                 set_scale_limits(scales)
             else:
-                plot = self._draw_animation_plot(p, figure, axs)
+                p.figure = cast(Figure, figure)
+                p.subfigure = cast(SubFigure, subfigure)
+                p.axs = axs
+                plot = self._draw_animation_plot(p)
                 check_scale_limits(plot.scales, frame_no)
 
             artists.append(get_frame_artists(axs))
@@ -218,9 +225,7 @@ class PlotnineAnimation(ArtistAnimation):
         plt.close(figure)
         return figure, artists
 
-    def _draw_animation_plot(
-        self, plot: ggplot, figure: Figure, axs: list[Axes]
-    ) -> ggplot:
+    def _draw_animation_plot(self, plot: ggplot) -> ggplot:
         """
         Draw a plot/frame of the animation
 
@@ -229,10 +234,8 @@ class PlotnineAnimation(ArtistAnimation):
         from ._utils.context import plot_context
 
         plot = deepcopy(plot)
-        plot.figure = figure
-        plot.axs = axs
         with plot_context(plot):
             plot._build()
-            plot.figure, plot.axs = plot.facet.setup(plot)
+            plot.facet.setup(plot)
             plot._draw_layers()
         return plot

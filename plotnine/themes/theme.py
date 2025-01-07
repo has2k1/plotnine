@@ -14,7 +14,6 @@ if typing.TYPE_CHECKING:
     from typing import Type
 
     from matplotlib.axes import Axes
-    from matplotlib.figure import Figure
     from typing_extensions import Self
 
     from plotnine import ggplot
@@ -98,7 +97,6 @@ class theme:
     # it is useful at legend drawing time and
     # when applying the theme.
     plot: ggplot
-    figure: Figure
     axs: list[Axes]
 
     # Dictionary to collect matplotlib objects that will
@@ -299,7 +297,6 @@ class theme:
         It also initialises where the artists to be themed will be stored.
         """
         self.plot = plot
-        self.figure = plot.figure
         self.axs = plot.axs
         self.targets = ThemeTargets()
         self._add_default_themeable_properties()

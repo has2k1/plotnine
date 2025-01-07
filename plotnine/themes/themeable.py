@@ -29,7 +29,7 @@ if TYPE_CHECKING:
 
     from matplotlib.artist import Artist
     from matplotlib.axes import Axes
-    from matplotlib.figure import Figure
+    from matplotlib.figure import SubFigure
 
     from plotnine import theme
     from plotnine.themes.targets import ThemeTargets
@@ -212,11 +212,11 @@ class themeable(metaclass=RegistryHierarchyMeta):
 
         Subclasses should not have to override this method
         """
-        blanks = (self.blank_figure, self.blank_ax)
-        applys = (self.apply_figure, self.apply_ax)
-        do_figure, do_ax = blanks if self.is_blank() else applys
+        blanks = (self.blank_subfigure, self.blank_ax)
+        applys = (self.apply_subfigure, self.apply_ax)
+        do_subfigure, do_ax = blanks if self.is_blank() else applys
 
-        do_figure(theme.figure, theme.targets)
+        do_subfigure(theme.plot.subfigure, theme.targets)
         for ax in theme.axs:
             do_ax(ax)
 
@@ -237,7 +237,7 @@ class themeable(metaclass=RegistryHierarchyMeta):
         ax : matplotlib.axes.Axes
         """
 
-    def apply_figure(self, figure: Figure, targets: ThemeTargets):
+    def apply_subfigure(self, subfigure: SubFigure, targets: ThemeTargets):
         """
         Apply theme to the figure
         """
@@ -247,7 +247,7 @@ class themeable(metaclass=RegistryHierarchyMeta):
         Blank out theme elements
         """
 
-    def blank_figure(self, figure: Figure, targets: ThemeTargets):
+    def blank_subfigure(self, subfigure: SubFigure, targets: ThemeTargets):
         """
         Blank out elements on the figure
         """
@@ -488,8 +488,8 @@ class axis_title_x(themeable):
 
     _omit = ["margin"]
 
-    def apply_figure(self, figure: Figure, targets: ThemeTargets):
-        super().apply_figure(figure, targets)
+    def apply_subfigure(self, subfigure: SubFigure, targets: ThemeTargets):
+        super().apply_subfigure(subfigure, targets)
         if text := targets.axis_title_x:
             props = self.properties
             # ha can be a float and is handled by the layout manager
@@ -497,8 +497,8 @@ class axis_title_x(themeable):
                 del props["ha"]
             text.set(**props)
 
-    def blank_figure(self, figure: Figure, targets: ThemeTargets):
-        super().blank_figure(figure, targets)
+    def blank_subfigure(self, subfigure: SubFigure, targets: ThemeTargets):
+        super().blank_subfigure(subfigure, targets)
         if text := targets.axis_title_x:
             text.set_visible(False)
 
@@ -514,8 +514,8 @@ class axis_title_y(themeable):
 
     _omit = ["margin"]
 
-    def apply_figure(self, figure: Figure, targets: ThemeTargets):
-        super().apply_figure(figure, targets)
+    def apply_subfigure(self, subfigure: SubFigure, targets: ThemeTargets):
+        super().apply_subfigure(subfigure, targets)
         if text := targets.axis_title_y:
             props = self.properties
             # va can be a float and is handled by the layout manager
@@ -523,8 +523,8 @@ class axis_title_y(themeable):
                 del props["va"]
             text.set(**props)
 
-    def blank_figure(self, figure: Figure, targets: ThemeTargets):
-        super().blank_figure(figure, targets)
+    def blank_subfigure(self, subfigure: SubFigure, targets: ThemeTargets):
+        super().blank_subfigure(subfigure, targets)
         if text := targets.axis_title_y:
             text.set_visible(False)
 
@@ -550,13 +550,13 @@ class legend_title(themeable):
 
     _omit = ["margin", "ha", "va"]
 
-    def apply_figure(self, figure: Figure, targets: ThemeTargets):
-        super().apply_figure(figure, targets)
+    def apply_subfigure(self, subfigure: SubFigure, targets: ThemeTargets):
+        super().apply_subfigure(subfigure, targets)
         if text := targets.legend_title:
             text.set(**self.properties)
 
-    def blank_figure(self, figure: Figure, targets: ThemeTargets):
-        super().blank_figure(figure, targets)
+    def blank_subfigure(self, subfigure: SubFigure, targets: ThemeTargets):
+        super().blank_subfigure(subfigure, targets)
         if text := targets.legend_title:
             text.set_visible(False)
 
@@ -578,13 +578,13 @@ class legend_text_legend(MixinSequenceOfValues):
 
     _omit = ["margin", "ha", "va"]
 
-    def apply_figure(self, figure: Figure, targets: ThemeTargets):
-        super().apply_figure(figure, targets)
+    def apply_subfigure(self, subfigure: SubFigure, targets: ThemeTargets):
+        super().apply_subfigure(subfigure, targets)
         if texts := targets.legend_text_legend:
             self.set(texts)
 
-    def blank_figure(self, figure: Figure, targets: ThemeTargets):
-        super().blank_figure(figure, targets)
+    def blank_subfigure(self, subfigure: SubFigure, targets: ThemeTargets):
+        super().blank_subfigure(subfigure, targets)
         if texts := targets.legend_text_legend:
             for text in texts:
                 text.set_visible(False)
@@ -607,13 +607,13 @@ class legend_text_colorbar(MixinSequenceOfValues):
 
     _omit = ["margin", "ha", "va"]
 
-    def apply_figure(self, figure: Figure, targets: ThemeTargets):
-        super().apply_figure(figure, targets)
+    def apply_subfigure(self, subfigure: SubFigure, targets: ThemeTargets):
+        super().apply_subfigure(subfigure, targets)
         if texts := targets.legend_text_colorbar:
             self.set(texts)
 
-    def blank_figure(self, figure: Figure, targets: ThemeTargets):
-        super().blank_figure(figure, targets)
+    def blank_subfigure(self, subfigure: SubFigure, targets: ThemeTargets):
+        super().blank_subfigure(subfigure, targets)
         if texts := targets.legend_text_colorbar:
             for text in texts:
                 text.set_visible(False)
@@ -653,8 +653,8 @@ class plot_title(themeable):
 
     _omit = ["margin"]
 
-    def apply_figure(self, figure: Figure, targets: ThemeTargets):
-        super().apply_figure(figure, targets)
+    def apply_subfigure(self, subfigure: SubFigure, targets: ThemeTargets):
+        super().apply_subfigure(subfigure, targets)
         if text := targets.plot_title:
             props = self.properties
             # ha can be a float and is handled by the layout manager
@@ -662,8 +662,8 @@ class plot_title(themeable):
                 del props["ha"]
             text.set(**props)
 
-    def blank_figure(self, figure: Figure, targets: ThemeTargets):
-        super().blank_figure(figure, targets)
+    def blank_subfigure(self, subfigure: SubFigure, targets: ThemeTargets):
+        super().blank_subfigure(subfigure, targets)
         if text := targets.plot_title:
             text.set_visible(False)
 
@@ -686,13 +686,13 @@ class plot_subtitle(themeable):
 
     _omit = ["margin"]
 
-    def apply_figure(self, figure: Figure, targets: ThemeTargets):
-        super().apply_figure(figure, targets)
+    def apply_subfigure(self, subfigure: SubFigure, targets: ThemeTargets):
+        super().apply_subfigure(subfigure, targets)
         if text := targets.plot_subtitle:
             text.set(**self.properties)
 
-    def blank_figure(self, figure: Figure, targets: ThemeTargets):
-        super().blank_figure(figure, targets)
+    def blank_subfigure(self, subfigure: SubFigure, targets: ThemeTargets):
+        super().blank_subfigure(subfigure, targets)
         if text := targets.plot_subtitle:
             text.set_visible(False)
 
@@ -708,13 +708,13 @@ class plot_caption(themeable):
 
     _omit = ["margin"]
 
-    def apply_figure(self, figure: Figure, targets: ThemeTargets):
-        super().apply_figure(figure, targets)
+    def apply_subfigure(self, subfigure: SubFigure, targets: ThemeTargets):
+        super().apply_subfigure(subfigure, targets)
         if text := targets.plot_caption:
             text.set(**self.properties)
 
-    def blank_figure(self, figure: Figure, targets: ThemeTargets):
-        super().blank_figure(figure, targets)
+    def blank_subfigure(self, subfigure: SubFigure, targets: ThemeTargets):
+        super().blank_subfigure(subfigure, targets)
         if text := targets.plot_caption:
             text.set_visible(False)
 
@@ -737,13 +737,13 @@ class plot_tag(themeable):
 
     _omit = ["margin"]
 
-    def apply_figure(self, figure: Figure, targets: ThemeTargets):
-        super().apply_figure(figure, targets)
+    def apply_subfigure(self, subfigure: SubFigure, targets: ThemeTargets):
+        super().apply_subfigure(subfigure, targets)
         if text := targets.plot_tag:
             text.set(**self.properties)
 
-    def blank_figure(self, figure: Figure, targets: ThemeTargets):
-        super().blank_figure(figure, targets)
+    def blank_subfigure(self, subfigure: SubFigure, targets: ThemeTargets):
+        super().blank_subfigure(subfigure, targets)
         if text := targets.plot_tag:
             text.set_visible(False)
 
@@ -813,13 +813,13 @@ class strip_text_x(MixinSequenceOfValues):
 
     _omit = ["margin"]
 
-    def apply_figure(self, figure: Figure, targets: ThemeTargets):
-        super().apply_figure(figure, targets)
+    def apply_subfigure(self, subfigure: SubFigure, targets: ThemeTargets):
+        super().apply_subfigure(subfigure, targets)
         if texts := targets.strip_text_x:
             self.set(texts)
 
-    def blank_figure(self, figure: Figure, targets: ThemeTargets):
-        super().blank_figure(figure, targets)
+    def blank_subfigure(self, subfigure: SubFigure, targets: ThemeTargets):
+        super().blank_subfigure(subfigure, targets)
         if texts := targets.strip_text_x:
             for text in texts:
                 text.set_visible(False)
@@ -836,13 +836,13 @@ class strip_text_y(MixinSequenceOfValues):
 
     _omit = ["margin"]
 
-    def apply_figure(self, figure: Figure, targets: ThemeTargets):
-        super().apply_figure(figure, targets)
+    def apply_subfigure(self, subfigure: SubFigure, targets: ThemeTargets):
+        super().apply_subfigure(subfigure, targets)
         if texts := targets.strip_text_y:
             self.set(texts)
 
-    def blank_figure(self, figure: Figure, targets: ThemeTargets):
-        super().blank_figure(figure, targets)
+    def blank_subfigure(self, subfigure: SubFigure, targets: ThemeTargets):
+        super().blank_subfigure(subfigure, targets)
         if texts := targets.strip_text_y:
             for text in texts:
                 text.set_visible(False)
@@ -1284,13 +1284,13 @@ class legend_ticks(themeable):
 
     _omit = ["solid_capstyle"]
 
-    def apply_figure(self, figure: Figure, targets: ThemeTargets):
-        super().apply_figure(figure, targets)
+    def apply_subfigure(self, subfigure: SubFigure, targets: ThemeTargets):
+        super().apply_subfigure(subfigure, targets)
         if coll := targets.legend_ticks:
             coll.set(**self.properties)
 
-    def blank_figure(self, figure: Figure, targets: ThemeTargets):
-        super().blank_figure(figure, targets)
+    def blank_subfigure(self, subfigure: SubFigure, targets: ThemeTargets):
+        super().blank_subfigure(subfigure, targets)
         if coll := targets.legend_ticks:
             coll.set_visible(False)
 
@@ -1445,8 +1445,8 @@ class legend_key(MixinSequenceOfValues):
     theme_element : element_rect
     """
 
-    def apply_figure(self, figure: Figure, targets: ThemeTargets):
-        super().apply_figure(figure, targets)
+    def apply_subfigure(self, subfigure: SubFigure, targets: ThemeTargets):
+        super().apply_subfigure(subfigure, targets)
         properties = self.properties
         # Prevent invisible strokes from having any effect
         if properties.get("edgecolor") in ("none", "None"):
@@ -1455,8 +1455,8 @@ class legend_key(MixinSequenceOfValues):
         rects = [da.patch for da in targets.legend_key]
         self.set(rects, properties)
 
-    def blank_figure(self, figure: Figure, targets: ThemeTargets):
-        super().blank_figure(figure, targets)
+    def blank_subfigure(self, subfigure: SubFigure, targets: ThemeTargets):
+        super().blank_subfigure(subfigure, targets)
         for da in targets.legend_key:
             da.patch.set_visible(False)
 
@@ -1472,13 +1472,13 @@ class legend_frame(themeable):
 
     _omit = ["facecolor"]
 
-    def apply_figure(self, figure: Figure, targets: ThemeTargets):
-        super().apply_figure(figure, targets)
+    def apply_subfigure(self, subfigure: SubFigure, targets: ThemeTargets):
+        super().apply_subfigure(subfigure, targets)
         if rect := targets.legend_frame:
             rect.set(**self.properties)
 
-    def blank_figure(self, figure: Figure, targets: ThemeTargets):
-        super().blank_figure(figure, targets)
+    def blank_subfigure(self, subfigure: SubFigure, targets: ThemeTargets):
+        super().blank_subfigure(subfigure, targets)
         if rect := targets.legend_frame:
             rect.set_visible(False)
 
@@ -1492,8 +1492,8 @@ class legend_background(themeable):
     theme_element : element_rect
     """
 
-    def apply_figure(self, figure: Figure, targets: ThemeTargets):
-        super().apply_figure(figure, targets)
+    def apply_subfigure(self, subfigure: SubFigure, targets: ThemeTargets):
+        super().apply_subfigure(subfigure, targets)
         # anchored offset box
         if legends := targets.legends:
             properties = self.properties
@@ -1510,8 +1510,8 @@ class legend_background(themeable):
                     if not aob.pad:
                         aob.pad = 0.2
 
-    def blank_figure(self, figure: Figure, targets: ThemeTargets):
-        super().blank_figure(figure, targets)
+    def blank_subfigure(self, subfigure: SubFigure, targets: ThemeTargets):
+        super().blank_subfigure(subfigure, targets)
         if legends := targets.legends:
             for aob in legends.boxes:
                 aob.patch.set_visible(False)
@@ -1569,8 +1569,8 @@ class panel_border(MixinSequenceOfValues):
 
     _omit = ["facecolor"]
 
-    def apply_figure(self, figure: Figure, targets: ThemeTargets):
-        super().apply_figure(figure, targets)
+    def apply_subfigure(self, subfigure: SubFigure, targets: ThemeTargets):
+        super().apply_subfigure(subfigure, targets)
         if not (rects := targets.panel_border):
             return
 
@@ -1586,8 +1586,8 @@ class panel_border(MixinSequenceOfValues):
 
         self.set(rects, d)
 
-    def blank_figure(self, figure: Figure, targets: ThemeTargets):
-        super().blank_figure(figure, targets)
+    def blank_subfigure(self, subfigure: SubFigure, targets: ThemeTargets):
+        super().blank_subfigure(subfigure, targets)
         for rect in targets.panel_border:
             rect.set_visible(False)
 
@@ -1601,13 +1601,13 @@ class plot_background(themeable):
     theme_element : element_rect
     """
 
-    def apply_figure(self, figure: Figure, targets: ThemeTargets):
-        super().apply_figure(figure, targets)
-        figure.patch.set(**self.properties)
+    def apply_subfigure(self, subfigure: SubFigure, targets: ThemeTargets):
+        super().apply_subfigure(subfigure, targets)
+        subfigure.patch.set(**self.properties)
 
-    def blank_figure(self, figure: Figure, targets: ThemeTargets):
-        super().blank_figure(figure, targets)
-        figure.patch.set_visible(False)
+    def blank_subfigure(self, subfigure: SubFigure, targets: ThemeTargets):
+        super().blank_subfigure(subfigure, targets)
+        subfigure.patch.set_visible(False)
 
 
 class strip_background_x(MixinSequenceOfValues):
@@ -1619,13 +1619,13 @@ class strip_background_x(MixinSequenceOfValues):
     theme_element : element_rect
     """
 
-    def apply_figure(self, figure: Figure, targets: ThemeTargets):
-        super().apply_figure(figure, targets)
+    def apply_subfigure(self, subfigure: SubFigure, targets: ThemeTargets):
+        super().apply_subfigure(subfigure, targets)
         if bboxes := targets.strip_background_x:
             self.set(bboxes)
 
-    def blank_figure(self, figure: Figure, targets: ThemeTargets):
-        super().blank_figure(figure, targets)
+    def blank_subfigure(self, subfigure: SubFigure, targets: ThemeTargets):
+        super().blank_subfigure(subfigure, targets)
         for rect in targets.strip_background_x:
             rect.set_visible(False)
 
@@ -1639,13 +1639,13 @@ class strip_background_y(MixinSequenceOfValues):
     theme_element : element_rect
     """
 
-    def apply_figure(self, figure: Figure, targets: ThemeTargets):
-        super().apply_figure(figure, targets)
+    def apply_subfigure(self, subfigure: SubFigure, targets: ThemeTargets):
+        super().apply_subfigure(subfigure, targets)
         if bboxes := targets.strip_background_y:
             self.set(bboxes)
 
-    def blank_figure(self, figure: Figure, targets: ThemeTargets):
-        super().blank_figure(figure, targets)
+    def blank_subfigure(self, subfigure: SubFigure, targets: ThemeTargets):
+        super().blank_subfigure(subfigure, targets)
         for rect in targets.strip_background_y:
             rect.set_visible(False)
 
@@ -2013,8 +2013,8 @@ class figure_size(themeable):
         (width, height) in inches
     """
 
-    def apply_figure(self, figure: Figure, targets: ThemeTargets):
-        figure.set_size_inches(self.properties["value"])
+    def apply_subfigure(self, subfigure: SubFigure, targets: ThemeTargets):
+        subfigure.figure.set_size_inches(self.properties["value"])
 
 
 class legend_box(themeable):
@@ -2402,7 +2402,7 @@ class svg_usefonts(themeable):
 
 
 class subplots_adjust(themeable):
-    def apply_figure(self, figure: Figure, targets: ThemeTargets):
+    def apply_subfigure(self, subfigure: SubFigure, targets: ThemeTargets):
         warn(
             "You no longer need to use subplots_adjust to make space for "
             "the legend or text around the panels. This parameter will be "

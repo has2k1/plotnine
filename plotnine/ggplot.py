@@ -40,7 +40,7 @@ if TYPE_CHECKING:
     from typing import Protocol
 
     from matplotlib.axes import Axes
-    from matplotlib.figure import Figure
+    from matplotlib.figure import Figure, SubFigure
     from typing_extensions import Self
 
     from plotnine import watermark
@@ -94,10 +94,8 @@ class ggplot:
     """
 
     figure: Figure
+    subfigure: SubFigure
     axs: list[Axes]
-    theme: theme
-    facet: facet
-    coordinates: coord
 
     def __init__(
         self,
@@ -110,7 +108,7 @@ class ggplot:
         data, mapping = order_as_data_mapping(data, mapping)
         self.data = data
         self.mapping = mapping if mapping is not None else aes()
-        self.facet = facet_null()
+        self.facet: facet = facet_null()
         self.labels = make_labels(self.mapping)
         self.layers = Layers()
         self.guides = guides()
@@ -193,7 +191,7 @@ class ggplot:
         new = result.__dict__
 
         # don't make a deepcopy of data
-        shallow = {"data", "figure", "_build_objs"}
+        shallow = {"data", "figure", "subfigure", "axs", "_build_objs"}
         for key, item in old.items():
             if key in shallow:
                 new[key] = item
@@ -248,7 +246,11 @@ class ggplot:
             raise TypeError(msg.format(type(other)))
         return self
 
-    def draw(self, show: bool = False) -> Figure:
+    def draw(
+        self,
+        *,
+        show: bool = False,
+    ) -> Figure:
         """
         Render the complete plot
 
@@ -264,21 +266,20 @@ class ggplot:
         """
         from ._mpl.layout_manager import PlotnineLayoutEngine
 
-        # Do not draw if drawn already.
-        # This prevents a needless error when reusing
-        # figure & axes in the jupyter notebook.
-        if hasattr(self, "figure"):
-            return self.figure
-
         # Prevent against any modifications to the users
         # ggplot object. Do the copy here as we may/may not
         # assign a default theme
         self = deepcopy(self)
+
         with plot_context(self, show=show):
+            if not hasattr(self, "figure"):
+                self._create_figure()
+
+            figure = self.figure
             self._build()
 
             # setup
-            self.figure, self.axs = self.facet.setup(self)
+            self.axs = self.facet.setup(self)
             self.guides._setup(self)
             self.theme.setup(self)
 
@@ -292,48 +293,24 @@ class ggplot:
 
             # Artist object theming
             self.theme.apply()
-            self.figure.set_layout_engine(PlotnineLayoutEngine(self))
+            figure.set_layout_engine(PlotnineLayoutEngine(self))
 
-        return self.figure
+        return figure
 
-    def _draw_using_figure(self, figure: Figure, axs: list[Axes]) -> ggplot:
+    def _create_figure(self):
         """
-        Draw onto already created figure and axes
-
-        This is can be used to draw animation frames,
-        or inset plots. It is intended to be used
-        after the key plot has been drawn.
-
-        Parameters
-        ----------
-        figure :
-            Matplotlib figure
-        axs :
-            Array of Axes onto which to draw the plots
+        Create gridspec for the panels
         """
-        from ._mpl.layout_manager import PlotnineLayoutEngine
+        import matplotlib.pyplot as plt
+        from matplotlib.figure import SubFigure
 
-        self = deepcopy(self)
-        self.figure = figure
-        self.axs = axs
-        with plot_context(self):
-            self._build()
+        self.figure = plt.figure()
+        self.subfigure = cast(SubFigure, self.figure.subfigures(1, 1, True))
 
-            # setup
-            self.figure, self.axs = self.facet.setup(self)
-            self.guides._setup(self)
-            self.theme.setup(self)
-
-            # drawing
-            self._draw_layers()
-            self._draw_breaks_and_labels()
-            self.guides.draw()
-
-            # artist theming
-            self.theme.apply()
-            self.figure.set_layout_engine(PlotnineLayoutEngine(self))
-
-        return self
+        # By default we want no figure.patch so that subfigure.patch is the
+        # background. Extensions that create figures may choose otherwise.
+        self.figure.patch.set_visible(False)
+        self.subfigure.patch.set_facecolor("white")
 
     def _build(self):
         """
@@ -439,7 +416,7 @@ class ggplot:
                 clip_path=ax.patch,
                 clip_on=False,
             )
-            self.figure.add_artist(rect)
+            self.subfigure.add_artist(rect)
             self.theme.targets.panel_border.append(rect)
 
     def _draw_layers(self):
@@ -484,7 +461,7 @@ class ggplot:
         """
         Draw title, x label, y label and caption onto the figure
         """
-        figure = self.figure
+        subfigure = self.subfigure
         theme = self.theme
         targets = theme.targets
 
@@ -501,22 +478,22 @@ class ggplot:
 
         # The locations are handled by the layout manager
         if title:
-            targets.plot_title = figure.text(0, 0, title)
+            targets.plot_title = subfigure.text(0, 0, title)
 
         if subtitle:
-            targets.plot_subtitle = figure.text(0, 0, subtitle)
+            targets.plot_subtitle = subfigure.text(0, 0, subtitle)
 
         if caption:
-            targets.plot_caption = figure.text(0, 0, caption)
+            targets.plot_caption = subfigure.text(0, 0, caption)
 
         if tag:
-            targets.plot_tag = figure.text(0, 0, tag)
+            targets.plot_tag = subfigure.text(0, 0, tag)
 
         if labels.x:
-            targets.axis_title_x = figure.text(0, 0, labels.x)
+            targets.axis_title_x = subfigure.text(0, 0, labels.x)
 
         if labels.y:
-            targets.axis_title_y = figure.text(0, 0, labels.y)
+            targets.axis_title_y = subfigure.text(0, 0, labels.y)
 
     def _draw_watermarks(self):
         """
