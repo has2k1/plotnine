@@ -4,7 +4,6 @@ from dataclasses import dataclass
 from itertools import chain
 from typing import TYPE_CHECKING, cast
 
-from matplotlib._tight_layout import get_subplotspec_list
 from matplotlib.backend_bases import RendererBase
 from matplotlib.text import Text
 
@@ -12,6 +11,7 @@ from plotnine.exceptions import PlotnineError
 
 from ..utils import (
     bbox_in_figure_space,
+    get_subplotspecs,
     get_transPanels,
     rel_position,
     tight_bbox_in_figure_space,
@@ -236,7 +236,7 @@ class LayoutItems:
         pred_method = f"is_{location}"
         return [
             ax
-            for spec, ax in zip(get_subplotspec_list(axs), axs)
+            for spec, ax in zip(get_subplotspecs(axs), axs)
             if getattr(spec, pred_method)()
         ]
 
