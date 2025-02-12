@@ -41,6 +41,7 @@ if TYPE_CHECKING:
 
     from matplotlib.axes import Axes
     from matplotlib.figure import Figure
+    from matplotlib.gridspec import GridSpec
     from typing_extensions import Self
 
     from plotnine import watermark
@@ -95,9 +96,7 @@ class ggplot:
 
     figure: Figure
     axs: list[Axes]
-    theme: theme
-    facet: facet
-    coordinates: coord
+    gs: GridSpec
 
     def __init__(
         self,
@@ -110,7 +109,7 @@ class ggplot:
         data, mapping = order_as_data_mapping(data, mapping)
         self.data = data
         self.mapping = mapping if mapping is not None else aes()
-        self.facet = facet_null()
+        self.facet: facet = facet_null()
         self.labels = make_labels(self.mapping)
         self.layers = Layers()
         self.guides = guides()
@@ -193,7 +192,7 @@ class ggplot:
         new = result.__dict__
 
         # don't make a deepcopy of data
-        shallow = {"data", "figure", "_build_objs"}
+        shallow = {"data", "figure", "gs", "_build_objs"}
         for key, item in old.items():
             if key in shallow:
                 new[key] = item
@@ -248,7 +247,7 @@ class ggplot:
             raise TypeError(msg.format(type(other)))
         return self
 
-    def draw(self, show: bool = False) -> Figure:
+    def draw(self, *, show: bool = False) -> Figure:
         """
         Render the complete plot
 
@@ -264,21 +263,19 @@ class ggplot:
         """
         from ._mpl.layout_manager import PlotnineLayoutEngine
 
-        # Do not draw if drawn already.
-        # This prevents a needless error when reusing
-        # figure & axes in the jupyter notebook.
-        if hasattr(self, "figure"):
-            return self.figure
-
         # Prevent against any modifications to the users
         # ggplot object. Do the copy here as we may/may not
         # assign a default theme
         self = deepcopy(self)
         with plot_context(self, show=show):
+            if not hasattr(self, "figure"):
+                self._create_figure()
+            figure = self.figure
+
             self._build()
 
             # setup
-            self.figure, self.axs = self.facet.setup(self)
+            self.axs = self.facet.setup(self)
             self.guides._setup(self)
             self.theme.setup(self)
 
@@ -292,48 +289,18 @@ class ggplot:
 
             # Artist object theming
             self.theme.apply()
-            self.figure.set_layout_engine(PlotnineLayoutEngine(self))
+            figure.set_layout_engine(PlotnineLayoutEngine(self))
 
-        return self.figure
+        return figure
 
-    def _draw_using_figure(self, figure: Figure, axs: list[Axes]) -> ggplot:
+    def _create_figure(self):
         """
-        Draw onto already created figure and axes
-
-        This is can be used to draw animation frames,
-        or inset plots. It is intended to be used
-        after the key plot has been drawn.
-
-        Parameters
-        ----------
-        figure :
-            Matplotlib figure
-        axs :
-            Array of Axes onto which to draw the plots
+        Create gridspec for the panels
         """
-        from ._mpl.layout_manager import PlotnineLayoutEngine
+        import matplotlib.pyplot as plt
 
-        self = deepcopy(self)
-        self.figure = figure
-        self.axs = axs
-        with plot_context(self):
-            self._build()
-
-            # setup
-            self.figure, self.axs = self.facet.setup(self)
-            self.guides._setup(self)
-            self.theme.setup(self)
-
-            # drawing
-            self._draw_layers()
-            self._draw_breaks_and_labels()
-            self.guides.draw()
-
-            # artist theming
-            self.theme.apply()
-            self.figure.set_layout_engine(PlotnineLayoutEngine(self))
-
-        return self
+        self.figure = plt.figure()
+        self.gs = self.figure.add_gridspec()
 
     def _build(self):
         """

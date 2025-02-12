@@ -233,6 +233,6 @@ class PlotnineAnimation(ArtistAnimation):
         plot.axs = axs
         with plot_context(plot):
             plot._build()
-            plot.figure, plot.axs = plot.facet.setup(plot)
+            plot.axs = plot.facet.setup(plot)
             plot._draw_layers()
         return plot
