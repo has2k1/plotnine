@@ -302,7 +302,7 @@ def parse_grid_facets_old(
         "((var1, var2), (var3, var4))",
     ]
     error_msg_s = (
-        "Valid sequences for specifying 'facets' look like" f" {valid_seqs}"
+        f"Valid sequences for specifying 'facets' look like {valid_seqs}"
     )
 
     valid_forms = [
@@ -314,7 +314,7 @@ def parse_grid_facets_old(
         ". ~ func(var1) + func(var2)",
         ". ~ func(var1+var3) + func(var2)",
     ] + valid_seqs
-    error_msg_f = "Valid formula for 'facet_grid' look like" f" {valid_forms}"
+    error_msg_f = f"Valid formula for 'facet_grid' look like {valid_forms}"
 
     if not isinstance(facets, str):
         if len(facets) == 1:

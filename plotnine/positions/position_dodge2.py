@@ -64,7 +64,7 @@ class position_dodge2(position_dodge):
             and ("xmax" not in data)
             and (self.params["width"] is None)
         ):
-            msg = "Width not defined. " "Set with `position_dodge2(width = ?)`"
+            msg = "Width not defined. Set with `position_dodge2(width = ?)`"
             raise PlotnineError(msg)
 
         params = copy(self.params)
