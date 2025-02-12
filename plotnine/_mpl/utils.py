@@ -11,6 +11,7 @@ if TYPE_CHECKING:
     from matplotlib.axes import Axes
     from matplotlib.backend_bases import RendererBase
     from matplotlib.figure import Figure
+    from matplotlib.gridspec import SubplotSpec
     from matplotlib.transforms import Transform
 
 
@@ -94,3 +95,25 @@ def rel_position(rel: float, length: float, low: float, high: float) -> float:
         Upper limit position
     """
     return low * (1 - rel) + (high - length) * rel
+
+
+def get_subplotspecs(axs: list[Axes]) -> list[SubplotSpec]:
+    """
+    Return the SubplotSpecs of the given axes
+
+    Parameters
+    ----------
+    axs:
+        List of axes
+
+    Notes
+    -----
+    This functions returns the innermost subplotspec and it expects
+    every axes object to have one.
+    """
+    subplotspecs: list[SubplotSpec] = []
+    for ax in axs:
+        if not (subplotspec := ax.get_subplotspec()):
+            raise ValueError("Axes has no suplotspec")
+        subplotspecs.append(subplotspec)
+    return subplotspecs
