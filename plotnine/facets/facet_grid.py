@@ -107,7 +107,7 @@ class facet_grid(facet):
         self.space = space
         self.margins = margins
 
-    def _get_subplots_gridspec(self):
+    def _get_panels_gridspec(self):
         """
         Create gridspec for the panels
         """
@@ -158,7 +158,10 @@ class facet_grid(facet):
             ratios["height_ratios"] = self.space.get("y")
 
         return GridSpecFromSubplotSpec(
-            self.nrow, self.ncol, subplot_spec=self.plot.gs[0, 0], **ratios
+            self.nrow,
+            self.ncol,
+            subplot_spec=self.plot._gridspec[0, 0],
+            **ratios,
         )
 
     def compute_layout(self, data: list[pd.DataFrame]) -> pd.DataFrame:

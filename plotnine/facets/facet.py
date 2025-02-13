@@ -93,7 +93,7 @@ class facet:
 
     # Axes
     axs: list[Axes]
-    _subplots_gs: GridSpecFromSubplotSpec
+    _panels_gridspec: GridSpecFromSubplotSpec
 
     # ggplot object that the facet belongs to
     plot: ggplot
@@ -373,14 +373,14 @@ class facet:
 
         return result
 
-    def _get_subplots_gridspec(self) -> GridSpecFromSubplotSpec:
+    def _get_panels_gridspec(self) -> GridSpecFromSubplotSpec:
         """
         Create gridspec for the panels
         """
         from matplotlib.gridspec import GridSpecFromSubplotSpec
 
         return GridSpecFromSubplotSpec(
-            self.nrow, self.ncol, subplot_spec=self.plot.gs[0, 0]
+            self.nrow, self.ncol, subplot_spec=self.plot._gridspec[0, 0]
         )
 
     def _make_axes(self) -> list[Axes]:
@@ -390,12 +390,14 @@ class facet:
         num_panels = len(self.layout.layout)
         axsarr = np.empty((self.nrow, self.ncol), dtype=object)
 
-        self._subplots_gs = self._get_subplots_gridspec()
+        self._panels_gridspec = self._get_panels_gridspec()
 
         # Create axes
         it = itertools.product(range(self.nrow), range(self.ncol))
         for i, (row, col) in enumerate(it):
-            axsarr[row, col] = self.figure.add_subplot(self._subplots_gs[i])
+            axsarr[row, col] = self.figure.add_subplot(
+                self._panels_gridspec[i]
+            )
 
         # Rearrange axes
         # They are ordered to match the positions in the layout table
