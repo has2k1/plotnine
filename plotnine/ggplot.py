@@ -6,7 +6,15 @@ from io import BytesIO
 from itertools import chain
 from pathlib import Path
 from types import SimpleNamespace as NS
-from typing import TYPE_CHECKING, Any, Dict, Iterable, Optional, cast
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Dict,
+    Iterable,
+    Optional,
+    cast,
+    overload,
+)
 from warnings import warn
 
 from ._utils import (
@@ -41,13 +49,14 @@ if TYPE_CHECKING:
 
     from matplotlib.axes import Axes
     from matplotlib.figure import Figure
-    from matplotlib.gridspec import GridSpec
+    from matplotlib.gridspec import GridSpec, GridSpecFromSubplotSpec
     from typing_extensions import Self
 
     from plotnine import watermark
     from plotnine.coords.coord import coord
     from plotnine.facets.facet import facet
     from plotnine.layer import layer
+    from plotnine.plot_composition import Compose
     from plotnine.typing import DataLike
 
     class PlotAddable(Protocol):
@@ -96,7 +105,7 @@ class ggplot:
 
     figure: Figure
     axs: list[Axes]
-    gs: GridSpec
+    _gridspec: GridSpec | GridSpecFromSubplotSpec
 
     def __init__(
         self,
@@ -146,6 +155,11 @@ class ggplot:
         Users should prefer this method instead of printing or repring
         the object.
         """
+        # Prevent against any modifications to the users
+        # ggplot object. Do the copy here as we may/may not
+        # assign a default theme
+        self = deepcopy(self)
+
         if is_inline_backend() or is_quarto_environment():
             # Take charge of the display because we have to make
             # adjustments for retina output.
@@ -219,9 +233,20 @@ class ggplot:
             other.__radd__(self)
         return self
 
-    def __add__(self, other: PlotAddable | list[PlotAddable] | None) -> ggplot:
+    @overload
+    def __add__(
+        self, rhs: PlotAddable | list[PlotAddable] | None
+    ) -> ggplot: ...
+
+    @overload
+    def __add__(self, rhs: ggplot | Compose) -> Compose: ...
+
+    def __add__(
+        self,
+        rhs: PlotAddable | list[PlotAddable] | None | ggplot | Compose,
+    ) -> ggplot | Compose:
         """
-        Add to ggplot from a list
+        Add to ggplot
 
         Parameters
         ----------
@@ -229,8 +254,37 @@ class ggplot:
             Either an object that knows how to "radd"
             itself to a ggplot, or a list of such objects.
         """
+        from .plot_composition import ADD, Compose
+
+        if isinstance(rhs, (ggplot, Compose)):
+            return ADD([self, rhs])
+
         self = deepcopy(self)
-        return self.__iadd__(other)
+        return self.__iadd__(rhs)
+
+    def __or__(self, rhs: ggplot | Compose) -> Compose:
+        """
+        Compose 2 plots columnwise
+        """
+        from .plot_composition import OR
+
+        return OR([self, rhs])
+
+    def __truediv__(self, rhs: ggplot | Compose) -> Compose:
+        """
+        Compose 2 plots rowwise
+        """
+        from .plot_composition import DIV
+
+        return DIV([self, rhs])
+
+    def __sub__(self, rhs: ggplot | Compose) -> Compose:
+        """
+        Compose 2 plots columnwise
+        """
+        from .plot_composition import OR
+
+        return OR([self, rhs])
 
     def __rrshift__(self, other: DataLike) -> ggplot:
         """
@@ -263,10 +317,6 @@ class ggplot:
         """
         from ._mpl.layout_manager import PlotnineLayoutEngine
 
-        # Prevent against any modifications to the users
-        # ggplot object. Do the copy here as we may/may not
-        # assign a default theme
-        self = deepcopy(self)
         with plot_context(self, show=show):
             if not hasattr(self, "figure"):
                 self._create_figure()
@@ -300,7 +350,7 @@ class ggplot:
         import matplotlib.pyplot as plt
 
         self.figure = plt.figure()
-        self.gs = self.figure.add_gridspec()
+        self._gridspec = self.figure.add_gridspec()
 
     def _build(self):
         """
