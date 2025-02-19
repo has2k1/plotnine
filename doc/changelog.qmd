@@ -1,6 +1,16 @@
 ---
 title: Changelog
 ---
+## v0.15.0
+
+(not-yet-released)
+
+### Enhancements
+
+- Included datasets [](:attr:`~plotnine.data.mpg`), [](:attr:`~plotnine.data.msleep`) and
+  [](:attr:`~plotnine.data.midwest`) no longer have any of their columns as categoricals.
+  This matches the respective datasets in R. {{< issue 913 >}}
+
 ## v0.14.5
 (2025-01-02)
 [![](https://zenodo.org/badge/DOI/10.5281/zenodo.14587381.svg)](https://doi.org/10.5281/zenodo.14587381)
