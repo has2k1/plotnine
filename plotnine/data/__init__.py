@@ -81,7 +81,7 @@ def _process_categories():
     """
     Set columns in some of the dataframes to categoricals
     """
-    global diamonds, midwest, mpg, msleep, penguins
+    global diamonds, penguins
     diamonds = _ordered_categories(
         diamonds,
         {
@@ -90,11 +90,6 @@ def _process_categories():
             "color": list("DEFGHIJ"),
         },
     )
-    mpg = _unordered_categories(
-        mpg, "manufacturer model trans fl drv class".split()
-    )
-    midwest = _unordered_categories(midwest, ["category"])
-    msleep = _unordered_categories(msleep, ["vore", "conservation"])
     penguins = _unordered_categories(penguins, ["species", "island", "sex"])
 
 
