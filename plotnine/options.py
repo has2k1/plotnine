@@ -10,14 +10,11 @@ if TYPE_CHECKING:
     from plotnine import theme
     from plotnine.typing import FigureFormat
 
-close_all_figures = False
-"""
-Development flag, e.g. set to `True` to prevent
-the queuing up of figures when errors happen.
-"""
-
 current_theme: Optional[theme | Type[theme]] = None
-"""Theme used when none is added to the ggplot object"""
+"""Theme used when none is added to the ggplot object
+
+Another way to do it, to set a default theme using `theme_set()`.
+"""
 
 base_family: str = "sans-serif"
 """
@@ -77,6 +74,11 @@ def get_option(name: str) -> Any:
     ----------
     name :
         Name of the option
+
+    Notes
+    -----
+    See [reference](/reference/#options) for a list of all the available
+    options.
     """
     d = globals()
 
@@ -103,6 +105,11 @@ def set_option(name: str, value: Any) -> Any:
     -------
     :
         Old value of the option
+
+    Notes
+    -----
+    See [reference](/reference/#options) for a list of all the available
+    options.
     """
     d = globals()
 
