@@ -467,7 +467,7 @@ class GuidesElements:
             if just is None:
                 just = (0.5, 0.5)
             elif just in VALID_JUSTIFICATION_WORDS:
-                just = ensure_xy_location(just)  # pyright: ignore[reportArgumentType]
+                just = ensure_xy_location(just)
             elif isinstance(just, (float, int)):
                 just = (just, just)
             return just[idx]
