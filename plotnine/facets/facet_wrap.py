@@ -198,8 +198,7 @@ def check_dimensions(
     if nrow is not None:
         if nrow < 1:
             warn(
-                "'nrow' must be greater than 0. "
-                "Your value has been ignored.",
+                "'nrow' must be greater than 0. Your value has been ignored.",
                 PlotnineWarning,
             )
             nrow = None
@@ -209,8 +208,7 @@ def check_dimensions(
     if ncol is not None:
         if ncol < 1:
             warn(
-                "'ncol' must be greater than 0. "
-                "Your value has been ignored.",
+                "'ncol' must be greater than 0. Your value has been ignored.",
                 PlotnineWarning,
             )
             ncol = None
@@ -241,7 +239,7 @@ def parse_wrap_facets_old(facets: str | Sequence[str]) -> Sequence[str]:
     This handles the old & silently deprecated r-style formulas
     """
     valid_forms = ["~ var1", "~ var1 + var2"]
-    error_msg = "Valid formula for 'facet_wrap' look like" f" {valid_forms}"
+    error_msg = f"Valid formula for 'facet_wrap' look like {valid_forms}"
 
     if isinstance(facets, (list, tuple)):
         return facets

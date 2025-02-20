@@ -101,7 +101,7 @@ class stat_sina(stat):
             and (data["x"] != data["x"].iloc[0]).any()
         ):
             raise TypeError(
-                "Continuous x aesthetic -- did you forget " "aes(group=...)?"
+                "Continuous x aesthetic -- did you forget aes(group=...)?"
             )
         return data
 

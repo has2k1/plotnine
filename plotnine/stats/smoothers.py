@@ -163,8 +163,7 @@ def rlm(data, xseq, **params) -> pd.DataFrame:
 
     if params["se"]:
         warnings.warn(
-            "Confidence intervals are not yet implemented"
-            " for RLM smoothing.",
+            "Confidence intervals are not yet implemented for RLM smoothing.",
             PlotnineWarning,
         )
 
@@ -190,8 +189,7 @@ def rlm_formula(data, xseq, **params) -> pd.DataFrame:
 
     if params["se"]:
         warnings.warn(
-            "Confidence intervals are not yet implemented"
-            " for RLM smoothing.",
+            "Confidence intervals are not yet implemented for RLM smoothing.",
             PlotnineWarning,
         )
 
