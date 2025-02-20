@@ -110,8 +110,7 @@ class geom_crossbar(geom):
 
             if any(ynotchlower < ymin) or any(ynotchupper > ymax):
                 warn(
-                    "Notch went outside the hinges. "
-                    "Try setting notch=False.",
+                    "Notch went outside the hinges. Try setting notch=False.",
                     PlotnineWarning,
                 )
 

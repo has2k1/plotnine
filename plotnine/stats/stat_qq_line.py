@@ -62,7 +62,7 @@ class stat_qq_line(stat):
     def setup_params(self, data):
         if len(self.params["line_p"]) != 2:
             raise PlotnineError(
-                "Cannot fit line quantiles. " "'line_p' must be of length 2"
+                "Cannot fit line quantiles. 'line_p' must be of length 2"
             )
         return self.params
 

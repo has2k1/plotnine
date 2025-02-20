@@ -39,8 +39,7 @@ class position_stack(position):
         if "ymax" in data:
             if any((data["ymin"] != 0) & (data["ymax"] != 0)):
                 warn(
-                    "Stacking not well defined when not "
-                    "anchored on the axis.",
+                    "Stacking not well defined when not anchored on the axis.",
                     PlotnineWarning,
                 )
             var = "ymax"
