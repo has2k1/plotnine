@@ -526,8 +526,21 @@ quartodoc:
     - title: Options
       desc: |
         When working interactively, some of the options make it convenient to
-        create plots that have a common look and feel. Another way to do it,
-        to set a default theme using `theme_set()`.
+        create plots that have a common look and feel.
+
+    - subtitle: Accessing the Options
+      desc: |
+        These are the methods that access the options.
+      package: plotnine.options
+      options:
+        dynamic: false
+      contents:
+        - get_option
+        - set_option
+
+    - subtitle: The Available Options
+      desc: |
+        These are _all_ the options that you can set or get the values of.
       package: plotnine.options
       options:
         dynamic: false
@@ -535,13 +548,10 @@ quartodoc:
         - aspect_ratio
         - base_family
         - base_margin
-        - close_all_figures
         - current_theme
         - dpi
         - figure_size
         - figure_format
-        - get_option
-        - set_option
 
     - title: Datasets
       desc: |
