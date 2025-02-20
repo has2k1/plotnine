@@ -310,8 +310,8 @@ def ninteraction(df: pd.DataFrame, drop: bool = False) -> list[int]:
 
     combs = np.array(np.hstack([1, np.cumprod(ndistinct[:-1])]))
     mat = np.array(ids)
-    res = (mat - 1) @ combs.T + 1
-    res = np.array(res).flatten().tolist()
+    _res = (mat - 1) @ combs.T + 1
+    res: list[int] = np.array(_res).flatten().tolist()
 
     if drop:
         return _id_var(res, drop)
