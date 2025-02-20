@@ -477,8 +477,7 @@ def combine_vars(
     has_all = [x.shape[1] == len(vars) for x in values]
     if not any(has_all):
         raise PlotnineError(
-            "At least one layer must contain all variables "
-            "used for facetting"
+            "At least one layer must contain all variables used for facetting"
         )
     base = pd.concat([x for i, x in enumerate(values) if has_all[i]], axis=0)
     base = base.drop_duplicates()

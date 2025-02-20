@@ -180,8 +180,7 @@ def qplot(
             return "wrap"
 
         warn(
-            "Could not determine the type of faceting, "
-            "therefore no faceting.",
+            "Could not determine the type of faceting, therefore no faceting.",
             PlotnineWarning,
         )
         return "null"

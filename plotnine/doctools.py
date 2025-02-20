@@ -188,7 +188,7 @@ def dict_to_table(header: tuple[str, str], contents: dict[str, str]) -> str:
     fill       `None`
     """
     rows = [
-        (name, value if value == "" else f"`{value!r}`" "{.py}")
+        (name, value if value == "" else f"`{value!r}`{{.py}}")
         for name, value in contents.items()
     ]
     return table_function(rows, headers=header, tablefmt="grid")

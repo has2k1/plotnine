@@ -73,7 +73,7 @@ def breaks_from_binwidth(
 
     if boundary is not None and center is not None:
         raise PlotnineError(
-            "Only one of 'boundary' and 'center' " "may be specified."
+            "Only one of 'boundary' and 'center' may be specified."
         )
     elif boundary is None:
         # When center is None, put the min and max of data in outer
