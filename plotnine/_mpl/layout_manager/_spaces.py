@@ -47,6 +47,13 @@ class GridSpecParams:
     wspace: float
     hspace: float
 
+    @property
+    def valid(self) -> bool:
+        """
+        Return True if the params will create a non-empty area
+        """
+        return self.top - self.bottom > 0 and self.right - self.left > 0
+
 
 @dataclass
 class _side_spaces(ABC):
