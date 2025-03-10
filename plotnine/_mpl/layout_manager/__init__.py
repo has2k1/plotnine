@@ -1,3 +1,6 @@
-from ._engine import PlotnineLayoutEngine
+from ._engine import PlotnineCompositionLayoutEngine, PlotnineLayoutEngine
 
-__all__ = ["PlotnineLayoutEngine"]
+__all__ = (
+    "PlotnineLayoutEngine",
+    "PlotnineCompositionLayoutEngine",
+)
