@@ -49,10 +49,10 @@ if TYPE_CHECKING:
 
     from matplotlib.axes import Axes
     from matplotlib.figure import Figure
-    from matplotlib.gridspec import GridSpec, GridSpecFromSubplotSpec
     from typing_extensions import Self
 
     from plotnine import watermark
+    from plotnine._mpl.gridspec import p9GridSpec
     from plotnine.coords.coord import coord
     from plotnine.facets.facet import facet
     from plotnine.layer import layer
@@ -105,7 +105,7 @@ class ggplot:
 
     figure: Figure
     axs: list[Axes]
-    _gridspec: GridSpec | GridSpecFromSubplotSpec
+    _gridspec: p9GridSpec
 
     def __init__(
         self,
@@ -336,6 +336,7 @@ class ggplot:
             self.guides.draw()
             self._draw_figure_texts()
             self._draw_watermarks()
+            self._draw_figure_background()
 
             # Artist object theming
             self.theme.apply()
@@ -349,8 +350,10 @@ class ggplot:
         """
         import matplotlib.pyplot as plt
 
+        from ._mpl.gridspec import p9GridSpec
+
         self.figure = plt.figure()
-        self._gridspec = self.figure.add_gridspec()
+        self._gridspec = p9GridSpec(1, 1, self.figure)
 
     def _build(self):
         """
@@ -541,6 +544,14 @@ class ggplot:
         """
         for wm in self.watermarks:
             wm.draw(self.figure)
+
+    def _draw_figure_background(self):
+        from matplotlib.patches import Rectangle
+
+        rect = Rectangle((0, 0), 0, 0, facecolor="none", zorder=-1000)
+        self.figure.add_artist(rect)
+        self._gridspec.patch = rect
+        self.theme.targets.plot_background = rect
 
     def _save_filename(self, ext: str) -> Path:
         """

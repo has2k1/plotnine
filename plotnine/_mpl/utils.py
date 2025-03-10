@@ -14,6 +14,8 @@ if TYPE_CHECKING:
     from matplotlib.gridspec import SubplotSpec
     from matplotlib.transforms import Transform
 
+    from .gridspec import p9GridSpec
+
 
 def bbox_in_figure_space(
     artist: Artist, fig: Figure, renderer: RendererBase
@@ -52,27 +54,26 @@ def pts_in_figure_space(fig: Figure, pts: float) -> float:
     return fig.transFigure.inverted().transform([0, pts])[1]
 
 
-def get_transPanels(fig: Figure) -> Transform:
+def get_transPanels(fig: Figure, gs: p9GridSpec) -> Transform:
     """
     Coordinate system of the Panels (facets) area
 
     (0, 0) is the bottom-left of the bottom-left panel and
     (1, 1) is the top right of the top-right panel.
 
-    The subplot parameters must be set before calling this function.
-    i.e. fig.subplots_adjust should have been called.
+    The gridspec parameters must be set before calling this function.
+    i.e. gs.update have been called.
     """
-    # Contains the layout information from which the panel area
-    # is derived
-    params = fig.subplotpars
+    # The position of the panels area in figure coordinates
+    params = gs.get_subplot_params(fig)
 
     # Figure width & height in display coordinates
     W, H = fig.bbox.width, fig.bbox.height
 
     # 1. The panels occupy space that is smaller than the figure
     # 2. That space is contained within the figure
-    # We create a transform that represent these separable aspects
-    # (but order matters), and use to transform transFigure
+    # We create a transform that represents these separable aspects
+    # (but order matters), and use it to transform transFigure
     sx, sy = params.right - params.left, params.top - params.bottom
     dx, dy = params.left * W, params.bottom * H
     transFiguretoPanels = Affine2D().scale(sx, sy).translate(dx, dy)
