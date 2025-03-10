@@ -594,7 +594,8 @@ def set_legends_position(legends: legend_artists, spaces: LayoutSpaces):
     Place legend on the figure and justify is a required
     """
     figure = spaces.plot.figure
-    params = figure.subplotpars
+    gs = spaces.plot.facet._panels_gridspec
+    params = gs.get_subplot_params()
 
     def set_position(
         aob: FlexibleAnchoredOffsetbox,
@@ -661,7 +662,7 @@ def set_legends_position(legends: legend_artists, spaces: LayoutSpaces):
 
     # Inside legends are placed using the panels coordinate system
     if legends.inside:
-        transPanels = get_transPanels(figure)
+        transPanels = get_transPanels(figure, gs)
         for l in legends.inside:
             set_position(l.box, l.position, l.justification, transPanels)
 
@@ -672,6 +673,7 @@ def set_plot_tag_position(tag: Text, spaces: LayoutSpaces):
     """
     figure = spaces.plot.figure
     theme = spaces.plot.theme
+    gs = spaces.plot.facet._panels_gridspec
     location: TagLocation = theme.getp("plot_tag_location")
     position: TagPosition = theme.getp("plot_tag_position")
     margin = theme.get_margin("plot_tag")
@@ -721,7 +723,7 @@ def set_plot_tag_position(tag: Text, spaces: LayoutSpaces):
         tag.set_verticalalignment("bottom")
     else:
         if location == "panel":
-            tag.set_transform(get_transPanels(figure))
+            tag.set_transform(get_transPanels(figure, gs))
 
     tag.set_position(position)
 

@@ -20,9 +20,9 @@ if typing.TYPE_CHECKING:
     import numpy.typing as npt
     from matplotlib.axes import Axes
     from matplotlib.figure import Figure
-    from matplotlib.gridspec import GridSpecFromSubplotSpec
 
     from plotnine import ggplot, theme
+    from plotnine._mpl.gridspec import p9GridSpec
     from plotnine.coords.coord import coord
     from plotnine.facets.labelling import CanBeStripLabellingFunc
     from plotnine.facets.layout import Layout
@@ -93,7 +93,7 @@ class facet:
 
     # Axes
     axs: list[Axes]
-    _panels_gridspec: GridSpecFromSubplotSpec
+    _panels_gridspec: p9GridSpec
 
     # ggplot object that the facet belongs to
     plot: ggplot
@@ -373,14 +373,14 @@ class facet:
 
         return result
 
-    def _get_panels_gridspec(self) -> GridSpecFromSubplotSpec:
+    def _get_panels_gridspec(self) -> p9GridSpec:
         """
         Create gridspec for the panels
         """
-        from matplotlib.gridspec import GridSpecFromSubplotSpec
+        from plotnine._mpl.gridspec import p9GridSpec
 
-        return GridSpecFromSubplotSpec(
-            self.nrow, self.ncol, subplot_spec=self.plot._gridspec[0, 0]
+        return p9GridSpec(
+            self.nrow, self.ncol, nest_into=self.plot._gridspec[0]
         )
 
     def _make_axes(self) -> list[Axes]:
