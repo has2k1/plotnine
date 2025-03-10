@@ -164,7 +164,9 @@ class Compose:
             # This gridspec contains a composition group e.g.
             # (p2 | p3) of p1 | (p2 | p3)
             ss_or_none = parent_gridspec[0] if parent_gridspec else None
-            gridspec = p9GridSpec(nrow, ncol, nest_into=ss_or_none)
+            gridspec = p9GridSpec(
+                nrow, ncol, self.figure, nest_into=ss_or_none
+            )
 
             # Each subplot in the composition will contain one of:
             #    1. A plot
@@ -181,7 +183,8 @@ class Compose:
                     )
                 elif item:
                     yield from _make_subplot_gridspecs(
-                        item, subplot_spec.subgridspec(1, 1)
+                        item,
+                        p9GridSpec(1, 1, self.figure, nest_into=subplot_spec),
                     )
 
         self.figure = plt.figure()
@@ -227,12 +230,17 @@ class Compose:
         :
             Matplotlib figure
         """
+        from .._mpl.layout_manager import PlotnineCompositionLayoutEngine
+
         with plot_composition_context(self, show):
             self._make_figure()
             for plot, gridspec in zip(self._plots, self._subplot_gridspecs):
                 plot.figure = self.figure
                 plot._gridspec = gridspec
                 plot.draw()
+            self.figure.set_layout_engine(
+                PlotnineCompositionLayoutEngine(self._plots)
+            )
         return self.figure
 
     def save(
