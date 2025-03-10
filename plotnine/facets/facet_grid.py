@@ -111,7 +111,7 @@ class facet_grid(facet):
         """
         Create gridspec for the panels
         """
-        from matplotlib.gridspec import GridSpecFromSubplotSpec
+        from plotnine._mpl.gridspec import p9GridSpec
 
         layout = self.layout
         space = self.space
@@ -157,10 +157,10 @@ class facet_grid(facet):
             ratios["width_ratios"] = self.space.get("x")
             ratios["height_ratios"] = self.space.get("y")
 
-        return GridSpecFromSubplotSpec(
+        return p9GridSpec(
             self.nrow,
             self.ncol,
-            subplot_spec=self.plot._gridspec[0, 0],
+            nest_into=self.plot._gridspec[0],
             **ratios,
         )
 

@@ -16,14 +16,9 @@ if TYPE_CHECKING:
     from pathlib import Path
     from typing import Generator, Iterator, Self
 
-    from matplotlib.figure import Figure, SubFigure
-    from matplotlib.gridspec import (
-        GridSpec,
-        GridSpecBase,
-        GridSpecFromSubplotSpec,
-        SubplotSpec,
-    )
+    from matplotlib.figure import Figure
 
+    from plotnine._mpl.gridspec import p9GridSpec
     from plotnine._utils.ipython import FigureFormat
     from plotnine.ggplot import PlotAddable, ggplot
 
@@ -43,8 +38,7 @@ class Compose:
 
         # These are created in the _setup method
         self.figure: Figure
-        self._gridspec: GridSpec
-        self._subplot_gridspecs: list[GridSpecFromSubplotSpec]
+        self._subplot_gridspecs: list[p9GridSpec]
 
     def __add__(self, rhs: ggplot | Compose) -> Compose:
         """
@@ -148,48 +142,18 @@ class Compose:
         """
         return self._plots[-1]
 
-    def _make_figure_old(self) -> tuple[Figure, list[SubFigure]]:
-        """
-        Make figure & subfigures on which to draw the composition
-        """
-        import matplotlib.pyplot as plt
-
-        from plotnine import ggplot
-        from plotnine.facets.facet_wrap import wrap_dims
-
-        def _make_subfigures(cmp: Compose, figbase: Figure | SubFigure):
-            """
-            Make figure/subfigure and assign them to the plots
-            """
-            if isinstance(cmp, ADD):
-                nrow, ncol = wrap_dims(len(cmp))
-            else:
-                ncol = len(cmp) if isinstance(cmp, OR) else 1
-                nrow = len(cmp) if isinstance(cmp, DIV) else 1
-
-            sfs = figbase.subfigures(nrow, ncol, squeeze=False).flatten()
-            for item, subfigure in zip(cmp, sfs):
-                if isinstance(item, ggplot):
-                    yield subfigure
-                else:
-                    yield from _make_subfigures(item, subfigure)
-
-        figure = plt.figure()
-        subfigures = list(_make_subfigures(self, figure))
-        return figure, subfigures
-
     def _make_figure(self):
         import matplotlib.pyplot as plt
 
         from plotnine import ggplot
+        from plotnine._mpl.gridspec import p9GridSpec
         from plotnine.facets.facet_wrap import wrap_dims
 
         def _make_subplot_gridspecs(
-            cmp: Compose,
-            parent_gridspec: GridSpecBase,
-        ) -> Generator[GridSpecFromSubplotSpec]:
+            cmp: Compose, parent_gridspec: p9GridSpec | None
+        ) -> Generator[p9GridSpec]:
             """
-            Create gridspecs for the different groups of plot compositions
+            Return the gridspecs for each subplot in the composition
             """
             if isinstance(cmp, ADD):
                 nrow, ncol = wrap_dims(len(cmp))
@@ -199,23 +163,29 @@ class Compose:
 
             # This gridspec contains a composition group e.g.
             # (p2 | p3) of p1 | (p2 | p3)
-            gridspec = parent_gridspec[0].subgridspec(nrow, ncol)
+            ss_or_none = parent_gridspec[0] if parent_gridspec else None
+            gridspec = p9GridSpec(nrow, ncol, nest_into=ss_or_none)
 
+            # Each subplot in the composition will contain one of:
+            #    1. A plot
+            #    2. A plot composition
+            #    3. Nothing
+            # Iterating over the gridspec yields the SubplotSpecs for each
+            # "subplot" in the grid. The SubplotSpec is the handle that
+            # allows us to set it up for a plot or to nest another gridspec
+            # in it.
             for item, subplot_spec in zip(cmp, gridspec):  # pyright: ignore[reportArgumentType]
                 if isinstance(item, ggplot):
-                    yield subplot_spec.subgridspec(1, 1)
-                elif item is None:
-                    pass
-                else:
+                    yield (
+                        p9GridSpec(1, 1, self.figure, nest_into=subplot_spec)
+                    )
+                elif item:
                     yield from _make_subplot_gridspecs(
                         item, subplot_spec.subgridspec(1, 1)
                     )
 
         self.figure = plt.figure()
-        self._gridspec = self.figure.add_gridspec(nrows=1, ncols=1)
-        self._subplot_gridspecs = list(
-            _make_subplot_gridspecs(self, self._gridspec)
-        )
+        self._subplot_gridspecs = list(_make_subplot_gridspecs(self, None))
 
     def _display(self):
         """

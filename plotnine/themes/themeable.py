@@ -1603,11 +1603,13 @@ class plot_background(themeable):
 
     def apply_figure(self, figure: Figure, targets: ThemeTargets):
         super().apply_figure(figure, targets)
-        figure.patch.set(**self.properties)
+        if targets.plot_background:
+            targets.plot_background.set(**self.properties)
 
     def blank_figure(self, figure: Figure, targets: ThemeTargets):
         super().blank_figure(figure, targets)
-        figure.patch.set_visible(False)
+        if targets.plot_background:
+            targets.plot_background.set_visible(False)
 
 
 class strip_background_x(MixinSequenceOfValues):

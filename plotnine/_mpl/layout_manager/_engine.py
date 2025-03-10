@@ -38,5 +38,5 @@ class PlotnineLayoutEngine(LayoutEngine):
         with getattr(renderer, "_draw_disabled", nullcontext)():
             spaces = LayoutSpaces(self.plot)
 
-        fig.subplots_adjust(**asdict(spaces.gsparams))
+        self.plot.facet._panels_gridspec.update(**asdict(spaces.gsparams))
         spaces.items._adjust_positions(spaces)
