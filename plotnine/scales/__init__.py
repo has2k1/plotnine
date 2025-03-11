@@ -79,7 +79,6 @@ from .scale_identity import (
 # linetype
 from .scale_linetype import (
     scale_linetype,
-    scale_linetype_continuous,
     scale_linetype_discrete,
 )
 
@@ -97,7 +96,6 @@ from .scale_manual import (
 # shape
 from .scale_shape import (
     scale_shape,
-    scale_shape_continuous,
     scale_shape_discrete,
 )
 
@@ -116,7 +114,6 @@ from .scale_size import (
 from .scale_stroke import (
     scale_stroke,
     scale_stroke_continuous,
-    scale_stroke_discrete,
 )
 
 # xy position and transforms
@@ -198,11 +195,9 @@ __all__ = (
     # linetype
     "scale_linetype",
     "scale_linetype_discrete",
-    "scale_linetype_continuous",
     # shape
     "scale_shape",
     "scale_shape_discrete",
-    "scale_shape_continuous",
     # size
     "scale_size",
     "scale_size_area",
@@ -214,7 +209,6 @@ __all__ = (
     # stroke
     "scale_stroke",
     "scale_stroke_continuous",
-    "scale_stroke_discrete",
     # identity
     "scale_alpha_identity",
     "scale_color_identity",
