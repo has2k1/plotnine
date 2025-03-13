@@ -3,11 +3,13 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from matplotlib.gridspec import GridSpecBase, SubplotParams
+from matplotlib.transforms import Bbox, BboxTransformTo, TransformedBbox
 
 if TYPE_CHECKING:
     from matplotlib.figure import Figure
     from matplotlib.gridspec import SubplotSpec
     from matplotlib.patches import Rectangle
+    from matplotlib.transforms import Transform
 
 
 class p9GridSpec(GridSpecBase):
@@ -156,9 +158,10 @@ class p9GridSpec(GridSpecBase):
         if not self.nested:
             return params
 
-        # When the gridspec is nested, the parameters are relative the
-        # parent subplot. From the position/parameters of parent gridspec,
-        # we calculate those of the nested one as offsets.
+        # When the gridspec is nested the subplot params of this gridspec
+        # are relative to the position of parent subplot. We want values that
+        # are relative to the figure, so we add these param values as offsets
+        # to the position of the parent subplot.
         parent_bbox = self._parent_subplot_spec.get_position(figure)  # pyright: ignore
         _left, _bottom, _right, _top = parent_bbox.extents
         left = _left + params.left
@@ -206,3 +209,36 @@ class p9GridSpec(GridSpecBase):
     @figure.setter
     def figure(self, value: Figure):
         self._figure = value
+
+    @property
+    def bbox_relative(self):
+        """
+        Bounding box for the gridspec relative to the figure
+
+        This bbox is in figure coordinates.
+        """
+        params = self.get_subplot_params()
+        return Bbox.from_extents(
+            params.left, params.bottom, params.right, params.top
+        )
+
+    @property
+    def bbox(self):
+        """
+        Bounding box of the gridspec
+
+        This bbox is in display coordinates.
+        """
+        return TransformedBbox(self.bbox_relative, self.figure.transSubfigure)
+
+    def to_transform(self) -> Transform:
+        """
+        Return transform of this gridspec
+
+        Where:
+            - (0, 0) is the bottom left of the gridspec
+            - (1, 1) is the top right of the gridspec
+
+        The output of this transform is in the display units of the figure.
+        """
+        return BboxTransformTo(self.bbox)
