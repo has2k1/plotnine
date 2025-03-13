@@ -12,7 +12,6 @@ from plotnine.exceptions import PlotnineError
 from ..utils import (
     bbox_in_figure_space,
     get_subplotspecs,
-    get_transPanels,
     rel_position,
     tight_bbox_in_figure_space,
 )
@@ -593,15 +592,15 @@ def set_legends_position(legends: legend_artists, spaces: LayoutSpaces):
     """
     Place legend on the figure and justify is a required
     """
-    figure = spaces.plot.figure
-    gs = spaces.plot.facet._panels_gridspec
-    params = gs.get_subplot_params()
+    panels_gs = spaces.plot.facet._panels_gridspec
+    params = panels_gs.get_subplot_params()
+    transPlot = spaces.plot._gridspec.to_transform()
 
     def set_position(
         aob: FlexibleAnchoredOffsetbox,
         anchor_point: tuple[float, float],
         xy_loc: tuple[float, float],
-        transform: Transform = figure.transFigure,
+        transform: Transform = transPlot,
     ):
         """
         Place box (by the anchor point) at given xy location
@@ -662,7 +661,7 @@ def set_legends_position(legends: legend_artists, spaces: LayoutSpaces):
 
     # Inside legends are placed using the panels coordinate system
     if legends.inside:
-        transPanels = get_transPanels(figure, gs)
+        transPanels = panels_gs.to_transform()
         for l in legends.inside:
             set_position(l.box, l.position, l.justification, transPanels)
 
@@ -671,9 +670,8 @@ def set_plot_tag_position(tag: Text, spaces: LayoutSpaces):
     """
     Set the postion of the plot_tag
     """
-    figure = spaces.plot.figure
     theme = spaces.plot.theme
-    gs = spaces.plot.facet._panels_gridspec
+    panels_gs = spaces.plot.facet._panels_gridspec
     location: TagLocation = theme.getp("plot_tag_location")
     position: TagPosition = theme.getp("plot_tag_position")
     margin = theme.get_margin("plot_tag")
@@ -723,7 +721,8 @@ def set_plot_tag_position(tag: Text, spaces: LayoutSpaces):
         tag.set_verticalalignment("bottom")
     else:
         if location == "panel":
-            tag.set_transform(get_transPanels(figure, gs))
+            transPanels = panels_gs.to_transform()
+            tag.set_transform(transPanels)
 
     tag.set_position(position)
 
@@ -739,7 +738,7 @@ def set_plot_tag_position_in_margin(tag: Text, spaces: LayoutSpaces):
             f"plot_tag_position={position!r}."
         )
 
-    tag.set_position((0.5, 0.5))
+    tag.set_position(spaces.to_figure_space((0.5, 0.5)))
     if "top" in position:
         tag.set_y(spaces.t.y2("plot_tag"))
         tag.set_verticalalignment("top")

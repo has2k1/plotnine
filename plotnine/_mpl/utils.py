@@ -118,3 +118,22 @@ def get_subplotspecs(axs: list[Axes]) -> list[SubplotSpec]:
             raise ValueError("Axes has no suplotspec")
         subplotspecs.append(subplotspec)
     return subplotspecs
+
+
+def draw_gridspec(gs: p9GridSpec, color="black", **kwargs):
+    """
+    A debug function to draw a rectangle around the gridspec
+    """
+    from matplotlib.patches import Rectangle
+
+    gs.figure.add_artist(
+        Rectangle(
+            xy=gs.bbox_relative.p0,
+            width=gs.bbox_relative.width,
+            height=gs.bbox_relative.height,
+            edgecolor=color,
+            fill=False,
+            clip_on=False,
+            **kwargs,
+        )
+    )

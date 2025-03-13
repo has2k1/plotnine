@@ -25,6 +25,7 @@ if TYPE_CHECKING:
     from typing import Generator
 
     from plotnine import ggplot
+    from plotnine._mpl.gridspec import p9GridSpec
 
 
 # Note
@@ -60,9 +61,11 @@ class _side_spaces(ABC):
     """
     Base class to for spaces
 
-    A *_space class should track the size taken up by all the objects that
-    may fall on that side of the panel. The same name may appear in multiple
+    A *_space class does the book keeping for all the artists that may
+    fall on that side of the panels. The same name may appear in multiple
     side classes (e.g. legend).
+
+    The amount of space for each artist is computed in figure coordinates.
     """
 
     items: LayoutItems
@@ -137,6 +140,62 @@ class _side_spaces(ABC):
         """
         return self._legend_size[1]
 
+    @cached_property
+    def gs(self) -> p9GridSpec:
+        """
+        The gridspec of the plot
+        """
+        return self.items.plot._gridspec
+
+    @cached_property
+    def offset(self) -> float:
+        """
+        Distance in figure dimensions from the edge of the figure
+
+        Derived classes should override this method
+
+        The space/margin and size consumed by artists is in figure dimensions
+        but the exact position is relative to the position of the GridSpec
+        within the figure. The offset accounts for the position of the
+        GridSpec and allows us to accurately place artists using figure
+        coordinates.
+
+        Example of an offset
+
+         Figure
+         ----------------------------------------
+        |                                        |
+        |          Plot GridSpec                 |
+        |          --------------------------    |
+        | offset  |                          |   |
+        |<------->| X                        |   |
+        |         |   Panels GridSpec        |   |
+        |         |   --------------------   |   |
+        |         |  |                    |  |   |
+        |         |  |                    |  |   |
+        |         |  |                    |  |   |
+        |         |  |                    |  |   |
+        |         |   --------------------   |   |
+        |         |                          |   |
+        |          --------------------------    |
+        |                                        |
+         ----------------------------------------
+        """
+        return 0
+
+    def to_figure_space(self, rel_value: float) -> float:
+        """
+        Convert value relative to the gridspec to one in figure space
+
+        The result is meant to be used with transFigure transforms.
+
+        Parameters
+        ----------
+        rel_value :
+            Position relative to the position of the gridspec
+        """
+        return self.offset + rel_value
+
 
 @dataclass
 class left_spaces(_side_spaces):
@@ -206,29 +265,52 @@ class left_spaces(_side_spaces):
 
         return self.items.calc.size(self.items.legends.left.box)
 
+    @cached_property
+    def offset(self) -> float:
+        """
+        Distance from left of the figure to the left of the plot gridspec
+
+              ----------------(1, 1)
+             |      ----      |
+             |  dx |    |     |
+             |<--->|    |     |
+             |     |    |     |
+             |      ----      |
+        (0, 0)----------------
+
+        """
+        return self.gs.bbox_relative.x0
+
     def x1(self, item: str) -> float:
         """
         Lower x-coordinate in figure space of the item
         """
-        return self.sum_upto(item)
+        return self.to_figure_space(self.sum_upto(item))
 
     def x2(self, item: str) -> float:
         """
         Higher x-coordinate in figure space of the item
         """
-        return self.sum_incl(item)
+        return self.to_figure_space(self.sum_incl(item))
+
+    @property
+    def left_relative(self):
+        """
+        Left (relative to the gridspec) of the panels in figure dimensions
+        """
+        return self.total
 
     @property
     def left(self):
         """
         Left of the panels in figure space
         """
-        return self.total
+        return self.to_figure_space(self.left_relative)
 
     @property
     def plot_left(self):
         """
-        Distance in figure space up to the left-most artist
+        Distance up to the left-most artist in figure space
         """
         return self.x1("legend")
 
@@ -288,29 +370,52 @@ class right_spaces(_side_spaces):
 
         return self.items.calc.size(self.items.legends.right.box)
 
+    @cached_property
+    def offset(self):
+        """
+        Distance from right of the figure to the right of the plot gridspec
+
+              ---------------(1, 1)
+             |     ----      |
+             |    |    | -dx |
+             |    |    |<--->|
+             |    |    |     |
+             |     ----      |
+        (0, 0)---------------
+
+        """
+        return self.gs.bbox_relative.x1 - 1
+
     def x1(self, item: str) -> float:
         """
         Lower x-coordinate in figure space of the item
         """
-        return 1 - self.sum_incl(item)
+        return self.to_figure_space(1 - self.sum_incl(item))
 
     def x2(self, item: str) -> float:
         """
         Higher x-coordinate in figure space of the item
         """
-        return 1 - self.sum_upto(item)
+        return self.to_figure_space(1 - self.sum_upto(item))
+
+    @property
+    def right_relative(self):
+        """
+        Right (relative to the gridspec) of the panels in figure dimensions
+        """
+        return 1 - self.total
 
     @property
     def right(self):
         """
         Right of the panels in figure space
         """
-        return 1 - self.total
+        return self.to_figure_space(self.right_relative)
 
     @property
     def plot_right(self):
         """
-        Distance in figure space upto the right-most artist
+        Distance up to the right-most artist in figure space
         """
         return self.x2("legend")
 
@@ -390,29 +495,55 @@ class top_spaces(_side_spaces):
 
         return self.items.calc.size(self.items.legends.top.box)
 
+    @cached_property
+    def offset(self) -> float:
+        """
+        Distance from top of the figure to the top of the plot gridspec
+
+              ----------------(1, 1)
+             |       ^        |
+             |       |-dy     |
+             |       v        |
+             |      ----      |
+             |     |    |     |
+             |     |    |     |
+             |     |    |     |
+             |      ----      |
+             |                |
+        (0, 0)----------------
+        """
+        return self.gs.bbox_relative.y1 - 1
+
     def y1(self, item: str) -> float:
         """
         Lower y-coordinate in figure space of the item
         """
-        return 1 - self.sum_incl(item)
+        return self.to_figure_space(1 - self.sum_incl(item))
 
     def y2(self, item: str) -> float:
         """
         Higher y-coordinate in figure space of the item
         """
-        return 1 - self.sum_upto(item)
+        return self.to_figure_space(1 - self.sum_upto(item))
+
+    @property
+    def top_relative(self):
+        """
+        Top (relative to the gridspec) of the panels in figure dimensions
+        """
+        return 1 - self.total
 
     @property
     def top(self):
         """
         Top of the panels in figure space
         """
-        return 1 - self.total
+        return self.to_figure_space(self.top_relative)
 
     @property
     def plot_top(self):
         """
-        Distance in figure space up to the top-most artist
+        Distance up to the top-most artist in figure space
         """
         return self.y2("legend")
 
@@ -495,29 +626,55 @@ class bottom_spaces(_side_spaces):
 
         return self.items.calc.size(self.items.legends.bottom.box)
 
+    @cached_property
+    def offset(self) -> float:
+        """
+        Distance from bottom of the figure to the bottom of the plot gridspec
+
+              ----------------(1, 1)
+             |                |
+             |      ----      |
+             |     |    |     |
+             |     |    |     |
+             |     |    |     |
+             |      ----      |
+             |       ^        |
+             |       |dy      |
+             |       v        |
+        (0, 0)----------------
+        """
+        return self.gs.bbox_relative.y0
+
     def y1(self, item: str) -> float:
         """
         Lower y-coordinate in figure space of the item
         """
-        return self.sum_upto(item)
+        return self.to_figure_space(self.sum_upto(item))
 
     def y2(self, item: str) -> float:
         """
         Higher y-coordinate in figure space of the item
         """
-        return self.sum_incl(item)
+        return self.to_figure_space(self.sum_incl(item))
+
+    @property
+    def bottom_relative(self):
+        """
+        Bottom (relative to the gridspec) of the panels in figure dimensions
+        """
+        return self.total
 
     @property
     def bottom(self):
         """
         Bottom of the panels in figure space
         """
-        return self.total
+        return self.to_figure_space(self.bottom_relative)
 
     @property
     def plot_bottom(self):
         """
-        Distance in figure space up to the bottom-most artist
+        Distance up to the bottom-most artist in figure space
         """
         return self.y1("legend")
 
@@ -660,10 +817,10 @@ class LayoutSpaces:
             raise TypeError(f"Unknown type of facet: {type(self.plot.facet)}")
 
         return GridSpecParams(
-            self.l.left,
-            self.r.right,
-            self.t.top,
-            self.b.bottom,
+            self.l.left_relative,
+            self.r.right_relative,
+            self.t.top_relative,
+            self.b.bottom_relative,
             wspace,
             hspace,
         )
@@ -790,3 +947,22 @@ class LayoutSpaces:
         Default aspect ratio of the panels
         """
         return (self.h * self.H) / (self.w * self.W)
+
+    @cached_property
+    def gs(self) -> p9GridSpec:
+        """
+        The gridspec
+        """
+        return self.plot._gridspec
+
+    def to_figure_space(
+        self,
+        position: tuple[float, float],
+    ) -> tuple[float, float]:
+        """
+        Convert position from gridspec space to figure space
+        """
+        _x, _y = position
+        x = self.l.plot_left + (self.r.plot_right - self.l.plot_left) * _x
+        y = self.b.plot_bottom + (self.t.plot_top - self.b.plot_bottom) * _y
+        return (x, y)
