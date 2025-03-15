@@ -11,6 +11,7 @@ from .._utils.ipython import (
     get_ipython,
 )
 from ..options import get_option
+from ._plotspec import plotspec
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -36,9 +37,9 @@ class Compose:
     def __init__(self, operands: list[ggplot | Compose]):
         self.operands = operands
 
-        # These are created in the _setup method
+        # These are created in the _create_figure method
         self.figure: Figure
-        self._subplot_gridspecs: list[p9GridSpec]
+        self.plotspecs: list[plotspec]
 
     def __add__(self, rhs: ggplot | Compose) -> Compose:
         """
@@ -135,25 +136,32 @@ class Compose:
 
         return list(_make(self))
 
-    @cached_property
-    def _last_plot(self):
+    @property
+    def last_plot(self):
         """
         Last plot added to the composition
         """
         return self._plots[-1]
 
-    def _make_figure(self):
+    @cached_property
+    def gridspec(self):
+        """
+        The gridspec that contains the whole composition
+        """
+        return self.plotspecs[0].composition_gridspec
+
+    def _create_figure(self):
         import matplotlib.pyplot as plt
 
         from plotnine import ggplot
         from plotnine._mpl.gridspec import p9GridSpec
         from plotnine.facets.facet_wrap import wrap_dims
 
-        def _make_subplot_gridspecs(
+        def _make_plotspecs(
             cmp: Compose, parent_gridspec: p9GridSpec | None
-        ) -> Generator[p9GridSpec]:
+        ) -> Generator[plotspec]:
             """
-            Return the gridspecs for each subplot in the composition
+            Return the plot specification for each subplot in the composition
             """
             if isinstance(cmp, ADD):
                 nrow, ncol = wrap_dims(len(cmp))
@@ -164,7 +172,7 @@ class Compose:
             # This gridspec contains a composition group e.g.
             # (p2 | p3) of p1 | (p2 | p3)
             ss_or_none = parent_gridspec[0] if parent_gridspec else None
-            gridspec = p9GridSpec(
+            composition_gs = p9GridSpec(
                 nrow, ncol, self.figure, nest_into=ss_or_none
             )
 
@@ -176,19 +184,29 @@ class Compose:
             # "subplot" in the grid. The SubplotSpec is the handle that
             # allows us to set it up for a plot or to nest another gridspec
             # in it.
-            for item, subplot_spec in zip(cmp, gridspec):  # pyright: ignore[reportArgumentType]
+            for item, subplot_spec in zip(cmp, composition_gs):  # pyright: ignore[reportArgumentType]
                 if isinstance(item, ggplot):
-                    yield (
-                        p9GridSpec(1, 1, self.figure, nest_into=subplot_spec)
+                    yield plotspec(
+                        next(_plots),  # FIXME See comment below
+                        self.figure,
+                        composition_gs,
+                        subplot_spec,
+                        p9GridSpec(1, 1, self.figure, nest_into=subplot_spec),
                     )
                 elif item:
-                    yield from _make_subplot_gridspecs(
+                    yield from _make_plotspecs(
                         item,
                         p9GridSpec(1, 1, self.figure, nest_into=subplot_spec),
                     )
 
+        # FIXME In _make_plotspecs, we shall use use ggplot instances that
+        # are generated and cached in ._plots and not the one from the
+        # iteration. This is because in ._display() we need to modify the
+        # plots and it gets called before this method. We should find a
+        # better way to do this.
+        _plots = iter(self._plots)
         self.figure = plt.figure()
-        self._subplot_gridspecs = list(_make_subplot_gridspecs(self, None))
+        self.plotspecs = list(_make_plotspecs(self, None))
 
     def _display(self):
         """
@@ -196,23 +214,21 @@ class Compose:
 
         This function is called for its side-effects.
 
-        It plots the plot to an io buffer, then uses ipython display
-        methods to show the result
+        It draws the plot to an io buffer then uses ipython display
+        methods to show the result.
         """
         ip = get_ipython()
         format: FigureFormat = get_option(
             "figure_format"
         ) or ip.config.InlineBackend.get("figure_format", "retina")
 
-        save_format = format
         if format == "retina":
-            save_format = "png"
             for p in self._plots:
                 p.theme = p.theme.to_retina()
 
-        figure_size_px = self._plots[-1].theme._figure_size_px
         buf = BytesIO()
-        self.save(buf, save_format)
+        self.save(buf, "png" if format == "retina" else format)
+        figure_size_px = self.last_plot.theme._figure_size_px
         display_func = get_display_function(format, figure_size_px)
         display_func(buf.getvalue())
 
@@ -233,15 +249,16 @@ class Compose:
         from .._mpl.layout_manager import PlotnineCompositionLayoutEngine
 
         with plot_composition_context(self, show):
-            self._make_figure()
-            for plot, gridspec in zip(self._plots, self._subplot_gridspecs):
-                plot.figure = self.figure
-                plot._gridspec = gridspec
-                plot.draw()
+            self._create_figure()
+            figure = self.figure
+
+            for ps in self.plotspecs:
+                ps.plot.draw()
+
             self.figure.set_layout_engine(
-                PlotnineCompositionLayoutEngine(self._plots)
+                PlotnineCompositionLayoutEngine(self)
             )
-        return self.figure
+        return figure
 
     def save(
         self, filename: str | Path | BytesIO, save_format: str | None = None
@@ -263,7 +280,7 @@ class plot_composition_context:
         # https://github.com/matplotlib/matplotlib/issues/24644
         # When drawing the Composition, the dpi themeable is infective
         # because it sets the rcParam after this figure is created.
-        rcParams = {"figure.dpi": self.cmp._last_plot.theme.getp("dpi")}
+        rcParams = {"figure.dpi": self.cmp.last_plot.theme.getp("dpi")}
         self._rc_context = mpl.rc_context(rcParams)
 
     def __enter__(self) -> Self:
@@ -287,6 +304,7 @@ class plot_composition_context:
                 plt.close(self.cmp.figure)
 
         self._rc_context.__exit__(exc_type, exc_value, exc_traceback)
+        del self.cmp._plots
 
 
 class OR(Compose):

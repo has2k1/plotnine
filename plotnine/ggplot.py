@@ -180,18 +180,15 @@ class ggplot:
         format = get_option("figure_format") or ip.config.InlineBackend.get(
             "figure_format", "retina"
         )
-        save_format = format
-
         # While jpegs can be displayed as retina, we restrict the output
         # of "retina" to png
         if format == "retina":
             self = copy(self)
             self.theme = self.theme.to_retina()
-            save_format = "png"
 
-        figure_size_px = self.theme._figure_size_px
         buf = BytesIO()
-        self.save(buf, format=save_format, verbose=False)
+        self.save(buf, "png" if format == "retina" else format, verbose=False)
+        figure_size_px = self.theme._figure_size_px
         display_func = get_display_function(format, figure_size_px)
         display_func(buf.getvalue())
 
