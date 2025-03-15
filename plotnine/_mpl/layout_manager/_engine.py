@@ -13,6 +13,7 @@ if TYPE_CHECKING:
     from matplotlib.figure import Figure
 
     from plotnine import ggplot
+    from plotnine.plot_composition import Compose
 
 
 class PlotnineLayoutEngine(LayoutEngine):
@@ -52,8 +53,8 @@ class PlotnineCompositionLayoutEngine(LayoutEngine):
     _adjust_compatible = True
     _colorbar_gridspec = False
 
-    def __init__(self, plots: list[ggplot]):
-        self.plots = plots
+    def __init__(self, composition: Compose):
+        self.composition = composition
 
     def execute(self, fig: Figure):
         from contextlib import nullcontext
@@ -64,8 +65,8 @@ class PlotnineCompositionLayoutEngine(LayoutEngine):
             with getattr(renderer, "_draw_disabled", nullcontext)():
                 return LayoutSpaces(plot)
 
-        for plot in self.plots:
-            spaces = get_spaces(plot)
+        for ps in self.composition.plotspecs:
+            spaces = get_spaces(ps.plot)
             if not spaces.gsparams.valid:
                 warn(
                     "The layout manager failed, the figure size is too small "
@@ -75,5 +76,5 @@ class PlotnineCompositionLayoutEngine(LayoutEngine):
                 )
                 break
 
-            plot.facet._panels_gridspec.update(**asdict(spaces.gsparams))
+            ps.plot.facet._panels_gridspec.update(**asdict(spaces.gsparams))
             spaces.items._adjust_positions(spaces)
