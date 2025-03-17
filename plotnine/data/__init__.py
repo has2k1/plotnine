@@ -85,8 +85,17 @@ def _process_categories():
     diamonds = _ordered_categories(
         diamonds,
         {
-            "cut": "Fair, Good, Very Good, Premium, Ideal".split(", "),
-            "clarity": "I1 SI2 SI1 VS2 VS1 VVS2 VVS1 IF".split(),
+            "cut": ["Fair", "Good", "Very Good", "Premium", "Ideal"],
+            "clarity": [
+                "I1",
+                "SI2",
+                "SI1",
+                "VS2",
+                "VS1",
+                "VVS2",
+                "VVS1",
+                "IF",
+            ],
             "color": list("DEFGHIJ"),
         },
     )
