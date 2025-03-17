@@ -171,7 +171,7 @@ def compute_density(x, weight, range, **params):
     x = np.asarray(x, dtype=float)
     not_nan = ~np.isnan(x)
     x = x[not_nan]
-    bw = cast(str | float, params["bw"])
+    bw = cast("str | float", params["bw"])
     kernel = params["kernel"]
     bounds = params["bounds"]
     has_bounds = not (np.isneginf(bounds[0]) and np.isposinf(bounds[1]))

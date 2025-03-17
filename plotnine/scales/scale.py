@@ -243,7 +243,7 @@ class scale(
         if not (exp := self.expand):
             m1, m2 = mult if isinstance(mult, (tuple, list)) else (mult, mult)
             a1, a2 = cast(
-                tuple[float, float],
+                "tuple[float, float]",
                 (add if isinstance(add, (tuple, list)) else (add, add)),
             )
             exp = (m1, a1, m2, a2)

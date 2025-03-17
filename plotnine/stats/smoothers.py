@@ -37,7 +37,7 @@ def predictdf(data, xseq, **params) -> pd.DataFrame:
         "gpr": gpr,
     }
 
-    method = cast(str | Callable[..., pd.DataFrame], params["method"])
+    method = cast("str | Callable[..., pd.DataFrame]", params["method"])
 
     if isinstance(method, str):
         try:

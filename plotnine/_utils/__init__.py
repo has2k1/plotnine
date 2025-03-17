@@ -604,7 +604,7 @@ def to_rgba(
         return c
 
     if is_iterable(colors):
-        colors = cast(Sequence["ColorType"], colors)
+        colors = cast("Sequence[ColorType]", colors)
 
         if all(no_color(c) for c in colors):
             return "none"

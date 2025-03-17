@@ -76,7 +76,7 @@ class guide(ABC, metaclass=Register):
         self.plot_layers: Layers
         self.plot_mapping: aes
         self._elements_cls = GuideElements
-        self.elements = cast(GuideElements, None)
+        self.elements = cast("GuideElements", None)
         self.guides_elements: GuidesElements
 
     def legend_aesthetics(self, layer):
@@ -132,14 +132,14 @@ class guide(ABC, metaclass=Register):
         pos = self.elements.position
         just_view = asdict(self.guides_elements.justification)
         if isinstance(pos, str):
-            just = cast(float, just_view[pos])
+            just = cast("float", just_view[pos])
             return (pos, just)
         else:
             # If no justification is given for an inside legend,
             # we use the position of the legend
             if (just := just_view["inside"]) is None:
                 just = pos
-            just = cast(tuple[float, float], just)
+            just = cast("tuple[float, float]", just)
             return (pos, just)
 
     def train(

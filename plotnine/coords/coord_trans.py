@@ -117,7 +117,7 @@ class coord_trans(coord):
                 range=ranges.range,
             )
             sv.range = tuple(sorted(ranges.range_coord))  # type: ignore
-            breaks = cast(tuple[float, float], sv.breaks)
+            breaks = cast("tuple[float, float]", sv.breaks)
             sv.breaks = transform_value(trans, breaks)
             sv.minor_breaks = transform_value(trans, sv.minor_breaks)
             return sv
