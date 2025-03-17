@@ -452,7 +452,7 @@ class GuideElementsLegend(GuideElements):
         If legend is horizontal, then key heights must be equal, so we
         use the maximum
         """
-        hs = [h for h, _ in self._key_dimensions]
+        hs = [h for _, h in self._key_dimensions]
         if self.is_horizontal:
             return [max(hs)] * len(hs)
         return hs
