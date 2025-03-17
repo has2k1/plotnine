@@ -4,14 +4,14 @@
     "href": "changelog.html",
     "title": "Changelog",
     "section": "",
-    "text": "(not-yet-released)\n\n\n\nIncluded datasets mpg, msleep and midwest no longer have any of their columns as categoricals. This matches the respective datasets in R. #913"
+    "text": "(not-yet-released)\n\n\n\nIncluded datasets mpg, msleep and midwest no longer have any of their columns as categoricals. This matches the respective datasets in R. #913\n\n\n\n\n\nFixed bug in with the legend_key_height themeable where it wasn’t applied. #921"
   },
   {
     "objectID": "changelog.html#v0.15.0",
     "href": "changelog.html#v0.15.0",
     "title": "Changelog",
     "section": "",
-    "text": "(not-yet-released)\n\n\n\nIncluded datasets mpg, msleep and midwest no longer have any of their columns as categoricals. This matches the respective datasets in R. #913"
+    "text": "(not-yet-released)\n\n\n\nIncluded datasets mpg, msleep and midwest no longer have any of their columns as categoricals. This matches the respective datasets in R. #913\n\n\n\n\n\nFixed bug in with the legend_key_height themeable where it wasn’t applied. #921"
   },
   {
     "objectID": "changelog.html#v0.14.5",
