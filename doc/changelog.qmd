@@ -11,6 +11,11 @@ title: Changelog
   [](:attr:`~plotnine.data.midwest`) no longer have any of their columns as categoricals.
   This matches the respective datasets in R. {{< issue 913 >}}
 
+### Bug Fixes
+
+- Fixed bug in with the `legend_key_height` themeable where it wasn't applied.
+  {{< issue 921 >}}
+
 ## v0.14.5
 (2025-01-02)
 [![](https://zenodo.org/badge/DOI/10.5281/zenodo.14587381.svg)](https://doi.org/10.5281/zenodo.14587381)
