@@ -468,7 +468,7 @@ def _calculate_panel_spacing_facet_grid(
     """
     Calculate spacing parts for facet_grid
     """
-    pack.facet = cast(facet_grid, pack.facet)
+    pack.facet = cast("facet_grid", pack.facet)
     theme = pack.theme
 
     ncol = pack.facet.ncol
@@ -499,7 +499,7 @@ def _calculate_panel_spacing_facet_wrap(
     """
     Calculate spacing parts for facet_wrap
     """
-    pack.facet = cast(facet_wrap, pack.facet)
+    pack.facet = cast("facet_wrap", pack.facet)
     theme = pack.theme
 
     ncol = pack.facet.ncol

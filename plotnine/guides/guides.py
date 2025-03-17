@@ -342,8 +342,8 @@ class guides:
             if isinstance(position, str) and isinstance(just, (float, int)):
                 setattr(legends, position, outside_legend(aob, just))
             else:
-                position = cast(tuple[float, float], position)
-                just = cast(tuple[float, float], just)
+                position = cast("tuple[float, float]", position)
+                just = cast("tuple[float, float]", just)
                 legends.inside.append(inside_legend(aob, just, position))
 
         return legends

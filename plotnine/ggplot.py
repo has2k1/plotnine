@@ -572,7 +572,7 @@ class ggplot:
         fig_kwargs: Dict[str, Any] = {"format": format, **kwargs}
 
         if limitsize is None:
-            limitsize = cast(bool, get_option("limitsize"))
+            limitsize = cast("bool", get_option("limitsize"))
 
         # filename, depends on the object
         if filename is None:
@@ -598,7 +598,7 @@ class ggplot:
             raise PlotnineError("You must specify both width and height")
         else:
             width, height = cast(
-                tuple[float, float], self.theme.getp("figure_size")
+                "tuple[float, float]", self.theme.getp("figure_size")
             )
 
         if limitsize and (width > 25 or height > 25):

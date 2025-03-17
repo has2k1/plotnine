@@ -226,10 +226,10 @@ class guide_legend(guide):
                 ncol = int(np.ceil(nbreak / 15))
 
         if nrow is None:
-            ncol = cast(int, ncol)
+            ncol = cast("int", ncol)
             nrow = int(np.ceil(nbreak / ncol))
         elif ncol is None:
-            nrow = cast(int, nrow)
+            nrow = cast("int", nrow)
             ncol = int(np.ceil(nbreak / nrow))
 
         return nrow, ncol
@@ -255,7 +255,7 @@ class guide_legend(guide):
         elements = self.elements
 
         # title
-        title = cast(str, self.title)
+        title = cast("str", self.title)
         title_box = TextArea(title)
         targets.legend_title = title_box._text  # type: ignore
 
@@ -403,7 +403,7 @@ class GuideElementsLegend(GuideElements):
         dimensions are big enough.
         """
         #  Note the different height sizes for the entries
-        guide = cast(guide_legend, self.guide)
+        guide = cast("guide_legend", self.guide)
         min_size = (
             self.theme.getp("legend_key_width"),
             self.theme.getp("legend_key_height"),
