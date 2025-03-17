@@ -91,7 +91,7 @@ class geom_path(geom):
 
         # return data
         n1 = len(data)
-        data = data.loc[bool_idx]  # pyright: ignore[reportCallIssue,reportArgumentType]
+        data = data.loc[bool_idx]
         data.reset_index(drop=True, inplace=True)
         n2 = len(data)
 
