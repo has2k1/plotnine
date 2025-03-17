@@ -29,6 +29,7 @@ dependencies = [
     "numpy>=1.23.5",
     "scipy>=1.8.0",
     "statsmodels>=0.14.0",
+    "narwhals>=1.30.0",
 ]
 requires-python = ">=3.10"
 
