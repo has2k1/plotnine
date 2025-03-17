@@ -15,6 +15,7 @@ from dataclasses import field
 from typing import TYPE_CHECKING, cast, overload
 from warnings import warn
 
+import narwhals as nw
 import numpy as np
 import pandas as pd
 from pandas.core.groupby import DataFrameGroupBy
@@ -27,6 +28,7 @@ if TYPE_CHECKING:
 
     import numpy.typing as npt
     from matplotlib.typing import ColorType
+    from narwhals.typing import DataFrameT, IntoDataFrame
     from typing_extensions import TypeGuard
 
     from plotnine.typing import (
@@ -625,13 +627,14 @@ def to_rgba(
             return to_rgba_hex(colors, alpha)
 
 
+@nw.narwhalify
 def groupby_apply(
-    df: pd.DataFrame,
+    df: DataFrameT,
     cols: str | list[str],
-    func: Callable[..., pd.DataFrame],
+    func: Callable[..., IntoDataFrame],
     *args: tuple[Any],
     **kwargs: Any,
-) -> pd.DataFrame:
+) -> DataFrameT:
     """
     Groupby cols and call the function fn on each grouped dataframe.
 
@@ -641,29 +644,21 @@ def groupby_apply(
         columns to groupby
     func : callable
         function to call on the grouped data
-    *args : tuple
-        positional parameters to pass to func
-    **kwargs : dict
-        keyword parameter to pass to func
 
-    This is meant to avoid pandas df.groupby('col').apply(fn, *args),
-    as it calls fn twice on the first dataframe. If the nested code also
+    This is/was meant to avoid pandas df.groupby('col').apply(fn, *args),
+    as it calls func twice on the first dataframe. If the nested code also
     does the same thing, it can be very expensive
     """
-    if df.empty:
-        return df.copy()
-
-    try:
-        axis = kwargs.pop("axis")
-    except KeyError:
-        axis = 0
+    if df.is_empty():
+        return df.clone()
 
     lst = []
-    for _, d in df.groupby(cols, observed=True):
+    for _, d in df.group_by(cols):
         # function fn should be free to modify dataframe d, therefore
         # do not mark d as a slice of df i.e no SettingWithCopyWarning
-        lst.append(func(d, *args, **kwargs))
-    return pd.concat(lst, axis=axis, ignore_index=True)
+        lst.append(nw.from_native(func(d.to_native(), *args, **kwargs)))
+
+    return nw.maybe_reset_index(nw.concat(lst, how="vertical"))  # pyright: ignore[reportReturnType]
 
 
 def pivot_apply(df, column, index, func, *args, **kwargs):
