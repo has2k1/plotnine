@@ -69,6 +69,14 @@ class _side_spaces(ABC):
     """
 
     items: LayoutItems
+    alignment_margin: float = 0
+    """
+    A margin added to align this plot with others in a composition
+
+    This value is calculated during the layout process in a tree structure
+    that has convenient access to the sides/edges of the panels in the
+    composition.
+    """
 
     def __post_init__(self):
         self._calculate()
@@ -710,22 +718,22 @@ class LayoutSpaces:
     b: bottom_spaces = field(init=False)
     """All subspaces below the bottom of the panels"""
 
-    W: float = field(init=False)
+    W: float = field(init=False, default=0)
     """Figure Width [inches]"""
 
-    H: float = field(init=False)
+    H: float = field(init=False, default=0)
     """Figure Height [inches]"""
 
-    w: float = field(init=False)
+    w: float = field(init=False, default=0)
     """Axes width w.r.t figure in [0, 1]"""
 
-    h: float = field(init=False)
+    h: float = field(init=False, default=0)
     """Axes height w.r.t figure in [0, 1]"""
 
-    sw: float = field(init=False)
+    sh: float = field(init=False, default=0)
     """horizontal spacing btn panels w.r.t figure"""
 
-    sh: float = field(init=False)
+    sw: float = field(init=False, default=0)
     """vertical spacing btn panels w.r.t figure"""
 
     gsparams: GridSpecParams = field(init=False)
@@ -742,6 +750,7 @@ class LayoutSpaces:
         self.t = top_spaces(self.items)
         self.b = bottom_spaces(self.items)
 
+    def get_gridspec_params(self) -> GridSpecParams:
         # Calculate the gridspec params
         # (spacing required by mpl)
         self.gsparams = self._calculate_panel_spacing()
@@ -758,6 +767,8 @@ class LayoutSpaces:
             elif ratio < current_ratio:
                 # Increase aspect ratio, wider panels
                 self._reduce_height(ratio)
+
+        return self.gsparams
 
     def increase_horizontal_plot_margin(self, dw: float):
         """

@@ -98,8 +98,8 @@ class p9GridSpec(GridSpecBase):
         self,
         left=None,
         bottom=None,
-        top=None,
         right=None,
+        top=None,
         wspace=None,
         hspace=None,
     ):
@@ -164,14 +164,16 @@ class p9GridSpec(GridSpecBase):
         # to the position of the parent subplot.
         parent_bbox = self._parent_subplot_spec.get_position(figure)  # pyright: ignore
         _left, _bottom, _right, _top = parent_bbox.extents
+
         left = _left + params.left
-        right = _right - (1 - params.right)
         bottom = _bottom + params.bottom
+        right = _right - (1 - params.right)
         top = _top - (1 - params.top)
+
         return SubplotParams(
             left=left,
-            right=right,
             bottom=bottom,
+            right=right,
             top=top,
             wspace=params.wspace,
             hspace=params.hspace,
