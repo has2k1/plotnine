@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from copy import deepcopy
 from dataclasses import dataclass
-from functools import cached_property
 from io import BytesIO
 from typing import TYPE_CHECKING
 
@@ -40,6 +39,7 @@ class Compose:
         # These are created in the _create_figure method
         self.figure: Figure
         self.plotspecs: list[plotspec]
+        self.gridspec: p9GridSpec
 
     def __add__(self, rhs: ggplot | Compose) -> Compose:
         """
@@ -120,42 +120,79 @@ class Compose:
         """
         return self._display()
 
-    @cached_property
-    def _plots(self) -> list[ggplot]:
+    @property
+    def nrow(self) -> int:
         """
-        All the plots in the composition.
+        Number of rows in the composition
         """
-        from plotnine import ggplot
+        return 0
 
-        def _make(cmp):
-            for item in cmp:
-                if isinstance(item, ggplot):
-                    yield deepcopy(item)
-                else:
-                    yield from _make(item)
-
-        return list(_make(self))
+    @property
+    def ncol(self) -> int:
+        """
+        Number of cols in the composition
+        """
+        return 0
 
     @property
     def last_plot(self):
         """
         Last plot added to the composition
         """
-        return self._plots[-1]
+        from plotnine import ggplot
 
-    @cached_property
-    def gridspec(self):
+        last_operand = self.operands[-1]
+        if isinstance(last_operand, ggplot):
+            return last_operand
+        else:
+            return last_operand.last_plot
+
+    def __deepcopy__(self, memo):
         """
-        The gridspec that contains the whole composition
+        Deep copy without copying the figure
         """
-        return self.plotspecs[0].composition_gridspec
+        cls = self.__class__
+        result = cls.__new__(cls)
+        memo[id(self)] = result
+        old = self.__dict__
+        new = result.__dict__
+
+        shallow = {"figure", "gridsspec", "__copy"}
+        for key, item in old.items():
+            if key in shallow:
+                new[key] = item
+                memo[id(new[key])] = new[key]
+            else:
+                new[key] = deepcopy(item, memo)
+
+        old["__copy"] = result
+
+        return result
+
+    def _to_retina(self):
+        from plotnine import ggplot
+
+        for item in self:
+            if isinstance(item, ggplot):
+                item.theme = item.theme.to_retina()
+            else:
+                item._to_retina()
+
+    def _create_gridspec(self, figure, nest_into):
+        """
+        Create the gridspec for this composition
+        """
+        from plotnine._mpl.gridspec import p9GridSpec
+
+        self.gridspec = p9GridSpec(
+            self.nrow, self.ncol, figure, nest_into=nest_into
+        )
 
     def _create_figure(self):
         import matplotlib.pyplot as plt
 
         from plotnine import ggplot
         from plotnine._mpl.gridspec import p9GridSpec
-        from plotnine.facets.facet_wrap import wrap_dims
 
         def _make_plotspecs(
             cmp: Compose, parent_gridspec: p9GridSpec | None
@@ -163,18 +200,10 @@ class Compose:
             """
             Return the plot specification for each subplot in the composition
             """
-            if isinstance(cmp, ADD):
-                nrow, ncol = wrap_dims(len(cmp))
-            else:
-                ncol = len(cmp) if isinstance(cmp, OR) else 1
-                nrow = len(cmp) if isinstance(cmp, DIV) else 1
-
             # This gridspec contains a composition group e.g.
             # (p2 | p3) of p1 | (p2 | p3)
             ss_or_none = parent_gridspec[0] if parent_gridspec else None
-            composition_gs = p9GridSpec(
-                nrow, ncol, self.figure, nest_into=ss_or_none
-            )
+            cmp._create_gridspec(self.figure, ss_or_none)
 
             # Each subplot in the composition will contain one of:
             #    1. A plot
@@ -184,12 +213,12 @@ class Compose:
             # "subplot" in the grid. The SubplotSpec is the handle that
             # allows us to set it up for a plot or to nest another gridspec
             # in it.
-            for item, subplot_spec in zip(cmp, composition_gs):  # pyright: ignore[reportArgumentType]
+            for item, subplot_spec in zip(cmp, cmp.gridspec):  # pyright: ignore[reportArgumentType]
                 if isinstance(item, ggplot):
                     yield plotspec(
-                        next(_plots),  # FIXME See comment below
+                        item,
                         self.figure,
-                        composition_gs,
+                        cmp.gridspec,
                         subplot_spec,
                         p9GridSpec(1, 1, self.figure, nest_into=subplot_spec),
                     )
@@ -199,12 +228,6 @@ class Compose:
                         p9GridSpec(1, 1, self.figure, nest_into=subplot_spec),
                     )
 
-        # FIXME In _make_plotspecs, we shall use use ggplot instances that
-        # are generated and cached in ._plots and not the one from the
-        # iteration. This is because in ._display() we need to modify the
-        # plots and it gets called before this method. We should find a
-        # better way to do this.
-        _plots = iter(self._plots)
         self.figure = plt.figure()
         self.plotspecs = list(_make_plotspecs(self, None))
 
@@ -223,8 +246,8 @@ class Compose:
         ) or ip.config.InlineBackend.get("figure_format", "retina")
 
         if format == "retina":
-            for p in self._plots:
-                p.theme = p.theme.to_retina()
+            self = deepcopy(self)
+            self._to_retina()
 
         buf = BytesIO()
         self.save(buf, "png" if format == "retina" else format)
@@ -304,13 +327,20 @@ class plot_composition_context:
                 plt.close(self.cmp.figure)
 
         self._rc_context.__exit__(exc_type, exc_value, exc_traceback)
-        del self.cmp._plots
 
 
 class OR(Compose):
     """
     Compose by adding a column
     """
+
+    @property
+    def nrow(self) -> int:
+        return 1
+
+    @property
+    def ncol(self) -> int:
+        return len(self)
 
     def __or__(self, rhs: ggplot | Compose) -> Compose:
         """
@@ -332,6 +362,14 @@ class DIV(Compose):
     Compose by adding a row
     """
 
+    @property
+    def nrow(self) -> int:
+        return len(self)
+
+    @property
+    def ncol(self) -> int:
+        return 1
+
     def __truediv__(self, rhs: ggplot | Compose) -> Compose:
         """
         Add rhs as a row
@@ -351,6 +389,18 @@ class ADD(Compose):
     """
     Compose by adding
     """
+
+    @property
+    def nrow(self) -> int:
+        from plotnine.facets.facet_wrap import wrap_dims
+
+        return wrap_dims(len(self))[0]
+
+    @property
+    def ncol(self) -> int:
+        from plotnine.facets.facet_wrap import wrap_dims
+
+        return wrap_dims(len(self))[1]
 
     def __add__(self, rhs: ggplot | Compose) -> Compose:
         """

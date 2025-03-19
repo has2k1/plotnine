@@ -41,7 +41,8 @@ class PlotnineLayoutEngine(LayoutEngine):
         with getattr(renderer, "_draw_disabled", nullcontext)():
             spaces = LayoutSpaces(self.plot)
 
-        self.plot.facet._panels_gridspec.update(**asdict(spaces.gsparams))
+        gsparams = spaces.get_gridspec_params()
+        self.plot.facet._panels_gridspec.update(**asdict(gsparams))
         spaces.items._adjust_positions(spaces)
 
 
@@ -55,6 +56,7 @@ class PlotnineCompositionLayoutEngine(LayoutEngine):
 
     def __init__(self, composition: Compose):
         self.composition = composition
+        self.lookup_spaces: dict[ggplot, LayoutSpaces] = {}
 
     def execute(self, fig: Figure):
         from contextlib import nullcontext
@@ -67,7 +69,13 @@ class PlotnineCompositionLayoutEngine(LayoutEngine):
 
         for ps in self.composition.plotspecs:
             spaces = get_spaces(ps.plot)
-            if not spaces.gsparams.valid:
+            self.lookup_spaces[ps.plot] = spaces
+
+        self.align()
+
+        for plot, spaces in self.lookup_spaces.items():
+            gsparams = spaces.get_gridspec_params()
+            if not gsparams.valid:
                 warn(
                     "The layout manager failed, the figure size is too small "
                     "to contain all the plots. Use theme() increase the "
@@ -75,6 +83,11 @@ class PlotnineCompositionLayoutEngine(LayoutEngine):
                     PlotnineWarning,
                 )
                 break
-
-            ps.plot.facet._panels_gridspec.update(**asdict(spaces.gsparams))
+            plot.facet._panels_gridspec.update(**asdict(gsparams))
             spaces.items._adjust_positions(spaces)
+
+    def align(self):
+        from ._layout_tree import LayoutTree
+
+        tree = LayoutTree.create(self.composition, self.lookup_spaces)
+        tree.align()
