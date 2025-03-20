@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import pytest
 
 from plotnine import (
     aes,
@@ -198,3 +199,14 @@ def test_array_mapping_and_evaluation():
         + facet_wrap("g")
     )
     assert p == "array_mapping_and_evaluation"
+
+
+def test_invalid_scales_value_raises():
+    with pytest.raises(ValueError):
+        # note the missing underscore
+        facet_wrap("var1", scales="freey")
+    # none of these raise
+    facet_wrap("var1", scales="fixed")
+    facet_wrap("var1", scales="free")
+    facet_wrap("var1", scales="free_x")
+    facet_wrap("var1", scales="free_y")

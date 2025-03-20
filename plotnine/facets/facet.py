@@ -121,6 +121,11 @@ class facet:
         self.as_table = as_table
         self.drop = drop
         self.dir = dir
+        allowed_scales = ["fixed", "free", "free_x", "free_y"]
+        if scales not in allowed_scales:
+            raise ValueError(
+                "Argument `scales` must be one of {allowed_scales}."
+            )
         self.free = {
             "x": scales in ("free_x", "free"),
             "y": scales in ("free_y", "free"),
