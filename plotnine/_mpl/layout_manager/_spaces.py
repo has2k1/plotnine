@@ -770,6 +770,34 @@ class LayoutSpaces:
 
         return self.gsparams
 
+    @property
+    def plot_width(self) -> float:
+        """
+        Width [figure dimensions] of the whole plot
+        """
+        return self.plot._gridspec.bbox_relative.width
+
+    @property
+    def plot_height(self) -> float:
+        """
+        Height [figure dimensions] of the whole plot
+        """
+        return self.plot._gridspec.bbox_relative.height
+
+    @property
+    def panel_width(self) -> float:
+        """
+        Width [figure dimensions] of panels
+        """
+        return self.r.right - self.l.left
+
+    @property
+    def panel_height(self) -> float:
+        """
+        Height [figure dimensions] of panels
+        """
+        return self.t.top - self.b.bottom
+
     def increase_horizontal_plot_margin(self, dw: float):
         """
         Increase the plot_margin to the right & left of the panels
