@@ -80,14 +80,11 @@ def test_inserting_layers():
             plot.layers.insert(0, self.obj.to_layer())
             return plot
 
-        def __rsub__(self, plot):
-            return self.__radd__(plot)
-
     p = (
         ggplot(data, aes("x", "y"))
         + geom_point(size=4)
         + as_first_layer(geom_point(color="cyan", size=8))
-        - as_first_layer(geom_point(color="red", size=12))
+        + as_first_layer(geom_point(color="red", size=12))
     )
 
     assert p == "inserting_layers"
