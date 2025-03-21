@@ -4,7 +4,6 @@ from dataclasses import dataclass
 from itertools import chain
 from typing import TYPE_CHECKING, cast
 
-from matplotlib.backend_bases import RendererBase
 from matplotlib.text import Text
 
 from plotnine.exceptions import PlotnineError
@@ -28,6 +27,7 @@ if TYPE_CHECKING:
     from matplotlib.artist import Artist
     from matplotlib.axes import Axes
     from matplotlib.axis import Tick
+    from matplotlib.backend_bases import RendererBase
     from matplotlib.transforms import Bbox, Transform
 
     from plotnine import ggplot
@@ -70,7 +70,7 @@ class Calc:
 
     def __post_init__(self):
         self.figure = self.plot.figure
-        self.renderer = cast(RendererBase, self.plot.figure._get_renderer())  # pyright: ignore
+        self.renderer = cast("RendererBase", self.plot.figure._get_renderer())  # pyright: ignore
 
     def bbox(self, artist: Artist) -> Bbox:
         """
