@@ -2,7 +2,13 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from matplotlib.gridspec import GridSpecBase, SubplotParams
+try:
+    from matplotlib.gridspec import GridSpecBase, SubplotParams
+except ImportError:
+    # MPL 3.8
+    from matplotlib.figure import SubplotParams
+    from matplotlib.gridspec import GridSpecBase
+
 from matplotlib.transforms import Bbox, BboxTransformTo, TransformedBbox
 
 if TYPE_CHECKING:
