@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>axis_ticks_pad – plotnine {{&lt; var version &gt;}}</title>
+<title>plot_tag_position – plotnine {{&lt; var version &gt;}}</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -114,7 +114,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine 0.0.post1+gc458313</span>
+    <span class="navbar-title">plotnine 0.0.post1+gadaf984</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -150,9 +150,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#plotnine.themes.themeable.axis_ticks_pad" id="toc-plotnine.themes.themeable.axis_ticks_pad" class="nav-link active" data-scroll-target="#plotnine.themes.themeable.axis_ticks_pad"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.themes.themeable.axis_ticks_pad</span></a></li>
+  <li><a href="#plotnine.themes.themeable.plot_tag_position" id="toc-plotnine.themes.themeable.plot_tag_position" class="nav-link active" data-scroll-target="#plotnine.themes.themeable.plot_tag_position"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.themes.themeable.plot_tag_position</span></a></li>
   <li><a href="#parameters" id="toc-parameters" class="nav-link" data-scroll-target="#parameters">Parameters</a></li>
-  <li><a href="#note" id="toc-note" class="nav-link" data-scroll-target="#note">Note</a></li>
   </ul>
 </nav>
     </div>
@@ -163,30 +162,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <header id="title-block-header" class="quarto-title-block default">
-<section id="plotnine.themes.themeable.axis_ticks_pad" class="level1 title doc-object doc-class quarto-title display-7">
-<h1 class="title doc-object doc-class"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.themes.themeable.axis_ticks_pad</span></h1>
+<section id="plotnine.themes.themeable.plot_tag_position" class="level1 title doc-object doc-class quarto-title display-7">
+<h1 class="title doc-object doc-class"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.themes.themeable.plot_tag_position</span></h1>
 </section>
 </header>
 <div class="doc-signature doc-class">
-<div class="sourceCode" id="cb1"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>axis_ticks_pad(theme_element)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>plot_tag_position(theme_element)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="doc-text">
-<p>Axis tick padding</p>
+<p>Position of the tag</p>
 </div>
 <section id="parameters" class="level2 doc-parameters">
 <h2 class="doc-parameters anchored" data-anchor-id="parameters">Parameters</h2>
 <div class="doc-definition-items">
 <dl>
-<dt><code><span class="doc-parameter-name">theme_element</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#float">float</a></span></code></dt>
+<dt><code><span class="doc-parameter-name">theme_element</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">Literal[<span class="st">"topleft"</span>, <span class="st">"top"</span>, <span class="st">"topright"</span>, <span class="st">"leftright"</span>, <span class="st">"bottomleft"</span>, <span class="st">"bottom"</span>, <span class="st">"bottomleft"</span>] | <a href="https://docs.python.org/3/library/stdtypes.html#tuple">tuple</a>[<a href="https://docs.python.org/3/library/functions.html#float">float</a>, <a href="https://docs.python.org/3/library/functions.html#float">float</a>]</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">= <span class="st">"topleft"</span></span></code></dt>
 <dd>
-<p>Value in points.</p>
+<p>If the value is a string, the tag will be managed by the layout manager. If it is a tuple of (x, y) coordinates, they should be in figure space and the tag will be ignored by the layout manager.</p>
 </dd>
 </dl>
 </div>
-</section>
-<section id="note" class="level2 doc-note">
-<h2 class="doc-note anchored" data-anchor-id="note">Note</h2>
-<p>Padding is not applied when the <code>axis_ticks</code> are blank, but it does apply when the <code>axis_ticks_length</code> is zero.</p>
 
 
 </section>
