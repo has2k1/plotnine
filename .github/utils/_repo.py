@@ -39,9 +39,14 @@ PRE_RELEASE_TAG_PATTERN = re.compile(
     r"^v"
     rf"{count}\.{count}\.{count}"
     r"(?:"
-    rf"(?:a|b|rc|alpha|beta){count}"
+    rf"(?:a|b|rc|alpha|beta|dev){count}"
     r")"
     r"$"
+)
+
+# development version
+DEV_RELEASE_TAG_PATTERN = re.compile(
+    rf"^v{count}\.{count}\.{count}\.dev{count}$"
 )
 
 
@@ -194,6 +199,15 @@ class Git:
         ref = os.environ.get("GITHUB_REF_NAME", "")
         ref_type = os.environ.get("GITHUB_REF_TYPE", "")
         return ref_type == "tag" and bool(PRE_RELEASE_TAG_PATTERN.match(ref))
+
+    @staticmethod
+    def is_dev_release():
+        """
+        Return True if event is a release
+        """
+        ref = os.environ.get("GITHUB_REF_NAME", "")
+        ref_type = os.environ.get("GITHUB_REF_TYPE", "")
+        return ref_type == "tag" and bool(DEV_RELEASE_TAG_PATTERN.match(ref))
 
     @staticmethod
     def branch():
