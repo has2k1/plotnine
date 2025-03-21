@@ -24,6 +24,8 @@ def where_can_i_deploy_documentation() -> str:
     """
     if Git.is_release():
         return "website"
+    elif Git.is_dev_release():
+        return "pre-website"
     elif Git.is_pre_release():
         return "pre-website"
     else:

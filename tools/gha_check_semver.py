@@ -30,6 +30,7 @@ TagType: TypeAlias = Literal[
     "alpha",
     "beta",
     "candidate",
+    "development",
     "final",
 ]
 
@@ -38,7 +39,7 @@ count = r"(?:[0-9]|[1-9][0-9]+)"
 SEMVER_PATTERN = re.compile(
     r"^v"
     rf"(?P<version>{count}\.{count}\.{count})"
-    rf"(?P<pre>(a|b|rc){count})?"
+    rf"(?P<pre>(a|b|rc|\.dev){count})?"
     r"$"
 )
 
@@ -59,15 +60,17 @@ def get_tag_type() -> TagType | None:
 
     pre = m.group("pre")
 
-    if pre:
-        if pre == "a":
+    match pre:
+        case "a":
             return "alpha"
-        elif pre == "b":
+        case "b":
             return "beta"
-        else:
+        case "rc":
             return "candidate"
-
-    return "final"
+        case ".dev":
+            return "development"
+        case _:
+            return "final"
 
 
 def output_tag_type(tag_type: TagType | None):
@@ -96,7 +99,7 @@ def output_publish_on(tag_type: TagType | None):
 
     if tag_type in ("alpha", "beta", "candidate"):
         publish_on = "testpypi"
-    elif tag_type == "final":
+    elif tag_type in ("development", "final"):
         publish_on = "pypi"
     else:
         publish_on = ""
