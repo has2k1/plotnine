@@ -110,7 +110,7 @@ jobs:
         if: ${{ needs.check-semver-tag.outputs.publish_on == 'testpypi' }}
         uses: peter-evans/repository-dispatch@v3
         with:
-          token: ${{ secrets.PAT_PLOTNINE_WEBSITE }}
+          token: ${{ secrets.PLOTNINE_WEBSITE }}
           repository: has2k1/plotnine.org
           event-type: plotnine-pre-release
 
@@ -118,6 +118,6 @@ jobs:
         if: ${{ needs.check-semver-tag.outputs.publish_on == 'pypi' }}
         uses: peter-evans/repository-dispatch@v3
         with:
-          token: ${{ secrets.PAT_PLOTNINE_WEBSITE }}
+          token: ${{ secrets.PLOTNINE_WEBSITE }}
           repository: has2k1/plotnine.org
           event-type: plotnine-release
