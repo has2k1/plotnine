@@ -180,6 +180,6 @@ jobs:
       - name: Build Website (Dev)
         uses: peter-evans/repository-dispatch@v3
         with:
-          token: ${{ secrets.PAT_PLOTNINE_WEBSITE }}
+          token: ${{ secrets.PLOTNINE_WEBSITE }}
           repository: has2k1/plotnine.org
           event-type: push-plotnine-main
