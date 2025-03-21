@@ -1,6 +1,8 @@
 import os
 
+import matplotlib as mpl
 import pytest
+from packaging import version
 
 from plotnine import (
     aes,
@@ -28,6 +30,8 @@ from plotnine import (
     theme_xkcd,
 )
 from plotnine.data import mtcars
+
+LT_MPL310 = version.parse(mpl.__version__) < version.parse("3.10")
 
 
 def test_add_complete_complete():
@@ -249,6 +253,7 @@ def test_theme_void():
     assert p == "theme_void"
 
 
+@pytest.mark.skipif(LT_MPL310, reason="Fails for older versions of matplotlib")
 def test_theme_xkcd():
     p = (
         g
