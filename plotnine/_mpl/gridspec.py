@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dataclasses import asdict
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 
 try:
     from matplotlib.gridspec import GridSpecBase, SubplotParams
@@ -47,6 +47,10 @@ class p9GridSpec(GridSpecBase):
     gridspec is contained. Use .get_subplot_params to get the absolute
     values (those in figure coordinates).
     """
+    _nested_gridspecs: list[p9GridSpec]
+    """
+    All gridspecs that are nested into any of the subplots of this one
+    """
     _patch: Rectangle
 
     def __init__(
@@ -60,17 +64,24 @@ class p9GridSpec(GridSpecBase):
         nest_into: SubplotSpec | None = None,
     ):
         self.figure = figure
+        self._nested_gridspecs = []
+
         super().__init__(
             nrows,
             ncols,
             width_ratios=width_ratios,
             height_ratios=height_ratios,
         )
+
         if nest_into:
             self._parent_subplot_spec = nest_into
             # MPL GridSpecBase expects only the subclasses that will be nested
             # to have the .get_topmost_subplotspec method.
             self.get_topmost_subplotspec = self._get_topmost_subplotspec
+
+            # Register this gridspec as nested
+            gs = cast("p9GridSpec", nest_into.get_gridspec())
+            gs._nested_gridspecs.append(self)
 
         self.update(
             left=0,
@@ -150,10 +161,21 @@ class p9GridSpec(GridSpecBase):
             if ss := ax.get_subplotspec():
                 ax._set_position(ss.get_position(self))  # pyright: ignore[reportAttributeAccessIssue, reportArgumentType]
 
-    def layout(self, figure: Figure, gsparams: GridSpecParams):
-        self.update(**asdict(gsparams))
+    def _update_artists(self):
+        """
+        Update the artist positions that depend on this gridspec
+        """
         self._update_patch_position()
         self._update_axes_position()
+        for gs in self._nested_gridspecs:
+            gs._update_artists()
+
+    def layout(self, gsparams: GridSpecParams):
+        """
+        Update the layout of the gridspec
+        """
+        self.update(**asdict(gsparams))
+        self._update_artists()
 
     def get_subplot_params(self, figure=None) -> SubplotParams:
         """
@@ -233,3 +255,11 @@ class p9GridSpec(GridSpecBase):
         The output of this transform is in the display units of the figure.
         """
         return BboxTransformTo(self.bbox)
+
+    def set_height_ratios(self, height_ratios):
+        super().set_height_ratios(height_ratios)
+        self._update_artists()
+
+    def set_width_ratios(self, width_ratios):
+        super().set_width_ratios(width_ratios)
+        self._update_artists()

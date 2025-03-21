@@ -86,3 +86,4 @@ class PlotnineCompositionLayoutEngine(LayoutEngine):
 
         tree = LayoutTree.create(self.composition, self.lookup_spaces)
         tree.align()
+        tree.resize()

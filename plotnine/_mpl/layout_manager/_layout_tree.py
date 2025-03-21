@@ -222,6 +222,83 @@ class LayoutTree:
         with suppress(AttributeError):
             del self.tops
 
+    @property
+    @abc.abstractmethod
+    def panel_width(self) -> float:
+        """
+        A representative for width for panels of the nodes
+        """
+
+    @property
+    @abc.abstractmethod
+    def panel_height(self) -> float:
+        """
+        A representative for height for panels of the nodes
+        """
+
+    @property
+    @abc.abstractmethod
+    def plot_width(self) -> float:
+        """
+        A representative for width for plots of the nodes
+        """
+
+    @property
+    @abc.abstractmethod
+    def plot_height(self) -> float:
+        """
+        A representative for height for plots of the nodes
+        """
+
+    @property
+    def plot_widths(self) -> Sequence[float]:
+        """
+        Widths [figure space] of nodes in this tree
+        """
+        return [node.plot_width for node in self.nodes]
+
+    @property
+    def plot_heights(self) -> Sequence[float]:
+        """
+        Heights [figure space] of nodes in this tree
+        """
+        return [node.plot_height for node in self.nodes]
+
+    @property
+    def panel_widths(self) -> Sequence[float]:
+        """
+        Widths [figure space] of the panels in this tree
+        """
+        return [node.panel_width for node in self.nodes]
+
+    @property
+    def panel_heights(self) -> Sequence[float]:
+        """
+        Heights [figure space] of the panels in this tree
+        """
+        return [node.panel_height for node in self.nodes]
+
+    def resize(self):
+        """
+        Resive panels
+        """
+        self.resize_widths()
+        self.resize_heights()
+
+        for item in self.nodes:
+            if isinstance(item, LayoutTree):
+                item.resize()
+
+    def resize_widths(self):
+        """
+        Resize the widths of gridspec so that panels have equal widths
+        """
+
+    def resize_heights(self):
+        """
+        Resize the heights of gridspec so that panels have equal heights
+        """
+
     @staticmethod
     def create(
         cmp: Compose,
@@ -351,6 +428,45 @@ class ColumnsTree(LayoutTree):
             else:
                 item.set_top_alignment_margin(value)
 
+    @property
+    def panel_width(self) -> float:
+        """
+        A representative for width for panels of the nodes
+        """
+        return sum(self.panel_widths)
+
+    @property
+    def panel_height(self) -> float:
+        """
+        A representative for height for panels of the nodes
+        """
+        return float(np.mean(self.panel_heights))
+
+    @property
+    def plot_width(self) -> float:
+        """
+        A representative for width for plots of the nodes
+        """
+        return sum(self.plot_widths)
+
+    @property
+    def plot_height(self) -> float:
+        """
+        A representative for height for plots of the nodes
+        """
+        return max(self.plot_heights)
+
+    def resize_widths(self):
+        # The new width of each panel is the average width of all
+        # the panels plus all the space to the left and right
+        # of the panels.
+        plot_widths = np.array(self.plot_widths)
+        panel_widths = np.array(self.panel_widths)
+        non_panel_space = plot_widths - panel_widths
+        new_plot_widths = panel_widths.mean() + non_panel_space
+        width_ratios = new_plot_widths / new_plot_widths.min()
+        self.gridspec.set_width_ratios(width_ratios)
+
 
 @dataclass
 class RowsTree(LayoutTree):
@@ -449,3 +565,41 @@ class RowsTree(LayoutTree):
             top_item.t.alignment_margin = value
         else:
             top_item.set_top_alignment_margin(value)
+
+    @property
+    def panel_width(self) -> float:
+        """
+        A representative for width for panels of the nodes
+        """
+        return float(np.mean(self.panel_widths))
+
+    @property
+    def panel_height(self) -> float:
+        """
+        A representative for height for panels of the nodes
+        """
+        return sum(self.panel_heights)
+
+    @property
+    def plot_width(self) -> float:
+        """
+        A representative for width for plots of the nodes
+        """
+        return max(self.plot_widths)
+
+    @property
+    def plot_height(self) -> float:
+        """
+        A representative for height for plots of the nodes
+        """
+        return sum(self.plot_heights)
+
+    def resize_heights(self):
+        # The new width of each panel is the average width of all
+        # the panels plus all the space above and below the panels.
+        plot_heights = np.array(self.plot_heights)
+        panel_heights = np.array(self.panel_heights)
+        non_panel_space = plot_heights - panel_heights
+        new_plot_heights = panel_heights.mean() + non_panel_space
+        height_ratios = new_plot_heights / new_plot_heights.max()
+        self.gridspec.set_height_ratios(height_ratios)
