@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from dataclasses import asdict
+from functools import cached_property
 from typing import TYPE_CHECKING
 
 try:
@@ -16,6 +18,8 @@ if TYPE_CHECKING:
     from matplotlib.gridspec import SubplotSpec
     from matplotlib.patches import Rectangle
     from matplotlib.transforms import Transform
+
+    from plotnine._mpl.layout_manager._spaces import GridSpecParams
 
 
 class p9GridSpec(GridSpecBase):
@@ -123,8 +127,6 @@ class p9GridSpec(GridSpecBase):
             wspace=wspace,
             hspace=hspace,
         )
-        self._update_patch_position()
-        self._update_axes_position()
 
     def _update_patch_position(self):
         """
@@ -141,19 +143,18 @@ class p9GridSpec(GridSpecBase):
         self.patch.set_width(ss_bbox.width)
         self.patch.set_height(ss_bbox.height)
 
-    def _update_axes_position(self):
+    def _update_axes_position(self, figure: Figure):
         """
         Update the position of the axes in this gridspec
         """
-        try:
-            figure = self.figure
-        except ValueError:
-            return
-
-        # Adapted from matplotlib.figure.Figure.subplots_adjust
         for ax in figure.axes:
             if ss := ax.get_subplotspec():
                 ax._set_position(ss.get_position(self))  # pyright: ignore[reportAttributeAccessIssue, reportArgumentType]
+
+    def layout(self, figure: Figure, gsparams: GridSpecParams):
+        self.update(**asdict(gsparams))
+        self._update_patch_position()
+        self._update_axes_position(figure)
 
     def get_subplot_params(self, figure=None) -> SubplotParams:
         """
@@ -196,6 +197,11 @@ class p9GridSpec(GridSpecBase):
         """
         return self._parent_subplot_spec.get_topmost_subplotspec()
 
+    @cached_property
+    def parent_gridspec(self) -> p9GridSpec | None:
+        if ss := self._parent_subplot_spec:
+            return ss.get_gridspec()  # pyright: ignore[reportReturnType]
+
     @property
     def figure(self) -> Figure:
         """
@@ -203,13 +209,8 @@ class p9GridSpec(GridSpecBase):
         """
         if self._figure:
             return self._figure
-        elif self.nested:
-            gs = self._parent_subplot_spec.get_gridspec()
-            if isinstance(gs, p9GridSpec):
-                return gs.figure  # pyright: ignore[reportReturnType]
-            ss = self.get_topmost_subplotspec()
-            return ss._gridspec.figure  # pyright: ignore[reportAttributeAccessIssue]
-
+        elif gs := self.parent_gridspec:
+            return gs.figure
         raise ValueError(
             "Could not find a figure associated with this GridSpec."
         )

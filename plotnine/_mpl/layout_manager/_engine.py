@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from dataclasses import asdict
 from typing import TYPE_CHECKING
 from warnings import warn
 
@@ -42,7 +41,7 @@ class PlotnineLayoutEngine(LayoutEngine):
             spaces = LayoutSpaces(self.plot)
 
         gsparams = spaces.get_gridspec_params()
-        self.plot.facet._panels_gridspec.update(**asdict(gsparams))
+        self.plot.facet._panels_gridspec.layout(fig, gsparams)
         spaces.items._adjust_positions(spaces)
 
 
@@ -63,13 +62,9 @@ class PlotnineCompositionLayoutEngine(LayoutEngine):
 
         renderer = fig._get_renderer()  # pyright: ignore[reportAttributeAccessIssue]
 
-        def get_spaces(plot):
-            with getattr(renderer, "_draw_disabled", nullcontext)():
-                return LayoutSpaces(plot)
-
-        for ps in self.composition.plotspecs:
-            spaces = get_spaces(ps.plot)
-            self.lookup_spaces[ps.plot] = spaces
+        with getattr(renderer, "_draw_disabled", nullcontext)():
+            for ps in self.composition.plotspecs:
+                self.lookup_spaces[ps.plot] = LayoutSpaces(ps.plot)
 
         self.align()
 
@@ -83,7 +78,8 @@ class PlotnineCompositionLayoutEngine(LayoutEngine):
                     PlotnineWarning,
                 )
                 break
-            plot.facet._panels_gridspec.update(**asdict(gsparams))
+
+            plot.facet._panels_gridspec.layout(fig, gsparams)
             spaces.items._adjust_positions(spaces)
 
     def align(self):
