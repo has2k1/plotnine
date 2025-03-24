@@ -21,6 +21,17 @@ title: Changelog
 
 ### New Features
 
+- Plot Composition is here. Using an intuitive algebra, you can
+  now put combine multiple plots into a single graphic.  e.g.
+
+  ```python
+  p1 = ggplot(...)
+  p2 = ggplot(...)
+  p3 = ggplot(...)
+
+  (p1 | p2) / p3
+  ```
+
 - Using
   [](:class:`~plotnine.themes.themeables.plot_title_position`) and
   [](:class:`~plotnine.themes.themeables.plot_caption_position`) e.g.
