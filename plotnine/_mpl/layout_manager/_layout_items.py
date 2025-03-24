@@ -594,13 +594,13 @@ def set_legends_position(legends: legend_artists, spaces: LayoutSpaces):
     """
     panels_gs = spaces.plot.facet._panels_gridspec
     params = panels_gs.get_subplot_params()
-    transPlot = spaces.plot._gridspec.to_transform()
+    transFigure = spaces.plot.figure.transFigure
 
     def set_position(
         aob: FlexibleAnchoredOffsetbox,
         anchor_point: tuple[float, float],
         xy_loc: tuple[float, float],
-        transform: Transform = transPlot,
+        transform: Transform = transFigure,
     ):
         """
         Place box (by the anchor point) at given xy location
