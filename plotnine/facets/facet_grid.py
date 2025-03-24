@@ -160,6 +160,7 @@ class facet_grid(facet):
         return p9GridSpec(
             self.nrow,
             self.ncol,
+            self.figure,
             nest_into=self.plot._gridspec[0],
             **ratios,
         )

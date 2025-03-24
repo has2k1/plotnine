@@ -380,7 +380,7 @@ class facet:
         from plotnine._mpl.gridspec import p9GridSpec
 
         return p9GridSpec(
-            self.nrow, self.ncol, nest_into=self.plot._gridspec[0]
+            self.nrow, self.ncol, self.figure, nest_into=self.plot._gridspec[0]
         )
 
     def _make_axes(self) -> list[Axes]:

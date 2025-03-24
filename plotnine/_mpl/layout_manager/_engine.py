@@ -41,7 +41,7 @@ class PlotnineLayoutEngine(LayoutEngine):
             spaces = LayoutSpaces(self.plot)
 
         gsparams = spaces.get_gridspec_params()
-        self.plot.facet._panels_gridspec.layout(fig, gsparams)
+        self.plot.facet._panels_gridspec.layout(gsparams)
         spaces.items._adjust_positions(spaces)
 
 
@@ -78,8 +78,7 @@ class PlotnineCompositionLayoutEngine(LayoutEngine):
                     PlotnineWarning,
                 )
                 break
-
-            plot.facet._panels_gridspec.layout(fig, gsparams)
+            plot.facet._panels_gridspec.layout(gsparams)
             spaces.items._adjust_positions(spaces)
 
     def align(self):
