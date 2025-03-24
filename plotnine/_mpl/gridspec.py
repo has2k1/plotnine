@@ -39,7 +39,6 @@ class p9GridSpec(GridSpecBase):
         If given, this gridspec will be contained in the subplot.
     """
 
-    _figure: Figure | None
     _subplot_params: SubplotParams
     """
     The subplot spacing parameters of this gridspec
@@ -54,19 +53,19 @@ class p9GridSpec(GridSpecBase):
         self,
         nrows,
         ncols,
-        figure=None,
+        figure: Figure,
         *,
         width_ratios=None,
         height_ratios=None,
         nest_into: SubplotSpec | None = None,
     ):
+        self.figure = figure
         super().__init__(
             nrows,
             ncols,
             width_ratios=width_ratios,
             height_ratios=height_ratios,
         )
-        self._figure = figure
         if nest_into:
             self._parent_subplot_spec = nest_into
             # MPL GridSpecBase expects only the subclasses that will be nested
@@ -143,18 +142,18 @@ class p9GridSpec(GridSpecBase):
         self.patch.set_width(ss_bbox.width)
         self.patch.set_height(ss_bbox.height)
 
-    def _update_axes_position(self, figure: Figure):
+    def _update_axes_position(self):
         """
         Update the position of the axes in this gridspec
         """
-        for ax in figure.axes:
+        for ax in self.figure.axes:
             if ss := ax.get_subplotspec():
                 ax._set_position(ss.get_position(self))  # pyright: ignore[reportAttributeAccessIssue, reportArgumentType]
 
     def layout(self, figure: Figure, gsparams: GridSpecParams):
         self.update(**asdict(gsparams))
         self._update_patch_position()
-        self._update_axes_position(figure)
+        self._update_axes_position()
 
     def get_subplot_params(self, figure=None) -> SubplotParams:
         """
@@ -199,25 +198,8 @@ class p9GridSpec(GridSpecBase):
 
     @cached_property
     def parent_gridspec(self) -> p9GridSpec | None:
-        if ss := self._parent_subplot_spec:
+        if self.nested and (ss := self._parent_subplot_spec):
             return ss.get_gridspec()  # pyright: ignore[reportReturnType]
-
-    @property
-    def figure(self) -> Figure:
-        """
-        Return the figure that contains this GridSpec
-        """
-        if self._figure:
-            return self._figure
-        elif gs := self.parent_gridspec:
-            return gs.figure
-        raise ValueError(
-            "Could not find a figure associated with this GridSpec."
-        )
-
-    @figure.setter
-    def figure(self, value: Figure):
-        self._figure = value
 
     @property
     def bbox_relative(self):
