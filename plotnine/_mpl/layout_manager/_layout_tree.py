@@ -8,7 +8,6 @@ from typing import TYPE_CHECKING
 
 import numpy as np
 
-from plotnine import ggplot
 from plotnine.plot_composition import OR
 
 from ._spaces import LayoutSpaces
@@ -16,6 +15,7 @@ from ._spaces import LayoutSpaces
 if TYPE_CHECKING:
     from typing import Sequence
 
+    from plotnine import ggplot
     from plotnine._mpl.gridspec import p9GridSpec
     from plotnine.plot_composition import Compose
 
@@ -200,6 +200,9 @@ class LayoutTree:
     def align(self):
         """
         Align all the edges in this composition & contained compositions
+
+        This function mutates the layout spaces, specifically the
+        alignment_margins along the sides of the plot.
         """
         self.align_lefts()
         self.align_bottoms()
@@ -280,7 +283,10 @@ class LayoutTree:
 
     def resize(self):
         """
-        Resive panels
+        Resize panels and the entire plots
+
+        This function mutates the composition gridspecs; specifically the
+        width_ratios and height_ratios.
         """
         self.resize_widths()
         self.resize_heights()
@@ -313,7 +319,14 @@ class LayoutTree:
             Composition
         lookup_spaces :
             A table to lookup the LayoutSpaces for each plot.
+
+        Notes
+        -----
+        LayoutTree works by modifying the `.gridspec` of the compositions,
+        and the `LayoutSpaces` of the plots.
         """
+        from plotnine import ggplot
+
         nodes: list[LayoutSpaces | LayoutTree] = []
         for item in cmp:
             if isinstance(item, ggplot):
@@ -325,6 +338,13 @@ class LayoutTree:
             return ColumnsTree(cmp.gridspec, nodes)
         else:
             return RowsTree(cmp.gridspec, nodes)
+
+    def harmonise(self):
+        """
+        Align and resize plots in composition to look good
+        """
+        self.align()
+        self.resize()
 
 
 @dataclass
