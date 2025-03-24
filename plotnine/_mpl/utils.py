@@ -124,13 +124,20 @@ def draw_gridspec(gs: p9GridSpec, color="black", **kwargs):
     """
     A debug function to draw a rectangle around the gridspec
     """
+    draw_bbox(gs.bbox_relative, gs.figure, color, **kwargs)
+
+
+def draw_bbox(bbox, figure, color="black", **kwargs):
+    """
+    A debug function to draw a rectangle around a bounding bbox
+    """
     from matplotlib.patches import Rectangle
 
-    gs.figure.add_artist(
+    figure.add_artist(
         Rectangle(
-            xy=gs.bbox_relative.p0,
-            width=gs.bbox_relative.width,
-            height=gs.bbox_relative.height,
+            xy=bbox.p0,
+            width=bbox.width,
+            height=bbox.height,
             edgecolor=color,
             fill=False,
             clip_on=False,
