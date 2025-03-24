@@ -6,6 +6,7 @@ from warnings import warn
 from matplotlib.layout_engine import LayoutEngine
 
 from ...exceptions import PlotnineWarning
+from ._layout_tree import LayoutTree
 from ._spaces import LayoutSpaces
 
 if TYPE_CHECKING:
@@ -55,20 +56,24 @@ class PlotnineCompositionLayoutEngine(LayoutEngine):
 
     def __init__(self, composition: Compose):
         self.composition = composition
-        self.lookup_spaces: dict[ggplot, LayoutSpaces] = {}
 
     def execute(self, fig: Figure):
         from contextlib import nullcontext
 
         renderer = fig._get_renderer()  # pyright: ignore[reportAttributeAccessIssue]
 
+        # Caculate the space taken up by all plot artists
+        lookup_spaces: dict[ggplot, LayoutSpaces] = {}
         with getattr(renderer, "_draw_disabled", nullcontext)():
             for ps in self.composition.plotspecs:
-                self.lookup_spaces[ps.plot] = LayoutSpaces(ps.plot)
+                lookup_spaces[ps.plot] = LayoutSpaces(ps.plot)
 
-        self.align()
+        # Adjust the size and placements of the plots
+        tree = LayoutTree.create(self.composition, lookup_spaces)
+        tree.harmonise()
 
-        for plot, spaces in self.lookup_spaces.items():
+        # Set the final positions of the artists in each plot
+        for plot, spaces in lookup_spaces.items():
             gsparams = spaces.get_gridspec_params()
             if not gsparams.valid:
                 warn(
@@ -80,10 +85,3 @@ class PlotnineCompositionLayoutEngine(LayoutEngine):
                 break
             plot.facet._panels_gridspec.layout(gsparams)
             spaces.items._adjust_positions(spaces)
-
-    def align(self):
-        from ._layout_tree import LayoutTree
-
-        tree = LayoutTree.create(self.composition, self.lookup_spaces)
-        tree.align()
-        tree.resize()
