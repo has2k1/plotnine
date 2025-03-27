@@ -398,3 +398,22 @@ class TestPlotTagLayout:
             plot_tag_position=(0.15, 0.95),
         )
         assert p == "panel_xycoords"
+
+
+def test_axis_text_justification():
+    data = pd.DataFrame(
+        {
+            "x": ["A", "BB", "CCCC", "DDDDD\nDDDDD"],
+            "y": ["A", "BB", "CCCC", "DDDDDDDDDD"],
+        }
+    )
+    p = (
+        ggplot(data, aes(x="x", y="y"))
+        + geom_point()
+        + theme(
+            axis_text_y=element_text(ha="left"),
+            axis_text_x=element_text(va="bottom"),
+        )
+    )
+
+    assert p == "axis_text_justification"

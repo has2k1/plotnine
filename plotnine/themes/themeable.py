@@ -890,7 +890,7 @@ class axis_text_x(MixinSequenceOfValues):
     creates a margin of 5 points.
     """
 
-    _omit = ["margin"]
+    _omit = ["margin", "va"]
 
     def apply_ax(self, ax: Axes):
         super().apply_ax(ax)
@@ -923,7 +923,7 @@ class axis_text_y(MixinSequenceOfValues):
     creates a margin of 5 points.
     """
 
-    _omit = ["margin"]
+    _omit = ["margin", "ha"]
 
     def apply_ax(self, ax: Axes):
         super().apply_ax(ax)

@@ -361,9 +361,9 @@ class LayoutItems:
         ]
         return self.calc.max_width(artists)
 
-    def axis_ticks_x_max_height(self, location: AxesLocation) -> float:
+    def axis_ticks_x_max_height_at(self, location: AxesLocation) -> float:
         """
-        Return maximum height[inches] of x ticks
+        Return maximum height[figure space] of x ticks
         """
         heights = [
             self.calc.tight_height(tick.tick1line)
@@ -372,22 +372,31 @@ class LayoutItems:
         ]
         return max(heights) if len(heights) else 0
 
-    def axis_text_x_max_height(self, location: AxesLocation) -> float:
+    def axis_text_x_max_height(self, ax: Axes) -> float:
         """
-        Return maximum height[inches] of x tick labels
+        Return maximum height[figure space] of x tick labels
         """
         heights = [
             self.calc.tight_height(label) + pad
-            for ax in self._filter_axes(location)
             for label, pad in zip(
                 self.axis_text_x(ax), self.axis_text_x_margin(ax)
             )
         ]
         return max(heights) if len(heights) else 0
 
-    def axis_ticks_y_max_width(self, location: AxesLocation) -> float:
+    def axis_text_x_max_height_at(self, location: AxesLocation) -> float:
         """
-        Return maximum width[inches] of y ticks
+        Return maximum height[figure space] of x tick labels
+        """
+        heights = [
+            self.axis_text_x_max_height(ax)
+            for ax in self._filter_axes(location)
+        ]
+        return max(heights) if len(heights) else 0
+
+    def axis_ticks_y_max_width_at(self, location: AxesLocation) -> float:
+        """
+        Return maximum width[figure space] of y ticks
         """
         widths = [
             self.calc.tight_width(tick.tick1line)
@@ -396,22 +405,31 @@ class LayoutItems:
         ]
         return max(widths) if len(widths) else 0
 
-    def axis_text_y_max_width(self, location: AxesLocation) -> float:
+    def axis_text_y_max_width(self, ax: Axes) -> float:
         """
-        Return maximum width[inches] of y tick labels
+        Return maximum width[figure space] of y tick labels
         """
         widths = [
             self.calc.tight_width(label) + pad
-            for ax in self._filter_axes(location)
             for label, pad in zip(
                 self.axis_text_y(ax), self.axis_text_y_margin(ax)
             )
         ]
         return max(widths) if len(widths) else 0
 
+    def axis_text_y_max_width_at(self, location: AxesLocation) -> float:
+        """
+        Return maximum width[figure space] of y tick labels
+        """
+        widths = [
+            self.axis_text_y_max_width(ax)
+            for ax in self._filter_axes(location)
+        ]
+        return max(widths) if len(widths) else 0
+
     def axis_text_y_top_protrusion(self, location: AxesLocation) -> float:
         """
-        Return maximum height[inches] above the axes of y tick labels
+        Return maximum height[figure space] above the axes of y tick labels
         """
         extras = []
         for ax in self._filter_axes(location):
@@ -424,7 +442,7 @@ class LayoutItems:
 
     def axis_text_y_bottom_protrusion(self, location: AxesLocation) -> float:
         """
-        Return maximum height[inches] below the axes of y tick labels
+        Return maximum height[figure space] below the axes of y tick labels
         """
         extras = []
         for ax in self._filter_axes(location):
@@ -438,7 +456,7 @@ class LayoutItems:
 
     def axis_text_x_left_protrusion(self, location: AxesLocation) -> float:
         """
-        Return maximum width[inches] of x tick labels to the left of the axes
+        Return maximum width[figure space] left of the axes of x tick labels
         """
         extras = []
         for ax in self._filter_axes(location):
@@ -452,7 +470,7 @@ class LayoutItems:
 
     def axis_text_x_right_protrusion(self, location: AxesLocation) -> float:
         """
-        Return maximum width[inches] of x tick labels to the right of the axes
+        Return maximum width[figure space] right of the axes of y tick labels
         """
         extras = []
         for ax in self._filter_axes(location):
@@ -470,6 +488,7 @@ class LayoutItems:
         theme = self.plot.theme
         plot_title_position = theme.getp("plot_title_position", "panel")
         plot_caption_position = theme.getp("plot_caption_position", "panel")
+        justify = TextJustifier(spaces)
 
         if self.plot_tag:
             set_plot_tag_position(self.plot_tag, spaces)
@@ -477,36 +496,123 @@ class LayoutItems:
         if self.plot_title:
             ha = theme.getp(("plot_title", "ha"))
             self.plot_title.set_y(spaces.t.y2("plot_title"))
-            horizontally_align_text(
-                self.plot_title, ha, spaces, plot_title_position
+            justify.horizontally_about(
+                self.plot_title, ha, plot_title_position
             )
 
         if self.plot_subtitle:
             ha = theme.getp(("plot_subtitle", "ha"))
             self.plot_subtitle.set_y(spaces.t.y2("plot_subtitle"))
-            horizontally_align_text(
-                self.plot_subtitle, ha, spaces, plot_title_position
+            justify.horizontally_about(
+                self.plot_subtitle, ha, plot_title_position
             )
 
         if self.plot_caption:
             ha = theme.getp(("plot_caption", "ha"), "right")
             self.plot_caption.set_y(spaces.b.y1("plot_caption"))
-            horizontally_align_text(
-                self.plot_caption, ha, spaces, plot_caption_position
+            justify.horizontally_about(
+                self.plot_caption, ha, plot_caption_position
             )
 
         if self.axis_title_x:
             ha = theme.getp(("axis_title_x", "ha"), "center")
             self.axis_title_x.set_y(spaces.b.y1("axis_title_x"))
-            horizontally_align_text(self.axis_title_x, ha, spaces)
+            justify.horizontally_about(self.axis_title_x, ha, "panel")
 
         if self.axis_title_y:
             va = theme.getp(("axis_title_y", "va"), "center")
             self.axis_title_y.set_x(spaces.l.x1("axis_title_y"))
-            vertically_align_text(self.axis_title_y, va, spaces)
+            justify.vertically_about(self.axis_title_y, va, "panel")
 
         if self.legends:
             set_legends_position(self.legends, spaces)
+
+        self._adjust_axis_text_x(justify)
+        self._adjust_axis_text_y(justify)
+
+    def _adjust_axis_text_x(self, justify: TextJustifier):
+        """
+        Adjust x-axis text, justifying vertically as necessary
+        """
+
+        def to_vertical_axis_dimensions(value: float, ax: Axes) -> float:
+            """
+            Convert value in figure dimensions to axis dimensions
+            """
+            _, H = self.plot.figure.bbox.size
+            h = ax.get_window_extent().height
+            return value * H / h
+
+        if self._is_blank("axis_text_x"):
+            return
+
+        va = self.plot.theme.getp(("axis_text_x", "va"), "top")
+
+        for ax in self.plot.axs:
+            texts = list(self.axis_text_x(ax))
+            axis_text_row_height = to_vertical_axis_dimensions(
+                self.axis_text_x_max_height(ax), ax
+            )
+            for text in texts:
+                height = to_vertical_axis_dimensions(
+                    self.calc.tight_height(text), ax
+                )
+                justify.vertically(
+                    text, va, -axis_text_row_height, 0, height=height
+                )
+
+    def _adjust_axis_text_y(self, justify: TextJustifier):
+        """
+        Adjust x-axis text, justifying horizontally as necessary
+        """
+
+        def to_horizontal_axis_dimensions(value: float, ax: Axes) -> float:
+            """
+            Convert value in figure dimensions to axis dimensions
+
+            Matplotlib expects x position of y-axis text is in transAxes,
+            but all our layout measurements are in transFigure.
+
+               ---------------------
+              |                     |
+              |     -----------     |
+              |  X |           |    |
+              |  X |           |    |
+              |  X |           |    |
+              |  X |           |    |
+              |  X |           |    |
+              |  X |           |    |
+              |    0-----------1    |
+              |        axes         |
+              |                     |
+              0---------------------1
+                       figure
+
+            We do not set the transform to transFigure because, then we need
+            to calculate the position in transFigure; accounting for all the
+            space wherever the panel may be.
+            """
+            W, _ = self.plot.figure.bbox.size
+            w = ax.get_window_extent().width
+            return value * W / w
+
+        if self._is_blank("axis_text_y"):
+            return
+
+        ha = self.plot.theme.getp(("axis_text_y", "ha"), "right")
+
+        for ax in self.plot.axs:
+            texts = list(self.axis_text_y(ax))
+            axis_text_col_width = to_horizontal_axis_dimensions(
+                self.axis_text_y_max_width(ax), ax
+            )
+            for text in texts:
+                width = to_horizontal_axis_dimensions(
+                    self.calc.tight_width(text), ax
+                )
+                justify.horizontally(
+                    text, ha, -axis_text_col_width, 0, width=width
+                )
 
 
 def _text_is_visible(text: Text) -> bool:
@@ -516,54 +622,47 @@ def _text_is_visible(text: Text) -> bool:
     return text.get_visible() and text._text  # type: ignore
 
 
-def horizontally_align_text(
-    text: Text,
-    ha: str | float,
-    spaces: LayoutSpaces,
-    how: Literal["panel", "plot"] = "panel",
-):
+@dataclass
+class TextJustifier:
     """
-    Horizontal justification
+    Justify Text
 
-    Reinterpret horizontal alignment to be justification about the panels or
-    the plot (depending on the how parameter)
+    The justification methods reinterpret alignment values to be justification
+    about a span.
     """
-    if isinstance(ha, str):
-        lookup = {
-            "left": 0.0,
-            "center": 0.5,
-            "right": 1.0,
-        }
-        rel = lookup[ha]
-    else:
-        rel = ha
 
-    if how == "panel":
-        left = spaces.l.left
-        right = spaces.r.right
-    else:
-        left = spaces.l.plot_left
-        right = spaces.r.plot_right
+    spaces: LayoutSpaces
 
-    width = spaces.items.calc.width(text)
-    x = rel_position(rel, width, left, right)
-    text.set_x(x)
-    text.set_horizontalalignment("left")
+    def horizontally(
+        self,
+        text: Text,
+        ha: str | float,
+        left: float,
+        right: float,
+        width: float | None = None,
+    ):
+        """
+        Horizontally Justify text between left and right
+        """
+        lookup = {"left": 0.0, "center": 0.5, "right": 1.0}
+        rel = lookup.get(ha, ha)  # pyright: ignore[reportCallIssue, reportArgumentType]
+        if width is None:
+            width = self.spaces.items.calc.width(text)
+        x = rel_position(rel, width, left, right)
+        text.set_x(x)
+        text.set_horizontalalignment("left")
 
-
-def vertically_align_text(
-    text: Text,
-    va: str | float,
-    spaces: LayoutSpaces,
-    how: Literal["panel", "plot"] = "panel",
-):
-    """
-    Vertical justification
-
-    Reinterpret vertical alignment to be justification about the panels or
-    the plot (depending on the how parameter).
-    """
-    if isinstance(va, str):
+    def vertically(
+        self,
+        text: Text,
+        va: str | float,
+        bottom: float,
+        top: float,
+        height: float | None = None,
+    ):
+        """
+        Vertically Justify text between bottom and top
+        """
         lookup = {
             "top": 1.0,
             "center": 0.5,
@@ -571,21 +670,63 @@ def vertically_align_text(
             "center_baseline": 0.5,
             "bottom": 0.0,
         }
-        rel = lookup[va]
-    else:
-        rel = va
+        rel = lookup.get(va, va)  # pyright: ignore[reportCallIssue, reportArgumentType]
 
-    if how == "panel":
-        top = spaces.t.top
-        bottom = spaces.b.bottom
-    else:
-        top = spaces.t.plot_top
-        bottom = spaces.b.plot_bottom
+        if height is None:
+            height = self.spaces.items.calc.height(text)
+        y = rel_position(rel, height, bottom, top)
+        text.set_y(y)
+        text.set_verticalalignment("bottom")
 
-    height = spaces.items.calc.height(text)
-    y = rel_position(rel, height, bottom, top)
-    text.set_y(y)
-    text.set_verticalalignment("bottom")
+    def horizontally_across_panel(self, text: Text, ha: str | float):
+        """
+        Horizontally Justify text accross the panel(s) width
+        """
+        self.horizontally(text, ha, self.spaces.l.left, self.spaces.r.right)
+
+    def horizontally_across_plot(self, text: Text, ha: str | float):
+        """
+        Horizontally Justify text across the plot's width
+        """
+        self.horizontally(
+            text, ha, self.spaces.l.plot_left, self.spaces.r.plot_right
+        )
+
+    def vertically_along_panel(self, text: Text, va: str | float):
+        """
+        Horizontally Justify text along the panel(s) height
+        """
+        self.vertically(text, va, self.spaces.b.bottom, self.spaces.t.top)
+
+    def vertically_along_plot(self, text: Text, va: str | float):
+        """
+        Vertically Justify text along the plot's height
+        """
+        self.vertically(
+            text, va, self.spaces.b.plot_bottom, self.spaces.t.plot_top
+        )
+
+    def horizontally_about(
+        self, text: Text, ratio: float, how: Literal["panel", "plot"]
+    ):
+        """
+        Horizontally Justify text across the panel or plot
+        """
+        if how == "panel":
+            self.horizontally_across_panel(text, ratio)
+        else:
+            self.horizontally_across_plot(text, ratio)
+
+    def vertically_about(
+        self, text: Text, ratio: float, how: Literal["panel", "plot"]
+    ):
+        """
+        Vertically Justify text along the panel or plot
+        """
+        if how == "panel":
+            self.vertically_along_panel(text, ratio)
+        else:
+            self.vertically_along_plot(text, ratio)
 
 
 def set_legends_position(legends: legend_artists, spaces: LayoutSpaces):

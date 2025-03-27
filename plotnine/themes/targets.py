@@ -21,7 +21,7 @@ class ThemeTargets:
     """
     Artists that will be themed
 
-    This includes only artist that cannot be accessed easily from
+    This includes only artist that cannot be easily accessed from
     the figure or the axes.
     """
 
