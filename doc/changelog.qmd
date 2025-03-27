@@ -79,6 +79,9 @@ title: Changelog
 - Fixed bug in with the `legend_key_height` themeable where it wasn't applied.
   {{< issue 921 >}}
 
+- Fixed bug where justifying `axis_text_x` and `axis_text_y` using horizontal and vertical
+  alignment did not work as expected. {{< issue 927 >}}
+
 ## v0.14.5
 (2025-01-02)
 [![](https://zenodo.org/badge/DOI/10.5281/zenodo.14587381.svg)](https://doi.org/10.5281/zenodo.14587381)

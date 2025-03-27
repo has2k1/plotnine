@@ -255,8 +255,8 @@ class left_spaces(_side_spaces):
             self.axis_title_y_margin_right = m.r
 
         # Account for the space consumed by the axis
-        self.axis_text_y = items.axis_text_y_max_width("first_col")
-        self.axis_ticks_y = items.axis_ticks_y_max_width("first_col")
+        self.axis_text_y = items.axis_text_y_max_width_at("first_col")
+        self.axis_ticks_y = items.axis_ticks_y_max_width_at("first_col")
 
         # Adjust plot_margin to make room for ylabels that protude well
         # beyond the axes
@@ -616,8 +616,8 @@ class bottom_spaces(_side_spaces):
             self.axis_title_x_margin_top = m.t * F
 
         # Account for the space consumed by the axis
-        self.axis_ticks_x = items.axis_ticks_x_max_height("last_row")
-        self.axis_text_x = items.axis_text_x_max_height("last_row")
+        self.axis_ticks_x = items.axis_ticks_x_max_height_at("last_row")
+        self.axis_text_x = items.axis_text_x_max_height_at("last_row")
 
         # Adjust plot_margin to make room for ylabels that protude well
         # beyond the axes
@@ -917,13 +917,13 @@ class LayoutSpaces:
             self.sh += self.t.strip_text_x_height_top * (1 + strip_align_x)
 
         if facet.free["x"]:
-            self.sh += self.items.axis_text_x_max_height(
+            self.sh += self.items.axis_text_x_max_height_at(
                 "all"
-            ) + self.items.axis_ticks_x_max_height("all")
+            ) + self.items.axis_ticks_x_max_height_at("all")
         if facet.free["y"]:
-            self.sw += self.items.axis_text_y_max_width(
+            self.sw += self.items.axis_text_y_max_width_at(
                 "all"
-            ) + self.items.axis_ticks_y_max_width("all")
+            ) + self.items.axis_ticks_y_max_width_at("all")
 
         # width and height of axes as fraction of figure width & height
         self.w = ((self.r.right - self.l.left) - self.sw * (ncol - 1)) / ncol
