@@ -283,11 +283,20 @@ class Compose:
             )
         return figure
 
-    def save(
-        self, filename: str | Path | BytesIO, save_format: str | None = None
-    ):
+    def save(self, filename: str | Path | BytesIO, format: str | None = None):
+        """
+        Save a Compose object as an image file
+
+        Parameters
+        ----------
+        filename :
+            File name to write the plot to. If not specified, a name
+        format :
+            Image format to use, automatically extract from
+            file name extension.
+        """
         figure = self.draw()
-        figure.savefig(filename, format=save_format)
+        figure.savefig(filename, format=format)
 
 
 @dataclass
