@@ -49,7 +49,7 @@ class StripTextPatch(FancyBboxPatch):
             return
 
         text = self.text
-        posx, posy = text.get_transform().transform((text._x, text._y))
+        posx, posy = text.get_transform().transform(text.get_position())
         x, y, w, h = _get_textbox(text, renderer)
 
         self.set_bounds(0.0, 0.0, w, h)

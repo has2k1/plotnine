@@ -63,11 +63,13 @@ class strip:
         """
         theme = self.theme
         position = self.position
+
         if position == "top":
             # The x & y values are just starting locations
             # The final location is determined by the layout manager.
             y = 1
-            ha, va = "center", "bottom"
+            ha = theme.getp(("strip_text_x", "ha"), "center")
+            va = theme.getp(("strip_text_x", "va"), "bottom")
             rotation = theme.getp(("strip_text_x", "rotation"))
             box_width = 1
             box_height = 0  # Determined by the text size
@@ -88,7 +90,8 @@ class strip:
             # The x & y values are just starting locations
             # The final location is determined by the layout manager.
             x = 1
-            ha, va = "left", "center"
+            ha = theme.getp(("strip_text_y", "ha"), "left")
+            va = theme.getp(("strip_text_y", "va"), "center")
             rotation = theme.getp(("strip_text_y", "rotation"))
             box_width = 0  # Determine by the text height
             # TODO: Allow two unique paddings for either side.
