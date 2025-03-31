@@ -201,6 +201,27 @@ def test_array_mapping_and_evaluation():
     assert p == "array_mapping_and_evaluation"
 
 
+def test_facetting_with_unused_categories():
+    data = pd.DataFrame(
+        {
+            "row": ["a", "a", "b", "b"],
+            "col": pd.Categorical(
+                ["u", "v", "u", "v"],
+                # Edge case was triggered when the unsed category
+                # was listed before a used category i.e. x before v
+                categories=["u", "x", "v"],
+            ),
+            "x": 1,
+            "y": 1,
+        }
+    )
+
+    p = ggplot(data, aes("x", "y")) + geom_point() + facet_grid("row", "col")
+
+    # No exception
+    p.draw_test()  # pyright: ignore
+
+
 def test_invalid_scales_value_raises():
     with pytest.raises(ValueError):
         # note the missing underscore
