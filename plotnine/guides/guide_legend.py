@@ -171,21 +171,20 @@ class guide_legend(guide):
             # Modify aesthetics
 
             # When doing after_scale evaluations, we only consider those
-            # for the aesthetics of this legend. The reduces the spurious
-            # warnings where an evaluation of another aesthetic failed yet
-            # it is not needed.
+            # for the aesthetics that are valid for this layer/geom.
             aes_modifiers = {
-                ae: expr
-                for ae, expr in l.mapping._scaled.items()
-                if ae in matched_set
+                ae: l.mapping._scaled[ae]
+                for ae in l.geom.aesthetics() & l.mapping._scaled.keys()
             }
 
             try:
                 data = l.use_defaults(data, aes_modifiers)
             except PlotnineError:
                 warn(
-                    "Failed to apply `after_scale` modifications "
-                    "to the legend.",
+                    "Failed to apply `after_scale` modifications to the "
+                    "legend. This probably should not happen. Help us "
+                    "discover why, please open and issue at "
+                    "https://github.com/has2k1/plotnine/issues",
                     PlotnineWarning,
                 )
                 data = l.use_defaults(data, {})

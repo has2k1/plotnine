@@ -6,6 +6,7 @@ from collections.abc import Iterable, Sequence
 from contextlib import suppress
 from copy import deepcopy
 from dataclasses import fields
+from functools import cached_property
 from typing import Any, Dict
 
 import pandas as pd
@@ -237,7 +238,7 @@ class aes(Dict[str, Any]):
                 kwargs[name] = after_stat(_after_stat)
         return kwargs
 
-    @property
+    @cached_property
     def _starting(self) -> dict[str, Any]:
         """
         Return the subset of aesthetics mapped from the layer data
@@ -254,7 +255,7 @@ class aes(Dict[str, Any]):
 
         return d
 
-    @property
+    @cached_property
     def _calculated(self) -> dict[str, Any]:
         """
         Return only the aesthetics mapped to calculated statistics
@@ -269,7 +270,7 @@ class aes(Dict[str, Any]):
 
         return d
 
-    @property
+    @cached_property
     def _scaled(self) -> dict[str, Any]:
         """
         Return only the aesthetics mapped to after scaling
