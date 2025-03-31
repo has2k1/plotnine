@@ -43,6 +43,7 @@ class theme_gray(theme):
                 family=base_family,
                 style="normal",
                 color="black",
+                ma="center",
                 size=base_size,
                 linespacing=0.9,
                 rotation=0,

@@ -22,8 +22,10 @@ if TYPE_CHECKING:
     from plotnine.typing import (
         CoordRange,
         FloatArrayLike,
+        HorizontalJustification,
         ScaledAestheticsName,
         StripPosition,
+        VerticalJustification,
     )
 
     from ._mpl.offsetbox import FlexibleAnchoredOffsetbox
@@ -231,8 +233,8 @@ class strip_draw_info:
 
     x: float
     y: float
-    ha: str
-    va: str
+    ha: HorizontalJustification | float
+    va: VerticalJustification | float
     box_width: float
     box_height: float
     strip_text_margin: float

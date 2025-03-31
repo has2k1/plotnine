@@ -811,7 +811,7 @@ class strip_text_x(MixinSequenceOfValues):
     theme_element : element_text
     """
 
-    _omit = ["margin"]
+    _omit = ["margin", "ha"]
 
     def apply_figure(self, figure: Figure, targets: ThemeTargets):
         super().apply_figure(figure, targets)
@@ -834,7 +834,7 @@ class strip_text_y(MixinSequenceOfValues):
     theme_element : element_text
     """
 
-    _omit = ["margin"]
+    _omit = ["margin", "va"]
 
     def apply_figure(self, figure: Figure, targets: ThemeTargets):
         super().apply_figure(figure, targets)

@@ -164,6 +164,7 @@ class element_text(element_base):
             "size",
             "style",
             "va",
+            "ma",
             "weight",
             "rotation_mode",
         )
