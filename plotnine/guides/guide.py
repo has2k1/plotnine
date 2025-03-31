@@ -18,7 +18,7 @@ if TYPE_CHECKING:
     from typing_extensions import Self
 
     from plotnine import aes, guides
-    from plotnine.layer import Layers
+    from plotnine.layer import Layers, layer
     from plotnine.scales.scale import scale
     from plotnine.typing import (
         LegendPosition,
@@ -79,7 +79,7 @@ class guide(ABC, metaclass=Register):
         self.elements = cast("GuideElements", None)
         self.guides_elements: GuidesElements
 
-    def legend_aesthetics(self, layer):
+    def legend_aesthetics(self, layer: layer):
         """
         Return the aesthetics that contribute to the legend
 

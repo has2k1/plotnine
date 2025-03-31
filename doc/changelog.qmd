@@ -87,6 +87,10 @@ title: Changelog
 - Fixed bug where facetting along a column with unused categories could raise
   an error. {{< issue 930 >}}
 
+- Fixed bug where computed aesthetic from `after_scale` are were not applied to the legend.
+  {{< issue 926 >}}
+
+
 ## v0.14.5
 (2025-01-02)
 [![](https://zenodo.org/badge/DOI/10.5281/zenodo.14587381.svg)](https://doi.org/10.5281/zenodo.14587381)
