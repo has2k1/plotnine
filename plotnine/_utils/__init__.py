@@ -299,7 +299,7 @@ def ninteraction(df: pd.DataFrame, drop: bool = False) -> list[int]:
         return _id_var(df[df.columns[0]], drop)
 
     # Calculate individual ids
-    ids = df.apply(_id_var, axis=0)
+    ids = df.apply(_id_var, axis=0, drop=drop)
     ids = ids.reindex(columns=list(reversed(ids.columns)))
 
     # Calculate dimensions

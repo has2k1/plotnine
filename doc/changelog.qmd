@@ -84,6 +84,9 @@ title: Changelog
 
 - Fixed justifying strip_text within the strip_background. {{< issue 867 >}}
 
+- Fixed bug where facetting along a column with unused categories could raise
+  an error. {{< issue 930 >}}
+
 ## v0.14.5
 (2025-01-02)
 [![](https://zenodo.org/badge/DOI/10.5281/zenodo.14587381.svg)](https://doi.org/10.5281/zenodo.14587381)
