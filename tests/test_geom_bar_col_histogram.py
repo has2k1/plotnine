@@ -40,6 +40,17 @@ def test_col():
     assert p == "col"
 
 
+def test_col_just():
+    data = pd.DataFrame({"x": range(1, 4), "y": range(1, 4)})
+    p = (
+        ggplot(data, aes("x", "y"))
+        + geom_col(just=0, fill="red", width=1 / 3)  # left
+        + geom_col(just=1, fill="blue", width=1 / 3)  # right
+        + geom_col(just=0.5, fill="green", width=1 / 3, alpha=0.7)  # center
+    )
+    assert p == "col_just"
+
+
 def test_histogram_count():
     p = ggplot(data, aes("x")) + geom_histogram(aes(fill="factor(z)"), bins=n)
 
