@@ -1,15 +1,16 @@
 from __future__ import annotations
 
 import numbers
-import typing
+from typing import TYPE_CHECKING
 
 import numpy as np
 import pandas as pd
 import pandas.api.types as pdtypes
 
 from ..exceptions import PlotnineError
+from ._eval_environment import factor, reorder
 
-if typing.TYPE_CHECKING:
+if TYPE_CHECKING:
     from typing import Any
 
     from . import aes
@@ -17,6 +18,9 @@ if typing.TYPE_CHECKING:
 
 
 __all__ = ("after_stat", "after_scale", "stage")
+
+
+EVAL_ENVIRONMENT = {"factor": factor, "reorder": reorder}
 
 _TPL_EVAL_FAIL = """\
 Could not evaluate the '{}' mapping: '{}' \
@@ -108,68 +112,6 @@ def after_scale(x):
     return stage(after_scale=x)
 
 
-def reorder(x, y, fun=np.median, ascending=True):
-    """
-    Reorder categorical by sorting along another variable
-
-    It is the order of the categories that changes. Values in x
-    are grouped by categories and summarised to determine the
-    new order.
-
-    Credit: Copied from plydata
-
-    Parameters
-    ----------
-    x : list-like
-        Values that will make up the categorical.
-    y : list-like
-        Values by which `c` will be ordered.
-    fun : callable
-        Summarising function to `x` for each category in `c`.
-        Default is the *median*.
-    ascending : bool
-        If `True`, the `c` is ordered in ascending order of `x`.
-
-    Examples
-    --------
-    >>> c = list('abbccc')
-    >>> x = [11, 2, 2, 3, 33, 3]
-    >>> cat_reorder(c, x)
-    [a, b, b, c, c, c]
-    Categories (3, object): [b, c, a]
-    >>> cat_reorder(c, x, fun=max)
-    [a, b, b, c, c, c]
-    Categories (3, object): [b, a, c]
-    >>> cat_reorder(c, x, fun=max, ascending=False)
-    [a, b, b, c, c, c]
-    Categories (3, object): [c, a, b]
-    >>> c_ordered = pd.Categorical(c, ordered=True)
-    >>> cat_reorder(c_ordered, x)
-    [a, b, b, c, c, c]
-    Categories (3, object): [b < c < a]
-    >>> cat_reorder(c + ['d'], x)
-    Traceback (most recent call last):
-        ...
-    ValueError: Lengths are not equal. len(c) is 7 and len(x) is 6.
-    """
-    if len(x) != len(y):
-        raise ValueError(f"Lengths are not equal. {len(x)=}, {len(x)=}")
-    summary = (
-        pd.Series(y)
-        .groupby(x, observed=True)
-        .apply(fun)
-        .sort_values(ascending=ascending)
-    )
-    cats = summary.index.to_list()
-    return pd.Categorical(x, categories=cats)
-
-
-# These are function that can be called by the user inside the aes()
-# mapping. This is meant to make the variable transformations as easy
-# as they are in ggplot2
-AES_INNER_NAMESPACE = {"factor": pd.Categorical, "reorder": reorder}
-
-
 def evaluate(
     aesthetics: aes | dict[str, Any], data: pd.DataFrame, env: Environment
 ) -> pd.DataFrame:
@@ -207,7 +149,7 @@ def evaluate(
     3  16
     4  25
     """
-    env = env.with_outer_namespace(AES_INNER_NAMESPACE)
+    env = env.with_outer_namespace(EVAL_ENVIRONMENT)
 
     # Store evaluation results in a dict column in a dict
     evaled = {}

@@ -1,20 +1,19 @@
 from __future__ import annotations
 
 import re
-import typing
 from collections.abc import Iterable, Sequence
 from contextlib import suppress
 from copy import deepcopy
 from dataclasses import fields
 from functools import cached_property
-from typing import Any, Dict
+from typing import TYPE_CHECKING, Any, Dict
 
 import pandas as pd
 
 from ..iapi import labels_view
 from .evaluation import after_stat, stage
 
-if typing.TYPE_CHECKING:
+if TYPE_CHECKING:
     from typing import Protocol, TypeVar
 
     class ColorOrColour(Protocol):
@@ -172,27 +171,11 @@ class aes(Dict[str, Any]):
       ggplot(df, aes(x="df.index", y="np.sin(gam ma)"))
       ```
 
-    `aes` has 2 internal methods you can use to transform variables being
-    mapped.
+    `aes` has 2 internal functions that you can use in your expressions
+    when transforming the variables.
 
-      1. `factor` - This function turns the variable into a factor.
-         It is just an alias to `pandas.Categorical`:
-
-         ```python
-         ggplot(mtcars, aes(x="factor(cyl)")) + geom_bar()
-         ```
-
-      2. `reorder` - This function changes the order of first variable
-         based on values of the second variable:
-
-         ```python
-         df = pd.DataFrame({
-             "x": ["b", "d", "c", "a"],
-             "y": [1, 2, 3, 4]
-         })
-
-         ggplot(df, aes("reorder(x, y)", "y")) + geom_col()
-         ```
+      1. [](:func:`~plotnine.mapping._eval_environment.factor`)
+      1. [](:func:`~plotnine.mapping._eval_environment.reorder`)
 
     **The group aesthetic**
 
