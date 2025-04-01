@@ -38,6 +38,17 @@ quartodoc:
         - after_scale
         - stage
 
+    - subtitle: Functions in the Aesthetic Evaluation Environment
+      desc: |
+        The expressions you write in the `aes()` call are evaluated inside an
+        environment with a few functions that you may need from time to time.
+        These functions are for your convenience, and you can expect them to
+        to always be there.
+      package: plotnine.mapping._eval_environment
+      contents:
+        - factor
+        - reorder
+
     - title: Geoms
       desc: |
         Geometric objects (geoms) are responsible for the visual representation
