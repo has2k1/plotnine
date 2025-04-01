@@ -20,6 +20,11 @@ class geom_bar(geom_rect):
     Parameters
     ----------
     {common_parameters}
+    just : float, default=0.5
+        How to align the column with respect to the axis breaks. The default
+        `0.5` aligns the center of the column with the break. `0` aligns the
+        left of the of the column with the break and `1` aligns the right of
+        the column with the break.
     width : float, default=None
         Bar width. If `None`{.py}, the width is set to
         `90%` of the resolution of the data.
@@ -35,6 +40,7 @@ class geom_bar(geom_rect):
         "stat": "count",
         "position": "stack",
         "na_rm": False,
+        "just": 0.5,
         "width": None,
     }
 
@@ -45,6 +51,8 @@ class geom_bar(geom_rect):
             else:
                 data["width"] = resolution(data["x"], False) * 0.9
 
+        just = self.params.get("just", 0.5)
+
         bool_idx = data["y"] < 0
 
         data["ymin"] = 0.0
@@ -53,7 +61,7 @@ class geom_bar(geom_rect):
         data["ymax"] = data["y"]
         data.loc[bool_idx, "ymax"] = 0.0
 
-        data["xmin"] = data["x"] - data["width"] / 2
-        data["xmax"] = data["x"] + data["width"] / 2
+        data["xmin"] = data["x"] - data["width"] * just
+        data["xmax"] = data["x"] + data["width"] * (1 - just)
         del data["width"]
         return data

@@ -17,6 +17,11 @@ class geom_col(geom_bar):
     Parameters
     ----------
     {common_parameters}
+    just : float, default=0.5
+        How to align the column with respect to the axis breaks. The default
+        `0.5` aligns the center of the column with the break. `0` aligns the
+        left of the of the column with the break and `1` aligns the right of
+        the column with the break.
     width : float, default=None
         Bar width. If `None`{.py}, the width is set to
         `90%` of the resolution of the data.
@@ -32,5 +37,6 @@ class geom_col(geom_bar):
         "stat": "identity",
         "position": "stack",
         "na_rm": False,
+        "just": 0.5,
         "width": None,
     }
