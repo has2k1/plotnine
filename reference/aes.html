@@ -115,7 +115,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine 0.0.post1+ga449bf0</span>
+    <span class="navbar-title">plotnine 0.0.post1+g9610d8b</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -247,17 +247,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># valid python variable name</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>ggplot(df, aes(x<span class="op">=</span><span class="st">"df.index"</span>, y<span class="op">=</span><span class="st">"np.sin(gam ma)"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
 </ul>
-<p><code>aes</code> has 2 internal methods you can use to transform variables being mapped.</p>
+<p><code>aes</code> has 2 internal functions that you can use in your expressions when transforming the variables.</p>
 <ol type="1">
-<li><p><code>factor</code> - This function turns the variable into a factor. It is just an alias to <code>pandas.Categorical</code>:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>ggplot(mtcars, aes(x<span class="op">=</span><span class="st">"factor(cyl)"</span>)) <span class="op">+</span> geom_bar()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
-<li><p><code>reorder</code> - This function changes the order of first variable based on values of the second variable:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"x"</span>: [<span class="st">"b"</span>, <span class="st">"d"</span>, <span class="st">"c"</span>, <span class="st">"a"</span>],</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"y"</span>: [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>]</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>ggplot(df, aes(<span class="st">"reorder(x, y)"</span>, <span class="st">"y"</span>)) <span class="op">+</span> geom_col()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+<li><a href="../reference/factor.html#plotnine.mapping._eval_environment.factor"><code>factor</code></a></li>
+<li><a href="../reference/reorder.html#plotnine.mapping._eval_environment.reorder"><code>reorder</code></a></li>
 </ol>
 <p><strong>The group aesthetic</strong></p>
 <p><code>group</code> is a special aesthetic that the user can <em>map</em> to. It is used to group the plotted items. If not specified, it is automatically computed and in most cases the computed groups are sufficient. However, there may be cases were it is handy to map to it.</p>

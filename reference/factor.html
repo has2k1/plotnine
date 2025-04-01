@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>axis_ticks_minor_x – plotnine {{&lt; var version &gt;}}</title>
+<title>factor – plotnine {{&lt; var version &gt;}}</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -151,7 +151,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#plotnine.themes.themeable.axis_ticks_minor_x" id="toc-plotnine.themes.themeable.axis_ticks_minor_x" class="nav-link active" data-scroll-target="#plotnine.themes.themeable.axis_ticks_minor_x"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.themes.themeable.axis_ticks_minor_x</span></a></li>
+  <li><a href="#plotnine.mapping._eval_environment.factor" id="toc-plotnine.mapping._eval_environment.factor" class="nav-link active" data-scroll-target="#plotnine.mapping._eval_environment.factor"><code class="doc-symbol doc-symbol-function"></code> <span class="doc-object-name doc-function-name">plotnine.mapping._eval_environment.factor</span></a></li>
   <li><a href="#parameters" id="toc-parameters" class="nav-link" data-scroll-target="#parameters">Parameters</a></li>
   </ul>
 </nav>
@@ -163,23 +163,32 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <header id="title-block-header" class="quarto-title-block default">
-<section id="plotnine.themes.themeable.axis_ticks_minor_x" class="level1 title doc-object doc-class doc-has-member-docs quarto-title display-7">
-<h1 class="title doc-object doc-class doc-has-member-docs"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.themes.themeable.axis_ticks_minor_x</span></h1>
+<section id="plotnine.mapping._eval_environment.factor" class="level1 title doc-object doc-function quarto-title display-7">
+<h1 class="title doc-object doc-function"><code class="doc-symbol doc-symbol-function"></code> <span class="doc-object-name doc-function-name">plotnine.mapping._eval_environment.factor</span></h1>
 </section>
 </header>
-<div class="doc-signature doc-class">
-<div class="sourceCode" id="cb1"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>axis_ticks_minor_x(theme_element)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="doc-signature doc-function">
+<div class="sourceCode" id="cb1"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>factor(values, categories<span class="op">=</span><span class="va">None</span>, ordered<span class="op">=</span><span class="va">None</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="doc-text">
-<p>x-axis tick lines</p>
+<p>Turn x in to a categorical (factor) variable</p>
+<p>It is just an alias to <code>pandas.Categorical</code></p>
 </div>
 <section id="parameters" class="level2 doc-parameters">
 <h2 class="doc-parameters anchored" data-anchor-id="parameters">Parameters</h2>
 <div class="doc-definition-items">
 <dl>
-<dt><code><span class="doc-parameter-name">theme_element</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">element_line</span></code></dt>
+<dt><code><span class="doc-parameter-name">values</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/typing.html#typing.Sequence">Sequence</a>[<a href="https://docs.python.org/3/library/typing.html#typing.Any">Any</a>]</span></code></dt>
 <dd>
-
+<p>The values of the categorical. If categories are given, values not in categories will be replaced with NaN.</p>
+</dd>
+<dt><code><span class="doc-parameter-name">categories</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/typing.html#typing.Sequence">Sequence</a>[<a href="https://docs.python.org/3/library/typing.html#typing.Any">Any</a>] | None</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
+<dd>
+<p>The unique categories for this categorical. If not given, the categories are assumed to be the unique values of <code>values</code> (sorted, if possible, otherwise in the order in which they appear).</p>
+</dd>
+<dt><code><span class="doc-parameter-name">ordered</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#bool">bool</a> | None</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
+<dd>
+<p>Whether or not this categorical is treated as a ordered categorical. If True, the resulting categorical will be ordered. An ordered categorical respects, when sorted, the order of its <code>categories</code> attribute (which in turn is the <code>categories</code> argument, if provided).</p>
 </dd>
 </dl>
 </div>
