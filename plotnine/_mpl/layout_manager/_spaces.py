@@ -736,7 +736,7 @@ class LayoutSpaces:
     sw: float = field(init=False, default=0)
     """vertical spacing btn panels w.r.t figure"""
 
-    gsparams: GridSpecParams = field(init=False)
+    gsparams: GridSpecParams = field(init=False, repr=False)
     """Grid spacing btn panels w.r.t figure"""
 
     def __post_init__(self):

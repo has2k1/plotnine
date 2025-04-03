@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import abc
-from contextlib import suppress
 from dataclasses import dataclass
 from functools import cached_property
 from typing import TYPE_CHECKING
@@ -82,6 +81,13 @@ class LayoutTree:
     """
 
     @cached_property
+    def sub_compositions(self) -> list[LayoutTree]:
+        """
+        LayoutTrees of the direct sub compositions of this one
+        """
+        return [item for item in self.nodes if isinstance(item, LayoutTree)]
+
+    @cached_property
     @abc.abstractmethod
     def lefts(self) -> Sequence[float]:
         """
@@ -141,62 +147,7 @@ class LayoutTree:
         In figure dimenstions
         """
 
-    def align_lefts(self):
-        """
-        Align the immediate left edges in this composition
-
-         -----------        -----------
-        |#          |      |  #        |
-        |#          |      |  #        |
-        |#          |      |  #        |
-        |-----------|  ->  |-----------|
-        |  #        |      |  #        |
-        |  #        |      |  #        |
-        |  #        |      |  #        |
-         -----------        -----------
-        """
-
-    def align_bottoms(self):
-        """
-        Align the immediate bottom edges this composition
-
-         -----------        -----------
-        |     |     |      |     |     |
-        |     |     |      |     |     |
-        |     |     |  ->  |     |     |
-        |     |#####|      |#####|#####|
-        |#####|     |      |     |     |
-         -----------        -----------
-        """
-
-    def align_rights(self):
-        """
-        Align the immediate right edges in this composition
-
-         -----------        -----------
-        |        #  |      |        #  |
-        |        #  |      |        #  |
-        |        #  |      |        #  |
-        |-----------|  ->  |-----------|
-        |          #|      |        #  |
-        |          #|      |        #  |
-        |          #|      |        #  |
-         -----------        -----------
-        """
-
-    def align_tops(self):
-        """
-        Align the immediate top edges in this composition
-
-         -----------        -----------
-        |#####|     |      |     |     |
-        |     |#####|      |#####|#####|
-        |     |     |  ->  |     |     |
-        |     |     |      |     |     |
-        |     |     |      |     |     |
-         -----------        -----------
-        """
-
+    @abc.abstractmethod
     def align(self):
         """
         Align all the edges in this composition & contained compositions
@@ -204,26 +155,46 @@ class LayoutTree:
         This function mutates the layout spaces, specifically the
         alignment_margins along the sides of the plot.
         """
-        self.align_lefts()
-        self.align_bottoms()
-        self.align_rights()
-        self.align_tops()
 
-        for item in self.nodes:
-            if isinstance(item, LayoutTree):
-                item.align()
+    def align_sub_compositions(self):
+        """
+        Align the compositions contained in this one
+        """
+        # Recurse into the contained compositions
+        for tree in self.sub_compositions:
+            tree.align()
 
-        with suppress(AttributeError):
-            del self.lefts
+    @property
+    def bottoms_align(self) -> bool:
+        """
+        Return True if panel bottoms for the nodes are aligned
+        """
+        arr = np.array(self.bottoms)
+        return all(arr == arr[0])
 
-        with suppress(AttributeError):
-            del self.bottoms
+    @property
+    def lefts_align(self) -> bool:
+        """
+        Return True if panel lefts for the nodes are aligned
+        """
+        arr = np.array(self.lefts)
+        return all(arr == arr[0])
 
-        with suppress(AttributeError):
-            del self.rights
+    @property
+    def tops_align(self) -> bool:
+        """
+        Return True if panel tops for the nodes are aligned
+        """
+        arr = np.array(self.tops)
+        return all(arr == arr[0])
 
-        with suppress(AttributeError):
-            del self.tops
+    @property
+    def rights_align(self) -> bool:
+        """
+        Return True if panel rights for the nodes are aligned
+        """
+        arr = np.array(self.rights)
+        return all(arr == arr[0])
 
     @property
     @abc.abstractmethod
@@ -288,22 +259,13 @@ class LayoutTree:
         This function mutates the composition gridspecs; specifically the
         width_ratios and height_ratios.
         """
-        self.resize_widths()
-        self.resize_heights()
 
-        for item in self.nodes:
-            if isinstance(item, LayoutTree):
-                item.resize()
-
-    def resize_widths(self):
+    def resize_sub_compositions(self):
         """
-        Resize the widths of gridspec so that panels have equal widths
+        Resize panels in the compositions contained in this one
         """
-
-    def resize_heights(self):
-        """
-        Resize the heights of gridspec so that panels have equal heights
-        """
+        for tree in self.sub_compositions:
+            tree.resize()
 
     @staticmethod
     def create(
@@ -368,6 +330,11 @@ class ColumnsTree(LayoutTree):
          -------------------
     """
 
+    def align(self):
+        self.align_tops()
+        self.align_bottoms()
+        self.align_sub_compositions()
+
     @cached_property
     def lefts(self):
         left_item = self.nodes[0]
@@ -383,14 +350,6 @@ class ColumnsTree(LayoutTree):
         else:
             left_item.set_left_alignment_margin(value)
 
-    def align_bottoms(self):
-        values = max(self.bottoms) - np.array(self.bottoms)
-        for item, value in zip(self.nodes, values):
-            if isinstance(item, LayoutSpaces):
-                item.b.alignment_margin = value
-            else:
-                item.set_bottom_alignment_margin(value)
-
     @cached_property
     def bottoms(self):
         values = []
@@ -400,6 +359,33 @@ class ColumnsTree(LayoutTree):
             else:
                 values.append(max(item.bottoms))
         return values
+
+    def align_bottoms(self):
+        """
+        Align the immediate bottom edges this composition
+
+         -----------        -----------
+        |     |     |      |     |     |
+        |     |     |      |     |     |
+        |     |     |  ->  |     |     |
+        |     |#####|      |#####|#####|
+        |#####|     |      |     |     |
+         -----------        -----------
+        """
+        # If panels are aligned and have a non-zero alignment_margin,
+        # aligning them again will set that value to zero and undoes
+        # the alignment.
+        if self.bottoms_align:
+            return
+
+        values = max(self.bottoms) - np.array(self.bottoms)
+        for item, value in zip(self.nodes, values):
+            if isinstance(item, LayoutSpaces):
+                item.b.alignment_margin = value
+            else:
+                item.set_bottom_alignment_margin(value)
+
+        del self.bottoms
 
     def set_bottom_alignment_margin(self, value: float):
         for item in self.nodes:
@@ -423,14 +409,6 @@ class ColumnsTree(LayoutTree):
         else:
             right_item.set_right_alignment_margin(value)
 
-    def align_tops(self):
-        values = np.array(self.tops) - min(self.tops)
-        for item, value in zip(self.nodes, values):
-            if isinstance(item, LayoutSpaces):
-                item.t.alignment_margin = value
-            else:
-                item.set_top_alignment_margin(value)
-
     @cached_property
     def tops(self):
         values = []
@@ -440,6 +418,30 @@ class ColumnsTree(LayoutTree):
             else:
                 values.append(min(item.tops))
         return values
+
+    def align_tops(self):
+        """
+        Align the immediate top edges in this composition
+
+         -----------        -----------
+        |#####|     |      |     |     |
+        |     |#####|      |#####|#####|
+        |     |     |  ->  |     |     |
+        |     |     |      |     |     |
+        |     |     |      |     |     |
+         -----------        -----------
+        """
+        if self.tops_align:
+            return
+
+        values = np.array(self.tops) - min(self.tops)
+        for item, value in zip(self.nodes, values):
+            if isinstance(item, LayoutSpaces):
+                item.t.alignment_margin = value
+            else:
+                item.set_top_alignment_margin(value)
+
+        del self.tops
 
     def set_top_alignment_margin(self, value: float):
         for item in self.nodes:
@@ -476,7 +478,10 @@ class ColumnsTree(LayoutTree):
         """
         return max(self.plot_heights)
 
-    def resize_widths(self):
+    def resize(self):
+        """
+        Resize the widths of gridspec so that panels have equal widths
+        """
         # The new width of each panel is the average width of all
         # the panels plus all the space to the left and right
         # of the panels.
@@ -486,6 +491,7 @@ class ColumnsTree(LayoutTree):
         new_plot_widths = panel_widths.mean() + non_panel_space
         width_ratios = new_plot_widths / new_plot_widths.min()
         self.gridspec.set_width_ratios(width_ratios)
+        self.resize_sub_compositions()
 
 
 @dataclass
@@ -506,13 +512,10 @@ class RowsTree(LayoutTree):
          -------------------
     """
 
-    def align_lefts(self):
-        values = max(self.lefts) - np.array(self.lefts)
-        for item, value in zip(self.nodes, values):
-            if isinstance(item, LayoutSpaces):
-                item.l.alignment_margin = value
-            else:
-                item.set_left_alignment_margin(value)
+    def align(self):
+        self.align_lefts()
+        self.align_rights()
+        self.align_sub_compositions()
 
     @cached_property
     def lefts(self):
@@ -523,6 +526,32 @@ class RowsTree(LayoutTree):
             else:
                 values.append(max(item.lefts))
         return values
+
+    def align_lefts(self):
+        """
+        Align the immediate left edges in this composition
+
+         -----------        -----------
+        |#          |      |  #        |
+        |#          |      |  #        |
+        |#          |      |  #        |
+        |-----------|  ->  |-----------|
+        |  #        |      |  #        |
+        |  #        |      |  #        |
+        |  #        |      |  #        |
+         -----------        -----------
+        """
+        if self.lefts_align:
+            return
+
+        values = max(self.lefts) - np.array(self.lefts)
+        for item, value in zip(self.nodes, values):
+            if isinstance(item, LayoutSpaces):
+                item.l.alignment_margin = value
+            else:
+                item.set_left_alignment_margin(value)
+
+        del self.lefts
 
     def set_left_alignment_margin(self, value: float):
         for item in self.nodes:
@@ -546,14 +575,6 @@ class RowsTree(LayoutTree):
         else:
             bottom_item.set_bottom_alignment_margin(value)
 
-    def align_rights(self):
-        values = np.array(self.rights) - min(self.rights)
-        for item, value in zip(self.nodes, values):
-            if isinstance(item, LayoutSpaces):
-                item.r.alignment_margin = value
-            else:
-                item.set_right_alignment_margin(value)
-
     @cached_property
     def rights(self):
         values = []
@@ -563,6 +584,32 @@ class RowsTree(LayoutTree):
             else:
                 values.append(min(item.rights))
         return values
+
+    def align_rights(self):
+        """
+        Align the immediate right edges in this composition
+
+         -----------        -----------
+        |        #  |      |        #  |
+        |        #  |      |        #  |
+        |        #  |      |        #  |
+        |-----------|  ->  |-----------|
+        |          #|      |        #  |
+        |          #|      |        #  |
+        |          #|      |        #  |
+         -----------        -----------
+        """
+        if self.rights_align:
+            return
+
+        values = np.array(self.rights) - min(self.rights)
+        for item, value in zip(self.nodes, values):
+            if isinstance(item, LayoutSpaces):
+                item.r.alignment_margin = value
+            else:
+                item.set_right_alignment_margin(value)
+
+        del self.rights
 
     def set_right_alignment_margin(self, value: float):
         for item in self.nodes:
@@ -614,8 +661,13 @@ class RowsTree(LayoutTree):
         """
         return sum(self.plot_heights)
 
-    def resize_heights(self):
-        # The new width of each panel is the average width of all
+    def resize(self):
+        """
+        Resize the heights of gridspec so that panels have equal heights
+
+        This method resizes (recursively) the contained compositions
+        """
+        # The new height of each panel is the average width of all
         # the panels plus all the space above and below the panels.
         plot_heights = np.array(self.plot_heights)
         panel_heights = np.array(self.panel_heights)
@@ -623,3 +675,4 @@ class RowsTree(LayoutTree):
         new_plot_heights = panel_heights.mean() + non_panel_space
         height_ratios = new_plot_heights / new_plot_heights.max()
         self.gridspec.set_height_ratios(height_ratios)
+        self.resize_sub_compositions()
