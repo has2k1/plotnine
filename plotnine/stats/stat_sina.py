@@ -57,6 +57,15 @@ class stat_sina(stat):
         - `area` - Scale by the largest density/bin among the different sinas
         - `count` - areas are scaled proportionally to the number of points
         - `width` - Only scale according to the maxwidth parameter.
+    style :
+        Type of sina plot to draw. The options are
+        ```python
+        'full'        # Regular (2 sided)
+        'left'        # Left-sided half
+        'right'       # Right-sided half
+        'left-right'  # Alternate (left first) half by the group
+        'right-left'  # Alternate (right first) half by the group
+        ```
 
     See Also
     --------
@@ -91,6 +100,7 @@ class stat_sina(stat):
         "bin_limit": 1,
         "random_state": None,
         "scale": "area",
+        "style": "full",
     }
     CREATES = {"scaled"}
 
@@ -245,6 +255,29 @@ class stat_sina(stat):
 
     def finish_layer(self, data, params):
         # Rescale x in case positions have been adjusted
+        style = params["style"]
+        x_mean = data["x"].to_numpy()
         x_mod = (data["xmax"] - data["xmin"]) / data["width"]
         data["x"] = data["x"] + data["x_diff"] * x_mod
+        x = data["x"].to_numpy()
+        even = data["group"].to_numpy() % 2 == 0
+
+        def mirror_x(bool_idx):
+            """
+            Mirror x locations along the mean value
+            """
+            data.loc[bool_idx, "x"] = (
+                2 * x_mean[bool_idx] - data.loc[bool_idx, "x"]
+            )
+
+        match style:
+            case "left":
+                mirror_x(x_mean < x)
+            case "right":
+                mirror_x(x < x_mean)
+            case "left-right":
+                mirror_x(even & (x < x_mean) | ~even & (x_mean < x))
+            case "right-left":
+                mirror_x(even & (x_mean < x) | ~even & (x < x_mean))
+
         return data
