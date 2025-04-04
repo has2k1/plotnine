@@ -71,6 +71,9 @@ title: Changelog
 - Geoms [](:class:`~plotnine.geom_bar`) and [](:class:`~plotnine.geom_col`) have
   gained new parameter `just` that controls how the bars align with the axis break point.
 
+- [](:class:`~plotnine.geom_sina`) has gained new parameter `style` just like
+  [](:class:`~plotnine.geom_violin`), which make one-sided (half) sina plots.
+
 ### Enhancements
 
 - Included datasets [](:attr:`~plotnine.data.mpg`), [](:attr:`~plotnine.data.msleep`) and

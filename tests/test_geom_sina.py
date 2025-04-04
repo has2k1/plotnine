@@ -68,3 +68,13 @@ def test_method_counts():
     )
 
     assert p == "method_counts"
+
+
+def test_style():
+    p = (
+        ggplot(data, aes("dist", "value"))
+        + geom_violin(style="left-right")
+        + geom_sina(style="left-right", random_state=123)
+    )
+
+    assert p == "style"
