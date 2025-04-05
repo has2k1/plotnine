@@ -342,14 +342,8 @@ class LayoutItems:
         """
         Return maximum height[figure space] of x tick labels
         """
-        top_margin = (
-            0
-            if self._is_blank("axis_text_x")
-            else self.plot.theme.get_margin("axis_text_x").fig.t
-        )
         heights = [
-            self.calc.tight_height(label) + top_margin
-            for label in self.axis_text_x(ax)
+            self.calc.tight_height(label) for label in self.axis_text_x(ax)
         ]
         return max(heights) if len(heights) else 0
 
@@ -378,14 +372,8 @@ class LayoutItems:
         """
         Return maximum width[figure space] of y tick labels
         """
-        right_margin = (
-            0
-            if self._is_blank("axis_text_y")
-            else self.plot.theme.get_margin("axis_text_y").fig.r
-        )
         widths = [
-            self.calc.tight_width(label) + right_margin
-            for label in self.axis_text_y(ax)
+            self.calc.tight_width(label) for label in self.axis_text_y(ax)
         ]
         return max(widths) if len(widths) else 0
 

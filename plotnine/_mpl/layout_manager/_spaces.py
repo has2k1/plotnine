@@ -222,7 +222,9 @@ class left_spaces(_side_spaces):
     axis_title_y_margin_left: float = 0
     axis_title_y: float = 0
     axis_title_y_margin_right: float = 0
+    axis_text_y_margin_left: float = 0
     axis_text_y: float = 0
+    axis_text_y_margin_right: float = 0
     axis_ticks_y: float = 0
 
     def _calculate(self):
@@ -256,6 +258,11 @@ class left_spaces(_side_spaces):
 
         # Account for the space consumed by the axis
         self.axis_text_y = items.axis_text_y_max_width_at("first_col")
+        if self.axis_text_y:
+            m = theme.get_margin("axis_text_y").fig
+            self.axis_text_y_margin_left = m.l
+            self.axis_text_y_margin_right = m.r
+
         self.axis_ticks_y = items.axis_ticks_y_max_width_at("first_col")
 
         # Adjust plot_margin to make room for ylabels that protude well
@@ -576,7 +583,9 @@ class bottom_spaces(_side_spaces):
     axis_title_x_margin_bottom: float = 0
     axis_title_x: float = 0
     axis_title_x_margin_top: float = 0
+    axis_text_x_margin_bottom: float = 0
     axis_text_x: float = 0
+    axis_text_x_margin_top: float = 0
     axis_ticks_x: float = 0
 
     def _calculate(self):
@@ -616,8 +625,12 @@ class bottom_spaces(_side_spaces):
             self.axis_title_x_margin_top = m.t * F
 
         # Account for the space consumed by the axis
-        self.axis_ticks_x = items.axis_ticks_x_max_height_at("last_row")
         self.axis_text_x = items.axis_text_x_max_height_at("last_row")
+        if self.axis_text_x:
+            m = theme.get_margin("axis_text_x").fig
+            self.axis_text_x_margin_bottom = m.b
+            self.axis_text_x_margin_top = m.t
+        self.axis_ticks_x = items.axis_ticks_x_max_height_at("last_row")
 
         # Adjust plot_margin to make room for ylabels that protude well
         # beyond the axes
