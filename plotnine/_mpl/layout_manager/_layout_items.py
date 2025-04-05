@@ -299,40 +299,6 @@ class LayoutItems:
 
         return chain(major, minor)
 
-    def axis_text_x_margin(self, ax: Axes) -> Iterator[float]:
-        """
-        Return XTicks paddings
-        """
-        # In plotnine tick padding are specified as a margin to the
-        # the axis_text.
-        major, minor = [], []
-        if not self._is_blank("axis_text_x"):
-            h = self.plot.figure.bbox.height
-            major = [
-                (t.get_pad() or 0) / h for t in ax.xaxis.get_major_ticks()
-            ]
-            minor = [
-                (t.get_pad() or 0) / h for t in ax.xaxis.get_minor_ticks()
-            ]
-        return chain(major, minor)
-
-    def axis_text_y_margin(self, ax: Axes) -> Iterator[float]:
-        """
-        Return YTicks paddings
-        """
-        # In plotnine tick padding are specified as a margin to the
-        # the axis_text.
-        major, minor = [], []
-        if not self._is_blank("axis_text_y"):
-            w = self.plot.figure.bbox.width
-            major = [
-                (t.get_pad() or 0) / w for t in ax.yaxis.get_major_ticks()
-            ]
-            minor = [
-                (t.get_pad() or 0) / w for t in ax.yaxis.get_minor_ticks()
-            ]
-        return chain(major, minor)
-
     def strip_text_x_height(self, position: StripPosition) -> float:
         """
         Height taken up by the top strips
@@ -376,11 +342,14 @@ class LayoutItems:
         """
         Return maximum height[figure space] of x tick labels
         """
+        top_margin = (
+            0
+            if self._is_blank("axis_text_x")
+            else self.plot.theme.get_margin("axis_text_x").fig.t
+        )
         heights = [
-            self.calc.tight_height(label) + pad
-            for label, pad in zip(
-                self.axis_text_x(ax), self.axis_text_x_margin(ax)
-            )
+            self.calc.tight_height(label) + top_margin
+            for label in self.axis_text_x(ax)
         ]
         return max(heights) if len(heights) else 0
 
@@ -409,11 +378,14 @@ class LayoutItems:
         """
         Return maximum width[figure space] of y tick labels
         """
+        right_margin = (
+            0
+            if self._is_blank("axis_text_y")
+            else self.plot.theme.get_margin("axis_text_y").fig.r
+        )
         widths = [
-            self.calc.tight_width(label) + pad
-            for label, pad in zip(
-                self.axis_text_y(ax), self.axis_text_y_margin(ax)
-            )
+            self.calc.tight_width(label) + right_margin
+            for label in self.axis_text_y(ax)
         ]
         return max(widths) if len(widths) else 0
 
