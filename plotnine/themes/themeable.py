@@ -1080,7 +1080,7 @@ class axis_ticks_minor_x(MixinSequenceOfValues):
         # to invisible. Theming should not change those artists to visible,
         # so we return early.
         params = ax.xaxis.get_tick_params(which="minor")
-        if not params.get("left", False):
+        if not params.get("bottom", False):
             return
 
         # We have to use both
