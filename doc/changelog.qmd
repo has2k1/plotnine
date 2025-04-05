@@ -96,6 +96,7 @@ title: Changelog
 - Fixed bug where computed aesthetic from `after_scale` are were not applied to the legend.
   {{< issue 926 >}}
 
+- Fixed theming of minor x axis ticks.
 
 ## v0.14.5
 (2025-01-02)
