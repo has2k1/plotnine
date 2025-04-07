@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Changelog – plotnine 0.0.post1+ga519dea</title>
+<title>Changelog – plotnine 0.0.post1+ge4a3226</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -115,7 +115,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">plotnine 0.0.post1+ga519dea</span>
+    <span class="navbar-title">plotnine 0.0.post1+ge4a3226</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -367,7 +367,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="enhancements" class="level3">
 <h3 class="anchored" data-anchor-id="enhancements">Enhancements</h3>
 <ul>
-<li>Included datasets <a href="./reference/mpg.html#plotnine.data.mpg"><code>mpg</code></a>, <a href="./reference/msleep.html#plotnine.data.msleep"><code>msleep</code></a> and <a href="./reference/midwest.html#plotnine.data.midwest"><code>midwest</code></a> no longer have any of their columns as categoricals. This matches the respective datasets in R. <a href="https://github.com/has2k1/plotnine/issues/913" title="Issue: #913">#913</a></li>
+<li><p>Included datasets <a href="./reference/mpg.html#plotnine.data.mpg"><code>mpg</code></a>, <a href="./reference/msleep.html#plotnine.data.msleep"><code>msleep</code></a> and <a href="./reference/midwest.html#plotnine.data.midwest"><code>midwest</code></a> no longer have any of their columns as categoricals. This matches the respective datasets in R. <a href="https://github.com/has2k1/plotnine/issues/913" title="Issue: #913">#913</a></p></li>
+<li><p>When the <code>width</code> of the violins in <a href="./reference/geom_violin.html#plotnine.geom_violin"><code>geom_violin</code></a> is wider than their normal area, they now overlap with those closest to the origin on top. This makes it possible to create overlapping ridge plots using half violins.</p></li>
 </ul>
 </section>
 <section id="bug-fixes" class="level3">
@@ -378,6 +379,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>Fixed justifying strip_text within the strip_background. <a href="https://github.com/has2k1/plotnine/issues/867" title="Issue: #867">#867</a></p></li>
 <li><p>Fixed bug where facetting along a column with unused categories could raise an error. <a href="https://github.com/has2k1/plotnine/issues/930" title="Issue: #930">#930</a></p></li>
 <li><p>Fixed bug where computed aesthetic from <code>after_scale</code> are were not applied to the legend. <a href="https://github.com/has2k1/plotnine/issues/926" title="Issue: #926">#926</a></p></li>
+<li><p>Fixed theming of minor x axis ticks.</p></li>
 </ul>
 </section>
 </section>
