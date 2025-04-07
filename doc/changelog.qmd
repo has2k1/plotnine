@@ -80,6 +80,10 @@ title: Changelog
   [](:attr:`~plotnine.data.midwest`) no longer have any of their columns as categoricals.
   This matches the respective datasets in R. {{< issue 913 >}}
 
+- When the `width` of the violins in [](:class:`~plotnine.geom_violin`) is wider than their
+  normal area, they now overlap with those closest to the origin on top. This makes it possible
+  to create overlapping ridge plots using half violins.
+
 ### Bug Fixes
 
 - Fixed bug in with the `legend_key_height` themeable where it wasn't applied.

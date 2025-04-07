@@ -132,3 +132,11 @@ def test_scales_free():
         + facet_grid("am", "'column'", scales="free")
     )
     assert p == "scales_free"
+
+
+def test_overlap():
+    p = ggplot(data, aes("x")) + geom_violin(
+        aes(y="y", fill="x"), position="identity", width=2
+    )
+
+    assert p == "overlap"

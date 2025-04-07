@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-import typing
+from typing import TYPE_CHECKING, cast
 
 import numpy as np
 import pandas as pd
@@ -11,7 +11,7 @@ from .geom import geom
 from .geom_path import geom_path
 from .geom_polygon import geom_polygon
 
-if typing.TYPE_CHECKING:
+if TYPE_CHECKING:
     from typing import Any
 
     from matplotlib.axes import Axes
@@ -115,10 +115,17 @@ class geom_violin(geom):
         ax: Axes,
         **params: Any,
     ):
-        quantiles = params["draw_quantiles"]
-        style = params["style"]
+        quantiles = params.pop("draw_quantiles")
+        style = params.pop("style")
+        zorder = params.pop("zorder")
 
-        for i, (_, df) in enumerate(data.groupby("group")):
+        for i, (group, df) in enumerate(data.groupby("group")):
+            # Place the violins with the smalleer group number on top
+            # of those with larger numbers. The group_zorder values should be
+            # in the range [zorder, zorder + 1) to stay within the layer.
+            group = cast("int", group)
+            group_zorder = zorder + 0.9 / group
+
             # Find the points for the line to go all the way around
             df["xminv"] = df["x"] - df["violinwidth"] * (df["x"] - df["xmin"])
             df["xmaxv"] = df["x"] + df["violinwidth"] * (df["xmax"] - df["x"])
@@ -156,7 +163,12 @@ class geom_violin(geom):
 
             # plot violin polygon
             geom_polygon.draw_group(
-                polygon_df, panel_params, coord, ax, **params
+                polygon_df,
+                panel_params,
+                coord,
+                ax,
+                zorder=group_zorder,
+                **params,
             )
 
             if quantiles is not None:
@@ -174,7 +186,12 @@ class geom_violin(geom):
 
                 # plot quantile segments
                 geom_path.draw_group(
-                    segment_df, panel_params, coord, ax, **params
+                    segment_df,
+                    panel_params,
+                    coord,
+                    ax,
+                    zorder=group_zorder,
+                    **params,
                 )
 
 
