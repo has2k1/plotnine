@@ -102,6 +102,9 @@ title: Changelog
 
 - Fixed theming of minor x axis ticks.
 
+- Fixed theming of `axis_text`, `axis_text_x` and  `axis_text_y` so when they can be
+  overriden if previously set to `element_blank()`.
+
 ## v0.14.5
 (2025-01-02)
 [![](https://zenodo.org/badge/DOI/10.5281/zenodo.14587381.svg)](https://doi.org/10.5281/zenodo.14587381)
