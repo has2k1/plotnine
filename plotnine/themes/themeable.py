@@ -894,13 +894,28 @@ class axis_text_x(MixinSequenceOfValues):
 
     def apply_ax(self, ax: Axes):
         super().apply_ax(ax)
-        self.set(ax.get_xticklabels())
+
+        # TODO: Remove this code when the minimum matplotlib >= 3.10.0,
+        # and use the commented one below it
+        import matplotlib as mpl
+        from packaging import version
+
+        vinstalled = version.parse(mpl.__version__)
+        v310 = version.parse("3.10.0")
+        name = "labelbottom" if vinstalled >= v310 else "labelleft"
+        if not ax.xaxis.get_tick_params()[name]:
+            return
+
+        # if not ax.xaxis.get_tick_params()["labelbottom"]:
+        #     return
+
+        labels = [t.label1 for t in ax.xaxis.get_major_ticks()]
+        self.set(labels)
 
     def blank_ax(self, ax: Axes):
         super().blank_ax(ax)
-        ax.xaxis.set_tick_params(
-            which="both", labelbottom=False, labeltop=False
-        )
+        for t in ax.xaxis.get_major_ticks():
+            t.label1.set_visible(False)
 
 
 class axis_text_y(MixinSequenceOfValues):
@@ -927,13 +942,17 @@ class axis_text_y(MixinSequenceOfValues):
 
     def apply_ax(self, ax: Axes):
         super().apply_ax(ax)
-        self.set(ax.get_yticklabels())
+
+        if not ax.yaxis.get_tick_params()["labelleft"]:
+            return
+
+        labels = [t.label1 for t in ax.yaxis.get_major_ticks()]
+        self.set(labels)
 
     def blank_ax(self, ax: Axes):
         super().blank_ax(ax)
-        ax.yaxis.set_tick_params(
-            which="both", labelleft=False, labelright=False
-        )
+        for t in ax.yaxis.get_major_ticks():
+            t.label1.set_visible(False)
 
 
 class axis_text(axis_text_x, axis_text_y):

@@ -14,6 +14,7 @@ from plotnine import (
     geom_point,
     ggplot,
     labs,
+    lims,
     theme,
     theme_538,
     theme_bw,
@@ -269,3 +270,16 @@ def test_theme_xkcd():
         assert p != "theme_gray"
     else:
         assert p == "theme_xkcd"
+
+
+def test_override_axis_text():
+    p = (
+        ggplot()
+        + lims(x=(0, 100), y=(0, 100))
+        + theme(
+            axis_text=element_blank(),
+            axis_text_x=element_text(color="purple", margin={"t": 4}),
+        )
+    )
+
+    assert p == "override_axis_text"
