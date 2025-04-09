@@ -14,7 +14,7 @@ from __future__ import annotations
 from abc import ABC
 from dataclasses import dataclass, field, fields
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 
 from plotnine.facets import facet_grid, facet_null, facet_wrap
 
@@ -26,7 +26,7 @@ if TYPE_CHECKING:
 
     from plotnine import ggplot
     from plotnine._mpl.gridspec import p9GridSpec
-
+    from plotnine.typing import Side
 
 # Note
 # Margins around the plot are specified in figure coordinates
@@ -79,6 +79,10 @@ class _side_spaces(ABC):
     """
 
     def __post_init__(self):
+        self.side = cast("Side", self.__class__.__name__[:-7])
+        """
+        Side of the panel(s) that this class applies to
+        """
         self._calculate()
 
     def _calculate(self):
@@ -204,6 +208,18 @@ class _side_spaces(ABC):
         """
         return self.offset + rel_value
 
+    @property
+    def has_tag(self) -> bool:
+        """
+        Return True if the space/margin to this side of the panel has a tag
+
+        If it does, then it will be included in the layout
+        """
+        getp = self.items.plot.theme.getp
+        return getp("plot_tag_location") == "margin" and self.side in getp(
+            "plot_tag_position"
+        )
+
 
 @dataclass
 class left_spaces(_side_spaces):
@@ -232,15 +248,9 @@ class left_spaces(_side_spaces):
         calc = self.items.calc
         items = self.items
 
-        # If the plot_tag is in the margin, it is included in the layout.
-        # So we make space for it, including any margins it may have.
-        plot_tag_in_layout = theme.getp(
-            "plot_tag_location"
-        ) == "margin" and "left" in theme.getp("plot_tag_position")
-
         self.plot_margin = theme.getp("plot_margin_left")
 
-        if items.plot_tag and plot_tag_in_layout:
+        if self.has_tag and items.plot_tag:
             m = theme.get_margin("plot_tag").fig
             self.plot_tag_margin_left = m.l
             self.plot_tag = calc.width(items.plot_tag)
@@ -350,15 +360,10 @@ class right_spaces(_side_spaces):
         items = self.items
         theme = self.items.plot.theme
         calc = self.items.calc
-        # If the plot_tag is in the margin, it is included in the layout.
-        # So we make space for it, including any margins it may have.
-        plot_tag_in_layout = theme.getp(
-            "plot_tag_location"
-        ) == "margin" and "right" in theme.getp("plot_tag_position")
 
         self.plot_margin = theme.getp("plot_margin_right")
 
-        if items.plot_tag and plot_tag_in_layout:
+        if self.has_tag and items.plot_tag:
             m = theme.get_margin("plot_tag").fig
             self.plot_tag_margin_right = m.r
             self.plot_tag = calc.width(items.plot_tag)
@@ -463,15 +468,10 @@ class top_spaces(_side_spaces):
         calc = self.items.calc
         W, H = theme.getp("figure_size")
         F = W / H
-        # If the plot_tag is in the margin, it is included in the layout.
-        # So we make space for it, including any margins it may have.
-        plot_tag_in_layout = theme.getp(
-            "plot_tag_location"
-        ) == "margin" and "top" in theme.getp("plot_tag_position")
 
         self.plot_margin = theme.getp("plot_margin_top") * F
 
-        if items.plot_tag and plot_tag_in_layout:
+        if self.has_tag and items.plot_tag:
             m = theme.get_margin("plot_tag").fig
             self.plot_tag_margin_top = m.t
             self.plot_tag = calc.height(items.plot_tag)
@@ -594,15 +594,10 @@ class bottom_spaces(_side_spaces):
         calc = self.items.calc
         W, H = theme.getp("figure_size")
         F = W / H
-        # If the plot_tag is in the margin, it is included in the layout.
-        # So we make space for it, including any margins it may have.
-        plot_tag_in_layout = theme.getp(
-            "plot_tag_location"
-        ) == "margin" and "bottom" in theme.getp("plot_tag_position")
 
         self.plot_margin = theme.getp("plot_margin_bottom") * F
 
-        if items.plot_tag and plot_tag_in_layout:
+        if self.has_tag and items.plot_tag:
             m = theme.get_margin("plot_tag").fig
             self.plot_tag_margin_bottom = m.b
             self.plot_tag = calc.height(items.plot_tag)
