@@ -25,7 +25,7 @@ if TYPE_CHECKING:
 
     from plotnine.geoms.geom import geom
     from plotnine.layer import layer
-    from plotnine.typing import SidePosition
+    from plotnine.typing import Side
 
 
 # See guides.py for terminology
@@ -281,7 +281,7 @@ class guide_legend(guide):
         targets.legend_key = drawings
 
         # Match Drawings with labels to create the entries
-        lookup: dict[SidePosition, tuple[type[PackerBase], slice]] = {
+        lookup: dict[Side, tuple[type[PackerBase], slice]] = {
             "right": (HPacker, reverse),
             "left": (HPacker, obverse),
             "bottom": (VPacker, reverse),
@@ -380,7 +380,7 @@ class GuideElementsLegend(GuideElements):
         )
 
     @cached_property
-    def text_position(self) -> SidePosition:
+    def text_position(self) -> Side:
         if not (pos := self.theme.getp("legend_text_position")):
             pos = "right"
         return pos

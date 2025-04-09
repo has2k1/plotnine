@@ -23,13 +23,13 @@ if TYPE_CHECKING:
     from plotnine.typing import (
         LegendPosition,
         Orientation,
-        SidePosition,
+        Side,
     )
 
     from .guides import GuidesElements
 
     AlignDict: TypeAlias = dict[
-        Literal["ha", "va"], dict[tuple[Orientation, SidePosition], str]
+        Literal["ha", "va"], dict[tuple[Orientation, Side], str]
     ]
 
 
@@ -122,10 +122,7 @@ class guide(ABC, metaclass=Register):
     @property
     def _resolved_position_justification(
         self,
-    ) -> (
-        tuple[SidePosition, float]
-        | tuple[tuple[float, float], tuple[float, float]]
-    ):
+    ) -> tuple[Side, float] | tuple[tuple[float, float], tuple[float, float]]:
         """
         Return the final position & justification to draw the guide
         """
@@ -213,7 +210,7 @@ class GuideElements:
         )
 
     @cached_property
-    def text_position(self) -> SidePosition:
+    def text_position(self) -> Side:
         raise NotImplementedError
 
     @cached_property
@@ -225,7 +222,7 @@ class GuideElements:
         return getattr(_margin, _loc)
 
     @cached_property
-    def title_position(self) -> SidePosition:
+    def title_position(self) -> Side:
         if not (pos := self.theme.getp("legend_title_position")):
             pos = "top" if self.is_vertical else "left"
         return pos
@@ -244,7 +241,7 @@ class GuideElements:
         return direction
 
     @cached_property
-    def position(self) -> SidePosition | tuple[float, float]:
+    def position(self) -> Side | tuple[float, float]:
         if (guide_pos := self.guide.position) == "inside":
             guide_pos = self._position_inside
 
@@ -256,7 +253,7 @@ class GuideElements:
         return pos
 
     @cached_property
-    def _position_inside(self) -> SidePosition | tuple[float, float]:
+    def _position_inside(self) -> Side | tuple[float, float]:
         pos = self.theme.getp("legend_position_inside")
         if isinstance(pos, tuple):
             return pos

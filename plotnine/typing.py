@@ -114,7 +114,7 @@ ScaledAestheticsName: TypeAlias = Literal[
 CoordRange: TypeAlias = tuple[float, float]
 
 # Guide
-SidePosition: TypeAlias = Literal["left", "right", "top", "bottom"]
+Side: TypeAlias = Literal["left", "right", "top", "bottom"]
 LegendPosition: TypeAlias = (
     Literal["left", "right", "top", "bottom", "inside"] | tuple[float, float]
 )
