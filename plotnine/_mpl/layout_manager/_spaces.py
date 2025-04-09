@@ -26,6 +26,7 @@ if TYPE_CHECKING:
 
     from plotnine import ggplot
     from plotnine._mpl.gridspec import p9GridSpec
+    from plotnine.iapi import outside_legend
     from plotnine.typing import Side
 
 # Note
@@ -79,7 +80,7 @@ class _side_spaces(ABC):
     """
 
     def __post_init__(self):
-        self.side = cast("Side", self.__class__.__name__[:-7])
+        self.side: Side = cast("Side", self.__class__.__name__[:-7])
         """
         Side of the panel(s) that this class applies to
         """
@@ -136,17 +137,21 @@ class _side_spaces(ABC):
         values e.g. 0.2, instead of just left, right, top,  bottom &
         center.
         """
-        return (0, 0)
+        if not self.has_legend:
+            return (0, 0)
+
+        ol: outside_legend = getattr(self.items.legends, self.side)
+        return self.items.calc.size(ol.box)
 
     @cached_property
-    def _legend_width(self) -> float:
+    def legend_width(self) -> float:
         """
         Return width of legend in figure coordinates
         """
         return self._legend_size[0]
 
     @cached_property
-    def _legend_height(self) -> float:
+    def legend_height(self) -> float:
         """
         Return height of legend in figure coordinates
         """
@@ -220,6 +225,17 @@ class _side_spaces(ABC):
             "plot_tag_position"
         )
 
+    @property
+    def has_legend(self) -> bool:
+        """
+        Return True if the space/margin to this side of the panel has a legend
+
+        If it does, then it will be included in the layout
+        """
+        if not self.items.legends:
+            return False
+        return hasattr(self.items.legends, self.side)
+
 
 @dataclass
 class left_spaces(_side_spaces):
@@ -257,7 +273,7 @@ class left_spaces(_side_spaces):
             self.plot_tag_margin_right = m.r
 
         if items.legends and items.legends.left:
-            self.legend = self._legend_width
+            self.legend = self.legend_width
             self.legend_box_spacing = theme.getp("legend_box_spacing")
 
         if items.axis_title_y:
@@ -282,13 +298,6 @@ class left_spaces(_side_spaces):
         adjustment = protrusion - (self.total - self.plot_margin)
         if adjustment > 0:
             self.plot_margin += adjustment
-
-    @cached_property
-    def _legend_size(self) -> tuple[float, float]:
-        if not (self.items.legends and self.items.legends.left):
-            return (0, 0)
-
-        return self.items.calc.size(self.items.legends.left.box)
 
     @property
     def offset(self) -> float:
@@ -370,7 +379,7 @@ class right_spaces(_side_spaces):
             self.plot_tag_margin_left = m.l
 
         if items.legends and items.legends.right:
-            self.legend = self._legend_width
+            self.legend = self.legend_width
             self.legend_box_spacing = theme.getp("legend_box_spacing")
 
         self.strip_text_y_width_right = items.strip_text_y_width("right")
@@ -382,13 +391,6 @@ class right_spaces(_side_spaces):
         adjustment = protrusion - (self.total - self.plot_margin)
         if adjustment > 0:
             self.plot_margin += adjustment
-
-    @cached_property
-    def _legend_size(self) -> tuple[float, float]:
-        if not (self.items.legends and self.items.legends.right):
-            return (0, 0)
-
-        return self.items.calc.size(self.items.legends.right.box)
 
     @property
     def offset(self):
@@ -490,7 +492,7 @@ class top_spaces(_side_spaces):
             self.plot_subtitle_margin_bottom = m.b * F
 
         if items.legends and items.legends.top:
-            self.legend = self._legend_height
+            self.legend = self.legend_height
             self.legend_box_spacing = theme.getp("legend_box_spacing") * F
 
         self.strip_text_x_height_top = items.strip_text_x_height("top")
@@ -502,13 +504,6 @@ class top_spaces(_side_spaces):
         adjustment = protrusion - (self.total - self.plot_margin)
         if adjustment > 0:
             self.plot_margin += adjustment
-
-    @cached_property
-    def _legend_size(self) -> tuple[float, float]:
-        if not (self.items.legends and self.items.legends.top):
-            return (0, 0)
-
-        return self.items.calc.size(self.items.legends.top.box)
 
     @property
     def offset(self) -> float:
@@ -610,7 +605,7 @@ class bottom_spaces(_side_spaces):
             self.plot_caption_margin_top = m.t * F
 
         if items.legends and items.legends.bottom:
-            self.legend = self._legend_height
+            self.legend = self.legend_height
             self.legend_box_spacing = theme.getp("legend_box_spacing") * F
 
         if items.axis_title_x:
@@ -634,13 +629,6 @@ class bottom_spaces(_side_spaces):
         adjustment = protrusion - (self.total - self.plot_margin)
         if adjustment > 0:
             self.plot_margin += adjustment
-
-    @cached_property
-    def _legend_size(self) -> tuple[float, float]:
-        if not (self.items.legends and self.items.legends.bottom):
-            return (0, 0)
-
-        return self.items.calc.size(self.items.legends.bottom.box)
 
     @property
     def offset(self) -> float:

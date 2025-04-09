@@ -723,7 +723,7 @@ def set_legends_position(legends: legend_artists, spaces: LayoutSpaces):
     if legends.right:
         y = rel_position(
             legends.right.justification,
-            spaces.r._legend_height,
+            spaces.r.legend_height,
             params.bottom,
             params.top,
         )
@@ -733,7 +733,7 @@ def set_legends_position(legends: legend_artists, spaces: LayoutSpaces):
     if legends.left:
         y = rel_position(
             legends.left.justification,
-            spaces.l._legend_height,
+            spaces.l.legend_height,
             params.bottom,
             params.top,
         )
@@ -743,7 +743,7 @@ def set_legends_position(legends: legend_artists, spaces: LayoutSpaces):
     if legends.top:
         x = rel_position(
             legends.top.justification,
-            spaces.t._legend_width,
+            spaces.t.legend_width,
             params.left,
             params.right,
         )
@@ -753,7 +753,7 @@ def set_legends_position(legends: legend_artists, spaces: LayoutSpaces):
     if legends.bottom:
         x = rel_position(
             legends.bottom.justification,
-            spaces.b._legend_width,
+            spaces.b.legend_width,
             params.left,
             params.right,
         )
