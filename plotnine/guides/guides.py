@@ -35,7 +35,7 @@ if TYPE_CHECKING:
         NoGuide,
         Orientation,
         ScaledAestheticsName,
-        SidePosition,
+        Side,
         TextJustification,
     )
 
@@ -326,7 +326,7 @@ class guides:
 
         # Group together guides for each position
         groups: dict[
-            tuple[SidePosition, float]
+            tuple[Side, float]
             | tuple[tuple[float, float], tuple[float, float]],
             list[PackerBase],
         ] = defaultdict(list)

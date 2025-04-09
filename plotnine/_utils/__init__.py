@@ -36,7 +36,7 @@ if TYPE_CHECKING:
         FloatArray,
         FloatArrayLike,
         IntArray,
-        SidePosition,
+        Side,
     )
 
     T = TypeVar("T")
@@ -1227,11 +1227,11 @@ def default_field(default: T) -> T:
     return field(default_factory=lambda: deepcopy(default))
 
 
-def get_opposite_side(s: SidePosition) -> SidePosition:
+def get_opposite_side(s: Side) -> Side:
     """
     Return the opposite side
     """
-    lookup: dict[SidePosition, SidePosition] = {
+    lookup: dict[Side, Side] = {
         "right": "left",
         "left": "right",
         "top": "bottom",
@@ -1241,7 +1241,7 @@ def get_opposite_side(s: SidePosition) -> SidePosition:
 
 
 def ensure_xy_location(
-    loc: SidePosition | Literal["center"] | float | tuple[float, float],
+    loc: Side | Literal["center"] | float | tuple[float, float],
 ) -> tuple[float, float]:
     """
     Convert input into (x, y) location
