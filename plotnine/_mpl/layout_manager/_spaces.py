@@ -70,14 +70,6 @@ class _side_spaces(ABC):
     """
 
     items: LayoutItems
-    alignment_margin: float = 0
-    """
-    A margin added to align this plot with others in a composition
-
-    This value is calculated during the layout process in a tree structure
-    that has convenient access to the sides/edges of the panels in the
-    composition.
-    """
 
     def __post_init__(self):
         self.side: Side = cast("Side", self.__class__.__name__[:-7])
@@ -236,6 +228,30 @@ class _side_spaces(ABC):
             return False
         return hasattr(self.items.legends, self.side)
 
+    @property
+    def tag_width(self) -> float:
+        """
+        The width of the tag including the margins
+
+        The value is zero expect if all these are true:
+            - The tag is in the margin `theme(plot_tag_position = "margin")`
+            - The tag at one one of the the following locations;
+              left, right, topleft, topright, bottomleft or bottomright
+        """
+        return 0
+
+    @property
+    def tag_height(self) -> float:
+        """
+        The height of the tag including the margins
+
+        The value is zero expect if all these are true:
+            - The tag is in the margin `theme(plot_tag_position = "margin")`
+            - The tag at one one of the the following locations;
+              top, bottom, topleft, topright, bottomleft or bottomright
+        """
+        return 0
+
 
 @dataclass
 class left_spaces(_side_spaces):
@@ -246,9 +262,50 @@ class left_spaces(_side_spaces):
     """
 
     plot_margin: float = 0
+    tag_alignment: float = 0
+    """
+    Space added to align the tag in this plot with others in a composition
+
+    This value is calculated during the layout process, and it ensures that
+    all tags on this side of the plot take up the same amount of space in
+    the margin. e.g. from
+
+         ------------------------------------
+        | plot_margin | tag | artists        |
+        |------------------------------------|
+        | plot_margin | A long tag | artists |
+         ------------------------------------
+
+    to
+
+         ------------------------------------
+        | plot_margin |     tag    | artists |
+        |------------------------------------|
+        | plot_margin | A long tag | artists |
+         ------------------------------------
+
+    And the tag is justified within that space e.g if ha="left" we get
+
+         ------------------------------------
+        | plot_margin | tag        | artists |
+        |------------------------------------|
+        | plot_margin | A long tag | artists |
+         ------------------------------------
+
+    So, contrary to the order in which the space items are laid out, the 
+    tag_alignment does not necessarily come before the plot_tag.
+    """
     plot_tag_margin_left: float = 0
     plot_tag: float = 0
     plot_tag_margin_right: float = 0
+    margin_alignment: float = 0
+    """
+    Space added to align this plot with others in a composition
+
+    This value is calculated during the layout process in a tree structure
+    that has convenient access to the sides/edges of the panels in the
+    composition.
+    """
     legend: float = 0
     legend_box_spacing: float = 0
     axis_title_y_margin_left: float = 0
@@ -348,6 +405,17 @@ class left_spaces(_side_spaces):
         """
         return self.x1("legend")
 
+    @property
+    def tag_width(self):
+        """
+        The width of the tag including the margins
+        """
+        return (
+            self.plot_tag_margin_left
+            + self.plot_tag
+            + self.plot_tag_margin_right
+        )
+
 
 @dataclass
 class right_spaces(_side_spaces):
@@ -358,9 +426,11 @@ class right_spaces(_side_spaces):
     """
 
     plot_margin: float = 0
+    tag_alignment: float = 0
     plot_tag_margin_right: float = 0
     plot_tag: float = 0
     plot_tag_margin_left: float = 0
+    margin_alignment: float = 0
     legend: float = 0
     legend_box_spacing: float = 0
     strip_text_y_width_right: float = 0
@@ -441,6 +511,17 @@ class right_spaces(_side_spaces):
         """
         return self.x2("legend")
 
+    @property
+    def tag_width(self):
+        """
+        The width of the tag including the margins
+        """
+        return (
+            self.plot_tag_margin_right
+            + self.plot_tag
+            + self.plot_tag_margin_left
+        )
+
 
 @dataclass
 class top_spaces(_side_spaces):
@@ -451,9 +532,11 @@ class top_spaces(_side_spaces):
     """
 
     plot_margin: float = 0
+    tag_alignment: float = 0
     plot_tag_margin_top: float = 0
     plot_tag: float = 0
     plot_tag_margin_bottom: float = 0
+    margin_alignment: float = 0
     plot_title_margin_top: float = 0
     plot_title: float = 0
     plot_title_margin_bottom: float = 0
@@ -557,6 +640,17 @@ class top_spaces(_side_spaces):
         """
         return self.y2("legend")
 
+    @property
+    def tag_height(self):
+        """
+        The height of the tag including the margins
+        """
+        return (
+            self.plot_tag_margin_top
+            + self.plot_tag
+            + self.plot_tag_margin_bottom
+        )
+
 
 @dataclass
 class bottom_spaces(_side_spaces):
@@ -567,9 +661,11 @@ class bottom_spaces(_side_spaces):
     """
 
     plot_margin: float = 0
+    tag_alignment: float = 0
     plot_tag_margin_bottom: float = 0
     plot_tag: float = 0
     plot_tag_margin_top: float = 0
+    margin_alignment: float = 0
     plot_caption_margin_bottom: float = 0
     plot_caption: float = 0
     plot_caption_margin_top: float = 0
@@ -682,6 +778,17 @@ class bottom_spaces(_side_spaces):
         """
         return self.y1("legend")
 
+    @property
+    def tag_height(self):
+        """
+        The height of the tag including the margins
+        """
+        return (
+            self.plot_tag_margin_bottom
+            + self.plot_tag
+            + self.plot_tag_margin_top
+        )
+
 
 @dataclass
 class LayoutSpaces:
@@ -793,6 +900,50 @@ class LayoutSpaces:
         Height [figure dimensions] of panels
         """
         return self.t.top - self.b.bottom
+
+    @property
+    def tag_width(self) -> float:
+        """
+        Width [figure dimensions] of space taken up by the tag
+        """
+        # Atleast one of these is zero
+        return max(self.l.tag_width, self.r.tag_width)
+
+    @property
+    def tag_height(self) -> float:
+        """
+        Height [figure dimensions] of space taken up by the tag
+        """
+        # Atleast one of these is zero
+        return max(self.t.tag_height, self.b.tag_height)
+
+    @property
+    def left_tag_width(self) -> float:
+        """
+        Width [figure dimensions] of space taken up by a left tag
+        """
+        return self.l.tag_width
+
+    @property
+    def right_tag_width(self) -> float:
+        """
+        Width [figure dimensions] of space taken up by a right tag
+        """
+        return self.r.tag_width
+
+    @property
+    def top_tag_height(self) -> float:
+        """
+        Width [figure dimensions] of space taken up by a top tag
+        """
+        return self.t.tag_height
+
+    @property
+    def bottom_tag_height(self) -> float:
+        """
+        Height [figure dimensions] of space taken up by a bottom tag
+        """
+        return self.b.tag_height
 
     def increase_horizontal_plot_margin(self, dw: float):
         """

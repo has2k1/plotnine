@@ -830,7 +830,10 @@ def set_plot_tag_position(tag: Text, spaces: LayoutSpaces):
 
 def set_plot_tag_position_in_margin(tag: Text, spaces: LayoutSpaces):
     """
-    Place the tag in the margin around the plot
+    Place the tag in an inner margin around the plot
+
+    The panel_margin remains outside the tag. For compositions, the
+    tag is placed and within the tag_alignment space.
     """
     position: TagPosition = spaces.plot.theme.getp("plot_tag_position")
     if not isinstance(position, str):
@@ -840,18 +843,34 @@ def set_plot_tag_position_in_margin(tag: Text, spaces: LayoutSpaces):
         )
 
     tag.set_position(spaces.to_figure_space((0.5, 0.5)))
-    if "top" in position:
-        tag.set_y(spaces.t.y2("plot_tag"))
-        tag.set_verticalalignment("top")
-    if "bottom" in position:
-        tag.set_y(spaces.b.y1("plot_tag"))
-        tag.set_verticalalignment("bottom")
-    if "left" in position:
-        tag.set_x(spaces.l.x1("plot_tag"))
+    ha = spaces.plot.theme.get_ha("plot_tag")
+    va = spaces.plot.theme.get_va("plot_tag")
+    if "left" in position:  # left, topleft, bottomleft
+        space = spaces.l.tag_alignment
+        x = spaces.l.x1("plot_tag") - (1 - ha) * space
+        tag.set_x(x)
         tag.set_horizontalalignment("left")
-    if "right" in position:
-        tag.set_x(spaces.r.x2("plot_tag"))
-        tag.set_horizontalalignment("right")
+    if "right" in position:  # right, topright, bottomright
+        space = spaces.r.tag_alignment
+        x = spaces.r.x1("plot_tag") + ha * space
+        tag.set_x(x)
+        tag.set_horizontalalignment("left")
+    if "bottom" in position:  # bottom, bottomleft, bottomright
+        space = spaces.b.tag_alignment
+        y = spaces.b.y1("plot_tag") + (1 - va) * space
+        tag.set_y(y)
+        tag.set_verticalalignment("bottom")
+    if "top" in position:  # top, topleft, topright
+        space = spaces.t.tag_alignment
+        y = spaces.t.y1("plot_tag") + va * space
+        tag.set_y(y)
+        tag.set_verticalalignment("bottom")
+
+    justify = TextJustifier(spaces)
+    if position in ("left", "right"):
+        justify.vertically_along_plot(tag, va)
+    elif position in ("top", "bottom"):
+        justify.horizontally_across_plot(tag, ha)
 
 
 def _plot_tag_margin_adjustment(
