@@ -377,6 +377,36 @@ class Themeables(dict[str, themeable]):
 
         return default
 
+    def get_ha(self, name: str) -> float:
+        """
+        Get the horizontal alignement of themeable as a float
+
+        The themeable should be and element_text
+        """
+        lookup = {"left": 0.0, "center": 0.5, "right": 1.0}
+        ha: str | float = self.getp((name, "ha"), "center")
+        if isinstance(ha, str):
+            ha = lookup[ha]
+        return ha
+
+    def get_va(self, name) -> float:
+        """
+        Get the vertical alignement of themeable as a float
+
+        The themeable should be and element_text
+        """
+        lookup = {
+            "bottom": 0.0,
+            "center": 0.5,
+            "baseline": 0.5,
+            "center_baseline": 0.5,
+            "top": 1.0,
+        }
+        va: str | float = self.getp((name, "va"), "center")
+        if isinstance(va, str):
+            va = lookup[va]
+        return va
+
     def property(self, name: str, key: str = "value") -> Any:
         """
         Get the value a specific themeable(s) property
@@ -729,18 +759,29 @@ class plot_tag(themeable):
 
     Notes
     -----
-    The `ha` & `va` of element_text will only have an effect if the
-    have no effect if the
-    [](:class:`~plotnine.themes.themeable.plot_tag_position`)
-    is given as x-y coordinates.
+    The `ha` & `va` of element_text have no effect in some cases. e.g.
+    if [](:class:`~plotnine.themes.themeable.plot_tag_position`) is "margin"
+    and the tag is at the top it cannot be vertically aligned.
+
+    Also `ha` & `va` can be floats if it makes sense to justify the tag
+    over a span. e.g. along the panel or plot, or when aligning with
+    other tags in a composition.
     """
 
     _omit = ["margin"]
 
     def apply_figure(self, figure: Figure, targets: ThemeTargets):
         super().apply_figure(figure, targets)
+        props = self.properties
+
+        if "va" in props and not isinstance(props["va"], str):
+            del props["va"]
+
+        if "ha" in props and not isinstance(props["ha"], str):
+            del props["ha"]
+
         if text := targets.plot_tag:
-            text.set(**self.properties)
+            text.set(**props)
 
     def blank_figure(self, figure: Figure, targets: ThemeTargets):
         super().blank_figure(figure, targets)

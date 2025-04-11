@@ -276,6 +276,14 @@ class theme:
         """
         return self.themeables.getp((name, "margin"))
 
+    @cached_property
+    def get_ha(self):
+        return self.themeables.get_ha
+
+    @cached_property
+    def get_va(self):
+        return self.themeables.get_va
+
     def apply(self):
         """
         Apply this theme, then apply additional modifications in order.
