@@ -41,7 +41,7 @@ class Compose:
         self.plotspecs: list[plotspec]
         self.gridspec: p9GridSpec
 
-    def __add__(self, rhs: ggplot | Compose) -> Compose:
+    def __add__(self, rhs: ggplot | Compose | PlotAddable) -> Compose:
         """
         Add rhs to the composition
 
@@ -50,6 +50,12 @@ class Compose:
         rhs:
             What to add to the composition
         """
+        from plotnine import ggplot
+
+        if not isinstance(rhs, (ggplot, Compose)):
+            cmp = deepcopy(self)
+            cmp.last_plot = cmp.last_plot + rhs
+            return cmp
         return self.__class__([*self, rhs])
 
     def __sub__(self, rhs: ggplot | Compose) -> Compose:
@@ -135,7 +141,7 @@ class Compose:
         return 0
 
     @property
-    def last_plot(self):
+    def last_plot(self) -> ggplot:
         """
         Last plot added to the composition
         """
@@ -146,6 +152,19 @@ class Compose:
             return last_operand
         else:
             return last_operand.last_plot
+
+    @last_plot.setter
+    def last_plot(self, plot: ggplot):
+        """
+        Replace the last plot in the composition
+        """
+        from plotnine import ggplot
+
+        last_operand = self.operands[-1]
+        if isinstance(last_operand, ggplot):
+            self.operands[-1] = plot
+        else:
+            last_operand.last_plot = plot
 
     def __deepcopy__(self, memo):
         """
@@ -410,12 +429,6 @@ class ADD(Compose):
         from plotnine.facets.facet_wrap import wrap_dims
 
         return wrap_dims(len(self))[1]
-
-    def __add__(self, rhs: ggplot | Compose) -> Compose:
-        """
-        Add rhs to the Composed group
-        """
-        return ADD([*self, rhs])
 
     def __or__(self, rhs: ggplot | Compose) -> Compose:
         """
