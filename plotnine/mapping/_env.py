@@ -122,7 +122,7 @@ class Environment:
     def __hash__(self):
         return hash((Environment, tuple(self._namespace_ids())))
 
-    def __getstate__(*args, **kwargs):
+    def __getstate__(self):
         """
         Return state with no namespaces
         """
@@ -198,7 +198,7 @@ class StackedLookup(MutableMapping):
     def __repr__(self):
         return f"{self.__class__.__name__}({self.stack})"
 
-    def __getstate__(*args, **kwargs):
+    def __getstate__(self):
         """
         Return state with no namespace
         """
