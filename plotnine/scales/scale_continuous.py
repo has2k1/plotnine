@@ -520,11 +520,12 @@ class scale_continuous(
             # When user sets breaks and labels of equal size,
             # but the limits exclude some of the breaks.
             # We remove the corresponding labels
-            from collections.abc import Sized
+            from collections.abc import Iterable, Sized
 
             labels = self.labels
             if (
                 len(labels) != len(breaks)
+                and isinstance(self.breaks, Iterable)
                 and isinstance(self.breaks, Sized)
                 and len(labels) == len(self.breaks)
             ):
