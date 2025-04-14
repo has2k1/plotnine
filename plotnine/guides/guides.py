@@ -104,7 +104,7 @@ class guides:
             raise ValueError("Got a guide for color and colour, choose one.")
         rename_aesthetics(self)
 
-    def __radd__(self, plot: ggplot):
+    def __radd__(self, other: ggplot):
         """
         Add guides to the plot
 
@@ -120,9 +120,9 @@ class guides:
         """
         for f in fields(self):
             if (g := getattr(self, f.name)) is not None:
-                setattr(plot.guides, f.name, g)
+                setattr(other.guides, f.name, g)
 
-        return plot
+        return other
 
     def _build(self) -> Sequence[guide]:
         """

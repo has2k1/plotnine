@@ -130,13 +130,13 @@ class facet:
             "y": scales in ("free_y", "free"),
         }
 
-    def __radd__(self, plot: ggplot) -> ggplot:
+    def __radd__(self, other: ggplot) -> ggplot:
         """
         Add facet to ggplot object
         """
-        plot.facet = copy(self)
-        plot.facet.environment = plot.environment
-        return plot
+        other.facet = copy(self)
+        other.facet.environment = other.environment
+        return other
 
     def setup(self, plot: ggplot):
         self.plot = plot

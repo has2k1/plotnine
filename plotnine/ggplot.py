@@ -64,7 +64,7 @@ if TYPE_CHECKING:
         Object that can be added to a ggplot object
         """
 
-        def __radd__(self, plot: ggplot) -> ggplot:
+        def __radd__(self, other: ggplot) -> ggplot:
             """
             Add to ggplot object
 

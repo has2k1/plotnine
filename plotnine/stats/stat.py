@@ -392,7 +392,7 @@ class stat(ABC, metaclass=Register):
         msg = "{} should implement this method."
         raise NotImplementedError(msg.format(cls.__name__))
 
-    def __radd__(self, plot: ggplot) -> ggplot:
+    def __radd__(self, other: ggplot) -> ggplot:
         """
         Add layer representing stat object on the right
 
@@ -406,8 +406,8 @@ class stat(ABC, metaclass=Register):
         out :
             ggplot object with added layer
         """
-        plot += self.to_layer()  # Add layer
-        return plot
+        other += self.to_layer()  # Add layer
+        return other
 
     def to_layer(self) -> layer:
         """

@@ -148,12 +148,12 @@ class scale(
             self.aesthetics if self.aesthetics else self._aesthetics
         )
 
-    def __radd__(self, plot):
+    def __radd__(self, other):
         """
         Add this scale to ggplot object
         """
-        plot.scales.append(copy(self))
-        return plot
+        other.scales.append(copy(self))
+        return other
 
     def map(self, x, limits=None):
         """

@@ -103,12 +103,12 @@ class labs:
         }
         self.labels = labels_view(**rename_aesthetics(kwargs))
 
-    def __radd__(self, plot: p9.ggplot) -> p9.ggplot:
+    def __radd__(self, other: p9.ggplot) -> p9.ggplot:
         """
         Add labels to ggplot object
         """
-        plot.labels.update(self.labels)
-        return plot
+        other.labels.update(self.labels)
+        return other
 
 
 class xlab(labs):
