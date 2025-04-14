@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import abc
 from copy import deepcopy
 from dataclasses import dataclass
 from io import BytesIO
@@ -40,6 +41,18 @@ class Compose:
         self.figure: Figure
         self.plotspecs: list[plotspec]
         self.gridspec: p9GridSpec
+
+    @abc.abstractmethod
+    def __or__(self, rhs: ggplot | Compose) -> Compose:
+        """
+        Add rhs as a column
+        """
+
+    @abc.abstractmethod
+    def __truediv__(self, rhs: ggplot | Compose) -> Compose:
+        """
+        Add rhs as a row
+        """
 
     def __add__(self, rhs: ggplot | Compose | PlotAddable) -> Compose:
         """
@@ -374,7 +387,7 @@ class OR(Compose):
         """
         Add rhs as a column
         """
-        # This is an adjacent or i.e. (OR | rhs) so we collapse the
+        # This is adjacent or i.e. (OR | rhs) so we collapse the
         # operands into a single operation
         return OR([*self, rhs])
 
