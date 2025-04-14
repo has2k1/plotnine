@@ -131,12 +131,12 @@ class annotate:
             **kwargs,
         )
 
-    def __radd__(self, plot: ggplot) -> ggplot:
+    def __radd__(self, other: ggplot) -> ggplot:
         """
         Add to ggplot
         """
-        plot += self.to_layer()  # Add layer
-        return plot
+        other += self.to_layer()  # Add layer
+        return other
 
     def to_layer(self) -> layer:
         """

@@ -125,16 +125,16 @@ class layer:
                 lkwargs[param] = geom.DEFAULT_PARAMS[param]
         return layer(**lkwargs)
 
-    def __radd__(self, plot: ggplot) -> ggplot:
+    def __radd__(self, other: ggplot) -> ggplot:
         """
         Add layer to ggplot object
         """
         try:
-            plot.layers.append(self)
+            other.layers.append(self)
         except AttributeError as e:
-            msg = f"Cannot add layer to object of type {type(plot)!r}"
+            msg = f"Cannot add layer to object of type {type(other)!r}"
             raise PlotnineError(msg) from e
-        return plot
+        return other
 
     def __deepcopy__(self, memo: dict[Any, Any]) -> layer:
         """

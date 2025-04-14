@@ -78,10 +78,10 @@ class _lim:
             self.aesthetic, series, limits=self.limits, trans=self.trans
         )
 
-    def __radd__(self, plot):
-        scale = self.get_scale(plot)
-        plot.scales.append(scale)
-        return plot
+    def __radd__(self, other):
+        scale = self.get_scale(other)
+        other.scales.append(scale)
+        return other
 
 
 class xlim(_lim):
@@ -194,7 +194,7 @@ class lims:
     def __init__(self, **kwargs):
         self._kwargs = kwargs
 
-    def __radd__(self, plot):
+    def __radd__(self, other):
         """
         Add limits to ggplot object
         """
@@ -206,9 +206,9 @@ class lims:
                 msg = "Cannot change limits for '{}'"
                 raise PlotnineError(msg) from e
 
-            plot += klass(value)
+            other += klass(value)
 
-        return plot
+        return other
 
 
 def expand_limits(**kwargs):
