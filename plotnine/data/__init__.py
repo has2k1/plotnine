@@ -8,6 +8,7 @@ import pandas as pd
 from pandas.api.types import CategoricalDtype
 
 __all__ = (
+    "anscombe_quartet",
     "diamonds",
     "economics",
     "economics_long",
@@ -42,6 +43,7 @@ penguins = pd.read_csv(DATA_DIR / "penguins.csv")
 luv_colours = pd.read_csv(DATA_DIR / "luv_colours.csv")
 faithfuld = pd.read_csv(DATA_DIR / "faithfuld.csv")
 faithful = pd.read_csv(DATA_DIR / "faithful.csv")
+anscombe_quartet = pd.read_csv(DATA_DIR / "anscombe-quartet.csv")
 
 # For convenience to the user, we set some columns in these
 # dataframes to categoricals.
@@ -617,4 +619,33 @@ A data frame with 83 rows and 11 variables
 
 Additional variables order, conservation status and
 vore were added from wikipedia.
+"""
+
+anscombe_quartet.__doc__ = """
+Anscombe's Quartet
+
+## Description
+
+A dataset by Statistician Francis Anscombe that challenged the commonly held
+belief that "numerical calculations are exact, but graphs are rough"
+(Anscombe, 1973). 
+
+It comprises of 4 (the quartet!) small sub-datasets, each with 11 points that
+have different distributions but nearly identical descriptive statistics.
+It is perhaps the best argument for visualising data.
+
+## Format
+
+A dataframe with 44 rows and 3 variables
+
+| Column       | Description                           |
+|--------------|---------------------------------------|
+| dataset      | The Dataset                           |
+| x            | x                                     |
+| y            | y                                     |
+
+## References
+
+Anscombe, F. J. (1973). "Graphs in Statistical Analysis".
+American Statistician. 27 (1): 17–21.
 """
