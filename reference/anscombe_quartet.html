@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>geom_dotplot – plotnine {{&lt; var version &gt;}}</title>
+<title>anscombe_quartet – plotnine {{&lt; var version &gt;}}</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,41 +19,6 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
-}
-/* CSS for syntax highlighting */
-html { -webkit-text-size-adjust: 100%; }
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -151,9 +116,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#plotnine.geom_dotplot" id="toc-plotnine.geom_dotplot" class="nav-link active" data-scroll-target="#plotnine.geom_dotplot"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.geom_dotplot</span></a></li>
-  <li><a href="#parameters" id="toc-parameters" class="nav-link" data-scroll-target="#parameters">Parameters</a></li>
-  <li><a href="#see-also" id="toc-see-also" class="nav-link" data-scroll-target="#see-also">See Also</a></li>
+  <li><a href="#plotnine.data.anscombe_quartet" id="toc-plotnine.data.anscombe_quartet" class="nav-link active" data-scroll-target="#plotnine.data.anscombe_quartet"><code class="doc-symbol doc-symbol-attribute"></code> <span class="doc-object-name doc-attribute-name">plotnine.data.anscombe_quartet</span></a></li>
   </ul>
 </nav>
     </div>
@@ -164,140 +127,53 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <header id="title-block-header" class="quarto-title-block default">
-<section id="plotnine.geom_dotplot" class="level1 title doc-object doc-class doc-has-member-docs quarto-title display-7">
-<h1 class="title doc-object doc-class doc-has-member-docs"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.geom_dotplot</span></h1>
+<section id="plotnine.data.anscombe_quartet" class="level1 title doc-object doc-attribute quarto-title display-7">
+<h1 class="title doc-object doc-attribute"><code class="doc-symbol doc-symbol-attribute"></code> <span class="doc-object-name doc-attribute-name">plotnine.data.anscombe_quartet</span></h1>
 </section>
 </header>
-<div class="doc-signature doc-class">
-<div class="sourceCode" id="cb1"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>geom_dotplot(</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    mapping<span class="op">=</span><span class="va">None</span>,</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span><span class="va">None</span>,</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span>,</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    stat<span class="op">=</span><span class="st">"bindot"</span>,</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    position<span class="op">=</span><span class="st">"identity"</span>,</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    na_rm<span class="op">=</span><span class="va">False</span>,</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    inherit_aes<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    show_legend<span class="op">=</span><span class="va">None</span>,</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    raster<span class="op">=</span><span class="va">False</span>,</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    stackdir<span class="op">=</span><span class="st">"up"</span>,</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    stackratio<span class="op">=</span><span class="dv">1</span>,</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    dotsize<span class="op">=</span><span class="dv">1</span>,</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    stackgroups<span class="op">=</span><span class="va">False</span>,</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    <span class="op">**</span>kwargs</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="doc-signature doc-attribute">
+<p><code><span class="doc-parameter-name">anscombe_quartet</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">pd.read_csv(DATA_DIR / <span class="st">"anscombe-quartet.csv"</span>)</span></code></p>
 </div>
 <div class="doc-text">
-<p>Dot plot</p>
-</div>
-<section id="parameters" class="level2 doc-parameters">
-<h2 class="doc-parameters anchored" data-anchor-id="parameters">Parameters</h2>
-<div class="doc-definition-items">
-<dl>
-<dt><code><span class="doc-parameter-name">mapping</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">aes</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
-<dd>
-<p>Aesthetic mappings created with aes. If specified and <code class="sourceCode python">inherit_aes<span class="op">=</span><span class="va">True</span></code>, it is combined with the default mapping for the plot. You must supply mapping if there is no plot mapping.</p>
+<p>Anscombe’s Quartet</p>
+<section id="description" class="level2">
+<h2 class="anchored" data-anchor-id="description">Description</h2>
+<p>A dataset by Statistician Francis Anscombe that challenged the commonly held belief that “numerical calculations are exact, but graphs are rough” (Anscombe, 1973).</p>
+<p>It comprises of 4 (the quartet!) small sub-datasets, each with 11 points that have different distributions but nearly identical descriptive statistics. It is perhaps the best argument for visualising data.</p>
+</section>
+<section id="format" class="level2">
+<h2 class="anchored" data-anchor-id="format">Format</h2>
+<p>A dataframe with 44 rows and 3 variables</p>
 <table class="caption-top table">
-<colgroup>
-<col style="width: 19%">
-<col style="width: 25%">
-</colgroup>
 <thead>
 <tr class="header">
-<th>Aesthetic</th>
-<th>Default value</th>
+<th>Column</th>
+<th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td><strong>x</strong></td>
-<td></td>
+<td>dataset</td>
+<td>The Dataset</td>
 </tr>
 <tr class="even">
-<td><strong>y</strong></td>
-<td></td>
+<td>x</td>
+<td>x</td>
 </tr>
 <tr class="odd">
-<td>alpha</td>
-<td><code class="sourceCode python"><span class="dv">1</span></code></td>
-</tr>
-<tr class="even">
-<td>color</td>
-<td><code class="sourceCode python"><span class="co">'black'</span></code></td>
-</tr>
-<tr class="odd">
-<td>fill</td>
-<td><code class="sourceCode python"><span class="co">'black'</span></code></td>
-</tr>
-<tr class="even">
-<td>group</td>
-<td></td>
+<td>y</td>
+<td>y</td>
 </tr>
 </tbody>
 </table>
-<p>The <strong>bold</strong> aesthetics are required.</p>
-</dd>
-<dt><code><span class="doc-parameter-name">data</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
-<dd>
-<p>The data to be displayed in this layer. If <code class="sourceCode python"><span class="va">None</span></code>, the data from from the <code class="sourceCode python">ggplot()</code> call is used. If specified, it overrides the data from the <code class="sourceCode python">ggplot()</code> call.</p>
-</dd>
-<dt><code><span class="doc-parameter-name">stat</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> | <a href="../reference/stat.html#plotnine.stats.stat.stat">stat</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default"><span class="st">"bindot"</span></span></code></dt>
-<dd>
-<p>The statistical transformation to use on the data for this layer. If it is a string, it must be the registered and known to Plotnine.</p>
-</dd>
-<dt><code><span class="doc-parameter-name">position</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> | <a href="../reference/position.html#plotnine.positions.position.position">position</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default"><span class="st">"identity"</span></span></code></dt>
-<dd>
-<p>Position adjustment. If it is a string, it must be registered and known to Plotnine.</p>
-</dd>
-<dt><code><span class="doc-parameter-name">na_rm</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#bool">bool</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">False</span></code></dt>
-<dd>
-<p>If <code class="sourceCode python"><span class="va">False</span></code>, removes missing values with a warning. If <code class="sourceCode python"><span class="va">True</span></code> silently removes missing values.</p>
-</dd>
-<dt><code><span class="doc-parameter-name">inherit_aes</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#bool">bool</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">True</span></code></dt>
-<dd>
-<p>If <code class="sourceCode python"><span class="va">False</span></code>, overrides the default aesthetics.</p>
-</dd>
-<dt><code><span class="doc-parameter-name">show_legend</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#bool">bool</a> | <a href="https://docs.python.org/3/library/stdtypes.html#dict">dict</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
-<dd>
-<p>Whether this layer should be included in the legends. <code class="sourceCode python"><span class="va">None</span></code> the default, includes any aesthetics that are mapped. If a <a href="https://docs.python.org/3/library/functions.html#bool"><code>bool</code></a>, <code class="sourceCode python"><span class="va">False</span></code> never includes and <code class="sourceCode python"><span class="va">True</span></code> always includes. A <a href="https://docs.python.org/3/library/stdtypes.html#dict"><code>dict</code></a> can be used to <em>exclude</em> specific aesthetis of the layer from showing in the legend. e.g <code class="sourceCode python">show_legend<span class="op">=</span>{<span class="st">'color'</span>: <span class="va">False</span>}</code>, any other aesthetic are included by default.</p>
-</dd>
-<dt><code><span class="doc-parameter-name">raster</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#bool">bool</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">False</span></code></dt>
-<dd>
-<p>If <code>True</code>, draw onto this layer a raster (bitmap) object even ifthe final image is in vector format.</p>
-</dd>
-<dt><code><span class="doc-parameter-name">stackdir</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">Literal[<span class="st">"up"</span>, <span class="st">"down"</span>, <span class="st">"center"</span>, <span class="st">"centerwhole"</span>]</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default"><span class="st">"up"</span></span></code></dt>
-<dd>
-<p>Direction in which to stack the dots. Options are</p>
-</dd>
-<dt><code><span class="doc-parameter-name">stackratio</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#float">float</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">1</span></code></dt>
-<dd>
-<p>How close to stack the dots. If value is less than 1, the dots overlap, if greater than 1 they are spaced.</p>
-</dd>
-<dt><code><span class="doc-parameter-name">dotsize</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#float">float</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">1</span></code></dt>
-<dd>
-<p>Diameter of dots relative to <code>binwidth</code>.</p>
-</dd>
-<dt><code><span class="doc-parameter-name">stackgroups</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#bool">bool</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">False</span></code></dt>
-<dd>
-<p>If <code class="sourceCode python"><span class="va">True</span></code>, the dots are stacked across groups.</p>
-</dd>
-<dt><code><span class="doc-parameter-name">**kwargs</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/typing.html#typing.Any">Any</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">{}</span></code></dt>
-<dd>
-<p>Aesthetics or parameters used by the <code>stat</code>.</p>
-</dd>
-</dl>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<p>Anscombe, F. J. (1973). “Graphs in Statistical Analysis”. American Statistician. 27 (1): 17–21.</p>
+</section>
 </div>
-</section>
-<section id="see-also" class="level2 doc-see-also">
-<h2 class="doc-see-also anchored" data-anchor-id="see-also">See Also</h2>
-<dl>
-<dt><a href="../reference/stat_bindot.html#plotnine.stat_bindot"><code>stat_bindot</code></a></dt>
-<dd>
-
-</dd>
-</dl>
 
 
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
