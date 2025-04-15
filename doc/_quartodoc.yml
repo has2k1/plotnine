@@ -568,6 +568,7 @@ quartodoc:
         from the `plotnine.data` sub-package.
       package: plotnine.data
       contents:
+        - anscombe_quartet
         - diamonds
         - economics
         - economics_long
