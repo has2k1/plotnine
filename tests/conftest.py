@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 from matplotlib.testing.compare import compare_images
 
 from plotnine import ggplot, theme
+from plotnine.plot_composition import Compose
 from plotnine.themes.theme import DEFAULT_RCPARAMS
 
 TOLERANCE = 2  # Default tolerance for the tests
@@ -232,3 +233,42 @@ def layer_data(p, i=0):
     p = deepcopy(p)
     p._build()
     return p.layers.data[i]
+
+
+def composition_equals(cmp: Compose, name: str) -> bool:
+    """
+    Compare plot composition to image determined by `right`
+
+    Parameters
+    ----------
+    cmp :
+        Plot Composition
+    name :
+        Identifier for the test image
+
+    This function is meant to monkey patch Compose.__eq__
+    so that tests can use the `assert` statement.
+    """
+    test_file = inspect.stack()[1][1]
+    filenames = make_test_image_filenames(name, test_file)
+
+    cmp = cmp + theme(dpi=DPI)
+
+    with _test_cleanup():
+        cmp.save(filenames.result)
+
+    if filenames.baseline.exists():
+        shutil.copyfile(filenames.baseline, filenames.expected)
+    else:
+        # Putting the exception in short function makes for
+        #  short pytest error messages
+        raise_no_baseline_image(filenames.baseline)
+    err = compare_images(
+        filenames.expected, filenames.result, TOLERANCE, in_decorator=True
+    )
+    # For the pytest error message
+    cmp._err = err  # pyright: ignore[reportAttributeAccessIssue]
+    return not err
+
+
+Compose.__eq__ = composition_equals  # pyright: ignore[reportAttributeAccessIssue]
