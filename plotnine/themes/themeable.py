@@ -1508,8 +1508,13 @@ class legend_key(MixinSequenceOfValues):
     def apply_figure(self, figure: Figure, targets: ThemeTargets):
         super().apply_figure(figure, targets)
         properties = self.properties
+        edgecolor = properties.get("edgecolor", None)
+
+        if isinstance(self, rect) and edgecolor:
+            del properties["edgecolor"]
+
         # Prevent invisible strokes from having any effect
-        if properties.get("edgecolor") in ("none", "None"):
+        if edgecolor in ("none", "None"):
             properties["linewidth"] = 0
 
         rects = [da.patch for da in targets.legend_key]
@@ -1593,7 +1598,7 @@ class legend_box_background(themeable):
     """
 
 
-class panel_background(themeable):
+class panel_background(legend_key):
     """
     Panel background
 
@@ -1601,6 +1606,9 @@ class panel_background(themeable):
     ----------
     theme_element : element_rect
     """
+
+    def apply_figure(self, figure: Figure, targets: ThemeTargets):
+        super().apply_figure(figure, targets)
 
     def apply_ax(self, ax: Axes):
         super().apply_ax(ax)
@@ -1723,7 +1731,6 @@ class strip_background(strip_background_x, strip_background_y):
 
 
 class rect(
-    legend_key,
     legend_frame,
     legend_background,
     panel_background,

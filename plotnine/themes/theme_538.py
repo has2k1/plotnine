@@ -23,7 +23,6 @@ class theme_538(theme_gray):
             axis_ticks=element_blank(),
             title=element_text(color="#3C3C3C"),
             legend_background=element_rect(fill="none"),
-            legend_key=element_rect(fill="#E0E0E0"),
             panel_background=element_rect(fill=bgcolor),
             panel_border=element_blank(),
             panel_grid_major=element_line(color="#D5D5D5"),

@@ -81,7 +81,6 @@ class theme_gray(theme):
             legend_frame=element_blank(),
             legend_key_spacing_x=6,
             legend_key_spacing_y=2,
-            legend_key=element_rect(fill="#F2F2F2", colour="none"),
             legend_key_size=base_size * 0.8 * 1.8,
             legend_ticks_length=0.2,
             legend_margin=0,  # points
@@ -95,7 +94,7 @@ class theme_gray(theme):
             legend_title=element_text(
                 margin=margin(t=m, l=m * 2, b=m / 2, r=m * 2, unit="fig")
             ),
-            panel_background=element_rect(fill="#EBEBEB"),
+            panel_background=element_rect(fill="#EBEBEB", color="none"),
             panel_border=element_blank(),
             panel_grid_major=element_line(color="white", size=1),
             panel_grid_minor=element_line(color="white", size=0.5),

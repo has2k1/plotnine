@@ -84,6 +84,11 @@ title: Changelog
   normal area, they now overlap with those closest to the origin on top. This makes it possible
   to create overlapping ridge plots using half violins.
 
+- [](:class:`~plotnine.themes.themeable.legend_key`) now inherits from 
+  [](:class:`~plotnine.themes.themeable.panel_background`) and the default themes have been
+  adjusted to rely on this inheritance. So when using the default themes, altering `fill`
+  parameter of the `panel_background` will also affect the background of the `legend_key`.
+
 ### Bug Fixes
 
 - Fixed bug in with the `legend_key_height` themeable where it wasn't applied.
