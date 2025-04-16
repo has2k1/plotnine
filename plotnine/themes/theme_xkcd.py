@@ -50,7 +50,6 @@ class theme_xkcd(theme_gray):
             legend_background=element_rect(color="black"),
             legend_box_margin=2,
             legend_margin=5,
-            legend_key=element_rect(fill="none"),
             panel_border=element_rect(color="black", size=1),
             panel_grid=element_blank(),
             panel_background=element_rect(fill="white"),

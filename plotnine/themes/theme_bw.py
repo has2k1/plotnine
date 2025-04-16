@@ -20,7 +20,6 @@ class theme_bw(theme_gray):
         super().__init__(base_size, base_family)
         self += theme(
             axis_text=element_text(size=0.8 * base_size),
-            legend_key=element_rect(fill="none", color="#CCCCCC"),
             panel_background=element_rect(fill="white"),
             panel_border=element_rect(fill="none", color="#7f7f7f"),
             panel_grid_major=element_line(color="#E5E5E5"),

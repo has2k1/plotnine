@@ -24,7 +24,6 @@ class theme_dark(theme_gray):
         self += theme(
             axis_ticks=element_line(color="#666666", size=0.5),
             axis_ticks_minor=element_blank(),
-            legend_key=element_rect(fill="#7F7F7F", color="#666666", size=0.5),
             panel_background=element_rect(fill="#7F7F7F", color="none"),
             panel_grid_major=element_line(color="#666666", size=0.5),
             panel_grid_minor=element_line(color="#737373", size=0.25),
