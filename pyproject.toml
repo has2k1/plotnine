@@ -51,7 +51,6 @@ extra = [
 
 doc = [
     "jupyter",
-    "nbsphinx",
     "click",
     "numpydoc>=0.9.1",
     "quartodoc>=0.7.2",
