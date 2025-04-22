@@ -482,7 +482,7 @@ def _draw_segments(data: pd.DataFrame, ax: Axes, **params: Any):
     linestyle = data.loc[indices, "linetype"]
 
     coll = LineCollection(
-        segments,  # pyright: ignore[reportArgumentType]
+        segments,
         edgecolor=edgecolor,
         linewidth=linewidth,
         linestyle=linestyle,
