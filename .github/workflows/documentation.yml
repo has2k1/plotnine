@@ -27,20 +27,15 @@ jobs:
       - name: Decide Whether to Build and/or Release
         id: decide
         run: |
-          set -xe
-          CAN_DEPLOY=$(python ../utils/please.py can_i_deploy_documentation)
-          DEPLOY_TO=$(python ../utils/please.py where_can_i_deploy_documentation)
-          # The message string is directly substituted in before the command is run.
-          # We use a HereDoc to avoid quotation issues if the message has quotes as well.
-          TITLE=$(cat <<EOF | head -n 1
-          $HEAD_COMMIT_MESSAGE
-          EOF
-          )
+          python ../utils/please.py set_deploy_to
+          python ../utils/please.py set_commit_title
 
-          echo "can_deploy=$CAN_DEPLOY" >> $GITHUB_OUTPUT
-          echo "deploy_to=$DEPLOY_TO" >> $GITHUB_OUTPUT
-          echo "commit_title='$TITLE'" >> $GITHUB_OUTPUT
           echo github.ref ${{ github.ref }}
+
+      - name: See outputs
+        run: |
+          echo 'set_deploy_to=${{ steps.decide.outputs.set_deploy_to }}'
+          echo 'set_commit_title=${{ steps.decide.outputs.set_commit_title }}'
 
   build-documentation:
     runs-on: ubuntu-latest
@@ -98,7 +93,7 @@ jobs:
 
       - name: Deploy to Documentation to a Branch
         uses: JamesIves/github-pages-deploy-action@v4
-        if: contains(needs.parse_commit_info.outputs.can_deploy, 'true')
+        if:  ${{ needs.parse_commit_info.outputs.deploy_to != '' }}
         with:
           folder: doc/_site
           branch: ${{ needs.parse_commit_info.outputs.deploy_to }}
