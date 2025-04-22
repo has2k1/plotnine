@@ -1,4 +1,6 @@
+import os
 import sys
+from pathlib import Path
 from typing import Callable, TypeAlias
 
 from _repo import Git
@@ -6,50 +8,77 @@ from _repo import Git
 Ask: TypeAlias = Callable[[], bool | str]
 Do: TypeAlias = Callable[[], str]
 
-
-def can_i_deploy_documentation() -> bool:
-    """
-    Return True if documentation should be deployed
-    """
-    return (
-        Git.is_release()
-        or Git.is_pre_release()
-        or Git.branch() in ("main", "dev")
-    )
+gh_output_file = os.environ.get("GITHUB_OUTPUT")
 
 
-def where_can_i_deploy_documentation() -> str:
+def set_deploy_to():
     """
-    Return branch to deploy documentation to
+    Write where to deploy to deploy_on in the GITHUB_OUTPUT env
     """
-    if Git.is_release():
-        return "website"
-    elif Git.is_dev_release() or Git.is_pre_release():
-        return "pre-website"
+    if not gh_output_file:
+        return
+
+    if Git.is_stable_release():
+        deploy_to = "website"
+    elif Git.is_pre_release():
+        deploy_to = "pre-website"
+    elif Git.branch() in {"main", "dev"}:
+        deploy_to = "gh-pages"
     else:
-        return "gh-pages"
+        deploy_to = ""
+
+    with Path(gh_output_file).open("a") as f:
+        print(f"deploy_to={deploy_to}", file=f)
 
 
-def process_request(arg: str) -> str:
-    if arg in REQUESTS:
-        result = REQUESTS.get(arg, lambda: False)()
-        if not isinstance(result, str):
-            result = str(result).lower()
+def set_publish_on():
+    """
+    Write index (pypi or testpypi) to publish_on in the GITHUB_OUTPUT env
+
+    i.e. Where to release
+    """
+    # Probably not on GHA
+    if not gh_output_file:
+        return
+
+    rtype = Git.release_type()
+
+    if rtype in {"stable", "alphabeta", "develoment"}:
+        publish_on = "pypi"
+    elif rtype == "candidate":
+        publish_on = "testpypi"
     else:
-        result = ACTIONS.get(arg, lambda: "")()
-    return result
+        publish_on = ""
+
+    with Path(gh_output_file).open("a") as f:
+        print(f"publish_on={publish_on}", file=f)
 
 
-REQUESTS: dict[str, Ask] = {
-    "can_i_deploy_documentation": can_i_deploy_documentation,
-    "where_can_i_deploy_documentation": where_can_i_deploy_documentation,
+def set_commit_title():
+    """
+    Write the commit title to commit_title in the GITHUB_OUTPUT env
+    """
+    if not gh_output_file:
+        return
+
+    with Path(gh_output_file).open("a") as f:
+        print(f"commit_title={Git.commit_title()}", file=f)
+
+
+def process_request(task_name: str) -> str | None:
+    if task_name in TASKS:
+        return TASKS[task_name]()
+
+
+TASKS: dict[str, Callable[[], str | None]] = {
+    "set_deploy_to": set_deploy_to,
+    "set_publish_on": set_publish_on,
+    "set_commit_title": set_commit_title,
 }
-
-
-ACTIONS: dict[str, Do] = {}
-
 
 if __name__ == "__main__":
     if len(sys.argv) == 2:
         arg = sys.argv[1]
-        print(process_request(arg))
+        output = process_request(arg)
+        if output:
+            print(output)

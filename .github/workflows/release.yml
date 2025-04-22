@@ -17,7 +17,6 @@ jobs:
     needs: [run-tests]
     runs-on: ubuntu-latest
     outputs:
-      tag_type: ${{ steps.check-tag.outputs.tag_type }}
       publish_on: ${{ steps.check-tag.outputs.publish_on }}
 
     strategy:
@@ -43,12 +42,11 @@ jobs:
 
       - name: Check for semantic version tag
         id: check-tag
-        run: python tools/gha_check_semver.py
+        run: python ../utils/please.py set_publish_on
 
       - name: See outputs
         shell: bash
         run: |
-          echo "tag_type="${{ steps.check-tag.outputs.tag_type }}
           echo "publish_on="${{ steps.check-tag.outputs.publish_on }}
 
   # Ref: https://github.com/pypa/gh-action-pypi-publish

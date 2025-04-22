@@ -5,7 +5,25 @@ import os
 import re
 import shlex
 from subprocess import PIPE, Popen
-from typing import Sequence
+from typing import Literal, Sequence, TypeAlias
+
+ReleaseType: TypeAlias = Literal[
+    "alpha",
+    "beta",
+    "candidate",
+    "development",
+    "stable",
+]
+
+pre_release_lookup: dict[str, ReleaseType] = {
+    "a": "alpha",
+    "alpha": "alpha",
+    "b": "beta",
+    "beta": "beta",
+    "rc": "candidate",
+    "dev": "development",
+    ".dev": "development",
+}
 
 # https://docs.github.com/en/actions/learn-github-actions/variables
 # #default-environment-variables
@@ -21,33 +39,31 @@ GITHUB_VARS = [
 
 
 count = r"(?:[0-9]|[1-9][0-9]+)"
-DESCRIBE_PATTERN = re.compile(
+DESCRIBE = re.compile(
     r"^v"
     rf"(?P<version>{count}\.{count}\.{count})"
-    rf"(?P<pre>(a|b|rc|alpha|beta){count})?"
+    rf"(?P<pre>(a|b|rc|alpha|beta|\.dev){count})?"
     r"(-(?P<commits>\d+)-g(?P<hash>[a-z0-9]+))?"
     r"(?P<dirty>-dirty)?"
     r"$"
 )
 
-# Define a releasable version to be valid according to PEP440
+# Define a stable release version to be valid according to PEP440
 # and is a semver
-RELEASE_TAG_PATTERN = re.compile(r"^v" rf"{count}\.{count}\.{count}" r"$")
+STABLE_TAG = re.compile(r"^v" rf"{count}\.{count}\.{count}" r"$")
 
 # Prerelease version
-PRE_RELEASE_TAG_PATTERN = re.compile(
+PRE_RELEASE_TAG = re.compile(
     r"^v"
     rf"{count}\.{count}\.{count}"
     r"(?:"
-    rf"(?:a|b|rc|alpha|beta|dev){count}"
+    rf"(?:a|b|rc|alpha|beta|\.dev){count}"
     r")"
     r"$"
 )
 
-# development version
-DEV_RELEASE_TAG_PATTERN = re.compile(
-    rf"^v{count}\.{count}\.{count}\.dev{count}$"
-)
+REF_NAME = os.environ.get("GITHUB_REF_NAME", "")
+REF_TYPE = os.environ.get("GITHUB_REF_TYPE", "")
 
 
 def run(cmd: str | Sequence[str]) -> str:
@@ -70,9 +86,9 @@ class Git:
         return res
 
     @staticmethod
-    def commit_subjects(n=1) -> list[str]:
+    def commit_titles(n=1) -> list[str]:
         """
-        Return a list n of commit subjects
+        Return a list n of commit titles
         """
         output = run(
             f"git log --oneline --no-merges --pretty='format:%s' -{n}"
@@ -93,16 +109,16 @@ class Git:
         return output.split(sep)[:n]
 
     @staticmethod
-    def commit_subject() -> str:
+    def commit_title() -> str:
         """
         Commit subject
         """
-        return Git.commit_subjects(1)[0]
+        return Git.commit_titles(1)[0]
 
     @staticmethod
     def commit_message() -> str:
         """
-        Commit message
+        Commit title
         """
         return Git.commit_messages(1)[0]
 
@@ -148,7 +164,7 @@ class Git:
         """
         Return True if repo can be "described" from a semver tag
         """
-        return bool(DESCRIBE_PATTERN.match(Git.describe()))
+        return bool(DESCRIBE.match(Git.describe()))
 
     @staticmethod
     def get_tag_at_commit(committish: str) -> str:
@@ -183,37 +199,32 @@ class Git:
         return run(f"git clone {_depth} {_branch} {url} .")
 
     @staticmethod
-    def is_release():
+    def is_stable_release():
         """
-        Return True if event is a release
+        Return True if event is a stable release
         """
-        ref = os.environ.get("GITHUB_REF_NAME", "")
-        ref_type = os.environ.get("GITHUB_REF_TYPE", "")
-        return ref_type == "tag" and bool(RELEASE_TAG_PATTERN.match(ref))
+        return REF_TYPE == "tag" and bool(STABLE_TAG.match(REF_NAME))
 
     @staticmethod
     def is_pre_release():
         """
-        Return True if event is a release
+        Return True if event is any kind of pre-release
         """
-        ref = os.environ.get("GITHUB_REF_NAME", "")
-        ref_type = os.environ.get("GITHUB_REF_TYPE", "")
-        return ref_type == "tag" and bool(PRE_RELEASE_TAG_PATTERN.match(ref))
+        return REF_TYPE == "tag" and bool(PRE_RELEASE_TAG.match(REF_NAME))
 
     @staticmethod
-    def is_dev_release():
-        """
-        Return True if event is a release
-        """
-        ref = os.environ.get("GITHUB_REF_NAME", "")
-        ref_type = os.environ.get("GITHUB_REF_TYPE", "")
-        return ref_type == "tag" and bool(DEV_RELEASE_TAG_PATTERN.match(ref))
+    def release_type() -> ReleaseType | None:
+        if Git.is_stable_release():
+            return "stable"
+        elif Git.is_pre_release():
+            match = PRE_RELEASE_TAG.match(REF_NAME)
+            assert match is not None
+            pre = match.group("pre")
+            return pre_release_lookup[pre]
 
     @staticmethod
     def branch():
         """
         Return event branch
         """
-        ref = os.environ.get("GITHUB_REF_NAME", "")
-        ref_type = os.environ.get("GITHUB_REF_TYPE", "")
-        return ref if ref_type == "branch" else ""
+        return REF_NAME if REF_TYPE == "branch" else ""
