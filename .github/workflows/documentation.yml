@@ -11,8 +11,8 @@ jobs:
   parse_commit_info:
     runs-on: ubuntu-latest
     outputs:
-      can_deploy: ${{ steps.decide.outputs.can_deploy }}
-      deploy_to: ${{ steps.decide.outputs.deploy_to }}
+      deploy_to: ${{ steps.variables.outputs.deploy_to }}
+      commit_title: ${{ steps.variables.outputs.commit_title }}
 
     steps:
       - name: Checkout Code
@@ -24,8 +24,8 @@ jobs:
         run: |
           cp -r .github/utils ../utils
 
-      - name: Decide Whether to Build and/or Release
-        id: decide
+      - name: Decide where to deploy and create output variables
+        id: variables
         run: |
           python ../utils/please.py set_deploy_to
           python ../utils/please.py set_commit_title
@@ -34,8 +34,8 @@ jobs:
 
       - name: See outputs
         run: |
-          echo 'set_deploy_to=${{ steps.decide.outputs.set_deploy_to }}'
-          echo 'set_commit_title=${{ steps.decide.outputs.set_commit_title }}'
+          echo 'deploy_to=${{ steps.variables.outputs.deploy_to }}'
+          echo 'commit_title=${{ steps.variables.outputs.commit_title }}'
 
   build-documentation:
     runs-on: ubuntu-latest
