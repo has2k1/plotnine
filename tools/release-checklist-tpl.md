@@ -68,7 +68,7 @@ Release: plotnine-<VERSION>
 - [ ] Tag a pre-release version. These are automatically deployed on `testpypi`
 
   ```sh
-  git tag -as v<VERSION>a1 -m "Version <VERSION>a1"  # e.g. <VERSION>a1, <VERSION>b1, <VERSION>rc1
+  git tag -as v<VERSION>rc1 -m "Version <VERSION>rc1"  # e.g. <VERSION>a1, <VERSION>b1, <VERSION>rc1
   git push -u origin release-v<VERSION>
   ```
   - [ ] GHA [release job](https://github.com/has2k1/plotnine/actions/workflows/release.yml) passes
