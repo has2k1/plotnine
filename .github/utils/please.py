@@ -43,7 +43,7 @@ def set_publish_on():
 
     rtype = Git.release_type()
 
-    if rtype in {"stable", "alphabeta", "develoment"}:
+    if rtype in {"stable", "alpha", "beta", "development"}:
         publish_on = "pypi"
     elif rtype == "candidate":
         publish_on = "testpypi"

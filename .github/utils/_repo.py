@@ -42,7 +42,7 @@ count = r"(?:[0-9]|[1-9][0-9]+)"
 DESCRIBE = re.compile(
     r"^v"
     rf"(?P<version>{count}\.{count}\.{count})"
-    rf"(?P<pre>(a|b|rc|alpha|beta|\.dev){count})?"
+    rf"((?P<pre>a|b|rc|alpha|beta|\.dev){count})?"
     r"(-(?P<commits>\d+)-g(?P<hash>[a-z0-9]+))?"
     r"(?P<dirty>-dirty)?"
     r"$"
@@ -56,9 +56,7 @@ STABLE_TAG = re.compile(r"^v" rf"{count}\.{count}\.{count}" r"$")
 PRE_RELEASE_TAG = re.compile(
     r"^v"
     rf"{count}\.{count}\.{count}"
-    r"(?:"
-    rf"(?:a|b|rc|alpha|beta|\.dev){count}"
-    r")"
+    rf"((?P<pre>a|b|rc|alpha|beta|\.dev){count})?"
     r"$"
 )
 
