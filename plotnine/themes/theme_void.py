@@ -1,5 +1,11 @@
 from ..options import get_option
-from .elements import element_blank, element_line, element_text, margin
+from .elements import (
+    element_blank,
+    element_line,
+    element_text,
+    margin,
+    margin_auto,
+)
 from .theme import theme
 
 
@@ -19,6 +25,7 @@ class theme_void(theme):
 
     def __init__(self, base_size=11, base_family=None):
         base_family = base_family or get_option("base_family")
+        half_line = base_size / 2
         m = get_option("base_margin")
         # Use only inherited elements and make everything blank
         theme.__init__(
@@ -54,7 +61,7 @@ class theme_void(theme):
             legend_spacing=10,
             legend_text=element_text(
                 size=base_size * 0.8,
-                margin=margin(m / 1.5, m / 1.5, m / 1.5, m / 1.5, "fig"),
+                margin=margin_auto(m / 1.5, unit="fig"),
             ),
             legend_ticks=element_line(color="#CCCCCC", size=1),
             legend_title=element_text(
@@ -94,8 +101,8 @@ class theme_void(theme):
             strip_text=element_text(
                 color="#1A1A1A",
                 size=base_size * 0.8,
-                linespacing=1.0,
-                margin=margin(1 / 3, 1 / 3, 1 / 3, 1 / 3, "lines"),
+                linespacing=1.5,
+                margin=margin_auto(half_line * 0.8),
             ),
             complete=True,
         )

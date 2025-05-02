@@ -5,6 +5,7 @@ from .elements import (
     element_rect,
     element_text,
     margin,
+    margin_auto,
 )
 from .theme import theme
 
@@ -33,6 +34,7 @@ class theme_matplotlib(theme):
         m = get_option("base_margin")
         base_size = mpl.rcParams.get("font.size", 11)
         linewidth = mpl.rcParams.get("grid.linewidth", 0.8)
+        half_line = base_size / 2
 
         super().__init__(
             line=element_line(size=linewidth),
@@ -68,9 +70,7 @@ class theme_matplotlib(theme):
             legend_margin=0,
             legend_position="right",
             legend_spacing=10,
-            legend_text=element_text(
-                margin=margin(m / 2, m / 2, m / 2, m / 2, "fig")
-            ),
+            legend_text=element_text(margin=margin_auto(m / 2, unit="fig")),
             legend_ticks=element_line(color="black"),
             legend_title=element_text(
                 ha="left",
@@ -111,7 +111,8 @@ class theme_matplotlib(theme):
                 fill="#D9D9D9", color="black", size=linewidth
             ),
             strip_text=element_text(
-                margin=margin(1 / 3, 1 / 3, 1 / 3, 1 / 3, "lines"),
+                linespacing=1.5,
+                margin=margin_auto(half_line * 0.8),
             ),
             strip_text_y=element_text(rotation=-90),
             complete=True,

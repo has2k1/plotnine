@@ -80,7 +80,7 @@ FacetSpaceRatios: TypeAlias = dict[Literal["x", "y"], Sequence[float]]
 
 StripPosition: TypeAlias = Literal["top", "right"]
 
-## Scales
+# Scales
 
 # Name names of scaled aesthetics
 ScaledAestheticsName: TypeAlias = Literal[
@@ -110,7 +110,7 @@ ScaledAestheticsName: TypeAlias = Literal[
     "upper",
 ]
 
-## Coords
+# Coords
 CoordRange: TypeAlias = tuple[float, float]
 
 # Guide

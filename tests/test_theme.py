@@ -258,7 +258,7 @@ def test_theme_void():
 def test_theme_xkcd():
     p = (
         g
-        + labs(title="Theme Xkcd")
+        + labs(title="Theme XKCD")
         + theme_xkcd()
         # High likely hood of Comic Sans being available
         + theme(text=element_text(family=["Comic Sans MS"]))

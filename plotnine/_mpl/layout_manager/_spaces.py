@@ -433,7 +433,7 @@ class right_spaces(_side_spaces):
     margin_alignment: float = 0
     legend: float = 0
     legend_box_spacing: float = 0
-    strip_text_y_width_right: float = 0
+    strip_text_y_extra_width: float = 0
 
     def _calculate(self):
         items = self.items
@@ -452,7 +452,7 @@ class right_spaces(_side_spaces):
             self.legend = self.legend_width
             self.legend_box_spacing = theme.getp("legend_box_spacing")
 
-        self.strip_text_y_width_right = items.strip_text_y_width("right")
+        self.strip_text_y_extra_width = items.strip_text_y_extra_width("right")
 
         # Adjust plot_margin to make room for ylabels that protude well
         # beyond the axes
@@ -545,7 +545,7 @@ class top_spaces(_side_spaces):
     plot_subtitle_margin_bottom: float = 0
     legend: float = 0
     legend_box_spacing: float = 0
-    strip_text_x_height_top: float = 0
+    strip_text_x_extra_height: float = 0
 
     def _calculate(self):
         items = self.items
@@ -578,7 +578,7 @@ class top_spaces(_side_spaces):
             self.legend = self.legend_height
             self.legend_box_spacing = theme.getp("legend_box_spacing") * F
 
-        self.strip_text_x_height_top = items.strip_text_x_height("top")
+        self.strip_text_x_extra_height = items.strip_text_x_extra_height("top")
 
         # Adjust plot_margin to make room for ylabels that protude well
         # beyond the axes
@@ -1061,7 +1061,7 @@ class LayoutSpaces:
         # Only interested in the proportion of the strip that
         # does not overlap with the panel
         if strip_align_x > -1:
-            self.sh += self.t.strip_text_x_height_top * (1 + strip_align_x)
+            self.sh += self.t.strip_text_x_extra_height * (1 + strip_align_x)
 
         if facet.free["x"]:
             self.sh += self.items.axis_text_x_max_height_at(

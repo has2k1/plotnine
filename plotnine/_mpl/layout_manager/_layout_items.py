@@ -6,6 +6,8 @@ from typing import TYPE_CHECKING, cast
 
 from matplotlib.text import Text
 
+from plotnine._mpl.patches import StripTextPatch
+from plotnine._utils import ha_as_float, va_as_float
 from plotnine.exceptions import PlotnineError
 
 from ..utils import (
@@ -35,7 +37,11 @@ if TYPE_CHECKING:
     from plotnine._mpl.text import StripText
     from plotnine.iapi import legend_artists
     from plotnine.themes.elements import margin as Margin
-    from plotnine.typing import StripPosition
+    from plotnine.typing import (
+        HorizontalJustification,
+        StripPosition,
+        VerticalJustification,
+    )
 
     from ._spaces import LayoutSpaces
 
@@ -299,9 +305,9 @@ class LayoutItems:
 
         return chain(major, minor)
 
-    def strip_text_x_height(self, position: StripPosition) -> float:
+    def strip_text_x_extra_height(self, position: StripPosition) -> float:
         """
-        Height taken up by the top strips
+        Height taken up by the top strips that is outside the panels
         """
         if not self.strip_text_x:
             return 0
@@ -311,11 +317,23 @@ class LayoutItems:
             for st in self.strip_text_x
             if st.patch.position == position
         ]
-        return self.calc.max_height(artists)
 
-    def strip_text_y_width(self, position: StripPosition) -> float:
+        heights = []
+
+        for a in artists:
+            info = (
+                a.text.draw_info
+                if isinstance(a, StripTextPatch)
+                else a.draw_info
+            )
+            h = self.calc.height(a)
+            heights.append(max(h + h * info.strip_align, 0))
+
+        return max(heights)
+
+    def strip_text_y_extra_width(self, position: StripPosition) -> float:
         """
-        Width taken up by the right strips
+        Width taken up by the top strips that is outside the panels
         """
         if not self.strip_text_y:
             return 0
@@ -325,7 +343,19 @@ class LayoutItems:
             for st in self.strip_text_y
             if st.patch.position == position
         ]
-        return self.calc.max_width(artists)
+
+        widths = []
+
+        for a in artists:
+            info = (
+                a.text.draw_info
+                if isinstance(a, StripTextPatch)
+                else a.draw_info
+            )
+            w = self.calc.width(a)
+            widths.append(max(w + w * info.strip_align, 0))
+
+        return max(widths)
 
     def axis_ticks_x_max_height_at(self, location: AxesLocation) -> float:
         """
@@ -489,6 +519,8 @@ class LayoutItems:
 
         self._adjust_axis_text_x(justify)
         self._adjust_axis_text_y(justify)
+        self._strip_text_x_background_equal_heights()
+        self._strip_text_y_background_equal_widths()
 
     def _adjust_axis_text_x(self, justify: TextJustifier):
         """
@@ -574,6 +606,36 @@ class LayoutItems:
                     text, ha, -axis_text_col_width, 0, width=width
                 )
 
+    def _strip_text_x_background_equal_heights(self):
+        """
+        Make the strip_text_x_backgrounds have equal heights
+
+        The smaller heights are expanded to match the largest height
+        """
+        if not self.strip_text_x:
+            return
+
+        heights = [self.calc.bbox(t.patch).height for t in self.strip_text_x]
+        max_height = max(heights)
+        relative_heights = [max_height / h for h in heights]
+        for text, scale in zip(self.strip_text_x, relative_heights):
+            text.patch.expand = scale
+
+    def _strip_text_y_background_equal_widths(self):
+        """
+        Make the strip_text_y_backgrounds have equal widths
+
+        The smaller widths are expanded to match the largest width
+        """
+        if not self.strip_text_y:
+            return
+
+        widths = [self.calc.bbox(t.patch).width for t in self.strip_text_y]
+        max_width = max(widths)
+        relative_widths = [max_width / w for w in widths]
+        for text, scale in zip(self.strip_text_y, relative_widths):
+            text.patch.expand = scale
+
 
 def _text_is_visible(text: Text) -> bool:
     """
@@ -596,7 +658,7 @@ class TextJustifier:
     def horizontally(
         self,
         text: Text,
-        ha: str | float,
+        ha: HorizontalJustification | float,
         left: float,
         right: float,
         width: float | None = None,
@@ -604,8 +666,7 @@ class TextJustifier:
         """
         Horizontally Justify text between left and right
         """
-        lookup = {"left": 0.0, "center": 0.5, "right": 1.0}
-        rel = lookup.get(ha, ha)  # pyright: ignore[reportCallIssue, reportArgumentType]
+        rel = ha_as_float(ha)
         if width is None:
             width = self.spaces.items.calc.width(text)
         x = rel_position(rel, width, left, right)
@@ -615,7 +676,7 @@ class TextJustifier:
     def vertically(
         self,
         text: Text,
-        va: str | float,
+        va: VerticalJustification | float,
         bottom: float,
         top: float,
         height: float | None = None,
@@ -623,14 +684,7 @@ class TextJustifier:
         """
         Vertically Justify text between bottom and top
         """
-        lookup = {
-            "top": 1.0,
-            "center": 0.5,
-            "baseline": 0.5,
-            "center_baseline": 0.5,
-            "bottom": 0.0,
-        }
-        rel = lookup.get(va, va)  # pyright: ignore[reportCallIssue, reportArgumentType]
+        rel = va_as_float(va)
 
         if height is None:
             height = self.spaces.items.calc.height(text)
@@ -638,13 +692,17 @@ class TextJustifier:
         text.set_y(y)
         text.set_verticalalignment("bottom")
 
-    def horizontally_across_panel(self, text: Text, ha: str | float):
+    def horizontally_across_panel(
+        self, text: Text, ha: HorizontalJustification | float
+    ):
         """
         Horizontally Justify text accross the panel(s) width
         """
         self.horizontally(text, ha, self.spaces.l.left, self.spaces.r.right)
 
-    def horizontally_across_plot(self, text: Text, ha: str | float):
+    def horizontally_across_plot(
+        self, text: Text, ha: HorizontalJustification | float
+    ):
         """
         Horizontally Justify text across the plot's width
         """
@@ -652,13 +710,17 @@ class TextJustifier:
             text, ha, self.spaces.l.plot_left, self.spaces.r.plot_right
         )
 
-    def vertically_along_panel(self, text: Text, va: str | float):
+    def vertically_along_panel(
+        self, text: Text, va: VerticalJustification | float
+    ):
         """
         Horizontally Justify text along the panel(s) height
         """
         self.vertically(text, va, self.spaces.b.bottom, self.spaces.t.top)
 
-    def vertically_along_plot(self, text: Text, va: str | float):
+    def vertically_along_plot(
+        self, text: Text, va: VerticalJustification | float
+    ):
         """
         Vertically Justify text along the plot's height
         """

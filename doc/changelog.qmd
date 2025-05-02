@@ -112,6 +112,20 @@ title: Changelog
 - Fixed theming of `axis_text`, `axis_text_x` and  `axis_text_y` so when they can be
   overriden if previously set to `element_blank()`.
 
+- Fixed `strip_text_x_background`s to always have equal heights and `strip_text_y_background`s
+  to have equal widths. This applies to cases where the texts have unequal number of lines or
+  they are rotated but have different lengths.
+
+- Fixed the empty space below the plot title (or subtitle) when `strip_text_x_background`s are
+  partly or fully aligned within the panel. This space (hole), was not accounted for by any of
+  the themeables. This affected `theme_xkcd` and any `theme` settings that tried to slide the
+  text / background into the panel.
+
+- Fixed the empty space to the left the right margin when the `strip_text_y_background`s are
+  partly or fully aligned within the panel. This space (hole), was not accounted for by any of 
+  the themeables. This affected `theme_xkcd` and any `theme` settings that tried to slide the
+  text / background into the panel.
+
 ## v0.14.5
 (2025-01-02)
 [![](https://zenodo.org/badge/DOI/10.5281/zenodo.14587381.svg)](https://doi.org/10.5281/zenodo.14587381)

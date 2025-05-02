@@ -6,6 +6,7 @@ from .elements import (
     element_rect,
     element_text,
     margin,
+    margin_auto,
 )
 from .theme import theme
 
@@ -27,6 +28,7 @@ class theme_gray(theme):
 
     def __init__(self, base_size=11, base_family=None):
         base_family = base_family or get_option("base_family")
+        half_line = base_size / 2
         quarter_line = base_size / 4
         fifth_line = base_size / 5
         eighth_line = base_size / 8
@@ -88,7 +90,7 @@ class theme_gray(theme):
             legend_spacing=10,  # points
             legend_text=element_text(
                 size=base_size * 0.8,
-                margin=margin(m / 1.5, m / 1.5, m / 1.5, m / 1.5, "fig"),
+                margin=margin_auto(m / 1.5, unit="fig"),
             ),
             legend_ticks=element_line(color="#CCCCCC", size=1),
             legend_title=element_text(
@@ -135,8 +137,8 @@ class theme_gray(theme):
             strip_text=element_text(
                 color="#1A1A1A",
                 size=base_size * 0.8,
-                linespacing=1.0,
-                margin=margin(1 / 3, 1 / 3, 1 / 3, 1 / 3, "lines"),
+                linespacing=1.5,
+                margin=margin_auto(half_line * 0.8),
             ),
             strip_text_y=element_text(rotation=-90),
             complete=True,
