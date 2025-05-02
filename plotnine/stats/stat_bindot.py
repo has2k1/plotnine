@@ -281,9 +281,7 @@ def densitybin(
     if all(pd.isna(x)):
         return pd.DataFrame()
 
-    if weight is None:
-        weight = np.ones(len(x))
-    weight = np.asarray(weight)
+    weight = np.ones(len(x)) if weight is None else np.array(list(weight))
     weight[np.isnan(weight)] = 0
 
     if rangee is None:
