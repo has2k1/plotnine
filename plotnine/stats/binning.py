@@ -165,7 +165,10 @@ def assign_bins(
     if weight is None:
         weight = np.ones(len(x))
     else:
-        weight = np.asarray(weight)
+        # If weight is a dtype that isn't writeable
+        # and does not own it's memory. Using a list
+        # as an intermediate easily solves this.
+        weight = np.array(list(weight))
         weight[np.isnan(weight)] = 0
 
     bin_idx = pd.cut(

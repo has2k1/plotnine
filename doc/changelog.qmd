@@ -126,6 +126,9 @@ title: Changelog
   the themeables. This affected `theme_xkcd` and any `theme` settings that tried to slide the
   text / background into the panel.
 
+- Fixed bug in [](:class:`~plotnine.geom_histogram`) where mapping to the `weight` aesthetic
+  lead to an error. {{< issue 936 >}}
+
 ## v0.14.5
 (2025-01-02)
 [![](https://zenodo.org/badge/DOI/10.5281/zenodo.14587381.svg)](https://doi.org/10.5281/zenodo.14587381)

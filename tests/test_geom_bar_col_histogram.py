@@ -99,3 +99,15 @@ def test_freedman_diaconis_bins():
     iqr1 = freedman_diaconis_bins(a1)
     iqr2 = freedman_diaconis_bins(a2)
     assert iqr1 == iqr2
+
+
+def test_histogram_weights():
+    data = pd.DataFrame(
+        {
+            "x": list(range(1, 6)),
+            "w": list(range(1, 6)),
+        }
+    )
+
+    p = ggplot(data, aes("x", weight="w")) + geom_histogram(bins=5)
+    assert p == "histogram_weights"
