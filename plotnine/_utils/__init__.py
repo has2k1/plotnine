@@ -35,8 +35,10 @@ if TYPE_CHECKING:
         DataLike,
         FloatArray,
         FloatArrayLike,
+        HorizontalJustification,
         IntArray,
         Side,
+        VerticalJustification,
     )
 
     T = TypeVar("T")
@@ -1264,3 +1266,27 @@ def ensure_xy_location(
         if isinstance(h, (int, float)) and isinstance(v, (int, float)):
             return (h, v)
     raise ValueError(f"Cannot make a location from '{loc}'")
+
+
+def ha_as_float(ha: HorizontalJustification | float) -> float:
+    """
+    Return horizontal alignment as a float
+    """
+    lookup = {"left": 0.0, "center": 0.5, "right": 1.0}
+    return lookup[ha] if isinstance(ha, str) else ha
+
+
+def va_as_float(va: VerticalJustification | float) -> float:
+    """
+    Return vertical alignment as a float
+    """
+    lookup = {
+        "top": 1.0,
+        "center": 0.5,
+        "bottom": 0.0,
+        # baseline and center_baseline are valid for texts but we do
+        # not handle them accurately
+        "baseline": 0.5,
+        "center_baseline": 0.5,
+    }
+    return lookup[va] if isinstance(va, str) else va

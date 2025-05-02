@@ -139,7 +139,7 @@ def draw_bbox(bbox, figure, color="black", **kwargs):
             width=bbox.width,
             height=bbox.height,
             edgecolor=color,
-            fill=False,
+            fill="facecolor" in kwargs,
             clip_on=False,
             **kwargs,
         )

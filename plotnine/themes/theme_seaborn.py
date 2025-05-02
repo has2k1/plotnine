@@ -5,6 +5,7 @@ from .elements import (
     element_rect,
     element_text,
     margin,
+    margin_auto,
 )
 from .theme import theme
 
@@ -20,7 +21,7 @@ class theme_seaborn(theme):
 
     Parameters
     ----------
-    style: "whitegrid", "darkgrid", "nogrid", "ticks"
+    style: "white", "dark", "whitegrid", "darkgrid",  "ticks"
         Style of axis background.
     context: "notebook", "talk", "paper", "poster"]``
         Intended context for resulting figures.
@@ -83,13 +84,15 @@ class theme_seaborn(theme):
             legend_position="right",
             legend_spacing=10,  # points
             legend_text=element_text(
-                margin=margin(m / 1.5, m / 1.5, m / 1.5, m / 1.5, "fig")
+                size=base_size * 0.8,
+                margin=margin_auto(m / 1.5, unit="fig"),
             ),
             legend_ticks=element_line(color="#CCCCCC", size=1),
             legend_title=element_text(
                 margin=margin(t=m, l=m * 2, b=m / 2, r=m * 2, unit="fig")
             ),
             panel_spacing=m,
+            panel_background=element_rect(fill=rcparams["axes.facecolor"]),
             plot_caption=element_text(
                 size=base_size * 0.8,
                 ha="right",
@@ -123,8 +126,8 @@ class theme_seaborn(theme):
             strip_background=element_rect(color="none", fill="#D1CDDF"),
             strip_text=element_text(
                 size=base_size * 0.8,
-                linespacing=1.0,
-                margin=margin(1 / 3, 1 / 3, 1 / 3, 1 / 3, "lines"),
+                linespacing=1.5,
+                margin=margin_auto(half_line * 0.8),
             ),
             strip_text_y=element_text(rotation=-90),
             complete=True,
