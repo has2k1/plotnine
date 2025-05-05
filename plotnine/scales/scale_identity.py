@@ -43,6 +43,8 @@ class scale_color_identity(MapTrainMixin, scale_discrete):
     """
 
     _aesthetics = ["color"]
+    _: KW_ONLY
+    guide: Literal["legend"] | None = None
 
 
 @dataclass
@@ -52,6 +54,8 @@ class scale_fill_identity(scale_color_identity):
     """
 
     _aesthetics = ["fill"]
+    _: KW_ONLY
+    guide: Literal["legend"] | None = None
 
 
 @dataclass
@@ -61,6 +65,8 @@ class scale_shape_identity(MapTrainMixin, scale_discrete):
     """
 
     _aesthetics = ["shape"]
+    _: KW_ONLY
+    guide: Literal["legend"] | None = None
 
 
 @dataclass
@@ -70,6 +76,8 @@ class scale_linetype_identity(MapTrainMixin, scale_discrete):
     """
 
     _aesthetics = ["linetype"]
+    _: KW_ONLY
+    guide: Literal["legend"] | None = None
 
 
 @dataclass
@@ -82,7 +90,7 @@ class scale_alpha_identity(
 
     _aesthetics = ["alpha"]
     _: KW_ONLY
-    guide: Literal["legend"] | None = "legend"
+    guide: Literal["legend"] | None = None
 
 
 @dataclass
@@ -95,7 +103,7 @@ class scale_size_identity(
 
     _aesthetics = ["size"]
     _: KW_ONLY
-    guide: Literal["legend"] | None = "legend"
+    guide: Literal["legend"] | None = None
 
 
 # American to British spelling
