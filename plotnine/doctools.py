@@ -451,7 +451,7 @@ def document_geom(geom: type[geom]) -> type[geom]:
     table = dict_to_table(("Aesthetic", "Default value"), contents)
     aesthetics_table = AESTHETICS_TABLE_TPL.format(table=table)
     tpl = dedent(geom._aesthetics_doc).strip()
-    aesthetics_doc = tpl.format(aesthetics_table=aesthetics_table)
+    aesthetics_doc = tpl.replace("{aesthetics_table}", aesthetics_table)
     aesthetics_doc = indent(aesthetics_doc, " " * 4)
 
     # common_parameters
