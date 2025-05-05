@@ -91,6 +91,10 @@ title: Changelog
   adjusted to rely on this inheritance. So when using the default themes, altering `fill`
   parameter of the `panel_background` will also affect the background of the `legend_key`.
 
+- The default value for the `guide` parameter for the identity scales (`scale_*_identity`)
+  has been reverted to `None`. This means by default using these scales will not generate
+  a legend.
+
 ### Bug Fixes
 
 - Fixed bug in with the `legend_key_height` themeable where it wasn't applied.
