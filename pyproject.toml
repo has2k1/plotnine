@@ -42,12 +42,16 @@ all = [
     "plotnine[dev]",
 ]
 
+# These should include all packages that we use in the tests and in the
+# examples
 extra = [
     "adjustText>=1.2.0",
     "geopandas>=1.0.0",
     "geodatasets>=2024.8.0",
     "scikit-learn>1.2.0",
     "scikit-misc>=0.5.1",
+    "polars>=1.24.0",
+    "pyarrow>=19.0.1",
 ]
 
 doc = [
