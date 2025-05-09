@@ -32,18 +32,13 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ matrix.python-version }}
-
       - name: Install a specific version of uv
         uses: astral-sh/setup-uv@v3
         with:
           version: "latest"
 
-      - name: Make uv use system python
-        run: echo "UV_SYSTEM_PYTHON=true" >> $GITHUB_ENV
+      - name: Create Virtual Environment
+        run: uv venv --python ${{ matrix.python-version }}
 
       - name: Install Packages
         run: |
@@ -56,9 +51,7 @@ jobs:
           uv pip list
 
       - name: Run Tests
-        run: |
-          coverage erase
-          make test
+        run: make test
 
       - name: List Directory
         run: |
@@ -96,18 +89,13 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ matrix.python-version }}
-
       - name: Install a specific version of uv
         uses: astral-sh/setup-uv@v3
         with:
           version: "latest"
 
-      - name: Make uv use system python
-        run: echo "UV_SYSTEM_PYTHON=true" >> $GITHUB_ENV
+      - name: Create Virtual Environment
+        run: uv venv --python ${{ matrix.python-version }}
 
       - name: Install Packages
         run: uv tool install ruff
@@ -140,22 +128,16 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ matrix.python-version }}
-
       - name: Install a specific version of uv
         uses: astral-sh/setup-uv@v3
         with:
           version: "latest"
 
-      - name: Make uv use system python
-        run: echo "UV_SYSTEM_PYTHON=true" >> $GITHUB_ENV
-
+      - name: Create Virtual Environment
+        run: uv venv --python ${{ matrix.python-version }}
+        
       - name: Install Packages
-        run: |
-          uv pip install ".[extra, typing]"
+        run: uv pip install ".[extra, typing]"
 
       - name: Environment Information
         run: uv pip list

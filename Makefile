@@ -51,7 +51,7 @@ clean-cache:
 	find . -name '__pycache__' -exec rm -fr {} +
 
 clean-test:
-	rm -f .coverage
+	$(UVRUN) coverage erase
 	rm -f coverage.xml
 	rm -fr htmlcov/
 	rm -fr tests/result_images/*
