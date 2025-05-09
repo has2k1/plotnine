@@ -68,8 +68,8 @@ download_qrenderer_style:  ## Download qrenderer stylesheet
 	fi
 
 extensions:  ## Install quarto/pandoc extensions
-	$(UVRUN) quarto add --no-prompt has2k1/issuey
-	$(UVRUN) quarto add --no-prompt has2k1/interlinks
+	quarto add --no-prompt has2k1/issuey
+	quarto add --no-prompt has2k1/interlinks
 
 dependencies: extensions download_qrenderer_style  ## Install build dependencies
 
@@ -84,9 +84,9 @@ docstrings: config  ## Generate qmd files from the docstrings
 	@$(PYTHON) -c "$$CREATE_OBJECTS_INV"
 
 html: docstrings download_qrenderer_style ## Build html site
-	$(UVRUN) quarto render
+	quarto render
 
 doc: clean interlinks html  ## Build html documentation from a clean slate
 
 preview:  ## Preview html website
-	$(UVRUN) quarto preview --port 42000 --no-browser
+	quarto preview --port 42000 --no-browser
