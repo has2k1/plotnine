@@ -74,13 +74,13 @@ extensions:  ## Install quarto/pandoc extensions
 dependencies: extensions download_qrenderer_style  ## Install build dependencies
 
 interlinks:  ## Gather interlinks
-	$(UVRUN) quartodoc interlinks
+	$(PYTHON) -m quartodoc interlinks
 
 config:  ## Configure project for quartodoc and quarto
 	$(PYTHON) _config.py
 
 docstrings: config  ## Generate qmd files from the docstrings
-	$(UVRUN) quartodoc build --config _quartodoc.yml
+	$(PYTHON) -m quartodoc build --config _quartodoc.yml
 	@$(PYTHON) -c "$$CREATE_OBJECTS_INV"
 
 html: docstrings download_qrenderer_style ## Build html site
