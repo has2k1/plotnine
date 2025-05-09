@@ -70,7 +70,7 @@ jobs:
       - name: Install Package
         shell: bash
         run: |
-          make doc-deps
+          make doc-dependencies
 
       - name: Environment Information
         shell: bash
