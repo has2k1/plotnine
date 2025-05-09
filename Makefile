@@ -1,5 +1,30 @@
 .PHONY: clean-pyc clean-build doc clean visualize-tests build
-BROWSER := python -mwebbrowser
+
+# NOTE: Take care not to use tabs in any programming flow outside the
+# make target
+
+# Use uv (if it is installed) to run all python related commands,
+# and prefere the active environment over .venv in a parent folder
+ifeq ($(OS),Windows_NT)
+  HAS_UV := $(if $(shell where uv 2>NUL),true,false)
+else
+  HAS_UV := $(if $(shell command -v uv 2>/dev/null),true,false)
+endif
+
+ifeq ($(HAS_UV),true)
+  PYTHON ?= uv run --active python
+  PIP ?= uv pip
+  UVRUN ?= uv run --active
+else
+  PYTHON ?= python
+  PIP ?= pip
+  UVRUN ?=
+endif
+
+BROWSER := $(PYTHON) -mwebbrowser
+
+all:
+	@echo "Using Python: $(PYTHON)"
 
 help:
 	@echo "clean - remove all build, test, coverage and Python artifacts"
@@ -9,7 +34,7 @@ help:
 	@echo "lint - check style with ruff"
 	@echo "test - run tests quickly with the default Python"
 	@echo "coverage - check code coverage quickly with the default Python"
-	@echo "docs - generate Sphinx HTML documentation, including API docs"
+	@echo "doc - generate HTML API documentation"
 	@echo "release - package and upload a release"
 	@echo "dist - package"
 	@echo "install - install the package to the active Python's site-packages"
@@ -32,13 +57,13 @@ clean-test:
 	rm -fr tests/result_images/*
 
 ruff:
-	ruff check . $(args)
+	$(UVRUN) ruff check . $(args)
 
 format:
-	ruff format . --check
+	$(UVRUN) ruff format . --check
 
 format-fix:
-	ruff format .
+	$(UVRUN) ruff format .
 
 lint: ruff
 
@@ -48,21 +73,21 @@ lint-fix:
 fix: format-fix lint-fix
 
 typecheck:
-	pyright
+	$(UVRUN) pyright
 
 test: clean-test
 	export MATPLOTLIB_BACKEND=agg
-	pytest
+	$(UVRUN) pytest
 
 visualize-tests:
-	python tools/visualize_tests.py
+	$(PYTHON) tools/visualize_tests.py
 
 update-baseline-images:
-	python tools/update_baseline_images.py
+	$(PYTHON) tools/update_baseline_images.py
 
 coverage:
-	coverage report -m
-	coverage html
+	$(UVRUN) coverage report -m
+	$(UVRUN) coverage html
 	$(BROWSER) htmlcov/index.html
 
 doc:
@@ -72,31 +97,31 @@ doc-preview:
 	$(MAKE) -C doc preview
 
 release-major:
-	@python ./tools/release-checklist.py major
+	@$(PYTHON) ./tools/release-checklist.py major
 
 release-minor:
-	@python ./tools/release-checklist.py minor
+	@$(PYTHON) ./tools/release-checklist.py minor
 
 release-patch:
-	@python ./tools/release-checklist.py patch
+	@$(PYTHON) ./tools/release-checklist.py patch
 
 dist: clean
-	python -m build
+	$(PYTHON) -m build
 	ls -l dist
 
 build: dist
 
 install: clean
-	uv pip install ".[extra]"
+	$(PIP) install ".[extra]"
 
-doc-deps:
-	uv pip install -e ".[doc]"
-	uv pip install -r requirements/doc.txt
-	cd doc && make deps
+doc-dependencies:
+	$(PIP) install -e ".[doc]"
+	$(PIP) install -r requirements/doc.txt
+	cd doc && make dependencies
 
 develop: clean-cache
-	uv pip install -e ".[all]"
+	$(PIP) install -e ".[all]"
 
 develop-update: clean-cache
-	uv pip install --upgrade -e ".[all]"
-	pre-commit autoupdate
+	$(PIP) install --upgrade -e ".[all]"
+	$(UVRUN) pre-commit autoupdate
