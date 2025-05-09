@@ -14,12 +14,8 @@ endif
 
 ifeq ($(HAS_UV),true)
   PYTHON ?= uv run --active python
-  PIP ?= uv pip
-  UVRUN ?= uv run --active
 else
   PYTHON ?= python
-  PIP ?= pip
-  UVRUN ?=
 endif
 
 define PRINT_HELP_PYSCRIPT
