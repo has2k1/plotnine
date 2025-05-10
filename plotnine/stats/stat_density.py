@@ -102,9 +102,9 @@ class stat_density(stat):
                 # useful for stacked density plots
 
     'scaled'    # density estimate, scaled to maximum of 1
+    'n'         # Number of observations at a position
     ```
 
-        'n'         # Number of observations at a position
 
     """
     REQUIRED_AES = {"x"}
