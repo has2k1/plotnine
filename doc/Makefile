@@ -31,12 +31,6 @@ for line in sys.stdin:
 endef
 export PRINT_HELP_PYSCRIPT
 
-define CREATE_OBJECTS_INV
-import sphobjinv as soi
-inv = soi.Inventory(source="objects.txt")
-soi.writebytes("objects.inv", soi.compress(inv.data_file()))
-endef
-export CREATE_OBJECTS_INV
 
 help:
 	@$(PYTHON) -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
@@ -71,7 +65,8 @@ config:  ## Configure project for quartodoc and quarto
 
 docstrings: config  ## Generate qmd files from the docstrings
 	$(PYTHON) -m quartodoc build --config _quartodoc.yml
-	@$(PYTHON) -c "$$CREATE_OBJECTS_INV"
+	# Create a objects.inv
+	@$(PYTHON) sphobjinv convert zlib objects.txt
 
 html: docstrings  ## Build html site
 	quarto render
