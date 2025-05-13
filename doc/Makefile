@@ -38,9 +38,6 @@ soi.writebytes("objects.inv", soi.compress(inv.data_file()))
 endef
 export CREATE_OBJECTS_INV
 
-QRENDERER_STYLE_FILE=qrenderer.scss
-QRENDERER_STYLE_URL=https://raw.githubusercontent.com/has2k1/qrenderer/main/doc/qrenderer.scss
-
 help:
 	@$(PYTHON) -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
 
@@ -57,17 +54,14 @@ clean:  ## Remove build artefacts
 readme-images:
 	cd images; $(PYTHON) readme_images.py
 
-download_qrenderer_style:  ## Download qrenderer stylesheet
-	@if [ ! -f $(QRENDERER_STYLE_FILE) ]; then \
-		echo "Downloading $(QRENDERER_STYLE_FILE)"; \
-		wget $(QRENDERER_STYLE_URL) -O $(QRENDERER_STYLE_FILE); \
-	fi
+install-stylesheets:  ## Install qrenderer stylesheet(s)
+	$(PYTHON) -m qrenderer.stylesheets.install $(CURDIR)
 
 extensions:  ## Install quarto/pandoc extensions
 	quarto add --no-prompt has2k1/issuey
 	quarto add --no-prompt has2k1/interlinks
 
-dependencies: extensions download_qrenderer_style  ## Install build dependencies
+dependencies: extensions install-stylesheets  ## Install build dependencies
 
 interlinks:  ## Gather interlinks
 	$(PYTHON) -m quartodoc interlinks
@@ -79,7 +73,7 @@ docstrings: config  ## Generate qmd files from the docstrings
 	$(PYTHON) -m quartodoc build --config _quartodoc.yml
 	@$(PYTHON) -c "$$CREATE_OBJECTS_INV"
 
-html: docstrings download_qrenderer_style ## Build html site
+html: docstrings  ## Build html site
 	quarto render
 
 doc: clean interlinks html  ## Build html documentation from a clean slate
