@@ -33,29 +33,24 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install a specific version of uv
-        uses: astral-sh/setup-uv@v3
+        uses: astral-sh/setup-uv@v6
         with:
-          version: "latest"
-
-      - name: Create Virtual Environment
-        run: uv venv --python ${{ matrix.python-version }}
+          python-version: ${{ matrix.python-version }}
 
       - name: Install Packages
         run: |
           # Install as an editable so that the coverage path
           # is predicable
-          uv pip install --resolution=${{ matrix.resolution }} -e ".[extra,test]"
+          uv run uv pip install --resolution=${{ matrix.resolution }} -e ".[extra,test]"
 
       - name: Environment Information
-        run: |
-          uv pip list
+        run: uv pip list
 
       - name: Run Tests
         run: make test
 
       - name: List Directory
-        run: |
-          ls -la
+        run: ls -la
 
       - uses: actions/upload-artifact@v4
         if: failure()
@@ -90,28 +85,21 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install a specific version of uv
-        uses: astral-sh/setup-uv@v3
+        uses: astral-sh/setup-uv@v6
         with:
-          version: "latest"
-
-      - name: Create Virtual Environment
-        run: uv venv --python ${{ matrix.python-version }}
+          python-version: ${{ matrix.python-version }}
 
       - name: Install Packages
-        run: uv tool install ruff
+        run: uv run uv pip install ruff
 
       - name: Environment Information
         run: uv pip list
 
       - name: Check lint with Ruff
-        shell: bash
-        run: |
-          make lint
+        run: make lint
 
       - name: Check format with Ruff
-        shell: bash
-        run: |
-          make format
+        run: make format
 
   typecheck:
     runs-on: ubuntu-latest
@@ -129,15 +117,12 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install a specific version of uv
-        uses: astral-sh/setup-uv@v3
+        uses: astral-sh/setup-uv@v6
         with:
-          version: "latest"
+          python-version: ${{ matrix.python-version }}
 
-      - name: Create Virtual Environment
-        run: uv venv --python ${{ matrix.python-version }}
-        
       - name: Install Packages
-        run: uv pip install ".[extra, typing]"
+        run: uv run uv pip install ".[extra, typing]"
 
       - name: Environment Information
         run: uv pip list
