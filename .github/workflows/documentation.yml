@@ -21,8 +21,7 @@ jobs:
           fetch-depth: 0
 
       - name: Copy build utils
-        run: |
-          cp -r .github/utils ../utils
+        run: cp -r .github/utils ../utils
 
       - name: Decide where to deploy and create output variables
         id: variables
@@ -49,42 +48,35 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Install a specific version of uv
-        uses: astral-sh/setup-uv@v3
+      - name: Install uv and set python version
+        uses: astral-sh/setup-uv@v6
         with:
-          version: "latest"
-
-      - name: Create Virtual Environment
-        run: uv venv --python ${{ matrix.python-version }}
+          python-version: ${{ matrix.python-version }}
 
       - name: Install Quarto
         uses: quarto-dev/quarto-actions/setup@v2
         with:
           version: pre-release
 
-      - name: Install Package
-        shell: bash
-        run: |
+      - name: Install Documentation Dependencies
+        run: |  
+          uv venv
           make doc-dependencies
 
       - name: Environment Information
-        shell: bash
         run: |
           ls -la
           ls -la doc
           uv pip list
 
       - name: Build docs
-        shell: bash
-        run: |
-          pushd doc; make doc; popd
+        run: make doc
 
       - name: Environment Information
-        shell: bash
         run: |
           ls -la doc
-          cat doc/_variables.yml
           ls -la doc/reference
+          cat doc/_variables.yml
 
       - name: Deploy to Documentation to a Branch
         uses: JamesIves/github-pages-deploy-action@v4

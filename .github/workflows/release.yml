@@ -28,25 +28,19 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install a specific version of uv
-        uses: astral-sh/setup-uv@v3
+        uses: astral-sh/setup-uv@v6
         with:
-          version: "latest"
-
-      - name: Create Virtual Environment
-        run: uv venv --python ${{ matrix.python-version }}
+          python-version: ${{ matrix.python-version }}
 
       - name: Copy build utils
-        run: |
-          cp -r .github/utils ../utils
+        run: cp -r .github/utils ../utils
 
       - name: Decide where to publish and create output variables
         id: variables
         run: uv run python ../utils/please.py set_publish_on
 
       - name: See outputs
-        shell: bash
-        run: |
-          echo "publish_on="${{ steps.variables.outputs.publish_on }}
+        run: echo "publish_on="${{ steps.variables.outputs.publish_on }}
 
   # Ref: https://github.com/pypa/gh-action-pypi-publish
   publish:
@@ -72,15 +66,12 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install a specific version of uv
-        uses: astral-sh/setup-uv@v3
+        uses: astral-sh/setup-uv@v6
         with:
-          version: "latest"
-
-      - name: Create Virtual Environment
-        run: uv venv --python ${{ matrix.python-version }}
+          python-version: ${{ matrix.python-version }}
 
       - name: Install Packages
-        run: uv pip install build
+        run: uv run uv pip install build
 
       - name: Build a wheel and a source tarball
         run: make dist
