@@ -1,3 +1,3 @@
 # These cannot be in pyproject.toml, pypi does not install git packages
-quartodoc @ git+https://github.com/machow/quartodoc#egg=quartodoc
+# quartodoc @ git+https://github.com/machow/quartodoc#egg=quartodoc
 qrenderer @ git+https://github.com/has2k1/qrenderer#egg=qrenderer
