@@ -56,19 +56,17 @@ clean-test:
 	rm -fr htmlcov/
 	rm -fr tests/result_images/*
 
-ruff:
-	$(UVRUN) ruff check . $(args)
-
 format:
-	$(UVRUN) ruff format . --check
+	$(UVRUN) ruff format --check .
 
 format-fix:
 	$(UVRUN) ruff format .
 
-lint: ruff
+lint:
+	$(UVRUN) ruff check .
 
 lint-fix:
-	make lint args="--fix"
+	$(UVRUN) ruff check --fix .
 
 fix: format-fix lint-fix
 
@@ -117,7 +115,7 @@ install: clean
 doc-dependencies:
 	$(PIP) install -e ".[doc]"
 	$(PIP) install -r requirements/doc.txt
-	cd doc && make dependencies
+	$(MAKE) -C doc dependencies
 
 develop: clean-cache
 	$(PIP) install -e ".[all]"
