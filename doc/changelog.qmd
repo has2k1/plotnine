@@ -76,6 +76,10 @@ title: Changelog
 
 - Gained the Anscombe Quartet dataset, [](:attr:`~plotnine.data.anscombe_quartet`).
 
+- Gained new module `plotnine.helpers` to be a place for some helper functions.
+
+- Gained new helper function [](:func:`~plotnine.helpers.get_aesthetic_limits`).
+
 ### Enhancements
 
 - Included datasets [](:attr:`~plotnine.data.mpg`), [](:attr:`~plotnine.data.msleep`) and

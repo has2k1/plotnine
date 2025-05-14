@@ -562,6 +562,13 @@ quartodoc:
         - figure_size
         - figure_format
 
+    - title: Tools
+      desc: |
+        Functions that you may occasioanally find helpful
+      package: plotnine.helpers
+      contents:
+          - get_aesthetic_limits
+
     - title: Datasets
       desc: |
         These datasets ship with the plotnine and you can import them with
