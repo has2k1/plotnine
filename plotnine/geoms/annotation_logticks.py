@@ -285,4 +285,6 @@ class annotation_logticks(annotate):
             linetype=linetype,
             lengths=lengths,
             base=base,
+            inherit_aes=False,
+            show_legend=False,
         )
