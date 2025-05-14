@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>rect – plotnine {{&lt; var version &gt;}}</title>
+<title>get_aesthetic_limits – plotnine {{&lt; var version &gt;}}</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -151,8 +151,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#plotnine.themes.themeable.rect" id="toc-plotnine.themes.themeable.rect" class="nav-link active" data-scroll-target="#plotnine.themes.themeable.rect"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.themes.themeable.rect</span></a></li>
+  <li><a href="#plotnine.helpers.get_aesthetic_limits" id="toc-plotnine.helpers.get_aesthetic_limits" class="nav-link active" data-scroll-target="#plotnine.helpers.get_aesthetic_limits"><code class="doc-symbol doc-symbol-function"></code> <span class="doc-object-name doc-function-name">plotnine.helpers.get_aesthetic_limits</span></a></li>
   <li><a href="#parameters" id="toc-parameters" class="nav-link" data-scroll-target="#parameters">Parameters</a></li>
+  <li><a href="#returns" id="toc-returns" class="nav-link" data-scroll-target="#returns">Returns</a></li>
   </ul>
 </nav>
     </div>
@@ -163,23 +164,39 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <header id="title-block-header" class="quarto-title-block default">
-<section id="plotnine.themes.themeable.rect" class="level1 title doc-object doc-class quarto-title display-7">
-<h1 class="title doc-object doc-class"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.themes.themeable.rect</span></h1>
+<section id="plotnine.helpers.get_aesthetic_limits" class="level1 title doc-object doc-function quarto-title display-7">
+<h1 class="title doc-object doc-function"><code class="doc-symbol doc-symbol-function"></code> <span class="doc-object-name doc-function-name">plotnine.helpers.get_aesthetic_limits</span></h1>
 </section>
 </header>
-<div class="doc-signature doc-class">
-<div class="sourceCode" id="cb1"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>rect(theme_element)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="doc-signature doc-function">
+<div class="sourceCode" id="cb1"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>get_aesthetic_limits(plot, ae)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="doc-text">
-<p>All rectangle elements</p>
+<p>Get the limits of an aesthetic</p>
+<p>These are the limits before they are expanded.</p>
 </div>
 <section id="parameters" class="level2 doc-parameters">
 <h2 class="doc-parameters anchored" data-anchor-id="parameters">Parameters</h2>
 <div class="doc-definition-items">
 <dl>
-<dt><code><span class="doc-parameter-name">theme_element</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">element_rect</span></code></dt>
+<dt><code><span class="doc-parameter-name">plot</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="../reference/ggplot.html#plotnine.ggplot">ggplot</a></span></code></dt>
 <dd>
-
+<p>ggplot object</p>
+</dd>
+<dt><code><span class="doc-parameter-name">ae</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#str">str</a></span></code></dt>
+<dd>
+<p>Name of aesthetic</p>
+</dd>
+</dl>
+</div>
+</section>
+<section id="returns" class="level2 doc-returns">
+<h2 class="doc-returns anchored" data-anchor-id="returns">Returns</h2>
+<div class="doc-definition-items">
+<dl>
+<dt><code><span class="doc-parameter-name">out</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#tuple">tuple</a>[<a href="https://docs.python.org/3/library/functions.html#float">float</a>, <a href="https://docs.python.org/3/library/functions.html#float">float</a>] | <a href="https://docs.python.org/3/library/typing.html#typing.Sequence">Sequence</a>[<a href="https://docs.python.org/3/library/stdtypes.html#str">str</a>] | <a href="https://docs.python.org/3/library/stdtypes.html#list">list</a>[<a href="https://docs.python.org/3/library/stdtypes.html#tuple">tuple</a>[<a href="https://docs.python.org/3/library/functions.html#float">float</a>]] | <a href="https://docs.python.org/3/library/stdtypes.html#list">list</a>[<a href="https://docs.python.org/3/library/typing.html#typing.Sequence">Sequence</a>[<a href="https://docs.python.org/3/library/stdtypes.html#str">str</a>]]</span></code></dt>
+<dd>
+<p>The limits of the aesthetic. If the plot is facetted, (has many panels), it is a sequence of limits, one for each panel.</p>
 </dd>
 </dl>
 </div>
