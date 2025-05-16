@@ -72,6 +72,8 @@ class annotation_stripes(annotate):
             fill_range=fill_range,
             extend=extend,
             direction=direction,
+            inherit_aes=False,
+            show_legend=False,
             **kwargs,
         )
 
