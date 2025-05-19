@@ -103,7 +103,7 @@ release-minor:
 release-patch:
 	@$(PYTHON) ./tools/release-checklist.py patch
 
-dist: clean
+dist: clean-build
 	$(PYTHON) -m build
 	ls -l dist
 
