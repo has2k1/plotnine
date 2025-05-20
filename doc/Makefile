@@ -66,7 +66,7 @@ config:  ## Configure project for quartodoc and quarto
 docstrings: config  ## Generate qmd files from the docstrings
 	$(PYTHON) -m quartodoc build --config _quartodoc.yml
 	# Create a objects.inv
-	@$(PYTHON) -m sphobjinv convert zlib objects.txt
+	@$(PYTHON) -m sphobjinv convert -o zlib objects.txt
 
 html: docstrings  ## Build html site
 	quarto render
