@@ -119,6 +119,7 @@ doc-dependencies:
 
 develop: clean-cache
 	$(PIP) install -e ".[all]"
+	$(MAKE) doc-dependencies
 
 develop-update: clean-cache
 	$(PIP) install --upgrade -e ".[all]"
