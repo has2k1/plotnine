@@ -540,27 +540,27 @@ quartodoc:
     - subtitle: Accessing the Options
       desc: |
         These are the methods that access the options.
-      package: plotnine.options
+      package: plotnine
       options:
         dynamic: false
       contents:
-        - get_option
-        - set_option
+        - options.get_option
+        - options.set_option
 
     - subtitle: The Available Options
       desc: |
         These are _all_ the options that you can set or get the values of.
-      package: plotnine.options
+      package: plotnine
       options:
         dynamic: false
       contents:
-        - aspect_ratio
-        - base_family
-        - base_margin
-        - current_theme
-        - dpi
-        - figure_size
-        - figure_format
+        - options.aspect_ratio
+        - options.base_family
+        - options.base_margin
+        - options.current_theme
+        - options.dpi
+        - options.figure_size
+        - options.figure_format
 
     - title: Tools
       desc: |

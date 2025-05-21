@@ -46,6 +46,16 @@ class _RenderDoc(RenderDoc):
         header = Header(self.level + 1, "Examples")
         return Blocks([body, header, embed_notebook])
 
+    # Until quartodoc makes it possible to use a tilde to use
+    # and objects name and not the qualified path, we have to
+    # create exceptions for all the qualified paths that we want
+    # to be short.
+    # Ref: https://github.com/machow/quartodoc/issues/230
+    @property
+    def summary_name(self):
+        name = super().summary_name
+        return name[8:] if name.startswith("options.") else name
+
 
 @extend_base_class
 class _RenderDocClass(RenderDocClass):
