@@ -137,6 +137,12 @@ title: Changelog
 - Fixed bug in [](:class:`~plotnine.geom_histogram`) where mapping to the `weight` aesthetic
   lead to an error. {{< issue 936 >}}
 
+- Fixed bug in [](:class:`~plotnine.geom_vline`) where you could not map the `xintercept`
+  aesthetic to a discrete variable.
+
+- Fixed bug in [](:class:`~plotnine.geom_hline`) where you could not map the `yintercept`
+  aesthetic to a discrete variable.
+
 ## v0.14.5
 (2025-01-02)
 [![](https://zenodo.org/badge/DOI/10.5281/zenodo.14587381.svg)](https://doi.org/10.5281/zenodo.14587381)
