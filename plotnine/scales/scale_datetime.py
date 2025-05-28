@@ -20,24 +20,21 @@ class scale_datetime(scale_continuous):
     """
     A string giving the distance between major breaks.
     For example `'2 weeks'`, `'5 years'`. If specified,
-    `date_breaks` takes precedence over
-    `breaks`.
+    `date_breaks` takes precedence over `breaks`.
     """
 
     date_labels: InitVar[str | None] = None
     """
     Format string for the labels.
     See [strftime](:ref:`strftime-strptime-behavior`).
-    If specified, `date_labels` takes precedence over
-    `labels`.
+    If specified, `date_labels` takes precedence over `labels`.
     """
 
     date_minor_breaks: InitVar[str | None] = None
     """
     A string giving the distance between minor breaks.
     For example `'2 weeks'`, `'5 years'`. If specified,
-    `date_minor_breaks` takes precedence over
-    `minor_breaks`.
+    `date_minor_breaks` takes precedence over `minor_breaks`.
     """
 
     _: KW_ONLY
@@ -84,14 +81,14 @@ class scale_datetime(scale_continuous):
         from mizani.labels import label_date as labels_func
 
         if date_breaks is not None:
-            self.breaks = breaks_func(date_breaks)  # pyright: ignore
+            self.breaks = breaks_func(width=date_breaks)  # pyright: ignore
         elif isinstance(self.breaks, str):
             self.breaks = breaks_func(width=self.breaks)  # pyright: ignore
 
         if date_labels is not None:
-            self.labels = labels_func(date_labels)  # pyright: ignore
+            self.labels = labels_func(fmt=date_labels)  # pyright: ignore
         elif isinstance(self.labels, str):
-            self.labels = labels_func(width=self.labels)  # pyright: ignore
+            self.labels = labels_func(fmt=self.labels)  # pyright: ignore
 
         if date_minor_breaks is not None:
             self.minor_breaks = breaks_func(date_minor_breaks)  # pyright: ignore
