@@ -513,7 +513,7 @@ def remove_missing(
     if finite:
         lst = [np.inf, -np.inf]
         to_replace = {v: lst for v in vars}
-        data.replace(to_replace, np.nan, inplace=True)  # pyright: ignore[reportArgumentType,reportCallIssue]
+        data.replace(to_replace, np.nan, inplace=True)
         txt = "non-finite"
     else:
         txt = "missing"

@@ -156,7 +156,7 @@ class scale_discrete(
             range = self.dimension(limits=limits)
 
         breaks_d = self.get_breaks(limits)
-        breaks = self.map(pd.Categorical(breaks_d))
+        breaks = self.map(pd.Categorical(breaks_d))  # pyright: ignore[reportArgumentType]
         minor_breaks = []
         labels = self.get_labels(breaks_d)
 

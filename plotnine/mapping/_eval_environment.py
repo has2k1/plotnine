@@ -48,7 +48,7 @@ def factor(
         `categories` attribute (which in turn is the `categories` argument, if
         provided).
     """
-    return pd.Categorical(values, categories=categories, ordered=None)
+    return pd.Categorical(values, categories=categories, ordered=None)  # pyright: ignore[reportArgumentType]
 
 
 def reorder(x, y, fun=np.median, ascending=True):
