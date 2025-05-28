@@ -72,8 +72,7 @@ class stat_bin_2d(stat):
         params["binwidth"] = dual_param(params["binwidth"])
         return params
 
-    @classmethod
-    def compute_group(cls, data, scales, **params):
+    def compute_group(self, data, scales, **params):
         bins = params["bins"]
         breaks = params["breaks"]
         binwidth = params["binwidth"]

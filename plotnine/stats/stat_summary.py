@@ -301,8 +301,7 @@ class stat_summary(stat):
 
         return self.params
 
-    @classmethod
-    def compute_panel(cls, data, scales, **params):
+    def compute_panel(self, data, scales, **params):
         func = make_summary_fun(
             params["fun_data"],
             params["fun_y"],

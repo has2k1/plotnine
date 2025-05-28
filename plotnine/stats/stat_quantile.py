@@ -70,8 +70,7 @@ class stat_quantile(stat):
 
         return params
 
-    @classmethod
-    def compute_group(cls, data, scales, **params):
+    def compute_group(self, data, scales, **params):
         res = [quant_pred(q, data, **params) for q in params["quantiles"]]
         return pd.concat(res, axis=0, ignore_index=True)
 

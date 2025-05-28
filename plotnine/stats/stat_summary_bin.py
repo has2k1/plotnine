@@ -125,8 +125,7 @@ class stat_summary_bin(stat):
 
         return self.params
 
-    @classmethod
-    def compute_group(cls, data, scales, **params):
+    def compute_group(self, data, scales, **params):
         bins = params["bins"]
         breaks = params["breaks"]
         binwidth = params["binwidth"]

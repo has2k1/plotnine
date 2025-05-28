@@ -16,6 +16,5 @@ class stat_identity(stat):
 
     DEFAULT_PARAMS = {"geom": "point", "position": "identity", "na_rm": False}
 
-    @classmethod
-    def compute_panel(cls, data, scales, **params):
+    def compute_panel(self, data, scales, **params):
         return data

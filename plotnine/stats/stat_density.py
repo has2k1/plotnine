@@ -150,8 +150,7 @@ class stat_density(stat):
 
         return params
 
-    @classmethod
-    def compute_group(cls, data, scales, **params):
+    def compute_group(self, data, scales, **params):
         weight = data.get("weight")
 
         if params["trim"]:

@@ -4,7 +4,7 @@ import pandas as pd
 from ..doctools import document
 from ..exceptions import PlotnineError
 from .stat import stat
-from .stat_qq import stat_qq
+from .stat_qq import theoretical_qq
 
 
 @document
@@ -66,8 +66,7 @@ class stat_qq_line(stat):
             )
         return self.params
 
-    @classmethod
-    def compute_group(cls, data, scales, **params):
+    def compute_group(self, data, scales, **params):
         from scipy.stats.mstats import mquantiles
 
         from .distributions import get_continuous_distribution
@@ -76,9 +75,15 @@ class stat_qq_line(stat):
         dparams = params["dparams"]
 
         # Compute theoretical values
-        qq_gdata = stat_qq.compute_group(data, scales, **params)
-        sample = qq_gdata["sample"].to_numpy()
-        theoretical = qq_gdata["theoretical"].to_numpy()
+        sample = data["sample"].sort_values().to_numpy()
+        theoretical = theoretical_qq(
+            sample,
+            params["distribution"],
+            alpha=params["alpha_beta"][0],
+            beta=params["alpha_beta"][1],
+            quantiles=params["quantiles"],
+            distribution_params=dparams,
+        )
 
         # Compute slope & intercept of the line through the quantiles
         cdist = get_continuous_distribution(params["distribution"])

@@ -47,8 +47,7 @@ class stat_hull(stat):
     }
     CREATES = {"area"}
 
-    @classmethod
-    def compute_group(cls, data, scales, **params):
+    def compute_group(self, data, scales, **params):
         from scipy.spatial import ConvexHull
 
         hull = ConvexHull(

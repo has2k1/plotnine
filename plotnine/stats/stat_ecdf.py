@@ -50,8 +50,7 @@ class stat_ecdf(stat):
     DEFAULT_AES = {"y": after_stat("ecdf")}
     CREATES = {"ecdf"}
 
-    @classmethod
-    def compute_group(cls, data, scales, **params):
+    def compute_group(self, data, scales, **params):
         from statsmodels.distributions.empirical_distribution import ECDF
 
         # If n is None, use raw values; otherwise interpolate
