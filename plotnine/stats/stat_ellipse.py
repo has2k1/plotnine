@@ -49,13 +49,13 @@ class stat_ellipse(stat):
         "segments": 51,
     }
 
-    def compute_group(self, data, scales, **params):
+    def compute_group(self, data, scales):
         import scipy.stats as stats
         from scipy import linalg
 
-        level = params["level"]
-        segments = params["segments"]
-        type_ = params["type"]
+        level = self.params["level"]
+        segments = self.params["segments"]
+        type_ = self.params["type"]
 
         dfn = 2
         dfd = len(data) - 1

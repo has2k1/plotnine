@@ -19,7 +19,10 @@ title: Changelog
    or `axis_text_y` to control the spacing between the axis text and the ticks.
    ({{< issue 843 >}})
 
-- The `stat` class methods `stat.compute_layer`, `stat.compute_panel` and `stat.compute_group` are now instance methods.
+- The `stat` class methods `stat.compute_layer`, `stat.compute_panel` and `stat.compute_group` are now instance methods and they no longer accept
+  `**params` arguments. Access to the parameters is through `self.params`.
+
+
 
 ### New Features
 

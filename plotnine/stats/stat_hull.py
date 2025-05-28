@@ -47,11 +47,11 @@ class stat_hull(stat):
     }
     CREATES = {"area"}
 
-    def compute_group(self, data, scales, **params):
+    def compute_group(self, data, scales):
         from scipy.spatial import ConvexHull
 
         hull = ConvexHull(
-            data[["x", "y"]], qhull_options=params["qhull_options"]
+            data[["x", "y"]], qhull_options=self.params["qhull_options"]
         )
         idx = np.hstack([hull.vertices, hull.vertices[0]])
 

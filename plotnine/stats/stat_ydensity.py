@@ -109,7 +109,7 @@ class stat_ydensity(stat):
         return data
 
     def setup_params(self, data):
-        params = self.params.copy()
+        params = self.params
 
         valid_scale = ("area", "count", "width")
         if params["scale"] not in valid_scale:
@@ -141,10 +141,9 @@ class stat_ydensity(stat):
         for key in missing_params:
             params[key] = stat_density.DEFAULT_PARAMS[key]
 
-        return params
-
-    def compute_panel(self, data, scales, **params):
-        data = super().compute_panel(data, scales, **params)
+    def compute_panel(self, data, scales):
+        params = self.params
+        data = super().compute_panel(data, scales)
 
         if not len(data):
             return data
@@ -166,19 +165,19 @@ class stat_ydensity(stat):
 
         return data
 
-    def compute_group(self, data, scales, **params):
+    def compute_group(self, data, scales):
         n = len(data)
         if n == 0:
             return pd.DataFrame()
 
         weight = data.get("weight")
 
-        if params["trim"]:
+        if self.params["trim"]:
             range_y = data["y"].min(), data["y"].max()
         else:
             range_y = scales.y.dimension()
 
-        dens = compute_density(data["y"], weight, range_y, **params)
+        dens = compute_density(data["y"], weight, range_y, self.params)
 
         if not len(dens):
             return dens

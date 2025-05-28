@@ -123,20 +123,18 @@ class stat_summary_bin(stat):
 
             self.params["fun_args"]["random_state"] = random_state
 
-        return self.params
-
-    def compute_group(self, data, scales, **params):
-        bins = params["bins"]
-        breaks = params["breaks"]
-        binwidth = params["binwidth"]
-        boundary = params["boundary"]
+    def compute_group(self, data, scales):
+        bins = self.params["bins"]
+        breaks = self.params["breaks"]
+        binwidth = self.params["binwidth"]
+        boundary = self.params["boundary"]
 
         func = make_summary_fun(
-            params["fun_data"],
-            params["fun_y"],
-            params["fun_ymin"],
-            params["fun_ymax"],
-            params["fun_args"],
+            self.params["fun_data"],
+            self.params["fun_y"],
+            self.params["fun_ymin"],
+            self.params["fun_ymax"],
+            self.params["fun_args"],
         )
 
         breaks = fuzzybreaks(scales.x, breaks, boundary, binwidth, bins)

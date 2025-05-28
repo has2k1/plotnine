@@ -59,7 +59,7 @@ class stat_quantile(stat):
     CREATES = {"quantile", "group"}
 
     def setup_params(self, data):
-        params = self.params.copy()
+        params = self.params
         if params["formula"] is None:
             params["formula"] = "y ~ x"
             warn("Formula not specified, using '{}'", PlotnineWarning)
@@ -68,14 +68,14 @@ class stat_quantile(stat):
         except TypeError:
             params["quantiles"] = (params["quantiles"],)
 
-        return params
-
-    def compute_group(self, data, scales, **params):
-        res = [quant_pred(q, data, **params) for q in params["quantiles"]]
+    def compute_group(self, data, scales):
+        res = [
+            quant_pred(q, data, self.params) for q in self.params["quantiles"]
+        ]
         return pd.concat(res, axis=0, ignore_index=True)
 
 
-def quant_pred(q, data, **params):
+def quant_pred(q, data, params):
     """
     Quantile precitions
     """

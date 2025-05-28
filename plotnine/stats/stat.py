@@ -195,9 +195,9 @@ class stat(ABC, metaclass=Register):
 
         return data
 
-    def setup_params(self, data: pd.DataFrame) -> dict[str, Any]:
+    def setup_params(self, data: pd.DataFrame):
         """
-        Override this to verify or adjust parameters
+        Override this to verify and/or adjust parameters
 
         Parameters
         ----------
@@ -209,7 +209,6 @@ class stat(ABC, metaclass=Register):
         out :
             Parameters used by the stats.
         """
-        return self.params
 
     def setup_data(self, data: pd.DataFrame) -> pd.DataFrame:
         """
@@ -227,9 +226,7 @@ class stat(ABC, metaclass=Register):
         """
         return data
 
-    def finish_layer(
-        self, data: pd.DataFrame, params: dict[str, Any]
-    ) -> pd.DataFrame:
+    def finish_layer(self, data: pd.DataFrame) -> pd.DataFrame:
         """
         Modify data after the aesthetics have been mapped
 
@@ -258,7 +255,7 @@ class stat(ABC, metaclass=Register):
         return data
 
     def compute_layer(
-        self, data: pd.DataFrame, params: dict[str, Any], layout: Layout
+        self, data: pd.DataFrame, layout: Layout
     ) -> pd.DataFrame:
         """
         Calculate statistics for this layers
@@ -274,20 +271,18 @@ class stat(ABC, metaclass=Register):
         ----------
         data :
             Data points for all objects in a layer.
-        params :
-            Stat parameters
         layout :
             Panel layout information
         """
         check_required_aesthetics(
             self.REQUIRED_AES,
-            list(data.columns) + list(params.keys()),
+            list(data.columns) + list(self.params.keys()),
             self.__class__.__name__,
         )
 
         data = remove_missing(
             data,
-            na_rm=params.get("na_rm", False),
+            na_rm=self.params.get("na_rm", False),
             vars=list(self.REQUIRED_AES | self.NON_MISSING_AES),
             name=self.__class__.__name__,
             finite=True,
@@ -303,13 +298,11 @@ class stat(ABC, metaclass=Register):
             if len(pdata) == 0:
                 return pdata
             pscales = layout.get_scales(pdata["PANEL"].iloc[0])
-            return self.compute_panel(pdata, pscales, **params)
+            return self.compute_panel(pdata, pscales)
 
         return groupby_apply(data, "PANEL", fn)
 
-    def compute_panel(
-        self, data: pd.DataFrame, scales: pos_scales, **params: Any
-    ):
+    def compute_panel(self, data: pd.DataFrame, scales: pos_scales):
         """
         Calculate the statistics for all the groups
 
@@ -339,7 +332,7 @@ class stat(ABC, metaclass=Register):
 
         stats = []
         for _, old in data.groupby("group"):
-            new = self.compute_group(old, scales, **params)
+            new = self.compute_group(old, scales)
             new.reset_index(drop=True, inplace=True)
             unique = uniquecols(old)
             missing = unique.columns.difference(new.columns)
@@ -364,7 +357,7 @@ class stat(ABC, metaclass=Register):
         return stats
 
     def compute_group(
-        self, data: pd.DataFrame, scales: pos_scales, **params: Any
+        self, data: pd.DataFrame, scales: pos_scales
     ) -> pd.DataFrame:
         """
         Calculate statistics for the group

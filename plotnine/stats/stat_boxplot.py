@@ -91,9 +91,8 @@ class stat_boxplot(stat):
         if self.params["width"] is None:
             x = data.get("x", 0)
             self.params["width"] = resolution(x, False) * 0.75
-        return self.params
 
-    def compute_group(self, data, scales, **params):
+    def compute_group(self, data, scales):
         n = len(data)
         y = data["y"].to_numpy()
         if "weight" in data:
@@ -102,12 +101,14 @@ class stat_boxplot(stat):
         else:
             weights = None
             total_weight = len(y)
-        res = weighted_boxplot_stats(y, weights=weights, whis=params["coef"])
+        res = weighted_boxplot_stats(
+            y, weights=weights, whis=self.params["coef"]
+        )
 
         if len(np.unique(data["x"])) > 1:
             width = np.ptp(data["x"]) * 0.9
         else:
-            width = params["width"]
+            width = self.params["width"]
 
         if isinstance(data["x"].dtype, pd.CategoricalDtype):
             x = data["x"].iloc[0]

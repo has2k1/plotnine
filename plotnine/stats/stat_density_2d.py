@@ -66,7 +66,7 @@ class stat_density_2d(stat):
     CREATES = {"y"}
 
     def setup_params(self, data):
-        params = self.params.copy()
+        params = self.params
         if params["kde_params"] is None:
             params["kde_params"] = {}
 
@@ -78,9 +78,8 @@ class stat_density_2d(stat):
                 y_type = get_var_type(data["y"])
                 kde_params["var_type"] = f"{x_type}{y_type}"
 
-        return params
-
-    def compute_group(self, data, scales, **params):
+    def compute_group(self, data, scales):
+        params = self.params
         package = params["package"]
         kde_params = params["kde_params"]
 

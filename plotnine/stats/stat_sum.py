@@ -35,7 +35,7 @@ class stat_sum(stat):
     DEFAULT_AES = {"size": after_stat("n"), "weight": 1}
     CREATES = {"n", "prop"}
 
-    def compute_panel(self, data, scales, **params):
+    def compute_panel(self, data, scales):
         if "weight" not in data:
             data["weight"] = 1
 

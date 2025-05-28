@@ -37,7 +37,7 @@ class stat_smooth(stat):
         If a `callable` is passed, it must have the signature:
 
         ```python
-        def my_smoother(data, xseq, **params):
+        def my_smoother(data, xseq, params):
             # * data - has the x and y values for the model
             # * xseq - x values to be predicted
             # * params - stat parameters
@@ -163,7 +163,7 @@ class stat_smooth(stat):
         return data
 
     def setup_params(self, data):
-        params = self.params.copy()
+        params = self.params
         # Use loess/lowess for small datasets
         # and glm for large
         if params["method"] == "auto":
@@ -202,11 +202,9 @@ class stat_smooth(stat):
                 )
             params["environment"] = self.environment
 
-        return params
-
-    def compute_group(self, data, scales, **params):
+    def compute_group(self, data, scales):
         data = data.sort_values("x")
-        n = params["n"]
+        n = self.params["n"]
 
         x_unique = data["x"].unique()
 
@@ -222,15 +220,15 @@ class stat_smooth(stat):
             return pd.DataFrame()
 
         if data["x"].dtype.kind == "i":
-            if params["fullrange"]:
+            if self.params["fullrange"]:
                 xseq = scales.x.dimension()
             else:
                 xseq = np.sort(x_unique)
         else:
-            if params["fullrange"]:
+            if self.params["fullrange"]:
                 rangee = scales.x.dimension()
             else:
                 rangee = [data["x"].min(), data["x"].max()]
             xseq = np.linspace(rangee[0], rangee[1], n)
 
-        return predictdf(data, xseq, **params)
+        return predictdf(data, xseq, self.params)

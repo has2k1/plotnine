@@ -100,7 +100,6 @@ class stat_bin(stat):
             and params["binwidth"] is None
             and params["bins"] is None
         ):
-            params = params.copy()
             params["bins"] = freedman_diaconis_bins(data["x"])
             msg = (
                 "'stat_bin()' using 'bins = {}'. "
@@ -108,9 +107,8 @@ class stat_bin(stat):
             )
             warn(msg.format(params["bins"]), PlotnineWarning)
 
-        return params
-
-    def compute_group(self, data, scales, **params):
+    def compute_group(self, data, scales):
+        params = self.params
         if params["breaks"] is not None:
             breaks = np.asarray(params["breaks"])
             if hasattr(scales.x, "transform"):
