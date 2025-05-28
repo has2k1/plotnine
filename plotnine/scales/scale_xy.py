@@ -213,7 +213,7 @@ class scale_x_discrete(scale_position_discrete):
     Discrete x position
     """
 
-    _aesthetics = ["x", "xmin", "xmax", "xend"]
+    _aesthetics = ["x", "xmin", "xmax", "xend", "xintercept"]
 
 
 @dataclass(kw_only=True)
@@ -222,7 +222,7 @@ class scale_y_discrete(scale_position_discrete):
     Discrete y position
     """
 
-    _aesthetics = ["y", "ymin", "ymax", "yend"]
+    _aesthetics = ["y", "ymin", "ymax", "yend", "yintercept"]
 
 
 # Not part of the user API
