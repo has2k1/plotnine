@@ -126,7 +126,7 @@ class stat_density(stat):
     CREATES = {"density", "count", "scaled", "n"}
 
     def setup_params(self, data):
-        params = self.params.copy()
+        params = self.params
         lookup = {
             "biweight": "biw",
             "cosine": "cos",
@@ -148,20 +148,18 @@ class stat_density(stat):
             )
             raise PlotnineError(msg)
 
-        return params
-
-    def compute_group(self, data, scales, **params):
+    def compute_group(self, data, scales):
         weight = data.get("weight")
 
-        if params["trim"]:
+        if self.params["trim"]:
             range_x = data["x"].min(), data["x"].max()
         else:
             range_x = scales.x.dimension()
 
-        return compute_density(data["x"], weight, range_x, **params)
+        return compute_density(data["x"], weight, range_x, self.params)
 
 
-def compute_density(x, weight, range, **params):
+def compute_density(x, weight, range, params):
     """
     Compute density
     """

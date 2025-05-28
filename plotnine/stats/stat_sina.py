@@ -116,7 +116,7 @@ class stat_sina(stat):
         return data
 
     def setup_params(self, data):
-        params = self.params.copy()
+        params = self.params
         random_state = params["random_state"]
 
         if params["maxwidth"] is None:
@@ -137,9 +137,9 @@ class stat_sina(stat):
         params["clip"] = (-np.inf, np.inf)
         params["bounds"] = (-np.inf, np.inf)
         params["n"] = 512
-        return params
 
-    def compute_panel(self, data, scales, **params):
+    def compute_panel(self, data, scales):
+        params = self.params
         maxwidth = params["maxwidth"]
         random_state = params["random_state"]
         fuzz = 1e-8
@@ -153,7 +153,7 @@ class stat_sina(stat):
         else:
             params["bins"] = breaks_from_bins(y_dim_fuzzed, params["bins"])
 
-        data = super().compute_panel(data, scales, **params)
+        data = super().compute_panel(data, scales)
 
         if not len(data):
             return data
@@ -197,10 +197,10 @@ class stat_sina(stat):
 
         return data
 
-    def compute_group(self, data, scales, **params):
-        maxwidth = params["maxwidth"]
-        bins = params["bins"]
-        bin_limit = params["bin_limit"]
+    def compute_group(self, data, scales):
+        maxwidth = self.params["maxwidth"]
+        bins = self.params["bins"]
+        bin_limit = self.params["bin_limit"]
         weight = None
         y = data["y"]
 
@@ -213,12 +213,12 @@ class stat_sina(stat):
         elif len(np.unique(y)) < 2:
             data["density"] = 1
             data["scaled"] = 1
-        elif params["method"] == "density":
+        elif self.params["method"] == "density":
             from scipy.interpolate import interp1d
 
             # density kernel estimation
             range_y = y.min(), y.max()
-            dens = compute_density(y, weight, range_y, **params)
+            dens = compute_density(y, weight, range_y, self.params)
             densf = interp1d(
                 dens["x"],
                 dens["density"],
@@ -251,9 +251,9 @@ class stat_sina(stat):
 
         return data
 
-    def finish_layer(self, data, params):
+    def finish_layer(self, data):
         # Rescale x in case positions have been adjusted
-        style = params["style"]
+        style = self.params["style"]
         x_mean = data["x"].to_numpy()
         x_mod = (data["xmax"] - data["xmin"]) / data["width"]
         data["x"] = data["x"] + data["x_diff"] * x_mod

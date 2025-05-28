@@ -50,16 +50,18 @@ class stat_ecdf(stat):
     DEFAULT_AES = {"y": after_stat("ecdf")}
     CREATES = {"ecdf"}
 
-    def compute_group(self, data, scales, **params):
+    def compute_group(self, data, scales):
         from statsmodels.distributions.empirical_distribution import ECDF
 
+        n, pad = self.params["n"], self.params["pad"]
+
         # If n is None, use raw values; otherwise interpolate
-        if params["n"] is None:
+        if n is None:
             x = np.unique(data["x"])
         else:
-            x = np.linspace(data["x"].min(), data["x"].max(), params["n"])
+            x = np.linspace(data["x"].min(), data["x"].max(), n)
 
-        if params["pad"]:
+        if pad:
             x = np.hstack([-np.inf, x, np.inf])
 
         ecdf = ECDF(data["x"].to_numpy())(x)

@@ -17,7 +17,7 @@ if TYPE_CHECKING:
     from plotnine.mapping import Environment
 
 
-def predictdf(data, xseq, **params) -> pd.DataFrame:
+def predictdf(data, xseq, params) -> pd.DataFrame:
     """
     Make prediction on the data
 
@@ -49,21 +49,21 @@ def predictdf(data, xseq, **params) -> pd.DataFrame:
     if not callable(method):
         msg = (
             "'method' should either be a string or a function"
-            "with the signature `func(data, xseq, **params)`"
+            "with the signature `func(data, xseq, params)`"
         )
         raise PlotnineError(msg)
 
-    return method(data, xseq, **params)
+    return method(data, xseq, params)
 
 
-def lm(data, xseq, **params) -> pd.DataFrame:
+def lm(data, xseq, params) -> pd.DataFrame:
     """
     Fit OLS / WLS if data has weight
     """
     import statsmodels.api as sm
 
     if params["formula"]:
-        return lm_formula(data, xseq, **params)
+        return lm_formula(data, xseq, params)
 
     X = sm.add_constant(data["x"])
     Xseq = sm.add_constant(xseq)
@@ -96,7 +96,7 @@ def lm(data, xseq, **params) -> pd.DataFrame:
     return data
 
 
-def lm_formula(data, xseq, **params) -> pd.DataFrame:
+def lm_formula(data, xseq, params) -> pd.DataFrame:
     """
     Fit OLS / WLS using a formula
     """
@@ -140,14 +140,14 @@ def lm_formula(data, xseq, **params) -> pd.DataFrame:
     return data
 
 
-def rlm(data, xseq, **params) -> pd.DataFrame:
+def rlm(data, xseq, params) -> pd.DataFrame:
     """
     Fit RLM
     """
     import statsmodels.api as sm
 
     if params["formula"]:
-        return rlm_formula(data, xseq, **params)
+        return rlm_formula(data, xseq, params)
 
     X = sm.add_constant(data["x"])
     Xseq = sm.add_constant(xseq)
@@ -170,7 +170,7 @@ def rlm(data, xseq, **params) -> pd.DataFrame:
     return data
 
 
-def rlm_formula(data, xseq, **params) -> pd.DataFrame:
+def rlm_formula(data, xseq, params) -> pd.DataFrame:
     """
     Fit RLM using a formula
     """
@@ -196,14 +196,14 @@ def rlm_formula(data, xseq, **params) -> pd.DataFrame:
     return data
 
 
-def gls(data, xseq, **params) -> pd.DataFrame:
+def gls(data, xseq, params) -> pd.DataFrame:
     """
     Fit GLS
     """
     import statsmodels.api as sm
 
     if params["formula"]:
-        return gls_formula(data, xseq, **params)
+        return gls_formula(data, xseq, params)
 
     X = sm.add_constant(data["x"])
     Xseq = sm.add_constant(xseq)
@@ -227,7 +227,7 @@ def gls(data, xseq, **params) -> pd.DataFrame:
     return data
 
 
-def gls_formula(data, xseq, **params):
+def gls_formula(data, xseq, params):
     """
     Fit GLL using a formula
     """
@@ -258,14 +258,14 @@ def gls_formula(data, xseq, **params):
     return data
 
 
-def glm(data, xseq, **params) -> pd.DataFrame:
+def glm(data, xseq, params) -> pd.DataFrame:
     """
     Fit GLM
     """
     import statsmodels.api as sm
 
     if params["formula"]:
-        return glm_formula(data, xseq, **params)
+        return glm_formula(data, xseq, params)
 
     X = sm.add_constant(data["x"])
     Xseq = sm.add_constant(xseq)
@@ -292,7 +292,7 @@ def glm(data, xseq, **params) -> pd.DataFrame:
     return data
 
 
-def glm_formula(data, xseq, **params):
+def glm_formula(data, xseq, params):
     """
     Fit with GLM formula
     """
@@ -321,7 +321,7 @@ def glm_formula(data, xseq, **params):
     return data
 
 
-def lowess(data, xseq, **params) -> pd.DataFrame:
+def lowess(data, xseq, params) -> pd.DataFrame:
     """
     Lowess fitting
     """
@@ -351,7 +351,7 @@ def lowess(data, xseq, **params) -> pd.DataFrame:
     return data
 
 
-def loess(data, xseq, **params) -> pd.DataFrame:
+def loess(data, xseq, params) -> pd.DataFrame:
     """
     Loess smoothing
     """
@@ -402,7 +402,7 @@ def loess(data, xseq, **params) -> pd.DataFrame:
     return data
 
 
-def mavg(data, xseq, **params) -> pd.DataFrame:
+def mavg(data, xseq, params) -> pd.DataFrame:
     """
     Fit moving average
     """
@@ -426,7 +426,7 @@ def mavg(data, xseq, **params) -> pd.DataFrame:
     return data
 
 
-def gpr(data, xseq, **params):
+def gpr(data, xseq, params):
     """
     Fit gaussian process
     """

@@ -16,5 +16,5 @@ class stat_unique(stat):
 
     DEFAULT_PARAMS = {"geom": "point", "position": "identity", "na_rm": False}
 
-    def compute_panel(self, data, scales, **params):
+    def compute_panel(self, data, scales):
         return data.drop_duplicates()

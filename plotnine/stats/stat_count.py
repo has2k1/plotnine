@@ -49,20 +49,17 @@ class stat_count(stat):
     CREATES = {"count", "prop"}
 
     def setup_params(self, data):
-        params = self.params.copy()
-        if params["width"] is None:
-            params["width"] = resolution(data["x"], False) * 0.9
+        if self.params["width"] is None:
+            self.params["width"] = resolution(data["x"], False) * 0.9
 
-        return params
-
-    def compute_group(self, data, scales, **params):
+    def compute_group(self, data, scales):
         x = data["x"]
-        if ("y" in data) or ("y" in params):
+        if ("y" in data) or ("y" in self.params):
             msg = "stat_count() must not be used with a y aesthetic"
             raise PlotnineError(msg)
 
         weight = data.get("weight", [1] * len(x))
-        width = params["width"]
+        width = self.params["width"]
         xdata_long = pd.DataFrame({"x": x, "weight": weight})
         # weighted frequency count
         count = xdata_long.pivot_table("weight", index=["x"], aggfunc="sum")[

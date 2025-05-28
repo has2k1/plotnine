@@ -278,10 +278,10 @@ class layer:
         if not len(data):
             return
 
-        params = self.stat.setup_params(data)
+        self.stat.setup_params(data)
         data = self.stat.use_defaults(data)
         data = self.stat.setup_data(data)
-        data = self.stat.compute_layer(data, params, layout)
+        data = self.stat.compute_layer(data, layout)
         self.data = data
 
     def map_statistic(self, plot: ggplot):
@@ -399,7 +399,7 @@ class layer:
         """
         Prepare/modify data for plotting
         """
-        self.stat.finish_layer(self.data, self.stat.params)
+        self.stat.finish_layer(self.data)
 
 
 class Layers(List[layer]):

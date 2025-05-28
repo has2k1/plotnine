@@ -74,15 +74,15 @@ class stat_qq(stat):
         "alpha_beta": (3 / 8, 3 / 8),
     }
 
-    def compute_group(self, data, scales, **params):
+    def compute_group(self, data, scales):
         sample = data["sample"].sort_values().to_numpy()
         theoretical = theoretical_qq(
             sample,
-            params["distribution"],
-            alpha=params["alpha_beta"][0],
-            beta=params["alpha_beta"][1],
-            quantiles=params["quantiles"],
-            distribution_params=params["dparams"],
+            self.params["distribution"],
+            alpha=self.params["alpha_beta"][0],
+            beta=self.params["alpha_beta"][1],
+            quantiles=self.params["quantiles"],
+            distribution_params=self.params["dparams"],
         )
         return pd.DataFrame({"sample": sample, "theoretical": theoretical})
 

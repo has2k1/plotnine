@@ -66,17 +66,16 @@ class stat_bin_2d(stat):
     CREATES = {"xmin", "xmax", "ymin", "ymax", "count", "density"}
 
     def setup_params(self, data):
-        params = self.params.copy()
+        params = self.params
         params["bins"] = dual_param(params["bins"])
         params["breaks"] = dual_param(params["breaks"])
         params["binwidth"] = dual_param(params["binwidth"])
-        return params
 
-    def compute_group(self, data, scales, **params):
-        bins = params["bins"]
-        breaks = params["breaks"]
-        binwidth = params["binwidth"]
-        drop = params["drop"]
+    def compute_group(self, data, scales):
+        bins = self.params["bins"]
+        breaks = self.params["breaks"]
+        binwidth = self.params["binwidth"]
+        drop = self.params["drop"]
         weight = data.get("weight")
 
         if weight is None:

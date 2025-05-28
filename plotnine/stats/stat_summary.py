@@ -299,15 +299,13 @@ class stat_summary(stat):
 
             self.params["fun_args"]["random_state"] = random_state
 
-        return self.params
-
-    def compute_panel(self, data, scales, **params):
+    def compute_panel(self, data, scales):
         func = make_summary_fun(
-            params["fun_data"],
-            params["fun_y"],
-            params["fun_ymin"],
-            params["fun_ymax"],
-            params["fun_args"],
+            self.params["fun_data"],
+            self.params["fun_y"],
+            self.params["fun_ymin"],
+            self.params["fun_ymax"],
+            self.params["fun_args"],
         )
 
         # break a dataframe into pieces, summarise each piece,
