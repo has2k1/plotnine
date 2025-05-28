@@ -19,6 +19,8 @@ title: Changelog
    or `axis_text_y` to control the spacing between the axis text and the ticks.
    ({{< issue 843 >}})
 
+- The `stat` class methods `stat.compute_layer`, `stat.compute_panel` and `stat.compute_group` are now instance methods.
+
 ### New Features
 
 - Plot Composition is here. Using an intuitive algebra, you can

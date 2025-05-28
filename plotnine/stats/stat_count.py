@@ -55,8 +55,7 @@ class stat_count(stat):
 
         return params
 
-    @classmethod
-    def compute_group(cls, data, scales, **params):
+    def compute_group(self, data, scales, **params):
         x = data["x"]
         if ("y" in data) or ("y" in params):
             msg = "stat_count() must not be used with a y aesthetic"

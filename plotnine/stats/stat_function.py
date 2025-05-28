@@ -84,8 +84,7 @@ class stat_function(stat):
             )
         return self.params
 
-    @classmethod
-    def compute_group(cls, data, scales, **params):
+    def compute_group(self, data, scales, **params):
         old_fun: Callable[..., FloatArrayLike] = params["fun"]
         n = params["n"]
         args = params["args"]

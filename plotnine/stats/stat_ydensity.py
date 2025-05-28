@@ -143,9 +143,8 @@ class stat_ydensity(stat):
 
         return params
 
-    @classmethod
-    def compute_panel(cls, data, scales, **params):
-        data = super(cls, cls).compute_panel(data, scales, **params)
+    def compute_panel(self, data, scales, **params):
+        data = super().compute_panel(data, scales, **params)
 
         if not len(data):
             return data
@@ -167,8 +166,7 @@ class stat_ydensity(stat):
 
         return data
 
-    @classmethod
-    def compute_group(cls, data, scales, **params):
+    def compute_group(self, data, scales, **params):
         n = len(data)
         if n == 0:
             return pd.DataFrame()

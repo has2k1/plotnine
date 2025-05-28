@@ -204,8 +204,7 @@ class stat_smooth(stat):
 
         return params
 
-    @classmethod
-    def compute_group(cls, data, scales, **params):
+    def compute_group(self, data, scales, **params):
         data = data.sort_values("x")
         n = params["n"]
 

@@ -49,8 +49,7 @@ class stat_ellipse(stat):
         "segments": 51,
     }
 
-    @classmethod
-    def compute_group(cls, data, scales, **params):
+    def compute_group(self, data, scales, **params):
         import scipy.stats as stats
         from scipy import linalg
 

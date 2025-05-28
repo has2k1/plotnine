@@ -93,8 +93,7 @@ class stat_boxplot(stat):
             self.params["width"] = resolution(x, False) * 0.75
         return self.params
 
-    @classmethod
-    def compute_group(cls, data, scales, **params):
+    def compute_group(self, data, scales, **params):
         n = len(data)
         y = data["y"].to_numpy()
         if "weight" in data:

@@ -257,9 +257,8 @@ class stat(ABC, metaclass=Register):
         """
         return data
 
-    @classmethod
     def compute_layer(
-        cls, data: pd.DataFrame, params: dict[str, Any], layout: Layout
+        self, data: pd.DataFrame, params: dict[str, Any], layout: Layout
     ) -> pd.DataFrame:
         """
         Calculate statistics for this layers
@@ -281,16 +280,16 @@ class stat(ABC, metaclass=Register):
             Panel layout information
         """
         check_required_aesthetics(
-            cls.REQUIRED_AES,
+            self.REQUIRED_AES,
             list(data.columns) + list(params.keys()),
-            cls.__name__,
+            self.__class__.__name__,
         )
 
         data = remove_missing(
             data,
             na_rm=params.get("na_rm", False),
-            vars=list(cls.REQUIRED_AES | cls.NON_MISSING_AES),
-            name=cls.__name__,
+            vars=list(self.REQUIRED_AES | self.NON_MISSING_AES),
+            name=self.__class__.__name__,
             finite=True,
         )
 
@@ -304,13 +303,12 @@ class stat(ABC, metaclass=Register):
             if len(pdata) == 0:
                 return pdata
             pscales = layout.get_scales(pdata["PANEL"].iloc[0])
-            return cls.compute_panel(pdata, pscales, **params)
+            return self.compute_panel(pdata, pscales, **params)
 
         return groupby_apply(data, "PANEL", fn)
 
-    @classmethod
     def compute_panel(
-        cls, data: pd.DataFrame, scales: pos_scales, **params: Any
+        self, data: pd.DataFrame, scales: pos_scales, **params: Any
     ):
         """
         Calculate the statistics for all the groups
@@ -341,7 +339,7 @@ class stat(ABC, metaclass=Register):
 
         stats = []
         for _, old in data.groupby("group"):
-            new = cls.compute_group(old, scales, **params)
+            new = self.compute_group(old, scales, **params)
             new.reset_index(drop=True, inplace=True)
             unique = uniquecols(old)
             missing = unique.columns.difference(new.columns)
@@ -365,9 +363,8 @@ class stat(ABC, metaclass=Register):
         # it completely.
         return stats
 
-    @classmethod
     def compute_group(
-        cls, data: pd.DataFrame, scales: pos_scales, **params: Any
+        self, data: pd.DataFrame, scales: pos_scales, **params: Any
     ) -> pd.DataFrame:
         """
         Calculate statistics for the group
@@ -390,7 +387,7 @@ class stat(ABC, metaclass=Register):
             Parameters
         """
         msg = "{} should implement this method."
-        raise NotImplementedError(msg.format(cls.__name__))
+        raise NotImplementedError(msg.format(self.__class__.__name__))
 
     def __radd__(self, other: ggplot) -> ggplot:
         """

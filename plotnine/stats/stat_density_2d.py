@@ -80,8 +80,7 @@ class stat_density_2d(stat):
 
         return params
 
-    @classmethod
-    def compute_group(cls, data, scales, **params):
+    def compute_group(self, data, scales, **params):
         package = params["package"]
         kde_params = params["kde_params"]
 

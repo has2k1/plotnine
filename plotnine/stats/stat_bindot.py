@@ -123,8 +123,7 @@ class stat_bindot(stat):
 
         return params
 
-    @classmethod
-    def compute_panel(cls, data, scales, **params):
+    def compute_panel(self, data, scales, **params):
         if (
             params["method"] == "dotdensity"
             and params["binpositions"] == "all"
@@ -160,10 +159,9 @@ class stat_bindot(stat):
             data["binwidth"] = newdata["binwidth"]
             data["weight"] = newdata["weight"]
             data["bincenter"] = newdata["bincenter"]
-        return super(cls, stat_bindot).compute_panel(data, scales, **params)
+        return super().compute_panel(data, scales, **params)
 
-    @classmethod
-    def compute_group(cls, data, scales, **params):
+    def compute_group(self, data, scales, **params):
         # Check that weights are whole numbers
         # (for dots, weights must be whole)
         weight = data.get("weight")

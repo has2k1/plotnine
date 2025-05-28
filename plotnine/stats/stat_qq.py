@@ -1,3 +1,7 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 import numpy as np
 import pandas as pd
 
@@ -5,6 +9,11 @@ from ..doctools import document
 from ..exceptions import PlotnineError
 from ..mapping.evaluation import after_stat
 from .stat import stat
+
+if TYPE_CHECKING:
+    from typing import Any, Sequence
+
+    from plotnine.typing import FloatArray
 
 
 # Note: distribution should be a name from scipy.stat.distribution
@@ -65,25 +74,41 @@ class stat_qq(stat):
         "alpha_beta": (3 / 8, 3 / 8),
     }
 
-    @classmethod
-    def compute_group(cls, data, scales, **params):
-        from scipy.stats.mstats import plotting_positions
-
-        from .distributions import get_continuous_distribution
-
+    def compute_group(self, data, scales, **params):
         sample = data["sample"].sort_values().to_numpy()
-        alpha, beta = params["alpha_beta"]
-        quantiles = params["quantiles"]
-
-        if quantiles is None:
-            quantiles = plotting_positions(sample, alpha, beta)
-        elif len(quantiles) != len(sample):
-            raise PlotnineError(
-                "The number of quantile values is not the same as "
-                "the number of sample values."
-            )
-
-        quantiles = np.asarray(quantiles)
-        cdist = get_continuous_distribution(params["distribution"])
-        theoretical = cdist.ppf(quantiles, **params["dparams"])
+        theoretical = theoretical_qq(
+            sample,
+            params["distribution"],
+            alpha=params["alpha_beta"][0],
+            beta=params["alpha_beta"][1],
+            quantiles=params["quantiles"],
+            distribution_params=params["dparams"],
+        )
         return pd.DataFrame({"sample": sample, "theoretical": theoretical})
+
+
+def theoretical_qq(
+    x: FloatArray,
+    distribution: str,
+    alpha: float,
+    beta: float,
+    quantiles: Sequence[float] | None,
+    distribution_params: dict[str, Any],
+) -> FloatArray:
+    """
+    Caculate theoretical qq distribution
+    """
+    from scipy.stats.mstats import plotting_positions
+
+    from .distributions import get_continuous_distribution
+
+    if quantiles is None:
+        quantiles = plotting_positions(x, alpha, beta)
+    elif len(quantiles) != len(x):
+        raise PlotnineError(
+            "The number of quantile values is not the same as "
+            "the number of sample values."
+        )
+
+    cdist = get_continuous_distribution(distribution)
+    return cdist.ppf(np.asarray(quantiles), **distribution_params)

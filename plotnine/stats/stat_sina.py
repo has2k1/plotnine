@@ -139,8 +139,7 @@ class stat_sina(stat):
         params["n"] = 512
         return params
 
-    @classmethod
-    def compute_panel(cls, data, scales, **params):
+    def compute_panel(self, data, scales, **params):
         maxwidth = params["maxwidth"]
         random_state = params["random_state"]
         fuzz = 1e-8
@@ -154,7 +153,7 @@ class stat_sina(stat):
         else:
             params["bins"] = breaks_from_bins(y_dim_fuzzed, params["bins"])
 
-        data = super(cls, stat_sina).compute_panel(data, scales, **params)
+        data = super().compute_panel(data, scales, **params)
 
         if not len(data):
             return data
@@ -198,8 +197,7 @@ class stat_sina(stat):
 
         return data
 
-    @classmethod
-    def compute_group(cls, data, scales, **params):
+    def compute_group(self, data, scales, **params):
         maxwidth = params["maxwidth"]
         bins = params["bins"]
         bin_limit = params["bin_limit"]
