@@ -96,9 +96,7 @@ class _geom_stripes(geom):
     }
     draw_legend = staticmethod(geom_polygon.draw_legend)
 
-    def draw_layer(
-        self, data: pd.DataFrame, layout: Layout, coord: coord, **params: Any
-    ):
+    def draw_layer(self, data: pd.DataFrame, layout: Layout, coord: coord):
         """
         Draw stripes on every panel
         """
@@ -106,7 +104,7 @@ class _geom_stripes(geom):
             ploc = pid - 1
             panel_params = layout.panel_params[ploc]
             ax = layout.axs[ploc]
-            self.draw_group(data, panel_params, coord, ax, **params)
+            self.draw_group(data, panel_params, coord, ax, self.params)
 
     @staticmethod
     def draw_group(
@@ -114,7 +112,7 @@ class _geom_stripes(geom):
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
-        **params: Any,
+        params: dict[str, Any],
     ):
         extend = params["extend"]
         fill_range = params["fill_range"]
@@ -195,4 +193,4 @@ class _geom_stripes(geom):
             }
         )
 
-        return geom_rect.draw_group(data, panel_params, coord, ax, **params)
+        return geom_rect.draw_group(data, panel_params, coord, ax, params)

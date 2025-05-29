@@ -55,12 +55,11 @@ class geom_point(geom):
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
-        **params: Any,
     ):
         """
         Plot all groups
         """
-        self.draw_group(data, panel_params, coord, ax, **params)
+        self.draw_group(data, panel_params, coord, ax, self.params)
 
     @staticmethod
     def draw_group(
@@ -68,13 +67,13 @@ class geom_point(geom):
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
-        **params: Any,
+        params: dict[str, Any],
     ):
         data = coord.transform(data, panel_params)
         units = "shape"
         for _, udata in data.groupby(units, dropna=False):
             udata.reset_index(inplace=True, drop=True)
-            geom_point.draw_unit(udata, panel_params, coord, ax, **params)
+            geom_point.draw_unit(udata, panel_params, coord, ax, params)
 
     @staticmethod
     def draw_unit(
@@ -82,7 +81,7 @@ class geom_point(geom):
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
-        **params: Any,
+        params: dict[str, Any],
     ):
         # Our size is in 'points' while scatter wants
         # 'points^2'. The stroke is outside. And pi

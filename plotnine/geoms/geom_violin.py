@@ -113,8 +113,8 @@ class geom_violin(geom):
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
-        **params: Any,
     ):
+        params = self.params.copy()
         quantiles = params.pop("draw_quantiles")
         style = params.pop("style")
         zorder = params.pop("zorder")
@@ -125,6 +125,7 @@ class geom_violin(geom):
             # in the range [zorder, zorder + 1) to stay within the layer.
             group = cast("int", group)
             group_zorder = zorder + 0.9 / group
+            params["zorder"] = group_zorder
 
             # Find the points for the line to go all the way around
             df["xminv"] = df["x"] - df["violinwidth"] * (df["x"] - df["xmin"])
@@ -167,8 +168,7 @@ class geom_violin(geom):
                 panel_params,
                 coord,
                 ax,
-                zorder=group_zorder,
-                **params,
+                params,
             )
 
             if quantiles is not None:
@@ -190,8 +190,7 @@ class geom_violin(geom):
                     panel_params,
                     coord,
                     ax,
-                    zorder=group_zorder,
-                    **params,
+                    params,
                 )
 
 

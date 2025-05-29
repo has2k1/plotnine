@@ -186,7 +186,7 @@ class geom_dotplot(geom):
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
-        **params: Any,
+        params: dict[str, Any],
     ):
         from matplotlib.collections import PatchCollection
         from matplotlib.patches import Ellipse

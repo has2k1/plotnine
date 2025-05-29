@@ -214,9 +214,8 @@ class geom_text(geom):
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
-        **params: Any,
     ):
-        super().draw_panel(data, panel_params, coord, ax, **params)
+        super().draw_panel(data, panel_params, coord, ax)
 
     @staticmethod
     def draw_group(
@@ -224,7 +223,7 @@ class geom_text(geom):
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
-        **params: Any,
+        params: dict[str, Any],
     ):
         data = coord.transform(data, panel_params)
         zorder = params["zorder"]

@@ -183,7 +183,7 @@ class geom_boxplot(geom):
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
-        **params: Any,
+        params: dict[str, Any],
     ):
         def flat(*args: pd.Series[Any]) -> npt.NDArray[Any]:
             """Flatten list-likes"""
@@ -245,11 +245,11 @@ class geom_boxplot(geom):
             outliers["shape"] = outlier_value("shape")
             outliers["size"] = outlier_value("size")
             outliers["stroke"] = outlier_value("stroke")
-            geom_point.draw_group(outliers, panel_params, coord, ax, **params)
+            geom_point.draw_group(outliers, panel_params, coord, ax, params)
 
         # plot
-        geom_segment.draw_group(whiskers, panel_params, coord, ax, **params)
-        geom_crossbar.draw_group(box, panel_params, coord, ax, **params)
+        geom_segment.draw_group(whiskers, panel_params, coord, ax, params)
+        geom_crossbar.draw_group(box, panel_params, coord, ax, params)
 
     @staticmethod
     def draw_legend(

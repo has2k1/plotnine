@@ -171,6 +171,21 @@ class geom(ABC, metaclass=Register):
 
         return result
 
+    def setup_params(self, data: pd.DataFrame):
+        """
+        Override this method to verify and/or adjust parameters
+
+        Parameters
+        ----------
+        data :
+            Data
+
+        Returns
+        -------
+        out :
+            Parameters used by the geoms.
+        """
+
     def setup_data(self, data: pd.DataFrame) -> pd.DataFrame:
         """
         Modify the data before drawing takes place
@@ -261,9 +276,7 @@ class geom(ABC, metaclass=Register):
 
         return data
 
-    def draw_layer(
-        self, data: pd.DataFrame, layout: Layout, coord: coord, **params: Any
-    ):
+    def draw_layer(self, data: pd.DataFrame, layout: Layout, coord: coord):
         """
         Draw layer across all panels
 
@@ -289,7 +302,7 @@ class geom(ABC, metaclass=Register):
             ploc = pdata["PANEL"].iloc[0] - 1
             panel_params = layout.panel_params[ploc]
             ax = layout.axs[ploc]
-            self.draw_panel(pdata, panel_params, coord, ax, **params)
+            self.draw_panel(pdata, panel_params, coord, ax)
 
     def draw_panel(
         self,
@@ -297,7 +310,6 @@ class geom(ABC, metaclass=Register):
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
-        **params: Any,
     ):
         """
         Plot all groups
@@ -331,7 +343,7 @@ class geom(ABC, metaclass=Register):
         """
         for _, gdata in data.groupby("group"):
             gdata.reset_index(inplace=True, drop=True)
-            self.draw_group(gdata, panel_params, coord, ax, **params)
+            self.draw_group(gdata, panel_params, coord, ax, self.params)
 
     @staticmethod
     def draw_group(
@@ -339,7 +351,7 @@ class geom(ABC, metaclass=Register):
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
-        **params: Any,
+        params: dict[str, Any],
     ):
         """
         Plot data belonging to a group.
@@ -376,7 +388,7 @@ class geom(ABC, metaclass=Register):
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
-        **params: Any,
+        params: dict[str, Any],
     ):
         """
         Plot data belonging to a unit.

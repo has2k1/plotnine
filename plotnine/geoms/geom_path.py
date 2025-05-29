@@ -107,7 +107,6 @@ class geom_path(geom):
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
-        **params: Any,
     ):
         if not any(data["group"].duplicated()):
             warn(
@@ -138,14 +137,14 @@ class geom_path(geom):
         ngroup = len(np.unique(data["group"].to_numpy()))
 
         constant = num_unique_rows == ngroup
-        params["constant"] = constant
+        self.params["constant"] = constant
 
         if not constant:
-            self.draw_group(data, panel_params, coord, ax, **params)
+            self.draw_group(data, panel_params, coord, ax, self.params)
         else:
             for _, gdata in data.groupby("group"):
                 gdata.reset_index(inplace=True, drop=True)
-                self.draw_group(gdata, panel_params, coord, ax, **params)
+                self.draw_group(gdata, panel_params, coord, ax, self.params)
 
     @staticmethod
     def draw_group(
@@ -153,7 +152,7 @@ class geom_path(geom):
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
-        **params: Any,
+        params: dict[str, Any],
     ):
         data = coord.transform(data, panel_params, munch=True)
         data["linewidth"] = data["size"] * SIZE_FACTOR
@@ -164,13 +163,13 @@ class geom_path(geom):
             constant = len(np.unique(data["group"].to_numpy())) == 1
 
         if not constant:
-            _draw_segments(data, ax, **params)
+            _draw_segments(data, ax, params)
         else:
-            _draw_lines(data, ax, **params)
+            _draw_lines(data, ax, params)
 
         if "arrow" in params and params["arrow"]:
             params["arrow"].draw(
-                data, panel_params, coord, ax, constant=constant, **params
+                data, panel_params, coord, ax, params, constant=constant
             )
 
     @staticmethod
@@ -264,8 +263,8 @@ class arrow:
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
+        params: dict[str, Any],
         constant: bool = True,
-        **params: Any,
     ):
         """
         Draw arrows at the end(s) of the lines
@@ -454,7 +453,7 @@ class arrow:
         return paths
 
 
-def _draw_segments(data: pd.DataFrame, ax: Axes, **params: Any):
+def _draw_segments(data: pd.DataFrame, ax: Axes, params: dict[str, Any]):
     """
     Draw independent line segments between all the
     points
@@ -493,7 +492,7 @@ def _draw_segments(data: pd.DataFrame, ax: Axes, **params: Any):
     ax.add_collection(coll)
 
 
-def _draw_lines(data: pd.DataFrame, ax: Axes, **params: Any):
+def _draw_lines(data: pd.DataFrame, ax: Axes, params: dict[str, Any]):
     """
     Draw a path with the same characteristics from the
     first point to the last point

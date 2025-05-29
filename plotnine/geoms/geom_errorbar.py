@@ -67,7 +67,7 @@ class geom_errorbar(geom):
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
-        **params: Any,
+        params: dict[str, Any],
     ):
         f = np.hstack
         # create (two horizontal bars) + vertical bar
@@ -81,4 +81,4 @@ class geom_errorbar(geom):
         )
 
         copy_missing_columns(bars, data)
-        geom_segment.draw_group(bars, panel_params, coord, ax, **params)
+        geom_segment.draw_group(bars, panel_params, coord, ax, params)

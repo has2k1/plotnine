@@ -62,12 +62,11 @@ class geom_polygon(geom):
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
-        **params: Any,
     ):
         """
         Plot all groups
         """
-        self.draw_group(data, panel_params, coord, ax, **params)
+        self.draw_group(data, panel_params, coord, ax, self.params)
 
     @staticmethod
     def draw_group(
@@ -75,7 +74,7 @@ class geom_polygon(geom):
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
-        **params: Any,
+        params: dict[str, Any],
     ):
         from matplotlib.collections import PolyCollection
 

@@ -64,7 +64,7 @@ class geom_segment(geom):
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
-        **params: Any,
+        params: dict[str, Any],
     ):
         from matplotlib.collections import LineCollection
 
@@ -100,5 +100,5 @@ class geom_segment(geom):
                 adata[param] = np.hstack([data[param], data[param]])
 
             params["arrow"].draw(
-                adata, panel_params, coord, ax, constant=False, **params
+                adata, panel_params, coord, ax, params, constant=False
             )

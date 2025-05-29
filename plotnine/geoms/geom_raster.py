@@ -155,7 +155,6 @@ class geom_raster(geom):
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
-        **params: Any,
     ):
         """
         Plot all groups
@@ -194,7 +193,7 @@ class geom_raster(geom):
         im = AxesImage(
             ax,
             data=X,
-            interpolation=params["interpolation"],
+            interpolation=self.params["interpolation"],
             origin="upper",
             extent=(
                 data["xmin"].min(),
@@ -202,8 +201,8 @@ class geom_raster(geom):
                 data["ymin"].min(),
                 data["ymax"].max(),
             ),
-            rasterized=params["raster"],
-            filterrad=params["filterrad"],
-            zorder=params["zorder"],
+            rasterized=self.params["raster"],
+            filterrad=self.params["filterrad"],
+            zorder=self.params["zorder"],
         )
         ax.add_image(im)

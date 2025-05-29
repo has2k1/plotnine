@@ -94,7 +94,7 @@ class geom_ribbon(geom):
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
-        **params: Any,
+        params: dict[str, Any],
     ):
         _x = "y" if isinstance(coord, coord_flip) else "x"
         data = coord.transform(data, panel_params, munch=True)
@@ -107,7 +107,7 @@ class geom_ribbon(geom):
 
         for _, udata in data.groupby(units, dropna=False):
             udata.reset_index(inplace=True, drop=True)
-            geom_ribbon.draw_unit(udata, panel_params, coord, ax, **params)
+            geom_ribbon.draw_unit(udata, panel_params, coord, ax, params)
 
     @staticmethod
     def draw_unit(
@@ -115,7 +115,7 @@ class geom_ribbon(geom):
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
-        **params: Any,
+        params: dict[str, Any],
     ):
         linewidth = data["size"].iloc[0] * SIZE_FACTOR
         fill = to_rgba(data["fill"], data["alpha"])
@@ -159,7 +159,7 @@ class geom_ribbon(geom):
 
         # Alpha does not affect the outlines
         data["alpha"] = 1
-        geom_ribbon._draw_outline(data, panel_params, coord, ax, **params)
+        geom_ribbon._draw_outline(data, panel_params, coord, ax, params)
 
     @staticmethod
     def _draw_outline(
@@ -167,7 +167,7 @@ class geom_ribbon(geom):
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
-        **params: Any,
+        params: dict[str, Any],
     ):
         outline_type = params["outline_type"]
 
@@ -185,7 +185,7 @@ class geom_ribbon(geom):
                 panel_params,
                 coord,
                 ax,
-                **params,
+                params,
             )
 
         if outline_type in ("upper", "both"):
@@ -194,5 +194,5 @@ class geom_ribbon(geom):
                 panel_params,
                 coord,
                 ax,
-                **params,
+                params,
             )

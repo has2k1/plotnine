@@ -78,7 +78,7 @@ class geom_crossbar(geom):
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
-        **params: Any,
+        params: dict[str, Any],
     ):
         y = data["y"]
         xmin = data["xmin"]
@@ -160,8 +160,8 @@ class geom_crossbar(geom):
             )
 
         copy_missing_columns(box, data)
-        geom_polygon.draw_group(box, panel_params, coord, ax, **params)
-        geom_segment.draw_group(middle, panel_params, coord, ax, **params)
+        geom_polygon.draw_group(box, panel_params, coord, ax, params)
+        geom_segment.draw_group(middle, panel_params, coord, ax, params)
 
     @staticmethod
     def draw_legend(
