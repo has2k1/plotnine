@@ -46,9 +46,7 @@ class _geom_logticks(geom_rug):
     }
     draw_legend = staticmethod(geom_path.draw_legend)
 
-    def draw_layer(
-        self, data: pd.DataFrame, layout: Layout, coord: coord, **params: Any
-    ):
+    def draw_layer(self, data: pd.DataFrame, layout: Layout, coord: coord):
         """
         Draw ticks on every panel
         """
@@ -56,7 +54,7 @@ class _geom_logticks(geom_rug):
             ploc = pid - 1
             panel_params = layout.panel_params[ploc]
             ax = layout.axs[ploc]
-            self.draw_panel(data, panel_params, coord, ax, **params)
+            self.draw_panel(data, panel_params, coord, ax)
 
     @staticmethod
     def _check_log_scale(
@@ -184,8 +182,8 @@ class _geom_logticks(geom_rug):
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
-        **params: Any,
     ):
+        params = self.params
         # Any passed data is ignored, the relevant data is created
         sides = params["sides"]
         lengths = params["lengths"]
@@ -203,9 +201,8 @@ class _geom_logticks(geom_rug):
         ):
             for position, length in zip(tick_positions, lengths):
                 data = pd.DataFrame({axis: position, **_aesthetics})
-                geom.draw_group(
-                    data, panel_params, coord, ax, length=length, **params
-                )
+                params["length"] = length
+                geom.draw_group(data, panel_params, coord, ax, params)
 
         if isinstance(coord, coord_flip):
             tick_range_x = panel_params.y.range

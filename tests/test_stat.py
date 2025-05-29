@@ -40,8 +40,7 @@ def test_stat_parameter_sharing():
         REQUIRED_AES = {"x"}
         CREATES = {"y"}
 
-        @classmethod
-        def compute_panel(cls, data, scales, **params):
+        def compute_panel(self, data, scales):
             return data
 
     class geom_abc(geom):

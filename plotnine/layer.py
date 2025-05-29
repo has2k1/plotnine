@@ -163,6 +163,7 @@ class layer:
         self._make_layer_data(plot.data)
         self._make_layer_mapping(plot.mapping)
         self._make_layer_environments(plot.environment)
+        self._share_layer_params()
 
     def _make_layer_data(self, plot_data: DataLike | None):
         """
@@ -250,6 +251,13 @@ class layer:
         self.geom.environment = plot_environment
         self.stat.environment = plot_environment
 
+    def _share_layer_params(self):
+        """
+        Pass necessary layer parameters to the geom
+        """
+        self.geom.params["zorder"] = self.zorder
+        self.geom.params["raster"] = self.raster
+
     def compute_aesthetics(self, plot: ggplot):
         """
         Return a dataframe where the columns match the aesthetic mappings
@@ -320,6 +328,8 @@ class layer:
         if len(data) == 0:
             return
 
+        self.geom.params.update(self.stat.params)
+        self.geom.setup_params(data)
         data = self.geom.setup_data(data)
 
         check_required_aesthetics(
@@ -357,14 +367,10 @@ class layer:
         coord : coord
             Type of coordinate axes
         """
-        params = copy(self.geom.params)
-        params.update(self.stat.params)
-        params["zorder"] = self.zorder
-        params["raster"] = self.raster
         self.data = self.geom.handle_na(self.data)
         # At this point each layer must have the data
         # that is created by the plot build process
-        self.geom.draw_layer(self.data, layout, coord, **params)
+        self.geom.draw_layer(self.data, layout, coord)
 
     def use_defaults(
         self,
@@ -450,7 +456,9 @@ class Layers(List[layer]):
         return [l.data for l in self]
 
     def setup(self, plot: ggplot):
-        for l in self:
+        # If zorder is 0, it is left to MPL
+        for i, l in enumerate(self, start=1):
+            l.zorder = i
             l.setup(plot)
 
     def setup_data(self):
@@ -458,9 +466,7 @@ class Layers(List[layer]):
             l.setup_data()
 
     def draw(self, layout: Layout, coord: coord):
-        # If zorder is 0, it is left to MPL
-        for i, l in enumerate(self, start=1):
-            l.zorder = i
+        for l in self:
             l.draw(layout, coord)
 
     def compute_aesthetics(self, plot: ggplot):

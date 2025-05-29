@@ -60,7 +60,7 @@ class geom_rug(geom):
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
-        **params: Any,
+        params: dict[str, Any],
     ):
         from matplotlib.collections import LineCollection
 

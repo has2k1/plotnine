@@ -119,11 +119,11 @@ class geom_map(geom):
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
-        **params: Any,
     ):
         if not len(data):
             return
 
+        params = self.params
         data.loc[data["color"].isna(), "color"] = "none"
         data.loc[data["fill"].isna(), "fill"] = "none"
         data["fill"] = to_rgba(data["fill"], data["alpha"])
@@ -153,7 +153,7 @@ class geom_map(geom):
             for _, gdata in data.groupby("group"):
                 gdata.reset_index(inplace=True, drop=True)
                 gdata.is_copy = None
-                geom_point.draw_group(gdata, panel_params, coord, ax, **params)
+                geom_point.draw_group(gdata, panel_params, coord, ax, params)
         elif geom_type == "MultiPoint":
             # Where n is the length of the dataframe (no. of multipoints),
             #       m is the number of all points in all multipoints
@@ -168,7 +168,7 @@ class geom_map(geom):
             data = data.explode("points", ignore_index=True)
             data["x"] = [p[0] for p in data["points"]]
             data["y"] = [p[1] for p in data["points"]]
-            geom_point.draw_group(data, panel_params, coord, ax, **params)
+            geom_point.draw_group(data, panel_params, coord, ax, params)
         elif geom_type in ("LineString", "MultiLineString"):
             from matplotlib.collections import LineCollection
 

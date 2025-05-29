@@ -102,7 +102,6 @@ class geom_abline(geom):
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
-        **params: Any,
     ):
         """
         Plot all groups
@@ -116,4 +115,6 @@ class geom_abline(geom):
 
         for _, gdata in data.groupby("group"):
             gdata.reset_index(inplace=True)
-            geom_segment.draw_group(gdata, panel_params, coord, ax, **params)
+            geom_segment.draw_group(
+                gdata, panel_params, coord, ax, self.params
+            )

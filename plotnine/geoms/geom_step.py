@@ -54,7 +54,7 @@ class geom_step(geom_path):
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
-        **params: Any,
+        params: dict[str, Any],
     ):
         direction = params["direction"]
         n = len(data)
@@ -84,4 +84,4 @@ class geom_step(geom_path):
 
         path_data = pd.DataFrame({"x": new_x, "y": new_y})
         copy_missing_columns(path_data, data)
-        geom_path.draw_group(path_data, panel_params, coord, ax, **params)
+        geom_path.draw_group(path_data, panel_params, coord, ax, params)

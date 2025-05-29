@@ -49,7 +49,7 @@ class geom_linerange(geom):
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
-        **params: Any,
+        params: dict[str, Any],
     ):
         data.eval(
             """
@@ -59,4 +59,4 @@ class geom_linerange(geom):
             """,
             inplace=True,
         )
-        geom_segment.draw_group(data, panel_params, coord, ax, **params)
+        geom_segment.draw_group(data, panel_params, coord, ax, params)

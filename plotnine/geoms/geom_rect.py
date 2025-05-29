@@ -52,7 +52,6 @@ class geom_rect(geom):
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
-        **params: Any,
     ):
         """
         Plot all groups
@@ -62,10 +61,10 @@ class geom_rect(geom):
             for _, gdata in data.groupby("group"):
                 gdata.reset_index(inplace=True, drop=True)
                 geom_polygon.draw_group(
-                    gdata, panel_params, coord, ax, **params
+                    gdata, panel_params, coord, ax, self.params
                 )
         else:
-            self.draw_group(data, panel_params, coord, ax, **params)
+            self.draw_group(data, panel_params, coord, ax, self.params)
 
     @staticmethod
     def draw_group(
@@ -73,7 +72,7 @@ class geom_rect(geom):
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
-        **params: Any,
+        params: dict[str, Any],
     ):
         from matplotlib.collections import PolyCollection
 

@@ -22,6 +22,9 @@ title: Changelog
 - The `stat` class methods `stat.compute_layer`, `stat.compute_panel` and `stat.compute_group` are now instance methods and they no longer accept
   `**params` arguments. Access to the parameters is through `self.params`.
 
+- The `geom` class methods `geom.draw_layer` and `geom.draw_panel` do no longer accept `**param` arguments. Access to the parameters is through `self.params`.
+
+- Method `geom.draw_group` now accepts the `params` argument as a dictionary and not `**params`.
 
 
 ### New Features

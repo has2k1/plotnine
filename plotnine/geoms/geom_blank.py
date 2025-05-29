@@ -6,8 +6,6 @@ from ..doctools import document
 from .geom import geom
 
 if typing.TYPE_CHECKING:
-    from typing import Any
-
     import pandas as pd
     from matplotlib.axes import Axes
 
@@ -39,7 +37,6 @@ class geom_blank(geom):
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
-        **params: Any,
     ):
         pass
 
