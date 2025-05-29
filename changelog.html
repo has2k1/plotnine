@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Changelog – plotnine 0.0.post1+gfd21cb4</title>
+<title>Changelog – plotnine 0.0.post1+gf27edc5</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -116,7 +116,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">plotnine 0.0.post1+gfd21cb4</span>
+    <span class="navbar-title">plotnine 0.0.post1+gf27edc5</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -333,7 +333,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="api-changes" class="level3">
 <h3 class="anchored" data-anchor-id="api-changes">API Changes</h3>
 <ul>
-<li>Themeables <code>axis_ticks_pad</code>, <code>axis_ticks_pad_minor</code>, <code>axis_ticks_pad_major</code>, <code>axis_ticks_pad_minor_x</code>, <code>axis_ticks_pad_minor_y</code>, <code>axis_ticks_pad_major_x</code> and <code>axis_ticks_pad_major_y</code> have been deprecated. Use the <code>margin</code> parameter of <a href="./reference/element_text.html#plotnine.element_text"><code>element_text</code></a> with <code>axis_text</code>, <code>axis_text_x</code> or <code>axis_text_y</code> to control the spacing between the axis text and the ticks. (<a href="https://github.com/has2k1/plotnine/issues/843" title="Issue: #843">#843</a>)</li>
+<li><p>Themeables <code>axis_ticks_pad</code>, <code>axis_ticks_pad_minor</code>, <code>axis_ticks_pad_major</code>, <code>axis_ticks_pad_minor_x</code>, <code>axis_ticks_pad_minor_y</code>, <code>axis_ticks_pad_major_x</code> and <code>axis_ticks_pad_major_y</code> have been deprecated. Use the <code>margin</code> parameter of <a href="./reference/element_text.html#plotnine.element_text"><code>element_text</code></a> with <code>axis_text</code>, <code>axis_text_x</code> or <code>axis_text_y</code> to control the spacing between the axis text and the ticks. (<a href="https://github.com/has2k1/plotnine/issues/843" title="Issue: #843">#843</a>)</p></li>
+<li><p>The <code>stat</code> class methods <code>stat.compute_layer</code>, <code>stat.compute_panel</code> and <code>stat.compute_group</code> are now instance methods and they no longer accept <code>**params</code> arguments. Access to the parameters is through <code>self.params</code>.</p></li>
+<li><p>The <code>geom</code> class methods <code>geom.draw_layer</code> and <code>geom.draw_panel</code> do no longer accept <code>**param</code> arguments. Access to the parameters is through <code>self.params</code>.</p></li>
+<li><p>Method <code>geom.draw_group</code> now accepts the <code>params</code> argument as a dictionary and not <code>**params</code>.</p></li>
 </ul>
 </section>
 <section id="new-features" class="level3">
