@@ -4,7 +4,13 @@ import re
 from pathlib import Path
 from textwrap import dedent
 
-from qrenderer import QRenderer, RenderDoc, RenderDocClass, extend_base_class
+from qrenderer import (
+    QRenderer,
+    RenderDoc,
+    RenderDocClass,
+    exclude_parameters,
+    extend_base_class,
+)
 from qrenderer._pandoc.inlines import shortcode
 from quartodoc.pandoc.blocks import Blocks, CodeBlock, Div, Header
 from quartodoc.pandoc.components import Attr
@@ -28,6 +34,13 @@ usage_pattern = re.compile(
 
 class Renderer(QRenderer):
     pass
+
+
+exclude_parameters(
+    {
+        "plotnine.scale_color_hue": ("s", "color_space"),
+    }
+)
 
 
 @extend_base_class

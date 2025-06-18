@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import KW_ONLY, InitVar, dataclass
+from dataclasses import KW_ONLY, InitVar, dataclass, field
 from typing import Literal, Sequence
 from warnings import warn
 
@@ -50,34 +50,66 @@ class scale_color_hue(_scale_color_discrete):
     Qualitative color scale with evenly spaced hues
     """
 
-    h: InitVar[float] = 0.01
+    h: InitVar[float | tuple[float, float]] = 15
     """
-    Hue. Must be in the range [0, 1]
+    Hue. If a float, it is the first hue value, in the range `[0, 360]`.
+    The range of the palette will be `[first, first + 360)`.
+
+    If a tuple, it is the range `[first, last)` of the hues.
     """
 
-    l: InitVar[float] = 0.6
+    c: InitVar[float] = 100
     """
-    Lightness. Must be in the range [0, 1]
-    """
-
-    s: InitVar[float] = 0.65
-    """
-    Saturation. Must be in the range [0, 1]
+    Chroma. Must be in the range `[0, 100]`
     """
 
-    color_space: InitVar[Literal["hls", "hsluv"]] = "hls"
+    l: InitVar[float] = 65
     """
-    Color space to use. Should be one of
-    [hls](https://en.wikipedia.org/wiki/HSL_and_HSV)
-    or [hsluv](https://www.hsluv.org/).
-    https://www.hsluv.org/
+    Lightness. Must be in the range [0, 100]
     """
 
-    def __post_init__(self, h, l, s, color_space):
+    direction: InitVar[Literal[1, -1]] = 1
+    """
+    The order of colours in the scale. If -1 the order
+    of colours is reversed. The default is 1.
+    """
+
+    _: KW_ONLY
+
+    s: None = field(default=None, repr=False)
+    """
+    Not being use and will be removed in a future version
+    """
+    color_space: None = field(default=None, repr=False)
+    """
+    Not being use and will be removed in a future version
+    """
+
+    def __post_init__(self, h, c, l, direction):
         from mizani.palettes import hue_pal
 
+        if (s := self.s) is not None:
+            warn(
+                f"You used {s=} for the saturation which has been ignored. "
+                f"{self.__class__.__name__} now works in HCL colorspace. "
+                f"Using `s` in future versions will throw an exception.",
+                FutureWarning,
+            )
+            del self.s
+
+        if (color_space := self.color_space) is not None:
+            warn(
+                f"You used {color_space=} to select a color_space and it "
+                f"has been ignored. {self.__class__.__name__} now only works "
+                f"in HCL colorspace. Using `color_space` in future versions "
+                "will throw an exception.",
+                FutureWarning,
+            )
+            del self.color_space
+
         super().__post_init__()
-        self.palette = hue_pal(h, l, s, color_space=color_space)
+        self.palette = hue_pal(h, c, l, direction)
+        self.palette.h
 
 
 @dataclass
