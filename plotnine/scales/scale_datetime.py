@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import KW_ONLY, InitVar, dataclass
 from typing import TYPE_CHECKING
+from warnings import warn
 
 from ._runtime_typing import TransUser  # noqa: TCH001
 from .scale_continuous import scale_continuous
@@ -77,22 +78,38 @@ class scale_datetime(scale_continuous):
         date_labels: str | None,
         date_minor_breaks: str | None,
     ):
-        from mizani.breaks import breaks_date as breaks_func
-        from mizani.labels import label_date as labels_func
+        from mizani.breaks import breaks_date_width
+        from mizani.labels import label_date
 
         if date_breaks is not None:
-            self.breaks = breaks_func(width=date_breaks)  # pyright: ignore
+            self.breaks = breaks_date_width(date_breaks)  # pyright: ignore[reportAttributeAccessIssue]
         elif isinstance(self.breaks, str):
-            self.breaks = breaks_func(width=self.breaks)  # pyright: ignore
+            warn(
+                "Passing a string to `breaks` will not work in "
+                f"future versions. Use `date_breaks={self.breaks!r}`",
+                FutureWarning,
+            )
+            self.breaks = breaks_date_width(width=self.breaks)  # pyright: ignore[reportAttributeAccessIssue]
 
         if date_labels is not None:
-            self.labels = labels_func(fmt=date_labels)  # pyright: ignore
+            self.labels = label_date(fmt=date_labels)  # pyright: ignore[reportAttributeAccessIssue]
         elif isinstance(self.labels, str):
-            self.labels = labels_func(fmt=self.labels)  # pyright: ignore
+            warn(
+                "Passing a string to `labels` will not work in "
+                f"future versions. Use `date_labels={self.labels!r}`",
+                FutureWarning,
+            )
+            self.labels = label_date(fmt=self.labels)  # pyright: ignore[reportAttributeAccessIssue]
 
         if date_minor_breaks is not None:
-            self.minor_breaks = breaks_func(date_minor_breaks)  # pyright: ignore
+            self.minor_breaks = breaks_date_width(date_minor_breaks)  # pyright: ignore[reportAttributeAccessIssue]
         elif isinstance(self.minor_breaks, str):
-            self.minor_breaks = breaks_func(width=self.minor_breaks)  # pyright: ignore
+            warn(
+                "Passing a string to `minor_breaks` will not work in "
+                "future versions. "
+                f"Use `date_minor_breaks={self.minor_breaks!r}`",
+                FutureWarning,
+            )
+            self.minor_breaks = breaks_date_width(width=self.minor_breaks)  # pyright: ignore[reportAttributeAccessIssue]
 
         scale_continuous.__post_init__(self)
