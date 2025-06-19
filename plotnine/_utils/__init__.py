@@ -346,6 +346,8 @@ def _id_var(x: AnyArrayLike, drop: bool = False) -> list[int]:
                 # NaNs are -1, we give them the highest code
                 nan_code = -1
                 new_nan_code = np.max(x.cat.codes) + 1
+                # TODO: We are assuming that x is of type Sequence[int|nan]
+                # is that accurate.
                 lst = [val if val != nan_code else new_nan_code for val in x]
             else:
                 lst = list(x.cat.codes + 1)
@@ -359,7 +361,7 @@ def _id_var(x: AnyArrayLike, drop: bool = False) -> list[int]:
         lst = match(x, levels)
         lst = [item + 1 for item in lst]
 
-    return lst
+    return lst  # pyright: ignore[reportReturnType]
 
 
 def join_keys(x, y, by=None):

@@ -206,7 +206,7 @@ class scale_discrete(
                 pal = np.asarray(pal, dtype=object)
             idx = np.asarray(match(x, limits))
             try:
-                pal_match = [pal[i] if i >= 0 else None for i in idx]
+                pal_match = [pal[i] if i >= 0 else None for i in idx]  # pyright: ignore[reportCallIssue,reportArgumentType]
             except IndexError:
                 # Deal with missing data
                 # - Insert NaN where there is no match

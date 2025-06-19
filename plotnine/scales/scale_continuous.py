@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from contextlib import suppress
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Sequence
+from typing import TYPE_CHECKING, Sequence, cast
 from warnings import warn
 
 import numpy as np
@@ -387,15 +387,16 @@ class scale_continuous(
             limits = self.final_limits
 
         x = self.oob(self.rescaler(x, _from=limits))
+        na_value = cast("float", self.na_value)
 
         uniq = np.unique(x)
         pal = np.asarray(self.palette(uniq))
         scaled = pal[match(x, uniq)]
         if scaled.dtype.kind == "U":
-            scaled = [self.na_value if x == "nan" else x for x in scaled]
+            scaled = [na_value if x == "nan" else x for x in scaled]
         else:
-            scaled[pd.isna(scaled)] = self.na_value
-        return scaled
+            scaled[pd.isna(scaled)] = na_value
+        return scaled  # pyright: ignore[reportReturnType]
 
     def get_breaks(
         self, limits: Optional[tuple[float, float]] = None
