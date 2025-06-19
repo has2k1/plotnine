@@ -3,7 +3,7 @@ from __future__ import annotations
 import abc
 from dataclasses import dataclass
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 
 import numpy as np
 
@@ -528,8 +528,9 @@ class ColumnsTree(LayoutTree):
         if self.bottom_tags_align:
             return
 
-        values = max(self.bottom_tag_heights) - np.array(
-            self.bottom_tag_heights
+        values = cast(
+            "Sequence[float]",
+            max(self.bottom_tag_heights) - np.array(self.bottom_tag_heights),
         )
         for item, value in zip(self.nodes, values):
             if isinstance(item, LayoutSpaces):
@@ -541,7 +542,10 @@ class ColumnsTree(LayoutTree):
         if self.top_tags_align:
             return
 
-        values = max(self.top_tag_heights) - np.array(self.top_tag_heights)
+        values = cast(
+            "Sequence[float]",
+            max(self.top_tag_heights) - np.array(self.top_tag_heights),
+        )
         for item, value in zip(self.nodes, values):
             if isinstance(item, LayoutSpaces):
                 item.t.tag_alignment = value
@@ -776,7 +780,10 @@ class RowsTree(LayoutTree):
         if self.left_tags_align:
             return
 
-        values = max(self.left_tag_widths) - np.array(self.left_tag_widths)
+        values = cast(
+            "Sequence[float]",
+            max(self.left_tag_widths) - np.array(self.left_tag_widths),
+        )
         for item, value in zip(self.nodes, values):
             if isinstance(item, LayoutSpaces):
                 item.l.tag_alignment = value
@@ -787,7 +794,10 @@ class RowsTree(LayoutTree):
         if self.right_tags_align:
             return
 
-        values = max(self.right_tag_widths) - np.array(self.right_tag_widths)
+        values = cast(
+            "Sequence[float]",
+            max(self.right_tag_widths) - np.array(self.right_tag_widths),
+        )
         for item, value in zip(self.nodes, values):
             if isinstance(item, LayoutSpaces):
                 item.r.tag_alignment = value

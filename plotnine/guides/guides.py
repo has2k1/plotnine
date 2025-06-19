@@ -369,7 +369,7 @@ class guides:
         # place the guides according to the guide.order
         default = max(g.order for g in gdefs) + 1
         orders = [default if g.order == 0 else g.order for g in gdefs]
-        idx: list[int] = list(np.argsort(orders))
+        idx = cast("Sequence[int]", np.argsort(orders))
         gdefs = [gdefs[i] for i in idx]
 
         # Draw each guide into a box

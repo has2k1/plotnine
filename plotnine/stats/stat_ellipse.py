@@ -202,7 +202,7 @@ def cov_trob(
         wt = wt[wt > 0]
         n, _ = x.shape
 
-    wt = wt[:, np.newaxis]
+    wt = wt[:, np.newaxis]  # pyright: ignore[reportCallIssue,reportArgumentType,reportOptionalSubscript]
 
     # loc
     use_loc = False

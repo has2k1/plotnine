@@ -1,12 +1,17 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 import numpy as np
 import pandas as pd
 
-from ..doctools import document
 from .density import get_var_type, kde
 from .stat import stat
 
+if TYPE_CHECKING:
+    from plotnine.typing import FloatArrayLike
 
-@document
+
 class stat_density_2d(stat):
     """
     Compute 2D kernel density estimation
@@ -116,7 +121,7 @@ class stat_density_2d(stat):
         return data
 
 
-def contour_lines(X, Y, Z, levels):
+def contour_lines(X, Y, Z, levels: int | FloatArrayLike):
     """
     Calculate contour lines
     """
@@ -150,7 +155,7 @@ def contour_lines(X, Y, Z, levels):
     level_values = []
     start_pid = 1
     for level in levels:
-        vertices, *_ = cgen.create_contour(level)
+        vertices, *_ = cgen.create_contour(level)  # pyright: ignore[reportArgumentType]
         for pid, piece in enumerate(vertices, start=start_pid):
             n = len(piece)  # pyright: ignore
             segments.append(piece)
