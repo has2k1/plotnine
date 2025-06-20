@@ -6024,14 +6024,14 @@
     "href": "reference/stat_density_2d.html",
     "title": " plotnine.stat_density_2d",
     "section": "",
-    "text": "stat_density_2d(\n    mapping=None,\n    data=None,\n    *,\n    geom=\"density_2d\",\n    position=\"identity\",\n    na_rm=False,\n    contour=True,\n    package=\"statsmodels\",\n    kde_params=None,\n    n=64,\n    levels=5,\n    **kwargs\n)"
+    "text": "stat_density_2d(mapping=None, data=None, kwargs={})"
   },
   {
     "objectID": "reference/stat_density_2d.html#parameters",
     "href": "reference/stat_density_2d.html#parameters",
     "title": " plotnine.stat_density_2d",
     "section": "Parameters",
-    "text": "Parameters\n\n\nmapping : aes = None\n\nAesthetic mappings created with aes. If specified and inherit_aes=True, it is combined with the default mapping for the plot. You must supply mapping if there is no plot mapping.\n\n\n\n\n\n\n\nAesthetic\nDefault value\n\n\n\n\nx\n\n\n\n\nThe bold aesthetics are required.\nOptions for computed aesthetics\n\"level\"     # density level of a contour\n\"density\"   # Computed density at a point\n\"piece\"     # Numeric id of a contour in a given group\nlevel is only relevant when contours are computed. density is available only when no contours are computed. piece is largely irrelevant.\n\ndata : DataFrame = None\n\nThe data to be displayed in this layer. If None, the data from from the ggplot() call is used. If specified, it overrides the data from the ggplot() call.\n\ngeom : str | geom = \"density_2d\"\n\nThe statistical transformation to use on the data for this layer. If it is a string, it must be the registered and known to Plotnine.\n\nposition : str | position = \"identity\"\n\nPosition adjustment. If it is a string, it must be registered and known to Plotnine.\n\nna_rm : bool = False\n\nIf False, removes missing values with a warning. If True silently removes missing values.\n\ncontour : bool = True\n\nWhether to create contours of the 2d density estimate.\n\nn : int = 64\n\nNumber of equally spaced points at which the density is to be estimated. For efficient computation, it should be a power of two.\n\nlevels : int | array_like = 5\n\nContour levels. If an integer, it specifies the maximum number of levels, if array_like it is the levels themselves.\n\npackage : Literal[statsmodels, scipy, sklearn] = \"statsmodels\"\n\nPackage whose kernel density estimation to use.\n\nkde_params : dict\n\nKeyword arguments to pass on to the kde class.\n\n**kwargs : Any = {}\n\nAesthetics or parameters used by the geom."
+    "text": "Parameters\n\n\ncontour : bool = True\n\nWhether to create contours of the 2d density estimate.\n\nn : int = 64\n\nNumber of equally spaced points at which the density is to be estimated. For efficient computation, it should be a power of two.\n\nlevels : int | array_like = 5\n\nContour levels. If an integer, it specifies the maximum number of levels, if array_like it is the levels themselves.\n\npackage : Literal[\"statsmodels\", \"scipy\", \"sklearn\"] = \"statsmodels\"\n\nPackage whose kernel density estimation to use.\n\nkde_params : dict\n\nKeyword arguments to pass on to the kde class."
   },
   {
     "objectID": "reference/stat_density_2d.html#see-also",
