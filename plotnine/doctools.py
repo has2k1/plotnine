@@ -71,7 +71,7 @@ STAT_SIGNATURE_TPL = """
 
 common_params_doc = {
     "mapping": """\
-Aesthetic mappings created with [aes](:class:`plotnine.mapping.aes`). If \
+Aesthetic mappings created with [aes](:class:`plotnine.mapping.aes.aes`). If \
 specified and `inherit_aes=True`{.py}, it is combined with the default \
 mapping for the plot. You must supply mapping if there is no plot mapping.""",
     "data": """\
@@ -103,7 +103,7 @@ the final image is in vector format.""",
 
 
 GEOM_PARAMS_TPL = """
-mapping : ~plotnine.mapping.aes, default=None
+mapping : ~plotnine.mapping.aes.aes, default=None
     {mapping}
     {_aesthetics_doc}
 data : ~pandas.DataFrame, default=None
@@ -124,7 +124,7 @@ raster : bool, default={default_raster}
 """
 
 STAT_PARAMS_TPL = """
-mapping : ~plotnine.mapping.aes, default=None
+mapping : ~plotnine.mapping.aes.aes, default=None
     {mapping}
     {_aesthetics_doc}
 data : ~pandas.DataFrame, default=None
