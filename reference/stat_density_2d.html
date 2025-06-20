@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.7">
+<meta name="generator" content="quarto-1.8.14">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -73,10 +73,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-e2dbac4cb4103ab08bd69bea3cb63eec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-8f1af79587c2686b78fe4e1fbadd71ab.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-bcfac80d409397a8b5bd5934c5fb830f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-9a9d6f2bf2e03a42564d1911820dd934.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -116,7 +116,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine 0.15.0a2</span>
+    <span class="navbar-title">plotnine 0.15.0a3</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -170,72 +170,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 </header>
 <div class="doc-signature doc-class">
-<div class="sourceCode" id="cb1"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>stat_density_2d(</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    mapping<span class="op">=</span><span class="va">None</span>,</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span><span class="va">None</span>,</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span>,</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    geom<span class="op">=</span><span class="st">"density_2d"</span>,</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    position<span class="op">=</span><span class="st">"identity"</span>,</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    na_rm<span class="op">=</span><span class="va">False</span>,</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    contour<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    package<span class="op">=</span><span class="st">"statsmodels"</span>,</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    kde_params<span class="op">=</span><span class="va">None</span>,</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    n<span class="op">=</span><span class="dv">64</span>,</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    levels<span class="op">=</span><span class="dv">5</span>,</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="op">**</span>kwargs</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>stat_density_2d(mapping<span class="op">=</span><span class="va">None</span>, data<span class="op">=</span><span class="va">None</span>, kwargs<span class="op">=</span>{})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="doc-text">
 <p>Compute 2D kernel density estimation</p>
+<p>{usage}</p>
 </div>
 <section id="parameters" class="level2 doc-parameters">
 <h2 class="doc-parameters anchored" data-anchor-id="parameters">Parameters</h2>
 <div class="doc-definition-items">
 <dl>
-<dt><code><span class="doc-parameter-name">mapping</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">aes</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
-<dd>
-<p>Aesthetic mappings created with aes. If specified and <code class="sourceCode python">inherit_aes<span class="op">=</span><span class="va">True</span></code>, it is combined with the default mapping for the plot. You must supply mapping if there is no plot mapping.</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 19%">
-<col style="width: 25%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Aesthetic</th>
-<th>Default value</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>x</strong></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<p>The <strong>bold</strong> aesthetics are required.</p>
-<p><strong>Options for computed aesthetics</strong></p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">"level"</span>     <span class="co"># density level of a contour</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">"density"</span>   <span class="co"># Computed density at a point</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">"piece"</span>     <span class="co"># Numeric id of a contour in a given group</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p><code>level</code> is only relevant when contours are computed. <code>density</code> is available only when no contours are computed. <code>piece</code> is largely irrelevant.</p>
-</dd>
-<dt><code><span class="doc-parameter-name">data</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
-<dd>
-<p>The data to be displayed in this layer. If <code class="sourceCode python"><span class="va">None</span></code>, the data from from the <code class="sourceCode python">ggplot()</code> call is used. If specified, it overrides the data from the <code class="sourceCode python">ggplot()</code> call.</p>
-</dd>
-<dt><code><span class="doc-parameter-name">geom</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> | <a href="../reference/geom.html#plotnine.geoms.geom.geom">geom</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default"><span class="st">"density_2d"</span></span></code></dt>
-<dd>
-<p>The statistical transformation to use on the data for this layer. If it is a string, it must be the registered and known to Plotnine.</p>
-</dd>
-<dt><code><span class="doc-parameter-name">position</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> | <a href="../reference/position.html#plotnine.positions.position.position">position</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default"><span class="st">"identity"</span></span></code></dt>
-<dd>
-<p>Position adjustment. If it is a string, it must be registered and known to Plotnine.</p>
-</dd>
-<dt><code><span class="doc-parameter-name">na_rm</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#bool">bool</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">False</span></code></dt>
-<dd>
-<p>If <code class="sourceCode python"><span class="va">False</span></code>, removes missing values with a warning. If <code class="sourceCode python"><span class="va">True</span></code> silently removes missing values.</p>
-</dd>
 <dt><code><span class="doc-parameter-name">contour</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#bool">bool</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">True</span></code></dt>
 <dd>
 <p>Whether to create contours of the 2d density estimate.</p>
@@ -248,17 +192,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <dd>
 <p>Contour levels. If an integer, it specifies the maximum number of levels, if array_like it is the levels themselves.</p>
 </dd>
-<dt><code><span class="doc-parameter-name">package</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">Literal[<a href="https://www.statsmodels.org/stable/about.html#module-statsmodels">statsmodels</a>, <a href="https://docs.scipy.org/doc/scipy/index.html#module-scipy">scipy</a>, <a href="https://scikit-learn.org/stable/api/sklearn.html#module-sklearn">sklearn</a>]</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default"><span class="st">"statsmodels"</span></span></code></dt>
+<dt><code><span class="doc-parameter-name">package</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">Literal[<span class="st">"statsmodels"</span>, <span class="st">"scipy"</span>, <span class="st">"sklearn"</span>]</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default"><span class="st">"statsmodels"</span></span></code></dt>
 <dd>
 <p>Package whose kernel density estimation to use.</p>
 </dd>
 <dt><code><span class="doc-parameter-name">kde_params</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#dict">dict</a></span></code></dt>
 <dd>
 <p>Keyword arguments to pass on to the kde class.</p>
-</dd>
-<dt><code><span class="doc-parameter-name">**kwargs</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/typing.html#typing.Any">Any</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">{}</span></code></dt>
-<dd>
-<p>Aesthetics or parameters used by the <code>geom</code>.</p>
 </dd>
 </dl>
 </div>

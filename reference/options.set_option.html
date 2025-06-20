@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.7">
+<meta name="generator" content="quarto-1.8.14">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>get_option – plotnine {{&lt; var version &gt;}}</title>
+<title>options.set_option – plotnine {{&lt; var version &gt;}}</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -73,10 +73,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-e2dbac4cb4103ab08bd69bea3cb63eec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-8f1af79587c2686b78fe4e1fbadd71ab.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-bcfac80d409397a8b5bd5934c5fb830f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-9a9d6f2bf2e03a42564d1911820dd934.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -116,7 +116,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine 0.15.0a2</span>
+    <span class="navbar-title">plotnine 0.15.0a3</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -152,8 +152,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#plotnine.options.get_option" id="toc-plotnine.options.get_option" class="nav-link active" data-scroll-target="#plotnine.options.get_option"><code class="doc-symbol doc-symbol-function"></code> <span class="doc-object-name doc-function-name">plotnine.options.get_option</span></a></li>
+  <li><a href="#plotnine.options.set_option" id="toc-plotnine.options.set_option" class="nav-link active" data-scroll-target="#plotnine.options.set_option"><code class="doc-symbol doc-symbol-function"></code> <span class="doc-object-name doc-function-name">plotnine.options.set_option</span></a></li>
   <li><a href="#parameters" id="toc-parameters" class="nav-link" data-scroll-target="#parameters">Parameters</a></li>
+  <li><a href="#returns" id="toc-returns" class="nav-link" data-scroll-target="#returns">Returns</a></li>
   <li><a href="#notes" id="toc-notes" class="nav-link" data-scroll-target="#notes">Notes</a></li>
   </ul>
 </nav>
@@ -165,15 +166,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <header id="title-block-header" class="quarto-title-block default">
-<section id="plotnine.options.get_option" class="level1 title doc-object doc-function quarto-title display-7">
-<h1 class="title doc-object doc-function"><code class="doc-symbol doc-symbol-function"></code> <span class="doc-object-name doc-function-name">plotnine.options.get_option</span></h1>
+<section id="plotnine.options.set_option" class="level1 title doc-object doc-function quarto-title display-7">
+<h1 class="title doc-object doc-function"><code class="doc-symbol doc-symbol-function"></code> <span class="doc-object-name doc-function-name">plotnine.options.set_option</span></h1>
 </section>
 </header>
 <div class="doc-signature doc-function">
-<div class="sourceCode" id="cb1"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>get_option(name)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>set_option(name, value)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="doc-text">
-<p>Get package option</p>
+<p>Set package option</p>
 </div>
 <section id="parameters" class="level2 doc-parameters">
 <h2 class="doc-parameters anchored" data-anchor-id="parameters">Parameters</h2>
@@ -182,6 +183,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <dt><code><span class="doc-parameter-name">name</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#str">str</a></span></code></dt>
 <dd>
 <p>Name of the option</p>
+</dd>
+<dt><code><span class="doc-parameter-name">value</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/typing.html#typing.Any">Any</a></span></code></dt>
+<dd>
+<p>New value of the option</p>
+</dd>
+</dl>
+</div>
+</section>
+<section id="returns" class="level2 doc-returns">
+<h2 class="doc-returns anchored" data-anchor-id="returns">Returns</h2>
+<div class="doc-definition-items">
+<dl>
+<dt><code><span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/typing.html#typing.Any">Any</a></span></code></dt>
+<dd>
+<p>Old value of the option</p>
 </dd>
 </dl>
 </div>

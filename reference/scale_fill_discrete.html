@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.7">
+<meta name="generator" content="quarto-1.8.14">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -73,10 +73,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-e2dbac4cb4103ab08bd69bea3cb63eec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-8f1af79587c2686b78fe4e1fbadd71ab.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-bcfac80d409397a8b5bd5934c5fb830f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-9a9d6f2bf2e03a42564d1911820dd934.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -116,7 +116,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine 0.15.0a2</span>
+    <span class="navbar-title">plotnine 0.15.0a3</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -171,10 +171,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 <div class="doc-signature doc-class">
 <div class="sourceCode" id="cb1"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>scale_fill_discrete(</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    h<span class="op">=</span><span class="fl">0.01</span>,</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    l<span class="op">=</span><span class="fl">0.6</span>,</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    s<span class="op">=</span><span class="fl">0.65</span>,</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    color_space<span class="op">=</span><span class="st">"hls"</span>,</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    h<span class="op">=</span><span class="dv">15</span>,</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    c<span class="op">=</span><span class="dv">100</span>,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    l<span class="op">=</span><span class="dv">65</span>,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    direction<span class="op">=</span><span class="dv">1</span>,</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span>,</span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    name<span class="op">=</span><span class="va">None</span>,</span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    breaks<span class="op">=</span><span class="va">True</span>,</span>
@@ -185,8 +185,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    na_value<span class="op">=</span><span class="st">"#7F7F7F"</span>,</span>
 <span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    aesthetics<span class="op">=</span>(),</span>
 <span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    drop<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    na_translate<span class="op">=</span><span class="va">True</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    na_translate<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    s<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    color_space<span class="op">=</span><span class="va">None</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="doc-text">
 <p>alias of <a href="../reference/scale_fill_hue.html#plotnine.scale_fill_hue">scale_fill_hue</a></p>
@@ -195,21 +197,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="doc-init-parameters anchored" data-anchor-id="init-parameters">Init Parameters</h2>
 <div class="doc-definition-items">
 <dl>
-<dt><code>h: <a href="https://docs.python.org/3/library/functions.html#float">float</a> = 0.01</code></dt>
+<dt><code>h: <a href="https://docs.python.org/3/library/functions.html#float">float</a> | <a href="https://docs.python.org/3/library/stdtypes.html#tuple">tuple</a>[<a href="https://docs.python.org/3/library/functions.html#float">float</a>, <a href="https://docs.python.org/3/library/functions.html#float">float</a>] = 15</code></dt>
 <dd>
-<p>Hue. Must be in the range [0, 1]</p>
+<p>Hue. If a float, it is the first hue value, in the range <code>[0, 360]</code>. The range of the palette will be <code>[first, first + 360)</code>.</p>
+<p>If a tuple, it is the range <code>[first, last)</code> of the hues.</p>
 </dd>
-<dt><code>l: <a href="https://docs.python.org/3/library/functions.html#float">float</a> = 0.6</code></dt>
+<dt><code>c: <a href="https://docs.python.org/3/library/functions.html#float">float</a> = 100</code></dt>
 <dd>
-<p>Lightness. Must be in the range [0, 1]</p>
+<p>Chroma. Must be in the range <code>[0, 100]</code></p>
 </dd>
-<dt><code>s: <a href="https://docs.python.org/3/library/functions.html#float">float</a> = 0.65</code></dt>
+<dt><code>l: <a href="https://docs.python.org/3/library/functions.html#float">float</a> = 65</code></dt>
 <dd>
-<p>Saturation. Must be in the range [0, 1]</p>
+<p>Lightness. Must be in the range [0, 100]</p>
 </dd>
-<dt><code>color_space: <a href="https://docs.python.org/3/library/typing.html#typing.Literal">Literal</a>[<span class="st">'hls'</span>, <span class="st">'hsluv'</span>] = <span class="st">'hls'</span></code></dt>
+<dt><code>direction: <a href="https://docs.python.org/3/library/typing.html#typing.Literal">Literal</a>[1, -1] = 1</code></dt>
 <dd>
-<p>Color space to use. Should be one of <a href="https://en.wikipedia.org/wiki/HSL_and_HSV">hls</a> or <a href="https://www.hsluv.org/">hsluv</a>. https://www.hsluv.org/</p>
+<p>The order of colours in the scale. If -1 the order of colours is reversed. The default is 1.</p>
 </dd>
 </dl>
 </div>
@@ -270,6 +273,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <dt><code>na_translate: <a href="https://docs.python.org/3/library/functions.html#bool">bool</a> = True</code></dt>
 <dd>
 <p>If <code>True</code> translate missing values and show them. If <code>False</code> remove missing values.</p>
+</dd>
+<dt><code>s: None = field(default=None, repr=False)</code></dt>
+<dd>
+<p>Not being use and will be removed in a future version</p>
+</dd>
+<dt><code>color_space: None = field(default=None, repr=False)</code></dt>
+<dd>
+<p>Not being use and will be removed in a future version</p>
 </dd>
 </dl>
 </div>
