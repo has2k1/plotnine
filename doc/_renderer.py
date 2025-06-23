@@ -9,7 +9,6 @@ from qrenderer import (
     RenderDoc,
     RenderDocClass,
     exclude_parameters,
-    extend_base_class,
 )
 from qrenderer._pandoc.inlines import shortcode
 from quartodoc.pandoc.blocks import Blocks, CodeBlock, Div, Header
@@ -43,7 +42,6 @@ exclude_parameters(
 )
 
 
-@extend_base_class
 class _RenderDoc(RenderDoc):
     def render_body(self):
         body = super().render_body()
@@ -70,7 +68,6 @@ class _RenderDoc(RenderDoc):
         return name[8:] if name.startswith("options.") else name
 
 
-@extend_base_class
 class _RenderDocClass(RenderDocClass):
     def render_signature(self):
         signature = super().render_signature()
