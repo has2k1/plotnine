@@ -179,11 +179,16 @@ class geom(ABC, metaclass=Register):
         ----------
         data :
             Data
+        """
 
-        Returns
-        -------
-        out :
-            Parameters used by the geoms.
+    def setup_aes_params(self, data: pd.DataFrame):
+        """
+        Override this method to verify and/or adjust aesthetic parameters
+
+        Parameters
+        ----------
+        data :
+            Data
         """
 
     def setup_data(self, data: pd.DataFrame) -> pd.DataFrame:
