@@ -1,6 +1,12 @@
 ---
 title: Changelog
 ---
+## v0.14.6
+(2026-06-25)
+
+- Limit scipy to [<v0.16.0](https://github.com/statsmodels/statsmodels/issues/9584).
+
+
 ## v0.14.5
 (2025-01-02)
 

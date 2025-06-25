@@ -27,7 +27,7 @@ dependencies = [
     "pandas>=2.2.0",
     "mizani~=0.13.0",
     "numpy>=1.23.5",
-    "scipy>=1.8.0",
+    "scipy>=1.8.0,<1.16.0",
     "statsmodels>=0.14.0",
 ]
 requires-python = ">=3.10"
