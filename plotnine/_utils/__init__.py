@@ -362,7 +362,7 @@ def _id_var(x: AnyArrayLike, drop: bool = False) -> list[int]:
         lst = match(x, levels)
         lst = [item + 1 for item in lst]
 
-    return lst  # pyright: ignore[reportReturnType]
+    return lst
 
 
 def join_keys(x, y, by=None):
