@@ -88,6 +88,16 @@ title: Changelog
 
 - Gained new helper function [](:func:`~plotnine.helpers.get_aesthetic_limits`).
 
+- [](:class:`~plotnine.geom_point`) gained the ability to handle shapes of the form
+  `Sequence[tuple[float, float]]` e.g.
+
+   ```python 
+   ((-2, -4), (-2, -1), (0, 1), (2, -1), (2, -4), (-2, -4))
+   ```
+
+   Which declares the vertices of a polygon shape.
+   
+
 ### Enhancements
 
 - Included datasets [](:attr:`~plotnine.data.mpg`), [](:attr:`~plotnine.data.msleep`) and

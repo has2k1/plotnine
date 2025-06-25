@@ -30,7 +30,7 @@ from plotnine import (
     ylab,
 )
 from plotnine.exceptions import PlotnineError, PlotnineWarning
-from plotnine.mapping.aes import is_valid_aesthetic
+from plotnine.mapping.aes import RepeatAesthetic
 
 data = pd.DataFrame({"x": np.arange(10), "y": np.arange(10)})
 
@@ -125,28 +125,31 @@ def test_aes():
     assert mapping._starting["color"] == "qsec"
 
 
-def test_valid_aes_linetypes():
-    assert is_valid_aesthetic("solid", "linetype")
-    assert is_valid_aesthetic("--", "linetype")
-    assert not is_valid_aesthetic("tada", "linetype")
-    assert is_valid_aesthetic((0, (3, 2)), "linetype")
-    assert not is_valid_aesthetic((0, (3, 2.0)), "linetype")
-    assert not is_valid_aesthetic((0, (3, 2, 1)), "linetype")
+def test_repeat_linetypes():
+    repeat_ae = RepeatAesthetic.linetype
+    assert repeat_ae("solid", 3) == ["solid", "solid", "solid"]
+    assert repeat_ae("--", 3) == ["--", "--", "--"]
+    assert repeat_ae((0, (3, 2)), 3) == [(0, (3, 2)), (0, (3, 2)), (0, (3, 2))]
+    with pytest.raises(ValueError):
+        repeat_ae("tada", 3)
+    with pytest.raises(ValueError):
+        repeat_ae((0, (3, 2.0)), 3)
+    with pytest.raises(ValueError):
+        repeat_ae((0, (3, 2, 1)), 2)
 
 
-def test_valid_aes_shapes():
-    assert is_valid_aesthetic("o", "shape")
-    assert is_valid_aesthetic((4, 1, 45), "shape")
-    assert not is_valid_aesthetic([4, 1, 45], "shape")
+def test_repeat_shapes():
+    repeat_ae = RepeatAesthetic.shape
+    assert repeat_ae("o", 3) == ["o", "o", "o"]
+    assert repeat_ae((4, 1, 45), 2) == [(4, 1, 45), (4, 1, 45)]
 
 
-def test_valid_aes_colors():
-    assert is_valid_aesthetic("red", "color")
-    assert is_valid_aesthetic("#FF0000", "color")
-    assert is_valid_aesthetic("#FF000080", "color")
-    assert is_valid_aesthetic((1, 0, 0), "color")
-    assert is_valid_aesthetic((1, 0, 0), "color")
-    assert is_valid_aesthetic((1, 0, 0, 0.5), "color")
+def test_repeat_colors():
+    repeat_ae = RepeatAesthetic.color
+    assert repeat_ae("red", 3) == ["red", "red", "red"]
+    assert repeat_ae("#FF0000", 3) == ["#FF0000", "#FF0000", "#FF0000"]
+    assert repeat_ae((1, 0, 0), 2) == [(1, 0, 0), (1, 0, 0)]
+    assert repeat_ae((1, 0, 0, 0.5), 2) == [(1, 0, 0, 0.5), (1, 0, 0, 0.5)]
 
 
 def test_calculated_aes():

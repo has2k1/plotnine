@@ -257,6 +257,7 @@ class layer:
         """
         self.geom.params["zorder"] = self.zorder
         self.geom.params["raster"] = self.raster
+        self.geom.params["inherit_aes"] = self.inherit_aes
 
     def compute_aesthetics(self, plot: ggplot):
         """
@@ -330,6 +331,7 @@ class layer:
 
         self.geom.params.update(self.stat.params)
         self.geom.setup_params(data)
+        self.geom.setup_aes_params(data)
         data = self.geom.setup_data(data)
 
         check_required_aesthetics(

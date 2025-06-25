@@ -26,6 +26,14 @@ data = pd.DataFrame(
 )
 
 
+data = pd.DataFrame(
+    {
+        "x": pd.Categorical(["b", "d", "c", "a"], ordered=True),
+        "y": [1, 2, 3, 4],
+    }
+)
+
+
 def test_reorder():
     p = (
         ggplot(data, aes("reorder(x, y)", "y", fill="reorder(x, y)"))
@@ -51,6 +59,30 @@ def test_labels_lists():
     p = ggplot(data, aes(x=[1, 2, 3], y=[1, 2, 3])) + geom_col()
     assert p.labels.x is None
     assert p.labels.y is None
+
+
+def test_irregular_shapes():
+    import matplotlib.path as mpath
+
+    five_point_astericks = (5, 2, 60)
+    house = ((-2, -4), (-2, -1), (0, 1), (2, -1), (2, -4), (-2, -4))
+
+    star = mpath.Path.unit_regular_star(6)
+    circle = mpath.Path.unit_circle()
+
+    cut_star = mpath.Path(
+        vertices=[*circle.vertices, *star.vertices[::-1]],  # pyright: ignore[reportGeneralTypeIssues,reportIndexIssue,reportArgumentType]
+        codes=[*circle.codes, *star.codes],  # pyright: ignore[reportOptionalIterable,reportGeneralTypeIssues]
+    )
+
+    p = (
+        ggplot(data, aes("x", "y"))
+        + geom_point(shape=five_point_astericks, size=10)
+        + geom_point(aes(y="y-.5"), shape=house, size=10)
+        + geom_point(aes(y="y-1"), shape=cut_star, size=10)
+    )
+
+    assert p == "irregular_shapes"
 
 
 class TestTransScale:
