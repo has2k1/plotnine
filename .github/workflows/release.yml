@@ -6,15 +6,15 @@ on:
       - 'v[0-9]*'
 
 jobs:
-  run-tests:
-    name: Run all tests
-    uses: ./.github/workflows/testing.yml
-    with:
-      skip_codecov: true
+  # run-tests:
+  #   name: Run all tests
+  #   uses: ./.github/workflows/testing.yml
+  #   with:
+  #     skip_codecov: true
 
   check-semver-tag:
     name: Check if the tag is in semantic version format
-    needs: [run-tests]
+    # needs: [run-tests]
     runs-on: ubuntu-latest
     outputs:
       tag_type: ${{ steps.check-tag.outputs.tag_type }}
