@@ -1,7 +1,16 @@
 import pandas as pd
 import pytest
 
-from plotnine import aes, annotate, geom_point, geom_rect, geom_segment, ggplot
+from plotnine import (
+    aes,
+    annotate,
+    facet_wrap,
+    geom_point,
+    geom_rect,
+    geom_segment,
+    ggplot,
+)
+from plotnine.data import mtcars
 from plotnine.exceptions import PlotnineError
 
 n = 4
@@ -29,6 +38,24 @@ def test_multiple_annotation_geoms():
         )
     )
     assert p == "multiple_annotation_geoms"
+
+
+def test_annotate_faceting():
+    p = (
+        ggplot(mtcars, aes("wt", "mpg"))
+        + geom_point(size=5)
+        + annotate(
+            "point",
+            x=[2, 5],
+            y=[15, 30],
+            color=["red", (0, 1, 0)],
+            shape="*",
+            size=5,
+        )
+        + facet_wrap("cyl")
+    )
+
+    assert p == "annotate_faceting"
 
 
 def test_non_geom_raises():

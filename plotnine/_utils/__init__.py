@@ -12,9 +12,10 @@ from collections.abc import Iterable, Sequence
 from contextlib import suppress
 from copy import deepcopy
 from dataclasses import field
-from typing import TYPE_CHECKING, cast, overload
+from typing import TYPE_CHECKING
 from warnings import warn
 
+import mizani._colors.utils as color_utils
 import numpy as np
 import pandas as pd
 from pandas.core.groupby import DataFrameGroupBy
@@ -26,12 +27,10 @@ if TYPE_CHECKING:
     from typing import Any, Callable, Literal, TypeVar
 
     import numpy.typing as npt
-    from matplotlib.typing import ColorType
     from typing_extensions import TypeGuard
 
     from plotnine.typing import (
         AnyArrayLike,
-        AnySeries,
         DataLike,
         FloatArray,
         FloatArrayLike,
@@ -59,6 +58,8 @@ BOX_LOCATIONS: dict[str, tuple[float, float]] = {
     "center": (0.5, 0.5),
     "centre": (0.5, 0.5),
 }
+
+to_rgba = color_utils.to_rgba
 
 
 def is_scalar(val):
@@ -528,105 +529,6 @@ def remove_missing(
             msg.format(name, n - len(data), txt), PlotnineWarning, stacklevel=3
         )
     return data
-
-
-@overload
-def to_rgba(colors: ColorType, alpha: float) -> ColorType: ...
-
-
-@overload
-def to_rgba(
-    colors: Sequence[ColorType], alpha: float
-) -> Sequence[ColorType] | ColorType: ...
-
-
-@overload
-def to_rgba(
-    colors: AnySeries, alpha: AnySeries
-) -> Sequence[ColorType] | ColorType: ...
-
-
-def to_rgba(
-    colors: Sequence[ColorType] | AnySeries | ColorType,
-    alpha: float | Sequence[float] | AnySeries,
-) -> Sequence[ColorType] | ColorType:
-    """
-    Convert hex colors to rgba values.
-
-    Parameters
-    ----------
-    colors : iterable | str
-        colors to convert
-    alphas : iterable | float
-        alpha values
-
-    Returns
-    -------
-    out : ndarray | tuple
-        rgba color(s)
-
-    Notes
-    -----
-    Matplotlib plotting functions only accept scalar
-    alpha values. Hence no two objects with different
-    alpha values may be plotted in one call. This would
-    make plots with continuous alpha values innefficient.
-    However :), the colors can be rgba hex values or
-    list-likes and the alpha dimension will be respected.
-    """
-
-    def is_iterable(var):
-        return np.iterable(var) and not isinstance(var, str)
-
-    def has_alpha(c):
-        return (isinstance(c, tuple) and len(c) == 4) or (
-            isinstance(c, str) and len(c) == 9 and c[0] == "#"
-        )
-
-    def no_color(c):
-        return c is None or c.lower() in ("none", "")
-
-    def to_rgba_hex(c: ColorType, a: float) -> str:
-        """
-        Convert rgb color to rgba hex value
-
-        If color c has an alpha channel, then alpha value
-        a is ignored
-        """
-        from matplotlib.colors import colorConverter, to_hex
-
-        if c in ("None", "none"):
-            return c
-
-        _has_alpha = has_alpha(c)
-        c = to_hex(c, keep_alpha=_has_alpha)
-
-        if not _has_alpha:
-            arr = colorConverter.to_rgba(c, a)
-            return to_hex(arr, keep_alpha=True)
-
-        return c
-
-    if is_iterable(colors):
-        colors = cast("Sequence[ColorType]", colors)
-
-        if all(no_color(c) for c in colors):
-            return "none"
-
-        if isinstance(alpha, (Sequence, pd.Series)):
-            return [to_rgba_hex(c, a) for c, a in zip(colors, alpha)]
-        else:
-            return [to_rgba_hex(c, alpha) for c in colors]
-    else:
-        colors = cast("ColorType", colors)
-
-        if no_color(colors):
-            return colors
-
-        if isinstance(alpha, (Sequence, pd.Series)):
-            return [to_rgba_hex(colors, a) for a in alpha]
-        else:
-            return to_rgba_hex(colors, alpha)
 
 
 def groupby_apply(

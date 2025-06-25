@@ -7,13 +7,12 @@ from itertools import chain, repeat
 
 from .._utils import (
     data_mapping_as_kwargs,
-    is_list_like,
     remove_missing,
 )
 from .._utils.registry import Register, Registry
 from ..exceptions import PlotnineError
 from ..layer import layer
-from ..mapping.aes import is_valid_aesthetic, rename_aesthetics
+from ..mapping.aes import RepeatAesthetic, rename_aesthetics
 from ..mapping.evaluation import evaluate
 from ..positions.position import position
 from ..stats.stat import stat
@@ -260,23 +259,28 @@ class geom(ABC, metaclass=Register):
             data[ae] = evaled[ae]
 
         num_panels = len(data["PANEL"].unique()) if "PANEL" in data else 1
+        across_panels = num_panels > 1 and not self.params["inherit_aes"]
 
         # Aesthetics set as parameters to the geom/stat
         for ae, value in self.aes_params.items():
             try:
                 data[ae] = value
             except ValueError as e:
-                # sniff out the special cases, like custom
-                # tupled linetypes, shapes and colors
-                if is_valid_aesthetic(value, ae):
-                    data[ae] = [value] * len(data)
-                elif num_panels > 1 and is_list_like(value):
-                    data[ae] = list(chain(*repeat(value, num_panels)))
+                # NOTE: Handling of the edgecases in this exception is not
+                # foolproof.
+                repeat_ae = getattr(RepeatAesthetic, ae, None)
+                if across_panels:
+                    # Adding an annotation/abline/hline/vhline with multiple
+                    # items across to more than 1 panel
+                    value = list(chain(*repeat(value, num_panels)))
+                    data[ae] = value
+                elif repeat_ae:
+                    # Some aesthetics may have valid values that are not
+                    # scalar. e.g. sequences. For such case, we need to
+                    # insert a sequence of the same value.
+                    data[ae] = repeat_ae(value, len(data))
                 else:
-                    msg = (
-                        f"'{value}' does not look like a "
-                        f"valid value for `{ae}`"
-                    )
+                    msg = f"'{ae}={value}' does not look like a valid value"
                     raise PlotnineError(msg) from e
 
         return data
