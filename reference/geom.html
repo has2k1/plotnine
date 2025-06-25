@@ -76,7 +76,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-8f1af79587c2686b78fe4e1fbadd71ab.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-9a9d6f2bf2e03a42564d1911820dd934.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-c76a4e1f577b38f22e18166b106e5de1.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -116,7 +116,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine 0.15.0a3</span>
+    <span class="navbar-title">plotnine 0.15.0a4</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -175,6 +175,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#plotnine.geoms.geom.geom.from_stat" id="toc-plotnine.geoms.geom.geom.from_stat" class="nav-link" data-scroll-target="#plotnine.geoms.geom.geom.from_stat"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">from_stat</span> <span class="doc-labels"><code class="doc-label doc-label-staticmethod"></code></span></a></li>
   <li><a href="#plotnine.geoms.geom.geom.handle_na" id="toc-plotnine.geoms.geom.geom.handle_na" class="nav-link" data-scroll-target="#plotnine.geoms.geom.geom.handle_na"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">handle_na</span></a></li>
   <li><a href="#plotnine.geoms.geom.geom.legend_key_size" id="toc-plotnine.geoms.geom.geom.legend_key_size" class="nav-link" data-scroll-target="#plotnine.geoms.geom.geom.legend_key_size"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">legend_key_size</span> <span class="doc-labels"><code class="doc-label doc-label-staticmethod"></code></span></a></li>
+  <li><a href="#plotnine.geoms.geom.geom.setup_aes_params" id="toc-plotnine.geoms.geom.geom.setup_aes_params" class="nav-link" data-scroll-target="#plotnine.geoms.geom.geom.setup_aes_params"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">setup_aes_params</span></a></li>
   <li><a href="#plotnine.geoms.geom.geom.setup_data" id="toc-plotnine.geoms.geom.geom.setup_data" class="nav-link" data-scroll-target="#plotnine.geoms.geom.geom.setup_data"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">setup_data</span></a></li>
   <li><a href="#plotnine.geoms.geom.geom.setup_params" id="toc-plotnine.geoms.geom.geom.setup_params" class="nav-link" data-scroll-target="#plotnine.geoms.geom.geom.setup_params"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">setup_params</span></a></li>
   <li><a href="#plotnine.geoms.geom.geom.to_layer" id="toc-plotnine.geoms.geom.geom.to_layer" class="nav-link" data-scroll-target="#plotnine.geoms.geom.geom.to_layer"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">to_layer</span></a></li>
@@ -365,18 +366,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>Calculate the size of key that would fit the layer contents</td>
 </tr>
 <tr class="even">
+<td><a href="#plotnine.geoms.geom.geom.setup_aes_params">setup_aes_params</a></td>
+<td>Override this method to verify and/or adjust aesthetic parameters</td>
+</tr>
+<tr class="odd">
 <td><a href="#plotnine.geoms.geom.geom.setup_data">setup_data</a></td>
 <td>Modify the data before drawing takes place</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><a href="#plotnine.geoms.geom.geom.setup_params">setup_params</a></td>
 <td>Override this method to verify and/or adjust parameters</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><a href="#plotnine.geoms.geom.geom.to_layer">to_layer</a></td>
 <td>Make a layer that represents this geom</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><a href="#plotnine.geoms.geom.geom.use_defaults">use_defaults</a></td>
 <td>Combine data with defaults and set aesthetics from parameters</td>
 </tr>
@@ -689,10 +694,30 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </section>
 </section>
+<section id="plotnine.geoms.geom.geom.setup_aes_params" class="level3 title doc-object doc-method">
+<h3 class="title doc-object doc-method anchored" data-anchor-id="plotnine.geoms.geom.geom.setup_aes_params"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">setup_aes_params</span></h3>
+<div class="doc-signature doc-method">
+<div class="sourceCode" id="cb15"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>setup_aes_params(data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="doc-text">
+<p>Override this method to verify and/or adjust aesthetic parameters</p>
+</div>
+<section id="parameters-8" class="level4 doc-parameters">
+<h4 class="doc-parameters anchored" data-anchor-id="parameters-8">Parameters</h4>
+<div class="doc-definition-items">
+<dl>
+<dt><code><span class="doc-parameter-name">data</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://pandas.pydata.org/pandas-docs/stable/index.html#module-pandas">pd</a>.<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span></code></dt>
+<dd>
+<p>Data</p>
+</dd>
+</dl>
+</div>
+</section>
+</section>
 <section id="plotnine.geoms.geom.geom.setup_data" class="level3 title doc-object doc-method">
 <h3 class="title doc-object doc-method anchored" data-anchor-id="plotnine.geoms.geom.geom.setup_data"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">setup_data</span></h3>
 <div class="doc-signature doc-method">
-<div class="sourceCode" id="cb15"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>setup_data(data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>setup_data(data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="doc-text">
 <p>Modify the data before drawing takes place</p>
@@ -702,8 +727,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>The <code>geom</code> inherits from another <code>geom</code> (superclass) which does the drawing and the superclass requires certain aesthetics to be present in the data. For example <code>geom_tile</code> and <code>geom_area</code>.</p></li>
 </ol>
 </div>
-<section id="parameters-8" class="level4 doc-parameters">
-<h4 class="doc-parameters anchored" data-anchor-id="parameters-8">Parameters</h4>
+<section id="parameters-9" class="level4 doc-parameters">
+<h4 class="doc-parameters anchored" data-anchor-id="parameters-9">Parameters</h4>
 <div class="doc-definition-items">
 <dl>
 <dt><code><span class="doc-parameter-name">data</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://pandas.pydata.org/pandas-docs/stable/index.html#module-pandas">pd</a>.<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span></code></dt>
@@ -728,13 +753,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="plotnine.geoms.geom.geom.setup_params" class="level3 title doc-object doc-method">
 <h3 class="title doc-object doc-method anchored" data-anchor-id="plotnine.geoms.geom.geom.setup_params"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">setup_params</span></h3>
 <div class="doc-signature doc-method">
-<div class="sourceCode" id="cb16"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>setup_params(data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>setup_params(data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="doc-text">
 <p>Override this method to verify and/or adjust parameters</p>
 </div>
-<section id="parameters-9" class="level4 doc-parameters">
-<h4 class="doc-parameters anchored" data-anchor-id="parameters-9">Parameters</h4>
+<section id="parameters-10" class="level4 doc-parameters">
+<h4 class="doc-parameters anchored" data-anchor-id="parameters-10">Parameters</h4>
 <div class="doc-definition-items">
 <dl>
 <dt><code><span class="doc-parameter-name">data</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://pandas.pydata.org/pandas-docs/stable/index.html#module-pandas">pd</a>.<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span></code></dt>
@@ -744,28 +769,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </dl>
 </div>
 </section>
-<section id="returns-4" class="level4 doc-returns">
-<h4 class="doc-returns anchored" data-anchor-id="returns-4">Returns</h4>
-<div class="doc-definition-items">
-<dl>
-<dt><code><span class="doc-parameter-name">out</span></code></dt>
-<dd>
-<p>Parameters used by the geoms.</p>
-</dd>
-</dl>
-</div>
-</section>
 </section>
 <section id="plotnine.geoms.geom.geom.to_layer" class="level3 title doc-object doc-method">
 <h3 class="title doc-object doc-method anchored" data-anchor-id="plotnine.geoms.geom.geom.to_layer"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">to_layer</span></h3>
 <div class="doc-signature doc-method">
-<div class="sourceCode" id="cb17"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>to_layer()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>to_layer()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="doc-text">
 <p>Make a layer that represents this geom</p>
 </div>
-<section id="returns-5" class="level4 doc-returns">
-<h4 class="doc-returns anchored" data-anchor-id="returns-5">Returns</h4>
+<section id="returns-4" class="level4 doc-returns">
+<h4 class="doc-returns anchored" data-anchor-id="returns-4">Returns</h4>
 <div class="doc-definition-items">
 <dl>
 <dt><code><span class="doc-parameter-annotation"><a href="../reference/layer.html#plotnine.layer.layer">layer</a></span></code></dt>
@@ -779,14 +793,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="plotnine.geoms.geom.geom.use_defaults" class="level3 title doc-object doc-method">
 <h3 class="title doc-object doc-method anchored" data-anchor-id="plotnine.geoms.geom.geom.use_defaults"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">use_defaults</span></h3>
 <div class="doc-signature doc-method">
-<div class="sourceCode" id="cb18"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>use_defaults(data, aes_modifiers)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>use_defaults(data, aes_modifiers)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="doc-text">
 <p>Combine data with defaults and set aesthetics from parameters</p>
 <p>geoms should not override this method.</p>
 </div>
-<section id="parameters-10" class="level4 doc-parameters">
-<h4 class="doc-parameters anchored" data-anchor-id="parameters-10">Parameters</h4>
+<section id="parameters-11" class="level4 doc-parameters">
+<h4 class="doc-parameters anchored" data-anchor-id="parameters-11">Parameters</h4>
 <div class="doc-definition-items">
 <dl>
 <dt><code><span class="doc-parameter-name">data</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://pandas.pydata.org/pandas-docs/stable/index.html#module-pandas">pd</a>.<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span></code></dt>
@@ -800,8 +814,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </dl>
 </div>
 </section>
-<section id="returns-6" class="level4 doc-returns">
-<h4 class="doc-returns anchored" data-anchor-id="returns-6">Returns</h4>
+<section id="returns-5" class="level4 doc-returns">
+<h4 class="doc-returns anchored" data-anchor-id="returns-5">Returns</h4>
 <div class="doc-definition-items">
 <dl>
 <dt><code><span class="doc-parameter-annotation"><a href="https://pandas.pydata.org/pandas-docs/stable/index.html#module-pandas">pd</a>.<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span></code></dt>
