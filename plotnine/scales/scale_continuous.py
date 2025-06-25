@@ -396,7 +396,7 @@ class scale_continuous(
             scaled = [na_value if x == "nan" else x for x in scaled]
         else:
             scaled[pd.isna(scaled)] = na_value
-        return scaled  # pyright: ignore[reportReturnType]
+        return scaled
 
     def get_breaks(
         self, limits: Optional[tuple[float, float]] = None
