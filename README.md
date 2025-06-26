@@ -130,6 +130,7 @@ $ conda install -c conda-forge plotnine
 
 # Or using pixi
 $ pixi init name-of-my-project
+$ cd name-of-my-project
 $ pixi add python plotnine
 ```
 
