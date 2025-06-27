@@ -2,8 +2,11 @@ from __future__ import annotations
 
 import typing
 from abc import ABC
+from contextlib import suppress
 from copy import deepcopy
 from itertools import chain, repeat
+
+import numpy as np
 
 from .._utils import (
     data_mapping_as_kwargs,
@@ -12,7 +15,7 @@ from .._utils import (
 from .._utils.registry import Register, Registry
 from ..exceptions import PlotnineError
 from ..layer import layer
-from ..mapping.aes import RepeatAesthetic, rename_aesthetics
+from ..mapping.aes import rename_aesthetics
 from ..mapping.evaluation import evaluate
 from ..positions.position import position
 from ..stats.stat import stat
@@ -243,6 +246,9 @@ class geom(ABC, metaclass=Register):
         :
             Data used for drawing the geom.
         """
+        from plotnine.mapping import _atomic as atomic
+        from plotnine.mapping._atomic import ae_value
+
         missing_aes = (
             self.DEFAULT_AES.keys()
             - self.aes_params.keys()
@@ -261,25 +267,31 @@ class geom(ABC, metaclass=Register):
         num_panels = len(data["PANEL"].unique()) if "PANEL" in data else 1
         across_panels = num_panels > 1 and not self.params["inherit_aes"]
 
-        # Aesthetics set as parameters to the geom/stat
+        # Aesthetics set as parameters in the geom/stat
         for ae, value in self.aes_params.items():
-            try:
+            if isinstance(value, (str, int, float, np.integer, np.floating)):
                 data[ae] = value
-            except ValueError as e:
-                # NOTE: Handling of the edgecases in this exception is not
-                # foolproof.
-                repeat_ae = getattr(RepeatAesthetic, ae, None)
-                if across_panels:
-                    # Adding an annotation/abline/hline/vhline with multiple
-                    # items across to more than 1 panel
-                    value = list(chain(*repeat(value, num_panels)))
+            elif isinstance(value, ae_value):
+                data[ae] = value * len(data)
+            elif across_panels:
+                value = list(chain(*repeat(value, num_panels)))
+                data[ae] = value
+            else:
+                # Try to make sense of aesthetics whose values can be tuples
+                # or sequences of sorts.
+                ae_value_cls: type[ae_value] | None = getattr(atomic, ae, None)
+                if ae_value_cls:
+                    with suppress(ValueError):
+                        data[ae] = ae_value_cls(value) * len(data)
+                        continue
+
+                # This should catch the aesthetic assignments to
+                # non-numeric or non-string values or sequence of values.
+                # e.g. x=datetime, x=Sequence[datetime],
+                #      x=Sequence[float], shape=Sequence[str]
+                try:
                     data[ae] = value
-                elif repeat_ae:
-                    # Some aesthetics may have valid values that are not
-                    # scalar. e.g. sequences. For such case, we need to
-                    # insert a sequence of the same value.
-                    data[ae] = repeat_ae(value, len(data))
-                else:
+                except ValueError as e:
                     msg = f"'{ae}={value}' does not look like a valid value"
                     raise PlotnineError(msg) from e
 
