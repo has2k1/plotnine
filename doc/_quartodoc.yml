@@ -589,6 +589,7 @@ quartodoc:
         - msleep
         - mtcars
         - pageviews
+        - penguins
         - presidential
         - seals
         - txhousing
