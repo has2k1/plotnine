@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING
 from .element_base import element_base
 
 if TYPE_CHECKING:
-    from typing import Any, Literal, Optional, Sequence
+    from typing import Any, Literal, Sequence
 
 
 class element_line(element_base):
@@ -26,6 +26,8 @@ class element_line(element_base):
         using tuples, see [](`~matplotlib.lines.line2D.set_linestyle`).
     size : float
         line thickness
+    alpha : float
+        Opacity value
     kwargs : dict
         Parameters recognised by [](`~matplotlib.lines.line2d`).
     """
@@ -33,31 +35,37 @@ class element_line(element_base):
     def __init__(
         self,
         *,
-        color: Optional[
+        color: (
             str
             | tuple[float, float, float]
             | tuple[float, float, float, float]
-        ] = None,
-        size: Optional[float] = None,
-        linetype: Optional[str | Sequence[int]] = None,
-        lineend: Optional[Literal["butt", "projecting", "round"]] = None,
-        colour: Optional[
+            | None
+        ) = None,
+        size: float | None = None,
+        linetype: str | Sequence[int] | None = None,
+        lineend: Literal["butt", "projecting", "round"] | None = None,
+        colour: (
             str
             | tuple[float, float, float]
             | tuple[float, float, float, float]
-        ] = None,
+            | None
+        ) = None,
+        alpha: float | None = None,
         **kwargs: Any,
     ):
         super().__init__()
         self.properties.update(**kwargs)
 
-        color = color if color else colour
+        color = color if color is not None else colour
+
         if color:
             self.properties["color"] = color
         if size:
             self.properties["linewidth"] = size
         if linetype:
             self.properties["linestyle"] = linetype
+        if alpha is not None:
+            self.properties["alpha"] = alpha
 
         if linetype in ("solid", "-") and lineend:
             self.properties["solid_capstyle"] = lineend

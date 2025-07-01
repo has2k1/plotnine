@@ -17,7 +17,7 @@ from warnings import warn
 
 import numpy as np
 
-from .._utils import to_rgba
+from .._utils import has_alpha_channel, to_rgba
 from .._utils.registry import RegistryHierarchyMeta
 from ..exceptions import PlotnineError, deprecated_themeable_name
 from .elements import element_blank
@@ -502,6 +502,25 @@ class MixinSequenceOfValues(themeable):
         for name, values in sequence_props.items():
             for a, value in zip(artists, values):
                 a.set(**{name: value})
+
+
+def blend_alpha(
+    properties: dict[str, Any], key: str = "color"
+) -> dict[str, Any]:
+    """
+    Blend color with alpha
+
+    When setting color property values of matplotlib objects,
+    for a color with an alpha channel, we don't want the alpha
+    property if any to have any effect on that color.
+    """
+    if (color := properties.get(key)) is not None:
+        if "alpha" in properties:
+            properties[key] = to_rgba(color, properties["alpha"])
+            properties["alpha"] = None
+        elif has_alpha_channel(color):
+            properties["alpha"] = None
+    return properties
 
 
 # element_text themeables
@@ -1366,7 +1385,7 @@ class panel_grid_major_x(themeable):
 
     def apply_ax(self, ax: Axes):
         super().apply_ax(ax)
-        ax.xaxis.grid(which="major", **self.properties)
+        ax.xaxis.grid(which="major", **blend_alpha(self.properties))
 
     def blank_ax(self, ax: Axes):
         super().blank_ax(ax)
@@ -1384,7 +1403,7 @@ class panel_grid_major_y(themeable):
 
     def apply_ax(self, ax: Axes):
         super().apply_ax(ax)
-        ax.yaxis.grid(which="major", **self.properties)
+        ax.yaxis.grid(which="major", **blend_alpha(self.properties))
 
     def blank_ax(self, ax: Axes):
         super().blank_ax(ax)
@@ -1612,11 +1631,7 @@ class panel_background(legend_key):
 
     def apply_ax(self, ax: Axes):
         super().apply_ax(ax)
-        d = self.properties
-        if "facecolor" in d and "alpha" in d:
-            d["facecolor"] = to_rgba(d["facecolor"], d["alpha"])
-            del d["alpha"]
-
+        d = blend_alpha(self.properties, "facecolor")
         d["edgecolor"] = "none"
         d["linewidth"] = 0
         ax.patch.set(**d)
@@ -1642,15 +1657,11 @@ class panel_border(MixinSequenceOfValues):
         if not (rects := targets.panel_border):
             return
 
-        d = self.properties
+        d = blend_alpha(self.properties, "edgecolor")
 
         with suppress(KeyError):
             if d["edgecolor"] == "none" or d["size"] == 0:
                 return
-
-        if "edgecolor" in d and "alpha" in d:
-            d["edgecolor"] = to_rgba(d["edgecolor"], d["alpha"])
-            del d["alpha"]
 
         self.set(rects, d)
 
