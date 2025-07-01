@@ -276,8 +276,13 @@ def test_scale_manual():
             s.palette(len(values) + 1)
 
     values = {"A": "red", "B": "violet", "C": "blue"}
-    sc = scale_manual.scale_color_manual(values)
-    assert sc.palette(3) == values
+    sc1 = scale_manual.scale_color_manual(values)
+    sc2 = scale_color_manual(values, breaks=["B", "A", "C"])
+    sc1.train(["A", "B", "C"])
+    sc2.train(["A", "B", "C"])
+    assert sc1.palette(3) == values
+    assert sc1.view().labels == ["A", "B", "C"]
+    assert sc2.view().labels == ["B", "A", "C"]
 
     # Breaks are matched with values
     sc1 = scale_manual.scale_color_manual(

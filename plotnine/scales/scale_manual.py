@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Mapping
 from dataclasses import KW_ONLY, InitVar, dataclass
 from typing import Any, Sequence
 from warnings import warn
@@ -29,6 +30,7 @@ class _scale_manual(scale_discrete):
             isinstance(self.breaks, Iterable)
             and isinstance(self.breaks, Sized)
             and len(self.breaks) == len(values)
+            and not isinstance(values, Mapping)
         ):
             values = dict(zip(self.breaks, values))
 
