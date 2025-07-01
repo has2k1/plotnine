@@ -1194,3 +1194,16 @@ def va_as_float(va: VerticalJustification | float) -> float:
         "center_baseline": 0.5,
     }
     return lookup[va] if isinstance(va, str) else va
+
+
+def has_alpha_channel(c: str | tuple) -> bool:
+    """
+    Return True if c a color with an alpha value
+
+    Either a 9 character hex string e.g. #AABBCC88 or
+    an RGBA tuple e.g. (.6, .7, .8, .5)
+    """
+    if isinstance(c, str):
+        return c.startswith("#") and len(c) == 9
+    else:
+        return color_utils.is_color_tuple(c) and len(c) == 4
