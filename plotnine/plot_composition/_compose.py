@@ -315,7 +315,13 @@ class Compose:
             )
         return figure
 
-    def save(self, filename: str | Path | BytesIO, format: str | None = None):
+    def save(
+        self,
+        filename: str | Path | BytesIO,
+        format: str | None = None,
+        dpi: int | None = None,
+        **kwargs,
+    ):
         """
         Save a Compose object as an image file
 
@@ -326,8 +332,19 @@ class Compose:
         format :
             Image format to use, automatically extract from
             file name extension.
+        dpi :
+            DPI to use for raster graphics. If None, defaults to using
+            the `dpi` of theme to the first plot.
+        kwargs :
+            These are ignored. Here to "softly" match the API of
+            `ggplot.save()`.
         """
-        figure = self.draw()
+        from plotnine import theme
+
+        # To set the dpi, we only need to change the dpi of
+        # the last plot and theme gets added to the last plot
+        plot = (self + theme(dpi=dpi)) if dpi else self
+        figure = plot.draw()
         figure.savefig(filename, format=format)
 
 
