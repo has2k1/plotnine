@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING, cast
 
 import numpy as np
 
-from plotnine.plot_composition import OR
+from plotnine.composition import OR
 
 from ._spaces import LayoutSpaces
 
@@ -16,7 +16,7 @@ if TYPE_CHECKING:
 
     from plotnine import ggplot
     from plotnine._mpl.gridspec import p9GridSpec
-    from plotnine.plot_composition import Compose
+    from plotnine.composition import Compose
 
 
 @dataclass
