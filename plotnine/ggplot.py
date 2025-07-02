@@ -53,10 +53,10 @@ if TYPE_CHECKING:
 
     from plotnine import watermark
     from plotnine._mpl.gridspec import p9GridSpec
+    from plotnine.composition import Compose
     from plotnine.coords.coord import coord
     from plotnine.facets.facet import facet
     from plotnine.layer import layer
-    from plotnine.plot_composition import Compose
     from plotnine.typing import DataLike
 
     class PlotAddable(Protocol):
@@ -251,7 +251,7 @@ class ggplot:
             Either an object that knows how to "radd"
             itself to a ggplot, or a list of such objects.
         """
-        from .plot_composition import ADD, Compose
+        from .composition import ADD, Compose
 
         if isinstance(rhs, (ggplot, Compose)):
             return ADD([self, rhs])
@@ -263,7 +263,7 @@ class ggplot:
         """
         Compose 2 plots columnwise
         """
-        from .plot_composition import OR
+        from .composition import OR
 
         return OR([self, rhs])
 
@@ -271,7 +271,7 @@ class ggplot:
         """
         Compose 2 plots rowwise
         """
-        from .plot_composition import DIV
+        from .composition import DIV
 
         return DIV([self, rhs])
 
@@ -279,7 +279,7 @@ class ggplot:
         """
         Compose 2 plots columnwise
         """
-        from .plot_composition import OR
+        from .composition import OR
 
         return OR([self, rhs])
 

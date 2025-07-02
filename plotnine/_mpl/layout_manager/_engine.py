@@ -13,7 +13,7 @@ if TYPE_CHECKING:
     from matplotlib.figure import Figure
 
     from plotnine import ggplot
-    from plotnine.plot_composition import Compose
+    from plotnine.composition import Compose
 
 
 class PlotnineLayoutEngine(LayoutEngine):
