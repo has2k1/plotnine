@@ -33,9 +33,9 @@ class geom_map(geom):
     """
     Draw map feature
 
-    The map feature are drawn without any special projections.
-
     {usage}
+
+    The map feature are drawn without any special projections.
 
     Parameters
     ----------
