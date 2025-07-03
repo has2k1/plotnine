@@ -539,6 +539,7 @@ quartodoc:
           include_attributes: false
         - Stack
         - Beside
+        - plot_spacer
 
     - title: Options
       desc: |
