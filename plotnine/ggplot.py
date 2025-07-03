@@ -13,7 +13,6 @@ from typing import (
     Iterable,
     Optional,
     cast,
-    overload,
 )
 from warnings import warn
 
@@ -53,7 +52,7 @@ if TYPE_CHECKING:
 
     from plotnine import watermark
     from plotnine._mpl.gridspec import p9GridSpec
-    from plotnine.composition import Compose
+    from plotnine.composition import Arrange
     from plotnine.coords.coord import coord
     from plotnine.facets.facet import facet
     from plotnine.layer import layer
@@ -230,18 +229,10 @@ class ggplot:
             other.__radd__(self)
         return self
 
-    @overload
-    def __add__(
-        self, rhs: PlotAddable | list[PlotAddable] | None
-    ) -> ggplot: ...
-
-    @overload
-    def __add__(self, rhs: ggplot | Compose) -> Compose: ...
-
     def __add__(
         self,
-        rhs: PlotAddable | list[PlotAddable] | None | ggplot | Compose,
-    ) -> ggplot | Compose:
+        rhs: PlotAddable | list[PlotAddable] | None,
+    ) -> ggplot:
         """
         Add to ggplot
 
@@ -251,37 +242,32 @@ class ggplot:
             Either an object that knows how to "radd"
             itself to a ggplot, or a list of such objects.
         """
-        from .composition import ADD, Compose
-
-        if isinstance(rhs, (ggplot, Compose)):
-            return ADD([self, rhs])
-
         self = deepcopy(self)
         return self.__iadd__(rhs)
 
-    def __or__(self, rhs: ggplot | Compose) -> Compose:
+    def __or__(self, rhs: ggplot | Arrange) -> Arrange:
         """
         Compose 2 plots columnwise
         """
-        from .composition import OR
+        from .composition import Beside
 
-        return OR([self, rhs])
+        return Beside([self, rhs])
 
-    def __truediv__(self, rhs: ggplot | Compose) -> Compose:
+    def __truediv__(self, rhs: ggplot | Arrange) -> Arrange:
         """
         Compose 2 plots rowwise
         """
-        from .composition import DIV
+        from .composition import Stack
 
-        return DIV([self, rhs])
+        return Stack([self, rhs])
 
-    def __sub__(self, rhs: ggplot | Compose) -> Compose:
+    def __sub__(self, rhs: ggplot | Arrange) -> Arrange:
         """
         Compose 2 plots columnwise
         """
-        from .composition import OR
+        from .composition import Beside
 
-        return OR([self, rhs])
+        return Beside([self, rhs])
 
     def __rrshift__(self, other: DataLike) -> ggplot:
         """

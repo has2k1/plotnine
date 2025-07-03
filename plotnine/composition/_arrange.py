@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import abc
 from copy import deepcopy
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from io import BytesIO
 from typing import TYPE_CHECKING
 
@@ -24,9 +24,15 @@ if TYPE_CHECKING:
     from plotnine.ggplot import PlotAddable, ggplot
 
 
-class Compose:
+@dataclass
+class Arrange:
     """
-    Arrange two or more plots
+    Base class for those that create plot compositions
+
+    As a user, you will never directly work with this class, except
+    the operators [`|`](`plotnine.composition.Beside`) and
+    [`/`](`plotnine.composition.Stack`) that are powered by subclasses
+    of this class.
 
     Parameters
     ----------
@@ -34,27 +40,26 @@ class Compose:
         The objects to be put together (composed).
     """
 
-    def __init__(self, operands: list[ggplot | Compose]):
-        self.operands = operands
+    operands: list[ggplot | Arrange]
 
-        # These are created in the _create_figure method
-        self.figure: Figure
-        self.plotspecs: list[plotspec]
-        self.gridspec: p9GridSpec
+    # These are created in the _create_figure method
+    figure: Figure = field(init=False, repr=False)
+    plotspecs: list[plotspec] = field(init=False, repr=False)
+    gridspec: p9GridSpec = field(init=False, repr=False)
 
     @abc.abstractmethod
-    def __or__(self, rhs: ggplot | Compose) -> Compose:
+    def __or__(self, rhs: ggplot | Arrange) -> Arrange:
         """
         Add rhs as a column
         """
 
     @abc.abstractmethod
-    def __truediv__(self, rhs: ggplot | Compose) -> Compose:
+    def __truediv__(self, rhs: ggplot | Arrange) -> Arrange:
         """
         Add rhs as a row
         """
 
-    def __add__(self, rhs: ggplot | Compose | PlotAddable) -> Compose:
+    def __add__(self, rhs: ggplot | Arrange | PlotAddable) -> Arrange:
         """
         Add rhs to the composition
 
@@ -65,13 +70,13 @@ class Compose:
         """
         from plotnine import ggplot
 
-        if not isinstance(rhs, (ggplot, Compose)):
+        if not isinstance(rhs, (ggplot, Arrange)):
             cmp = deepcopy(self)
             cmp.last_plot = cmp.last_plot + rhs
             return cmp
         return self.__class__([*self, rhs])
 
-    def __sub__(self, rhs: ggplot | Compose) -> Compose:
+    def __sub__(self, rhs: ggplot | Arrange) -> Arrange:
         """
         Add the rhs besides the composition
 
@@ -82,7 +87,7 @@ class Compose:
         """
         return self.__class__([self, rhs])
 
-    def __and__(self, rhs: PlotAddable) -> Compose:
+    def __and__(self, rhs: PlotAddable) -> Arrange:
         """
         Add rhs to all plots in the composition
 
@@ -93,9 +98,9 @@ class Compose:
         """
         self = deepcopy(self)
 
-        def add_other(op: Compose):
+        def add_other(op: Arrange):
             for item in op:
-                if isinstance(item, Compose):
+                if isinstance(item, Arrange):
                     add_other(item)
                 else:
                     item += rhs
@@ -103,7 +108,7 @@ class Compose:
         add_other(self)
         return self
 
-    def __mul__(self, rhs: PlotAddable) -> Compose:
+    def __mul__(self, rhs: PlotAddable) -> Arrange:
         """
         Add rhs to the outermost nesting level of the composition
 
@@ -127,7 +132,7 @@ class Compose:
         """
         return len(self.operands)
 
-    def __iter__(self) -> Iterator[ggplot | Compose]:
+    def __iter__(self) -> Iterator[ggplot | Arrange]:
         """
         Return an iterable of all the operands
         """
@@ -227,7 +232,7 @@ class Compose:
         from plotnine._mpl.gridspec import p9GridSpec
 
         def _make_plotspecs(
-            cmp: Compose, parent_gridspec: p9GridSpec | None
+            cmp: Arrange, parent_gridspec: p9GridSpec | None
         ) -> Generator[plotspec]:
             """
             Return the plot specification for each subplot in the composition
@@ -289,7 +294,7 @@ class Compose:
 
     def draw(self, *, show: bool = False) -> Figure:
         """
-        Render the composed plots
+        Render the arranged plots
 
         Parameters
         ----------
@@ -323,7 +328,7 @@ class Compose:
         **kwargs,
     ):
         """
-        Save a Compose object as an image file
+        Save a composition as an image file
 
         Parameters
         ----------
@@ -350,7 +355,7 @@ class Compose:
 
 @dataclass
 class plot_composition_context:
-    cmp: Compose
+    cmp: Arrange
     show: bool
 
     def __post_init__(self):
@@ -385,95 +390,3 @@ class plot_composition_context:
                 plt.close(self.cmp.figure)
 
         self._rc_context.__exit__(exc_type, exc_value, exc_traceback)
-
-
-class OR(Compose):
-    """
-    Compose by adding a column
-    """
-
-    @property
-    def nrow(self) -> int:
-        return 1
-
-    @property
-    def ncol(self) -> int:
-        return len(self)
-
-    def __or__(self, rhs: ggplot | Compose) -> Compose:
-        """
-        Add rhs as a column
-        """
-        # This is adjacent or i.e. (OR | rhs) so we collapse the
-        # operands into a single operation
-        return OR([*self, rhs])
-
-    def __truediv__(self, rhs: ggplot | Compose) -> Compose:
-        """
-        Add rhs as a row
-        """
-        return DIV([self, rhs])
-
-
-class DIV(Compose):
-    """
-    Compose by adding a row
-    """
-
-    @property
-    def nrow(self) -> int:
-        return len(self)
-
-    @property
-    def ncol(self) -> int:
-        return 1
-
-    def __truediv__(self, rhs: ggplot | Compose) -> Compose:
-        """
-        Add rhs as a row
-        """
-        # This is an adjacent div i.e. (DIV | rhs) so we collapse the
-        # operands into a single operation
-        return DIV([*self, rhs])
-
-    def __or__(self, rhs: ggplot | Compose) -> Compose:
-        """
-        Add rhs as a column
-        """
-        return OR([self, rhs])
-
-
-class ADD(Compose):
-    """
-    Compose by adding
-    """
-
-    @property
-    def nrow(self) -> int:
-        from plotnine.facets.facet_wrap import wrap_dims
-
-        return wrap_dims(len(self))[0]
-
-    @property
-    def ncol(self) -> int:
-        from plotnine.facets.facet_wrap import wrap_dims
-
-        return wrap_dims(len(self))[1]
-
-    def __or__(self, rhs: ggplot | Compose) -> Compose:
-        """
-        Add rhs as a column
-        """
-        return OR([self, rhs])
-
-    def __truediv__(self, rhs: ggplot | Compose) -> Compose:
-        """
-        Add rhs as a row
-        """
-        return DIV([self, rhs])
-
-    def __sub__(self, rhs: ggplot | Compose) -> Compose:
-        """
-        Add rhs as a column
-        """
-        return OR([self, rhs])

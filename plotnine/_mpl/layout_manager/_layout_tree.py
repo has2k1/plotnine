@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING, cast
 
 import numpy as np
 
-from plotnine.composition import OR
+from plotnine.composition import Beside
 
 from ._spaces import LayoutSpaces
 
@@ -16,7 +16,7 @@ if TYPE_CHECKING:
 
     from plotnine import ggplot
     from plotnine._mpl.gridspec import p9GridSpec
-    from plotnine.composition import Compose
+    from plotnine.composition import Arrange
 
 
 @dataclass
@@ -82,7 +82,7 @@ class LayoutTree:
 
     @staticmethod
     def create(
-        cmp: Compose,
+        cmp: Arrange,
         lookup_spaces: dict[ggplot, LayoutSpaces],
     ) -> LayoutTree:
         """
@@ -109,7 +109,7 @@ class LayoutTree:
             else:
                 nodes.append(LayoutTree.create(item, lookup_spaces))
 
-        if isinstance(cmp, OR):
+        if isinstance(cmp, Beside):
             return ColumnsTree(cmp.gridspec, nodes)
         else:
             return RowsTree(cmp.gridspec, nodes)
