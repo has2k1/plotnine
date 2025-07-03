@@ -14,11 +14,11 @@ class geom_area(geom_ribbon):
     """
     Area plot
 
+    {usage}
+
     An area plot is a special case of geom_ribbon,
     where the minimum of the range is fixed to 0,
     and the position adjustment defaults to 'stack'.
-
-    {usage}
 
     Parameters
     ----------
