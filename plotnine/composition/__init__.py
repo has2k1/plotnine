@@ -1,10 +1,11 @@
-from ._compose import ADD, DIV, OR, Compose
+from ._arrange import Arrange
+from ._beside import Beside
 from ._spacer import spacer
+from ._stack import Stack
 
 __all__ = (
-    "Compose",
-    "ADD",
-    "DIV",
-    "OR",
+    "Arrange",
+    "Stack",
+    "Beside",
     "spacer",
 )

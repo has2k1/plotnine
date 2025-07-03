@@ -532,6 +532,14 @@ quartodoc:
         - coord_flip
         - coord_trans
 
+    - title: Composing Plots
+      package: plotnine.composition
+      contents:
+        - name: Arrange
+          include_attributes: false
+        - Stack
+        - Beside
+
     - title: Options
       desc: |
         When working interactively, some of the options make it convenient to

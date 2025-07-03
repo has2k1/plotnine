@@ -14,7 +14,7 @@ class spacer(ggplot):
         super().__init__()
         self.theme = theme_void()
 
-    def __add__(self, rhs) -> spacer:  # pyright: ignore[reportIncompatibleMethodOverride]
+    def __add__(self, rhs) -> spacer:
         """
         Add to spacer
 

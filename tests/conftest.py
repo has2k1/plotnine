@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 from matplotlib.testing.compare import compare_images
 
 from plotnine import ggplot, theme
-from plotnine.composition import Compose
+from plotnine.composition import Arrange
 from plotnine.themes.theme import DEFAULT_RCPARAMS
 
 TOLERANCE = 2  # Default tolerance for the tests
@@ -235,7 +235,7 @@ def layer_data(p, i=0):
     return p.layers.data[i]
 
 
-def composition_equals(cmp: Compose, name: str) -> bool:
+def composition_equals(cmp: Arrange, name: str) -> bool:
     """
     Compare plot composition to image determined by `right`
 
@@ -246,7 +246,7 @@ def composition_equals(cmp: Compose, name: str) -> bool:
     name :
         Identifier for the test image
 
-    This function is meant to monkey patch Compose.__eq__
+    This function is meant to monkey patch Arrange.__eq__
     so that tests can use the `assert` statement.
     """
     test_file = inspect.stack()[1][1]
@@ -271,4 +271,4 @@ def composition_equals(cmp: Compose, name: str) -> bool:
     return not err
 
 
-Compose.__eq__ = composition_equals  # pyright: ignore[reportAttributeAccessIssue]
+Arrange.__eq__ = composition_equals  # pyright: ignore[reportAttributeAccessIssue]
