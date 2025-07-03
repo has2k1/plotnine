@@ -35,6 +35,12 @@ $signature-border-color: tint-color($primary, 25%);
   margin-right: .5rem;
 }
 
+.doc-usage:not(.doc-signature) > p {
+  margin-bottom: -1rem;
+  color: $gray-600;
+  font-size: 0.95rem;
+}
+
 /*-- scss:functions --*/
 
 /*-- scss:uses --*/
