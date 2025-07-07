@@ -16,6 +16,10 @@ class geom_count(geom_point):
     Parameters
     ----------
     {common_parameters}
+
+    See Also
+    --------
+    plotnine.stat_sum : The default `stat` for this `geom`.
     """
 
     DEFAULT_PARAMS = {"stat": "sum", "position": "identity", "na_rm": False}

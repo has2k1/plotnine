@@ -24,6 +24,7 @@ class stat_pointdensity(stat):
 
     See Also
     --------
+    plotnine.geom_density_2d : The default `geom` for this `stat`.
     statsmodels.nonparametric.kde.KDEMultivariate
     scipy.stats.gaussian_kde
     sklearn.neighbors.KernelDensity

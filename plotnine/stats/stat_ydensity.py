@@ -69,7 +69,7 @@ class stat_ydensity(stat):
 
     See Also
     --------
-    plotnine.geom_violin
+    plotnine.geom_violin : The default `geom` for this `stat`.
     statsmodels.nonparametric.kde.KDEUnivariate
     statsmodels.nonparametric.kde.KDEUnivariate.fit
     """

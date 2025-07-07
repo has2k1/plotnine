@@ -12,6 +12,10 @@ class geom_pointdensity(geom_point):
     Parameters
     ----------
     {common_parameters}
+
+    See Also
+    --------
+    plotnine.stat_pointdensity : The default `stat` for this `geom`.
     """
 
     DEFAULT_PARAMS = {

@@ -17,6 +17,10 @@ class geom_bin_2d(geom_rect):
     Parameters
     ----------
     {common_parameters}
+
+    See Also
+    --------
+    plotnine.stat_bin_2d : The default stat for this `geom`.
     """
 
     DEFAULT_PARAMS = {"stat": "bin_2d", "position": "identity", "na_rm": False}

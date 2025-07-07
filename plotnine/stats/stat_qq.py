@@ -47,6 +47,7 @@ class stat_qq(stat):
 
     See Also
     --------
+    plotnine.geom_qq : The default `geom` for this `stat`.
     scipy.stats.mstats.plotting_positions : Uses `alpha_beta`
         to calculate the quantiles.
     """

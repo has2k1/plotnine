@@ -16,6 +16,10 @@ class geom_quantile(geom_path):
         Line end style. This option is applied for solid linetypes.
     linejoin : Literal["round", "miter", "bevel"], default="round"
         Line join style. This option is applied for solid linetypes.
+
+    See Also
+    --------
+    plotnine.stat_quantile : The default `stat` for this `geom`.
     """
 
     DEFAULT_AES = {

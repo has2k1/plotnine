@@ -53,6 +53,10 @@ class stat_bin(stat):
     pad : bool, default=False
         If `True`{.py}, adds empty bins at either side of x.
         This ensures that frequency polygons touch 0.
+
+    See Also
+    --------
+    plotnine.histogram : The default `geom` for this `stat`.
     """
 
     _aesthetics_doc = """

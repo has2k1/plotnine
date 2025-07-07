@@ -23,6 +23,7 @@ class stat_count(stat):
 
     See Also
     --------
+    plotnine.geom_histogram : The default `geom` for this `stat`.
     plotnine.stat_bin
     """
 

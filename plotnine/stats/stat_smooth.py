@@ -106,6 +106,7 @@ class stat_smooth(stat):
 
     See Also
     --------
+    plotnine.geom_smooth : The default `geom` for this `stat`.
     statsmodels.regression.linear_model.OLS
     statsmodels.regression.linear_model.WLS
     statsmodels.robust.robust_linear_model.RLM

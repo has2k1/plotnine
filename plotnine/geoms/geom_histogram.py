@@ -15,7 +15,7 @@ class geom_histogram(geom_bar):
 
     See Also
     --------
-    plotnine.geom_bar
+    plotnine.geom_bar : The default `stat` for this `geom`.
     """
 
     DEFAULT_PARAMS = {"stat": "bin", "position": "stack", "na_rm": False}

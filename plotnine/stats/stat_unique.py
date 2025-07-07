@@ -12,6 +12,10 @@ class stat_unique(stat):
     Parameters
     ----------
     {common_parameters}
+
+    See Also
+    --------
+    plotnine.geom_point : The default `geom` for this `stat`.
     """
 
     DEFAULT_PARAMS = {"geom": "point", "position": "identity", "na_rm": False}

@@ -68,6 +68,7 @@ class stat_bindot(stat):
 
     See Also
     --------
+    plotnine.geom_dotplot : The default `geom` for this `stat`.
     plotnine.stat_bin
     """
 
