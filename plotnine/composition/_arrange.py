@@ -38,6 +38,12 @@ class Arrange:
     ----------
     operands:
         The objects to be put together (composed).
+
+    See Also
+    --------
+    plotnine.composition.Beside : To arrange plots side by side
+    plotnine.composition.Stack : To arrange plots vertically
+    plotnine.composition.plot_spacer : To add a blank space between plots
     """
 
     operands: list[ggplot | Arrange]
