@@ -32,6 +32,7 @@ class geom_bar(geom_rect):
     See Also
     --------
     plotnine.geom_histogram
+    plotnine.stat_count : The default `stat` for this `geom`.
     """
 
     REQUIRED_AES = {"x", "y"}

@@ -37,6 +37,10 @@ class stat_function(stat):
         then the `xlim` must be provided.
     args : Optional[tuple[Any] | dict[str, Any]], default=None
         Arguments to pass to `fun`.
+
+    See Also
+    --------
+    plotnine.geom_path : The default `geom` for this `stat`.
     """
 
     _aesthetics_doc = """

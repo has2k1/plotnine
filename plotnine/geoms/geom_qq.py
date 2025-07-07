@@ -12,6 +12,10 @@ class geom_qq(geom_point):
     Parameters
     ----------
     {common_parameters}
+
+    See Also
+    --------
+    plotnine.stat_qq : The default `stat` for this `geom`.
     """
 
     DEFAULT_PARAMS = {"stat": "qq", "position": "identity", "na_rm": False}

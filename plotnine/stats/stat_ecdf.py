@@ -25,7 +25,7 @@ class stat_ecdf(stat):
 
     See Also
     --------
-    plotnine.geom_step
+    plotnine.geom_step : The default `geom` for this `stat`.
     """
 
     _aesthetics_doc = """

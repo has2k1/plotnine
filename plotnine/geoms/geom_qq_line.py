@@ -12,6 +12,10 @@ class geom_qq_line(geom_path):
     Parameters
     ----------
     {common_parameters}
+
+    See Also
+    --------
+    plotnine.stat_qq_line : The default `stat` for this `geom`.
     """
 
     DEFAULT_PARAMS = {

@@ -37,6 +37,10 @@ class stat_ellipse(stat):
         The confidence level at which to draw the ellipse.
     segments : int, default=51
         Number of segments to be used in drawing the ellipse.
+
+    See Also
+    --------
+    plotnine.geom_path : The default `geom` for this `stat`.
     """
 
     REQUIRED_AES = {"x", "y"}

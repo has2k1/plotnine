@@ -85,7 +85,7 @@ class stat_density(stat):
 
     See Also
     --------
-    plotnine.geom_density
+    plotnine.geom_density : The default `geom` for this `stat`.
     statsmodels.nonparametric.kde.KDEUnivariate
     statsmodels.nonparametric.kde.KDEUnivariate.fit
     """

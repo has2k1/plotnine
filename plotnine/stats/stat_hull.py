@@ -26,6 +26,10 @@ class stat_hull(stat):
         Raised when Qhull encounters an error condition,
         such as geometrical degeneracy when options to resolve are
         not enabled.
+
+    See Also
+    --------
+    plotnine.geom_path : The default `geom` for this `stat`.
     """
 
     _aesthetics_doc = """

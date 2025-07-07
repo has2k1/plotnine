@@ -29,8 +29,8 @@ class stat_quantile(stat):
 
     See Also
     --------
+    plotnine.geom_quantile : The default `geom` for this `stat`.
     statsmodels.regression.quantile_regression.QuantReg
-    plotnine.geom_quantile
     """
 
     _aesthetics_doc = """

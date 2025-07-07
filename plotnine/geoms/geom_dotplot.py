@@ -46,7 +46,7 @@ class geom_dotplot(geom):
 
     See Also
     --------
-    plotnine.stat_bindot
+    plotnine.stat_bindot : The default `stat` for this `geom`.
     """
 
     DEFAULT_AES = {"alpha": 1, "color": "black", "fill": "black"}

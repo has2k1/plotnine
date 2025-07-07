@@ -34,6 +34,10 @@ class geom_smooth(geom):
         How much (vertically) of the legend box should be filled by
         the color that indicates the confidence intervals. Should be
         in the range [0, 1].
+
+    See Also
+    --------
+    plotnine.stat_smooth : The default `stat` for this `geom`.
     """
 
     DEFAULT_AES = {

@@ -17,6 +17,10 @@ class stat_sum(stat):
     Parameters
     ----------
     {common_parameters}
+
+    See Also
+    --------
+    plotnine.geom_point : The default `geom` for this `stat`.
     """
 
     _aesthetics_doc = """

@@ -35,6 +35,10 @@ class stat_bin_2d(stat):
         the stories in your data.
     drop : bool, default=False
         If `True`{.py}, removes all cells with zero counts.
+
+    See Also
+    --------
+    plotnine.geom_rect : The default `geom` for this `stat`.
     """
 
     _aesthetics_doc = """

@@ -45,6 +45,10 @@ class geom_violin(geom):
         'left-right'  # Alternate (left first) half violins by the group
         'right-left'  # Alternate (right first) half violins by the group
         ```
+
+    See Also
+    --------
+    plotnine.stat_ydensity : The default `stat` for this `geom`.
     """
 
     DEFAULT_AES = {

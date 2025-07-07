@@ -70,6 +70,10 @@ class geom_boxplot(geom):
     fatten : float, default=2
         A multiplicative factor used to increase the size of the
         middle bar across the box.
+
+    See Also
+    --------
+    plotnine.stat_boxplot : The default `stat` for this `geom`.
     """
 
     DEFAULT_AES = {

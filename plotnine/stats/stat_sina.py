@@ -69,7 +69,7 @@ class stat_sina(stat):
 
     See Also
     --------
-    plotnine.geom_sina
+    plotnine.geom_sina : The default `geom` for this `stat`.
     """
 
     _aesthetics_doc = """
