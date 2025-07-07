@@ -20,6 +20,11 @@ class Beside(Arrange):
         composition | composition
 
     Typically, you will use this class through the `|` operator.
+
+    See Also
+    --------
+    plotnine.composition.Stack : To arrange plots vertically
+    plotnine.composition.plot_spacer : To add a blank space between plots
     """
 
     @property

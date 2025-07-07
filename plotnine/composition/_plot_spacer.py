@@ -17,6 +17,12 @@ class plot_spacer(ggplot):
 
         The color can also be modified by adding a [](`~plotnine.theme`)
         and setting the [](`~plotnine.themes.themeable.plot_background`).
+
+    See Also
+    --------
+    plotnine.composition.Beside : To arrange plots side by side
+    plotnine.composition.Stack : To arrange plots vertically
+    plotnine.composition.Arrange : For more on arranging plots
     """
 
     def __init__(
