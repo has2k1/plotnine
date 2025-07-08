@@ -25,7 +25,6 @@ class theme_void(theme):
 
     def __init__(self, base_size=11, base_family=None):
         base_family = base_family or get_option("base_family")
-        half_line = base_size / 2
         m = get_option("base_margin")
         # Use only inherited elements and make everything blank
         theme.__init__(
@@ -98,11 +97,6 @@ class theme_void(theme):
             plot_tag_location="margin",
             plot_tag_position="topleft",
             strip_align=0,
-            strip_text=element_text(
-                color="#1A1A1A",
-                size=base_size * 0.8,
-                linespacing=1.5,
-                margin=margin_auto(half_line * 0.8),
-            ),
+            strip_text=element_text(size=base_size * 0.8),
             complete=True,
         )
