@@ -698,7 +698,9 @@ class TextJustifier:
         """
         Horizontally Justify text accross the panel(s) width
         """
-        self.horizontally(text, ha, self.spaces.l.left, self.spaces.r.right)
+        self.horizontally(
+            text, ha, self.spaces.l.panel_left, self.spaces.r.panel_right
+        )
 
     def horizontally_across_plot(
         self, text: Text, ha: HorizontalJustification | float
@@ -716,7 +718,9 @@ class TextJustifier:
         """
         Horizontally Justify text along the panel(s) height
         """
-        self.vertically(text, va, self.spaces.b.bottom, self.spaces.t.top)
+        self.vertically(
+            text, va, self.spaces.b.panel_bottom, self.spaces.t.panel_top
+        )
 
     def vertically_along_plot(
         self, text: Text, va: VerticalJustification | float
