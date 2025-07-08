@@ -32,7 +32,7 @@ class StripText(Text):
             "clip_on": False,
             "zorder": 3.3,
             # Since the text can be rotated, it is simpler to anchor it at
-            # the center, align it then do the rotation. Vertically,
+            # the center, align it, then do the rotation. Vertically,
             # center_baseline places the text in the visual center, but
             # only if it is one line. For multiline text, we are better
             # off with plain center.
@@ -44,12 +44,6 @@ class StripText(Text):
         super().__init__(0, 0, info.label, **kwargs)
         self.draw_info = info
         self.patch = StripTextPatch(self)
-
-        # self.set_horizontalalignment("center")
-        # self.set_verticalalignment(
-        #     "center_baseline" if info.is_oneline else "center"
-        # )
-        # self.set_rotation_mode("anchor")
 
     # TODO: This should really be part of the unit conversions in the
     # margin class.
