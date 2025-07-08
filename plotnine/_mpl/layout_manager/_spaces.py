@@ -385,18 +385,18 @@ class left_spaces(_side_spaces):
         return self.to_figure_space(self.sum_incl(item))
 
     @property
-    def left_relative(self):
+    def panel_left_relative(self):
         """
         Left (relative to the gridspec) of the panels in figure dimensions
         """
         return self.total
 
     @property
-    def left(self):
+    def panel_left(self):
         """
         Left of the panels in figure space
         """
-        return self.to_figure_space(self.left_relative)
+        return self.to_figure_space(self.panel_left_relative)
 
     @property
     def plot_left(self):
@@ -491,18 +491,18 @@ class right_spaces(_side_spaces):
         return self.to_figure_space(1 - self.sum_upto(item))
 
     @property
-    def right_relative(self):
+    def panel_right_relative(self):
         """
         Right (relative to the gridspec) of the panels in figure dimensions
         """
         return 1 - self.total
 
     @property
-    def right(self):
+    def panel_right(self):
         """
         Right of the panels in figure space
         """
-        return self.to_figure_space(self.right_relative)
+        return self.to_figure_space(self.panel_right_relative)
 
     @property
     def plot_right(self):
@@ -620,18 +620,18 @@ class top_spaces(_side_spaces):
         return self.to_figure_space(1 - self.sum_upto(item))
 
     @property
-    def top_relative(self):
+    def panel_top_relative(self):
         """
         Top (relative to the gridspec) of the panels in figure dimensions
         """
         return 1 - self.total
 
     @property
-    def top(self):
+    def panel_top(self):
         """
         Top of the panels in figure space
         """
-        return self.to_figure_space(self.top_relative)
+        return self.to_figure_space(self.panel_top_relative)
 
     @property
     def plot_top(self):
@@ -758,18 +758,18 @@ class bottom_spaces(_side_spaces):
         return self.to_figure_space(self.sum_incl(item))
 
     @property
-    def bottom_relative(self):
+    def panel_bottom_relative(self):
         """
         Bottom (relative to the gridspec) of the panels in figure dimensions
         """
         return self.total
 
     @property
-    def bottom(self):
+    def panel_bottom(self):
         """
         Bottom of the panels in figure space
         """
-        return self.to_figure_space(self.bottom_relative)
+        return self.to_figure_space(self.panel_bottom_relative)
 
     @property
     def plot_bottom(self):
@@ -892,14 +892,14 @@ class LayoutSpaces:
         """
         Width [figure dimensions] of panels
         """
-        return self.r.right - self.l.left
+        return self.r.panel_right - self.l.panel_left
 
     @property
     def panel_height(self) -> float:
         """
         Height [figure dimensions] of panels
         """
-        return self.t.top - self.b.bottom
+        return self.t.panel_top - self.b.panel_bottom
 
     @property
     def tag_width(self) -> float:
@@ -981,8 +981,8 @@ class LayoutSpaces:
 
         This is the area in which the panels are drawn.
         """
-        x1, x2 = self.l.left, self.r.right
-        y1, y2 = self.b.bottom, self.t.top
+        x1, x2 = self.l.panel_left, self.r.panel_right
+        y1, y2 = self.b.panel_bottom, self.t.panel_top
         return ((x1, y1), (x2, y2))
 
     def _calculate_panel_spacing(self) -> GridSpecParams:
@@ -1003,10 +1003,10 @@ class LayoutSpaces:
             raise TypeError(f"Unknown type of facet: {type(self.plot.facet)}")
 
         return GridSpecParams(
-            self.l.left_relative,
-            self.r.right_relative,
-            self.t.top_relative,
-            self.b.bottom_relative,
+            self.l.panel_left_relative,
+            self.r.panel_right_relative,
+            self.t.panel_top_relative,
+            self.b.panel_bottom_relative,
             wspace,
             hspace,
         )
@@ -1020,6 +1020,9 @@ class LayoutSpaces:
         ncol = self.plot.facet.ncol
         nrow = self.plot.facet.nrow
 
+        left, right = self.l.panel_left, self.r.panel_right
+        top, bottom = self.t.panel_top, self.b.panel_bottom
+
         # Both spacings are specified as fractions of the figure width
         # Multiply the vertical by (W/H) so that the gullies along both
         # directions are equally spaced.
@@ -1027,8 +1030,8 @@ class LayoutSpaces:
         self.sh = theme.getp("panel_spacing_y") * self.W / self.H
 
         # width and height of axes as fraction of figure width & height
-        self.w = ((self.r.right - self.l.left) - self.sw * (ncol - 1)) / ncol
-        self.h = ((self.t.top - self.b.bottom) - self.sh * (nrow - 1)) / nrow
+        self.w = ((right - left) - self.sw * (ncol - 1)) / ncol
+        self.h = ((top - bottom) - self.sh * (nrow - 1)) / nrow
 
         # Spacing as fraction of axes width & height
         wspace = self.sw / self.w
@@ -1044,6 +1047,9 @@ class LayoutSpaces:
 
         ncol = facet.ncol
         nrow = facet.nrow
+
+        left, right = self.l.panel_left, self.r.panel_right
+        top, bottom = self.t.panel_top, self.b.panel_bottom
 
         # Both spacings are specified as fractions of the figure width
         self.sw = theme.getp("panel_spacing_x")
@@ -1073,8 +1079,8 @@ class LayoutSpaces:
             ) + self.items.axis_ticks_y_max_width_at("all")
 
         # width and height of axes as fraction of figure width & height
-        self.w = ((self.r.right - self.l.left) - self.sw * (ncol - 1)) / ncol
-        self.h = ((self.t.top - self.b.bottom) - self.sh * (nrow - 1)) / nrow
+        self.w = ((right - left) - self.sw * (ncol - 1)) / ncol
+        self.h = ((top - bottom) - self.sh * (nrow - 1)) / nrow
 
         # Spacing as fraction of axes width & height
         wspace = self.sw / self.w
@@ -1085,8 +1091,8 @@ class LayoutSpaces:
         """
         Calculate spacing parts for facet_null
         """
-        self.w = self.r.right - self.l.left
-        self.h = self.t.top - self.b.bottom
+        self.w = self.r.panel_right - self.l.panel_left
+        self.h = self.t.panel_top - self.b.panel_bottom
         self.sw = 0
         self.sh = 0
         return 0, 0
