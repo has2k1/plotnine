@@ -164,6 +164,9 @@ title: Changelog
 - Fixed bug in all manual scales (`scale_*_manual`) where if you set `values`
   to a `dict` then setting the breaks would lead to an error. {{< issue 949 >}}
 
+- Fixed using [](:class:`~plotnine.theme_void`) with facetting so that the
+  strip text are always fully within the figure bounds.
+
 ## v0.14.5
 (2025-01-02)
 [![](https://zenodo.org/badge/DOI/10.5281/zenodo.14587381.svg)](https://doi.org/10.5281/zenodo.14587381)
