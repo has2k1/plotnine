@@ -17,6 +17,38 @@ def test_basic_vertical_align_resize():
     assert p == "basic_vertical_align_resize"
 
 
+def test_nested_horizontal_align_1():
+    p1 = plot.red
+    p2 = plot.green
+    p3 = plot.blue + g.cols
+    p = p1 | (p2 | p3)
+    assert p == "test_nested_horizontal_align_1"
+
+
+def test_nested_horizontal_align_2():
+    p1 = plot.red + g.points
+    p2 = plot.green
+    p3 = plot.blue
+    p = p1 | (p2 | p3)
+    assert p == "test_nested_horizontal_align_2"
+
+
+def test_nested_vertical_align_1():
+    p1 = plot.red
+    p2 = plot.green
+    p3 = plot.blue + g.cols
+    p = p1 / (p2 / p3)
+    assert p == "test_nested_vertical_align_1"
+
+
+def test_nested_vertical_align_2():
+    p1 = plot.red + g.points
+    p2 = plot.green
+    p3 = plot.blue
+    p = p1 / (p2 / p3)
+    assert p == "test_nested_vertical_align_2"
+
+
 def test_nested_horizontal_align_resize():
     p1 = plot.red + tag("a)")
     p2 = plot.green + tag("g)")
