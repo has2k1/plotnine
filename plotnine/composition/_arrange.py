@@ -53,6 +53,15 @@ class Arrange:
     plotspecs: list[plotspec] = field(init=False, repr=False)
     gridspec: p9GridSpec = field(init=False, repr=False)
 
+    def __post_init__(self):
+        # The way we handle the plots has consequences that would
+        # prevent having a duplicate plot in the composition.
+        # Using copies prevents this.
+        self.operands = [
+            op if isinstance(op, Arrange) else deepcopy(op)
+            for op in self.operands
+        ]
+
     @abc.abstractmethod
     def __or__(self, rhs: ggplot | Arrange) -> Arrange:
         """
@@ -84,7 +93,7 @@ class Arrange:
 
     def __sub__(self, rhs: ggplot | Arrange) -> Arrange:
         """
-        Add the rhs besides the composition
+        Add the rhs onto the composition
 
         Parameters
         ----------

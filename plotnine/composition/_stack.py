@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 from ._arrange import Arrange
@@ -8,6 +9,7 @@ if TYPE_CHECKING:
     from plotnine.ggplot import ggplot
 
 
+@dataclass
 class Stack(Arrange):
     """
     Place plots or compositions on top of each other
