@@ -16,6 +16,7 @@ from dataclasses import dataclass, field, fields
 from functools import cached_property
 from typing import TYPE_CHECKING, cast
 
+from plotnine.exceptions import PlotnineError
 from plotnine.facets import facet_grid, facet_null, facet_wrap
 
 from ._layout_items import LayoutItems
@@ -233,7 +234,7 @@ class _side_spaces(ABC):
         """
         The width of the tag including the margins
 
-        The value is zero expect if all these are true:
+        The value is zero except if all these are true:
             - The tag is in the margin `theme(plot_tag_position = "margin")`
             - The tag at one one of the the following locations;
               left, right, topleft, topright, bottomleft or bottomright
@@ -245,12 +246,40 @@ class _side_spaces(ABC):
         """
         The height of the tag including the margins
 
-        The value is zero expect if all these are true:
+        The value is zero except if all these are true:
             - The tag is in the margin `theme(plot_tag_position = "margin")`
             - The tag at one one of the the following locations;
               top, bottom, topleft, topright, bottomleft or bottomright
         """
         return 0
+
+    @property
+    def axis_title_clearance(self) -> float:
+        """
+        The distance between the axis title and the panel
+
+         Figure
+         ----------------------------
+        |         Panel              |
+        |         -----------        |
+        |        |           |       |
+        |        |           |       |
+        |  Y<--->|           |       |
+        |        |           |       |
+        |        |           |       |
+        |         -----------        |
+        |                            |
+         ----------------------------
+
+        We use this value to when aligning axis titles in a
+        plot composition.
+        """
+
+        try:
+            return self.total - self.sum_upto("axis_title_alignment")
+        except AttributeError as err:
+            # There is probably an error in in the layout manager
+            raise PlotnineError("Side has no axis title") from err
 
 
 @dataclass
@@ -311,6 +340,14 @@ class left_spaces(_side_spaces):
     axis_title_y_margin_left: float = 0
     axis_title_y: float = 0
     axis_title_y_margin_right: float = 0
+    axis_title_alignment: float = 0
+    """
+    Space added to align the axis title with others in a composition
+
+    This value is calculated during the layout process. The amount is
+    the difference between the largest and smallest axis_title_clearance
+    among the items in the composition.
+    """
     axis_text_y_margin_left: float = 0
     axis_text_y: float = 0
     axis_text_y_margin_right: float = 0
@@ -674,6 +711,15 @@ class bottom_spaces(_side_spaces):
     axis_title_x_margin_bottom: float = 0
     axis_title_x: float = 0
     axis_title_x_margin_top: float = 0
+    axis_title_alignment: float = 0
+    """
+    Space added to align the axis title with others in a composition
+
+    This value is calculated during the layout process in a tree structure
+    that has convenient access to the sides/edges of the panels in the
+    composition. It's amount is the difference in height between this axis
+    text (and it's margins) and the tallest axis text (and it's margin).
+    """
     axis_text_x_margin_bottom: float = 0
     axis_text_x: float = 0
     axis_text_x_margin_top: float = 0
@@ -944,6 +990,24 @@ class LayoutSpaces:
         Height [figure dimensions] of space taken up by a bottom tag
         """
         return self.b.tag_height
+
+    @property
+    def left_axis_title_clearance(self) -> float:
+        """
+        Distance between the left y-axis title and the panel
+
+        In figure dimensions.
+        """
+        return self.l.axis_title_clearance
+
+    @property
+    def bottom_axis_title_clearance(self) -> float:
+        """
+        Distance between the bottom x-axis title and the panel
+
+        In figure dimensions.
+        """
+        return self.b.axis_title_clearance
 
     def increase_horizontal_plot_margin(self, dw: float):
         """

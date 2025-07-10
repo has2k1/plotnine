@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 from matplotlib.testing.compare import compare_images
 
 from plotnine import ggplot, theme
-from plotnine.composition import Arrange
+from plotnine.composition import Arrange, Beside, Stack
 from plotnine.themes.theme import DEFAULT_RCPARAMS
 
 TOLERANCE = 2  # Default tolerance for the tests
@@ -271,4 +271,8 @@ def composition_equals(cmp: Arrange, name: str) -> bool:
     return not err
 
 
+# Note that, dataclass subclasses have their own __eq__ and not that of the
+# parent class.
 Arrange.__eq__ = composition_equals  # pyright: ignore[reportAttributeAccessIssue]
+Beside.__eq__ = composition_equals  # pyright: ignore[reportAttributeAccessIssue]
+Stack.__eq__ = composition_equals  # pyright: ignore[reportAttributeAccessIssue]
