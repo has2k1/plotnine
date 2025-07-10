@@ -433,9 +433,6 @@ quartodoc:
         - legend_box_margin
         - legend_box_spacing
         - legend_direction
-        - legend_key_spacing
-        - legend_key_spacing_x
-        - legend_key_spacing_y
         - legend_frame
         - legend_justification
         - legend_justification_bottom
@@ -446,6 +443,9 @@ quartodoc:
         - legend_key
         - legend_key_height
         - legend_key_size
+        - legend_key_spacing
+        - legend_key_spacing_x
+        - legend_key_spacing_y
         - legend_key_width
         - legend_margin
         - legend_position
@@ -455,6 +455,7 @@ quartodoc:
         - legend_text_colorbar
         - legend_text_legend
         - legend_text_position
+        - legend_ticks
         - legend_ticks_length
         - legend_title
         - legend_title_position
@@ -496,7 +497,6 @@ quartodoc:
         - strip_text
         - strip_text_x
         - strip_text_y
-        - subplots_adjust
         - svg_usefonts
         - text
         - title
