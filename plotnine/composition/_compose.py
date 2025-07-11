@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import abc
-from copy import deepcopy
+from copy import copy, deepcopy
 from dataclasses import dataclass, field
 from io import BytesIO
 from typing import TYPE_CHECKING, overload
@@ -167,7 +167,7 @@ class Compose:
                 if isinstance(item, Compose):
                     add_other(item)
                 else:
-                    cmp[i] = item + rhs
+                    cmp[i] = item + copy(rhs)
 
         add_other(self)
         return self
@@ -187,7 +187,7 @@ class Compose:
 
         for i, item in enumerate(self):
             if isinstance(item, ggplot):
-                self[i] = item + rhs
+                self[i] = item + copy(rhs)
 
         return self
 

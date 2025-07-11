@@ -1,4 +1,4 @@
-from plotnine import element_text, facet_grid, facet_wrap, theme
+from plotnine import element_text, facet_grid, facet_wrap, theme, theme_gray
 from plotnine._utils.yippie import geom as g
 from plotnine._utils.yippie import legend, plot, rotate, tag
 
@@ -115,3 +115,39 @@ def test_complex_composition():
     )
     p = p1 | p2 | p3 / p4 / (p5 | p6)
     assert p == "complex_composition"
+
+
+def test_minus_operator():
+    p1 = plot.red
+    p2 = plot.green
+    p3 = plot.blue
+    p4 = plot.brown
+    p = (p1 / p2) - p3 - p4
+    assert p == "minus"
+
+
+def test_and_operator():
+    p1 = plot.red
+    p2 = plot.green
+    p3 = plot.blue
+    p4 = plot.brown
+    p = (p1 | p2 | (p3 / p4)) & theme_gray()
+    assert p == "and_operator"
+
+
+def test_mul_operator():
+    p1 = plot.red
+    p2 = plot.green
+    p3 = plot.blue
+    p4 = plot.brown
+    p = (p1 | p2 | (p3 / p4)) * theme_gray()
+    assert p == "mul_operator"
+
+
+def test_plus_operator():
+    p1 = plot.red
+    p2 = plot.green
+    p3 = plot.blue
+    p4 = plot.brown
+    p = (p1 | p2 | (p3 / p4)) + theme_gray()
+    assert p == "plus_operator"
