@@ -3,14 +3,14 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
-from ._arrange import Arrange
+from ._compose import Compose
 
 if TYPE_CHECKING:
     from plotnine.ggplot import ggplot
 
 
 @dataclass
-class Beside(Arrange):
+class Beside(Compose):
     """
     Place plots or compositions side by side
 
@@ -27,6 +27,7 @@ class Beside(Arrange):
     --------
     plotnine.composition.Stack : To arrange plots vertically
     plotnine.composition.plot_spacer : To add a blank space between plots
+    plotnine.composition.Compose : For more on composing plots
     """
 
     @property
@@ -37,7 +38,7 @@ class Beside(Arrange):
     def ncol(self) -> int:
         return len(self)
 
-    def __or__(self, rhs: ggplot | Arrange) -> Arrange:
+    def __or__(self, rhs: ggplot | Compose) -> Compose:
         """
         Add rhs as a column
         """
@@ -45,7 +46,7 @@ class Beside(Arrange):
         # operands into a single operation
         return Beside([*self, rhs])
 
-    def __truediv__(self, rhs: ggplot | Arrange) -> Arrange:
+    def __truediv__(self, rhs: ggplot | Compose) -> Compose:
         """
         Add rhs as a row
         """

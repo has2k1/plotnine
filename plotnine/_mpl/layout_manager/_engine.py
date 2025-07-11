@@ -13,7 +13,7 @@ if TYPE_CHECKING:
     from matplotlib.figure import Figure
 
     from plotnine import ggplot
-    from plotnine.composition import Arrange
+    from plotnine.composition import Compose
 
 
 class PlotnineLayoutEngine(LayoutEngine):
@@ -54,7 +54,7 @@ class PlotnineCompositionLayoutEngine(LayoutEngine):
     _adjust_compatible = True
     _colorbar_gridspec = False
 
-    def __init__(self, composition: Arrange):
+    def __init__(self, composition: Compose):
         self.composition = composition
 
     def execute(self, fig: Figure):

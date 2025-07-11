@@ -535,7 +535,7 @@ quartodoc:
     - title: Composing Plots
       package: plotnine.composition
       contents:
-        - name: Arrange
+        - name: Compose
           include_attributes: false
         - Stack
         - Beside
