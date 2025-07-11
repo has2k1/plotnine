@@ -16,7 +16,7 @@ if TYPE_CHECKING:
 
     from plotnine import ggplot
     from plotnine._mpl.gridspec import p9GridSpec
-    from plotnine.composition import Arrange
+    from plotnine.composition import Compose
 
 
 @dataclass
@@ -82,7 +82,7 @@ class LayoutTree:
 
     @staticmethod
     def create(
-        cmp: Arrange,
+        cmp: Compose,
         lookup_spaces: dict[ggplot, LayoutSpaces],
     ) -> LayoutTree:
         """

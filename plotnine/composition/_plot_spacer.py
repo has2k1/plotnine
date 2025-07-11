@@ -22,7 +22,7 @@ class plot_spacer(ggplot):
     --------
     plotnine.composition.Beside : To arrange plots side by side
     plotnine.composition.Stack : To arrange plots vertically
-    plotnine.composition.Arrange : For more on arranging plots
+    plotnine.composition.Compose : For more on composing plots
     """
 
     def __init__(

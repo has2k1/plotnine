@@ -52,7 +52,7 @@ if TYPE_CHECKING:
 
     from plotnine import watermark
     from plotnine._mpl.gridspec import p9GridSpec
-    from plotnine.composition import Arrange
+    from plotnine.composition import Compose
     from plotnine.coords.coord import coord
     from plotnine.facets.facet import facet
     from plotnine.layer import layer
@@ -245,7 +245,7 @@ class ggplot:
         self = deepcopy(self)
         return self.__iadd__(rhs)
 
-    def __or__(self, rhs: ggplot | Arrange) -> Arrange:
+    def __or__(self, rhs: ggplot | Compose) -> Compose:
         """
         Compose 2 plots columnwise
         """
@@ -253,7 +253,7 @@ class ggplot:
 
         return Beside([self, rhs])
 
-    def __truediv__(self, rhs: ggplot | Arrange) -> Arrange:
+    def __truediv__(self, rhs: ggplot | Compose) -> Compose:
         """
         Compose 2 plots rowwise
         """
@@ -261,7 +261,7 @@ class ggplot:
 
         return Stack([self, rhs])
 
-    def __sub__(self, rhs: ggplot | Arrange) -> Arrange:
+    def __sub__(self, rhs: ggplot | Compose) -> Compose:
         """
         Compose 2 plots columnwise
         """

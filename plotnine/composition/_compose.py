@@ -4,7 +4,7 @@ import abc
 from copy import deepcopy
 from dataclasses import dataclass, field
 from io import BytesIO
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, overload
 
 from .._utils.ipython import (
     get_display_function,
@@ -25,19 +25,53 @@ if TYPE_CHECKING:
 
 
 @dataclass
-class Arrange:
+class Compose:
     """
     Base class for those that create plot compositions
 
     As a user, you will never directly work with this class, except
-    the operators [`|`](`plotnine.composition.Beside`) and
-    [`/`](`plotnine.composition.Stack`) that are powered by subclasses
-    of this class.
+    through the operators that it makes possible.
+    The operators are of two kinds:
 
-    Parameters
-    ----------
-    operands:
-        The objects to be put together (composed).
+    ### 1. Composing Operators
+
+    The combine plots or compositions into a single composition.
+    Both operands are either a plot or a composition.
+
+    `/`
+
+    :   Arrange operands side by side.
+        Powered by the subclass [](`~plotnine.composition.Beside`).
+
+    `|`
+
+    :   Arrange operands vertically.
+        Powered by the subclass [](`~plotnine.composition.Stack`).
+
+    `-`
+
+    :   Arrange operands side by side _and_ at the same nesting level.
+        Also powered by the subclass [](`~plotnine.composition.Beside`).
+
+    ### 2. Plot Modifying Operators
+
+    The modify all or some of the plots in a composition.
+    The left operand is a composition and the right operand is a
+    _plotaddable_; any object that can be added to a `ggplot` object
+    e.g. _geoms_, _stats_, _themes_, _facets_, ... .
+
+    `&`
+
+    :   Add right hand side to all plots in the composition.
+
+    `*`
+
+    :   Add right hand side to all plots in the top-most nesting
+        level of the composition.
+
+    `+`
+
+    :    Add right hand side to the last plot in the composition.
 
     See Also
     --------
@@ -46,7 +80,10 @@ class Arrange:
     plotnine.composition.plot_spacer : To add a blank space between plots
     """
 
-    operands: list[ggplot | Arrange]
+    items: list[ggplot | Compose]
+    """
+    The objects to be arranged (composed).
+    """
 
     # These are created in the _create_figure method
     figure: Figure = field(init=False, repr=False)
@@ -57,24 +94,24 @@ class Arrange:
         # The way we handle the plots has consequences that would
         # prevent having a duplicate plot in the composition.
         # Using copies prevents this.
-        self.operands = [
-            op if isinstance(op, Arrange) else deepcopy(op)
-            for op in self.operands
+        self.items = [
+            op if isinstance(op, Compose) else deepcopy(op)
+            for op in self.items
         ]
 
     @abc.abstractmethod
-    def __or__(self, rhs: ggplot | Arrange) -> Arrange:
+    def __or__(self, rhs: ggplot | Compose) -> Compose:
         """
         Add rhs as a column
         """
 
     @abc.abstractmethod
-    def __truediv__(self, rhs: ggplot | Arrange) -> Arrange:
+    def __truediv__(self, rhs: ggplot | Compose) -> Compose:
         """
         Add rhs as a row
         """
 
-    def __add__(self, rhs: ggplot | Arrange | PlotAddable) -> Arrange:
+    def __add__(self, rhs: ggplot | Compose | PlotAddable) -> Compose:
         """
         Add rhs to the composition
 
@@ -85,13 +122,16 @@ class Arrange:
         """
         from plotnine import ggplot
 
-        if not isinstance(rhs, (ggplot, Arrange)):
+        if not isinstance(rhs, (ggplot, Compose)):
             cmp = deepcopy(self)
             cmp.last_plot = cmp.last_plot + rhs
             return cmp
-        return self.__class__([*self, rhs])
 
-    def __sub__(self, rhs: ggplot | Arrange) -> Arrange:
+        t1, t2 = type(self).__name__, type(rhs).__name__
+        msg = f"unsupported operand type(s) for +: '{t1}' and '{t2}'"
+        raise TypeError(msg)
+
+    def __sub__(self, rhs: ggplot | Compose) -> Compose:
         """
         Add the rhs onto the composition
 
@@ -100,9 +140,18 @@ class Arrange:
         rhs:
             What to place besides the composition
         """
-        return self.__class__([self, rhs])
+        from plotnine import ggplot
 
-    def __and__(self, rhs: PlotAddable) -> Arrange:
+        from . import Beside
+
+        if not isinstance(rhs, (ggplot, Compose)):
+            t1, t2 = type(self).__name__, type(rhs).__name__
+            msg = f"unsupported operand type(s) for -: '{t1}' and '{t2}'"
+            raise TypeError(msg)
+
+        return Beside([self, rhs])
+
+    def __and__(self, rhs: PlotAddable) -> Compose:
         """
         Add rhs to all plots in the composition
 
@@ -113,17 +162,17 @@ class Arrange:
         """
         self = deepcopy(self)
 
-        def add_other(op: Arrange):
-            for item in op:
-                if isinstance(item, Arrange):
+        def add_other(cmp: Compose):
+            for i, item in enumerate(cmp):
+                if isinstance(item, Compose):
                     add_other(item)
                 else:
-                    item += rhs
+                    cmp[i] = item + rhs
 
         add_other(self)
         return self
 
-    def __mul__(self, rhs: PlotAddable) -> Arrange:
+    def __mul__(self, rhs: PlotAddable) -> Compose:
         """
         Add rhs to the outermost nesting level of the composition
 
@@ -136,22 +185,38 @@ class Arrange:
 
         self = deepcopy(self)
 
-        for item in self:
+        for i, item in enumerate(self):
             if isinstance(item, ggplot):
-                item += rhs
+                self[i] = item + rhs
+
         return self
 
     def __len__(self) -> int:
         """
         Number of operand
         """
-        return len(self.operands)
+        return len(self.items)
 
-    def __iter__(self) -> Iterator[ggplot | Arrange]:
+    def __iter__(self) -> Iterator[ggplot | Compose]:
         """
-        Return an iterable of all the operands
+        Return an iterable of all the items
         """
-        return iter(self.operands)
+        return iter(self.items)
+
+    @overload
+    def __getitem__(self, index: int) -> ggplot | Compose: ...
+
+    @overload
+    def __getitem__(self, index: slice) -> list[ggplot | Compose]: ...
+
+    def __getitem__(
+        self,
+        index: int | slice,
+    ) -> ggplot | Compose | list[ggplot | Compose]:
+        return self.items[index]
+
+    def __setitem__(self, key, value):
+        self.items[key] = value
 
     def _ipython_display_(self):
         """
@@ -180,7 +245,7 @@ class Arrange:
         """
         from plotnine import ggplot
 
-        last_operand = self.operands[-1]
+        last_operand = self.items[-1]
         if isinstance(last_operand, ggplot):
             return last_operand
         else:
@@ -193,9 +258,9 @@ class Arrange:
         """
         from plotnine import ggplot
 
-        last_operand = self.operands[-1]
+        last_operand = self.items[-1]
         if isinstance(last_operand, ggplot):
-            self.operands[-1] = plot
+            self.items[-1] = plot
         else:
             last_operand.last_plot = plot
 
@@ -247,7 +312,7 @@ class Arrange:
         from plotnine._mpl.gridspec import p9GridSpec
 
         def _make_plotspecs(
-            cmp: Arrange, parent_gridspec: p9GridSpec | None
+            cmp: Compose, parent_gridspec: p9GridSpec | None
         ) -> Generator[plotspec]:
             """
             Return the plot specification for each subplot in the composition
@@ -370,7 +435,7 @@ class Arrange:
 
 @dataclass
 class plot_composition_context:
-    cmp: Arrange
+    cmp: Compose
     show: bool
 
     def __post_init__(self):
