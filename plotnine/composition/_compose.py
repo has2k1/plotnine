@@ -420,7 +420,7 @@ class Compose:
         dpi :
             DPI to use for raster graphics. If None, defaults to using
             the `dpi` of theme to the first plot.
-        kwargs :
+        **kwargs :
             These are ignored. Here to "softly" match the API of
             `ggplot.save()`.
         """
