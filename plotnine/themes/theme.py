@@ -72,7 +72,7 @@ class theme:
         ```
 
         will only modify the x-axis text.
-    kwargs: dict
+    kwargs: Any
         kwargs are `themeables`. The themeables are elements that are
         subclasses of `themeable`. Many themeables are defined using
         theme elements i.e
