@@ -167,6 +167,10 @@ title: Changelog
 - Fixed using [](:class:`~plotnine.theme_void`) with facetting so that the
   strip text are always fully within the figure bounds.
 
+- Fixed the ordinal color scales [](:class:`~scale_color_ordinal`), [](:class:`~scale_color_cmap_d`)
+  [](:class:`~scale_fill_ordinal`) and [](:class:`~scale_fill_cmap_d`)
+  to handle missing (`NaN` or `None`) values. {{< issue 953 >}}
+
 ## v0.14.5
 (2025-01-02)
 [![](https://zenodo.org/badge/DOI/10.5281/zenodo.14587381.svg)](https://doi.org/10.5281/zenodo.14587381)
