@@ -350,7 +350,7 @@ class scale_color_gradientn(_scale_color_continuous):
     plotnine.scale_color_gradientn
     """
 
-    colors: InitVar[Sequence[str]] = "#832424"
+    colors: InitVar[Sequence[str]]
     """
     List of colors
     """
