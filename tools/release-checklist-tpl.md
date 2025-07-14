@@ -55,7 +55,6 @@ Release: plotnine-<VERSION>
   - [ ] The tests pass
   - [ ] The coverage is acceptable
 
-
 - [ ] The latest [online documentation](https://has2k1.github.io/plotnine) builds, be sure to browse
 
 
@@ -74,7 +73,6 @@ Release: plotnine-<VERSION>
   - [ ] GHA [release job](https://github.com/has2k1/plotnine/actions/workflows/release.yml) passes
   - [ ] Plotnine test release is on [TestPyPi](https://test.pypi.org/project/plotnine/#history)
 
-
 - [ ] Update changelog
 
   ```sh
@@ -86,7 +84,6 @@ Release: plotnine-<VERSION>
   - [ ] Add a release date
   - [ ] The [GHA tests](https://github.com/has2k1/plotnine/actions/workflows/testing.yml) pass
 
-
 - [ ] Tag final version and release
 
   ```sh
@@ -97,7 +94,6 @@ Release: plotnine-<VERSION>
   - [ ] The [GHA Release](https://github.com/has2k1/plotnine/actions/workflows/release.yml) job passes
   - [ ] [PyPi](https://pypi.org/project/plotnine) shows the new release
 
-
 - [ ] Update `main` branch
 
   ```sh
@@ -105,7 +101,6 @@ Release: plotnine-<VERSION>
   git merge --ff-only release-v<VERSION>
   git push
   ```
-
 
 - [ ] Create conda release
 
@@ -124,6 +119,3 @@ Release: plotnine-<VERSION>
     ```
   - [ ] Create a [PR](https://github.com/conda-forge/plotnine-feedstock/pulls)
   - [ ] Complete PR (follow the steps and merge)
-
-
-- [ ] Add [zenodo badge](https://doi.org/10.5281/zenodo.1325308) to the changelog.
