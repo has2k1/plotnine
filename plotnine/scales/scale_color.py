@@ -363,8 +363,8 @@ class scale_color_gradientn(_scale_color_continuous):
     def __post_init__(self, colors, values):
         from mizani.palettes import gradient_n_pal
 
-        self.palette = gradient_n_pal(colors, values)
         super().__post_init__()
+        self.palette = gradient_n_pal(colors, values)
 
 
 @dataclass
