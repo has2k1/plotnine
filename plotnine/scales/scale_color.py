@@ -489,7 +489,7 @@ class scale_fill_cmap(scale_color_cmap):
 
 
 @dataclass
-class scale_color_cmap_d(scale_discrete):
+class scale_color_cmap_d(_scale_color_discrete):
     """
     A discrete color scales using Matplotlib colormaps
 
@@ -506,7 +506,6 @@ class scale_color_cmap_d(scale_discrete):
     `matplotlib.cm.cmap_d.keys()` or see the
     `documentation <http://matplotlib.org/users/colormaps.html>`_.
     """
-    _aesthetics = ["color"]
 
     def __post_init__(self, cmap_name):
         from mizani.palettes import cmap_d_pal
