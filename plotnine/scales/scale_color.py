@@ -109,7 +109,6 @@ class scale_color_hue(_scale_color_discrete):
 
         super().__post_init__()
         self.palette = hue_pal(h, c, l, direction)
-        self.palette.h
 
 
 @dataclass
