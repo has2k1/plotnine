@@ -3,7 +3,7 @@ title: Changelog
 ---
 ## v0.15.0
 
-(not-yet-released)
+(2025-06-15)
 
 ### API Changes
 
@@ -102,7 +102,7 @@ title: Changelog
 
 - Included datasets [](:attr:`~plotnine.data.mpg`), [](:attr:`~plotnine.data.msleep`) and
   [](:attr:`~plotnine.data.midwest`) no longer have any of their columns as categoricals.
-  This matches the respective datasets in R. {{< issue 913 >}}
+  This matches the respective datasets in R. ({{< issue 913 >}})
 
 - When the `width` of the violins in [](:class:`~plotnine.geom_violin`) is wider than their
   normal area, they now overlap with those closest to the origin on top. This makes it possible
@@ -120,18 +120,18 @@ title: Changelog
 ### Bug Fixes
 
 - Fixed bug in with the `legend_key_height` themeable where it wasn't applied.
-  {{< issue 921 >}}
+  ({{< issue 921 >}})
 
 - Fixed bug where justifying `axis_text_x` and `axis_text_y` using horizontal and vertical
-  alignment did not work as expected. {{< issue 927 >}}
+  alignment did not work as expected. ({{< issue 927 >}})
 
-- Fixed justifying strip_text within the strip_background. {{< issue 867 >}}
+- Fixed justifying strip_text within the strip_background. ({{< issue 867 >}})
 
 - Fixed bug where facetting along a column with unused categories could raise
-  an error. {{< issue 930 >}}
+  an error. ({{< issue 930 >}})
 
 - Fixed bug where computed aesthetic from `after_scale` are were not applied to the legend.
-  {{< issue 926 >}}
+  ({{< issue 926 >}})
 
 - Fixed theming of minor x axis ticks.
 
@@ -153,7 +153,7 @@ title: Changelog
   text / background into the panel.
 
 - Fixed bug in [](:class:`~plotnine.geom_histogram`) where mapping to the `weight` aesthetic
-  lead to an error. {{< issue 936 >}}
+  lead to an error. ({{< issue 936 >}})
 
 - Fixed bug in [](:class:`~plotnine.geom_vline`) where you could not map the `xintercept`
   aesthetic to a discrete variable.
@@ -162,14 +162,14 @@ title: Changelog
   aesthetic to a discrete variable.
 
 - Fixed bug in all manual scales (`scale_*_manual`) where if you set `values`
-  to a `dict` then setting the breaks would lead to an error. {{< issue 949 >}}
+  to a `dict` then setting the breaks would lead to an error. ({{< issue 949 >}})
 
 - Fixed using [](:class:`~plotnine.theme_void`) with facetting so that the
   strip text are always fully within the figure bounds.
 
 - Fixed the ordinal color scales [](:class:`~scale_color_ordinal`), [](:class:`~scale_color_cmap_d`)
   [](:class:`~scale_fill_ordinal`) and [](:class:`~scale_fill_cmap_d`)
-  to handle missing (`NaN` or `None`) values. {{< issue 953 >}}
+  to handle missing (`NaN` or `None`) values. ({{< issue 953 >}})
 
 ## v0.14.5
 (2025-01-02)
@@ -188,7 +188,7 @@ title: Changelog
   the arrows are drawn at the same layer (zorder) as the text.
 
 - Fixed [](:class:`~plotnine.geom_text`) with `adjust_text` for some
-  cases where the text are placed outside the panels. {{< issue 899 >}}
+  cases where the text are placed outside the panels. ({{< issue 899 >}})
 
 - The default aesthetics and aesthetic parameters of geoms (and stats) are
   now transformed. So you can now set date values as aesthetic parameters.
