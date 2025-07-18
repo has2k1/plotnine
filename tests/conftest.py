@@ -127,7 +127,11 @@ ggplot.build_test = build_test
 
 
 def pytest_assertrepr_compare(op, left, right):
-    if isinstance(left, ggplot) and isinstance(right, str) and op == "==":
+    if (
+        isinstance(left, (ggplot, Compose))
+        and isinstance(right, str)
+        and op == "=="
+    ):
         msg = (
             "images not close: {actual:s} vs. {expected:s} "
             "(RMS {rms:.2f})".format(**left._err)
@@ -252,10 +256,10 @@ def composition_equals(cmp: Compose, name: str) -> bool:
     test_file = inspect.stack()[1][1]
     filenames = make_test_image_filenames(name, test_file)
 
-    cmp = cmp + theme(dpi=DPI)
+    _cmp = cmp + theme(dpi=DPI)
 
     with _test_cleanup():
-        cmp.save(filenames.result)
+        _cmp.save(filenames.result)
 
     if filenames.baseline.exists():
         shutil.copyfile(filenames.baseline, filenames.expected)
