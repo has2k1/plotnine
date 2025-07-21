@@ -9,6 +9,7 @@ from plotnine import (
     geom_crossbar,
     geom_point,
     ggplot,
+    labs,
     scale_x_log10,
     scale_y_log10,
     stage,
@@ -17,14 +18,6 @@ from plotnine import (
     stat_function,
 )
 from plotnine.mapping.aes import make_labels
-
-data = pd.DataFrame(
-    {
-        "x": pd.Categorical(["b", "d", "c", "a"], ordered=True),
-        "y": [1, 2, 3, 4],
-    }
-)
-
 
 data = pd.DataFrame(
     {
@@ -50,15 +43,17 @@ def test_reorder_index():
 
 
 def test_labels_series():
-    p = ggplot(data, aes(x=data.x, y=data.y)) + geom_col()
+    p = ggplot(data, aes(x=data.x, y=data.y)) + geom_col() + labs(y="yy")
+    p.draw()
     assert p.labels.x == "x"
-    assert p.labels.y == "y"
+    assert p.labels.y == "yy"
 
 
 def test_labels_lists():
-    p = ggplot(data, aes(x=[1, 2, 3], y=[1, 2, 3])) + geom_col()
-    assert p.labels.x is None
-    assert p.labels.y is None
+    p = ggplot(data, aes(x=[0, 1, 2, 3], y=range(4))) + geom_col()
+    p.draw()
+    assert p.labels.x == ""
+    assert p.labels.y == ""
 
 
 def test_irregular_shapes():

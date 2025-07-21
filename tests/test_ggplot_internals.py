@@ -222,9 +222,18 @@ def test_add_aes():
     data = pd.DataFrame({"var1": [1, 2, 3, 4], "var2": 2})
     p = ggplot(data) + geom_point()
     p += aes("var1", "var2")
-
+    p.draw()
     assert p.mapping == aes("var1", "var2")
     assert p.labels.x == "var1"
+    assert p.labels.y == "var2"
+
+
+def test_add_labs():
+    data = pd.DataFrame({"var1": [1, 2, 3, 4], "var2": 2})
+    p = ggplot(data) + geom_point() + labs(x="x title")
+    p += aes("var1", "var2")
+    p.draw()
+    assert p.labels.x == "x title"
     assert p.labels.y == "var2"
 
 
