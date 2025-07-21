@@ -36,9 +36,9 @@ from .facets import facet_null
 from .facets.layout import Layout
 from .geoms.geom_blank import geom_blank
 from .guides.guides import guides
-from .iapi import mpl_save_view
+from .iapi import labels_view, mpl_save_view
 from .layer import Layers
-from .mapping.aes import aes, make_labels
+from .mapping.aes import aes
 from .options import get_option
 from .scales.scales import Scales
 from .themes.theme import theme, theme_get
@@ -55,7 +55,6 @@ if TYPE_CHECKING:
     from plotnine.composition import Compose
     from plotnine.coords.coord import coord
     from plotnine.facets.facet import facet
-    from plotnine.layer import layer
     from plotnine.typing import DataLike
 
     class PlotAddable(Protocol):
@@ -118,7 +117,7 @@ class ggplot:
         self.data = data
         self.mapping = mapping if mapping is not None else aes()
         self.facet: facet = facet_null()
-        self.labels = make_labels(self.mapping)
+        self.labels = labels_view()
         self.layers = Layers()
         self.guides = guides()
         self.scales = Scales()
@@ -301,10 +300,7 @@ class ggplot:
         from ._mpl.layout_manager import PlotnineLayoutEngine
 
         with plot_context(self, show=show):
-            if not hasattr(self, "figure"):
-                self._create_figure()
-            figure = self.figure
-
+            figure = self._setup()
             self._build()
 
             # setup
@@ -326,6 +322,16 @@ class ggplot:
             figure.set_layout_engine(PlotnineLayoutEngine(self))
 
         return figure
+
+    def _setup(self) -> Figure:
+        """
+        Setup this instance for the building process
+        """
+        if not hasattr(self, "figure"):
+            self._create_figure()
+
+        self.labels.add_defaults(self.mapping.labels)
+        return self.figure
 
     def _create_figure(self):
         """
@@ -547,21 +553,6 @@ class ggplot:
         """
         hash_token = abs(self.__hash__())
         return Path(f"plotnine-save-{hash_token}.{ext}")
-
-    def _update_labels(self, layer: layer):
-        """
-        Update label data for the ggplot
-
-        Parameters
-        ----------
-        layer : layer
-            New layer that has just been added to the ggplot
-            object.
-        """
-        mapping = make_labels(layer.mapping)
-        default = make_labels(layer.stat.DEFAULT_AES)
-        mapping.add_defaults(default)
-        self.labels.add_defaults(mapping)
 
     def save_helper(
         self: ggplot,

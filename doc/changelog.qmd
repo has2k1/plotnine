@@ -1,6 +1,23 @@
 ---
 title: Changelog
 ---
+
+## v0.15.1
+(not-yet-released)
+
+### Bug Fixes
+
+- Fixed labels set with the `labs` call so that they are only ever overwritten
+  by a call to `labs` or setting the `name` of a scale. Previously, if a
+  global mapping was added after `labs`, it over-wrote the previously set labels.
+
+  ```python
+  ggplot(mtcars) + labs(x="x title", y="y title") + geom_point() + aes("wt", "mpg")
+  ```
+
+  The labels will be "x title" and "y title".
+
+
 ## v0.15.0
 
 (2025-06-15)

@@ -290,8 +290,14 @@ class aes(Dict[str, Any]):
         """
         self = deepcopy(self)
         other.mapping.update(self)
-        other.labels.update(make_labels(self))
         return other
+
+    @property
+    def labels(self) -> labels_view:
+        """
+        The labels for this mapping
+        """
+        return make_labels(self)
 
     def copy(self):
         return aes(**self)
