@@ -8,7 +8,7 @@ import pandas as pd
 
 from ._utils import array_kind, check_required_aesthetics, ninteraction
 from .exceptions import PlotnineError
-from .mapping.aes import NO_GROUP, SCALED_AESTHETICS, aes
+from .mapping.aes import NO_GROUP, SCALED_AESTHETICS, aes, make_labels
 from .mapping.evaluation import evaluate, stage
 
 if typing.TYPE_CHECKING:
@@ -409,6 +409,13 @@ class layer:
         """
         self.stat.finish_layer(self.data)
 
+    def update_labels(self, plot: ggplot):
+        """
+        Update label data for the ggplot from the mappings in this layer
+        """
+        plot.labels.add_defaults(self.mapping.labels)
+        plot.labels.add_defaults(make_labels(self.stat.DEFAULT_AES))
+
 
 class Layers(List[layer]):
     """
@@ -509,7 +516,7 @@ class Layers(List[layer]):
 
     def update_labels(self, plot: ggplot):
         for l in self:
-            plot._update_labels(l)
+            l.update_labels(plot)
 
 
 def add_group(data: pd.DataFrame) -> pd.DataFrame:
