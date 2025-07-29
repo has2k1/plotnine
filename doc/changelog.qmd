@@ -17,6 +17,8 @@ title: Changelog
 
   The labels will be "x title" and "y title".
 
+- Fixed bug with plot compositions where if a `plot_spacer` is the last plot in the composition, one could not change the figure size or dpi of the composition. ({{< issue 960 >}})
+
 
 ## v0.15.0
 
