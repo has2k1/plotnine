@@ -12,9 +12,6 @@ from ..exceptions import PlotnineError, PlotnineWarning
 
 if TYPE_CHECKING:
     import statsmodels.api as sm
-    from patsy.eval import EvalEnvironment
-
-    from plotnine.mapping import Environment
 
 
 def predictdf(data, xseq, params) -> pd.DataFrame:
@@ -103,7 +100,7 @@ def lm_formula(data, xseq, params) -> pd.DataFrame:
     import statsmodels.api as sm
     import statsmodels.formula.api as smf
 
-    eval_env = _to_patsy_env(params["environment"])
+    eval_env = params["environment"].to_patsy_env()
     formula = params["formula"]
     weights = data.get("weight", None)
 
@@ -177,7 +174,7 @@ def rlm_formula(data, xseq, params) -> pd.DataFrame:
     import statsmodels.api as sm
     import statsmodels.formula.api as smf
 
-    eval_env = _to_patsy_env(params["environment"])
+    eval_env = params["environment"].to_patsy_env()
     formula = params["formula"]
     init_kwargs, fit_kwargs = separate_method_kwargs(
         params["method_args"], sm.RLM, sm.RLM.fit
@@ -234,7 +231,7 @@ def gls_formula(data, xseq, params):
     import statsmodels.api as sm
     import statsmodels.formula.api as smf
 
-    eval_env = _to_patsy_env(params["environment"])
+    eval_env = params["environment"].to_patsy_env()
     formula = params["formula"]
     init_kwargs, fit_kwargs = separate_method_kwargs(
         params["method_args"], sm.GLS, sm.GLS.fit
@@ -299,7 +296,7 @@ def glm_formula(data, xseq, params):
     import statsmodels.api as sm
     import statsmodels.formula.api as smf
 
-    eval_env = _to_patsy_env(params["environment"])
+    eval_env = params["environment"].to_patsy_env()
     init_kwargs, fit_kwargs = separate_method_kwargs(
         params["method_args"], sm.GLM, sm.GLM.fit
     )
@@ -591,16 +588,6 @@ def separate_method_kwargs(method_args, init_method, fit_method):
             f"{list(unknown_kwargs)}"
         )
     return init_kwargs, fit_kwargs
-
-
-def _to_patsy_env(environment: Environment) -> EvalEnvironment:
-    """
-    Convert a plotnine environment to a patsy environment
-    """
-    from patsy.eval import EvalEnvironment
-
-    eval_env = EvalEnvironment(environment.namespaces)
-    return eval_env
 
 
 def _glm_family(family: str) -> sm.families.Family:

@@ -10,6 +10,8 @@ if TYPE_CHECKING:
     from collections.abc import Iterator
     from typing import Any, Hashable, Protocol, Self
 
+    from patsy.eval import EvalEnvironment
+
     class SupportsGetItem(Protocol):
         """
         Supports __getitem__
@@ -109,6 +111,15 @@ class Environment:
         # caught...:
         finally:
             del frame
+
+    def to_patsy_env(self) -> EvalEnvironment:
+        """
+        Convert a plotnine environment to a patsy environment
+        """
+        from patsy.eval import EvalEnvironment
+
+        eval_env = EvalEnvironment(self.namespaces)
+        return eval_env
 
     def _namespace_ids(self):
         return [id(n) for n in self.namespaces]

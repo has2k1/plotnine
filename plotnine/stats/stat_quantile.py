@@ -64,11 +64,7 @@ class stat_quantile(stat):
             params["formula"] = "y ~ x"
             warn("Formula not specified, using '{}'", PlotnineWarning)
         else:
-            from patsy.eval import EvalEnvironment
-
-            params["eval_env"] = EvalEnvironment(
-                namespaces=self.environment.namespaces
-            )
+            params["eval_env"] = self.environment.to_patsy_env()
 
         try:
             iter(params["quantiles"])
