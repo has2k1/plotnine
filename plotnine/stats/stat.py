@@ -64,7 +64,7 @@ class stat(ABC, metaclass=Register):
 
     # Plot namespace, it gets its value when the plot is being
     # built.
-    environment: Environment | None = None
+    environment: Environment
 
     def __init__(
         self,
