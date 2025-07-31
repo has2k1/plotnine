@@ -5,6 +5,10 @@ title: Changelog
 ## v0.15.1
 (not-yet-released)
 
+### New
+
+- Added [](:class:`~plotnine.scale_stroke_identity`) which was conspicuously missing!
+
 ### Bug Fixes
 
 - Fixed labels set with the `labs` call so that they are only ever overwritten
