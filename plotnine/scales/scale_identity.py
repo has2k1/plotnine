@@ -106,6 +106,17 @@ class scale_size_identity(
     guide: Literal["legend"] | None = None
 
 
+@dataclass
+class scale_stroke_identity(MapTrainMixin, scale_discrete):
+    """
+    No stroke scaling
+    """
+
+    _aesthetics = ["stroke"]
+    _: KW_ONLY
+    guide: Literal["legend"] | None = None
+
+
 # American to British spelling
 @alias
 class scale_colour_identity(scale_color_identity):

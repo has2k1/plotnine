@@ -74,6 +74,7 @@ from .scale_identity import (
     scale_linetype_identity,
     scale_shape_identity,
     scale_size_identity,
+    scale_stroke_identity,
 )
 
 # linetype
@@ -217,6 +218,7 @@ __all__ = (
     "scale_linetype_identity",
     "scale_shape_identity",
     "scale_size_identity",
+    "scale_stroke_identity",
     # manual
     "scale_color_manual",
     "scale_colour_manual",

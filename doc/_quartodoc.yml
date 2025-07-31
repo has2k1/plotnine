@@ -252,6 +252,7 @@ quartodoc:
         - scale_linetype_identity
         - scale_shape_identity
         - scale_size_identity
+        - scale_stroke_identity
 
     - subtitle: Linetype Scales
       options: *no-members
