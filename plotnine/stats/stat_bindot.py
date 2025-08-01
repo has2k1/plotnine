@@ -114,12 +114,13 @@ class stat_bindot(stat):
             and params["binwidth"] is None
             and params["bins"] is None
         ):
-            params["bins"] = freedman_diaconis_bins(data["x"])
-            msg = (
-                "'stat_bin()' using 'bins = {}'. "
-                "Pick better value with 'binwidth'."
+            bins = freedman_diaconis_bins(data["x"])
+            params["bins"] = bins
+            warn(
+                f"'stat_bindot' is using '{bins=}'. "
+                "Pick better value with 'binwidth'",
+                PlotnineWarning,
             )
-            warn(msg.format(params["bins"]), PlotnineWarning)
 
     def compute_panel(self, data, scales):
         params = self.params
