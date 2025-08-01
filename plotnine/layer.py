@@ -298,7 +298,9 @@ class layer:
         Mapping aesthetics to computed statistics
         """
         # Mixin default stat aesthetic mappings
-        calculated = self.mapping.inherit(self.stat.DEFAULT_AES)._calculated
+        calculated = (
+            aes(**self.stat.DEFAULT_AES)._calculated | self.mapping._calculated
+        )
 
         if not len(self.data) or not calculated:
             return
