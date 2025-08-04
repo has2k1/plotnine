@@ -48,6 +48,11 @@ class _scale_color_continuous(
 class scale_color_hue(_scale_color_discrete):
     """
     Qualitative color scale with evenly spaced hues
+
+    See Also
+    --------
+    mizani.palettes.hue_pal : The palette class that generates colours
+        in HCL space.
     """
 
     h: InitVar[float | tuple[float, float]] = 15
@@ -78,11 +83,11 @@ class scale_color_hue(_scale_color_discrete):
 
     s: None = field(default=None, repr=False)
     """
-    Not being use and will be removed in a future version
+    Not being used and will be removed in a future version
     """
     color_space: None = field(default=None, repr=False)
     """
-    Not being use and will be removed in a future version
+    Not being used and will be removed in a future version
     """
 
     def __post_init__(self, h, c, l, direction):
@@ -126,6 +131,11 @@ class scale_color_brewer(_scale_color_discrete):
     Sequential, diverging and qualitative discrete color scales
 
     See `colorbrewer.org <http://colorbrewer2.org/>`_
+
+    See Also
+    --------
+    mizani.palette.brewer_pal : The palette class that generates colours
+        that generates the brewer colors.
     """
 
     type: InitVar[
@@ -177,6 +187,11 @@ class scale_fill_brewer(scale_color_brewer):
 class scale_color_grey(_scale_color_discrete):
     """
     Sequential grey color scale.
+
+    See Also
+    --------
+    mizani.palettes.grey_pal : The palette class that generates colours
+        gray scale color.
     """
 
     start: InitVar[float] = 0.2
@@ -219,6 +234,8 @@ class scale_color_gradient(_scale_color_continuous):
     --------
     plotnine.scale_color_gradient2
     plotnine.scale_color_gradientn
+    mizani.palettes.gradient_n_pal : The palette class that generates
+        the colour gradient.
     """
 
     low: InitVar[str] = "#132B43"
@@ -251,6 +268,11 @@ class scale_fill_gradient(scale_color_gradient):
 class scale_color_desaturate(_scale_color_continuous):
     """
     Create a desaturated color gradient
+
+    See Also
+    --------
+    mizani.palettes.desaturate_pal : The palette class that generates
+        the desaturated colours.
     """
 
     color: InitVar[str] = "red"
@@ -294,6 +316,8 @@ class scale_color_gradient2(_scale_color_continuous):
     --------
     plotnine.scale_color_gradient
     plotnine.scale_color_gradientn
+    mizani.palettes.gradient_n_pal : The palette class that generates
+        the colour gradient.
     """
 
     low: InitVar[str] = "#832424"
@@ -347,6 +371,8 @@ class scale_color_gradientn(_scale_color_continuous):
     --------
     plotnine.scale_color_gradient
     plotnine.scale_color_gradientn
+    mizani.palettes.gradient_n_pal : The palette class that generates
+        the colour gradient.
     """
 
     colors: InitVar[Sequence[str]]
@@ -461,6 +487,8 @@ class scale_color_cmap(_scale_color_continuous):
     --------
     [](`matplotlib.cm`)
     [](`matplotlib.colors`)
+    mizani.palettes.cmap_pal : The palette class that generates
+        the colour gradients of this scale.
     """
 
     cmap_name: InitVar[str] = "viridis"
@@ -496,6 +524,8 @@ class scale_color_cmap_d(_scale_color_discrete):
     --------
     [](`matplotlib.cm`)
     [](`matplotlib.colors`)
+    mizani.palettes.cmap_pal : The palette class that generates
+        the colours of this scale.
     """
 
     cmap_name: InitVar[str] = "viridis"
@@ -526,6 +556,10 @@ class scale_fill_cmap_d(scale_color_cmap_d):
 class scale_color_datetime(scale_datetime, scale_color_cmap):  # pyright: ignore[reportIncompatibleVariableOverride]
     """
     Datetime color scale
+
+    See Also
+    --------
+    plotnine.scale_color_cmap : The parent class.
     """
 
     _: KW_ONLY
