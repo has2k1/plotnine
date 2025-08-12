@@ -6,10 +6,7 @@ from dataclasses import dataclass, field
 from io import BytesIO
 from typing import TYPE_CHECKING, overload
 
-from .._utils.ipython import (
-    get_display_function,
-    get_ipython,
-)
+from .._utils.ipython import get_display_function, get_ipython, get_mimebundle
 from ..options import get_option
 from ._plotspec import plotspec
 
@@ -20,8 +17,8 @@ if TYPE_CHECKING:
     from matplotlib.figure import Figure
 
     from plotnine._mpl.gridspec import p9GridSpec
-    from plotnine._utils.ipython import FigureFormat
     from plotnine.ggplot import PlotAddable, ggplot
+    from plotnine.typing import FigureFormat
 
 
 @dataclass
@@ -218,11 +215,25 @@ class Compose:
     def __setitem__(self, key, value):
         self.items[key] = value
 
-    def _ipython_display_(self):
+    def _repr_mimebundle_(self, **kwargs):
         """
-        Display plot in the output of the cell
+        Return dynamic MIME bundle for composition display
         """
-        return self._display()
+        ip = get_ipython()
+        format: FigureFormat = (
+            get_option("figure_format")
+            or (ip and ip.config.InlineBackend.get("figure_format"))
+            or "retina"
+        )
+
+        if format == "retina":
+            self = deepcopy(self)
+            self._to_retina()
+
+        buf = BytesIO()
+        self.save(buf, "png" if format == "retina" else format)
+        figure_size_px = self.last_plot.theme._figure_size_px
+        return get_mimebundle(buf.getvalue(), format, figure_size_px)
 
     @property
     def nrow(self) -> int:
@@ -357,20 +368,9 @@ class Compose:
         It draws the plot to an io buffer then uses ipython display
         methods to show the result.
         """
-        ip = get_ipython()
-        format: FigureFormat = get_option(
-            "figure_format"
-        ) or ip.config.InlineBackend.get("figure_format", "retina")
-
-        if format == "retina":
-            self = deepcopy(self)
-            self._to_retina()
-
-        buf = BytesIO()
-        self.save(buf, "png" if format == "retina" else format)
-        figure_size_px = self.last_plot.theme._figure_size_px
-        display_func = get_display_function(format, figure_size_px)
-        display_func(buf.getvalue())
+        data, metadata = self._repr_mimebundle_()
+        display_func = get_display_function()
+        display_func(data, metadata)
 
     def draw(self, *, show: bool = False) -> Figure:
         """
