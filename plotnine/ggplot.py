@@ -27,6 +27,7 @@ from ._utils.context import plot_context
 from ._utils.ipython import (
     get_display_function,
     get_ipython,
+    get_mimebundle,
     is_inline_backend,
 )
 from ._utils.quarto import is_quarto_environment
@@ -55,7 +56,7 @@ if TYPE_CHECKING:
     from plotnine.composition import Compose
     from plotnine.coords.coord import coord
     from plotnine.facets.facet import facet
-    from plotnine.typing import DataLike
+    from plotnine.typing import DataLike, FigureFormat
 
     class PlotAddable(Protocol):
         """
@@ -137,14 +138,29 @@ class ggplot:
         w, h = self.theme._figure_size_px
         return f"<ggplot: ({w} x {h})>"
 
-    def _ipython_display_(self):
+    def _repr_mimebundle_(self, **kwargs):
         """
-        Display plot in the output of the cell
+        Return dynamic MIME bundle for plot display
 
-        This method will always be called when a ggplot object is the
-        last in the cell.
+        This method is called when a ggplot object is the last in the cell.
         """
-        self._display()
+        ip = get_ipython()
+        format: FigureFormat = (
+            get_option("figure_format")
+            or (ip and ip.config.InlineBackend.get("figure_format"))
+            or "retina"
+        )
+
+        # While jpegs can be displayed as retina, we restrict the output
+        # of "retina" to png
+        if format == "retina":
+            self = copy(self)
+            self.theme = self.theme.to_retina()
+
+        buf = BytesIO()
+        self.save(buf, "png" if format == "retina" else format, verbose=False)
+        figure_size_px = self.theme._figure_size_px
+        return get_mimebundle(buf.getvalue(), format, figure_size_px)
 
     def show(self):
         """
@@ -174,21 +190,9 @@ class ggplot:
         It plots the plot to an io buffer, then uses ipython display
         methods to show the result
         """
-        ip = get_ipython()
-        format = get_option("figure_format") or ip.config.InlineBackend.get(
-            "figure_format", "retina"
-        )
-        # While jpegs can be displayed as retina, we restrict the output
-        # of "retina" to png
-        if format == "retina":
-            self = copy(self)
-            self.theme = self.theme.to_retina()
-
-        buf = BytesIO()
-        self.save(buf, "png" if format == "retina" else format, verbose=False)
-        figure_size_px = self.theme._figure_size_px
-        display_func = get_display_function(format, figure_size_px)
-        display_func(buf.getvalue())
+        data, metadata = self._repr_mimebundle_()
+        display_func = get_display_function()
+        display_func(data, metadata)
 
     def __deepcopy__(self, memo: dict[Any, Any]) -> ggplot:
         """
