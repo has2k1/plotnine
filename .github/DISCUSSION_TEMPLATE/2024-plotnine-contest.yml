@@ -1,11 +1,11 @@
-labels: ["contest-2024"]
+labels: ["contest-2025"]
 body:
   - type: markdown
   
     attributes:
       value: >-
-        Thank you for submitting to the [2024 Plotnine Contest](https://posit.co/blog/announcing-the-2024-plotnine-contest/).
-        The submission deadline is Friday, July 12, 2024 ([Anywhere on Earth](https://time.is/Anywhere_on_Earth)).
+        Thank you for submitting to the [2025 Plotnine Contest TODO](https://posit.co/blog/announcing-the-2025-plotnine-contest/).
+        The submission deadline is Friday, October 3, 2025 ([Anywhere on Earth](https://time.is/Anywhere_on_Earth)).
         
         <details>
         <summary><b>What should my submission include?</b></summary>
@@ -58,18 +58,9 @@ body:
         <summary><b>What are the prizes?</b></summary>
 
 
-        #### 1. Grand Prize
+        #### 1. Fabulous Prizes
         
-        In addition to the prizes below, any number of Plotnine & Posit t-shirts, books, mugs, and other swag (worth up to $200).
-
-        #### 2. Runners Up
-
-        In addition to the prizes below, one year of shinyapps.io Basic plan or one year of Posit.cloud.
-
-        #### 3. Honorable Mentions
-
-
-        A larger-than-large helping of open source stickers plus a side of hex for plot-making packages (and other goodies).
+        We are still working out the fabulous prizes, but anticipate some beautiful combo of stickers, and sundry Posit swag.
 
          
         </details>
