@@ -4,7 +4,7 @@ body:
   
     attributes:
       value: >-
-        Thank you for submitting to the [2025 Plotnine Contest TODO](https://posit.co/blog/announcing-the-2025-plotnine-contest/).
+        Thank you for submitting to the [2025 Plotnine Contest](https://github.com/has2k1/plotnine/discussions/972).
         The submission deadline is Friday, October 3, 2025 ([Anywhere on Earth](https://time.is/Anywhere_on_Earth)).
         
         <details>
@@ -64,7 +64,14 @@ body:
 
          
         </details>
-      
+
+  - type: textarea
+    id: output
+    attributes:
+      label: Plot
+      description: "This is your submission!"
+    validations:
+      required: true
   - type: input
     id: authors
     attributes:
