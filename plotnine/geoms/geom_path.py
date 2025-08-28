@@ -96,8 +96,9 @@ class geom_path(geom):
         n2 = len(data)
 
         if n2 != n1 and not self.params["na_rm"]:
-            msg = "geom_path: Removed {} rows containing missing values."
-            warn(msg.format(n1 - n2), PlotnineWarning)
+            geom = self.__class__.__name__
+            msg = f"{geom}: Removed {n1 - n2} rows containing missing values."
+            warn(msg, PlotnineWarning)
 
         return data
 
@@ -109,8 +110,9 @@ class geom_path(geom):
         ax: Axes,
     ):
         if not any(data["group"].duplicated()):
+            geom = self.__class__.__name__
             warn(
-                "geom_path: Each group consist of only one "
+                f"{geom}: Each group consist of only one "
                 "observation. Do you need to adjust the "
                 "group aesthetic?",
                 PlotnineWarning,
