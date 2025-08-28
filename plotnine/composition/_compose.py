@@ -6,7 +6,12 @@ from dataclasses import dataclass, field
 from io import BytesIO
 from typing import TYPE_CHECKING, overload
 
-from .._utils.ipython import get_display_function, get_ipython, get_mimebundle
+from .._utils.ipython import (
+    get_ipython,
+    get_mimebundle,
+    is_inline_backend,
+)
+from .._utils.quarto import is_quarto_environment
 from ..options import get_option
 from ._plotspec import plotspec
 
@@ -18,7 +23,7 @@ if TYPE_CHECKING:
 
     from plotnine._mpl.gridspec import p9GridSpec
     from plotnine.ggplot import PlotAddable, ggplot
-    from plotnine.typing import FigureFormat
+    from plotnine.typing import FigureFormat, MimeBundle
 
 
 @dataclass
@@ -215,7 +220,7 @@ class Compose:
     def __setitem__(self, key, value):
         self.items[key] = value
 
-    def _repr_mimebundle_(self, **kwargs):
+    def _repr_mimebundle_(self, include=None, exclude=None) -> MimeBundle:
         """
         Return dynamic MIME bundle for composition display
         """
@@ -359,18 +364,24 @@ class Compose:
         self.figure = plt.figure()
         self.plotspecs = list(_make_plotspecs(self, None))
 
-    def _display(self):
+    def show(self):
         """
         Display plot in the cells output
 
         This function is called for its side-effects.
-
-        It draws the plot to an io buffer then uses ipython display
-        methods to show the result.
         """
-        data, metadata = self._repr_mimebundle_()
-        display_func = get_display_function()
-        display_func(data, metadata)
+        # Prevent against any modifications to the users
+        # ggplot object. Do the copy here as we may/may not
+        # assign a default theme
+        self = deepcopy(self)
+
+        if is_inline_backend() or is_quarto_environment():
+            from IPython.display import display
+
+            data, metadata = self._repr_mimebundle_()
+            display(data, metadata=metadata, raw=True)
+        else:
+            self.draw(show=True)
 
     def draw(self, *, show: bool = False) -> Figure:
         """
