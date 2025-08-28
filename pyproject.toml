@@ -81,7 +81,7 @@ dev = [
 ]
 
 typing = [
-    "pyright==1.1.403",
+    "pyright==1.1.404",
     "ipython",
     "pandas-stubs",
 ]
