@@ -29,7 +29,7 @@ from ._utils.ipython import (
     get_mimebundle,
     is_inline_backend,
 )
-from ._utils.quarto import is_quarto_environment
+from ._utils.quarto import is_knitr_engine, is_quarto_environment
 from .coords import coord_cartesian
 from .exceptions import PlotnineError, PlotnineWarning
 from .facets import facet_null
@@ -136,6 +136,14 @@ class ggplot:
         """
         w, h = self.theme._figure_size_px
         return f"<ggplot: ({w} x {h})>"
+
+    def __repr__(self):
+        # knitr relies on __repr__ to automatically print the last object
+        # in a cell.
+        if is_knitr_engine():
+            self.show()
+            return ""
+        return super().__repr__()
 
     def _repr_mimebundle_(self, include=None, exclude=None) -> MimeBundle:
         """

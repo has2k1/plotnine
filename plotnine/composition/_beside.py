@@ -9,7 +9,7 @@ if TYPE_CHECKING:
     from plotnine.ggplot import ggplot
 
 
-@dataclass
+@dataclass(repr=False)
 class Beside(Compose):
     """
     Place plots or compositions side by side

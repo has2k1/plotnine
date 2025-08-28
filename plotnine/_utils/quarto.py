@@ -1,4 +1,6 @@
 import os
+import sys
+from functools import lru_cache
 
 
 def is_quarto_environment() -> bool:
@@ -31,3 +33,22 @@ def set_options_from_quarto():
     set_option("dpi", dpi)
     set_option("figure_size", figure_size)
     set_option("figure_format", figure_format)
+
+
+# We do not expect the contents the file stored in the QUARTO_EXECUTE_INFO
+# variable to change. We can can cache the output
+@lru_cache()
+def is_knitr_engine() -> bool:
+    """
+    Return True if knitr is executing the code
+    """
+
+    if filename := os.environ.get("QUARTO_EXECUTE_INFO"):  # Quarto >= 1.8.21
+        import json
+        from pathlib import Path
+
+        info = json.loads(Path(filename).read_text())
+        return info["format"]["execute"]["engine"] == "knitr"
+    else:
+        # NOTE: Remove this branch some time after quarto 1.9 is released
+        return "rpytools" in sys.modules
