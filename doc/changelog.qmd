@@ -9,6 +9,18 @@ title: Changelog
 
 - Added [](:class:`~plotnine.scale_stroke_identity`) which was conspicuously missing!
 
+- Added [](:class:`~plotnine.composition.Compose.show`), making it possible to output/show 
+  plot composition objects when they are not the last object in a cell.
+
+### Enhancements
+
+- In a jupyter environment, the output when the plot is the last in a cell is
+  now rendered without side effects. ({{< pr 969 >}})
+
+- When using the knitr engine in a Quarto document, you no longer need to
+  class `plot.show()` to get output if the `plot` is the last object in
+  the cell. ({{< issue 970 >}})
+
 ### Bug Fixes
 
 - Fixed labels set with the `labs` call so that they are only ever overwritten
