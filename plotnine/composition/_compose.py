@@ -6,18 +6,19 @@ from dataclasses import dataclass, field
 from io import BytesIO
 from typing import TYPE_CHECKING, overload
 
+from .._utils.context import plot_composition_context
 from .._utils.ipython import (
     get_ipython,
     get_mimebundle,
     is_inline_backend,
 )
-from .._utils.quarto import is_quarto_environment
+from .._utils.quarto import is_knitr_engine, is_quarto_environment
 from ..options import get_option
 from ._plotspec import plotspec
 
 if TYPE_CHECKING:
     from pathlib import Path
-    from typing import Generator, Iterator, Self
+    from typing import Generator, Iterator
 
     from matplotlib.figure import Figure
 
@@ -100,6 +101,22 @@ class Compose:
             op if isinstance(op, Compose) else deepcopy(op)
             for op in self.items
         ]
+
+    def __repr__(self):
+        """
+        repr
+
+        Notes
+        -----
+        Subclasses that are dataclasses should be declared with
+        `@dataclass(repr=False)`.
+        """
+        # knitr relies on __repr__ to automatically print the last object
+        # in a cell.
+        if is_knitr_engine():
+            self.show()
+            return ""
+        return super().__repr__()
 
     @abc.abstractmethod
     def __or__(self, rhs: ggplot | Compose) -> Compose:
@@ -321,6 +338,15 @@ class Compose:
             self.nrow, self.ncol, figure, nest_into=nest_into
         )
 
+    def _setup(self) -> Figure:
+        """
+        Setup this instance for the building process
+        """
+        if not hasattr(self, "figure"):
+            self._create_figure()
+
+        return self.figure
+
     def _create_figure(self):
         import matplotlib.pyplot as plt
 
@@ -364,6 +390,13 @@ class Compose:
         self.figure = plt.figure()
         self.plotspecs = list(_make_plotspecs(self, None))
 
+    def _draw_plots(self):
+        """
+        Draw all plots in the composition
+        """
+        for ps in self.plotspecs:
+            ps.plot.draw()
+
     def show(self):
         """
         Display plot in the cells output
@@ -400,15 +433,9 @@ class Compose:
         from .._mpl.layout_manager import PlotnineCompositionLayoutEngine
 
         with plot_composition_context(self, show):
-            self._create_figure()
-            figure = self.figure
-
-            for ps in self.plotspecs:
-                ps.plot.draw()
-
-            self.figure.set_layout_engine(
-                PlotnineCompositionLayoutEngine(self)
-            )
+            figure = self._setup()
+            self._draw_plots()
+            figure.set_layout_engine(PlotnineCompositionLayoutEngine(self))
         return figure
 
     def save(
@@ -442,42 +469,3 @@ class Compose:
         plot = (self + theme(dpi=dpi)) if dpi else self
         figure = plot.draw()
         figure.savefig(filename, format=format)
-
-
-@dataclass
-class plot_composition_context:
-    cmp: Compose
-    show: bool
-
-    def __post_init__(self):
-        import matplotlib as mpl
-
-        # The dpi is needed when the figure is created, either as
-        # a parameter to plt.figure() or an rcParam.
-        # https://github.com/matplotlib/matplotlib/issues/24644
-        # When drawing the Composition, the dpi themeable is infective
-        # because it sets the rcParam after this figure is created.
-        rcParams = {"figure.dpi": self.cmp.last_plot.theme.getp("dpi")}
-        self._rc_context = mpl.rc_context(rcParams)
-
-    def __enter__(self) -> Self:
-        """
-        Enclose in matplolib & pandas environments
-        """
-        self._rc_context.__enter__()
-        return self
-
-    def __exit__(self, exc_type, exc_value, exc_traceback):
-        import matplotlib.pyplot as plt
-
-        if exc_type is None:
-            if self.show:
-                plt.show()
-            else:
-                plt.close(self.cmp.figure)
-        else:
-            # There is an exception, close any figure
-            if hasattr(self.cmp, "figure"):
-                plt.close(self.cmp.figure)
-
-        self._rc_context.__exit__(exc_type, exc_value, exc_traceback)
