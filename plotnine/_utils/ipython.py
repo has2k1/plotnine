@@ -3,17 +3,9 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from typing import Callable, Literal, NotRequired, TypeAlias, TypedDict
-
     from IPython.core.interactiveshell import InteractiveShell
 
-    FigureFormat: TypeAlias = Literal[
-        "png", "retina", "jpeg", "jpg", "svg", "pdf"
-    ]
-
-    class DisplayMetadata(TypedDict):
-        width: NotRequired[int]
-        height: NotRequired[int]
+    from ..typing import DisplayMetadata, FigureFormat, MimeBundle
 
 
 def get_ipython() -> "None | InteractiveShell":
@@ -28,7 +20,7 @@ def get_ipython() -> "None | InteractiveShell":
     return _get_ipython()
 
 
-def is_inline_backend():
+def is_inline_backend() -> bool:
     """
     Return True if the inline_backend is on
 
@@ -36,28 +28,13 @@ def is_inline_backend():
     """
     import matplotlib as mpl
 
-    return "matplotlib_inline.backend_inline" in mpl.get_backend()
-
-
-def get_display_function() -> Callable[
-    [dict[str, bytes], dict[str, DisplayMetadata]], None
-]:
-    """
-    Return a function that will display the plot image
-    """
-    from IPython.display import display
-
-    def display_func(
-        data: dict[str, bytes], metadata: dict[str, DisplayMetadata]
-    ) -> None:
-        display(data, metadata=metadata, raw=True)
-
-    return display_func
+    backend = mpl.get_backend()
+    return backend in ("inline", "module://matplotlib_inline.backend_inline")
 
 
 def get_mimebundle(
     b: bytes, format: FigureFormat, figure_size_px: tuple[int, int]
-):
+) -> MimeBundle:
     """
     Return a the display MIME bundle from image data
 

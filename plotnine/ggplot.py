@@ -25,7 +25,6 @@ from ._utils import (
 )
 from ._utils.context import plot_context
 from ._utils.ipython import (
-    get_display_function,
     get_ipython,
     get_mimebundle,
     is_inline_backend,
@@ -56,7 +55,7 @@ if TYPE_CHECKING:
     from plotnine.composition import Compose
     from plotnine.coords.coord import coord
     from plotnine.facets.facet import facet
-    from plotnine.typing import DataLike, FigureFormat
+    from plotnine.typing import DataLike, FigureFormat, MimeBundle
 
     class PlotAddable(Protocol):
         """
@@ -138,11 +137,15 @@ class ggplot:
         w, h = self.theme._figure_size_px
         return f"<ggplot: ({w} x {h})>"
 
-    def _repr_mimebundle_(self, **kwargs):
+    def _repr_mimebundle_(self, include=None, exclude=None) -> MimeBundle:
         """
         Return dynamic MIME bundle for plot display
 
         This method is called when a ggplot object is the last in the cell.
+
+        Notes
+        -----
+        - https://ipython.readthedocs.io/en/stable/config/integrating.html
         """
         ip = get_ipython()
         format: FigureFormat = (
@@ -166,8 +169,7 @@ class ggplot:
         """
         Show plot using the matplotlib backend set by the user
 
-        Users should prefer this method instead of printing or repring
-        the object.
+        This function is called for its side-effects.
         """
         # Prevent against any modifications to the users
         # ggplot object. Do the copy here as we may/may not
@@ -175,24 +177,12 @@ class ggplot:
         self = deepcopy(self)
 
         if is_inline_backend() or is_quarto_environment():
-            # Take charge of the display because we have to make
-            # adjustments for retina output.
-            self._display()
+            from IPython.display import display
+
+            data, metadata = self._repr_mimebundle_()
+            display(data, metadata=metadata, raw=True)
         else:
             self.draw(show=True)
-
-    def _display(self):
-        """
-        Display plot in the cells output
-
-        This function is called for its side-effects.
-
-        It plots the plot to an io buffer, then uses ipython display
-        methods to show the result
-        """
-        data, metadata = self._repr_mimebundle_()
-        display_func = get_display_function()
-        display_func(data, metadata)
 
     def __deepcopy__(self, memo: dict[Any, Any]) -> ggplot:
         """

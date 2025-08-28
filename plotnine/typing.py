@@ -1,14 +1,13 @@
 from __future__ import annotations
 
-import sys
-from datetime import datetime, timedelta
 from typing import (
-    TYPE_CHECKING,
     Any,
     Callable,
     Literal,
+    NotRequired,
     Protocol,
     Sequence,
+    TypedDict,
     TypeVar,
 )
 
@@ -142,3 +141,15 @@ class PTransform(Protocol):
     """
 
     def __call__(self, x: TFloatArrayLike) -> TFloatArrayLike: ...
+
+
+class DisplayMetadata(TypedDict):
+    """
+    Metadata for the IPython output
+    """
+
+    width: NotRequired[int]
+    height: NotRequired[int]
+
+
+MimeBundle: TypeAlias = tuple[dict[str, bytes], dict[str, DisplayMetadata]]
