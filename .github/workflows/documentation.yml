@@ -33,8 +33,8 @@ jobs:
 
       - name: See outputs
         run: |
-          echo 'deploy_to=${{ steps.variables.outputs.deploy_to }}'
-          echo 'commit_title=${{ steps.variables.outputs.commit_title }}'
+          echo deploy_to="${{ steps.variables.outputs.deploy_to }}"
+          echo commit_title="${{ steps.variables.outputs.commit_title }}"
 
   build-documentation:
     runs-on: ubuntu-latest
