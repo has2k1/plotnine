@@ -947,68 +947,6 @@ class LayoutSpaces:
         """
         return self.t.panel_top - self.b.panel_bottom
 
-    @property
-    def tag_width(self) -> float:
-        """
-        Width [figure dimensions] of space taken up by the tag
-        """
-        # Atleast one of these is zero
-        return max(self.l.tag_width, self.r.tag_width)
-
-    @property
-    def tag_height(self) -> float:
-        """
-        Height [figure dimensions] of space taken up by the tag
-        """
-        # Atleast one of these is zero
-        return max(self.t.tag_height, self.b.tag_height)
-
-    @property
-    def left_tag_width(self) -> float:
-        """
-        Width [figure dimensions] of space taken up by a left tag
-        """
-        return self.l.tag_width
-
-    @property
-    def right_tag_width(self) -> float:
-        """
-        Width [figure dimensions] of space taken up by a right tag
-        """
-        return self.r.tag_width
-
-    @property
-    def top_tag_height(self) -> float:
-        """
-        Width [figure dimensions] of space taken up by a top tag
-        """
-        return self.t.tag_height
-
-    @property
-    def bottom_tag_height(self) -> float:
-        """
-        Height [figure dimensions] of space taken up by a bottom tag
-        """
-        return self.b.tag_height
-
-    @property
-    def left_axis_title_clearance(self) -> float:
-        """
-        Distance between the left y-axis title and the panel
-
-        In figure dimensions.
-        """
-        return self.l.axis_title_clearance
-
-    @property
-    def bottom_axis_title_clearance(self) -> float:
-        """
-        Distance between the bottom x-axis title and the panel
-
-        In figure dimensions.
-        """
-        return self.b.axis_title_clearance
-
     def increase_horizontal_plot_margin(self, dw: float):
         """
         Increase the plot_margin to the right & left of the panels
