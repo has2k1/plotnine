@@ -2,7 +2,7 @@
 title: Changelog
 ---
 
-## v0.15.1
+## v0.16.0
 (not-yet-released)
 
 ### New
@@ -11,6 +11,9 @@ title: Changelog
 
 - Added [](:class:`~plotnine.composition.Compose.show`), making it possible to output/show 
   plot composition objects when they are not the last object in a cell.
+
+- Added [](:class:`~plotnine.composition.plot_layout`) with which you can customise the
+  layout of plots in composition.
 
 ### Enhancements
 
