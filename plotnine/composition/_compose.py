@@ -6,6 +6,9 @@ from dataclasses import dataclass, field
 from io import BytesIO
 from typing import TYPE_CHECKING, overload
 
+from plotnine.composition._plot_layout import plot_layout
+from plotnine.composition._types import ComposeAddable
+
 from .._utils.context import plot_composition_context
 from .._utils.ipython import (
     get_ipython,
@@ -85,7 +88,12 @@ class Compose:
 
     items: list[ggplot | Compose]
     """
-    The objects to be arranged (composed).
+    The objects to be arranged (composed)
+    """
+
+    _plot_layout: plot_layout = field(init=False, repr=False)
+    """
+    The instance of plot_layout added to the composition
     """
 
     # These are created in the _create_figure method
@@ -130,7 +138,10 @@ class Compose:
         Add rhs as a row
         """
 
-    def __add__(self, rhs: ggplot | Compose | PlotAddable) -> Compose:
+    def __add__(
+        self,
+        rhs: ggplot | Compose | PlotAddable | ComposeAddable,
+    ) -> Compose:
         """
         Add rhs to the composition
 
@@ -141,10 +152,13 @@ class Compose:
         """
         from plotnine import ggplot
 
-        if not isinstance(rhs, (ggplot, Compose)):
-            cmp = deepcopy(self)
-            cmp.last_plot = cmp.last_plot + rhs
-            return cmp
+        self = deepcopy(self)
+
+        if isinstance(rhs, ComposeAddable):
+            return rhs.__radd__(self)
+        elif not isinstance(rhs, (ggplot, Compose)):
+            self.last_plot = self.last_plot + rhs
+            return self
 
         t1, t2 = type(self).__name__, type(rhs).__name__
         msg = f"unsupported operand type(s) for +: '{t1}' and '{t2}'"
@@ -181,14 +195,12 @@ class Compose:
         """
         self = deepcopy(self)
 
-        def add_other(cmp: Compose):
-            for i, item in enumerate(cmp):
-                if isinstance(item, Compose):
-                    add_other(item)
-                else:
-                    cmp[i] = item + copy(rhs)
+        for i, item in enumerate(self):
+            if isinstance(item, Compose):
+                self[i] = item & rhs
+            else:
+                item += copy(rhs)
 
-        add_other(self)
         return self
 
     def __mul__(self, rhs: PlotAddable) -> Compose:
@@ -204,9 +216,9 @@ class Compose:
 
         self = deepcopy(self)
 
-        for i, item in enumerate(self):
+        for item in self:
             if isinstance(item, ggplot):
-                self[i] = item + copy(rhs)
+                item += copy(rhs)
 
         return self
 
@@ -337,6 +349,11 @@ class Compose:
         self.gridspec = p9GridSpec(
             self.nrow, self.ncol, figure, nest_into=nest_into
         )
+
+        if not hasattr(self, "_plot_layout"):
+            self._plot_layout = plot_layout()
+
+        self._plot_layout._setup(self.nrow, self.ncol)
 
     def _setup(self) -> Figure:
         """

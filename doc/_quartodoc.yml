@@ -541,6 +541,7 @@ quartodoc:
         - Stack
         - Beside
         - plot_spacer
+        - plot_layout
 
     - title: Options
       desc: |
