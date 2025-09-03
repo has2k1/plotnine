@@ -1,6 +1,7 @@
 from plotnine import element_text, facet_grid, facet_wrap, theme, theme_gray
 from plotnine._utils.yippie import geom as g
 from plotnine._utils.yippie import legend, plot, rotate, tag
+from plotnine.composition._plot_layout import plot_layout
 
 
 def test_basic_horizontal_align_resize():
@@ -151,3 +152,30 @@ def test_plus_operator():
     p4 = plot.brown
     p = (p1 | p2 | (p3 / p4)) + theme_gray()
     assert p == "plus_operator"
+
+
+def test_plot_layout_widths():
+    p1 = plot.red
+    p2 = plot.green
+    p = (p1 | p2) + plot_layout(widths=[1, 4])
+    assert p == "plot_layout_widths"
+
+
+def test_plot_layout_heights():
+    p1 = plot.red
+    p2 = plot.green
+    p = (p1 / p2) + plot_layout(heights=[1, 4])
+    assert p == "plot_layout_heights"
+
+
+def test_plot_layout_nested_resize():
+    p1 = plot.red
+    p2 = plot.green
+    p3 = plot.blue
+    p4 = plot.brown
+
+    ws = plot_layout(widths=[1, 4])
+    hs = plot_layout(heights=[1, 3])
+
+    p = (((p1 | p2) + ws) / ((p3 | p4) + ws)) + hs
+    assert p == "plot_layout_nested_resize"

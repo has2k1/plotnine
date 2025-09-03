@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import abc
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from functools import cached_property
 from typing import TYPE_CHECKING
 
@@ -72,7 +72,18 @@ class LayoutTree:
     Each composition is a tree or subtree
     """
 
-    gridspec: p9GridSpec
+    cmp: Compose
+    """
+    Composition that this tree represents
+    """
+
+    nodes: list[LayoutSpaces | LayoutTree]
+    """
+    The spaces or tree of spaces in the composition that the tree
+    represents.
+    """
+
+    gridspec: p9GridSpec = field(init=False)
     """
     Gridspec of the composition
 
@@ -86,11 +97,8 @@ class LayoutTree:
     LayoutSpaces.
     """
 
-    nodes: list[LayoutSpaces | LayoutTree]
-    """
-    The spaces or tree of spaces in the composition that the tree
-    represents.
-    """
+    def __post_init__(self):
+        self.gridspec = self.cmp.gridspec
 
     @staticmethod
     def create(
@@ -122,9 +130,9 @@ class LayoutTree:
                 nodes.append(LayoutTree.create(item, lookup_spaces))
 
         if isinstance(cmp, Beside):
-            return ColumnsTree(cmp.gridspec, nodes)
+            return ColumnsTree(cmp, nodes)
         else:
-            return RowsTree(cmp.gridspec, nodes)
+            return RowsTree(cmp, nodes)
 
     @cached_property
     def sub_compositions(self) -> list[LayoutTree]:
@@ -310,14 +318,16 @@ class ColumnsTree(LayoutTree):
         """
         Resize the widths of gridspec so that panels have equal widths
         """
-        # The new width of each panel is the average width of all
-        # the panels plus all the space to the left and right
-        # of the panels.
-        plot_widths = np.array(self.plot_widths)
-        panel_widths = np.array(self.panel_widths)
-        non_panel_space = plot_widths - panel_widths
-        new_plot_widths = panel_widths.mean() + non_panel_space
-        width_ratios = new_plot_widths / new_plot_widths.min()
+        # The new width of each panel is the total panel area scaled
+        # by the factor given in plot_layout.
+        # The new width of the plot includes the space not taken up
+        # by the panels.
+        factors = np.array(self.cmp._plot_layout.widths)
+        _totals = np.ones(len(self.panel_widths)) * sum(self.panel_widths)
+        scaled_panel_widths = _totals * factors
+        non_panel_space = np.array(self.plot_widths) - self.panel_widths
+        new_plot_widths = scaled_panel_widths + non_panel_space
+        width_ratios = new_plot_widths / new_plot_widths.max()
         self.gridspec.set_width_ratios(width_ratios)
         self.resize_sub_compositions()
 
@@ -472,12 +482,15 @@ class RowsTree(LayoutTree):
 
         This method resizes (recursively) the contained compositions
         """
-        # The new height of each panel is the average width of all
-        # the panels plus all the space above and below the panels.
-        plot_heights = np.array(self.plot_heights)
-        panel_heights = np.array(self.panel_heights)
-        non_panel_space = plot_heights - panel_heights
-        new_plot_heights = panel_heights.mean() + non_panel_space
+        # The new height of each panel is the total panel area scaled
+        # by the factor given in plot_layout.
+        # The new height of the plot includes the space not taken up
+        # by the panels.
+        factors = np.array(self.cmp._plot_layout.heights)
+        _totals = np.ones(len(self.panel_heights)) * sum(self.panel_heights)
+        scaled_panel_heights = _totals * factors
+        non_panel_space = np.array(self.plot_heights) - self.panel_heights
+        new_plot_heights = scaled_panel_heights + non_panel_space
         height_ratios = new_plot_heights / new_plot_heights.max()
         self.gridspec.set_height_ratios(height_ratios)
         self.resize_sub_compositions()
