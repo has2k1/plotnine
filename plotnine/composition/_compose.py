@@ -109,6 +109,8 @@ class Compose:
             op if isinstance(op, Compose) else deepcopy(op)
             for op in self.items
         ]
+        self.nrow = 1
+        self.ncol = 1
 
     def __repr__(self):
         """
@@ -268,20 +270,6 @@ class Compose:
         self.save(buf, "png" if format == "retina" else format)
         figure_size_px = self.last_plot.theme._figure_size_px
         return get_mimebundle(buf.getvalue(), format, figure_size_px)
-
-    @property
-    def nrow(self) -> int:
-        """
-        Number of rows in the composition
-        """
-        return 0
-
-    @property
-    def ncol(self) -> int:
-        """
-        Number of cols in the composition
-        """
-        return 0
 
     @property
     def last_plot(self) -> ggplot:
