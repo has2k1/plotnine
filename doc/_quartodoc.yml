@@ -540,6 +540,7 @@ quartodoc:
           include_attributes: false
         - Stack
         - Beside
+        - Wrap
         - plot_spacer
         - plot_layout
 

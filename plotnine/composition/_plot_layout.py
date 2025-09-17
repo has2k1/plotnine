@@ -27,6 +27,16 @@ class plot_layout(ComposeAddable):
     Relative heights of each column
     """
 
+    nrow: int | None = None
+    """
+    Number of rows
+    """
+
+    ncol: int | None = None
+    """
+    Number of columns
+    """
+
     def __radd__(self, cmp: Compose) -> Compose:
         """
         Add plot layout to composition

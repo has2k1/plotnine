@@ -13,6 +13,7 @@ from typing import (
     Iterable,
     Optional,
     cast,
+    overload,
 )
 from warnings import warn
 
@@ -230,10 +231,19 @@ class ggplot:
             other.__radd__(self)
         return self
 
+    @overload
     def __add__(
         self,
         rhs: PlotAddable | list[PlotAddable] | None,
-    ) -> ggplot:
+    ) -> ggplot: ...
+
+    @overload
+    def __add__(self, rhs: ggplot) -> Compose: ...
+
+    def __add__(
+        self,
+        rhs: PlotAddable | list[PlotAddable] | None | ggplot,
+    ) -> ggplot | Compose:
         """
         Add to ggplot
 
@@ -244,6 +254,12 @@ class ggplot:
             itself to a ggplot, or a list of such objects.
         """
         self = deepcopy(self)
+
+        if isinstance(rhs, ggplot):
+            from .composition import Wrap
+
+            return Wrap([self, rhs])
+
         return self.__iadd__(rhs)
 
     def __or__(self, rhs: ggplot | Compose) -> Compose:

@@ -26,6 +26,7 @@ class Stack(Compose):
     See Also
     --------
     plotnine.composition.Beside : To arrange plots side by side
+    plotnine.composition.Wrap : To arrange plots in a grid
     plotnine.composition.plot_spacer : To add a blank space between plots
     plotnine.composition.Compose : For more on composing plots
     """

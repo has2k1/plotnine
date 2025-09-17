@@ -3,12 +3,14 @@ from __future__ import annotations
 import abc
 from dataclasses import dataclass, field
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Iterator
 
 import numpy as np
 
 from plotnine.composition import Beside
+from plotnine.composition._stack import Stack
 
+from ._grid import Grid
 from ._spaces import (
     LayoutSpaces,
     bottom_spaces,
@@ -18,7 +20,7 @@ from ._spaces import (
 )
 
 if TYPE_CHECKING:
-    from typing import Sequence
+    from typing import Sequence, TypeAlias
 
     from plotnine import ggplot
     from plotnine._mpl.gridspec import p9GridSpec
@@ -29,6 +31,8 @@ if TYPE_CHECKING:
         top_spaces,
     )
     from plotnine.composition import Compose
+
+    Node: TypeAlias = "LayoutSpaces | LayoutTree"
 
 
 @dataclass
@@ -122,6 +126,7 @@ class LayoutTree:
         """
         from plotnine import ggplot
 
+        # Create subtree
         nodes: list[LayoutSpaces | LayoutTree] = []
         for item in cmp:
             if isinstance(item, ggplot):
@@ -129,10 +134,13 @@ class LayoutTree:
             else:
                 nodes.append(LayoutTree.create(item, lookup_spaces))
 
+        # Create root
         if isinstance(cmp, Beside):
             return ColumnsTree(cmp, nodes)
-        else:
+        elif isinstance(cmp, Stack):
             return RowsTree(cmp, nodes)
+        else:
+            return GridTree(cmp, nodes)
 
     @cached_property
     def sub_compositions(self) -> list[LayoutTree]:
@@ -280,6 +288,14 @@ class LayoutTree:
         """
         return [node.plot_height for node in self.nodes]
 
+    @property
+    def total_panel_width(self) -> float:
+        return sum(self.panel_widths)
+
+    @property
+    def total_panel_height(self) -> float:
+        return sum(self.panel_heights)
+
 
 @dataclass
 class ColumnsTree(LayoutTree):
@@ -322,8 +338,9 @@ class ColumnsTree(LayoutTree):
         # by the factor given in plot_layout.
         # The new width of the plot includes the space not taken up
         # by the panels.
+        n = len(self.panel_widths)
         factors = np.array(self.cmp._plot_layout.widths)
-        _totals = np.ones(len(self.panel_widths)) * sum(self.panel_widths)
+        _totals = np.ones(n) * self.total_panel_width
         scaled_panel_widths = _totals * factors
         non_panel_space = np.array(self.plot_widths) - self.panel_widths
         new_plot_widths = scaled_panel_widths + non_panel_space
@@ -486,8 +503,9 @@ class RowsTree(LayoutTree):
         # by the factor given in plot_layout.
         # The new height of the plot includes the space not taken up
         # by the panels.
+        n = len(self.panel_heights)
         factors = np.array(self.cmp._plot_layout.heights)
-        _totals = np.ones(len(self.panel_heights)) * sum(self.panel_heights)
+        _totals = np.ones(n) * self.total_panel_height
         scaled_panel_heights = _totals * factors
         non_panel_space = np.array(self.plot_heights) - self.panel_heights
         new_plot_heights = scaled_panel_heights + non_panel_space
@@ -612,3 +630,283 @@ class RowsTree(LayoutTree):
     @property
     def plot_height(self) -> float:
         return sum(self.plot_heights)
+
+
+@dataclass
+class GridTree(LayoutTree):
+    """
+    Tree with a grid of at the top level
+
+    e.g. p1 + p2 + p3 + p4 + p5
+
+         --------------------------
+        |        |        |        |
+        |   p1   |   p2   |   p3   |
+        |        |        |        |
+        |--------------------------|
+        |        |        |        |
+        |   p4   |   p5   |        |
+        |        |        |        |
+         --------------------------
+
+    More accurately this is a grid of trees.
+    """
+
+    def __post_init__(self):
+        super().__post_init__()
+        self.ncol = self.cmp.ncol
+        self.nrow = self.cmp.nrow
+        self.grid = Grid["Node"](self.nrow, self.ncol, self.nodes)
+
+    def align(self):
+        self.align_tags()
+        self.align_panels()
+        self.align_sub_compositions()
+
+    def resize(self):
+        """
+        Resize all squares of the grid
+        """
+        self.resize_widths()
+        self.resize_heights()
+        self.resize_sub_compositions()
+
+    @property
+    def panel_width(self) -> float:
+        return sum(self.panel_widths)
+
+    @property
+    def panel_height(self) -> float:
+        return sum(self.panel_heights)
+
+    @property
+    def plot_width(self) -> float:
+        return sum(self.plot_widths)
+
+    @property
+    def plot_height(self) -> float:
+        return sum(self.plot_heights)
+
+    def iter_left_spaces(self) -> Iterator[list[left_spaces]]:
+        """
+        Left spaces for each non-empty column
+
+        Will not return an empty list.
+        """
+        for c in range(self.ncol):
+            spaces = self.left_spaces_in_col(c)
+            if spaces:
+                yield spaces
+
+    def iter_right_spaces(self) -> Iterator[list[right_spaces]]:
+        """
+        Right spaces for each non-empty column
+
+        Will not return an empty list.
+        """
+        for c in range(self.ncol):
+            spaces = self.right_spaces_in_col(c)
+            if spaces:
+                yield spaces
+
+    def iter_bottom_spaces(self) -> Iterator[list[bottom_spaces]]:
+        """
+        Bottom spaces for each non-empty row
+        """
+        for r in range(self.nrow):
+            spaces = self.bottom_spaces_in_row(r)
+            if spaces:
+                yield spaces
+
+    def iter_top_spaces(self) -> Iterator[list[top_spaces]]:
+        """
+        Top spaces for each non-empty row
+        """
+        for r in range(self.nrow):
+            spaces = self.top_spaces_in_row(r)
+            if spaces:
+                yield spaces
+
+    @cached_property
+    def bottom_spaces_to_align(self) -> list[bottom_spaces]:
+        """
+        Bottom spaces of items in the last row
+        """
+        return [s for s in self.bottom_spaces_in_row(self.nrow - 1)]
+
+    @cached_property
+    def top_spaces_to_align(self) -> list[top_spaces]:
+        """
+        Top spaces of items in the top row
+        """
+        return [s for s in self.top_spaces_in_row(0)]
+
+    @cached_property
+    def left_spaces_to_align(self) -> list[left_spaces]:
+        """
+        Left spaces of items in the last column
+        """
+        return [s for s in self.left_spaces_in_col(0)]
+
+    @cached_property
+    def right_spaces_to_align(self) -> list[right_spaces]:
+        """
+        Right spaces of items the last column
+        """
+        return [s for s in self.right_spaces_in_col(self.ncol - 1)]
+
+    def bottom_spaces_in_row(self, r: int) -> list[bottom_spaces]:
+        spaces: list[bottom_spaces] = []
+        for node in self.grid[r, :]:
+            if isinstance(node, LayoutSpaces):
+                spaces.append(node.b)
+            elif isinstance(node, LayoutTree):
+                spaces.extend(node.bottom_spaces_to_align)
+        return spaces
+
+    def top_spaces_in_row(self, r: int) -> list[top_spaces]:
+        spaces: list[top_spaces] = []
+        for node in self.grid[r, :]:
+            if isinstance(node, LayoutSpaces):
+                spaces.append(node.t)
+            elif isinstance(node, LayoutTree):
+                spaces.extend(node.top_spaces_to_align)
+        return spaces
+
+    def left_spaces_in_col(self, c: int) -> list[left_spaces]:
+        spaces: list[left_spaces] = []
+        for node in self.grid[:, c]:
+            if isinstance(node, LayoutSpaces):
+                spaces.append(node.l)
+            elif isinstance(node, LayoutTree):
+                spaces.extend(node.left_spaces_to_align)
+        return spaces
+
+    def right_spaces_in_col(self, c: int) -> list[right_spaces]:
+        spaces: list[right_spaces] = []
+        for node in self.grid[:, c]:
+            if isinstance(node, LayoutSpaces):
+                spaces.append(node.r)
+            elif isinstance(node, LayoutTree):
+                spaces.extend(node.right_spaces_to_align)
+        return spaces
+
+    def align_panels(self):
+        for spaces in self.iter_bottom_spaces():
+            bottoms = [space.panel_bottom for space in spaces]
+            high = max(bottoms)
+            diffs = [high - b for b in bottoms]
+            for space, diff in zip(spaces, diffs):
+                space.margin_alignment += diff
+
+        for spaces in self.iter_top_spaces():
+            tops = [space.panel_top for space in spaces]
+            low = min(tops)
+            diffs = [b - low for b in tops]
+            for space, diff in zip(spaces, diffs):
+                space.margin_alignment += diff
+
+        for spaces in self.iter_left_spaces():
+            lefts = [space.panel_left for space in spaces]
+            high = max(lefts)
+            diffs = [high - l for l in lefts]
+            for space, diff in zip(spaces, diffs):
+                space.margin_alignment += diff
+
+        for spaces in self.iter_right_spaces():
+            rights = [space.panel_right for space in spaces]
+            low = min(rights)
+            diffs = [r - low for r in rights]
+            for space, diff in zip(spaces, diffs):
+                space.margin_alignment += diff
+
+    def align_tags(self):
+        for spaces in self.iter_bottom_spaces():
+            heights = [
+                space.tag_height + space.tag_alignment for space in spaces
+            ]
+            high = max(heights)
+            diffs = [high - h for h in heights]
+            for space, diff in zip(spaces, diffs):
+                space.tag_alignment += diff
+
+        for spaces in self.iter_top_spaces():
+            heights = [
+                space.tag_height + space.tag_alignment for space in spaces
+            ]
+            high = max(heights)
+            diffs = [high - h for h in heights]
+            for space, diff in zip(spaces, diffs):
+                space.tag_alignment += diff
+
+        for spaces in self.iter_left_spaces():
+            widths = [
+                space.tag_width + space.tag_alignment for space in spaces
+            ]
+            high = max(widths)
+            diffs = [high - w for w in widths]
+            for space, diff in zip(spaces, diffs):
+                space.tag_alignment += diff
+
+        for spaces in self.iter_right_spaces():
+            widths = [
+                space.tag_width + space.tag_alignment for space in spaces
+            ]
+            high = max(widths)
+            diffs = [high - w for w in widths]
+            for space, diff in zip(spaces, diffs):
+                space.tag_alignment += diff
+
+    def align_axis_titles(self):
+        for spaces in self.iter_bottom_spaces():
+            clearances = [space.axis_title_clearance for space in spaces]
+            high = max(clearances)
+            diffs = [high - b for b in clearances]
+            for space, diff in zip(spaces, diffs):
+                space.axis_title_alignment += diff
+
+        for spaces in self.iter_left_spaces():
+            clearances = [space.axis_title_clearance for space in spaces]
+            high = max(clearances)
+            diffs = [high - l for l in clearances]
+            for space, diff in zip(spaces, diffs):
+                space.axis_title_alignment += diff
+
+        for tree in self.sub_compositions:
+            tree.align_axis_titles()
+
+    def resize_widths(self):
+        n = self.ncol
+        panel_widths = np.array(
+            [
+                max([node.panel_width if node else 0 for node in col])
+                for col in self.grid.iter_cols()
+            ]
+        )
+        plot_widths = np.ones(n) * 1 / n
+        total_panel_width = sum(panel_widths)
+        factors = np.array(self.cmp._plot_layout.widths)
+        _totals = np.ones(n) * total_panel_width
+        scaled_panel_widths = _totals * factors
+        non_panel_space = plot_widths - panel_widths
+        new_plot_widths = scaled_panel_widths + non_panel_space
+        width_ratios = new_plot_widths / new_plot_widths.max()
+        self.gridspec.set_width_ratios(width_ratios)
+
+    def resize_heights(self):
+        n = self.nrow
+        panel_heights = np.array(
+            [
+                max([node.panel_height if node else 0 for node in col])
+                for col in self.grid.iter_rows()
+            ]
+        )
+        plot_heights = np.ones(n) * 1 / n
+        total_panel_height = sum(panel_heights)
+        factors = np.array(self.cmp._plot_layout.heights)
+        _totals = np.ones(n) * total_panel_height
+        scaled_panel_heights = _totals * factors
+        non_panel_space = plot_heights - panel_heights
+        new_plot_heights = scaled_panel_heights + non_panel_space
+        height_ratios = new_plot_heights / new_plot_heights.max()
+        self.gridspec.set_height_ratios(height_ratios)
