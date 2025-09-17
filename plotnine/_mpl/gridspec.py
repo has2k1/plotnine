@@ -27,8 +27,7 @@ class p9GridSpec(GridSpecBase):
     Gridspec for plotnine plots
 
     This gridspec does not read any subplot parameter values from matplotlib's
-    rcparams and the default a grid that fills up all the available space;
-    there is no space along the edges and between the subplots.
+    rcparams. And there is no space along the edges and between the subplots.
 
     This gridspec can also be initialised while contained/nested in a given
     subplot.
