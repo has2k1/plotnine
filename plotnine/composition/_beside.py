@@ -30,13 +30,9 @@ class Beside(Compose):
     plotnine.composition.Compose : For more on composing plots
     """
 
-    @property
-    def nrow(self) -> int:
-        return 1
-
-    @property
-    def ncol(self) -> int:
-        return len(self)
+    def __post_init__(self):
+        super().__post_init__()
+        self.ncol = len(self)
 
     def __or__(self, rhs: ggplot | Compose) -> Compose:
         """

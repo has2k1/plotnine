@@ -30,13 +30,9 @@ class Stack(Compose):
     plotnine.composition.Compose : For more on composing plots
     """
 
-    @property
-    def nrow(self) -> int:
-        return len(self)
-
-    @property
-    def ncol(self) -> int:
-        return 1
+    def __post_init__(self):
+        super().__post_init__()
+        self.nrow = len(self)
 
     def __truediv__(self, rhs: ggplot | Compose) -> Compose:
         """
