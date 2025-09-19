@@ -4,10 +4,7 @@ import abc
 from copy import copy, deepcopy
 from dataclasses import dataclass, field
 from io import BytesIO
-from typing import TYPE_CHECKING, overload
-
-from plotnine.composition._plot_layout import plot_layout
-from plotnine.composition._types import ComposeAddable
+from typing import TYPE_CHECKING, cast, overload
 
 from .._utils.context import plot_composition_context
 from .._utils.ipython import (
@@ -16,6 +13,8 @@ from .._utils.ipython import (
     is_inline_backend,
 )
 from .._utils.quarto import is_knitr_engine, is_quarto_environment
+from ..composition._plot_layout import plot_layout
+from ..composition._types import ComposeAddable
 from ..options import get_option
 from ._plotspec import plotspec
 
@@ -91,9 +90,13 @@ class Compose:
     The objects to be arranged (composed)
     """
 
-    _plot_layout: plot_layout = field(init=False, repr=False)
+    _layout: plot_layout = field(
+        init=False, repr=False, default_factory=plot_layout
+    )
     """
-    The instance of plot_layout added to the composition
+    Every composition gets initiated with an empty plot_layout whose
+    attributes are either dynamically generated before the composition
+    is drawn, or they are overwritten by a layout added by the user.
     """
 
     # These are created in the _create_figure method
@@ -109,8 +112,6 @@ class Compose:
             op if isinstance(op, Compose) else deepcopy(op)
             for op in self.items
         ]
-        self.nrow = 1
-        self.ncol = 1
 
     def __repr__(self):
         """
@@ -127,6 +128,46 @@ class Compose:
             self.show()
             return ""
         return super().__repr__()
+
+    @property
+    def layout(self) -> plot_layout:
+        """
+        The plot_layout of this composition
+        """
+        return self._layout
+
+    @layout.setter
+    def layout(self, value: plot_layout):
+        """
+        Add (or merge) a plot_layout to this composition
+        """
+        if self.has_layout:
+            _new_layout = copy(self.layout)
+            _new_layout.update(value)
+        else:
+            _new_layout = value
+
+        self._layout = _new_layout
+
+    @property
+    def nrow(self) -> int:
+        return cast("int", self.layout.nrow)
+
+    @property
+    def ncol(self) -> int:
+        return cast("int", self.layout.ncol)
+
+    @property
+    def has_layout(self) -> bool:
+        return hasattr(self, "_layout")
+
+    @abc.abstractmethod
+    def _finalise_layout(self):
+        """
+        Verify that the layout is compatible with the composition
+
+        Raises a ValueError if layout is not compatible
+        """
 
     @abc.abstractmethod
     def __or__(self, rhs: ggplot | Compose) -> Compose:
@@ -226,7 +267,7 @@ class Compose:
 
     def __len__(self) -> int:
         """
-        Number of operand
+        Number of operands
         """
         return len(self.items)
 
@@ -334,14 +375,13 @@ class Compose:
         """
         from plotnine._mpl.gridspec import p9GridSpec
 
+        # TODO: Merge these two calls
+        self._finalise_layout()
+        self._layout._setup()
+
         self.gridspec = p9GridSpec(
             self.nrow, self.ncol, figure, nest_into=nest_into
         )
-
-        if not hasattr(self, "_plot_layout"):
-            self._plot_layout = plot_layout()
-
-        self._plot_layout._setup(self.nrow, self.ncol)
 
     def _setup(self) -> Figure:
         """

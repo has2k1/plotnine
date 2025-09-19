@@ -3,6 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
+from ..composition._plot_layout import plot_layout
 from ._compose import Compose
 
 if TYPE_CHECKING:
@@ -31,17 +32,13 @@ class Beside(Compose):
     plotnine.composition.Compose : For more on composing plots
     """
 
-    def __post_init__(self):
-        super().__post_init__()
-        self.ncol = len(self)
-
     def __or__(self, rhs: ggplot | Compose) -> Compose:
         """
         Add rhs as a column
         """
         # This is adjacent or i.e. (OR | rhs) so we collapse the
         # operands into a single operation
-        return Beside([*self, rhs])
+        return Beside([*self, rhs]) + self.layout
 
     def __truediv__(self, rhs: ggplot | Compose) -> Compose:
         """
@@ -50,3 +47,17 @@ class Beside(Compose):
         from ._stack import Stack
 
         return Stack([self, rhs])
+
+    def _finalise_layout(self):
+        if not self.has_layout:
+            self.layout = plot_layout()
+
+        if self.layout.ncol is None:
+            self.layout.ncol = len(self)
+        elif self.layout.ncol < len(self):
+            raise ValueError(
+                "Specified fewer columns than the items in the composition."
+            )
+
+        if self.layout.nrow is None:
+            self.layout.nrow = 1

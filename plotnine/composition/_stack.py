@@ -3,6 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
+from ..composition._plot_layout import plot_layout
 from ._compose import Compose
 
 if TYPE_CHECKING:
@@ -31,17 +32,13 @@ class Stack(Compose):
     plotnine.composition.Compose : For more on composing plots
     """
 
-    def __post_init__(self):
-        super().__post_init__()
-        self.nrow = len(self)
-
     def __truediv__(self, rhs: ggplot | Compose) -> Compose:
         """
         Add rhs as a row
         """
         # This is an adjacent div i.e. (DIV | rhs) so we collapse the
         # operands into a single operation
-        return Stack([*self, rhs])
+        return Stack([*self, rhs]) + self.layout
 
     def __or__(self, rhs: ggplot | Compose) -> Compose:
         """
@@ -50,3 +47,17 @@ class Stack(Compose):
         from ._beside import Beside
 
         return Beside([self, rhs])
+
+    def _finalise_layout(self):
+        if not self.has_layout:
+            self.layout = plot_layout()
+
+        if self.layout.nrow is None:
+            self.layout.nrow = len(self)
+        elif self.layout.nrow < len(self):
+            raise ValueError(
+                "Specified fewer rows than the items in the composition."
+            )
+
+        if self.layout.ncol is None:
+            self.layout.ncol = 1
