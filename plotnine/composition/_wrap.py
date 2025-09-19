@@ -1,8 +1,9 @@
 from __future__ import annotations
 
-from plotnine.composition._plot_layout import plot_layout
-from plotnine.ggplot import ggplot
+from copy import copy
 
+from ..composition._plot_layout import plot_layout
+from ..ggplot import ggplot
 from ._compose import Compose
 
 
@@ -36,36 +37,19 @@ class Wrap(Compose):
     plotnine.composition.Compose : For more on composing plots
     """
 
-    def __init__(
-        self,
-        items: list[ggplot | Compose],
-        *,
-        nrow: int | None = None,
-        ncol: int | None = None,
-    ):
-        self.items = items
-        super().__post_init__()
-        self._wrap_plots(nrow, ncol)
-
-    def _wrap_plots(self, nrow: int | None, ncol: int | None):
-        """
-        Wrap plots (and subcompositions) into rows and columns
-        """
-        from plotnine.facets.facet_wrap import wrap_dims
-
-        self.nrow, self.ncol = wrap_dims(len(self), nrow, ncol)
-
     def __add__(self, rhs):
         """
         Add rhs
         """
-        if isinstance(rhs, plot_layout) and (rhs.nrow or rhs.ncol):
-            self._wrap_plots(rhs.nrow, rhs.ncol)
+        if isinstance(rhs, plot_layout):
+            self = copy(self)
+            self.layout = rhs
+            return self
 
         if not isinstance(rhs, (ggplot, Compose)):
             return super().__add__(rhs)
 
-        return Wrap([*self, rhs])
+        return Wrap([*self, rhs]) + self.layout
 
     def __or__(self, rhs: ggplot | Compose) -> Compose:
         """
@@ -82,3 +66,13 @@ class Wrap(Compose):
         from ._stack import Stack
 
         return Stack([self, rhs])
+
+    def _finalise_layout(self):
+        from plotnine.facets.facet_wrap import wrap_dims
+
+        if not self.has_layout:
+            self.layout = plot_layout()
+
+        self.layout.nrow, self.layout.ncol = wrap_dims(
+            len(self), self.layout.nrow, self.layout.ncol
+        )

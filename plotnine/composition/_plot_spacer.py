@@ -39,7 +39,7 @@ class plot_spacer(ggplot):
         if fill:
             self.theme += theme(plot_background=element_rect(fill=fill))
 
-    def __add__(self, rhs) -> plot_spacer:
+    def __add__(self, rhs) -> plot_spacer:  # pyright: ignore[reportIncompatibleMethodOverride]
         """
         Add to spacer
 

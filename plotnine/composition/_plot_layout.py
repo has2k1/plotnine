@@ -1,11 +1,10 @@
 from __future__ import annotations
 
-from copy import copy
 from dataclasses import dataclass
 from itertools import cycle
-from typing import TYPE_CHECKING, Sequence
+from typing import TYPE_CHECKING, Sequence, cast
 
-from plotnine.composition._types import ComposeAddable
+from ..composition._types import ComposeAddable
 
 if TYPE_CHECKING:
     from ._compose import Compose
@@ -41,15 +40,17 @@ class plot_layout(ComposeAddable):
         """
         Add plot layout to composition
         """
-        cmp._plot_layout = copy(self)
+        cmp.layout = self
         return cmp
 
-    def _setup(self, nrow: int, ncol: int):
+    def _setup(self):
         """
         Setup default parameters as they are expected by the layout manager
 
         - Ensure that the widths and heights are set and normalised to unit sum
         """
+        nrow = cast("int", self.nrow)
+        ncol = cast("int", self.ncol)
         ws, hs = self.widths, self.heights
         if ws is None:
             ws = (1 / ncol,) * ncol
@@ -63,6 +64,19 @@ class plot_layout(ComposeAddable):
 
         self.widths = normalise(ws)
         self.heights = normalise(hs)
+
+    def update(self, other: plot_layout):
+        """
+        Update this layout with the contents of other
+        """
+        if other.widths:
+            self.widths = other.widths
+        if other.heights:
+            self.heights = other.heights
+        if other.ncol:
+            self.ncol = other.ncol
+        if other.nrow:
+            self.nrow = other.nrow
 
 
 def repeat(seq: Sequence[float], n: int) -> list[float]:
