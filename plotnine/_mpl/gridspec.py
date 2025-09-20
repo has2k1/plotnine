@@ -243,6 +243,20 @@ class p9GridSpec(GridSpecBase):
         """
         return TransformedBbox(self.bbox_relative, self.figure.transSubfigure)
 
+    @property
+    def width(self) -> float:
+        """
+        Width of bbox in figure space
+        """
+        return self.bbox_relative.width
+
+    @property
+    def height(self) -> float:
+        """
+        Height of bbox in figure space
+        """
+        return self.bbox_relative.height
+
     def to_transform(self) -> Transform:
         """
         Return transform of this gridspec

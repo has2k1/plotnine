@@ -924,14 +924,14 @@ class LayoutSpaces:
         """
         Width [figure dimensions] of the whole plot
         """
-        return self.plot._gridspec.bbox_relative.width
+        return float(self.plot._gridspec.width)
 
     @property
     def plot_height(self) -> float:
         """
         Height [figure dimensions] of the whole plot
         """
-        return self.plot._gridspec.bbox_relative.height
+        return float(self.plot._gridspec.height)
 
     @property
     def panel_width(self) -> float:

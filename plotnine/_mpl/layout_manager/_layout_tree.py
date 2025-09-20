@@ -258,42 +258,42 @@ class LayoutTree:
     @property
     def panel_width(self) -> float:
         """
-        A representative width for panels of the nodes
+        A width of all panels in this composition
         """
         return sum(self.panel_widths)
 
     @property
     def panel_height(self) -> float:
         """
-        A representative height for panels of the nodes
+        A height of all panels in this composition
         """
         return sum(self.panel_heights)
 
     @property
     def plot_width(self) -> float:
         """
-        A representative for width for plots of the nodes
+        A width of all plots in this tree/composition
         """
-        return sum(self.plot_widths)
+        return self.gridspec.width
 
     @property
     def plot_height(self) -> float:
         """
-        A representative for height for plots of the nodes
+        A height of all plots in this tree/composition
         """
-        return sum(self.plot_heights)
+        return self.gridspec.height
 
     @property
     def panel_widths(self) -> Sequence[float]:
         """
         Widths [figure space] of the panels along horizontal dimension
-
-        For each column, the effective panel width is the width of the
-        shortest panel.
         """
-        n = self.ncol
+        # This method is used after aligning the panels. Therefore, the
+        # wides panel_width (i.e. max()) is the good representative width
+        # of the column.
+        w = self.plot_width / self.ncol
         return [
-            max([node.panel_width if node else 1 / n for node in col])
+            max(node.panel_width for node in col if node) if any(col) else w
             for col in self.grid.iter_cols()
         ]
 
@@ -301,12 +301,10 @@ class LayoutTree:
     def panel_heights(self) -> Sequence[float]:
         """
         Heights [figure space] of the panels along vertical dimension
-
-        For each row, the representative height is that of the shortest panel.
         """
-        n = self.nrow
+        h = self.plot_height / self.nrow
         return [
-            max([node.panel_height if node else 1 / n for node in row])
+            max([node.panel_height for node in row if node]) if any(row) else h
             for row in self.grid.iter_rows()
         ]
 
@@ -315,11 +313,11 @@ class LayoutTree:
         """
         Widths [figure space] of the plots along horizontal dimension
 
-        For each column, the representative width is that of the shortest plot.
+        For each column, the representative width is that of the widest plot.
         """
-        n = self.ncol
+        w = self.gridspec.width / self.ncol
         return [
-            max([node.plot_width if node else 1 / n for node in col])
+            max([node.plot_width if node else w for node in col])
             for col in self.grid.iter_cols()
         ]
 
@@ -328,13 +326,31 @@ class LayoutTree:
         """
         Heights [figure space] of the plots along vertical dimension
 
-        For each row, the representative height is that of the shortest plot.
+        For each row, the representative height is that of the tallest plot.
         """
-        n = self.nrow
+        h = self.gridspec.height / self.nrow
         return [
-            max([node.plot_height if node else 1 / n for node in row])
+            max([node.plot_height if node else h for node in row])
             for row in self.grid.iter_rows()
         ]
+
+    @property
+    def panel_width_ratios(self) -> Sequence[float]:
+        """
+        The relative widths of the panels in the composition
+
+        These are normalised to have a mean = 1.
+        """
+        return cast("Sequence[float]", self.cmp._layout.widths)
+
+    @property
+    def panel_height_ratios(self) -> Sequence[float]:
+        """
+        The relative heights of the panels in the composition
+
+        These are normalised to have a mean = 1.
+        """
+        return cast("Sequence[float]", self.cmp._layout.heights)
 
     def bottom_spaces_in_row(self, r: int) -> list[bottom_spaces]:
         spaces: list[bottom_spaces] = []
@@ -509,21 +525,22 @@ class LayoutTree:
             tree.align_axis_titles()
 
     def resize_widths(self):
-        n = self.ncol
-        resize_ratios = np.array(self.cmp._layout.widths)
-        base_panel_widths = np.ones(n) * self.panel_width
-        scaled_panel_widths = base_panel_widths * resize_ratios
+        # The scaling calcuation to get the new panel width is
+        # straight-forward because the ratios have a mean of 1.
+        # So the multiplication preserves the total panel width.
+        new_panel_widths = np.mean(self.panel_widths) * np.array(
+            self.panel_width_ratios
+        )
         non_panel_space = np.array(self.plot_widths) - self.panel_widths
-        new_plot_widths = scaled_panel_widths + non_panel_space
+        new_plot_widths = new_panel_widths + non_panel_space
         width_ratios = new_plot_widths / new_plot_widths.max()
         self.gridspec.set_width_ratios(width_ratios)
 
     def resize_heights(self):
-        n = self.nrow
-        resize_ratios = np.array(self.cmp._layout.heights)
-        base_panel_heights = np.ones(n) * self.panel_height
-        scaled_panel_heights = base_panel_heights * resize_ratios
+        new_panel_heights = np.mean(self.panel_heights) * np.array(
+            self.panel_height_ratios
+        )
         non_panel_space = np.array(self.plot_heights) - self.panel_heights
-        new_plot_heights = scaled_panel_heights + non_panel_space
+        new_plot_heights = new_panel_heights + non_panel_space
         height_ratios = new_plot_heights / new_plot_heights.max()
         self.gridspec.set_height_ratios(height_ratios)
