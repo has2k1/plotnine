@@ -86,6 +86,11 @@ def repeat(seq: Sequence[float], n: int) -> list[float]:
     return [val for _, val in zip(range(n), cycle(seq))]
 
 
-def normalise(seq) -> list[float]:
-    total = sum(seq)
-    return [x / total for x in seq]
+def normalise(seq: Sequence[float]) -> list[float]:
+    """
+    Normalise seq so that the mean is 1
+    """
+    mean = sum(seq) / len(seq)
+    if mean == 0:
+        raise ValueError("Cannot rescale: mean is zero")
+    return [x / mean for x in seq]
