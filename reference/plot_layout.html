@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>stat_summary – plotnine {{&lt; var version &gt;}}</title>
+<title>plot_layout – plotnine {{&lt; var version &gt;}}</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -154,10 +154,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#plotnine.stat_summary" id="toc-plotnine.stat_summary" class="nav-link active" data-scroll-target="#plotnine.stat_summary"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.stat_summary</span></a></li>
-  <li><a href="#parameters" id="toc-parameters" class="nav-link" data-scroll-target="#parameters">Parameters</a></li>
-  <li><a href="#notes" id="toc-notes" class="nav-link" data-scroll-target="#notes">Notes</a></li>
-  <li><a href="#see-also" id="toc-see-also" class="nav-link" data-scroll-target="#see-also">See Also</a></li>
+  <li><a href="#plotnine.composition.plot_layout" id="toc-plotnine.composition.plot_layout" class="nav-link active" data-scroll-target="#plotnine.composition.plot_layout"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.composition.plot_layout</span></a></li>
+  <li><a href="#parameter-attributes" id="toc-parameter-attributes" class="nav-link" data-scroll-target="#parameter-attributes">Parameter Attributes</a></li>
   </ul>
 </nav>
     </div>
@@ -168,152 +166,30 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <header id="title-block-header" class="quarto-title-block default">
-<section id="plotnine.stat_summary" class="level1 title doc-object doc-class doc-has-member-docs quarto-title display-7">
-<h1 class="title doc-object doc-class doc-has-member-docs"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.stat_summary</span></h1>
+<section id="plotnine.composition.plot_layout" class="level1 title doc-object doc-class doc-has-member-docs quarto-title display-7">
+<h1 class="title doc-object doc-class doc-has-member-docs"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.composition.plot_layout</span></h1>
 </section>
 </header>
+<div class="doc-signature doc-class">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>plot_layout(<span class="op">*</span>, widths<span class="op">=</span><span class="va">None</span>, heights<span class="op">=</span><span class="va">None</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 <div class="doc-text">
-<p>Calculate summary statistics depending on x</p>
-<div class="doc-signature doc-class doc-usage">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>stat_summary(</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    mapping<span class="op">=</span><span class="va">None</span>,</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span><span class="va">None</span>,</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span>,</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    geom<span class="op">=</span><span class="st">"pointrange"</span>,</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    position<span class="op">=</span><span class="st">"identity"</span>,</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    na_rm<span class="op">=</span><span class="va">False</span>,</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    fun_data<span class="op">=</span><span class="st">"mean_cl_boot"</span>,</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    fun_y<span class="op">=</span><span class="va">None</span>,</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    fun_ymin<span class="op">=</span><span class="va">None</span>,</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    fun_ymax<span class="op">=</span><span class="va">None</span>,</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    fun_args<span class="op">=</span><span class="va">None</span>,</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    random_state<span class="op">=</span><span class="va">None</span>,</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    <span class="op">**</span>kwargs</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Customise the layout of plots in a composition</p>
 </div>
-</div>
-<section id="parameters" class="level2 doc-parameters">
-<h2 class="doc-parameters anchored" data-anchor-id="parameters">Parameters</h2>
+<section id="parameter-attributes" class="level2 doc-parameter-attributes">
+<h2 class="doc-parameter-attributes anchored" data-anchor-id="parameter-attributes">Parameter Attributes</h2>
 <div class="doc-definition-items">
 <dl>
-<dt><code><span class="doc-parameter-name">mapping</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="../reference/aes.html#plotnine.aes">aes</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
+<dt><code>widths: <a href="https://docs.python.org/3/library/typing.html#typing.Sequence">Sequence</a>[<a href="https://docs.python.org/3/library/functions.html#float">float</a>] | None = None</code></dt>
 <dd>
-<p>Aesthetic mappings created with <a href="../reference/aes.html#plotnine.aes">aes</a>. If specified and <code class="sourceCode python">inherit_aes<span class="op">=</span><span class="va">True</span></code>, it is combined with the default mapping for the plot. You must supply mapping if there is no plot mapping.</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 19%">
-<col style="width: 25%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Aesthetic</th>
-<th>Default value</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>x</strong></td>
-<td></td>
-</tr>
-<tr class="even">
-<td><strong>y</strong></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<p>The <strong>bold</strong> aesthetics are required.</p>
-<p><strong>Options for computed aesthetics</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">"ymin"</span>  <span class="co"># ymin computed by the summary function</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">"ymax"</span>  <span class="co"># ymax computed by the summary function</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">"n"</span>     <span class="co"># Number of observations at a position</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Calculated aesthetics are accessed using the <code>after_stat</code> function. e.g.&nbsp;<code class="sourceCode python">after_stat(<span class="st">'ymin'</span>)</code>.</p>
+<p>Relative widths of each column</p>
 </dd>
-<dt><code><span class="doc-parameter-name">data</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
+<dt><code>heights: <a href="https://docs.python.org/3/library/typing.html#typing.Sequence">Sequence</a>[<a href="https://docs.python.org/3/library/functions.html#float">float</a>] | None = None</code></dt>
 <dd>
-<p>The data to be displayed in this layer. If <code class="sourceCode python"><span class="va">None</span></code>, the data from from the <code class="sourceCode python">ggplot()</code> call is used. If specified, it overrides the data from the <code class="sourceCode python">ggplot()</code> call.</p>
-</dd>
-<dt><code><span class="doc-parameter-name">geom</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> | <a href="../reference/geom.html#plotnine.geoms.geom.geom">geom</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default"><span class="st">"pointrange"</span></span></code></dt>
-<dd>
-<p>The statistical transformation to use on the data for this layer. If it is a string, it must be the registered and known to Plotnine.</p>
-</dd>
-<dt><code><span class="doc-parameter-name">position</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> | <a href="../reference/position.html#plotnine.positions.position.position">position</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default"><span class="st">"identity"</span></span></code></dt>
-<dd>
-<p>Position adjustment. If it is a string, it must be registered and known to Plotnine.</p>
-</dd>
-<dt><code><span class="doc-parameter-name">na_rm</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#bool">bool</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">False</span></code></dt>
-<dd>
-<p>If <code class="sourceCode python"><span class="va">False</span></code>, removes missing values with a warning. If <code class="sourceCode python"><span class="va">True</span></code> silently removes missing values.</p>
-</dd>
-<dt><code><span class="doc-parameter-name">fun_data</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> | <a href="https://docs.python.org/3/library/functions.html#callable">callable</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default"><span class="st">"mean_cl_boot"</span></span></code></dt>
-<dd>
-<p>If string, it should be one of:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bootstrapped mean, confidence interval</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Arguments:</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">#     n_samples - No. of samples to draw</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">#     confidence_interval</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">#     random_state</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">"mean_cl_boot"</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Mean, C.I. assuming normal distribution</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Arguments:</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co">#     confidence_interval</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co">"mean_cl_normal"</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Mean, standard deviation * constant</span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Arguments:</span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co">#     mult - multiplication factor</span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co">"mean_sdl"</span></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Median, outlier quantiles with equal tail areas</span></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Arguments:</span></span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="co">#     confidence_interval</span></span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="co">"median_hilow"</span></span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Mean, Standard Errors * constant</span></span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Arguments:</span></span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="co">#     mult - multiplication factor</span></span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="co">"mean_se"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>or any function that takes a array and returns a dataframe with three columns named <code>y</code>, <code>ymin</code> and <code>ymax</code>.</p>
-</dd>
-<dt><code><span class="doc-parameter-name">fun_y</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#callable">callable</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
-<dd>
-<p>Any function that takes a array_like and returns a value</p>
-</dd>
-<dt><code><span class="doc-parameter-name">fun_ymin</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#callable">callable</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
-<dd>
-<p>Any function that takes an array_like and returns a value</p>
-</dd>
-<dt><code><span class="doc-parameter-name">fun_ymax</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#callable">callable</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
-<dd>
-<p>Any function that takes an array_like and returns a value</p>
-</dd>
-<dt><code><span class="doc-parameter-name">fun_args</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#dict">dict</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
-<dd>
-<p>Arguments to any of the functions. Provided the names of the arguments of the different functions are in not conflict, the arguments will be assigned to the right functions. If there is a conflict, create a wrapper function that resolves the ambiguity in the argument names.</p>
-</dd>
-<dt><code><span class="doc-parameter-name">random_state</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#int">int</a> | <a href="https://numpy.org/doc/stable/reference/random/legacy.html#numpy.random.RandomState">RandomState</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
-<dd>
-<p>Seed or Random number generator to use. If <code>None</code>, then numpy global generator <a href="https://numpy.org/doc/stable/reference/random/index.html#module-numpy.random"><code>numpy.random</code></a> is used.</p>
-</dd>
-<dt><code><span class="doc-parameter-name">**kwargs</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/typing.html#typing.Any">Any</a></span></code></dt>
-<dd>
-<p>Aesthetics or parameters used by the <code>geom</code>.</p>
+<p>Relative heights of each column</p>
 </dd>
 </dl>
 </div>
-</section>
-<section id="notes" class="level2 doc-notes">
-<h2 class="doc-notes anchored" data-anchor-id="notes">Notes</h2>
-<p>If any of <code>fun_y</code>, <code>fun_ymin</code> or <code>fun_ymax</code> are provided, the value of <code>fun_data</code> will be ignored.</p>
-</section>
-<section id="see-also" class="level2 doc-see-also">
-<h2 class="doc-see-also anchored" data-anchor-id="see-also">See Also</h2>
-<dl>
-<dt><a href="../reference/geom_pointrange.html#plotnine.geom_pointrange"><code>geom_pointrange</code></a></dt>
-<dd>
-<p>The default <code>geom</code> for this <code>stat</code>.</p>
-</dd>
-</dl>
 
 
 </section>

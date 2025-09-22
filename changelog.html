@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.21">
+<meta name="generator" content="quarto-1.9.0">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Changelog – plotnine 999.post1+g84e698885</title>
+<title>Changelog – plotnine 999.post1+g41da5fc24</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -73,7 +73,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-ea1d7ac60288e0f1efdbc993fd8432ae.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-0ed29b1f0e6f007c337b74d6a5232f88.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap-1912389b6e37ba0fc4e3a7db544ffd34.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
@@ -118,7 +118,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a href="./index.html" class="navbar-brand navbar-brand-logo">
     </a>
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">plotnine 999.post1+g84e698885</span>
+    <span class="navbar-title">plotnine 999.post1+g41da5fc24</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -154,7 +154,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#v0.15.1" id="toc-v0.15.1" class="nav-link active" data-scroll-target="#v0.15.1">v0.15.1</a>
+  <li><a href="#v0.16.0" id="toc-v0.16.0" class="nav-link active" data-scroll-target="#v0.16.0">v0.16.0</a>
   <ul class="collapse">
   <li><a href="#new" id="toc-new" class="nav-link" data-scroll-target="#new">New</a></li>
   <li><a href="#enhancements" id="toc-enhancements" class="nav-link" data-scroll-target="#enhancements">Enhancements</a></li>
@@ -335,14 +335,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="v0.15.1" class="level2">
-<h2 class="anchored" data-anchor-id="v0.15.1">v0.15.1</h2>
+<section id="v0.16.0" class="level2">
+<h2 class="anchored" data-anchor-id="v0.16.0">v0.16.0</h2>
 <p>(not-yet-released)</p>
 <section id="new" class="level3">
 <h3 class="anchored" data-anchor-id="new">New</h3>
 <ul>
 <li><p>Added <a href="./reference/scale_stroke_identity.html#plotnine.scale_stroke_identity"><code>scale_stroke_identity</code></a> which was conspicuously missing!</p></li>
 <li><p>Added <code>show</code>, making it possible to output/show plot composition objects when they are not the last object in a cell.</p></li>
+<li><p>Added <a href="./reference/plot_layout.html#plotnine.composition.plot_layout"><code>plot_layout</code></a> with which you can customise the layout of plots in composition.</p></li>
 </ul>
 </section>
 <section id="enhancements" class="level3">
@@ -1331,13 +1332,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy
