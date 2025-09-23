@@ -58,6 +58,11 @@ class Compose:
     :   Arrange operands side by side _and_ at the same nesting level.
         Also powered by the subclass [](`~plotnine.composition.Beside`).
 
+    `+`
+
+    :   Arrange operands in a 2D grid.
+        Powered by the subclass [](`~plotnine.composition.Wrap`).
+
     ### 2. Plot Modifying Operators
 
     The modify all or some of the plots in a composition.
@@ -82,6 +87,7 @@ class Compose:
     --------
     plotnine.composition.Beside : To arrange plots side by side
     plotnine.composition.Stack : To arrange plots vertically
+    plotnine.composition.Stack : To arrange in a grid
     plotnine.composition.plot_spacer : To add a blank space between plots
     """
 
