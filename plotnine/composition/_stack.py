@@ -3,7 +3,6 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
-from ..composition._plot_layout import plot_layout
 from ._compose import Compose
 
 if TYPE_CHECKING:
@@ -47,17 +46,3 @@ class Stack(Compose):
         from ._beside import Beside
 
         return Beside([self, rhs])
-
-    def _finalise_layout(self):
-        if not self.has_layout:
-            self.layout = plot_layout()
-
-        if self.layout.nrow is None:
-            self.layout.nrow = len(self)
-        elif self.layout.nrow < len(self):
-            raise ValueError(
-                "Specified fewer rows than the items in the composition."
-            )
-
-        if self.layout.ncol is None:
-            self.layout.ncol = 1
