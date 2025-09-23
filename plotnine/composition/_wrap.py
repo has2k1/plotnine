@@ -1,8 +1,5 @@
 from __future__ import annotations
 
-from copy import copy
-
-from ..composition._plot_layout import plot_layout
 from ..ggplot import ggplot
 from ._compose import Compose
 

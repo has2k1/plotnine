@@ -1,9 +1,8 @@
 from __future__ import annotations
 
-from copy import copy
 from dataclasses import dataclass, field
 from itertools import cycle
-from typing import TYPE_CHECKING, Sequence, cast
+from typing import TYPE_CHECKING, Sequence
 
 from ..composition._types import ComposeAddable
 
