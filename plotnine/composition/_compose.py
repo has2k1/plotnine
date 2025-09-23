@@ -162,14 +162,6 @@ class Compose:
         return hasattr(self, "_layout")
 
     @abc.abstractmethod
-    def _finalise_layout(self):
-        """
-        Verify that the layout is compatible with the composition
-
-        Raises a ValueError if layout is not compatible
-        """
-
-    @abc.abstractmethod
     def __or__(self, rhs: ggplot | Compose) -> Compose:
         """
         Add rhs as a column
@@ -375,9 +367,7 @@ class Compose:
         """
         from plotnine._mpl.gridspec import p9GridSpec
 
-        # TODO: Merge these two calls
-        self._finalise_layout()
-        self._layout._setup()
+        self._layout._setup(self)
 
         self.gridspec = p9GridSpec(
             self.nrow, self.ncol, figure, nest_into=nest_into

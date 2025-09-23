@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from copy import copy
+from dataclasses import dataclass, field
 from itertools import cycle
 from typing import TYPE_CHECKING, Sequence, cast
 
@@ -36,6 +37,11 @@ class plot_layout(ComposeAddable):
     Number of columns
     """
 
+    _cmp: Compose = field(init=False, repr=False)
+    """
+    Composition that this layout is attached to
+    """
+
     def __radd__(self, cmp: Compose) -> Compose:
         """
         Add plot layout to composition
@@ -43,14 +49,43 @@ class plot_layout(ComposeAddable):
         cmp.layout = self
         return cmp
 
-    def _setup(self):
+    def _setup(self, cmp: Compose):
         """
         Setup default parameters as they are expected by the layout manager
 
-        - Ensure that the widths and heights are set and normalised to unit sum
+        - Ensure nrow and ncol have values
+        - Ensure the widths & heights are set and normalised to mean=1
         """
-        nrow = cast("int", self.nrow)
-        ncol = cast("int", self.ncol)
+        from . import Beside, Stack
+
+        # setup nrow & ncol
+        if isinstance(cmp, Beside):
+            if self.ncol is None:
+                self.ncol = len(cmp)
+            elif self.ncol < len(cmp):
+                raise ValueError(
+                    "Composition has more items than the layout can handle"
+                )
+            if self.nrow is None:
+                self.nrow = 1
+        elif isinstance(cmp, Stack):
+            if self.nrow is None:
+                self.nrow = len(cmp)
+            elif self.nrow < len(cmp):
+                raise ValueError(
+                    "Composition has more items than the layout can handle"
+                )
+
+            if self.ncol is None:
+                self.ncol = 1
+        else:
+            from plotnine.facets.facet_wrap import wrap_dims
+
+            self.nrow, self.ncol = wrap_dims(len(cmp), self.nrow, self.ncol)
+
+        nrow, ncol = self.nrow, self.ncol
+
+        # setup widths & heights
         ws, hs = self.widths, self.heights
         if ws is None:
             ws = (1 / ncol,) * ncol

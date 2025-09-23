@@ -41,11 +41,6 @@ class Wrap(Compose):
         """
         Add rhs
         """
-        if isinstance(rhs, plot_layout):
-            self = copy(self)
-            self.layout = rhs
-            return self
-
         if not isinstance(rhs, (ggplot, Compose)):
             return super().__add__(rhs)
 
@@ -66,13 +61,3 @@ class Wrap(Compose):
         from ._stack import Stack
 
         return Stack([self, rhs])
-
-    def _finalise_layout(self):
-        from plotnine.facets.facet_wrap import wrap_dims
-
-        if not self.has_layout:
-            self.layout = plot_layout()
-
-        self.layout.nrow, self.layout.ncol = wrap_dims(
-            len(self), self.layout.nrow, self.layout.ncol
-        )
