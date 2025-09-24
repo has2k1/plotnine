@@ -147,13 +147,8 @@ class Compose:
         """
         Add (or merge) a plot_layout to this composition
         """
-        if self.has_layout:
-            _new_layout = copy(self.layout)
-            _new_layout.update(value)
-        else:
-            _new_layout = value
-
-        self._layout = _new_layout
+        self._layout = copy(self.layout)
+        self._layout.update(value)
 
     @property
     def nrow(self) -> int:
@@ -162,10 +157,6 @@ class Compose:
     @property
     def ncol(self) -> int:
         return cast("int", self.layout.ncol)
-
-    @property
-    def has_layout(self) -> bool:
-        return hasattr(self, "_layout")
 
     @abc.abstractmethod
     def __or__(self, rhs: ggplot | Compose) -> Compose:
