@@ -364,7 +364,7 @@ class Compose:
         """
         from plotnine._mpl.gridspec import p9GridSpec
 
-        self._layout._setup(self)
+        self.layout._setup(self)
 
         self.gridspec = p9GridSpec(
             self.nrow, self.ncol, figure, nest_into=nest_into
