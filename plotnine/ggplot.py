@@ -253,9 +253,11 @@ class ggplot:
             Either an object that knows how to "radd"
             itself to a ggplot, or a list of such objects.
         """
+        from .composition import Compose
+
         self = deepcopy(self)
 
-        if isinstance(rhs, ggplot):
+        if isinstance(rhs, (ggplot, Compose)):
             from .composition import Wrap
 
             return Wrap([self, rhs])

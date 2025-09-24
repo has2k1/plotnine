@@ -1,3 +1,5 @@
+import pytest
+
 from plotnine import (
     element_text,
     facet_grid,
@@ -272,3 +274,47 @@ def test_plot_layout_association():
     c2 = (p4 + p5) + plot_layout(widths=(2, 1))
     p = (c1 + c2) + plot_layout(nrow=2, widths=(1, 2))
     assert p == "plot_layout_association"
+
+
+def test_add_into_beside():
+    p1 = plot.red
+    p2 = plot.green
+    p3 = plot.blue
+
+    p = (p1 | p2) + p3
+    assert p == "add_into_ncol"
+
+
+def test_add_into_stack():
+    p1 = plot.red
+    p2 = plot.green
+    p3 = plot.blue
+
+    p = (p1 / p2) + p3
+    assert p == "add_into_stack"
+
+
+def test_add_into_beside_error():
+    p1 = plot.red
+    p2 = plot.green
+    p3 = plot.blue
+
+    c1 = (p1 | p2) + plot_layout(ncol=2)
+
+    with pytest.raises(ValueError) as ve:
+        (c1 + p3).draw()
+
+    assert "more items than the layout columns" in str(ve.value)
+
+
+def test_add_into_stack_error():
+    p1 = plot.red
+    p2 = plot.green
+    p3 = plot.blue
+
+    c1 = (p1 / p2) + plot_layout(nrow=2)
+
+    with pytest.raises(ValueError) as ve:
+        (c1 + p3).draw()
+
+    assert "more items than the layout rows" in str(ve.value)
