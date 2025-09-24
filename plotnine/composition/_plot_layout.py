@@ -63,7 +63,7 @@ class plot_layout(ComposeAddable):
                 self.ncol = len(cmp)
             elif self.ncol < len(cmp):
                 raise ValueError(
-                    "Composition has more items than the layout can handle"
+                    "Composition has more items than the layout columns."
                 )
             if self.nrow is None:
                 self.nrow = 1
@@ -72,7 +72,7 @@ class plot_layout(ComposeAddable):
                 self.nrow = len(cmp)
             elif self.nrow < len(cmp):
                 raise ValueError(
-                    "Composition has more items than the layout can handle"
+                    "Composition has more items than the layout rows."
                 )
 
             if self.ncol is None:

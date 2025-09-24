@@ -46,3 +46,14 @@ class Beside(Compose):
         from ._stack import Stack
 
         return Stack([self, rhs])
+
+    def __add__(self, rhs):
+        """
+        Add rhs into the besides composition
+        """
+        from plotnine import ggplot
+
+        if not isinstance(rhs, (ggplot, Compose)):
+            return super().__add__(rhs)
+
+        return self | rhs

@@ -36,7 +36,7 @@ class Wrap(Compose):
 
     def __add__(self, rhs):
         """
-        Add rhs
+        Add rhs into the wrapping composition
         """
         if not isinstance(rhs, (ggplot, Compose)):
             return super().__add__(rhs)

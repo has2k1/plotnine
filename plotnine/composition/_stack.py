@@ -46,3 +46,14 @@ class Stack(Compose):
         from ._beside import Beside
 
         return Beside([self, rhs])
+
+    def __add__(self, rhs):
+        """
+        Add rhs into the stacking composition
+        """
+        from plotnine import ggplot
+
+        if not isinstance(rhs, (ggplot, Compose)):
+            return super().__add__(rhs)
+
+        return self / rhs
