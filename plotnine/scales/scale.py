@@ -31,8 +31,8 @@ if TYPE_CHECKING:
 
 @dataclass(kw_only=True)
 class scale(
-    Generic[RangeT, BreaksUserT, LimitsUserT, GuideTypeT],
     ABC,
+    Generic[RangeT, BreaksUserT, LimitsUserT, GuideTypeT],
     metaclass=Register,
 ):
     """
