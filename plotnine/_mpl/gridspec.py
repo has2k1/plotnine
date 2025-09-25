@@ -169,9 +169,9 @@ class p9GridSpec(GridSpecBase):
         for gs in self._nested_gridspecs:
             gs._update_artists()
 
-    def layout(self, gsparams: GridSpecParams):
+    def update_params_and_artists(self, gsparams: GridSpecParams):
         """
-        Update the layout of the gridspec
+        Update gridpspec params and the artists
         """
         self.update(**asdict(gsparams))
         self._update_artists()

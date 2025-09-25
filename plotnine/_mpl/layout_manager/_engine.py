@@ -42,7 +42,7 @@ class PlotnineLayoutEngine(LayoutEngine):
             spaces = LayoutSpaces(self.plot)
 
         gsparams = spaces.get_gridspec_params()
-        self.plot.facet._panels_gridspec.layout(gsparams)
+        self.plot.facet._panels_gridspec.update_params_and_artists(gsparams)
         spaces.items._adjust_positions(spaces)
 
 
@@ -83,5 +83,5 @@ class PlotnineCompositionLayoutEngine(LayoutEngine):
                     PlotnineWarning,
                 )
                 break
-            plot.facet._panels_gridspec.layout(gsparams)
+            plot.facet._panels_gridspec.update_params_and_artists(gsparams)
             spaces.items._adjust_positions(spaces)
