@@ -318,3 +318,13 @@ def test_add_into_stack_error():
         (c1 + p3).draw()
 
     assert "more items than the layout rows" in str(ve.value)
+
+
+def test_plot_layout_byrow():
+    p1 = plot.red
+    p2 = plot.green
+    p3 = plot.blue
+    p4 = plot.yellow
+
+    p = (p1 + p2 + p3 + p4) + plot_layout(nrow=3, byrow=False)
+    assert p == "plot_layout_byrow"
