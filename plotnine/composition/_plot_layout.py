@@ -16,16 +16,6 @@ class plot_layout(ComposeAddable):
     Customise the layout of plots in a composition
     """
 
-    widths: Sequence[float] | None = None
-    """
-    Relative widths of each column
-    """
-
-    heights: Sequence[float] | None = None
-    """
-    Relative heights of each column
-    """
-
     nrow: int | None = None
     """
     Number of rows
@@ -34,6 +24,23 @@ class plot_layout(ComposeAddable):
     ncol: int | None = None
     """
     Number of columns
+    """
+
+    byrow: bool | None = None
+    """
+    How to place plots into the grid.
+    If None or True, they are placed row by row, left to right.
+    If False, they are placed column by column, top to bottom.
+    """
+
+    widths: Sequence[float] | None = None
+    """
+    Relative widths of each column
+    """
+
+    heights: Sequence[float] | None = None
+    """
+    Relative heights of each column
     """
 
     _cmp: Compose = field(init=False, repr=False)
@@ -84,6 +91,10 @@ class plot_layout(ComposeAddable):
 
         nrow, ncol = self.nrow, self.ncol
 
+        # byrow
+        if self.byrow is None:
+            self.byrow = True
+
         # setup widths & heights
         ws, hs = self.widths, self.heights
         if ws is None:
@@ -111,6 +122,8 @@ class plot_layout(ComposeAddable):
             self.ncol = other.ncol
         if other.nrow:
             self.nrow = other.nrow
+        if other.byrow is not None:
+            self.byrow = other.byrow
 
 
 def repeat(seq: Sequence[float], n: int) -> list[float]:

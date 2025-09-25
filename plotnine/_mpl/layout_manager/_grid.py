@@ -39,13 +39,13 @@ class Grid(Generic[T]):
                 self[r, c] = item
                 c += 1
                 if c >= ncol:
-                    c, r = 0, r + 1
+                    r, c = r + 1, 0
         else:
             for item in items:
                 self[r, c] = item
                 r += 1
                 if r >= nrow:
-                    c, r = r + 1, 0
+                    r, c = 0, c + 1
 
     @overload
     def __getitem__(self, index: tuple[int, int]) -> T | None: ...

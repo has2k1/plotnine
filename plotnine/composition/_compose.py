@@ -365,9 +365,8 @@ class Compose:
         from plotnine._mpl.gridspec import p9GridSpec
 
         self.layout._setup(self)
-
-        self.gridspec = p9GridSpec(
-            self.nrow, self.ncol, figure, nest_into=nest_into
+        self.gridspec = p9GridSpec.from_layout(
+            self.layout, figure=figure, nest_into=nest_into
         )
 
     def _setup(self) -> Figure:
@@ -404,7 +403,7 @@ class Compose:
             # "subplot" in the grid. The SubplotSpec is the handle that
             # allows us to set it up for a plot or to nest another gridspec
             # in it.
-            for item, subplot_spec in zip(cmp, cmp.gridspec):  # pyright: ignore[reportArgumentType]
+            for item, subplot_spec in zip(cmp, cmp.gridspec):
                 if isinstance(item, ggplot):
                     yield plotspec(
                         item,

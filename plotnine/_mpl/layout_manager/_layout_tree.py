@@ -127,7 +127,12 @@ class LayoutTree:
 
     def __post_init__(self):
         self.gridspec = self.cmp.gridspec
-        self.grid = Grid["Node"](self.nrow, self.ncol, self.nodes)
+        self.grid = Grid["Node"](
+            self.nrow,
+            self.ncol,
+            self.nodes,
+            order="row_major" if self.cmp.layout.byrow else "col_major",
+        )
 
     @property
     def ncol(self) -> int:
