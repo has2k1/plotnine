@@ -1,3 +1,5 @@
+from typing import TYPE_CHECKING, cast
+
 import numpy as np
 import pandas as pd
 
@@ -5,6 +7,9 @@ from ..doctools import document
 from ..exceptions import PlotnineError
 from .stat import stat
 from .stat_qq import theoretical_qq
+
+if TYPE_CHECKING:
+    from plotnine.typing import FloatArray
 
 
 @document
@@ -75,7 +80,7 @@ class stat_qq_line(stat):
         dparams = self.params["dparams"]
 
         # Compute theoretical values
-        sample = data["sample"].sort_values().to_numpy()
+        sample = cast("FloatArray", data["sample"].sort_values().to_numpy())
         theoretical = theoretical_qq(
             sample,
             self.params["distribution"],

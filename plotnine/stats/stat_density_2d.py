@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 
 import numpy as np
 import pandas as pd
@@ -92,17 +92,19 @@ class stat_density_2d(stat):
         group = data["group"].iloc[0]
         range_x = scales.x.dimension()
         range_y = scales.y.dimension()
-        x = np.linspace(range_x[0], range_x[1], params["n"])
-        y = np.linspace(range_y[0], range_y[1], params["n"])
+        _x = np.linspace(range_x[0], range_x[1], params["n"])
+        _y = np.linspace(range_y[0], range_y[1], params["n"])
 
         # The grid must have a "similar" shape (n, p) to the var_data
-        X, Y = np.meshgrid(x, y)
-        var_data = np.array([data["x"].to_numpy(), data["y"].to_numpy()]).T
+        X, Y = np.meshgrid(_x, _y)
+        x = cast("FloatArrayLike", data["x"].to_numpy())
+        y = cast("FloatArrayLike", data["y"].to_numpy())
+        var_data = np.array([x, y]).T
         grid = np.array([X.flatten(), Y.flatten()]).T
         density = kde(var_data, grid, package, **kde_params)
 
         if params["contour"]:
-            Z = density.reshape(len(x), len(y))
+            Z = density.reshape(len(_x), len(_y))
             data = contour_lines(X, Y, Z, params["levels"])
             # Each piece should have a distinct group
             groups = str(group) + "-00" + data["piece"].astype(str)

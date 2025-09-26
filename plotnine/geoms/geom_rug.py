@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-import typing
+from typing import TYPE_CHECKING, cast
 
 import numpy as np
 
@@ -10,7 +10,7 @@ from ..doctools import document
 from .geom import geom
 from .geom_path import geom_path
 
-if typing.TYPE_CHECKING:
+if TYPE_CHECKING:
     from typing import Any
 
     import pandas as pd
@@ -89,30 +89,26 @@ class geom_rug(geom):
         xheight = (xmax - xmin) * params["length"]
         yheight = (ymax - ymin) * params["length"]
 
-        # Please the type checker
-        x: FloatArray
-        y: FloatArray
-
         if has_x:
+            x = cast("FloatArray", np.repeat(data["x"].to_numpy(), 2))
+
             if "b" in sides:
-                x = np.repeat(data["x"].to_numpy(), 2)
                 y = np.tile([ymin, ymin + yheight], n)
                 rugs.extend(make_line_segments(x, y, ispath=False))
 
             if "t" in sides:
-                x = np.repeat(data["x"].to_numpy(), 2)
                 y = np.tile([ymax - yheight, ymax], n)
                 rugs.extend(make_line_segments(x, y, ispath=False))
 
         if has_y:
+            y = cast("FloatArray", np.repeat(data["y"].to_numpy(), 2))
+
             if "l" in sides:
                 x = np.tile([xmin, xmin + xheight], n)
-                y = np.repeat(data["y"].to_numpy(), 2)
                 rugs.extend(make_line_segments(x, y, ispath=False))
 
             if "r" in sides:
                 x = np.tile([xmax - xheight, xmax], n)
-                y = np.repeat(data["y"].to_numpy(), 2)
                 rugs.extend(make_line_segments(x, y, ispath=False))
 
         color = to_rgba(data["color"], data["alpha"])

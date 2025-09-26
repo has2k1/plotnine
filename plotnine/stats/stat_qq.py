@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 
 import numpy as np
 import pandas as pd
@@ -76,7 +76,7 @@ class stat_qq(stat):
     }
 
     def compute_group(self, data, scales):
-        sample = data["sample"].sort_values().to_numpy()
+        sample = cast("FloatArray", data["sample"].sort_values().to_numpy())
         theoretical = theoretical_qq(
             sample,
             self.params["distribution"],
