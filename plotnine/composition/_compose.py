@@ -13,6 +13,7 @@ from .._utils.ipython import (
     is_inline_backend,
 )
 from .._utils.quarto import is_knitr_engine, is_quarto_environment
+from ..composition._plot_annotation import plot_annotation
 from ..composition._plot_layout import plot_layout
 from ..composition._types import ComposeAddable
 from ..options import get_option
@@ -105,6 +106,10 @@ class Compose:
     is drawn, or they are overwritten by a layout added by the user.
     """
 
+    _annotation: plot_annotation = field(
+        init=False, repr=False, default_factory=plot_annotation
+    )
+
     # These are created in the _create_figure method
     figure: Figure = field(init=False, repr=False)
     plotspecs: list[plotspec] = field(init=False, repr=False)
@@ -149,6 +154,21 @@ class Compose:
         """
         self._layout = copy(self.layout)
         self._layout.update(value)
+
+    @property
+    def annotation(self) -> plot_annotation:
+        """
+        The plot_annotation of this composition
+        """
+        return self._annotation
+
+    @annotation.setter
+    def annotation(self, value: plot_annotation):
+        """
+        Add (or merge) a plot_annotation to this composition
+        """
+        self._annotation = copy(self.annotation)
+        self._annotation.update(value)
 
     @property
     def nrow(self) -> int:
@@ -225,7 +245,12 @@ class Compose:
         rhs:
             What to add.
         """
+        from plotnine import theme
+
         self = deepcopy(self)
+
+        if isinstance(rhs, theme):
+            self.annotation.theme = self.annotation.theme + rhs
 
         for i, item in enumerate(self):
             if isinstance(item, Compose):
@@ -466,6 +491,7 @@ class Compose:
         with plot_composition_context(self, show):
             figure = self._setup()
             self._draw_plots()
+            self.annotation.draw()
             figure.set_layout_engine(PlotnineCompositionLayoutEngine(self))
         return figure
 
