@@ -83,7 +83,7 @@ dev = [
 typing = [
     "pyright==1.1.404",
     "ipython",
-    "pandas-stubs",
+    "pandas-stubs==v2.3.2.250827",
 ]
 
 [project.urls]
