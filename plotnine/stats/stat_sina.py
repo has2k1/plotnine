@@ -1,3 +1,5 @@
+from typing import TYPE_CHECKING, cast
+
 import numpy as np
 import pandas as pd
 
@@ -8,6 +10,9 @@ from ..mapping.aes import has_groups
 from .binning import breaks_from_bins, breaks_from_binwidth
 from .stat import stat
 from .stat_density import compute_density
+
+if TYPE_CHECKING:
+    from plotnine.typing import FloatArray, IntArray
 
 
 @document
@@ -254,19 +259,18 @@ class stat_sina(stat):
     def finish_layer(self, data):
         # Rescale x in case positions have been adjusted
         style = self.params["style"]
-        x_mean = data["x"].to_numpy()
+        x_mean = cast("FloatArray", data["x"].to_numpy())
         x_mod = (data["xmax"] - data["xmin"]) / data["width"]
         data["x"] = data["x"] + data["x_diff"] * x_mod
-        x = data["x"].to_numpy()
-        even = data["group"].to_numpy() % 2 == 0
+        group = cast("IntArray", data["group"].to_numpy())
+        x = cast("FloatArray", data["x"].to_numpy())
+        even = group % 2 == 0
 
         def mirror_x(bool_idx):
             """
             Mirror x locations along the mean value
             """
-            data.loc[bool_idx, "x"] = (
-                2 * x_mean[bool_idx] - data.loc[bool_idx, "x"]
-            )
+            data.loc[bool_idx, "x"] = 2 * x_mean[bool_idx] - x[bool_idx]
 
         match style:
             case "left":

@@ -1,3 +1,5 @@
+from typing import TYPE_CHECKING, cast
+
 import numpy as np
 import pandas as pd
 
@@ -5,6 +7,9 @@ from ..doctools import document
 from ..mapping.evaluation import after_stat
 from .density import get_var_type, kde
 from .stat import stat
+
+if TYPE_CHECKING:
+    from plotnine.typing import FloatArray
 
 
 @document
@@ -67,8 +72,10 @@ class stat_pointdensity(stat):
     def compute_group(self, data, scales):
         package = self.params["package"]
         kde_params = self.params["kde_params"]
+        x = cast("FloatArray", data["x"].to_numpy())
+        y = cast("FloatArray", data["y"].to_numpy())
 
-        var_data = np.array([data["x"].to_numpy(), data["y"].to_numpy()]).T
+        var_data = np.array([x, y]).T
         density = kde(var_data, var_data, package, **kde_params)
 
         data = pd.DataFrame(

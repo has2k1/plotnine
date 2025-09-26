@@ -1,3 +1,5 @@
+from typing import TYPE_CHECKING, cast
+
 import numpy as np
 import pandas as pd
 
@@ -8,6 +10,9 @@ from ..scales.scale_discrete import scale_discrete
 from .binning import fuzzybreaks
 from .stat import stat
 from .stat_summary import make_summary_fun
+
+if TYPE_CHECKING:
+    from plotnine.typing import IntArray
 
 
 @document
@@ -157,7 +162,8 @@ class stat_summary_bin(stat):
         # This is a plyr::ddply
         out = groupby_apply(data, "bin", func_wrapper)
         centers = (breaks[:-1] + breaks[1:]) * 0.5
-        bin_centers = centers[out["bin"].to_numpy()]
+        bin = cast("IntArray", out["bin"].to_numpy())
+        bin_centers = centers[bin]
         out["x"] = bin_centers
         out["bin"] += 1
         if isinstance(scales.x, scale_discrete):
