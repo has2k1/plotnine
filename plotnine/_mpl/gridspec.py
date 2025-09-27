@@ -19,7 +19,7 @@ if TYPE_CHECKING:
     from matplotlib.patches import Rectangle
     from matplotlib.transforms import Transform
 
-    from plotnine._mpl.layout_manager._spaces import GridSpecParams
+    from plotnine._mpl.layout_manager._side_space import GridSpecParams
     from plotnine.composition._plot_layout import plot_layout
 
 
