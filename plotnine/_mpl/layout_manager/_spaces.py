@@ -134,7 +134,7 @@ class _side_spaces(ABC):
             return (0, 0)
 
         ol: outside_legend = getattr(self.items.legends, self.side)
-        return self.items.calc.size(ol.box)
+        return self.items.geometry.size(ol.box)
 
     @cached_property
     def legend_width(self) -> float:
@@ -355,7 +355,7 @@ class left_spaces(_side_spaces):
 
     def _calculate(self):
         theme = self.items.plot.theme
-        calc = self.items.calc
+        geometry = self.items.geometry
         items = self.items
 
         self.plot_margin = theme.getp("plot_margin_left")
@@ -363,7 +363,7 @@ class left_spaces(_side_spaces):
         if self.has_tag and items.plot_tag:
             m = theme.get_margin("plot_tag").fig
             self.plot_tag_margin_left = m.l
-            self.plot_tag = calc.width(items.plot_tag)
+            self.plot_tag = geometry.width(items.plot_tag)
             self.plot_tag_margin_right = m.r
 
         if items.legends and items.legends.left:
@@ -373,7 +373,7 @@ class left_spaces(_side_spaces):
         if items.axis_title_y:
             m = theme.get_margin("axis_title_y").fig
             self.axis_title_y_margin_left = m.l
-            self.axis_title_y = calc.width(items.axis_title_y)
+            self.axis_title_y = geometry.width(items.axis_title_y)
             self.axis_title_y_margin_right = m.r
 
         # Account for the space consumed by the axis
@@ -475,14 +475,14 @@ class right_spaces(_side_spaces):
     def _calculate(self):
         items = self.items
         theme = self.items.plot.theme
-        calc = self.items.calc
+        geometry = self.items.geometry
 
         self.plot_margin = theme.getp("plot_margin_right")
 
         if self.has_tag and items.plot_tag:
             m = theme.get_margin("plot_tag").fig
             self.plot_tag_margin_right = m.r
-            self.plot_tag = calc.width(items.plot_tag)
+            self.plot_tag = geometry.width(items.plot_tag)
             self.plot_tag_margin_left = m.l
 
         if items.legends and items.legends.right:
@@ -587,7 +587,7 @@ class top_spaces(_side_spaces):
     def _calculate(self):
         items = self.items
         theme = self.items.plot.theme
-        calc = self.items.calc
+        geometry = self.items.geometry
         W, H = theme.getp("figure_size")
         F = W / H
 
@@ -596,19 +596,19 @@ class top_spaces(_side_spaces):
         if self.has_tag and items.plot_tag:
             m = theme.get_margin("plot_tag").fig
             self.plot_tag_margin_top = m.t
-            self.plot_tag = calc.height(items.plot_tag)
+            self.plot_tag = geometry.height(items.plot_tag)
             self.plot_tag_margin_bottom = m.b
 
         if items.plot_title:
             m = theme.get_margin("plot_title").fig
             self.plot_title_margin_top = m.t * F
-            self.plot_title = calc.height(items.plot_title)
+            self.plot_title = geometry.height(items.plot_title)
             self.plot_title_margin_bottom = m.b * F
 
         if items.plot_subtitle:
             m = theme.get_margin("plot_subtitle").fig
             self.plot_subtitle_margin_top = m.t * F
-            self.plot_subtitle = calc.height(items.plot_subtitle)
+            self.plot_subtitle = geometry.height(items.plot_subtitle)
             self.plot_subtitle_margin_bottom = m.b * F
 
         if items.legends and items.legends.top:
@@ -728,7 +728,7 @@ class bottom_spaces(_side_spaces):
     def _calculate(self):
         items = self.items
         theme = self.items.plot.theme
-        calc = self.items.calc
+        geometry = self.items.geometry
         W, H = theme.getp("figure_size")
         F = W / H
 
@@ -737,13 +737,13 @@ class bottom_spaces(_side_spaces):
         if self.has_tag and items.plot_tag:
             m = theme.get_margin("plot_tag").fig
             self.plot_tag_margin_bottom = m.b
-            self.plot_tag = calc.height(items.plot_tag)
+            self.plot_tag = geometry.height(items.plot_tag)
             self.plot_tag_margin_top = m.t
 
         if items.plot_caption:
             m = theme.get_margin("plot_caption").fig
             self.plot_caption_margin_bottom = m.b * F
-            self.plot_caption = calc.height(items.plot_caption)
+            self.plot_caption = geometry.height(items.plot_caption)
             self.plot_caption_margin_top = m.t * F
 
         if items.legends and items.legends.bottom:
@@ -753,7 +753,7 @@ class bottom_spaces(_side_spaces):
         if items.axis_title_x:
             m = theme.get_margin("axis_title_x").fig
             self.axis_title_x_margin_bottom = m.b * F
-            self.axis_title_x = calc.height(items.axis_title_x)
+            self.axis_title_x = geometry.height(items.axis_title_x)
             self.axis_title_x_margin_top = m.t * F
 
         # Account for the space consumed by the axis
