@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING, Iterator, cast
 import numpy as np
 
 from ._grid import Grid
-from ._side_space import (
+from ._plot_side_space import (
     LayoutSpaces,
     bottom_space,
     left_space,
@@ -20,7 +20,7 @@ if TYPE_CHECKING:
 
     from plotnine import ggplot
     from plotnine._mpl.gridspec import p9GridSpec
-    from plotnine._mpl.layout_manager._side_space import (
+    from plotnine._mpl.layout_manager._plot_side_space import (
         bottom_space,
         left_space,
         right_space,
