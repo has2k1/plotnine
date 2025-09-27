@@ -114,7 +114,7 @@ class guide(ABC, metaclass=Register):
         # guide theme has priority and its targets are tracked
         # independently.
         self.theme = guides.plot.theme + self.theme
-        self.theme.setup(guides.plot)
+        self.theme._setup(guides.plot.figure)
         self.plot_layers = guides.plot.layers
         self.plot_mapping = guides.plot.mapping
         self.elements = self._elements_cls(self.theme, self)

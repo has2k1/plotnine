@@ -1,10 +1,7 @@
 from __future__ import annotations
 
-from copy import copy
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
-
-from plotnine.themes.targets import ThemeTargets
 
 from .. import theme
 from .._utils.dataclasses import non_none_init_items
@@ -61,13 +58,7 @@ class plot_annotation(ComposeAddable):
         """
         Setup annotation
         """
-        # We mimick theme.setup instead of call it because
-        # we cannot have have a ggplot object.
-        self.theme = copy(self.theme)
-        self.theme.figure = cmp.figure
-        self.theme.targets = ThemeTargets()
-        self.theme._add_default_themeable_properties()
-        self.theme.T.setup(self.theme)
+        self.theme._setup(cmp.figure)
 
     def empty(self) -> bool:
         """

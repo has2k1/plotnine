@@ -295,7 +295,13 @@ class theme:
         for th in self.T.values():
             th.apply(self)
 
-    def setup(self, plot: ggplot):
+    def _setup(
+        self,
+        figure: Figure,
+        axs: list[Axes] | None = None,
+        title: str | None = None,
+        subtitle: str | None = None,
+    ):
         """
         Setup theme for applying
 
@@ -306,24 +312,14 @@ class theme:
 
         It also initialises where the artists to be themed will be stored.
         """
-        self.plot = plot
-        self.figure = plot.figure
-        self.axs = plot.axs
+        self.figure = figure
+        self.axs = axs if axs is not None else []
+
+        if title or subtitle:
+            self._smart_title_and_subtitle_ha(title, subtitle)
+
         self.targets = ThemeTargets()
-        self._add_default_themeable_properties()
         self.T.setup(self)
-
-    def _add_default_themeable_properties(self):
-        """
-        Add default themeable properties that depend depend on the plot
-
-        Some properties may be left unset (None) and their final values are
-        best worked out dynamically after the plot has been built, but
-        before the themeables are applied.
-
-        This is where the theme is modified to add those values.
-        """
-        self._smart_title_and_subtitle_ha()
 
     @property
     def rcParams(self):
@@ -466,18 +462,16 @@ class theme:
         dpi = self.getp("dpi")
         return self + theme(dpi=dpi * 2)
 
-    def _smart_title_and_subtitle_ha(self):
+    def _smart_title_and_subtitle_ha(
+        self, title: str | None, subtitle: str | None
+    ):
         """
         Smartly add the horizontal alignment for the title and subtitle
         """
         from .elements import element_text
 
-        has_title = bool(
-            self.plot.labels.get("title", "")
-        ) and not self.T.is_blank("plot_title")
-        has_subtitle = bool(
-            self.plot.labels.get("subtitle", "")
-        ) and not self.T.is_blank("plot_subtitle")
+        has_title = bool(title) and not self.T.is_blank("plot_title")
+        has_subtitle = bool(subtitle) and not self.T.is_blank("plot_subtitle")
 
         title_ha = self.getp(("plot_title", "ha"))
         subtitle_ha = self.getp(("plot_subtitle", "ha"))
