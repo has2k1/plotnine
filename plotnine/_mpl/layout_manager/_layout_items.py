@@ -39,7 +39,7 @@ if TYPE_CHECKING:
         VerticalJustification,
     )
 
-    from ._spaces import LayoutSpaces
+    from ._side_space import LayoutSpaces
 
     AxesLocation: TypeAlias = Literal[
         "all", "first_row", "last_row", "first_col", "last_col"
