@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from dataclasses import dataclass
+from typing import TYPE_CHECKING, Sequence, cast
 
 from matplotlib.transforms import Affine2D, Bbox
 
@@ -144,3 +145,125 @@ def draw_bbox(bbox, figure, color="black", **kwargs):
             **kwargs,
         )
     )
+
+
+@dataclass
+class ArtistGeometry:
+    """
+    Helper to calculate the position & extents (space) of an artist
+    """
+
+    figure: Figure
+
+    def __post_init__(self):
+        self.renderer = cast("RendererBase", self.figure._get_renderer())  # pyright: ignore
+
+    def bbox(self, artist: Artist) -> Bbox:
+        """
+        Bounding box of artist in figure coordinates
+        """
+        return bbox_in_figure_space(artist, self.figure, self.renderer)
+
+    def tight_bbox(self, artist: Artist) -> Bbox:
+        """
+        Bounding box of artist and its children in figure coordinates
+        """
+        return tight_bbox_in_figure_space(artist, self.figure, self.renderer)
+
+    def width(self, artist: Artist) -> float:
+        """
+        Width of artist in figure space
+        """
+        return self.bbox(artist).width
+
+    def tight_width(self, artist: Artist) -> float:
+        """
+        Width of artist and its children in figure space
+        """
+        return self.tight_bbox(artist).width
+
+    def height(self, artist: Artist) -> float:
+        """
+        Height of artist in figure space
+        """
+        return self.bbox(artist).height
+
+    def tight_height(self, artist: Artist) -> float:
+        """
+        Height of artist and its children in figure space
+        """
+        return self.tight_bbox(artist).height
+
+    def size(self, artist: Artist) -> tuple[float, float]:
+        """
+        (width, height) of artist in figure space
+        """
+        bbox = self.bbox(artist)
+        return (bbox.width, bbox.height)
+
+    def tight_size(self, artist: Artist) -> tuple[float, float]:
+        """
+        (width, height) of artist and its children in figure space
+        """
+        bbox = self.tight_bbox(artist)
+        return (bbox.width, bbox.height)
+
+    def left_x(self, artist: Artist) -> float:
+        """
+        x value of the left edge of the artist
+
+         ---
+        x   |
+         ---
+        """
+        return self.bbox(artist).min[0]
+
+    def right_x(self, artist: Artist) -> float:
+        """
+        x value of the left edge of the artist
+
+         ---
+        |   x
+         ---
+        """
+        return self.bbox(artist).max[0]
+
+    def top_y(self, artist: Artist) -> float:
+        """
+        y value of the top edge of the artist
+
+         -y-
+        |   |
+         ---
+        """
+        return self.bbox(artist).max[1]
+
+    def bottom_y(self, artist: Artist) -> float:
+        """
+        y value of the bottom edge of the artist
+
+         ---
+        |   |
+         -y-
+        """
+        return self.bbox(artist).min[1]
+
+    def max_width(self, artists: Sequence[Artist]) -> float:
+        """
+        Return the maximum width of list of artists
+        """
+        widths = [
+            bbox_in_figure_space(a, self.figure, self.renderer).width
+            for a in artists
+        ]
+        return max(widths) if len(widths) else 0
+
+    def max_height(self, artists: Sequence[Artist]) -> float:
+        """
+        Return the maximum height of list of artists
+        """
+        heights = [
+            bbox_in_figure_space(a, self.figure, self.renderer).height
+            for a in artists
+        ]
+        return max(heights) if len(heights) else 0
