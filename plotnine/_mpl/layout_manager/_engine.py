@@ -7,7 +7,7 @@ from matplotlib.layout_engine import LayoutEngine
 
 from ...exceptions import PlotnineWarning
 from ._layout_tree import LayoutTree
-from ._spaces import LayoutSpaces
+from ._side_space import LayoutSpaces
 
 if TYPE_CHECKING:
     from matplotlib.figure import Figure

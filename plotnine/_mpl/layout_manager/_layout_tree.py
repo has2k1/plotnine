@@ -7,12 +7,12 @@ from typing import TYPE_CHECKING, Iterator, cast
 import numpy as np
 
 from ._grid import Grid
-from ._spaces import (
+from ._side_space import (
     LayoutSpaces,
-    bottom_spaces,
-    left_spaces,
-    right_spaces,
-    top_spaces,
+    bottom_space,
+    left_space,
+    right_space,
+    top_space,
 )
 
 if TYPE_CHECKING:
@@ -20,11 +20,11 @@ if TYPE_CHECKING:
 
     from plotnine import ggplot
     from plotnine._mpl.gridspec import p9GridSpec
-    from plotnine._mpl.layout_manager._spaces import (
-        bottom_spaces,
-        left_spaces,
-        right_spaces,
-        top_spaces,
+    from plotnine._mpl.layout_manager._side_space import (
+        bottom_space,
+        left_space,
+        right_space,
+        top_space,
     )
     from plotnine.composition import Compose
 
@@ -233,28 +233,28 @@ class LayoutTree:
             tree.resize()
 
     @cached_property
-    def bottom_most_spaces(self) -> list[bottom_spaces]:
+    def bottom_most_spaces(self) -> list[bottom_space]:
         """
         Bottom spaces of items in the last row
         """
         return [s for s in self.bottom_spaces_in_row(self.nrow - 1)]
 
     @cached_property
-    def top_most_spaces(self) -> list[top_spaces]:
+    def top_most_spaces(self) -> list[top_space]:
         """
         Top spaces of items in the top row
         """
         return [s for s in self.top_spaces_in_row(0)]
 
     @cached_property
-    def left_most_spaces(self) -> list[left_spaces]:
+    def left_most_spaces(self) -> list[left_space]:
         """
         Left spaces of items in the last column
         """
         return [s for s in self.left_spaces_in_col(0)]
 
     @cached_property
-    def right_most_spaces(self) -> list[right_spaces]:
+    def right_most_spaces(self) -> list[right_space]:
         """
         Right spaces of items the last column
         """
@@ -357,8 +357,8 @@ class LayoutTree:
         """
         return cast("Sequence[float]", self.cmp._layout.heights)
 
-    def bottom_spaces_in_row(self, r: int) -> list[bottom_spaces]:
-        spaces: list[bottom_spaces] = []
+    def bottom_spaces_in_row(self, r: int) -> list[bottom_space]:
+        spaces: list[bottom_space] = []
         for node in self.grid[r, :]:
             if isinstance(node, LayoutSpaces):
                 spaces.append(node.b)
@@ -366,8 +366,8 @@ class LayoutTree:
                 spaces.extend(node.bottom_most_spaces)
         return spaces
 
-    def top_spaces_in_row(self, r: int) -> list[top_spaces]:
-        spaces: list[top_spaces] = []
+    def top_spaces_in_row(self, r: int) -> list[top_space]:
+        spaces: list[top_space] = []
         for node in self.grid[r, :]:
             if isinstance(node, LayoutSpaces):
                 spaces.append(node.t)
@@ -375,8 +375,8 @@ class LayoutTree:
                 spaces.extend(node.top_most_spaces)
         return spaces
 
-    def left_spaces_in_col(self, c: int) -> list[left_spaces]:
-        spaces: list[left_spaces] = []
+    def left_spaces_in_col(self, c: int) -> list[left_space]:
+        spaces: list[left_space] = []
         for node in self.grid[:, c]:
             if isinstance(node, LayoutSpaces):
                 spaces.append(node.l)
@@ -384,8 +384,8 @@ class LayoutTree:
                 spaces.extend(node.left_most_spaces)
         return spaces
 
-    def right_spaces_in_col(self, c: int) -> list[right_spaces]:
-        spaces: list[right_spaces] = []
+    def right_spaces_in_col(self, c: int) -> list[right_space]:
+        spaces: list[right_space] = []
         for node in self.grid[:, c]:
             if isinstance(node, LayoutSpaces):
                 spaces.append(node.r)
@@ -393,7 +393,7 @@ class LayoutTree:
                 spaces.extend(node.right_most_spaces)
         return spaces
 
-    def iter_left_spaces(self) -> Iterator[list[left_spaces]]:
+    def iter_left_spaces(self) -> Iterator[list[left_space]]:
         """
         Left spaces for each non-empty column
 
@@ -404,7 +404,7 @@ class LayoutTree:
             if spaces:
                 yield spaces
 
-    def iter_right_spaces(self) -> Iterator[list[right_spaces]]:
+    def iter_right_spaces(self) -> Iterator[list[right_space]]:
         """
         Right spaces for each non-empty column
 
@@ -415,7 +415,7 @@ class LayoutTree:
             if spaces:
                 yield spaces
 
-    def iter_bottom_spaces(self) -> Iterator[list[bottom_spaces]]:
+    def iter_bottom_spaces(self) -> Iterator[list[bottom_space]]:
         """
         Bottom spaces for each non-empty row
         """
@@ -424,7 +424,7 @@ class LayoutTree:
             if spaces:
                 yield spaces
 
-    def iter_top_spaces(self) -> Iterator[list[top_spaces]]:
+    def iter_top_spaces(self) -> Iterator[list[top_space]]:
         """
         Top spaces for each non-empty row
         """

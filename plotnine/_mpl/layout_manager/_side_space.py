@@ -59,7 +59,7 @@ class GridSpecParams:
 
 
 @dataclass
-class _side_spaces(ABC):
+class _side_space(ABC):
     """
     Base class to for spaces
 
@@ -73,7 +73,7 @@ class _side_spaces(ABC):
     items: LayoutItems
 
     def __post_init__(self):
-        self.side: Side = cast("Side", self.__class__.__name__[:-7])
+        self.side: Side = cast("Side", self.__class__.__name__[:-6])
         """
         Side of the panel(s) that this class applies to
         """
@@ -283,7 +283,7 @@ class _side_spaces(ABC):
 
 
 @dataclass
-class left_spaces(_side_spaces):
+class left_space(_side_space):
     """
     Space in the figure for artists on the left of the panel area
 
@@ -455,7 +455,7 @@ class left_spaces(_side_spaces):
 
 
 @dataclass
-class right_spaces(_side_spaces):
+class right_space(_side_space):
     """
     Space in the figure for artists on the right of the panel area
 
@@ -561,7 +561,7 @@ class right_spaces(_side_spaces):
 
 
 @dataclass
-class top_spaces(_side_spaces):
+class top_space(_side_space):
     """
     Space in the figure for artists above the panel area
 
@@ -690,7 +690,7 @@ class top_spaces(_side_spaces):
 
 
 @dataclass
-class bottom_spaces(_side_spaces):
+class bottom_space(_side_space):
     """
     Space in the figure for artists below the panel area
 
@@ -855,16 +855,16 @@ class LayoutSpaces:
 
     plot: ggplot
 
-    l: left_spaces = field(init=False)
+    l: left_space = field(init=False)
     """All subspaces to the left of the panels"""
 
-    r: right_spaces = field(init=False)
+    r: right_space = field(init=False)
     """All subspaces to the right of the panels"""
 
-    t: top_spaces = field(init=False)
+    t: top_space = field(init=False)
     """All subspaces above the top of the panels"""
 
-    b: bottom_spaces = field(init=False)
+    b: bottom_space = field(init=False)
     """All subspaces below the bottom of the panels"""
 
     W: float = field(init=False, default=0)
@@ -894,10 +894,10 @@ class LayoutSpaces:
 
         # Calculate the spacing along the edges of the panel area
         # (spacing required by plotnine)
-        self.l = left_spaces(self.items)
-        self.r = right_spaces(self.items)
-        self.t = top_spaces(self.items)
-        self.b = bottom_spaces(self.items)
+        self.l = left_space(self.items)
+        self.r = right_space(self.items)
+        self.t = top_space(self.items)
+        self.b = bottom_space(self.items)
 
     def get_gridspec_params(self) -> GridSpecParams:
         # Calculate the gridspec params
