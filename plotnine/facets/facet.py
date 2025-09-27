@@ -93,7 +93,7 @@ class facet:
 
     # Axes
     axs: list[Axes]
-    _panels_gridspec: p9GridSpec
+    _gridspec: p9GridSpec
 
     # ggplot object that the facet belongs to
     plot: ggplot
@@ -395,14 +395,12 @@ class facet:
         num_panels = len(self.layout.layout)
         axsarr = np.empty((self.nrow, self.ncol), dtype=object)
 
-        self._panels_gridspec = self._get_panels_gridspec()
+        self._gridspec = self._get_panels_gridspec()
 
         # Create axes
         it = itertools.product(range(self.nrow), range(self.ncol))
         for i, (row, col) in enumerate(it):
-            axsarr[row, col] = self.figure.add_subplot(
-                self._panels_gridspec[i]
-            )
+            axsarr[row, col] = self.figure.add_subplot(self._gridspec[i])
 
         # Rearrange axes
         # They are ordered to match the positions in the layout table
