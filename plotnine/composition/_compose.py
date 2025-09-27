@@ -113,7 +113,7 @@ class Compose:
     # These are created in the _create_figure method
     figure: Figure = field(init=False, repr=False)
     plotspecs: list[plotspec] = field(init=False, repr=False)
-    gridspec: p9GridSpec = field(init=False, repr=False)
+    _gridspec: p9GridSpec = field(init=False, repr=False)
 
     def __post_init__(self):
         # The way we handle the plots has consequences that would
@@ -383,15 +383,18 @@ class Compose:
             else:
                 item._to_retina()
 
-    def _create_gridspec(self, figure, nest_into):
+    def _create_gridspec(self, nest_into):
         """
         Create the gridspec for this composition
         """
         from plotnine._mpl.gridspec import p9GridSpec
 
+        # NOTE: These two should be in ._setup
         self.layout._setup(self)
-        self.gridspec = p9GridSpec.from_layout(
-            self.layout, figure=figure, nest_into=nest_into
+        self.annotation._setup(self)
+
+        self._gridspec = p9GridSpec.from_layout(
+            self.layout, figure=self.figure, nest_into=nest_into
         )
 
     def _setup(self) -> Figure:
@@ -409,6 +412,8 @@ class Compose:
         from plotnine import ggplot
         from plotnine._mpl.gridspec import p9GridSpec
 
+        figure = plt.figure()
+
         def _make_plotspecs(
             cmp: Compose, parent_gridspec: p9GridSpec | None
         ) -> Generator[plotspec]:
@@ -418,7 +423,9 @@ class Compose:
             # This gridspec contains a composition group e.g.
             # (p2 | p3) of p1 | (p2 | p3)
             ss_or_none = parent_gridspec[0] if parent_gridspec else None
-            cmp._create_gridspec(self.figure, ss_or_none)
+
+            cmp.figure = figure
+            cmp._create_gridspec(ss_or_none)
 
             # Each subplot in the composition will contain one of:
             #    1. A plot
@@ -428,22 +435,21 @@ class Compose:
             # "subplot" in the grid. The SubplotSpec is the handle that
             # allows us to set it up for a plot or to nest another gridspec
             # in it.
-            for item, subplot_spec in zip(cmp, cmp.gridspec):
+            for item, subplot_spec in zip(cmp, cmp._gridspec):
                 if isinstance(item, ggplot):
                     yield plotspec(
                         item,
-                        self.figure,
-                        cmp.gridspec,
+                        figure,
+                        cmp._gridspec,
                         subplot_spec,
-                        p9GridSpec(1, 1, self.figure, nest_into=subplot_spec),
+                        p9GridSpec(1, 1, figure, nest_into=subplot_spec),
                     )
                 elif item:
                     yield from _make_plotspecs(
                         item,
-                        p9GridSpec(1, 1, self.figure, nest_into=subplot_spec),
+                        p9GridSpec(1, 1, figure, nest_into=subplot_spec),
                     )
 
-        self.figure = plt.figure()
         self.plotspecs = list(_make_plotspecs(self, None))
 
     def _draw_plots(self):
@@ -486,6 +492,11 @@ class Compose:
         :
             Matplotlib figure
         """
+        # NOTE: This method is not recursive though considering the order in
+        # which the methods are called we may expect it to be.
+        # The outmost composition has a list (the plotspecs created recursively
+        # in ._create_figure), so we can draw all the plots.
+        # Consider a refactoring.
         from .._mpl.layout_manager import PlotnineCompositionLayoutEngine
 
         with plot_composition_context(self, show):
