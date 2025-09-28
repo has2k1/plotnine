@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import abc
 from copy import copy, deepcopy
-from dataclasses import dataclass, field
 from io import BytesIO
 from typing import TYPE_CHECKING, cast, overload
 
@@ -15,7 +14,7 @@ from .._utils.ipython import (
 from .._utils.quarto import is_knitr_engine, is_quarto_environment
 from ..composition._plot_annotation import plot_annotation
 from ..composition._plot_layout import plot_layout
-from ..composition._types import ComposeAddable
+from ..composition._types import ComposeAddable, CompositionItems
 from ..options import get_option
 from ._plotspec import plotspec
 
@@ -30,7 +29,6 @@ if TYPE_CHECKING:
     from plotnine.typing import FigureFormat, MimeBundle
 
 
-@dataclass
 class Compose:
     """
     Base class for those that create plot compositions
@@ -84,45 +82,61 @@ class Compose:
 
     :    Add right hand side to the last plot in the composition.
 
+    Parameters
+    ----------
+    items :
+        The objects to be arranged (composed)
+
+
     See Also
     --------
     plotnine.composition.Beside : To arrange plots side by side
     plotnine.composition.Stack : To arrange plots vertically
-    plotnine.composition.Stack : To arrange in a grid
+    plotnine.composition.Wrap : To arrange in a grid
     plotnine.composition.plot_spacer : To add a blank space between plots
     """
 
-    items: list[ggplot | Compose]
+    # These are created in the ._create_figure
+    figure: Figure
+    plotspecs: list[plotspec]
+    _gridspec: p9GridSpec
     """
-    The objects to be arranged (composed)
+    Gridspec (1x1) that contains the annotations and the composition items
+
+     -------------------
+    |  title            |<----- This one
+    |  subtitle         |
+    |                   |
+    |   -------------   |
+    |  |      |      |<-+----- .items._gridspec
+    |  |      |      |  |
+    |   -------------   |
+    |                   |
+    |  caption          |
+     -------------------
+
+    plot_layout's theme parameter affects this gridspec.
     """
 
-    _layout: plot_layout = field(
-        init=False, repr=False, default_factory=plot_layout
-    )
-    """
-    Every composition gets initiated with an empty plot_layout whose
-    attributes are either dynamically generated before the composition
-    is drawn, or they are overwritten by a layout added by the user.
-    """
-
-    _annotation: plot_annotation = field(
-        init=False, repr=False, default_factory=plot_annotation
-    )
-
-    # These are created in the _create_figure method
-    figure: Figure = field(init=False, repr=False)
-    plotspecs: list[plotspec] = field(init=False, repr=False)
-    _gridspec: p9GridSpec = field(init=False, repr=False)
-
-    def __post_init__(self):
+    def __init__(self, items: list[ggplot | Compose]):
         # The way we handle the plots has consequences that would
         # prevent having a duplicate plot in the composition.
         # Using copies prevents this.
-        self.items = [
-            op if isinstance(op, Compose) else deepcopy(op)
-            for op in self.items
-        ]
+        self.items = CompositionItems(
+            [op if isinstance(op, Compose) else deepcopy(op) for op in items]
+        )
+
+        self._layout = plot_layout()
+        """
+        Every composition gets initiated with an empty plot_layout whose
+        attributes are either dynamically generated before the composition
+        is drawn, or they are overwritten by a layout added by the user.
+        """
+
+        self._annotation = plot_annotation()
+        """
+        The annotations around the composition
+        """
 
     def __repr__(self):
         """
@@ -145,6 +159,7 @@ class Compose:
         """
         The plot_layout of this composition
         """
+        self.items
         return self._layout
 
     @layout.setter
@@ -393,7 +408,7 @@ class Compose:
         self.layout._setup(self)
         self.annotation._setup(self)
 
-        self._gridspec = p9GridSpec.from_layout(
+        self.items._gridspec = p9GridSpec.from_layout(
             self.layout, figure=self.figure, nest_into=nest_into
         )
 
@@ -415,42 +430,36 @@ class Compose:
         figure = plt.figure()
 
         def _make_plotspecs(
-            cmp: Compose, parent_gridspec: p9GridSpec | None
+            cmp: Compose, _gridspec: p9GridSpec
         ) -> Generator[plotspec]:
             """
             Return the plot specification for each subplot in the composition
             """
             # This gridspec contains a composition group e.g.
             # (p2 | p3) of p1 | (p2 | p3)
-            ss_or_none = parent_gridspec[0] if parent_gridspec else None
+            ss_or_none = _gridspec[0]
 
             cmp.figure = figure
             cmp._create_gridspec(ss_or_none)
 
-            # Each subplot in the composition will contain one of:
-            #    1. A plot
-            #    2. A plot composition
-            #    3. Nothing
             # Iterating over the gridspec yields the SubplotSpecs for each
-            # "subplot" in the grid. The SubplotSpec is the handle that
-            # allows us to set it up for a plot or to nest another gridspec
-            # in it.
-            for item, subplot_spec in zip(cmp, cmp._gridspec):
+            # "subplot" in the grid. The SubplotSpec is the handle for the
+            # area in the grid; it allows us to put a plot or a nested
+            # composion in that area.
+            for item, subplot_spec in zip(cmp, cmp.items._gridspec):
+                # This container gs will contain a plot or a composition,
+                # i.e. it will be assigned to one of:
+                #    1. ggplot._gridspec
+                #    2. compose._gridspec
+                container_gs = p9GridSpec(1, 1, figure, nest_into=subplot_spec)
                 if isinstance(item, ggplot):
-                    yield plotspec(
-                        item,
-                        figure,
-                        cmp._gridspec,
-                        subplot_spec,
-                        p9GridSpec(1, 1, figure, nest_into=subplot_spec),
-                    )
-                elif item:
-                    yield from _make_plotspecs(
-                        item,
-                        p9GridSpec(1, 1, figure, nest_into=subplot_spec),
-                    )
+                    yield plotspec(item, figure, container_gs)
+                else:
+                    yield from _make_plotspecs(item, container_gs)
 
-        self.plotspecs = list(_make_plotspecs(self, None))
+        self.plotspecs = list(
+            _make_plotspecs(self, p9GridSpec(1, 1, figure, nest_into=None))
+        )
 
     def _draw_plots(self):
         """
