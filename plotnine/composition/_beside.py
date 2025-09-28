@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 from ._compose import Compose
@@ -9,7 +8,6 @@ if TYPE_CHECKING:
     from plotnine.ggplot import ggplot
 
 
-@dataclass(repr=False)
 class Beside(Compose):
     """
     Place plots or compositions side by side

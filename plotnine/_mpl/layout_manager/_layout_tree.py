@@ -126,7 +126,7 @@ class LayoutTree:
     """
 
     def __post_init__(self):
-        self.gridspec = self.cmp._gridspec
+        self.gridspec = self.cmp.items._gridspec
         self.grid = Grid["Node"](
             self.nrow,
             self.ncol,
