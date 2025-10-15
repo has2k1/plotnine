@@ -147,17 +147,6 @@ class stat_sina(stat):
         params = self.params
         maxwidth = params["maxwidth"]
         random_state = params["random_state"]
-        fuzz = 1e-8
-        y_dim = scales.y.dimension()
-        y_dim_fuzzed = (y_dim[0] - fuzz, y_dim[1] + fuzz)
-
-        if params["binwidth"] is not None:
-            params["bins"] = breaks_from_binwidth(
-                y_dim_fuzzed, params["binwidth"]
-            )
-        else:
-            params["bins"] = breaks_from_bins(y_dim_fuzzed, params["bins"])
-
         data = super().compute_panel(data, scales)
 
         if not len(data):
@@ -203,8 +192,8 @@ class stat_sina(stat):
         return data
 
     def compute_group(self, data, scales):
+        binwidth = self.params["binwidth"]
         maxwidth = self.params["maxwidth"]
-        bins = self.params["bins"]
         bin_limit = self.params["bin_limit"]
         weight = None
         y = data["y"]
@@ -233,8 +222,16 @@ class stat_sina(stat):
             data["density"] = densf(y)
             data["scaled"] = data["density"] / dens["density"].max()
         else:
+            y_dim = scales.y.dimension()
+            fuzz = 1e-8
+            y_dim_fuzzed = (y_dim[0] - fuzz, y_dim[1] + fuzz)
+            if binwidth is not None:
+                bins = breaks_from_binwidth(y_dim_fuzzed, binwidth)
+            else:
+                bins = breaks_from_bins(y_dim_fuzzed, self.params["bins"])
+
             # bin based estimation
-            bin_index = pd.cut(y, bins, include_lowest=True, labels=False)
+            bin_index = pd.cut(y, bins, include_lowest=True, labels=False)  # pyright: ignore[reportCallIssue,reportArgumentType]
             data["density"] = (
                 pd.Series(bin_index)
                 .groupby(bin_index)
