@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING, cast
 import numpy as np
 import pandas as pd
 
-from .._utils import array_kind, jitter, resolution
+from .._utils import array_kind, jitter, nextafter_range, resolution
 from ..doctools import document
 from ..exceptions import PlotnineError
 from ..mapping.aes import has_groups
@@ -222,13 +222,11 @@ class stat_sina(stat):
             data["density"] = densf(y)
             data["scaled"] = data["density"] / dens["density"].max()
         else:
-            y_dim = scales.y.dimension()
-            fuzz = 1e-8
-            y_dim_fuzzed = (y_dim[0] - fuzz, y_dim[1] + fuzz)
+            expanded_y_range = nextafter_range(scales.y.dimension())
             if binwidth is not None:
-                bins = breaks_from_binwidth(y_dim_fuzzed, binwidth)
+                bins = breaks_from_binwidth(expanded_y_range, binwidth)
             else:
-                bins = breaks_from_bins(y_dim_fuzzed, self.params["bins"])
+                bins = breaks_from_bins(expanded_y_range, self.params["bins"])
 
             # bin based estimation
             bin_index = pd.cut(y, bins, include_lowest=True, labels=False)  # pyright: ignore[reportCallIssue,reportArgumentType]

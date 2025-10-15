@@ -1207,3 +1207,24 @@ def has_alpha_channel(c: str | tuple) -> bool:
         return c.startswith("#") and len(c) == 9
     else:
         return color_utils.is_color_tuple(c) and len(c) == 4
+
+
+def nextafter_range(rng: tuple[float, float]) -> tuple[float, float]:
+    """
+    Expand floating-point range by a step to adjacent representable numbers
+
+    Parameters
+    ----------
+    rng :
+        A tuple (min, max) representing the range to expand.
+
+    Returns
+    -------
+    :
+        A new tuple (lower, upper) where,
+        - lower is moved 1 float toward -∞
+        - upper is moved 1 float toward +∞
+    """
+    from math import inf, nextafter
+
+    return (nextafter(rng[0], -inf), nextafter(rng[1], inf))

@@ -82,13 +82,12 @@ def breaks_from_binwidth(
         if center is not None:
             boundary = center - boundary
 
-    epsilon = np.finfo(float).eps
     shift = np.floor((x_range[0] - boundary) / binwidth)
     origin = boundary + shift * binwidth
-    # The (1-epsilon) factor prevents numerical roundoff in the
+    # The nextafter reduction prevents numerical roundoff in the
     # binwidth from creating an extra break beyond the one that
     # includes x_range[1].
-    max_x = x_range[1] + binwidth * (1 - epsilon)
+    max_x = np.nextafter(x_range[1] + binwidth, -np.inf)
     breaks = np.arange(origin, max_x, binwidth)
     return breaks
 
@@ -303,48 +302,21 @@ def fuzzybreaks(
 
     # To minimise precision errors, we do not pass the boundary and
     # binwidth into np.arange as params. The resulting breaks
-    # can then be adjusted with finer(epsilon based rather than
-    # some arbitrary small number) precision.
+    # can then be adjusted to the next floating point number.
     breaks = np.arange(boundary, srange[1] + binwidth, binwidth)
     return _adjust_breaks(breaks, right)
 
 
 def _adjust_breaks(breaks: FloatArray, right: bool) -> FloatArray:
-    epsilon = np.finfo(float).eps
-    plus = 1 + epsilon
-    minus = 1 - epsilon
+    """
+    Adjust breaks to include/exclude every right break
 
-    sign = np.sign(breaks)
-    pos_idx = np.where(sign == 1)[0]
-    neg_idx = np.where(sign == -1)[0]
-    zero_idx = np.where(sign == 0)[0]
-
-    fuzzy = breaks.copy()
-    if right:
-        # [_](_](_](_]
-        lbreak = breaks[0]
-        fuzzy[pos_idx] *= plus
-        fuzzy[neg_idx] *= minus
-        fuzzy[zero_idx] = epsilon
-        # Left closing break
-        if lbreak == 0:
-            fuzzy[0] = -epsilon
-        elif lbreak < 0:
-            fuzzy[0] = lbreak * plus
-        else:
-            fuzzy[0] = lbreak * minus
-    else:
-        # [_)[_)[_)[_]
-        rbreak = breaks[-1]
-        fuzzy[pos_idx] *= minus
-        fuzzy[neg_idx] *= plus
-        fuzzy[zero_idx] = -epsilon
-        # Right closing break
-        if rbreak == 0:
-            fuzzy[-1] = epsilon
-        elif rbreak > 0:
-            fuzzy[-1] = rbreak * plus
-        else:
-            fuzzy[-1] = rbreak * minus
-
+    If right=True, the breaks create intervals closed on right
+    i.e. [_] (_] (_] (_]
+    If right=False, the breaks create intervals closed on the left
+    i.e. [_) [_) [_) [_]
+    """
+    limit, idx = (np.inf, 0) if right else (-np.inf, -1)
+    fuzzy = np.nextafter(breaks, limit)
+    fuzzy[idx] = np.nextafter(breaks[idx], -limit)
     return fuzzy
