@@ -47,7 +47,7 @@ def breaks_from_binwidth(
     binwidth: float,
     center: Optional[float] = None,
     boundary: Optional[float] = None,
-):
+) -> FloatArray:
     """
     Calculate breaks given binwidth
 
@@ -98,7 +98,7 @@ def breaks_from_bins(
     bins: int = 30,
     center: Optional[float] = None,
     boundary: Optional[float] = None,
-):
+) -> FloatArray:
     """
     Calculate breaks given binwidth
 
