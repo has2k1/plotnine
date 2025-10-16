@@ -11,14 +11,14 @@ such cases as when left or right margin are affected by xlabel.
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from functools import cached_property
 from typing import TYPE_CHECKING
 
 from plotnine.exceptions import PlotnineError
 from plotnine.facets import facet_grid, facet_null, facet_wrap
 
-from ._layout_items import LayoutItems
+from ._plot_layout_items import PlotLayoutItems
 from ._side_space import GridSpecParams, _side_space
 
 if TYPE_CHECKING:
@@ -33,7 +33,7 @@ class _plot_side_space(_side_space):
     Base class for the side space around a plot
     """
 
-    items: LayoutItems
+    items: PlotLayoutItems
 
     @cached_property
     def _legend_size(self) -> tuple[float, float]:
@@ -701,8 +701,7 @@ class bottom_space(_plot_side_space):
         )
 
 
-@dataclass
-class LayoutSpaces:
+class PlotLayoutSpaces:
     """
     Compute the all the spaces required in the layout
 
@@ -718,51 +717,44 @@ class LayoutSpaces:
     them in their final positions.
     """
 
-    plot: ggplot
-
-    l: left_space = field(init=False)
-    """All subspaces to the left of the panels"""
-
-    r: right_space = field(init=False)
-    """All subspaces to the right of the panels"""
-
-    t: top_space = field(init=False)
-    """All subspaces above the top of the panels"""
-
-    b: bottom_space = field(init=False)
-    """All subspaces below the bottom of the panels"""
-
-    W: float = field(init=False, default=0)
+    W: float
     """Figure Width [inches]"""
 
-    H: float = field(init=False, default=0)
+    H: float
     """Figure Height [inches]"""
 
-    w: float = field(init=False, default=0)
+    w: float
     """Axes width w.r.t figure in [0, 1]"""
 
-    h: float = field(init=False, default=0)
+    h: float
     """Axes height w.r.t figure in [0, 1]"""
 
-    sh: float = field(init=False, default=0)
+    sh: float
     """horizontal spacing btn panels w.r.t figure"""
 
-    sw: float = field(init=False, default=0)
+    sw: float
     """vertical spacing btn panels w.r.t figure"""
 
-    gsparams: GridSpecParams = field(init=False, repr=False)
+    gsparams: GridSpecParams
     """Grid spacing btn panels w.r.t figure"""
 
-    def __post_init__(self):
-        self.items = LayoutItems(self.plot)
-        self.W, self.H = self.plot.theme.getp("figure_size")
+    def __init__(self, plot: ggplot):
+        self.plot = plot
+        self.items = PlotLayoutItems(plot)
 
-        # Calculate the spacing along the edges of the panel area
-        # (spacing required by plotnine)
         self.l = left_space(self.items)
+        """All subspaces to the left of the panels"""
+
         self.r = right_space(self.items)
+        """All subspaces to the right of the panels"""
+
         self.t = top_space(self.items)
+        """All subspaces above the top of the panels"""
+
         self.b = bottom_space(self.items)
+        """All subspaces below the bottom of the panels"""
+
+        self.W, self.H = plot.theme.getp("figure_size")
 
     def get_gridspec_params(self) -> GridSpecParams:
         # Calculate the gridspec params

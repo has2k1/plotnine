@@ -8,7 +8,7 @@ import numpy as np
 
 from ._grid import Grid
 from ._plot_side_space import (
-    LayoutSpaces,
+    PlotLayoutSpaces,
     bottom_space,
     left_space,
     right_space,
@@ -28,7 +28,7 @@ if TYPE_CHECKING:
     )
     from plotnine.composition import Compose
 
-    Node: TypeAlias = "LayoutSpaces | LayoutTree"
+    Node: TypeAlias = "PlotLayoutSpaces | LayoutTree"
 
 
 @dataclass
@@ -105,7 +105,7 @@ class LayoutTree:
     Composition that this tree represents
     """
 
-    nodes: list[LayoutSpaces | LayoutTree]
+    nodes: list[PlotLayoutSpaces | LayoutTree]
     """
     The spaces or tree of spaces in the composition that the tree
     represents.
@@ -151,7 +151,7 @@ class LayoutTree:
     @staticmethod
     def create(
         cmp: Compose,
-        lookup_spaces: dict[ggplot, LayoutSpaces],
+        lookup_spaces: dict[ggplot, PlotLayoutSpaces],
     ) -> LayoutTree:
         """
         Create a LayoutTree for this composition
@@ -171,7 +171,7 @@ class LayoutTree:
         from plotnine import ggplot
 
         # Create subtree
-        nodes: list[LayoutSpaces | LayoutTree] = []
+        nodes: list[PlotLayoutSpaces | LayoutTree] = []
         for item in cmp:
             if isinstance(item, ggplot):
                 nodes.append(lookup_spaces[item])
@@ -360,7 +360,7 @@ class LayoutTree:
     def bottom_spaces_in_row(self, r: int) -> list[bottom_space]:
         spaces: list[bottom_space] = []
         for node in self.grid[r, :]:
-            if isinstance(node, LayoutSpaces):
+            if isinstance(node, PlotLayoutSpaces):
                 spaces.append(node.b)
             elif isinstance(node, LayoutTree):
                 spaces.extend(node.bottom_most_spaces)
@@ -369,7 +369,7 @@ class LayoutTree:
     def top_spaces_in_row(self, r: int) -> list[top_space]:
         spaces: list[top_space] = []
         for node in self.grid[r, :]:
-            if isinstance(node, LayoutSpaces):
+            if isinstance(node, PlotLayoutSpaces):
                 spaces.append(node.t)
             elif isinstance(node, LayoutTree):
                 spaces.extend(node.top_most_spaces)
@@ -378,7 +378,7 @@ class LayoutTree:
     def left_spaces_in_col(self, c: int) -> list[left_space]:
         spaces: list[left_space] = []
         for node in self.grid[:, c]:
-            if isinstance(node, LayoutSpaces):
+            if isinstance(node, PlotLayoutSpaces):
                 spaces.append(node.l)
             elif isinstance(node, LayoutTree):
                 spaces.extend(node.left_most_spaces)
@@ -387,7 +387,7 @@ class LayoutTree:
     def right_spaces_in_col(self, c: int) -> list[right_space]:
         spaces: list[right_space] = []
         for node in self.grid[:, c]:
-            if isinstance(node, LayoutSpaces):
+            if isinstance(node, PlotLayoutSpaces):
                 spaces.append(node.r)
             elif isinstance(node, LayoutTree):
                 spaces.extend(node.right_most_spaces)

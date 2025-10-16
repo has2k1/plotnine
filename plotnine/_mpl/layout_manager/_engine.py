@@ -7,7 +7,7 @@ from matplotlib.layout_engine import LayoutEngine
 
 from ...exceptions import PlotnineWarning
 from ._layout_tree import LayoutTree
-from ._plot_side_space import LayoutSpaces
+from ._plot_side_space import PlotLayoutSpaces
 
 if TYPE_CHECKING:
     from matplotlib.figure import Figure
@@ -39,7 +39,7 @@ class PlotnineLayoutEngine(LayoutEngine):
         renderer = fig._get_renderer()  # pyright: ignore[reportAttributeAccessIssue]
 
         with getattr(renderer, "_draw_disabled", nullcontext)():
-            spaces = LayoutSpaces(self.plot)
+            spaces = PlotLayoutSpaces(self.plot)
 
         gsparams = spaces.get_gridspec_params()
         self.plot.facet._gridspec.update_params_and_artists(gsparams)
@@ -63,10 +63,10 @@ class PlotnineCompositionLayoutEngine(LayoutEngine):
         renderer = fig._get_renderer()  # pyright: ignore[reportAttributeAccessIssue]
 
         # Caculate the space taken up by all plot artists
-        lookup_spaces: dict[ggplot, LayoutSpaces] = {}
+        lookup_spaces: dict[ggplot, PlotLayoutSpaces] = {}
         with getattr(renderer, "_draw_disabled", nullcontext)():
             for ps in self.composition.plotspecs:
-                lookup_spaces[ps.plot] = LayoutSpaces(ps.plot)
+                lookup_spaces[ps.plot] = PlotLayoutSpaces(ps.plot)
 
         # Adjust the size and placements of the plots
         tree = LayoutTree.create(self.composition, lookup_spaces)
