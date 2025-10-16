@@ -1,19 +1,26 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Sequence, cast
+from typing import TYPE_CHECKING, cast
 
 from matplotlib.transforms import Affine2D, Bbox
+
+from plotnine._utils import ha_as_float, va_as_float
 
 from .transforms import ZEROS_BBOX
 
 if TYPE_CHECKING:
+    from typing import Literal, Sequence
+
     from matplotlib.artist import Artist
     from matplotlib.axes import Axes
     from matplotlib.backend_bases import RendererBase
     from matplotlib.figure import Figure
     from matplotlib.gridspec import SubplotSpec
+    from matplotlib.text import Text
     from matplotlib.transforms import Transform
+
+    from plotnine.typing import HorizontalJustification, VerticalJustification
 
     from .gridspec import p9GridSpec
 
@@ -267,3 +274,131 @@ class ArtistGeometry:
             for a in artists
         ]
         return max(heights) if len(heights) else 0
+
+
+@dataclass
+class JustifyBoundaries:
+    """
+    Limits about which text can be justified
+    """
+
+    plot_left: float
+    plot_right: float
+    plot_bottom: float
+    plot_top: float
+    panel_left: float
+    panel_right: float
+    panel_bottom: float
+    panel_top: float
+
+
+class TextJustifier:
+    """
+    Justify Text
+
+    The justification methods reinterpret alignment values to be justification
+    about a span.
+    """
+
+    def __init__(self, figure: Figure, boundaries: JustifyBoundaries):
+        self.geometry = ArtistGeometry(figure)
+        self.boundaries = boundaries
+
+    def horizontally(
+        self,
+        text: Text,
+        ha: HorizontalJustification | float,
+        left: float,
+        right: float,
+        width: float | None = None,
+    ):
+        """
+        Horizontally Justify text between left and right
+        """
+        rel = ha_as_float(ha)
+        if width is None:
+            width = self.geometry.width(text)
+        x = rel_position(rel, width, left, right)
+        text.set_x(x)
+        text.set_horizontalalignment("left")
+
+    def vertically(
+        self,
+        text: Text,
+        va: VerticalJustification | float,
+        bottom: float,
+        top: float,
+        height: float | None = None,
+    ):
+        """
+        Vertically Justify text between bottom and top
+        """
+        rel = va_as_float(va)
+
+        if height is None:
+            height = self.geometry.height(text)
+        y = rel_position(rel, height, bottom, top)
+        text.set_y(y)
+        text.set_verticalalignment("bottom")
+
+    def horizontally_across_panel(
+        self, text: Text, ha: HorizontalJustification | float
+    ):
+        """
+        Horizontally Justify text accross the panel(s) width
+        """
+        self.horizontally(
+            text, ha, self.boundaries.panel_left, self.boundaries.panel_right
+        )
+
+    def horizontally_across_plot(
+        self, text: Text, ha: HorizontalJustification | float
+    ):
+        """
+        Horizontally Justify text across the plot's width
+        """
+        self.horizontally(
+            text, ha, self.boundaries.plot_left, self.boundaries.plot_right
+        )
+
+    def vertically_along_panel(
+        self, text: Text, va: VerticalJustification | float
+    ):
+        """
+        Horizontally Justify text along the panel(s) height
+        """
+        self.vertically(
+            text, va, self.boundaries.panel_bottom, self.boundaries.panel_top
+        )
+
+    def vertically_along_plot(
+        self, text: Text, va: VerticalJustification | float
+    ):
+        """
+        Vertically Justify text along the plot's height
+        """
+        self.vertically(
+            text, va, self.boundaries.plot_bottom, self.boundaries.plot_top
+        )
+
+    def horizontally_about(
+        self, text: Text, ratio: float, how: Literal["panel", "plot"]
+    ):
+        """
+        Horizontally Justify text across the panel or plot
+        """
+        if how == "panel":
+            self.horizontally_across_panel(text, ratio)
+        else:
+            self.horizontally_across_plot(text, ratio)
+
+    def vertically_about(
+        self, text: Text, ratio: float, how: Literal["panel", "plot"]
+    ):
+        """
+        Vertically Justify text along the panel or plot
+        """
+        if how == "panel":
+            self.vertically_along_panel(text, ratio)
+        else:
+            self.vertically_along_plot(text, ratio)
