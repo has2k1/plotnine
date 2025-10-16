@@ -38,7 +38,7 @@ if TYPE_CHECKING:
         StripPosition,
     )
 
-    from ._plot_side_space import LayoutSpaces
+    from ._plot_side_space import PlotLayoutSpaces
 
     AxesLocation: TypeAlias = Literal[
         "all", "first_row", "last_row", "first_col", "last_col"
@@ -60,7 +60,7 @@ if TYPE_CHECKING:
 
 
 @dataclass
-class LayoutItems:
+class PlotLayoutItems:
     """
     Objects required to compute the layout
     """
@@ -341,7 +341,7 @@ class LayoutItems:
 
         return max(extras) if len(extras) else 0
 
-    def _adjust_positions(self, spaces: LayoutSpaces):
+    def _adjust_positions(self, spaces: PlotLayoutSpaces):
         """
         Set the x,y position of the artists around the panels
         """
@@ -521,7 +521,7 @@ class PlotTextJustifier(TextJustifier):
     Justify Text about a plot or it's panels
     """
 
-    def __init__(self, spaces: LayoutSpaces):
+    def __init__(self, spaces: PlotLayoutSpaces):
         boundaries = JustifyBoundaries(
             plot_left=spaces.l.plot_left,
             plot_right=spaces.r.plot_right,
@@ -535,7 +535,7 @@ class PlotTextJustifier(TextJustifier):
         super().__init__(spaces.plot.figure, boundaries)
 
 
-def set_legends_position(legends: legend_artists, spaces: LayoutSpaces):
+def set_legends_position(legends: legend_artists, spaces: PlotLayoutSpaces):
     """
     Place legend on the figure and justify is a required
     """
@@ -613,7 +613,7 @@ def set_legends_position(legends: legend_artists, spaces: LayoutSpaces):
             set_position(l.box, l.position, l.justification, transPanels)
 
 
-def set_plot_tag_position(tag: Text, spaces: LayoutSpaces):
+def set_plot_tag_position(tag: Text, spaces: PlotLayoutSpaces):
     """
     Set the postion of the plot_tag
     """
@@ -674,7 +674,7 @@ def set_plot_tag_position(tag: Text, spaces: LayoutSpaces):
     tag.set_position(position)
 
 
-def set_plot_tag_position_in_margin(tag: Text, spaces: LayoutSpaces):
+def set_plot_tag_position_in_margin(tag: Text, spaces: PlotLayoutSpaces):
     """
     Place the tag in an inner margin around the plot
 
