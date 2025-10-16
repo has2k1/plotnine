@@ -7,11 +7,12 @@ from typing import TYPE_CHECKING
 from matplotlib.text import Text
 
 from plotnine._mpl.patches import StripTextPatch
-from plotnine._utils import ha_as_float, va_as_float
 from plotnine.exceptions import PlotnineError
 
 from ..utils import (
     ArtistGeometry,
+    JustifyBoundaries,
+    TextJustifier,
     get_subplotspecs,
     rel_position,
 )
@@ -34,9 +35,7 @@ if TYPE_CHECKING:
     from plotnine.iapi import legend_artists
     from plotnine.themes.elements import margin as Margin
     from plotnine.typing import (
-        HorizontalJustification,
         StripPosition,
-        VerticalJustification,
     )
 
     from ._plot_side_space import LayoutSpaces
@@ -349,7 +348,7 @@ class LayoutItems:
         theme = self.plot.theme
         plot_title_position = theme.getp("plot_title_position", "panel")
         plot_caption_position = theme.getp("plot_caption_position", "panel")
-        justify = TextJustifier(spaces)
+        justify = PlotTextJustifier(spaces)
 
         if self.plot_tag:
             set_plot_tag_position(self.plot_tag, spaces)
@@ -393,7 +392,7 @@ class LayoutItems:
         self._strip_text_x_background_equal_heights()
         self._strip_text_y_background_equal_widths()
 
-    def _adjust_axis_text_x(self, justify: TextJustifier):
+    def _adjust_axis_text_x(self, justify: PlotTextJustifier):
         """
         Adjust x-axis text, justifying vertically as necessary
         """
@@ -424,7 +423,7 @@ class LayoutItems:
                     text, va, -axis_text_row_height, 0, height=height
                 )
 
-    def _adjust_axis_text_y(self, justify: TextJustifier):
+    def _adjust_axis_text_y(self, justify: PlotTextJustifier):
         """
         Adjust x-axis text, justifying horizontally as necessary
         """
@@ -517,115 +516,23 @@ def _text_is_visible(text: Text) -> bool:
     return text.get_visible() and text._text  # type: ignore
 
 
-@dataclass
-class TextJustifier:
+class PlotTextJustifier(TextJustifier):
     """
-    Justify Text
-
-    The justification methods reinterpret alignment values to be justification
-    about a span.
+    Justify Text about a plot or it's panels
     """
 
-    spaces: LayoutSpaces
-
-    def horizontally(
-        self,
-        text: Text,
-        ha: HorizontalJustification | float,
-        left: float,
-        right: float,
-        width: float | None = None,
-    ):
-        """
-        Horizontally Justify text between left and right
-        """
-        rel = ha_as_float(ha)
-        if width is None:
-            width = self.spaces.items.geometry.width(text)
-        x = rel_position(rel, width, left, right)
-        text.set_x(x)
-        text.set_horizontalalignment("left")
-
-    def vertically(
-        self,
-        text: Text,
-        va: VerticalJustification | float,
-        bottom: float,
-        top: float,
-        height: float | None = None,
-    ):
-        """
-        Vertically Justify text between bottom and top
-        """
-        rel = va_as_float(va)
-
-        if height is None:
-            height = self.spaces.items.geometry.height(text)
-        y = rel_position(rel, height, bottom, top)
-        text.set_y(y)
-        text.set_verticalalignment("bottom")
-
-    def horizontally_across_panel(
-        self, text: Text, ha: HorizontalJustification | float
-    ):
-        """
-        Horizontally Justify text accross the panel(s) width
-        """
-        self.horizontally(
-            text, ha, self.spaces.l.panel_left, self.spaces.r.panel_right
+    def __init__(self, spaces: LayoutSpaces):
+        boundaries = JustifyBoundaries(
+            plot_left=spaces.l.plot_left,
+            plot_right=spaces.r.plot_right,
+            plot_bottom=spaces.b.plot_bottom,
+            plot_top=spaces.t.plot_top,
+            panel_left=spaces.l.panel_left,
+            panel_right=spaces.r.panel_right,
+            panel_bottom=spaces.b.panel_bottom,
+            panel_top=spaces.t.panel_top,
         )
-
-    def horizontally_across_plot(
-        self, text: Text, ha: HorizontalJustification | float
-    ):
-        """
-        Horizontally Justify text across the plot's width
-        """
-        self.horizontally(
-            text, ha, self.spaces.l.plot_left, self.spaces.r.plot_right
-        )
-
-    def vertically_along_panel(
-        self, text: Text, va: VerticalJustification | float
-    ):
-        """
-        Horizontally Justify text along the panel(s) height
-        """
-        self.vertically(
-            text, va, self.spaces.b.panel_bottom, self.spaces.t.panel_top
-        )
-
-    def vertically_along_plot(
-        self, text: Text, va: VerticalJustification | float
-    ):
-        """
-        Vertically Justify text along the plot's height
-        """
-        self.vertically(
-            text, va, self.spaces.b.plot_bottom, self.spaces.t.plot_top
-        )
-
-    def horizontally_about(
-        self, text: Text, ratio: float, how: Literal["panel", "plot"]
-    ):
-        """
-        Horizontally Justify text across the panel or plot
-        """
-        if how == "panel":
-            self.horizontally_across_panel(text, ratio)
-        else:
-            self.horizontally_across_plot(text, ratio)
-
-    def vertically_about(
-        self, text: Text, ratio: float, how: Literal["panel", "plot"]
-    ):
-        """
-        Vertically Justify text along the panel or plot
-        """
-        if how == "panel":
-            self.vertically_along_panel(text, ratio)
-        else:
-            self.vertically_along_plot(text, ratio)
+        super().__init__(spaces.plot.figure, boundaries)
 
 
 def set_legends_position(legends: legend_artists, spaces: LayoutSpaces):
@@ -805,7 +712,7 @@ def set_plot_tag_position_in_margin(tag: Text, spaces: LayoutSpaces):
         tag.set_y(y)
         tag.set_verticalalignment("bottom")
 
-    justify = TextJustifier(spaces)
+    justify = PlotTextJustifier(spaces)
     if position in ("left", "right"):
         justify.vertically_along_plot(tag, va)
     elif position in ("top", "bottom"):
