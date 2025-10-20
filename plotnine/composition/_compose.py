@@ -25,7 +25,7 @@ if TYPE_CHECKING:
     from matplotlib.figure import Figure
 
     from plotnine._mpl.gridspec import p9GridSpec
-    from plotnine.ggplot import PlotAddable, ggplot
+    from plotnine.ggplot import PlotAddable, ggplot, theme
     from plotnine.typing import FigureFormat, MimeBundle
 
 
@@ -193,6 +193,14 @@ class Compose:
     def ncol(self) -> int:
         return cast("int", self.layout.ncol)
 
+    @property
+    def theme(self) -> theme:
+        return self.annotation.theme
+
+    @theme.setter
+    def theme(self, value: theme):
+        self.annotation.theme = value
+
     @abc.abstractmethod
     def __or__(self, rhs: ggplot | Compose) -> Compose:
         """
@@ -338,7 +346,7 @@ class Compose:
 
         buf = BytesIO()
         self.save(buf, "png" if format == "retina" else format)
-        figure_size_px = self.last_plot.theme._figure_size_px
+        figure_size_px = self.annotation.theme._figure_size_px
         return get_mimebundle(buf.getvalue(), format, figure_size_px)
 
     @property
@@ -398,7 +406,7 @@ class Compose:
             else:
                 item._to_retina()
 
-    def _create_gridspec(self, nest_into):
+    def _create_gridspec(self, container_gs):
         """
         Create the gridspec for this composition
         """
@@ -408,8 +416,9 @@ class Compose:
         self.layout._setup(self)
         self.annotation._setup(self)
 
+        self._gridspec = container_gs
         self.items._gridspec = p9GridSpec.from_layout(
-            self.layout, figure=self.figure, nest_into=nest_into
+            self.layout, figure=self.figure, nest_into=container_gs[0]
         )
 
     def _setup(self) -> Figure:
@@ -430,17 +439,13 @@ class Compose:
         figure = plt.figure()
 
         def _make_plotspecs(
-            cmp: Compose, _gridspec: p9GridSpec
+            cmp: Compose, container_gs: p9GridSpec
         ) -> Generator[plotspec]:
             """
             Return the plot specification for each subplot in the composition
             """
-            # This gridspec contains a composition group e.g.
-            # (p2 | p3) of p1 | (p2 | p3)
-            ss_or_none = _gridspec[0]
-
             cmp.figure = figure
-            cmp._create_gridspec(ss_or_none)
+            cmp._create_gridspec(container_gs)
 
             # Iterating over the gridspec yields the SubplotSpecs for each
             # "subplot" in the grid. The SubplotSpec is the handle for the
@@ -512,8 +517,18 @@ class Compose:
             figure = self._setup()
             self._draw_plots()
             self.annotation.draw()
+            self._draw_composition_background()
+            self.annotation.theme.apply()
             figure.set_layout_engine(PlotnineCompositionLayoutEngine(self))
         return figure
+
+    def _draw_composition_background(self):
+        from matplotlib.patches import Rectangle
+
+        rect = Rectangle((0, 0), 0, 0, facecolor="none", zorder=-1000)
+        self.figure.add_artist(rect)
+        self._gridspec.patch = rect
+        self.annotation.theme.targets.plot_background = rect
 
     def save(
         self,

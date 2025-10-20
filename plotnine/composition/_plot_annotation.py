@@ -58,7 +58,8 @@ class plot_annotation(ComposeAddable):
         """
         Setup annotation
         """
-        self.theme._setup(cmp.figure)
+        self.theme = cmp.last_plot.theme + self.theme
+        self.theme._setup(cmp.figure, None, self.title, self.subtitle)
 
     def empty(self) -> bool:
         """
