@@ -340,7 +340,7 @@ class ggplot:
             self.guides.draw()
             self._draw_figure_texts()
             self._draw_watermarks()
-            self._draw_figure_background()
+            self._draw_plot_background()
 
             # Artist object theming
             self.theme.apply()
@@ -559,7 +559,7 @@ class ggplot:
         for wm in self.watermarks:
             wm.draw(self.figure)
 
-    def _draw_figure_background(self):
+    def _draw_plot_background(self):
         from matplotlib.patches import Rectangle
 
         rect = Rectangle((0, 0), 0, 0, facecolor="none", zorder=-1000)
