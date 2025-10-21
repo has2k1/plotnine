@@ -54,13 +54,6 @@ class plot_annotation(ComposeAddable):
             else:
                 setattr(self, name, value)
 
-    def _setup(self, cmp: Compose):
-        """
-        Setup annotation
-        """
-        self.theme = cmp.last_plot.theme + self.theme
-        self.theme._setup(cmp.figure, None, self.title, self.subtitle)
-
     def empty(self) -> bool:
         """
         Whether the annotation has any content
@@ -72,22 +65,3 @@ class plot_annotation(ComposeAddable):
                 return False
 
         return True
-
-    def draw(self):
-        """
-        Render the items in the annotation
-        """
-        if self.empty():
-            return
-
-        figure = self.theme.figure
-        targets = self.theme.targets
-
-        if self.title:
-            targets.plot_title = figure.text(0, 0, self.title)
-
-        if subtitle := self.subtitle:
-            targets.plot_subtitle = figure.text(0, 0, subtitle)
-
-        if caption := self.caption:
-            targets.plot_caption = figure.text(0, 0, caption)
