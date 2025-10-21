@@ -5,6 +5,8 @@ from copy import copy, deepcopy
 from io import BytesIO
 from typing import TYPE_CHECKING, cast, overload
 
+from plotnine.themes.theme import theme_get
+
 from .._utils.context import plot_composition_context
 from .._utils.ipython import (
     get_ipython,
@@ -195,11 +197,19 @@ class Compose:
 
     @property
     def theme(self) -> theme:
-        return self.annotation.theme
+        """
+        Theme for this composition
+
+        This is the default theme plus combined with theme from the
+        annotation.
+        """
+        if not getattr(self, "_theme", None):
+            self._theme = theme_get() + self.annotation.theme
+        return self._theme
 
     @theme.setter
     def theme(self, value: theme):
-        self.annotation.theme = value
+        self._theme = value
 
     @abc.abstractmethod
     def __or__(self, rhs: ggplot | Compose) -> Compose:
@@ -346,7 +356,7 @@ class Compose:
 
         buf = BytesIO()
         self.save(buf, "png" if format == "retina" else format)
-        figure_size_px = self.annotation.theme._figure_size_px
+        figure_size_px = self.theme._figure_size_px
         return get_mimebundle(buf.getvalue(), format, figure_size_px)
 
     @property
@@ -400,6 +410,8 @@ class Compose:
     def _to_retina(self):
         from plotnine import ggplot
 
+        self.theme = self.theme.to_retina()
+
         for item in self:
             if isinstance(item, ggplot):
                 item.theme = item.theme.to_retina()
@@ -412,9 +424,8 @@ class Compose:
         """
         from plotnine._mpl.gridspec import p9GridSpec
 
-        # NOTE: These two should be in ._setup
+        # NOTE: This should be in ._setup
         self.layout._setup(self)
-        self.annotation._setup(self)
 
         self._gridspec = container_gs
         self.items._gridspec = p9GridSpec.from_layout(
@@ -516,19 +527,47 @@ class Compose:
         with plot_composition_context(self, show):
             figure = self._setup()
             self._draw_plots()
-            self.annotation.draw()
+            self.theme._setup(
+                self.figure,
+                None,
+                self.annotation.title,
+                self.annotation.subtitle,
+            )
+            self._draw_annotation()
             self._draw_composition_background()
-            self.annotation.theme.apply()
+            self.theme.apply()
             figure.set_layout_engine(PlotnineCompositionLayoutEngine(self))
         return figure
 
     def _draw_composition_background(self):
+        """
+        Draw the background rectangle of the composition
+        """
         from matplotlib.patches import Rectangle
 
         rect = Rectangle((0, 0), 0, 0, facecolor="none", zorder=-1000)
         self.figure.add_artist(rect)
         self._gridspec.patch = rect
-        self.annotation.theme.targets.plot_background = rect
+        self.theme.targets.plot_background = rect
+
+    def _draw_annotation(self):
+        """
+        Draw the items in the annotation
+        """
+        if self.annotation.empty():
+            return
+
+        figure = self.theme.figure
+        targets = self.theme.targets
+
+        if title := self.annotation.title:
+            targets.plot_title = figure.text(0, 0, title)
+
+        if subtitle := self.annotation.subtitle:
+            targets.plot_subtitle = figure.text(0, 0, subtitle)
+
+        if caption := self.annotation.caption:
+            targets.plot_caption = figure.text(0, 0, caption)
 
     def save(
         self,
