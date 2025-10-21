@@ -59,15 +59,12 @@ if TYPE_CHECKING:
     )
 
 
-@dataclass
 class PlotLayoutItems:
     """
     Objects required to compute the layout
     """
 
-    plot: ggplot
-
-    def __post_init__(self):
+    def __init__(self, plot: ggplot):
         def get(name: str) -> Any:
             """
             Return themeable target or None
@@ -80,6 +77,7 @@ class PlotLayoutItems:
                     return None
                 return t
 
+        self.plot = plot
         self.geometry = ArtistGeometry(self.plot.figure)
 
         self.axis_title_x: Text | None = get("axis_title_x")
