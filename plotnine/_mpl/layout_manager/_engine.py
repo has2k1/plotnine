@@ -6,6 +6,7 @@ from warnings import warn
 from matplotlib.layout_engine import LayoutEngine
 
 from ...exceptions import PlotnineWarning
+from ._composition_side_space import CompositionLayoutSpaces
 from ._layout_tree import LayoutTree
 from ._plot_side_space import PlotLayoutSpaces
 
@@ -61,10 +62,16 @@ class PlotnineCompositionLayoutEngine(LayoutEngine):
         from contextlib import nullcontext
 
         renderer = fig._get_renderer()  # pyright: ignore[reportAttributeAccessIssue]
+        cmp = self.composition
 
         # Caculate the space taken up by all plot artists
         lookup_spaces: dict[ggplot, PlotLayoutSpaces] = {}
         with getattr(renderer, "_draw_disabled", nullcontext)():
+            cmp_spaces = CompositionLayoutSpaces(cmp)
+            gsparams = cmp_spaces.get_gridspec_params()
+            cmp.items._gridspec.update_params_and_artists(gsparams)
+            cmp_spaces.items._adjust_positions(cmp_spaces)
+
             for ps in self.composition.plotspecs:
                 lookup_spaces[ps.plot] = PlotLayoutSpaces(ps.plot)
 
