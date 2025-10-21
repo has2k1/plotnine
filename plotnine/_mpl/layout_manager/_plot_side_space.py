@@ -11,7 +11,6 @@ such cases as when left or right margin are affected by xlabel.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 from functools import cached_property
 from typing import TYPE_CHECKING
 
@@ -27,13 +26,14 @@ if TYPE_CHECKING:
     from plotnine.iapi import outside_legend
 
 
-@dataclass
 class _plot_side_space(_side_space):
     """
     Base class for the side space around a plot
     """
 
-    items: PlotLayoutItems
+    def __init__(self, items: PlotLayoutItems):
+        self.items = items
+        self._calculate()
 
     @cached_property
     def _legend_size(self) -> tuple[float, float]:
@@ -147,7 +147,6 @@ class _plot_side_space(_side_space):
             raise PlotnineError("Side has no axis title") from err
 
 
-@dataclass
 class left_space(_plot_side_space):
     """
     Space in the figure for artists on the left of the panel area
@@ -319,7 +318,6 @@ class left_space(_plot_side_space):
         )
 
 
-@dataclass
 class right_space(_plot_side_space):
     """
     Space in the figure for artists on the right of the panel area
@@ -425,7 +423,6 @@ class right_space(_plot_side_space):
         )
 
 
-@dataclass
 class top_space(_plot_side_space):
     """
     Space in the figure for artists above the panel area
@@ -554,7 +551,6 @@ class top_space(_plot_side_space):
         )
 
 
-@dataclass
 class bottom_space(_plot_side_space):
     """
     Space in the figure for artists below the panel area

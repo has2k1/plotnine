@@ -12,14 +12,11 @@ such cases as when left or right margin are affected by xlabel.
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from dataclasses import dataclass, fields
+from dataclasses import dataclass
 from functools import cached_property
 from typing import TYPE_CHECKING, cast
 
 if TYPE_CHECKING:
-    from dataclasses import Field
-    from typing import Generator
-
     from plotnine._mpl.gridspec import p9GridSpec
     from plotnine.typing import Side
 
@@ -52,7 +49,6 @@ class GridSpecParams:
         return self.top - self.bottom > 0 and self.right - self.left > 0
 
 
-@dataclass
 class _side_space(ABC):
     """
     Base class to for spaces
@@ -64,24 +60,39 @@ class _side_space(ABC):
     The amount of space for each artist is computed in figure coordinates.
     """
 
-    def __post_init__(self):
-        self.side: Side = cast("Side", self.__class__.__name__.split("_")[0])
-        """
-        Side of the panel(s) that this class applies to
-        """
-        self._calculate()
-
     def _calculate(self):
         """
         Calculate the space taken up by each artist
         """
+
+    @cached_property
+    def side(self) -> Side:
+        """
+        Side of the panel(s) that this class applies to
+        """
+        return cast("Side", self.__class__.__name__.split("_")[0])
+
+    @cached_property
+    def parts(self) -> list[str]:
+        """
+        The names of the part of the spaces
+        """
+        return [
+            name
+            for name, value in self.__class__.__dict__.items()
+            if not (
+                name.startswith("_")
+                or callable(value)
+                or isinstance(value, property)
+            )
+        ]
 
     @property
     def total(self) -> float:
         """
         Total space
         """
-        return sum(getattr(self, f.name) for f in fields(self)[1:])
+        return sum(getattr(self, name) for name in self.parts)
 
     def sum_upto(self, item: str) -> float:
         """
@@ -89,14 +100,8 @@ class _side_space(ABC):
 
         Sums from the edge of the figure i.e. the "plot_margin".
         """
-
-        def _fields_upto(item: str) -> Generator[Field, None, None]:
-            for f in fields(self)[1:]:
-                if f.name == item:
-                    break
-                yield f
-
-        return sum(getattr(self, f.name) for f in _fields_upto(item))
+        stop = self.parts.index(item)
+        return sum(getattr(self, name) for name in self.parts[:stop])
 
     def sum_incl(self, item: str) -> float:
         """
@@ -104,14 +109,8 @@ class _side_space(ABC):
 
         Sums from the edge of the figure i.e. the "plot_margin".
         """
-
-        def _fields_upto(item: str) -> Generator[Field, None, None]:
-            for f in fields(self)[1:]:
-                yield f
-                if f.name == item:
-                    break
-
-        return sum(getattr(self, f.name) for f in _fields_upto(item))
+        stop = self.parts.index(item) + 1
+        return sum(getattr(self, name) for name in self.parts[:stop])
 
     @cached_property
     @abstractmethod
