@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 from matplotlib.testing.compare import compare_images
 
 from plotnine import ggplot, theme
-from plotnine.composition import Beside, Compose, Stack
+from plotnine.composition import Beside, Compose, Stack, plot_annotation
 from plotnine.themes.theme import DEFAULT_RCPARAMS
 
 TOLERANCE = 2  # Default tolerance for the tests
@@ -256,7 +256,7 @@ def composition_equals(cmp: Compose, name: str) -> bool:
     test_file = inspect.stack()[1][1]
     filenames = make_test_image_filenames(name, test_file)
 
-    _cmp = cmp + theme(dpi=DPI)
+    _cmp = cmp + plot_annotation(theme=theme(figure_size=(8, 6), dpi=DPI))
 
     with _test_cleanup():
         _cmp.save(filenames.result)
