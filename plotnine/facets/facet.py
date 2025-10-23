@@ -93,7 +93,6 @@ class facet:
 
     # Axes
     axs: list[Axes]
-    _gridspec: p9GridSpec
 
     # ggplot object that the facet belongs to
     plot: ggplot
@@ -144,15 +143,15 @@ class facet:
         self.figure = plot.figure
 
         if hasattr(plot, "axs"):
-            self.axs = plot.axs
+            gs, self.axs = plot._sub_gridspec, plot.axs
         else:
-            self.axs = self._make_axes()
+            gs, self.axs = self._make_axes()
 
         self.coordinates = plot.coordinates
         self.theme = plot.theme
         self.layout.axs = self.axs
         self.strips = Strips.from_facet(self)
-        return self.axs
+        return gs, self.axs
 
     def setup_data(self, data: list[pd.DataFrame]) -> list[pd.DataFrame]:
         """
@@ -378,7 +377,7 @@ class facet:
 
         return result
 
-    def _get_panels_gridspec(self) -> p9GridSpec:
+    def _make_gridspec(self):
         """
         Create gridspec for the panels
         """
@@ -388,19 +387,19 @@ class facet:
             self.nrow, self.ncol, self.figure, nest_into=self.plot._gridspec[0]
         )
 
-    def _make_axes(self) -> list[Axes]:
+    def _make_axes(self) -> tuple[p9GridSpec, list[Axes]]:
         """
         Create and return subplot axes
         """
+
         num_panels = len(self.layout.layout)
         axsarr = np.empty((self.nrow, self.ncol), dtype=object)
-
-        self._gridspec = self._get_panels_gridspec()
+        gs = self._make_gridspec()
 
         # Create axes
         it = itertools.product(range(self.nrow), range(self.ncol))
         for i, (row, col) in enumerate(it):
-            axsarr[row, col] = self.figure.add_subplot(self._gridspec[i])
+            axsarr[row, col] = self.figure.add_subplot(gs[i])
 
         # Rearrange axes
         # They are ordered to match the positions in the layout table
@@ -421,7 +420,7 @@ class facet:
         for ax in axs[num_panels:]:
             self.figure.delaxes(ax)
         axs = axs[:num_panels]
-        return list(axs)
+        return gs, list(axs)
 
     def _aspect_ratio(self) -> Optional[float]:
         """

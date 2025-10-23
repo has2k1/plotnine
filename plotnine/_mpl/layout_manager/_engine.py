@@ -43,7 +43,7 @@ class PlotnineLayoutEngine(LayoutEngine):
             spaces = PlotLayoutSpaces(self.plot)
 
         gsparams = spaces.get_gridspec_params()
-        self.plot.facet._gridspec.update_params_and_artists(gsparams)
+        self.plot._sub_gridspec.update_params_and_artists(gsparams)
         spaces.items._adjust_positions(spaces)
 
 
@@ -67,7 +67,7 @@ class PlotnineCompositionLayoutEngine(LayoutEngine):
         def _do_cmp(cmp):
             cmp_spaces = CompositionLayoutSpaces(cmp)
             gsparams = cmp_spaces.get_gridspec_params()
-            cmp.items._gridspec.update_params_and_artists(gsparams)
+            cmp._sub_gridspec.update_params_and_artists(gsparams)
             cmp_spaces.items._adjust_positions(cmp_spaces)
 
             for plot in cmp.iter_plots():
@@ -95,5 +95,5 @@ class PlotnineCompositionLayoutEngine(LayoutEngine):
                     PlotnineWarning,
                 )
                 break
-            plot.facet._gridspec.update_params_and_artists(gsparams)
+            plot._sub_gridspec.update_params_and_artists(gsparams)
             spaces.items._adjust_positions(spaces)

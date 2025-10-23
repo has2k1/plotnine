@@ -107,7 +107,7 @@ class facet_grid(facet):
         self.space = space
         self.margins = margins
 
-    def _get_panels_gridspec(self):
+    def _make_gridspec(self):
         """
         Create gridspec for the panels
         """
