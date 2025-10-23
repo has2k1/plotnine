@@ -6,9 +6,9 @@ from warnings import warn
 from matplotlib.layout_engine import LayoutEngine
 
 from ...exceptions import PlotnineWarning
-from ._composition_side_space import CompositionLayoutSpaces
+from ._composition_side_space import CompositionSideSpaces
 from ._layout_tree import LayoutTree
-from ._plot_side_space import PlotLayoutSpaces
+from ._plot_side_space import PlotSideSpaces
 
 if TYPE_CHECKING:
     from matplotlib.figure import Figure
@@ -40,7 +40,7 @@ class PlotnineLayoutEngine(LayoutEngine):
         renderer = fig._get_renderer()  # pyright: ignore[reportAttributeAccessIssue]
 
         with getattr(renderer, "_draw_disabled", nullcontext)():
-            spaces = PlotLayoutSpaces(self.plot)
+            spaces = PlotSideSpaces(self.plot)
 
         gsparams = spaces.get_gridspec_params()
         self.plot._sub_gridspec.update_params_and_artists(gsparams)
@@ -62,16 +62,16 @@ class PlotnineCompositionLayoutEngine(LayoutEngine):
         from contextlib import nullcontext
 
         renderer = fig._get_renderer()  # pyright: ignore[reportAttributeAccessIssue]
-        lookup_spaces: dict[ggplot, PlotLayoutSpaces] = {}
+        lookup_spaces: dict[ggplot, PlotSideSpaces] = {}
 
         def _do_cmp(cmp):
-            cmp_spaces = CompositionLayoutSpaces(cmp)
+            cmp_spaces = CompositionSideSpaces(cmp)
             gsparams = cmp_spaces.get_gridspec_params()
             cmp._sub_gridspec.update_params_and_artists(gsparams)
             cmp_spaces.items._adjust_positions(cmp_spaces)
 
             for plot in cmp.iter_plots():
-                lookup_spaces[plot] = PlotLayoutSpaces(plot)
+                lookup_spaces[plot] = PlotSideSpaces(plot)
 
             for sub_cmp in cmp.iter_sub_compositions():
                 _do_cmp(sub_cmp)
