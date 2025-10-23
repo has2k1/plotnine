@@ -11,7 +11,7 @@ such cases as when left or right margin are affected by xlabel.
 
 from __future__ import annotations
 
-from abc import ABC, abstractmethod
+from abc import ABC
 from dataclasses import dataclass
 from functools import cached_property
 from typing import TYPE_CHECKING, cast
@@ -58,6 +58,11 @@ class _side_space(ABC):
     side classes (e.g. legend).
 
     The amount of space for each artist is computed in figure coordinates.
+    """
+
+    gridspec: p9GridSpec
+    """
+    The gridspec (1x1) of the plot or composition
     """
 
     def _calculate(self):
@@ -111,13 +116,6 @@ class _side_space(ABC):
         """
         stop = self.parts.index(item) + 1
         return sum(getattr(self, name) for name in self.parts[:stop])
-
-    @cached_property
-    @abstractmethod
-    def gs(self) -> p9GridSpec:
-        """
-        The gridspec of the plot or composition
-        """
 
     @property
     def offset(self) -> float:

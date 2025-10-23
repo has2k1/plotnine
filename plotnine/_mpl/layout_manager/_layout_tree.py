@@ -111,9 +111,9 @@ class LayoutTree:
     represents.
     """
 
-    gridspec: p9GridSpec = field(init=False, repr=False)
+    sub_gridspec: p9GridSpec = field(init=False, repr=False)
     """
-    Gridspec of the composition
+    Gridspec (nxn) of the composed items
 
     Originally this gridspec occupies all the space available to it so the
     subplots are of equal sizes. As each subplot contains full ggplot,
@@ -126,7 +126,7 @@ class LayoutTree:
     """
 
     def __post_init__(self):
-        self.gridspec = self.cmp.items._gridspec
+        self.sub_gridspec = self.cmp._sub_gridspec
         self.grid = Grid["Node"](
             self.nrow,
             self.ncol,
@@ -279,14 +279,14 @@ class LayoutTree:
         """
         A width of all plots in this tree/composition
         """
-        return self.gridspec.width
+        return self.sub_gridspec.width
 
     @property
     def plot_height(self) -> float:
         """
         A height of all plots in this tree/composition
         """
-        return self.gridspec.height
+        return self.sub_gridspec.height
 
     @property
     def panel_widths(self) -> Sequence[float]:
@@ -320,7 +320,7 @@ class LayoutTree:
 
         For each column, the representative width is that of the widest plot.
         """
-        w = self.gridspec.width / self.ncol
+        w = self.sub_gridspec.width / self.ncol
         return [
             max([node.plot_width if node else w for node in col])
             for col in self.grid.iter_cols()
@@ -333,7 +333,7 @@ class LayoutTree:
 
         For each row, the representative height is that of the tallest plot.
         """
-        h = self.gridspec.height / self.nrow
+        h = self.sub_gridspec.height / self.nrow
         return [
             max([node.plot_height if node else h for node in row])
             for row in self.grid.iter_rows()
@@ -539,7 +539,7 @@ class LayoutTree:
         non_panel_space = np.array(self.plot_widths) - self.panel_widths
         new_plot_widths = new_panel_widths + non_panel_space
         width_ratios = new_plot_widths / new_plot_widths.max()
-        self.gridspec.set_width_ratios(width_ratios)
+        self.sub_gridspec.set_width_ratios(width_ratios)
 
     def resize_heights(self):
         new_panel_heights = np.mean(self.panel_heights) * np.array(
@@ -548,4 +548,4 @@ class LayoutTree:
         non_panel_space = np.array(self.plot_heights) - self.panel_heights
         new_plot_heights = new_panel_heights + non_panel_space
         height_ratios = new_plot_heights / new_plot_heights.max()
-        self.gridspec.set_height_ratios(height_ratios)
+        self.sub_gridspec.set_height_ratios(height_ratios)
