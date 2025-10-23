@@ -1,13 +1,11 @@
 from __future__ import annotations
 
-from functools import cached_property
 from typing import TYPE_CHECKING
 
 from ._composition_layout_items import CompositionLayoutItems
 from ._side_space import GridSpecParams, _side_space
 
 if TYPE_CHECKING:
-    from plotnine._mpl.gridspec import p9GridSpec
     from plotnine.composition._compose import Compose
 
 
@@ -18,14 +16,8 @@ class _composition_side_space(_side_space):
 
     def __init__(self, items: CompositionLayoutItems):
         self.items = items
+        self.gridspec = items.cmp._gridspec
         self._calculate()
-
-    @cached_property
-    def gs(self) -> p9GridSpec:
-        """
-        The gridspec of the composition
-        """
-        return self.items.cmp._gridspec
 
 
 class composition_left_space(_composition_side_space):
@@ -49,7 +41,7 @@ class composition_left_space(_composition_side_space):
         (0, 0)----------------
 
         """
-        return self.gs.bbox_relative.x0
+        return self.gridspec.bbox_relative.x0
 
     def x1(self, item: str) -> float:
         """
@@ -120,7 +112,7 @@ class composition_right_space(_composition_side_space):
         (0, 0)---------------
 
         """
-        return self.gs.bbox_relative.x1 - 1
+        return self.gridspec.bbox_relative.x1 - 1
 
     def x1(self, item: str) -> float:
         """
@@ -217,7 +209,7 @@ class composition_top_space(_composition_side_space):
              |                |
         (0, 0)----------------
         """
-        return self.gs.bbox_relative.y1 - 1
+        return self.gridspec.bbox_relative.y1 - 1
 
     def y1(self, item: str) -> float:
         """
@@ -305,7 +297,7 @@ class composition_bottom_space(_composition_side_space):
              |       v        |
         (0, 0)----------------
         """
-        return self.gs.bbox_relative.y0
+        return self.gridspec.bbox_relative.y0
 
     def y1(self, item: str) -> float:
         """

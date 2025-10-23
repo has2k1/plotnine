@@ -16,7 +16,7 @@ from .._utils.ipython import (
 from .._utils.quarto import is_knitr_engine, is_quarto_environment
 from ..composition._plot_annotation import plot_annotation
 from ..composition._plot_layout import plot_layout
-from ..composition._types import ComposeAddable, CompositionItems
+from ..composition._types import ComposeAddable
 from ..options import get_option
 
 if TYPE_CHECKING:
@@ -103,28 +103,33 @@ class Compose:
     """
     Gridspec (1x1) that contains the annotations and the composition items
 
+    plot_layout's theme parameter affects this gridspec.
+    """
+
+    _sub_gridspec: p9GridSpec
+    """
+    Gridspec (nxn) that contains the composed [ggplot | Compose] items
+
      -------------------
-    |  title            |<----- This one
+    |  title            |<----- ._gridspec
     |  subtitle         |
     |                   |
     |   -------------   |
-    |  |      |      |<-+----- .items._gridspec
+    |  |      |      |<-+------ ._sub_gridspec
     |  |      |      |  |
     |   -------------   |
     |                   |
-    |  caption          |
+    |           caption |
      -------------------
-
-    plot_layout's theme parameter affects this gridspec.
     """
 
     def __init__(self, items: list[ggplot | Compose]):
         # The way we handle the plots has consequences that would
         # prevent having a duplicate plot in the composition.
         # Using copies prevents this.
-        self.items = CompositionItems(
-            [op if isinstance(op, Compose) else deepcopy(op) for op in items]
-        )
+        self.items = [
+            op if isinstance(op, Compose) else deepcopy(op) for op in items
+        ]
 
         self._layout = plot_layout()
         """
@@ -459,7 +464,7 @@ class Compose:
         self.figure = figure
         self._gridspec = container_gs
         self.layout._setup(self)
-        self.items._gridspec = p9GridSpec.from_layout(
+        self._sub_gridspec = p9GridSpec.from_layout(
             self.layout, figure=figure, nest_into=container_gs[0]
         )
 
@@ -467,7 +472,7 @@ class Compose:
         # "subplot" in the grid. The SubplotSpec is the handle for the
         # area in the grid; it allows us to put a plot or a nested
         # composion in that area.
-        for item, subplot_spec in zip(self, self.items._gridspec):
+        for item, subplot_spec in zip(self, self._sub_gridspec):
             # This container gs will contain a plot or a composition,
             # i.e. it will be assigned to one of:
             #    1. ggplot._gridspec
