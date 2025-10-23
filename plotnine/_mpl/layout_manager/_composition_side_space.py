@@ -341,7 +341,7 @@ class composition_bottom_space(_composition_side_space):
         return self.composition_bottom
 
 
-class CompositionLayoutSpaces:
+class CompositionSideSpaces:
     gsparams: GridSpecParams
     """Grid spacing btn panels w.r.t figure"""
 

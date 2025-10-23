@@ -16,7 +16,7 @@ if TYPE_CHECKING:
 
     from plotnine.composition._compose import Compose
 
-    from ._composition_side_space import CompositionLayoutSpaces
+    from ._composition_side_space import CompositionSideSpaces
 
 
 @dataclass
@@ -48,7 +48,7 @@ class CompositionLayoutItems:
     def _is_blank(self, name: str) -> bool:
         return self.cmp.theme.T.is_blank(name)
 
-    def _adjust_positions(self, spaces: CompositionLayoutSpaces):
+    def _adjust_positions(self, spaces: CompositionSideSpaces):
         theme = self.cmp.theme
         plot_title_position = theme.getp("plot_title_position", "panel")
         plot_caption_position = theme.getp("plot_caption_position", "panel")
@@ -81,7 +81,7 @@ class CompositionTextJustifier(TextJustifier):
     Justify Text about a composition or it's panels
     """
 
-    def __init__(self, spaces: CompositionLayoutSpaces):
+    def __init__(self, spaces: CompositionSideSpaces):
         boundaries = JustifyBoundaries(
             plot_left=spaces.l.composition_left,
             plot_right=spaces.r.composition_right,
