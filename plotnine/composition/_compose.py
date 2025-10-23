@@ -5,7 +5,7 @@ from copy import copy, deepcopy
 from io import BytesIO
 from typing import TYPE_CHECKING, cast, overload
 
-from plotnine.themes.theme import theme_get
+from plotnine.themes.theme import theme, theme_get
 
 from .._utils.context import plot_composition_context
 from .._utils.ipython import (
@@ -18,16 +18,15 @@ from ..composition._plot_annotation import plot_annotation
 from ..composition._plot_layout import plot_layout
 from ..composition._types import ComposeAddable, CompositionItems
 from ..options import get_option
-from ._plotspec import plotspec
 
 if TYPE_CHECKING:
     from pathlib import Path
-    from typing import Generator, Iterator
+    from typing import Iterator
 
     from matplotlib.figure import Figure
 
     from plotnine._mpl.gridspec import p9GridSpec
-    from plotnine.ggplot import PlotAddable, ggplot, theme
+    from plotnine.ggplot import PlotAddable, ggplot
     from plotnine.typing import FigureFormat, MimeBundle
 
 
@@ -100,7 +99,6 @@ class Compose:
 
     # These are created in the ._create_figure
     figure: Figure
-    plotspecs: list[plotspec]
     _gridspec: p9GridSpec
     """
     Gridspec (1x1) that contains the annotations and the composition items
@@ -359,6 +357,18 @@ class Compose:
         figure_size_px = self.theme._figure_size_px
         return get_mimebundle(buf.getvalue(), format, figure_size_px)
 
+    def iter_sub_compositions(self):
+        for item in self:
+            if isinstance(item, Compose):
+                yield item
+
+    def iter_plots(self):
+        from plotnine import ggplot
+
+        for item in self:
+            if isinstance(item, ggplot):
+                yield item
+
     @property
     def last_plot(self) -> ggplot:
         """
@@ -418,71 +428,70 @@ class Compose:
             else:
                 item._to_retina()
 
-    def _create_gridspec(self, container_gs):
-        """
-        Create the gridspec for this composition
-        """
-        from plotnine._mpl.gridspec import p9GridSpec
-
-        # NOTE: This should be in ._setup
-        self.layout._setup(self)
-
-        self._gridspec = container_gs
-        self.items._gridspec = p9GridSpec.from_layout(
-            self.layout, figure=self.figure, nest_into=container_gs[0]
-        )
-
     def _setup(self) -> Figure:
         """
         Setup this instance for the building process
         """
-        if not hasattr(self, "figure"):
-            self._create_figure()
-
+        self._create_figure()
+        self._remove_sub_composition_background()
         return self.figure
 
     def _create_figure(self):
+        """
+        Create figure & gridspecs for all sub compositions
+        """
+        if hasattr(self, "figure"):
+            return
+
         import matplotlib.pyplot as plt
 
-        from plotnine import ggplot
         from plotnine._mpl.gridspec import p9GridSpec
 
         figure = plt.figure()
-
-        def _make_plotspecs(
-            cmp: Compose, container_gs: p9GridSpec
-        ) -> Generator[plotspec]:
-            """
-            Return the plot specification for each subplot in the composition
-            """
-            cmp.figure = figure
-            cmp._create_gridspec(container_gs)
-
-            # Iterating over the gridspec yields the SubplotSpecs for each
-            # "subplot" in the grid. The SubplotSpec is the handle for the
-            # area in the grid; it allows us to put a plot or a nested
-            # composion in that area.
-            for item, subplot_spec in zip(cmp, cmp.items._gridspec):
-                # This container gs will contain a plot or a composition,
-                # i.e. it will be assigned to one of:
-                #    1. ggplot._gridspec
-                #    2. compose._gridspec
-                container_gs = p9GridSpec(1, 1, figure, nest_into=subplot_spec)
-                if isinstance(item, ggplot):
-                    yield plotspec(item, figure, container_gs)
-                else:
-                    yield from _make_plotspecs(item, container_gs)
-
-        self.plotspecs = list(
-            _make_plotspecs(self, p9GridSpec(1, 1, figure, nest_into=None))
+        self._generate_gridspecs(
+            figure, p9GridSpec(1, 1, figure, nest_into=None)
         )
 
-    def _draw_plots(self):
+    def _generate_gridspecs(self, figure: Figure, container_gs: p9GridSpec):
+        from plotnine import ggplot
+        from plotnine._mpl.gridspec import p9GridSpec
+
+        self.figure = figure
+        self._gridspec = container_gs
+        self.layout._setup(self)
+        self.items._gridspec = p9GridSpec.from_layout(
+            self.layout, figure=figure, nest_into=container_gs[0]
+        )
+
+        # Iterating over the gridspec yields the SubplotSpecs for each
+        # "subplot" in the grid. The SubplotSpec is the handle for the
+        # area in the grid; it allows us to put a plot or a nested
+        # composion in that area.
+        for item, subplot_spec in zip(self, self.items._gridspec):
+            # This container gs will contain a plot or a composition,
+            # i.e. it will be assigned to one of:
+            #    1. ggplot._gridspec
+            #    2. compose._gridspec
+            _container_gs = p9GridSpec(1, 1, figure, nest_into=subplot_spec)
+            if isinstance(item, ggplot):
+                item.figure = figure
+                item._gridspec = _container_gs
+            else:
+                item._generate_gridspecs(figure, _container_gs)
+
+    def _remove_sub_composition_background(self):
         """
-        Draw all plots in the composition
+        Remove the background and margins of subcompositions
+
+        Only the top-most composition can have a background and
+        margin. This prevents edgy interactions.
         """
-        for ps in self.plotspecs:
-            ps.plot.draw()
+        from plotnine import element_blank
+
+        for cmp in self.iter_sub_compositions():
+            cmp.theme = cmp.theme + theme(
+                plot_margin=0, plot_background=element_blank()
+            )
 
     def show(self):
         """
@@ -517,27 +526,45 @@ class Compose:
         :
             Matplotlib figure
         """
-        # NOTE: This method is not recursive though considering the order in
-        # which the methods are called we may expect it to be.
-        # The outmost composition has a list (the plotspecs created recursively
-        # in ._create_figure), so we can draw all the plots.
-        # Consider a refactoring.
         from .._mpl.layout_manager import PlotnineCompositionLayoutEngine
 
-        with plot_composition_context(self, show):
-            figure = self._setup()
-            self._draw_plots()
-            self.theme._setup(
-                self.figure,
+        def _draw(cmp):
+            figure = cmp._setup()
+            cmp._draw_plots()
+            cmp.theme._setup(
+                cmp.figure,
                 None,
-                self.annotation.title,
-                self.annotation.subtitle,
+                cmp.annotation.title,
+                cmp.annotation.subtitle,
             )
-            self._draw_annotation()
-            self._draw_composition_background()
+            cmp._draw_annotation()
+            cmp._draw_composition_background()
+
+            for sub_cmp in cmp.iter_sub_compositions():
+                _draw(sub_cmp)
+                sub_cmp.theme.apply()
+
+            return figure
+
+        # As the plot border and plot background apply to the entire
+        # composition and not the sub compositions, the theme of the
+        # whole composition is applied last (outside _draw).
+        with plot_composition_context(self, show):
+            figure = _draw(self)
             self.theme.apply()
             figure.set_layout_engine(PlotnineCompositionLayoutEngine(self))
+
         return figure
+
+    def _draw_plots(self):
+        """
+        Draw all plots in the composition
+        """
+        from plotnine import ggplot
+
+        for item in self:
+            if isinstance(item, ggplot):
+                item.draw()
 
     def _draw_composition_background(self):
         """
