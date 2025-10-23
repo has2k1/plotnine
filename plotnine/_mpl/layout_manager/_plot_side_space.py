@@ -691,7 +691,7 @@ class bottom_space(_plot_side_space):
         )
 
 
-class PlotLayoutSpaces:
+class PlotSideSpaces:
     """
     Compute the all the spaces required in the layout
 
