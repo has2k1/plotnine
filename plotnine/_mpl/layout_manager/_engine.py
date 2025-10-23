@@ -62,18 +62,23 @@ class PlotnineCompositionLayoutEngine(LayoutEngine):
         from contextlib import nullcontext
 
         renderer = fig._get_renderer()  # pyright: ignore[reportAttributeAccessIssue]
-        cmp = self.composition
-
-        # Caculate the space taken up by all plot artists
         lookup_spaces: dict[ggplot, PlotLayoutSpaces] = {}
-        with getattr(renderer, "_draw_disabled", nullcontext)():
+
+        def _do_cmp(cmp):
             cmp_spaces = CompositionLayoutSpaces(cmp)
             gsparams = cmp_spaces.get_gridspec_params()
             cmp.items._gridspec.update_params_and_artists(gsparams)
             cmp_spaces.items._adjust_positions(cmp_spaces)
 
-            for ps in self.composition.plotspecs:
-                lookup_spaces[ps.plot] = PlotLayoutSpaces(ps.plot)
+            for plot in cmp.iter_plots():
+                lookup_spaces[plot] = PlotLayoutSpaces(plot)
+
+            for sub_cmp in cmp.iter_sub_compositions():
+                _do_cmp(sub_cmp)
+
+        # Caculate the space taken up by all plot artists
+        with getattr(renderer, "_draw_disabled", nullcontext)():
+            _do_cmp(self.composition)
 
         # Adjust the size and placements of the plots
         tree = LayoutTree.create(self.composition, lookup_spaces)
