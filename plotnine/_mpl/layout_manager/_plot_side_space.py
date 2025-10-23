@@ -33,6 +33,7 @@ class _plot_side_space(_side_space):
 
     def __init__(self, items: PlotLayoutItems):
         self.items = items
+        self.gridspec = items.plot._gridspec
         self._calculate()
 
     @cached_property
@@ -63,13 +64,6 @@ class _plot_side_space(_side_space):
         Return height of legend in figure coordinates
         """
         return self._legend_size[1]
-
-    @cached_property
-    def gs(self) -> p9GridSpec:
-        """
-        The gridspec of the plot
-        """
-        return self.items.plot._gridspec
 
     @property
     def has_tag(self) -> bool:
@@ -271,7 +265,7 @@ class left_space(_plot_side_space):
         (0, 0)----------------
 
         """
-        return self.gs.bbox_relative.x0
+        return self.gridspec.bbox_relative.x0
 
     def x1(self, item: str) -> float:
         """
@@ -376,7 +370,7 @@ class right_space(_plot_side_space):
         (0, 0)---------------
 
         """
-        return self.gs.bbox_relative.x1 - 1
+        return self.gridspec.bbox_relative.x1 - 1
 
     def x1(self, item: str) -> float:
         """
@@ -504,7 +498,7 @@ class top_space(_plot_side_space):
              |                |
         (0, 0)----------------
         """
-        return self.gs.bbox_relative.y1 - 1
+        return self.gridspec.bbox_relative.y1 - 1
 
     def y1(self, item: str) -> float:
         """
@@ -650,7 +644,7 @@ class bottom_space(_plot_side_space):
              |       v        |
         (0, 0)----------------
         """
-        return self.gs.bbox_relative.y0
+        return self.gridspec.bbox_relative.y0
 
     def y1(self, item: str) -> float:
         """

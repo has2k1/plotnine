@@ -536,7 +536,7 @@ def set_legends_position(legends: legend_artists, spaces: PlotLayoutSpaces):
     """
     Place legend on the figure and justify is a required
     """
-    panels_gs = spaces.plot.facet._gridspec
+    panels_gs = spaces.plot._sub_gridspec
     params = panels_gs.get_subplot_params()
     transFigure = spaces.plot.figure.transFigure
 
@@ -615,7 +615,7 @@ def set_plot_tag_position(tag: Text, spaces: PlotLayoutSpaces):
     Set the postion of the plot_tag
     """
     theme = spaces.plot.theme
-    panels_gs = spaces.plot.facet._gridspec
+    panels_gs = spaces.plot._sub_gridspec
     location: TagLocation = theme.getp("plot_tag_location")
     position: TagPosition = theme.getp("plot_tag_position")
     margin = theme.get_margin("plot_tag")

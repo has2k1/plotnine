@@ -188,6 +188,7 @@ class PlotnineAnimation(ArtistAnimation):
                         "different limits from those of the first frame."
                     )
 
+        first_plot: ggplot | None = None
         figure: Figure | None = None
         axs: list[Axes] = []
         artists = []
@@ -198,14 +199,15 @@ class PlotnineAnimation(ArtistAnimation):
         # onto the figure and axes created by the first ggplot and
         # they create the subsequent frames.
         for frame_no, p in enumerate(plots):
-            if figure is None:
-                figure = p.draw()
-                axs = figure.get_axes()
+            if first_plot is None:
+                first_plot = p
+                figure = first_plot.draw()
+                axs = first_plot.figure.get_axes()
                 initialise_artist_offsets(len(axs))
-                scales = p._build_objs.scales
+                scales = first_plot._build_objs.scales
                 set_scale_limits(scales)
             else:
-                plot = self._draw_animation_plot(p, figure, axs)
+                plot = self._draw_animation_plot(p, first_plot)
                 check_scale_limits(plot.scales, frame_no)
 
             artists.append(get_frame_artists(axs))
@@ -213,14 +215,11 @@ class PlotnineAnimation(ArtistAnimation):
         if figure is None:
             figure = plt.figure()
 
-        assert figure is not None
         # Prevent Jupyter from plotting any static figure
         plt.close(figure)
         return figure, artists
 
-    def _draw_animation_plot(
-        self, plot: ggplot, figure: Figure, axs: list[Axes]
-    ) -> ggplot:
+    def _draw_animation_plot(self, plot: ggplot, first_plot: ggplot) -> ggplot:
         """
         Draw a plot/frame of the animation
 
@@ -229,10 +228,12 @@ class PlotnineAnimation(ArtistAnimation):
         from ._utils.context import plot_context
 
         plot = deepcopy(plot)
-        plot.figure = figure
-        plot.axs = axs
+        plot.figure = first_plot.figure
+        plot.axs = first_plot.axs
+        plot._gridspec = first_plot._sub_gridspec
+        plot._sub_gridspec = first_plot._sub_gridspec
         with plot_context(plot):
             plot._build()
-            plot.axs = plot.facet.setup(plot)
+            _ = plot.facet.setup(plot)
             plot._draw_layers()
         return plot
