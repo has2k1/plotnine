@@ -794,6 +794,22 @@ class PlotSideSpaces:
         """
         return self.t.panel_top - self.b.panel_bottom
 
+    @property
+    def horizontal_space(self) -> float:
+        """
+        Horizontal non-panel space [figure dimensions]
+        """
+        # The same as plot_width - panel_width
+        return self.l.total + self.r.total
+
+    @property
+    def vertical_space(self) -> float:
+        """
+        Vertical non-panel space [figure dimensions]
+        """
+        # The same as plot_height - panel_height
+        return self.t.total + self.b.total
+
     def increase_horizontal_plot_margin(self, dw: float):
         """
         Increase the plot_margin to the right & left of the panels
