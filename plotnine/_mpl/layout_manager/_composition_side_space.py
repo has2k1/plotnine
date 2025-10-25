@@ -342,8 +342,9 @@ class composition_bottom_space(_composition_side_space):
 
 
 class CompositionSideSpaces:
-    gsparams: GridSpecParams
-    """Grid spacing btn panels w.r.t figure"""
+    """
+    Compute the spaces required to layout the composition
+    """
 
     def __init__(self, cmp: Compose):
         self.cmp = cmp
@@ -361,8 +362,25 @@ class CompositionSideSpaces:
         self.b = composition_bottom_space(self.items)
         """All subspaces below the bottom of the panels"""
 
-    def get_gridspec_params(self) -> GridSpecParams:
-        self.gsparams = GridSpecParams(
+    def apply(self):
+        """
+        Apply the space calculations to the sub_gridspec
+        """
+        gsparams = self.calculate_gridspec_params()
+        gsparams.validate()
+        self.cmp._sub_gridspec.update_params_and_artists(gsparams)
+
+    def adjust_artist_positions(self):
+        """
+        Set the x,y position of the artists around the compositions
+        """
+        self.items._adjust_positions(self)
+
+    def calculate_gridspec_params(self) -> GridSpecParams:
+        """
+        Grid spacing between compositions w.r.t figure
+        """
+        return GridSpecParams(
             self.l.items_left_relative,
             self.r.items_right_relative,
             self.t.items_top_relative,
@@ -370,7 +388,6 @@ class CompositionSideSpaces:
             0,
             0,
         )
-        return self.gsparams
 
     @property
     def horizontal_space(self) -> float:

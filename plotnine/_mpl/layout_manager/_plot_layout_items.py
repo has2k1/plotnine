@@ -338,7 +338,7 @@ class PlotLayoutItems:
 
         return max(extras) if len(extras) else 0
 
-    def _adjust_positions(self, spaces: PlotSideSpaces):
+    def _adjust_artist_positions(self, spaces: PlotSideSpaces):
         """
         Set the x,y position of the artists around the panels
         """
