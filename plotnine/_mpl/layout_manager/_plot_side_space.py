@@ -11,6 +11,7 @@ such cases as when left or right margin are affected by xlabel.
 
 from __future__ import annotations
 
+from copy import copy
 from functools import cached_property
 from typing import TYPE_CHECKING
 
@@ -725,9 +726,6 @@ class PlotSideSpaces:
     sw: float
     """vertical spacing btn panels w.r.t figure"""
 
-    gsparams: GridSpecParams
-    """Grid spacing btn panels w.r.t figure"""
-
     def __init__(self, plot: ggplot):
         self.plot = plot
         self.items = PlotLayoutItems(plot)
@@ -746,10 +744,25 @@ class PlotSideSpaces:
 
         self.W, self.H = plot.theme.getp("figure_size")
 
-    def get_gridspec_params(self) -> GridSpecParams:
-        # Calculate the gridspec params
-        # (spacing required by mpl)
-        self.gsparams = self._calculate_panel_spacing()
+    def apply(self):
+        """
+        Apply the space calculations to the sub_gridspec
+        """
+        gsparams = self.calculate_gridspec_params()
+        gsparams.validate()
+        self.plot._sub_gridspec.update_params_and_artists(gsparams)
+
+    def adjust_artist_positions(self):
+        """
+        Set the x,y position of the artists around the panels
+        """
+        self.items._adjust_artist_positions(self)
+
+    def calculate_gridspec_params(self) -> GridSpecParams:
+        """
+        Grid spacing between panels w.r.t figure
+        """
+        gsparams = self._calculate_panel_spacing()
 
         # Adjust the spacing parameters for the desired aspect ratio
         # It is simpler to adjust for the aspect ratio than to calculate
@@ -759,12 +772,12 @@ class PlotSideSpaces:
             current_ratio = self.aspect_ratio
             if ratio > current_ratio:
                 # Increase aspect ratio, taller panels
-                self._reduce_width(ratio)
+                gsparams = self._reduce_width(gsparams, ratio)
             elif ratio < current_ratio:
                 # Increase aspect ratio, wider panels
-                self._reduce_height(ratio)
+                gsparams = self._reduce_height(gsparams, ratio)
 
-        return self.gsparams
+        return gsparams
 
     @property
     def plot_width(self) -> float:
@@ -956,10 +969,12 @@ class PlotSideSpaces:
         self.sh = 0
         return 0, 0
 
-    def _reduce_height(self, ratio: float):
+    def _reduce_height(self, gsparams: GridSpecParams, ratio: float):
         """
         Reduce the height of axes to get the aspect ratio
         """
+        gsparams = copy(gsparams)
+
         # New height w.r.t figure height
         h1 = ratio * self.w * (self.W / self.H)
 
@@ -967,17 +982,20 @@ class PlotSideSpaces:
         dh = (self.h - h1) * self.plot.facet.nrow / 2
 
         # Reduce plot area height
-        self.gsparams.top -= dh
-        self.gsparams.bottom += dh
-        self.gsparams.hspace = self.sh / h1
+        gsparams.top -= dh
+        gsparams.bottom += dh
+        gsparams.hspace = self.sh / h1
 
         # Add more vertical plot margin
         self.increase_vertical_plot_margin(dh)
+        return gsparams
 
-    def _reduce_width(self, ratio: float):
+    def _reduce_width(self, gsparams: GridSpecParams, ratio: float):
         """
         Reduce the width of axes to get the aspect ratio
         """
+        gsparams = copy(gsparams)
+
         # New width w.r.t figure width
         w1 = (self.h * self.H) / (ratio * self.W)
 
@@ -985,12 +1003,13 @@ class PlotSideSpaces:
         dw = (self.w - w1) * self.plot.facet.ncol / 2
 
         # Reduce width
-        self.gsparams.left += dw
-        self.gsparams.right -= dw
-        self.gsparams.wspace = self.sw / w1
+        gsparams.left += dw
+        gsparams.right -= dw
+        gsparams.wspace = self.sw / w1
 
         # Add more horizontal margin
         self.increase_horizontal_plot_margin(dw)
+        return gsparams
 
     @property
     def aspect_ratio(self) -> float:
