@@ -371,3 +371,17 @@ class CompositionSideSpaces:
             0,
         )
         return self.gsparams
+
+    @property
+    def horizontal_space(self) -> float:
+        """
+        Horizontal non-panel space [figure dimensions]
+        """
+        return self.l.total + self.r.total
+
+    @property
+    def vertical_space(self) -> float:
+        """
+        Vertical non-panel space [figure dimensions]
+        """
+        return self.t.total + self.b.total
