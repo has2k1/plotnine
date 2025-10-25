@@ -12,7 +12,6 @@ from ._plot_side_space import PlotSideSpaces
 if TYPE_CHECKING:
     from typing import Sequence, TypeAlias
 
-    from plotnine import ggplot
     from plotnine._mpl.gridspec import p9GridSpec
     from plotnine._mpl.layout_manager._plot_side_space import (
         bottom_space,
@@ -92,6 +91,26 @@ class LayoutTree:
         LayoutSpaces  LayoutSpaces  LayoutSpaces  LayoutSpaces  LayoutSpaces
 
     Each composition is a tree or subtree
+
+    ## How it works
+
+    Initially (and if the composition does not have annotation texts), the
+    sub_gridspec occupies all the space available to it with the contained
+    items (ggplot / Compose) having equal sizes.
+
+    But if the full plot / composition occupy the same space, their panels
+    may have different sizes because they have to share that space with the
+    texts (title, subtitle, caption, axis title, axis text, tag), legends
+    and plot margins that surround the panels.
+
+    We align the panels, axis titles and tags by adding *_alignment margins;
+    and resize the panels by
+
+    Taking the sizes of these elements into account, we align the panels
+    in the composition by changing the width and/or height of the gridspec.
+
+    The information about the size (width & height) of the panels is in the
+    LayoutSpaces.
     """
 
     cmp: Compose
@@ -105,18 +124,14 @@ class LayoutTree:
     represents.
     """
 
+    gridspec: p9GridSpec = field(init=False, repr=False)
+    """
+    Gridspec (nx1) of the composition
+    """
+
     sub_gridspec: p9GridSpec = field(init=False, repr=False)
     """
     Gridspec (nxn) of the composed items
-
-    Originally this gridspec occupies all the space available to it so the
-    subplots are of equal sizes. As each subplot contains full ggplot,
-    differences in texts and legend sizes may make the panels (panel area)
-    have unequal sizes. We can resize the panels, by changing the height
-    and width ratios of this (composition) gridspec.
-
-    The information about the size (width & height) of the panels is in the
-    LayoutSpaces.
     """
 
     def __post_init__(self):
@@ -143,10 +158,7 @@ class LayoutTree:
         return cast("int", self.cmp.layout.nrow)
 
     @staticmethod
-    def create(
-        cmp: Compose,
-        lookup_spaces: dict[ggplot, PlotSideSpaces],
-    ) -> LayoutTree:
+    def create(cmp: Compose) -> LayoutTree:
         """
         Create a LayoutTree for this composition
 
@@ -168,9 +180,9 @@ class LayoutTree:
         nodes: list[PlotSideSpaces | LayoutTree] = []
         for item in cmp:
             if isinstance(item, ggplot):
-                nodes.append(lookup_spaces[item])
+                nodes.append(item._sidespaces)
             else:
-                nodes.append(LayoutTree.create(item, lookup_spaces))
+                nodes.append(LayoutTree.create(item))
 
         return LayoutTree(cmp, nodes)
 

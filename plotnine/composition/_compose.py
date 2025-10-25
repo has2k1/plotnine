@@ -26,6 +26,9 @@ if TYPE_CHECKING:
     from matplotlib.figure import Figure
 
     from plotnine._mpl.gridspec import p9GridSpec
+    from plotnine._mpl.layout_manager._composition_side_space import (
+        CompositionSideSpaces,
+    )
     from plotnine.ggplot import PlotAddable, ggplot
     from plotnine.typing import FigureFormat, MimeBundle
 
@@ -122,6 +125,7 @@ class Compose:
     |           caption |
      -------------------
     """
+    _sidespaces: CompositionSideSpaces
 
     def __init__(self, items: list[ggplot | Compose]):
         # The way we handle the plots has consequences that would
