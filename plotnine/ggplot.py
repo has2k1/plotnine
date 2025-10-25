@@ -53,6 +53,7 @@ if TYPE_CHECKING:
 
     from plotnine import watermark
     from plotnine._mpl.gridspec import p9GridSpec
+    from plotnine._mpl.layout_manager._plot_side_space import PlotSideSpaces
     from plotnine.composition import Compose
     from plotnine.coords.coord import coord
     from plotnine.facets.facet import facet
@@ -128,6 +129,8 @@ class ggplot:
     |                 caption |
      -------------------------
     """
+
+    _sidespaces: PlotSideSpaces
 
     def __init__(
         self,

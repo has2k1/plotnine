@@ -28,6 +28,12 @@ if TYPE_CHECKING:
 # in both directions
 
 
+class GridSpecParamsError(Exception):
+    """
+    Error thrown when there isn't enough space for some panels
+    """
+
+
 @dataclass
 class GridSpecParams:
     """
@@ -41,12 +47,15 @@ class GridSpecParams:
     wspace: float
     hspace: float
 
-    @property
-    def valid(self) -> bool:
+    def validate(self):
         """
         Return True if the params will create a non-empty area
         """
-        return self.top - self.bottom > 0 and self.right - self.left > 0
+        if not (self.top - self.bottom > 0 and self.right - self.left > 0):
+            raise GridSpecParamsError(
+                "The parameters of the gridspec do not create a regular "
+                "rectangle."
+            )
 
 
 class _side_space(ABC):
