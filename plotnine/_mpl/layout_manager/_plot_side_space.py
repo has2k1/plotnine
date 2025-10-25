@@ -885,9 +885,6 @@ class PlotSideSpaces:
         ncol = self.plot.facet.ncol
         nrow = self.plot.facet.nrow
 
-        left, right = self.l.panel_left, self.r.panel_right
-        top, bottom = self.t.panel_top, self.b.panel_bottom
-
         # Both spacings are specified as fractions of the figure width
         # Multiply the vertical by (W/H) so that the gullies along both
         # directions are equally spaced.
@@ -895,8 +892,8 @@ class PlotSideSpaces:
         self.sh = theme.getp("panel_spacing_y") * self.W / self.H
 
         # width and height of axes as fraction of figure width & height
-        self.w = ((right - left) - self.sw * (ncol - 1)) / ncol
-        self.h = ((top - bottom) - self.sh * (nrow - 1)) / nrow
+        self.w = (self.panel_width - self.sw * (ncol - 1)) / ncol
+        self.h = (self.panel_height - self.sh * (nrow - 1)) / nrow
 
         # Spacing as fraction of axes width & height
         wspace = self.sw / self.w
@@ -912,9 +909,6 @@ class PlotSideSpaces:
 
         ncol = facet.ncol
         nrow = facet.nrow
-
-        left, right = self.l.panel_left, self.r.panel_right
-        top, bottom = self.t.panel_top, self.b.panel_bottom
 
         # Both spacings are specified as fractions of the figure width
         self.sw = theme.getp("panel_spacing_x")
@@ -944,8 +938,8 @@ class PlotSideSpaces:
             ) + self.items.axis_ticks_y_max_width_at("all")
 
         # width and height of axes as fraction of figure width & height
-        self.w = ((right - left) - self.sw * (ncol - 1)) / ncol
-        self.h = ((top - bottom) - self.sh * (nrow - 1)) / nrow
+        self.w = (self.panel_width - self.sw * (ncol - 1)) / ncol
+        self.h = (self.panel_height - self.sh * (nrow - 1)) / nrow
 
         # Spacing as fraction of axes width & height
         wspace = self.sw / self.w
@@ -956,8 +950,8 @@ class PlotSideSpaces:
         """
         Calculate spacing parts for facet_null
         """
-        self.w = self.r.panel_right - self.l.panel_left
-        self.h = self.t.panel_top - self.b.panel_bottom
+        self.w = self.panel_width
+        self.h = self.panel_height
         self.sw = 0
         self.sh = 0
         return 0, 0
