@@ -362,7 +362,7 @@ class CompositionSideSpaces:
         self.b = composition_bottom_space(self.items)
         """All subspaces below the bottom of the panels"""
 
-    def apply(self):
+    def resize_gridspec(self):
         """
         Apply the space calculations to the sub_gridspec
         """
@@ -370,11 +370,11 @@ class CompositionSideSpaces:
         gsparams.validate()
         self.cmp._sub_gridspec.update_params_and_artists(gsparams)
 
-    def adjust_artist_positions(self):
+    def place_artists(self):
         """
         Set the x,y position of the artists around the compositions
         """
-        self.items._adjust_positions(self)
+        self.items._place_artists(self)
 
     def calculate_gridspec_params(self) -> GridSpecParams:
         """
