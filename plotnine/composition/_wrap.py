@@ -41,7 +41,7 @@ class Wrap(Compose):
         if not isinstance(rhs, (ggplot, Compose)):
             return super().__add__(rhs)
 
-        return Wrap([*self, rhs]) + self.layout
+        return Wrap([*self, rhs]) + self.layout + self.annotation
 
     def __or__(self, rhs: ggplot | Compose) -> Compose:
         """

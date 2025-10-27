@@ -48,7 +48,7 @@ class CompositionLayoutItems:
     def _is_blank(self, name: str) -> bool:
         return self.cmp.theme.T.is_blank(name)
 
-    def _adjust_positions(self, spaces: CompositionSideSpaces):
+    def _place_artists(self, spaces: CompositionSideSpaces):
         theme = self.cmp.theme
         plot_title_position = theme.getp("plot_title_position", "panel")
         plot_caption_position = theme.getp("plot_caption_position", "panel")

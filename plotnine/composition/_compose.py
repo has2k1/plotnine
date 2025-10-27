@@ -378,6 +378,16 @@ class Compose:
             if isinstance(item, ggplot):
                 yield item
 
+    def iter_plots_all(self):
+        """
+        Recursively generate all plots under this composition
+        """
+        for plot in self.iter_plots():
+            yield plot
+
+        for cmp in self.iter_sub_compositions():
+            yield from cmp.iter_plots_all()
+
     @property
     def last_plot(self) -> ggplot:
         """
@@ -442,7 +452,6 @@ class Compose:
         Setup this instance for the building process
         """
         self._create_figure()
-        self._remove_sub_composition_background()
         return self.figure
 
     def _create_figure(self):
@@ -488,20 +497,6 @@ class Compose:
             else:
                 item._generate_gridspecs(figure, _container_gs)
 
-    def _remove_sub_composition_background(self):
-        """
-        Remove the background and margins of subcompositions
-
-        Only the top-most composition can have a background and
-        margin. This prevents edgy interactions.
-        """
-        from plotnine import element_blank
-
-        for cmp in self.iter_sub_compositions():
-            cmp.theme = cmp.theme + theme(
-                plot_margin=0, plot_background=element_blank()
-            )
-
     def show(self):
         """
         Display plot in the cells output
@@ -540,18 +535,9 @@ class Compose:
         def _draw(cmp):
             figure = cmp._setup()
             cmp._draw_plots()
-            cmp.theme._setup(
-                cmp.figure,
-                None,
-                cmp.annotation.title,
-                cmp.annotation.subtitle,
-            )
-            cmp._draw_annotation()
-            cmp._draw_composition_background()
 
             for sub_cmp in cmp.iter_sub_compositions():
                 _draw(sub_cmp)
-                sub_cmp.theme.apply()
 
             return figure
 
@@ -560,6 +546,14 @@ class Compose:
         # whole composition is applied last (outside _draw).
         with plot_composition_context(self, show):
             figure = _draw(self)
+            self.theme._setup(
+                self.figure,
+                None,
+                self.annotation.title,
+                self.annotation.subtitle,
+            )
+            self._draw_annotation()
+            self._draw_composition_background()
             self.theme.apply()
             figure.set_layout_engine(PlotnineCompositionLayoutEngine(self))
 

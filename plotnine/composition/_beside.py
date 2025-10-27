@@ -35,7 +35,7 @@ class Beside(Compose):
         """
         # This is adjacent or i.e. (OR | rhs) so we collapse the
         # operands into a single operation
-        return Beside([*self, rhs]) + self.layout
+        return Beside([*self, rhs]) + self.layout + self.annotation
 
     def __truediv__(self, rhs: ggplot | Compose) -> Compose:
         """
