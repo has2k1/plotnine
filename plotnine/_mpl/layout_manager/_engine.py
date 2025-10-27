@@ -40,8 +40,8 @@ class PlotnineLayoutEngine(LayoutEngine):
         with getattr(renderer, "_draw_disabled", nullcontext)():
             self.plot._sidespaces = PlotSideSpaces(self.plot)
 
-        self.plot._sidespaces.apply()
-        self.plot._sidespaces.adjust_artist_positions()
+        self.plot._sidespaces.resize_gridspec()
+        self.plot._sidespaces.place_artists()
 
 
 class PlotnineCompositionLayoutEngine(LayoutEngine):
@@ -54,46 +54,38 @@ class PlotnineCompositionLayoutEngine(LayoutEngine):
 
     def __init__(self, composition: Compose):
         self.composition = composition
+        """
+        Top level composition
+        """
 
     def execute(self, fig: Figure):
         from contextlib import nullcontext
 
         renderer = fig._get_renderer()  # pyright: ignore[reportAttributeAccessIssue]
+        cmp = self.composition
 
-        # Calculate the all sidespaces (recursively)
-        # For the compositions, we have to also update (.apply)
-        # the gridspec so that LayoutTree has the right information
-        # to arrange the plots and resize them (.harmonise).
-        def _calculate_sidespaces(cmp: Compose):
+        # Calculate the sidespaces of:
+        #   1. The top composition
+        #   2. All the contained plots (recurvively)
+        with getattr(renderer, "_draw_disabled", nullcontext)():
+            # We have to apply the spaces of the composition before
+            # executing the LayoutTree because it expects the
+            # ._sub_gridspec of the composition to have its final
+            # position and total area.
             cmp._sidespaces = CompositionSideSpaces(cmp)
-            cmp._sidespaces.apply()
+            cmp._sidespaces.resize_gridspec()
 
-            for plot in cmp.iter_plots():
+            for plot in cmp.iter_plots_all():
                 plot._sidespaces = PlotSideSpaces(plot)
 
-            for sub_cmp in cmp.iter_sub_compositions():
-                _calculate_sidespaces(sub_cmp)
+        # Adjust the numbers that align the plots, and resize them.
+        tree = LayoutTree.create(cmp)
+        tree.arrange_layout()
 
-        # Caculate the space taken up by all plot artists
-        with getattr(renderer, "_draw_disabled", nullcontext)():
-            _calculate_sidespaces(self.composition)
-
-        # Adjust the size and placements of the plots
-        tree = LayoutTree.create(self.composition)
-        tree.harmonise()
-
-        # Recursively place the artists in both the compositions
-        # and plots in their final position.
-        # First we update (.apply) the plot gridspecs as LayoutTree
-        # has adjusted the sidespaces to their final values.
-        def _adjust_artist_positions(cmp: Compose):
-            cmp._sidespaces.adjust_artist_positions()
-
-            for plot in cmp.iter_plots():
-                plot._sidespaces.apply()
-                plot._sidespaces.adjust_artist_positions()
-
-            for sub_cmp in cmp.iter_sub_compositions():
-                _adjust_artist_positions(sub_cmp)
-
-        _adjust_artist_positions(self.composition)
+        # At this point, the compositions > plots > panels have been
+        # placed in their final positions and have the desired sizes.
+        # We place the artists around them into their final positions.
+        cmp._sidespaces.place_artists()
+        for plot in cmp.iter_plots_all():
+            plot._sidespaces.resize_gridspec()
+            plot._sidespaces.place_artists()

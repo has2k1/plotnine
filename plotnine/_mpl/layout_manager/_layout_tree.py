@@ -124,14 +124,9 @@ class LayoutTree:
     represents.
     """
 
-    gridspec: p9GridSpec = field(init=False, repr=False)
-    """
-    Gridspec (nx1) of the composition
-    """
-
     sub_gridspec: p9GridSpec = field(init=False, repr=False)
     """
-    Gridspec (nxn) of the composed items
+    Gridspec (nxn) that contains the composed items
     """
 
     def __post_init__(self):
@@ -166,13 +161,6 @@ class LayoutTree:
         ----------
         cmp :
             Composition
-        lookup_spaces :
-            A table to lookup the LayoutSpaces for each plot.
-
-        Notes
-        -----
-        LayoutTree works by modifying the `.gridspec` of the compositions,
-        and the `LayoutSpaces` of the plots.
         """
         from plotnine import ggplot
 
@@ -193,9 +181,16 @@ class LayoutTree:
         """
         return [item for item in self.nodes if isinstance(item, LayoutTree)]
 
-    def harmonise(self):
+    def arrange_layout(self):
         """
         Align and resize plots in composition to look good
+
+        Aligning changes the *_alignment attributes of the side_spaces.
+        Resizing, changes the parameters of the sub_gridspec.
+
+        Note that we expect that this method will be called only on the
+        tree for the top-level composition, and it is called for its
+        side-effects.
         """
         self.align_axis_titles()
         self.align()
@@ -406,6 +401,12 @@ class LayoutTree:
         return cast("Sequence[float]", self.cmp._layout.heights)
 
     def bottom_spaces_in_row(self, r: int) -> list[bottom_space]:
+        """
+        The bottom_spaces of plots in a given row
+
+        If an item in the row is a compositions, then it is the
+        bottom_spaces in the bottom row of that composition.
+        """
         spaces: list[bottom_space] = []
         for node in self.grid[r, :]:
             if isinstance(node, PlotSideSpaces):
@@ -415,6 +416,12 @@ class LayoutTree:
         return spaces
 
     def top_spaces_in_row(self, r: int) -> list[top_space]:
+        """
+        The top_spaces of plots in a given row
+
+        If an item in the row is a compositions, then it is the
+        top_spaces in the top row of that composition.
+        """
         spaces: list[top_space] = []
         for node in self.grid[r, :]:
             if isinstance(node, PlotSideSpaces):
@@ -424,6 +431,12 @@ class LayoutTree:
         return spaces
 
     def left_spaces_in_col(self, c: int) -> list[left_space]:
+        """
+        The left_spaces plots in a given column
+
+        If an item in the column is a compositions, then it is the
+        left_spaces in the left most column of that composition.
+        """
         spaces: list[left_space] = []
         for node in self.grid[:, c]:
             if isinstance(node, PlotSideSpaces):
@@ -433,6 +446,12 @@ class LayoutTree:
         return spaces
 
     def right_spaces_in_col(self, c: int) -> list[right_space]:
+        """
+        The right_spaces of plots in a given column
+
+        If an item in the column is a compositions, then it is the
+        right_spaces in the right most column of that composition.
+        """
         spaces: list[right_space] = []
         for node in self.grid[:, c]:
             if isinstance(node, PlotSideSpaces):
@@ -466,6 +485,8 @@ class LayoutTree:
     def iter_bottom_spaces(self) -> Iterator[list[bottom_space]]:
         """
         Bottom spaces for each non-empty row
+
+        Will not return an empty list.
         """
         for r in range(self.nrow):
             spaces = self.bottom_spaces_in_row(r)
@@ -475,6 +496,8 @@ class LayoutTree:
     def iter_top_spaces(self) -> Iterator[list[top_space]]:
         """
         Top spaces for each non-empty row
+
+        Will not return an empty list.
         """
         for r in range(self.nrow):
             spaces = self.top_spaces_in_row(r)
@@ -482,6 +505,9 @@ class LayoutTree:
                 yield spaces
 
     def align_panels(self):
+        """
+        Align the edges of the panels in the composition
+        """
         for spaces in self.iter_bottom_spaces():
             bottoms = [space.panel_bottom for space in spaces]
             high = max(bottoms)
@@ -511,6 +537,9 @@ class LayoutTree:
                 space.margin_alignment += diff
 
     def align_tags(self):
+        """
+        Align the tags in the composition
+        """
         for spaces in self.iter_bottom_spaces():
             heights = [
                 space.tag_height + space.tag_alignment for space in spaces
@@ -578,6 +607,9 @@ class LayoutTree:
             tree.align_axis_titles()
 
     def resize_widths(self):
+        """
+        Resize the widths of the plots & panels in the composition
+        """
         # The scaling calculation to get the new panel width is
         # straight-forward because the ratios have a mean of 1.
         # So the multiplication preserves the total panel width.
@@ -589,9 +621,41 @@ class LayoutTree:
         self.sub_gridspec.set_width_ratios(width_ratios)
 
     def resize_heights(self):
+        """
+        Resize the heights of the plots & panels in the composition
+        """
         new_panel_heights = np.mean(self.panel_heights) * np.array(
             self.panel_height_ratios
         )
         new_plot_heights = new_panel_heights + self.vertical_spaces
         height_ratios = new_plot_heights / new_plot_heights.max()
         self.sub_gridspec.set_height_ratios(height_ratios)
+
+
+# For debugging
+def _draw_gridspecs(tree: LayoutTree):
+    from ..utils import draw_bbox
+
+    def draw(t):
+        draw_bbox(
+            t.cmp._gridspec.bbox_relative,
+            t.cmp._gridspec.figure,
+        )
+        for subtree in t.sub_compositions:
+            draw(subtree)
+
+    draw(tree)
+
+
+def _draw_sub_gridspecs(tree: LayoutTree):
+    from ..utils import draw_bbox
+
+    def draw(t):
+        draw_bbox(
+            t.sub_gridspec.bbox_relative,
+            t.sub_gridspec.figure,
+        )
+        for subtree in t.sub_compositions:
+            draw(subtree)
+
+    draw(tree)
