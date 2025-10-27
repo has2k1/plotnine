@@ -35,7 +35,7 @@ class Stack(Compose):
         """
         # This is an adjacent div i.e. (DIV | rhs) so we collapse the
         # operands into a single operation
-        return Stack([*self, rhs]) + self.layout
+        return Stack([*self, rhs]) + self.layout + self.annotation
 
     def __or__(self, rhs: ggplot | Compose) -> Compose:
         """

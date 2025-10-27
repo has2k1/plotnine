@@ -744,7 +744,7 @@ class PlotSideSpaces:
 
         self.W, self.H = plot.theme.getp("figure_size")
 
-    def apply(self):
+    def resize_gridspec(self):
         """
         Apply the space calculations to the sub_gridspec
         """
@@ -752,11 +752,11 @@ class PlotSideSpaces:
         gsparams.validate()
         self.plot._sub_gridspec.update_params_and_artists(gsparams)
 
-    def adjust_artist_positions(self):
+    def place_artists(self):
         """
         Set the x,y position of the artists around the panels
         """
-        self.items._adjust_artist_positions(self)
+        self.items._place_artists(self)
 
     def calculate_gridspec_params(self) -> GridSpecParams:
         """
