@@ -2,6 +2,9 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from plotnine._mpl.layout_manager._layout_tree import LayoutTree
+from plotnine._mpl.layout_manager._plot_side_space import PlotSideSpaces
+
 from ._composition_layout_items import CompositionLayoutItems
 from ._side_space import GridSpecParams, _side_space
 
@@ -69,21 +72,6 @@ class composition_left_space(_composition_side_space):
         """
         return self.to_figure_space(self.items_left_relative)
 
-    @property
-    def composition_left(self):
-        """
-        Distance up to the left-most artist in figure space
-        """
-        return self.x2("plot_margin")
-
-    @property
-    def composition_panel_left(self):
-        """
-        Left of the panels in figure space
-        """
-        # TODO: Fixme. Workout the actual panel left
-        return self.composition_left
-
 
 class composition_right_space(_composition_side_space):
     """
@@ -139,21 +127,6 @@ class composition_right_space(_composition_side_space):
         Right of the panels in figure space
         """
         return self.to_figure_space(self.items_right_relative)
-
-    @property
-    def composition_right(self):
-        """
-        Distance up to the right-most artist in figure space
-        """
-        return self.x1("plot_margin")
-
-    @property
-    def composition_panel_right(self):
-        """
-        Right of the panels in figure space
-        """
-        # TODO: Fixme. Workout the actual panel right
-        return self.composition_right
 
 
 class composition_top_space(_composition_side_space):
@@ -237,21 +210,6 @@ class composition_top_space(_composition_side_space):
         """
         return self.to_figure_space(self.items_top_relative)
 
-    @property
-    def composition_top(self):
-        """
-        Distance up to the top-most artist in figure space
-        """
-        return self.y2("plot_margin")
-
-    @property
-    def composition_panel_top(self):
-        """
-        Top of the panels in figure space
-        """
-        # TODO: Fixme. Workout the actual panel top
-        return self.composition_top
-
 
 class composition_bottom_space(_composition_side_space):
     """
@@ -325,29 +283,18 @@ class composition_bottom_space(_composition_side_space):
         """
         return self.to_figure_space(self.items_bottom_relative)
 
-    @property
-    def composition_bottom(self):
-        """
-        Distance up to the bottom-most artist in figure space
-        """
-        return self.y1("plot_margin")
-
-    @property
-    def composition_panel_bottom(self):
-        """
-        Bottom of the panels in figure space
-        """
-        # TODO: Fixme. Workout the actual panel bottom
-        return self.composition_bottom
-
 
 class CompositionSideSpaces:
     """
     Compute the spaces required to layout the composition
+
+    This is meant for the top-most composition
     """
 
     def __init__(self, cmp: Compose):
         self.cmp = cmp
+        self.gridspec = cmp._gridspec
+        self.sub_gridspec = cmp._sub_gridspec
         self.items = CompositionLayoutItems(cmp)
 
         self.l = composition_left_space(self.items)
@@ -362,19 +309,44 @@ class CompositionSideSpaces:
         self.b = composition_bottom_space(self.items)
         """All subspaces below the bottom of the panels"""
 
+        self._create_plot_sidespaces()
+        self.tree = LayoutTree.create(cmp)
+
+    def arrange(self):
+        """
+        Resize composition and place artists in final positions
+        """
+        # We first resize the compositions gridspec so that the tree
+        # algorithms can work with the final position and total area.
+        self.resize_gridspec()
+        self.tree.arrange_layout()
+        self.items._move_artists(self)
+        self._arrange_plots()
+
+    def _arrange_plots(self):
+        """
+        Arrange all the plots in the composition
+        """
+        for plot in self.cmp.iter_plots_all():
+            plot._sidespaces.arrange()
+
+    def _create_plot_sidespaces(self):
+        """
+        Create sidespaces for all the plots in the composition
+        """
+        for plot in self.cmp.iter_plots_all():
+            plot._sidespaces = PlotSideSpaces(plot)
+
     def resize_gridspec(self):
         """
         Apply the space calculations to the sub_gridspec
+
+        After calling this method, the sub_gridspec will be appropriately
+        sized to accomodate the content of the annotations.
         """
         gsparams = self.calculate_gridspec_params()
         gsparams.validate()
-        self.cmp._sub_gridspec.update_params_and_artists(gsparams)
-
-    def place_artists(self):
-        """
-        Set the x,y position of the artists around the compositions
-        """
-        self.items._place_artists(self)
+        self.sub_gridspec.update_params_and_artists(gsparams)
 
     def calculate_gridspec_params(self) -> GridSpecParams:
         """
@@ -402,3 +374,88 @@ class CompositionSideSpaces:
         Vertical non-panel space [figure dimensions]
         """
         return self.t.total + self.b.total
+
+    @property
+    def plot_left(self) -> float:
+        """
+        Distance up to left most artist in the composition
+        """
+        try:
+            return min([l.plot_left for l in self.tree.left_most_spaces])
+        except ValueError:
+            return self.sub_gridspec.bbox_relative.x0
+
+    @property
+    def plot_right(self) -> float:
+        """
+        Distance up to right most artist in the composition
+        """
+        try:
+            return max([r.plot_right for r in self.tree.right_most_spaces])
+        except ValueError:
+            # When the user asks for more columns than there are
+            # plots/compositions to fill the columns, we get one or
+            # more empty columns on the right. i.e. max([])
+            # In that case, act as if there is an invisible plot
+            # whose right edge is along that of the gridspec.
+            return self.sub_gridspec.bbox_relative.x1
+
+    @property
+    def plot_bottom(self) -> float:
+        """
+        Distance up to bottom most artist in the composition
+        """
+        try:
+            return min([b.plot_bottom for b in self.tree.bottom_most_spaces])
+        except ValueError:
+            return self.sub_gridspec.bbox_relative.y0
+
+    @property
+    def plot_top(self) -> float:
+        """
+        Distance upto top most artist in the composition
+        """
+        try:
+            return max([t.plot_top for t in self.tree.top_most_spaces])
+        except ValueError:
+            return self.sub_gridspec.bbox_relative.y1
+
+    @property
+    def panel_left(self) -> float:
+        """
+        Distance up to left most artist in the composition
+        """
+        try:
+            return min([l.panel_left for l in self.tree.left_most_spaces])
+        except ValueError:
+            return self.sub_gridspec.bbox_relative.x0
+
+    @property
+    def panel_right(self) -> float:
+        """
+        Distance up to right most artist in the composition
+        """
+        try:
+            return max([r.panel_right for r in self.tree.right_most_spaces])
+        except ValueError:
+            return self.sub_gridspec.bbox_relative.x1
+
+    @property
+    def panel_bottom(self) -> float:
+        """
+        Distance up to bottom most artist in the composition
+        """
+        try:
+            return min([b.panel_bottom for b in self.tree.bottom_most_spaces])
+        except ValueError:
+            return self.sub_gridspec.bbox_relative.y0
+
+    @property
+    def panel_top(self) -> float:
+        """
+        Distance upto top most artist in the composition
+        """
+        try:
+            return max([t.panel_top for t in self.tree.top_most_spaces])
+        except ValueError:
+            return self.sub_gridspec.bbox_relative.y1

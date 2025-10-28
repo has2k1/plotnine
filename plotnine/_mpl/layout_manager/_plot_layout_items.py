@@ -338,9 +338,9 @@ class PlotLayoutItems:
 
         return max(extras) if len(extras) else 0
 
-    def _place_artists(self, spaces: PlotSideSpaces):
+    def _move_artists(self, spaces: PlotSideSpaces):
         """
-        Set the x,y position of the artists around the panels
+        Move the artists to their final positions
         """
         theme = self.plot.theme
         plot_title_position = theme.getp("plot_title_position", "panel")
