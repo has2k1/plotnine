@@ -728,6 +728,8 @@ class PlotSideSpaces:
 
     def __init__(self, plot: ggplot):
         self.plot = plot
+        self.gridspec = plot._gridspec
+        self.sub_gridspec = plot._sub_gridspec
         self.items = PlotLayoutItems(plot)
 
         self.l = left_space(self.items)
@@ -744,19 +746,23 @@ class PlotSideSpaces:
 
         self.W, self.H = plot.theme.getp("figure_size")
 
+    def arrange(self):
+        """
+        Resize plot and place artists in final positions around the panels
+        """
+        self.resize_gridspec()
+        self.items._move_artists(self)
+
     def resize_gridspec(self):
         """
         Apply the space calculations to the sub_gridspec
+
+        After calling this method, the sub_gridspec will be appropriately
+        sized to accomodate the artists around the panels.
         """
         gsparams = self.calculate_gridspec_params()
         gsparams.validate()
-        self.plot._sub_gridspec.update_params_and_artists(gsparams)
-
-    def place_artists(self):
-        """
-        Set the x,y position of the artists around the panels
-        """
-        self.items._place_artists(self)
+        self.sub_gridspec.update_params_and_artists(gsparams)
 
     def calculate_gridspec_params(self) -> GridSpecParams:
         """
@@ -784,14 +790,14 @@ class PlotSideSpaces:
         """
         Width [figure dimensions] of the whole plot
         """
-        return float(self.plot._gridspec.width)
+        return float(self.gridspec.width)
 
     @property
     def plot_height(self) -> float:
         """
         Height [figure dimensions] of the whole plot
         """
-        return float(self.plot._gridspec.height)
+        return float(self.gridspec.height)
 
     @property
     def panel_width(self) -> float:
