@@ -530,7 +530,7 @@ class Compose:
         :
             Matplotlib figure
         """
-        from .._mpl.layout_manager import PlotnineCompositionLayoutEngine
+        from .._mpl.layout_manager import PlotnineLayoutEngine
 
         def _draw(cmp):
             figure = cmp._setup()
@@ -555,7 +555,7 @@ class Compose:
             self._draw_annotation()
             self._draw_composition_background()
             self.theme.apply()
-            figure.set_layout_engine(PlotnineCompositionLayoutEngine(self))
+            figure.set_layout_engine(PlotnineLayoutEngine(self))
 
         return figure
 
@@ -583,6 +583,9 @@ class Compose:
     def _draw_annotation(self):
         """
         Draw the items in the annotation
+
+        Note that, this method puts the artists on the figure, and
+        the layout manager moves them to their final positions.
         """
         if self.annotation.empty():
             return
