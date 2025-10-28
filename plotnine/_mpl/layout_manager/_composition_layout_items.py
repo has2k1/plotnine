@@ -48,7 +48,10 @@ class CompositionLayoutItems:
     def _is_blank(self, name: str) -> bool:
         return self.cmp.theme.T.is_blank(name)
 
-    def _place_artists(self, spaces: CompositionSideSpaces):
+    def _move_artists(self, spaces: CompositionSideSpaces):
+        """
+        Move the annotations to their final positions
+        """
         theme = self.cmp.theme
         plot_title_position = theme.getp("plot_title_position", "panel")
         plot_caption_position = theme.getp("plot_caption_position", "panel")
@@ -83,13 +86,13 @@ class CompositionTextJustifier(TextJustifier):
 
     def __init__(self, spaces: CompositionSideSpaces):
         boundaries = JustifyBoundaries(
-            plot_left=spaces.l.composition_left,
-            plot_right=spaces.r.composition_right,
-            plot_bottom=spaces.b.composition_bottom,
-            plot_top=spaces.t.composition_top,
-            panel_left=spaces.l.composition_panel_left,
-            panel_right=spaces.r.composition_panel_right,
-            panel_bottom=spaces.b.composition_panel_bottom,
-            panel_top=spaces.t.composition_panel_top,
+            plot_left=spaces.plot_left,
+            plot_right=spaces.plot_right,
+            plot_bottom=spaces.plot_bottom,
+            plot_top=spaces.plot_top,
+            panel_left=spaces.panel_left,
+            panel_right=spaces.panel_right,
+            panel_bottom=spaces.panel_bottom,
+            panel_top=spaces.panel_top,
         )
         super().__init__(spaces.cmp.figure, boundaries)
