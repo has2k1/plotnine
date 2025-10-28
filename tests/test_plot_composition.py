@@ -10,7 +10,7 @@ from plotnine import (
 )
 from plotnine._utils.yippie import geom as g
 from plotnine._utils.yippie import legend, plot, rotate, tag
-from plotnine.composition._plot_layout import plot_layout
+from plotnine.composition import plot_annotation, plot_layout
 
 
 def test_basic_horizontal_align_resize():
@@ -328,3 +328,72 @@ def test_plot_layout_byrow():
 
     p = (p1 + p2 + p3 + p4) + plot_layout(nrow=3, byrow=False)
     assert p == "plot_layout_byrow"
+
+
+def test_plot_annotation_position_plot():
+    p1 = plot.red
+    p2 = plot.green
+    p3 = plot.blue
+
+    th1 = theme(
+        plot_title=element_text(color="red"),
+        plot_subtitle=element_text(color="green"),
+        plot_caption=element_text(color="blue"),
+        plot_title_position="plot",
+    )
+    ann = plot_annotation(
+        title="The Title of the Red, Green and Blue Composition",
+        subtitle="The subtitle of the red, green and blue composition",
+        caption="The caption of the red, green and blue composition.",
+        theme=th1,
+    )
+
+    p = ((p1 | p2) / p3) + ann
+    assert p == "plot_annotation_position_plot"
+
+
+def test_plot_annotation_position_panel():
+    p1 = plot.red
+    p2 = plot.green
+    p3 = plot.blue
+    th = theme(
+        plot_title=element_text(color="red"),
+        plot_subtitle=element_text(color="green"),
+        plot_caption=element_text(color="blue"),
+        plot_title_position="panel",
+    )
+    ann = plot_annotation(
+        title="The Title of the Red, Green and Blue Composition",
+        subtitle="The subtitle of the red, green and blue composition",
+        caption="The caption of the red, green and blue composition.",
+        theme=th,
+    )
+
+    p = ((p1 | p2) / p3) + ann
+    assert p == "plot_annotation_position_panel"
+
+
+def test_plot_annotation_addition():
+    p1 = plot.red
+    p2 = plot.green
+    p3 = plot.blue
+    p4 = plot.yellow
+
+    th = theme(
+        plot_title=element_text(color="red"),
+        plot_subtitle=element_text(color="green"),
+        plot_caption=element_text(color="blue"),
+        plot_title_position="panel",
+    )
+    ann = plot_annotation(
+        title="The Title of the RGBY Composition",
+        subtitle="The subtitle of the RGBY composition",
+        caption="The caption of the RGBY composition.",
+        theme=th,
+    )
+
+    p = ((p1 / p2) + (p3 | p4)) + ann
+    p_alt = ((p1 / p2) + ann) + (p3 | p4)
+
+    assert p == "plot_annotation_addition"
+    assert p_alt == "plot_annotation_addition"
