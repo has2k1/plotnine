@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.16">
+<meta name="generator" content="quarto-1.9.9">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>penguins – plotnine {{&lt; var version &gt;}}</title>
+<title>subplots_adjust – plotnine {{&lt; var version &gt;}}</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +19,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -38,10 +73,10 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dd755132419e67449ef99e0994c660a4.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-5d254f1e278c2921d96b26102a150bb1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-383f0a2b3e0873b80115d8b3d63773f0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-4221c6c9ac76c41ce990b9566882c68e.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -80,10 +115,8 @@ ul.task-list li input[type="checkbox"] {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a href="../index.html" class="navbar-brand navbar-brand-logo">
-    </a>
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine 0.15.0rc1</span>
+    <span class="navbar-title">plotnine 0.15.0a4</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -119,7 +152,7 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#plotnine.data.penguins" id="toc-plotnine.data.penguins" class="nav-link active" data-scroll-target="#plotnine.data.penguins"><code class="doc-symbol doc-symbol-attribute"></code> <span class="doc-object-name doc-attribute-name">plotnine.data.penguins</span></a></li>
+  <li><a href="#plotnine.themes.themeable.subplots_adjust" id="toc-plotnine.themes.themeable.subplots_adjust" class="nav-link active" data-scroll-target="#plotnine.themes.themeable.subplots_adjust"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.themes.themeable.subplots_adjust</span></a></li>
   </ul>
 </nav>
     </div>
@@ -130,74 +163,12 @@ ul.task-list li input[type="checkbox"] {
 
 
 <header id="title-block-header" class="quarto-title-block default">
-<section id="plotnine.data.penguins" class="level1 title doc-object doc-attribute quarto-title display-7">
-<h1 class="title doc-object doc-attribute"><code class="doc-symbol doc-symbol-attribute"></code> <span class="doc-object-name doc-attribute-name">plotnine.data.penguins</span></h1>
+<section id="plotnine.themes.themeable.subplots_adjust" class="level1 title doc-object doc-class doc-has-member-docs quarto-title display-7">
+<h1 class="title doc-object doc-class doc-has-member-docs"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.themes.themeable.subplots_adjust</span></h1>
 </section>
 </header>
-<div class="doc-signature doc-attribute">
-<p><code><span class="doc-parameter-name">penguins</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">pd.read_csv(DATA_DIR / <span class="st">"penguins.csv"</span>)</span></code></p>
-</div>
-<div class="doc-text">
-<p>Palmer Penguins</p>
-<section id="description" class="level2">
-<h2 class="anchored" data-anchor-id="description">Description</h2>
-<p>Data about 3 different species of penguins collected from 3 islands in the Palmer Archipelago, Antarctica.</p>
-</section>
-<section id="format" class="level2">
-<h2 class="anchored" data-anchor-id="format">Format</h2>
-<p>A dataframe with 344 rows and 8 variables</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 29%">
-<col style="width: 68%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Column</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>species</td>
-<td>Penguin species (Adélie, Chinstrap and Gentoo)</td>
-</tr>
-<tr class="even">
-<td>island</td>
-<td>Island in Palmer Archipelago, Antarctica (Biscoe, Dream or Torgersen)</td>
-</tr>
-<tr class="odd">
-<td>bill_length_mm</td>
-<td>Bill length (millimeters)</td>
-</tr>
-<tr class="even">
-<td>bill_depth_mm</td>
-<td>Bill depth (millimeters)</td>
-</tr>
-<tr class="odd">
-<td>flipper_length_mm</td>
-<td>Flipper length (millimeters)</td>
-</tr>
-<tr class="even">
-<td>body_mass_g</td>
-<td>Body mass (grams)</td>
-</tr>
-<tr class="odd">
-<td>sex</td>
-<td>Penguin sex (female, male)</td>
-</tr>
-<tr class="even">
-<td>year</td>
-<td>The study year (2007, 2008, or 2009)</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="source" class="level2">
-<h2 class="anchored" data-anchor-id="source">Source</h2>
-<p>Collected by <a href="https://www.uaf.edu/cfos/people/faculty/detail/kristen-gorman.php">Dr.&nbsp;Kristen Gorman</a> and the <a href="https://pallter.marine.rutgers.edu/">Palmer Station, Antarctica LTER</a>.</p>
-<p>Made conveniently available by <a href="https://github.com/allisonhorst/palmerpenguins/">Alison Horst</a> to serve as a dataset exploration and visualisation.</p>
-</section>
+<div class="doc-signature doc-class">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>subplots_adjust(theme_element)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 
 
@@ -254,13 +225,14 @@ ul.task-list li input[type="checkbox"] {
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy
