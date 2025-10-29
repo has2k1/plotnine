@@ -15,6 +15,10 @@ if TYPE_CHECKING:
 class plot_annotation(ComposeAddable):
     """
     Annotate a composition
+
+    This applies to only the top-level composition. When a composition
+    with an annotation is added to larger composition, the annotation
+    of the sub-composition becomes irrelevant.
     """
 
     title: str | None = None
@@ -35,6 +39,10 @@ class plot_annotation(ComposeAddable):
     theme: theme = field(default_factory=theme)  # pyright: ignore[reportUnboundVariable]
     """
     Theme to use for the plot title, subtitle, caption, margin and background
+
+    It also controls the [](`~plotnine.themes.themeables.figure_size`) of the
+    composition. The default theme is the same as the default one used for the
+    plots, which you can change with [](`~plotnine.theme_set`).
     """
 
     def __radd__(self, cmp: Compose) -> Compose:
