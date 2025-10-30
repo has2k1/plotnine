@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Changelog – plotnine 0.15.0a5</title>
+<title>Changelog – plotnine 0.15.0a6</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -76,7 +76,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-5d254f1e278c2921d96b26102a150bb1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-4221c6c9ac76c41ce990b9566882c68e.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-ed764075dc29d90dc1aae680d8c7426e.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -116,7 +116,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">plotnine 0.15.0a5</span>
+    <span class="navbar-title">plotnine 0.15.0a6</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -399,6 +399,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>Fixed bug in <a href="./reference/geom_histogram.html#plotnine.geom_histogram"><code>geom_histogram</code></a> where mapping to the <code>weight</code> aesthetic lead to an error. <a href="https://github.com/has2k1/plotnine/issues/936" title="Issue: #936">#936</a></p></li>
 <li><p>Fixed bug in <a href="./reference/geom_vline.html#plotnine.geom_vline"><code>geom_vline</code></a> where you could not map the <code>xintercept</code> aesthetic to a discrete variable.</p></li>
 <li><p>Fixed bug in <a href="./reference/geom_hline.html#plotnine.geom_hline"><code>geom_hline</code></a> where you could not map the <code>yintercept</code> aesthetic to a discrete variable.</p></li>
+<li><p>Fixed bug in all manual scales (<code>scale_*_manual</code>) where if you set <code>values</code> to a <code>dict</code> then setting the breaks would lead to an error. <a href="https://github.com/has2k1/plotnine/issues/949" title="Issue: #949">#949</a></p></li>
 </ul>
 </section>
 </section>
