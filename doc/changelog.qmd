@@ -3,7 +3,7 @@ title: Changelog
 ---
 
 ## v0.15.1
-(not-yet-released)
+(2025-09-30)
 
 ### New
 
