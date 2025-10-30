@@ -76,7 +76,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-5d254f1e278c2921d96b26102a150bb1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-ed764075dc29d90dc1aae680d8c7426e.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-4221c6c9ac76c41ce990b9566882c68e.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -116,7 +116,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine 0.15.1rc1</span>
+    <span class="navbar-title">plotnine 0.15.0a4</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -179,7 +179,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    labels<span class="op">=</span><span class="va">True</span>,</span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    expand<span class="op">=</span><span class="va">None</span>,</span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    guide<span class="op">=</span><span class="st">"legend"</span>,</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    na_value<span class="op">=</span><span class="st">"#7F7F7F"</span>,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    na_value<span class="op">=</span>np.nan,</span>
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    aesthetics<span class="op">=</span>(),</span>
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    drop<span class="op">=</span><span class="va">True</span>,</span>
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    na_translate<span class="op">=</span><span class="va">True</span></span>
@@ -240,9 +240,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <dd>
 
 </dd>
-<dt><code>na_value: <a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> = <span class="st">"#7F7F7F"</span></code></dt>
+<dt><code>na_value: <a href="https://docs.python.org/3/library/typing.html#typing.Any">Any</a> = np.nan</code></dt>
 <dd>
-<p>Color of missing values.</p>
+<p>If <code>na_translate=True</code>, what aesthetic value should be assigned to the missing values. This parameter does not apply to position scales where <code>nan</code> is always placed on the right.</p>
 </dd>
 <dt><code>aesthetics: <a href="https://docs.python.org/3/library/typing.html#typing.Sequence">Sequence</a>[<a href="../reference/typing.html#plotnine.typing.ScaledAestheticsName">ScaledAestheticsName</a>] = ()</code></dt>
 <dd>
