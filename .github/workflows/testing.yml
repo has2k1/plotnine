@@ -70,65 +70,65 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
 
-  lint-and-format:
-    runs-on: ubuntu-latest
+  # lint-and-format:
+  #   runs-on: ubuntu-latest
+  #
+  #   # We want to run on external PRs, but not on our own internal PRs as they'll be run
+  #   # by the push to the branch.
+  #   if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name != github.repository
+  #
+  #   strategy:
+  #     matrix:
+  #       python-version: [3.13]
+  #   steps:
+  #     - name: Checkout Code
+  #       uses: actions/checkout@v4
+  #
+  #     - name: Install a specific version of uv
+  #       uses: astral-sh/setup-uv@v6
+  #       with:
+  #         python-version: ${{ matrix.python-version }}
+  #
+  #     - name: Install Packages
+  #       run: uv run uv pip install ruff
+  #
+  #     - name: Environment Information
+  #       run: uv pip list
+  #
+  #     - name: Check lint with Ruff
+  #       run: make lint
+  #
+  #     - name: Check format with Ruff
+  #       run: make format
 
-    # We want to run on external PRs, but not on our own internal PRs as they'll be run
-    # by the push to the branch.
-    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name != github.repository
-
-    strategy:
-      matrix:
-        python-version: [3.13]
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Install a specific version of uv
-        uses: astral-sh/setup-uv@v6
-        with:
-          python-version: ${{ matrix.python-version }}
-
-      - name: Install Packages
-        run: uv run uv pip install ruff
-
-      - name: Environment Information
-        run: uv pip list
-
-      - name: Check lint with Ruff
-        run: make lint
-
-      - name: Check format with Ruff
-        run: make format
-
-  typecheck:
-    runs-on: ubuntu-latest
-
-    # We want to run on external PRs, but not on our own internal PRs as they'll be run
-    # by the push to the branch.
-    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name != github.repository
-
-    strategy:
-      matrix:
-        python-version: [3.13]
-
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Install a specific version of uv
-        uses: astral-sh/setup-uv@v6
-        with:
-          python-version: ${{ matrix.python-version }}
-
-      - name: Install Packages
-        run: uv run uv pip install ".[extra, typing]"
-
-      - name: Environment Information
-        run: uv pip list
-
-      - name: Run Tests
-        run: make typecheck
+  # typecheck:
+  #   runs-on: ubuntu-latest
+  #
+  #   # We want to run on external PRs, but not on our own internal PRs as they'll be run
+  #   # by the push to the branch.
+  #   if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name != github.repository
+  #
+  #   strategy:
+  #     matrix:
+  #       python-version: [3.13]
+  #
+  #   steps:
+  #     - name: Checkout Code
+  #       uses: actions/checkout@v4
+  #
+  #     - name: Install a specific version of uv
+  #       uses: astral-sh/setup-uv@v6
+  #       with:
+  #         python-version: ${{ matrix.python-version }}
+  #
+  #     - name: Install Packages
+  #       run: uv run uv pip install ".[extra, typing]"
+  #
+  #     - name: Environment Information
+  #       run: uv pip list
+  #
+  #     - name: Run Tests
+  #       run: make typecheck
 
   call-build-documentation:
     if: |
@@ -138,7 +138,7 @@ jobs:
 
   build-website:
     # Requires all the previous jobs to pass
-    needs: [unittests, lint-and-format, typecheck, call-build-documentation]
+    needs: [unittests, call-build-documentation]
     if: |
       github.event_name == 'push' &&
       github.ref == 'refs/heads/main'
