@@ -4,14 +4,14 @@
     "href": "changelog.html",
     "title": "Changelog",
     "section": "",
-    "text": "(not-yet-released)\n\n\n\nThemeables axis_ticks_pad, axis_ticks_pad_minor, axis_ticks_pad_major, axis_ticks_pad_minor_x, axis_ticks_pad_minor_y, axis_ticks_pad_major_x and axis_ticks_pad_major_y have been deprecated. Use the margin parameter of element_text with axis_text, axis_text_x or axis_text_y to control the spacing between the axis text and the ticks. (#843)\nThe stat class methods stat.compute_layer, stat.compute_panel and stat.compute_group are now instance methods and they no longer accept **params arguments. Access to the parameters is through self.params.\nThe geom class methods geom.draw_layer and geom.draw_panel do no longer accept **param arguments. Access to the parameters is through self.params.\nMethod geom.draw_group now accepts the params argument as a dictionary and not **params.\n\n\n\n\n\nPlot Composition is here. Using an intuitive algebra, you can now put combine multiple plots into a single graphic. e.g.\np1 = ggplot(...)\np2 = ggplot(...)\np3 = ggplot(...)\n\n(p1 | p2) / p3\nUsing plot_title_position and plot_caption_position e.g.\ntheme(\n   plot_title_position=\"plot\",\n   plot_caption_position=\"plot\",\n)\nYou can now position the plot_title, plot_subtitle and plot_caption by alignment them with respect to the plot. (#838)\nGained new label tag to create a tag for a plot. You can set it with labs e.g.\nlabs(tag=\"A\")\nand customise it using these themeables\nplot_tag and plot_tag_position and plot_tag_location\ne.g.\ntheme(\n   plot_tag=\"plot\",\n   plot_tag_location=\"plot\",\n   plot_tag_position=\"topright\",\n)\nGeoms geom_bar and geom_col have gained new parameter just that controls how the bars align with the axis break point.\ngeom_sina has gained new parameter style just like geom_violin, which make one-sided (half) sina plots.\nGained the Anscombe Quartet dataset, anscombe_quartet.\nGained new module plotnine.helpers to be a place for some helper functions.\nGained new helper function get_aesthetic_limits.\ngeom_point gained the ability to handle shapes of the form Sequence[tuple[float, float]] e.g.\n((-2, -4), (-2, -1), (0, 1), (2, -1), (2, -4), (-2, -4))\nWhich declares the vertices of a polygon shape.\n\n\n\n\n\nIncluded datasets mpg, msleep and midwest no longer have any of their columns as categoricals. This matches the respective datasets in R. #913\nWhen the width of the violins in geom_violin is wider than their normal area, they now overlap with those closest to the origin on top. This makes it possible to create overlapping ridge plots using half violins.\nlegend_key now inherits from panel_background and the default themes have been adjusted to rely on this inheritance. So when using the default themes, altering fill parameter of the panel_background will also affect the background of the legend_key.\nThe default value for the guide parameter for the identity scales (scale_*_identity) has been reverted to None. This means by default using these scales will not generate a legend.\n\n\n\n\n\nFixed bug in with the legend_key_height themeable where it wasn’t applied. #921\nFixed bug where justifying axis_text_x and axis_text_y using horizontal and vertical alignment did not work as expected. #927\nFixed justifying strip_text within the strip_background. #867\nFixed bug where facetting along a column with unused categories could raise an error. #930\nFixed bug where computed aesthetic from after_scale are were not applied to the legend. #926\nFixed theming of minor x axis ticks.\nFixed theming of axis_text, axis_text_x and axis_text_y so when they can be overriden if previously set to element_blank().\nFixed strip_text_x_backgrounds to always have equal heights and strip_text_y_backgrounds to have equal widths. This applies to cases where the texts have unequal number of lines or they are rotated but have different lengths.\nFixed the empty space below the plot title (or subtitle) when strip_text_x_backgrounds are partly or fully aligned within the panel. This space (hole), was not accounted for by any of the themeables. This affected theme_xkcd and any theme settings that tried to slide the text / background into the panel.\nFixed the empty space to the left the right margin when the strip_text_y_backgrounds are partly or fully aligned within the panel. This space (hole), was not accounted for by any of the themeables. This affected theme_xkcd and any theme settings that tried to slide the text / background into the panel.\nFixed bug in geom_histogram where mapping to the weight aesthetic lead to an error. #936\nFixed bug in geom_vline where you could not map the xintercept aesthetic to a discrete variable.\nFixed bug in geom_hline where you could not map the yintercept aesthetic to a discrete variable.\nFixed bug in all manual scales (scale_*_manual) where if you set values to a dict then setting the breaks would lead to an error. #949"
+    "text": "(not-yet-released)\n\n\n\nThemeables axis_ticks_pad, axis_ticks_pad_minor, axis_ticks_pad_major, axis_ticks_pad_minor_x, axis_ticks_pad_minor_y, axis_ticks_pad_major_x and axis_ticks_pad_major_y have been deprecated. Use the margin parameter of element_text with axis_text, axis_text_x or axis_text_y to control the spacing between the axis text and the ticks. (#843)\nThe stat class methods stat.compute_layer, stat.compute_panel and stat.compute_group are now instance methods and they no longer accept **params arguments. Access to the parameters is through self.params.\nThe geom class methods geom.draw_layer and geom.draw_panel do no longer accept **param arguments. Access to the parameters is through self.params.\nMethod geom.draw_group now accepts the params argument as a dictionary and not **params.\n\n\n\n\n\nPlot Composition is here. Using an intuitive algebra, you can now put combine multiple plots into a single graphic. e.g.\np1 = ggplot(...)\np2 = ggplot(...)\np3 = ggplot(...)\n\n(p1 | p2) / p3\nUsing plot_title_position and plot_caption_position e.g.\ntheme(\n   plot_title_position=\"plot\",\n   plot_caption_position=\"plot\",\n)\nYou can now position the plot_title, plot_subtitle and plot_caption by alignment them with respect to the plot. (#838)\nGained new label tag to create a tag for a plot. You can set it with labs e.g.\nlabs(tag=\"A\")\nand customise it using these themeables\nplot_tag and plot_tag_position and plot_tag_location\ne.g.\ntheme(\n   plot_tag=\"plot\",\n   plot_tag_location=\"plot\",\n   plot_tag_position=\"topright\",\n)\nGeoms geom_bar and geom_col have gained new parameter just that controls how the bars align with the axis break point.\ngeom_sina has gained new parameter style just like geom_violin, which make one-sided (half) sina plots.\nGained the Anscombe Quartet dataset, anscombe_quartet.\nGained new module plotnine.helpers to be a place for some helper functions.\nGained new helper function get_aesthetic_limits.\ngeom_point gained the ability to handle shapes of the form Sequence[tuple[float, float]] e.g.\n((-2, -4), (-2, -1), (0, 1), (2, -1), (2, -4), (-2, -4))\nWhich declares the vertices of a polygon shape.\n\n\n\n\n\nIncluded datasets mpg, msleep and midwest no longer have any of their columns as categoricals. This matches the respective datasets in R. #913\nWhen the width of the violins in geom_violin is wider than their normal area, they now overlap with those closest to the origin on top. This makes it possible to create overlapping ridge plots using half violins.\nlegend_key now inherits from panel_background and the default themes have been adjusted to rely on this inheritance. So when using the default themes, altering fill parameter of the panel_background will also affect the background of the legend_key.\nThe default value for the guide parameter for the identity scales (scale_*_identity) has been reverted to None. This means by default using these scales will not generate a legend.\n\n\n\n\n\nFixed bug in with the legend_key_height themeable where it wasn’t applied. #921\nFixed bug where justifying axis_text_x and axis_text_y using horizontal and vertical alignment did not work as expected. #927\nFixed justifying strip_text within the strip_background. #867\nFixed bug where facetting along a column with unused categories could raise an error. #930\nFixed bug where computed aesthetic from after_scale are were not applied to the legend. #926\nFixed theming of minor x axis ticks.\nFixed theming of axis_text, axis_text_x and axis_text_y so when they can be overriden if previously set to element_blank().\nFixed strip_text_x_backgrounds to always have equal heights and strip_text_y_backgrounds to have equal widths. This applies to cases where the texts have unequal number of lines or they are rotated but have different lengths.\nFixed the empty space below the plot title (or subtitle) when strip_text_x_backgrounds are partly or fully aligned within the panel. This space (hole), was not accounted for by any of the themeables. This affected theme_xkcd and any theme settings that tried to slide the text / background into the panel.\nFixed the empty space to the left the right margin when the strip_text_y_backgrounds are partly or fully aligned within the panel. This space (hole), was not accounted for by any of the themeables. This affected theme_xkcd and any theme settings that tried to slide the text / background into the panel.\nFixed bug in geom_histogram where mapping to the weight aesthetic lead to an error. #936\nFixed bug in geom_vline where you could not map the xintercept aesthetic to a discrete variable.\nFixed bug in geom_hline where you could not map the yintercept aesthetic to a discrete variable."
   },
   {
     "objectID": "changelog.html#v0.15.0",
     "href": "changelog.html#v0.15.0",
     "title": "Changelog",
     "section": "",
-    "text": "(not-yet-released)\n\n\n\nThemeables axis_ticks_pad, axis_ticks_pad_minor, axis_ticks_pad_major, axis_ticks_pad_minor_x, axis_ticks_pad_minor_y, axis_ticks_pad_major_x and axis_ticks_pad_major_y have been deprecated. Use the margin parameter of element_text with axis_text, axis_text_x or axis_text_y to control the spacing between the axis text and the ticks. (#843)\nThe stat class methods stat.compute_layer, stat.compute_panel and stat.compute_group are now instance methods and they no longer accept **params arguments. Access to the parameters is through self.params.\nThe geom class methods geom.draw_layer and geom.draw_panel do no longer accept **param arguments. Access to the parameters is through self.params.\nMethod geom.draw_group now accepts the params argument as a dictionary and not **params.\n\n\n\n\n\nPlot Composition is here. Using an intuitive algebra, you can now put combine multiple plots into a single graphic. e.g.\np1 = ggplot(...)\np2 = ggplot(...)\np3 = ggplot(...)\n\n(p1 | p2) / p3\nUsing plot_title_position and plot_caption_position e.g.\ntheme(\n   plot_title_position=\"plot\",\n   plot_caption_position=\"plot\",\n)\nYou can now position the plot_title, plot_subtitle and plot_caption by alignment them with respect to the plot. (#838)\nGained new label tag to create a tag for a plot. You can set it with labs e.g.\nlabs(tag=\"A\")\nand customise it using these themeables\nplot_tag and plot_tag_position and plot_tag_location\ne.g.\ntheme(\n   plot_tag=\"plot\",\n   plot_tag_location=\"plot\",\n   plot_tag_position=\"topright\",\n)\nGeoms geom_bar and geom_col have gained new parameter just that controls how the bars align with the axis break point.\ngeom_sina has gained new parameter style just like geom_violin, which make one-sided (half) sina plots.\nGained the Anscombe Quartet dataset, anscombe_quartet.\nGained new module plotnine.helpers to be a place for some helper functions.\nGained new helper function get_aesthetic_limits.\ngeom_point gained the ability to handle shapes of the form Sequence[tuple[float, float]] e.g.\n((-2, -4), (-2, -1), (0, 1), (2, -1), (2, -4), (-2, -4))\nWhich declares the vertices of a polygon shape.\n\n\n\n\n\nIncluded datasets mpg, msleep and midwest no longer have any of their columns as categoricals. This matches the respective datasets in R. #913\nWhen the width of the violins in geom_violin is wider than their normal area, they now overlap with those closest to the origin on top. This makes it possible to create overlapping ridge plots using half violins.\nlegend_key now inherits from panel_background and the default themes have been adjusted to rely on this inheritance. So when using the default themes, altering fill parameter of the panel_background will also affect the background of the legend_key.\nThe default value for the guide parameter for the identity scales (scale_*_identity) has been reverted to None. This means by default using these scales will not generate a legend.\n\n\n\n\n\nFixed bug in with the legend_key_height themeable where it wasn’t applied. #921\nFixed bug where justifying axis_text_x and axis_text_y using horizontal and vertical alignment did not work as expected. #927\nFixed justifying strip_text within the strip_background. #867\nFixed bug where facetting along a column with unused categories could raise an error. #930\nFixed bug where computed aesthetic from after_scale are were not applied to the legend. #926\nFixed theming of minor x axis ticks.\nFixed theming of axis_text, axis_text_x and axis_text_y so when they can be overriden if previously set to element_blank().\nFixed strip_text_x_backgrounds to always have equal heights and strip_text_y_backgrounds to have equal widths. This applies to cases where the texts have unequal number of lines or they are rotated but have different lengths.\nFixed the empty space below the plot title (or subtitle) when strip_text_x_backgrounds are partly or fully aligned within the panel. This space (hole), was not accounted for by any of the themeables. This affected theme_xkcd and any theme settings that tried to slide the text / background into the panel.\nFixed the empty space to the left the right margin when the strip_text_y_backgrounds are partly or fully aligned within the panel. This space (hole), was not accounted for by any of the themeables. This affected theme_xkcd and any theme settings that tried to slide the text / background into the panel.\nFixed bug in geom_histogram where mapping to the weight aesthetic lead to an error. #936\nFixed bug in geom_vline where you could not map the xintercept aesthetic to a discrete variable.\nFixed bug in geom_hline where you could not map the yintercept aesthetic to a discrete variable.\nFixed bug in all manual scales (scale_*_manual) where if you set values to a dict then setting the breaks would lead to an error. #949"
+    "text": "(not-yet-released)\n\n\n\nThemeables axis_ticks_pad, axis_ticks_pad_minor, axis_ticks_pad_major, axis_ticks_pad_minor_x, axis_ticks_pad_minor_y, axis_ticks_pad_major_x and axis_ticks_pad_major_y have been deprecated. Use the margin parameter of element_text with axis_text, axis_text_x or axis_text_y to control the spacing between the axis text and the ticks. (#843)\nThe stat class methods stat.compute_layer, stat.compute_panel and stat.compute_group are now instance methods and they no longer accept **params arguments. Access to the parameters is through self.params.\nThe geom class methods geom.draw_layer and geom.draw_panel do no longer accept **param arguments. Access to the parameters is through self.params.\nMethod geom.draw_group now accepts the params argument as a dictionary and not **params.\n\n\n\n\n\nPlot Composition is here. Using an intuitive algebra, you can now put combine multiple plots into a single graphic. e.g.\np1 = ggplot(...)\np2 = ggplot(...)\np3 = ggplot(...)\n\n(p1 | p2) / p3\nUsing plot_title_position and plot_caption_position e.g.\ntheme(\n   plot_title_position=\"plot\",\n   plot_caption_position=\"plot\",\n)\nYou can now position the plot_title, plot_subtitle and plot_caption by alignment them with respect to the plot. (#838)\nGained new label tag to create a tag for a plot. You can set it with labs e.g.\nlabs(tag=\"A\")\nand customise it using these themeables\nplot_tag and plot_tag_position and plot_tag_location\ne.g.\ntheme(\n   plot_tag=\"plot\",\n   plot_tag_location=\"plot\",\n   plot_tag_position=\"topright\",\n)\nGeoms geom_bar and geom_col have gained new parameter just that controls how the bars align with the axis break point.\ngeom_sina has gained new parameter style just like geom_violin, which make one-sided (half) sina plots.\nGained the Anscombe Quartet dataset, anscombe_quartet.\nGained new module plotnine.helpers to be a place for some helper functions.\nGained new helper function get_aesthetic_limits.\ngeom_point gained the ability to handle shapes of the form Sequence[tuple[float, float]] e.g.\n((-2, -4), (-2, -1), (0, 1), (2, -1), (2, -4), (-2, -4))\nWhich declares the vertices of a polygon shape.\n\n\n\n\n\nIncluded datasets mpg, msleep and midwest no longer have any of their columns as categoricals. This matches the respective datasets in R. #913\nWhen the width of the violins in geom_violin is wider than their normal area, they now overlap with those closest to the origin on top. This makes it possible to create overlapping ridge plots using half violins.\nlegend_key now inherits from panel_background and the default themes have been adjusted to rely on this inheritance. So when using the default themes, altering fill parameter of the panel_background will also affect the background of the legend_key.\nThe default value for the guide parameter for the identity scales (scale_*_identity) has been reverted to None. This means by default using these scales will not generate a legend.\n\n\n\n\n\nFixed bug in with the legend_key_height themeable where it wasn’t applied. #921\nFixed bug where justifying axis_text_x and axis_text_y using horizontal and vertical alignment did not work as expected. #927\nFixed justifying strip_text within the strip_background. #867\nFixed bug where facetting along a column with unused categories could raise an error. #930\nFixed bug where computed aesthetic from after_scale are were not applied to the legend. #926\nFixed theming of minor x axis ticks.\nFixed theming of axis_text, axis_text_x and axis_text_y so when they can be overriden if previously set to element_blank().\nFixed strip_text_x_backgrounds to always have equal heights and strip_text_y_backgrounds to have equal widths. This applies to cases where the texts have unequal number of lines or they are rotated but have different lengths.\nFixed the empty space below the plot title (or subtitle) when strip_text_x_backgrounds are partly or fully aligned within the panel. This space (hole), was not accounted for by any of the themeables. This affected theme_xkcd and any theme settings that tried to slide the text / background into the panel.\nFixed the empty space to the left the right margin when the strip_text_y_backgrounds are partly or fully aligned within the panel. This space (hole), was not accounted for by any of the themeables. This affected theme_xkcd and any theme settings that tried to slide the text / background into the panel.\nFixed bug in geom_histogram where mapping to the weight aesthetic lead to an error. #936\nFixed bug in geom_vline where you could not map the xintercept aesthetic to a discrete variable.\nFixed bug in geom_hline where you could not map the yintercept aesthetic to a discrete variable."
   },
   {
     "objectID": "changelog.html#v0.14.5",
@@ -501,7 +501,7 @@
     "href": "reference/stat_ydensity.html",
     "title": " plotnine.stat_ydensity",
     "section": "",
-    "text": "Density estimate\n\nstat_ydensity(\n    mapping=None,\n    data=None,\n    *,\n    geom=\"violin\",\n    position=\"dodge\",\n    na_rm=False,\n    adjust=1,\n    kernel=\"gaussian\",\n    n=1024,\n    trim=True,\n    bw=\"nrd0\",\n    scale=\"area\",\n    **kwargs\n)"
+    "text": "stat_ydensity(\n    mapping=None,\n    data=None,\n    *,\n    geom=\"violin\",\n    position=\"dodge\",\n    na_rm=False,\n    adjust=1,\n    kernel=\"gaussian\",\n    n=1024,\n    trim=True,\n    bw=\"nrd0\",\n    scale=\"area\",\n    **kwargs\n)"
   },
   {
     "objectID": "reference/stat_ydensity.html#parameters",
@@ -522,7 +522,7 @@
     "href": "reference/stat_summary_bin.html",
     "title": " plotnine.stat_summary_bin",
     "section": "",
-    "text": "Summarise y values at x intervals\n\nstat_summary_bin(\n    mapping=None,\n    data=None,\n    *,\n    geom=\"pointrange\",\n    position=\"identity\",\n    na_rm=False,\n    bins=30,\n    breaks=None,\n    binwidth=None,\n    boundary=None,\n    fun_data=None,\n    fun_y=None,\n    fun_ymin=None,\n    fun_ymax=None,\n    fun_args=None,\n    random_state=None,\n    **kwargs\n)"
+    "text": "stat_summary_bin(\n    mapping=None,\n    data=None,\n    *,\n    geom=\"pointrange\",\n    position=\"identity\",\n    na_rm=False,\n    bins=30,\n    breaks=None,\n    binwidth=None,\n    boundary=None,\n    fun_data=None,\n    fun_y=None,\n    fun_ymin=None,\n    fun_ymax=None,\n    fun_args=None,\n    random_state=None,\n    **kwargs\n)"
   },
   {
     "objectID": "reference/stat_summary_bin.html#parameters",
@@ -550,7 +550,7 @@
     "href": "reference/stat_sum.html",
     "title": " plotnine.stat_sum",
     "section": "",
-    "text": "Sum unique values\nUseful for overplotting on scatterplots.\n\nstat_sum(\n    mapping=None,\n    data=None,\n    *,\n    geom=\"point\",\n    position=\"identity\",\n    na_rm=False,\n    **kwargs\n)"
+    "text": "stat_sum(\n    mapping=None,\n    data=None,\n    *,\n    geom=\"point\",\n    position=\"identity\",\n    na_rm=False,\n    **kwargs\n)"
   },
   {
     "objectID": "reference/stat_sum.html#parameters",
@@ -564,7 +564,7 @@
     "href": "reference/stat_sina.html",
     "title": " plotnine.stat_sina",
     "section": "",
-    "text": "Compute Sina plot values\n\nstat_sina(\n    mapping=None,\n    data=None,\n    *,\n    geom=\"sina\",\n    position=\"dodge\",\n    na_rm=False,\n    binwidth=None,\n    bins=None,\n    method=\"density\",\n    bw=\"nrd0\",\n    maxwidth=None,\n    adjust=1,\n    bin_limit=1,\n    random_state=None,\n    scale=\"area\",\n    style=\"full\",\n    **kwargs\n)"
+    "text": "stat_sina(\n    mapping=None,\n    data=None,\n    *,\n    geom=\"sina\",\n    position=\"dodge\",\n    na_rm=False,\n    binwidth=None,\n    bins=None,\n    method=\"density\",\n    bw=\"nrd0\",\n    maxwidth=None,\n    adjust=1,\n    bin_limit=1,\n    random_state=None,\n    scale=\"area\",\n    style=\"full\",\n    **kwargs\n)"
   },
   {
     "objectID": "reference/stat_sina.html#parameters",
@@ -585,7 +585,7 @@
     "href": "reference/stat_qq_line.html",
     "title": " plotnine.stat_qq_line",
     "section": "",
-    "text": "Calculate line through quantile-quantile plot\n\nstat_qq_line(\n    mapping=None,\n    data=None,\n    *,\n    geom=\"qq_line\",\n    position=\"identity\",\n    na_rm=False,\n    distribution=\"norm\",\n    dparams={},\n    quantiles=None,\n    alpha_beta=(0.375, 0.375),\n    line_p=(0.25, 0.75),\n    fullrange=False,\n    **kwargs\n)"
+    "text": "stat_qq_line(\n    mapping=None,\n    data=None,\n    *,\n    geom=\"qq_line\",\n    position=\"identity\",\n    na_rm=False,\n    distribution=\"norm\",\n    dparams={},\n    quantiles=None,\n    alpha_beta=(0.375, 0.375),\n    line_p=(0.25, 0.75),\n    fullrange=False,\n    **kwargs\n)"
   },
   {
     "objectID": "reference/stat_qq_line.html#parameters",
@@ -606,7 +606,7 @@
     "href": "reference/stat_identity.html",
     "title": " plotnine.stat_identity",
     "section": "",
-    "text": "Identity (do nothing) statistic\n\nstat_identity(\n    mapping=None,\n    data=None,\n    *,\n    geom=\"point\",\n    position=\"identity\",\n    na_rm=False,\n    **kwargs\n)"
+    "text": "stat_identity(\n    mapping=None,\n    data=None,\n    *,\n    geom=\"point\",\n    position=\"identity\",\n    na_rm=False,\n    **kwargs\n)"
   },
   {
     "objectID": "reference/stat_identity.html#parameters",
@@ -620,7 +620,7 @@
     "href": "reference/stat_function.html",
     "title": " plotnine.stat_function",
     "section": "",
-    "text": "Superimpose a function onto a plot\n\nstat_function(\n    mapping=None,\n    data=None,\n    *,\n    geom=\"path\",\n    position=\"identity\",\n    na_rm=False,\n    fun=None,\n    n=101,\n    args=None,\n    xlim=None,\n    **kwargs\n)"
+    "text": "stat_function(\n    mapping=None,\n    data=None,\n    *,\n    geom=\"path\",\n    position=\"identity\",\n    na_rm=False,\n    fun=None,\n    n=101,\n    args=None,\n    xlim=None,\n    **kwargs\n)"
   },
   {
     "objectID": "reference/stat_function.html#parameters",
@@ -634,7 +634,7 @@
     "href": "reference/stat_ecdf.html",
     "title": " plotnine.stat_ecdf",
     "section": "",
-    "text": "Empirical Cumulative Density Function\n\nstat_ecdf(\n    mapping=None,\n    data=None,\n    *,\n    geom=\"step\",\n    position=\"identity\",\n    na_rm=False,\n    n=None,\n    pad=True,\n    **kwargs\n)"
+    "text": "stat_ecdf(\n    mapping=None,\n    data=None,\n    *,\n    geom=\"step\",\n    position=\"identity\",\n    na_rm=False,\n    n=None,\n    pad=True,\n    **kwargs\n)"
   },
   {
     "objectID": "reference/stat_ecdf.html#parameters",
@@ -655,7 +655,7 @@
     "href": "reference/stat_density.html",
     "title": " plotnine.stat_density",
     "section": "",
-    "text": "Compute density estimate\n\nstat_density(\n    mapping=None,\n    data=None,\n    *,\n    geom=\"density\",\n    position=\"stack\",\n    na_rm=False,\n    kernel=\"gaussian\",\n    adjust=1,\n    trim=False,\n    n=1024,\n    gridsize=None,\n    bw=\"nrd0\",\n    cut=3,\n    clip=(-inf, inf),\n    bounds=(-inf, inf),\n    **kwargs\n)"
+    "text": "stat_density(\n    mapping=None,\n    data=None,\n    *,\n    geom=\"density\",\n    position=\"stack\",\n    na_rm=False,\n    kernel=\"gaussian\",\n    adjust=1,\n    trim=False,\n    n=1024,\n    gridsize=None,\n    bw=\"nrd0\",\n    cut=3,\n    clip=(-inf, inf),\n    bounds=(-inf, inf),\n    **kwargs\n)"
   },
   {
     "objectID": "reference/stat_density.html#parameters",
@@ -676,7 +676,7 @@
     "href": "reference/stat_boxplot.html",
     "title": " plotnine.stat_boxplot",
     "section": "",
-    "text": "Compute boxplot statistics\n\nstat_boxplot(\n    mapping=None,\n    data=None,\n    *,\n    geom=\"boxplot\",\n    position=\"dodge\",\n    na_rm=False,\n    coef=1.5,\n    width=None,\n    **kwargs\n)"
+    "text": "stat_boxplot(\n    mapping=None,\n    data=None,\n    *,\n    geom=\"boxplot\",\n    position=\"dodge\",\n    na_rm=False,\n    coef=1.5,\n    width=None,\n    **kwargs\n)"
   },
   {
     "objectID": "reference/stat_boxplot.html#parameters",
@@ -697,7 +697,7 @@
     "href": "reference/stat_bin_2d.html",
     "title": " plotnine.stat_bin_2d",
     "section": "",
-    "text": "2 Dimensional bin counts\n\nstat_bin_2d(\n    mapping=None,\n    data=None,\n    *,\n    geom=\"rect\",\n    position=\"identity\",\n    na_rm=False,\n    bins=30,\n    breaks=None,\n    binwidth=None,\n    drop=True,\n    **kwargs\n)"
+    "text": "stat_bin_2d(\n    mapping=None,\n    data=None,\n    *,\n    geom=\"rect\",\n    position=\"identity\",\n    na_rm=False,\n    bins=30,\n    breaks=None,\n    binwidth=None,\n    drop=True,\n    **kwargs\n)"
   },
   {
     "objectID": "reference/stat_bin_2d.html#parameters",
@@ -1722,74 +1722,60 @@
     "text": "Notes\nThe ha & va of element_text have no effect in some cases. e.g. if plot_tag_position is “margin” and the tag is at the top it cannot be vertically aligned.\nAlso ha & va can be floats if it makes sense to justify the tag over a span. e.g. along the panel or plot, or when aligning with other tags in a composition."
   },
   {
-    "objectID": "reference/plot_spacer.html",
-    "href": "reference/plot_spacer.html",
-    "title": " plotnine.composition.plot_spacer",
+    "objectID": "reference/plot_margin_top.html",
+    "href": "reference/plot_margin_top.html",
+    "title": " plotnine.themes.themeable.plot_margin_top",
     "section": "",
-    "text": "plot_spacer(fill=None)"
+    "text": "plot_margin_top(theme_element)"
   },
   {
-    "objectID": "reference/plot_spacer.html#parameters",
-    "href": "reference/plot_spacer.html#parameters",
-    "title": " plotnine.composition.plot_spacer",
-    "section": "Parameters",
-    "text": "Parameters\n\n\nfill : str | tuple[float, float, float] | tuple[float, float, float, float] | None = None\n\nBackground color. The default is a transparent area, but it can be changed through this parameter.\nThe color can also be modified by adding a theme and setting the plot_background."
-  },
-  {
-    "objectID": "reference/plot_margin_right.html",
-    "href": "reference/plot_margin_right.html",
-    "title": " plotnine.themes.themeable.plot_margin_right",
-    "section": "",
-    "text": "plot_margin_right(theme_element)"
-  },
-  {
-    "objectID": "reference/plot_margin_right.html#parameters",
-    "href": "reference/plot_margin_right.html#parameters",
-    "title": " plotnine.themes.themeable.plot_margin_right",
+    "objectID": "reference/plot_margin_top.html#parameters",
+    "href": "reference/plot_margin_top.html#parameters",
+    "title": " plotnine.themes.themeable.plot_margin_top",
     "section": "Parameters",
     "text": "Parameters\n\n\ntheme_element : float\n\nMust be in the [0, 1] range. It is specified as a fraction of the figure width and figure height."
   },
   {
-    "objectID": "reference/plot_margin_bottom.html",
-    "href": "reference/plot_margin_bottom.html",
-    "title": " plotnine.themes.themeable.plot_margin_bottom",
+    "objectID": "reference/plot_margin_left.html",
+    "href": "reference/plot_margin_left.html",
+    "title": " plotnine.themes.themeable.plot_margin_left",
     "section": "",
-    "text": "plot_margin_bottom(theme_element)"
+    "text": "plot_margin_left(theme_element)"
   },
   {
-    "objectID": "reference/plot_margin_bottom.html#parameters",
-    "href": "reference/plot_margin_bottom.html#parameters",
-    "title": " plotnine.themes.themeable.plot_margin_bottom",
+    "objectID": "reference/plot_margin_left.html#parameters",
+    "href": "reference/plot_margin_left.html#parameters",
+    "title": " plotnine.themes.themeable.plot_margin_left",
     "section": "Parameters",
     "text": "Parameters\n\n\ntheme_element : float\n\nMust be in the [0, 1] range. It is specified as a fraction of the figure width and figure height."
   },
   {
-    "objectID": "reference/plot_caption_position.html",
-    "href": "reference/plot_caption_position.html",
-    "title": " plotnine.themes.themeable.plot_caption_position",
+    "objectID": "reference/plot_margin.html",
+    "href": "reference/plot_margin.html",
+    "title": " plotnine.themes.themeable.plot_margin",
     "section": "",
-    "text": "plot_caption_position(theme_element)"
+    "text": "plot_margin(theme_element)"
   },
   {
-    "objectID": "reference/plot_caption_position.html#parameters",
-    "href": "reference/plot_caption_position.html#parameters",
-    "title": " plotnine.themes.themeable.plot_caption_position",
+    "objectID": "reference/plot_margin.html#parameters",
+    "href": "reference/plot_margin.html#parameters",
+    "title": " plotnine.themes.themeable.plot_margin",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : Literal[\"panel\", \"plot\"] = = \"panel\"\n\nIf “panel”, the caption is aligned with respect to the panels. If “plot”, it is aligned with the plot, excluding the margin space."
+    "text": "Parameters\n\n\ntheme_element : float\n\nMust be in the [0, 1] range. It is specified as a fraction of the figure width and figure height."
   },
   {
-    "objectID": "reference/plot_background.html",
-    "href": "reference/plot_background.html",
-    "title": " plotnine.themes.themeable.plot_background",
+    "objectID": "reference/plot_caption.html",
+    "href": "reference/plot_caption.html",
+    "title": " plotnine.themes.themeable.plot_caption",
     "section": "",
-    "text": "plot_background(theme_element)"
+    "text": "plot_caption(theme_element)"
   },
   {
-    "objectID": "reference/plot_background.html#parameters",
-    "href": "reference/plot_background.html#parameters",
-    "title": " plotnine.themes.themeable.plot_background",
+    "objectID": "reference/plot_caption.html#parameters",
+    "href": "reference/plot_caption.html#parameters",
+    "title": " plotnine.themes.themeable.plot_caption",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : element_rect"
+    "text": "Parameters\n\n\ntheme_element : element_text"
   },
   {
     "objectID": "reference/panel_spacing_y.html",
@@ -2426,7 +2412,7 @@
     "href": "reference/geom_vline.html",
     "title": " plotnine.geom_vline",
     "section": "",
-    "text": "Vertical line\n\ngeom_vline(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"identity\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=False,\n    show_legend=None,\n    raster=False,\n    **kwargs\n)"
+    "text": "geom_vline(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"identity\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=False,\n    show_legend=None,\n    raster=False,\n    **kwargs\n)"
   },
   {
     "objectID": "reference/geom_vline.html#parameters",
@@ -2440,7 +2426,7 @@
     "href": "reference/geom_tile.html",
     "title": " plotnine.geom_tile",
     "section": "",
-    "text": "Rectangles specified using a center points\n\ngeom_tile(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"identity\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    **kwargs\n)"
+    "text": "geom_tile(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"identity\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    **kwargs\n)"
   },
   {
     "objectID": "reference/geom_tile.html#parameters",
@@ -2461,7 +2447,7 @@
     "href": "reference/geom_step.html",
     "title": " plotnine.geom_step",
     "section": "",
-    "text": "Stepped connected points\n\ngeom_step(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"identity\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    direction=\"hv\",\n    **kwargs\n)"
+    "text": "geom_step(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"identity\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    direction=\"hv\",\n    **kwargs\n)"
   },
   {
     "objectID": "reference/geom_step.html#parameters",
@@ -2482,7 +2468,7 @@
     "href": "reference/geom_smooth.html",
     "title": " plotnine.geom_smooth",
     "section": "",
-    "text": "A smoothed conditional mean\n\ngeom_smooth(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"smooth\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    legend_fill_ratio=0.5,\n    **kwargs\n)"
+    "text": "geom_smooth(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"smooth\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    legend_fill_ratio=0.5,\n    **kwargs\n)"
   },
   {
     "objectID": "reference/geom_smooth.html#parameters",
@@ -2496,7 +2482,7 @@
     "href": "reference/geom_segment.html",
     "title": " plotnine.geom_segment",
     "section": "",
-    "text": "Line segments\n\ngeom_segment(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"identity\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    lineend=\"butt\",\n    arrow=None,\n    **kwargs\n)"
+    "text": "geom_segment(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"identity\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    lineend=\"butt\",\n    arrow=None,\n    **kwargs\n)"
   },
   {
     "objectID": "reference/geom_segment.html#parameters",
@@ -2517,7 +2503,7 @@
     "href": "reference/geom_ribbon.html",
     "title": " plotnine.geom_ribbon",
     "section": "",
-    "text": "Ribbon plot\n\ngeom_ribbon(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"identity\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    outline_type=\"both\",\n    **kwargs\n)"
+    "text": "geom_ribbon(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"identity\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    outline_type=\"both\",\n    **kwargs\n)"
   },
   {
     "objectID": "reference/geom_ribbon.html#parameters",
@@ -2531,7 +2517,7 @@
     "href": "reference/geom_raster.html",
     "title": " plotnine.geom_raster",
     "section": "",
-    "text": "Rasterized Rectangles specified using center points\n\ngeom_raster(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"identity\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=True,\n    vjust=0.5,\n    hjust=0.5,\n    interpolation=None,\n    filterrad=4.0,\n    **kwargs\n)"
+    "text": "geom_raster(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"identity\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=True,\n    vjust=0.5,\n    hjust=0.5,\n    interpolation=None,\n    filterrad=4.0,\n    **kwargs\n)"
   },
   {
     "objectID": "reference/geom_raster.html#parameters",
@@ -2552,7 +2538,7 @@
     "href": "reference/geom_qq_line.html",
     "title": " plotnine.geom_qq_line",
     "section": "",
-    "text": "Quantile-Quantile Line plot\n\ngeom_qq_line(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"qq_line\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    **kwargs\n)"
+    "text": "geom_qq_line(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"qq_line\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    **kwargs\n)"
   },
   {
     "objectID": "reference/geom_qq_line.html#parameters",
@@ -2566,7 +2552,7 @@
     "href": "reference/geom_polygon.html",
     "title": " plotnine.geom_polygon",
     "section": "",
-    "text": "Polygon, a filled path\n\ngeom_polygon(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"identity\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    **kwargs\n)"
+    "text": "geom_polygon(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"identity\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    **kwargs\n)"
   },
   {
     "objectID": "reference/geom_polygon.html#parameters",
@@ -2587,7 +2573,7 @@
     "href": "reference/geom_pointdensity.html",
     "title": " plotnine.geom_pointdensity",
     "section": "",
-    "text": "Scatterplot with density estimation at each point\n\ngeom_pointdensity(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"pointdensity\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    **kwargs\n)"
+    "text": "geom_pointdensity(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"pointdensity\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    **kwargs\n)"
   },
   {
     "objectID": "reference/geom_pointdensity.html#parameters",
@@ -2601,7 +2587,7 @@
     "href": "reference/geom_path.html",
     "title": " plotnine.geom_path",
     "section": "",
-    "text": "Connected points\n\ngeom_path(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"identity\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    lineend=\"butt\",\n    linejoin=\"round\",\n    arrow=None,\n    **kwargs\n)"
+    "text": "geom_path(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"identity\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    lineend=\"butt\",\n    linejoin=\"round\",\n    arrow=None,\n    **kwargs\n)"
   },
   {
     "objectID": "reference/geom_path.html#parameters",
@@ -2622,7 +2608,7 @@
     "href": "reference/geom_linerange.html",
     "title": " plotnine.geom_linerange",
     "section": "",
-    "text": "Vertical interval represented by lines\n\ngeom_linerange(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"identity\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    **kwargs\n)"
+    "text": "geom_linerange(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"identity\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    **kwargs\n)"
   },
   {
     "objectID": "reference/geom_linerange.html#parameters",
@@ -2636,7 +2622,7 @@
     "href": "reference/geom_label.html",
     "title": " plotnine.geom_label",
     "section": "",
-    "text": "Textual annotations with a background\n\ngeom_label(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"identity\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    parse=False,\n    nudge_x=0,\n    nudge_y=0,\n    adjust_text=None,\n    format_string=None,\n    path_effects=None,\n    boxstyle=\"round\",\n    boxcolor=None,\n    label_padding=0.25,\n    label_r=0.25,\n    label_size=0.7,\n    tooth_size=None,\n    **kwargs\n)"
+    "text": "geom_label(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"identity\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    parse=False,\n    nudge_x=0,\n    nudge_y=0,\n    adjust_text=None,\n    format_string=None,\n    path_effects=None,\n    boxstyle=\"round\",\n    boxcolor=None,\n    label_padding=0.25,\n    label_r=0.25,\n    label_size=0.7,\n    tooth_size=None,\n    **kwargs\n)"
   },
   {
     "objectID": "reference/geom_label.html#parameters",
@@ -2657,7 +2643,7 @@
     "href": "reference/geom_hline.html",
     "title": " plotnine.geom_hline",
     "section": "",
-    "text": "Horizontal line\n\ngeom_hline(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"identity\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=False,\n    show_legend=None,\n    raster=False,\n    **kwargs\n)"
+    "text": "geom_hline(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"identity\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=False,\n    show_legend=None,\n    raster=False,\n    **kwargs\n)"
   },
   {
     "objectID": "reference/geom_hline.html#parameters",
@@ -2671,14 +2657,14 @@
     "href": "reference/geom_freqpoly.html",
     "title": " plotnine.geom_freqpoly",
     "section": "",
-    "text": "Frequency polygon\n\ngeom_freqpoly(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"bin\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    lineend=\"butt\",\n    linejoin=\"round\",\n    arrow=None,\n    **kwargs\n)\n\nSee geom_path for documentation of the parameters."
+    "text": "geom_freqpoly(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"bin\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    lineend=\"butt\",\n    linejoin=\"round\",\n    arrow=None,\n    **kwargs\n)\n\n\nFrequency polygon\nSee geom_path for documentation of the parameters."
   },
   {
     "objectID": "reference/geom_errorbar.html",
     "href": "reference/geom_errorbar.html",
     "title": " plotnine.geom_errorbar",
     "section": "",
-    "text": "Vertical interval represented as an errorbar\n\ngeom_errorbar(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"identity\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    width=0.5,\n    **kwargs\n)"
+    "text": "geom_errorbar(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"identity\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    width=0.5,\n    **kwargs\n)"
   },
   {
     "objectID": "reference/geom_errorbar.html#parameters",
@@ -2692,7 +2678,7 @@
     "href": "reference/geom_density_2d.html",
     "title": " plotnine.geom_density_2d",
     "section": "",
-    "text": "2D density estimate\n\ngeom_density_2d(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"density_2d\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    **kwargs\n)\n\nThis is a 2d version of geom_density."
+    "text": "geom_density_2d(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"density_2d\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    **kwargs\n)"
   },
   {
     "objectID": "reference/geom_density_2d.html#parameters",
@@ -2706,7 +2692,7 @@
     "href": "reference/geom_crossbar.html",
     "title": " plotnine.geom_crossbar",
     "section": "",
-    "text": "Vertical interval represented by a crossbar\n\ngeom_crossbar(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"identity\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    width=0.5,\n    fatten=2,\n    **kwargs\n)"
+    "text": "geom_crossbar(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"identity\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    width=0.5,\n    fatten=2,\n    **kwargs\n)"
   },
   {
     "objectID": "reference/geom_crossbar.html#parameters",
@@ -2720,7 +2706,7 @@
     "href": "reference/geom_col.html",
     "title": " plotnine.geom_col",
     "section": "",
-    "text": "Bar plot with base on the x-axis\n\ngeom_col(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"identity\",\n    position=\"stack\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    just=0.5,\n    width=None,\n    **kwargs\n)\n\nThis is an alternate version of geom_bar that maps the height of bars to an existing variable in your data. If you want the height of the bar to represent a count of cases, use geom_bar."
+    "text": "geom_col(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"identity\",\n    position=\"stack\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    just=0.5,\n    width=None,\n    **kwargs\n)"
   },
   {
     "objectID": "reference/geom_col.html#parameters",
@@ -2741,7 +2727,7 @@
     "href": "reference/geom_blank.html",
     "title": " plotnine.geom_blank",
     "section": "",
-    "text": "An empty plot\n\ngeom_blank(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"identity\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    **kwargs\n)"
+    "text": "geom_blank(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"identity\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    **kwargs\n)"
   },
   {
     "objectID": "reference/geom_blank.html#parameters",
@@ -2755,7 +2741,7 @@
     "href": "reference/geom_bar.html",
     "title": " plotnine.geom_bar",
     "section": "",
-    "text": "Bar plot\n\ngeom_bar(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"count\",\n    position=\"stack\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    just=0.5,\n    width=None,\n    **kwargs\n)"
+    "text": "geom_bar(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"count\",\n    position=\"stack\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    just=0.5,\n    width=None,\n    **kwargs\n)"
   },
   {
     "objectID": "reference/geom_bar.html#parameters",
@@ -2776,7 +2762,7 @@
     "href": "reference/geom_abline.html",
     "title": " plotnine.geom_abline",
     "section": "",
-    "text": "Lines specified by slope and intercept\n\ngeom_abline(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"identity\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=False,\n    show_legend=None,\n    raster=False,\n    **kwargs\n)"
+    "text": "geom_abline(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"identity\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=False,\n    show_legend=None,\n    raster=False,\n    **kwargs\n)"
   },
   {
     "objectID": "reference/geom_abline.html#parameters",
@@ -3290,55 +3276,6 @@
     "text": "See Also\n\nafter_stat\n\n\n\nstage"
   },
   {
-    "objectID": "reference/Stack.html",
-    "href": "reference/Stack.html",
-    "title": " plotnine.composition.Stack",
-    "section": "",
-    "text": "Stack(operands)"
-  },
-  {
-    "objectID": "reference/Stack.html#parameter-attributes",
-    "href": "reference/Stack.html#parameter-attributes",
-    "title": " plotnine.composition.Stack",
-    "section": "Parameter Attributes",
-    "text": "Parameter Attributes\n\n\noperands: list[ggplot | Arrange]"
-  },
-  {
-    "objectID": "reference/Beside.html",
-    "href": "reference/Beside.html",
-    "title": " plotnine.composition.Beside",
-    "section": "",
-    "text": "Beside(operands)"
-  },
-  {
-    "objectID": "reference/Beside.html#parameter-attributes",
-    "href": "reference/Beside.html#parameter-attributes",
-    "title": " plotnine.composition.Beside",
-    "section": "Parameter Attributes",
-    "text": "Parameter Attributes\n\n\noperands: list[ggplot | Arrange]"
-  },
-  {
-    "objectID": "reference/Arrange.html",
-    "href": "reference/Arrange.html",
-    "title": " plotnine.composition.Arrange",
-    "section": "",
-    "text": "Arrange(operands)"
-  },
-  {
-    "objectID": "reference/Arrange.html#parameters",
-    "href": "reference/Arrange.html#parameters",
-    "title": " plotnine.composition.Arrange",
-    "section": "Parameters",
-    "text": "Parameters\n\n\noperands : list[ggplot | Arrange]\n\nThe objects to be put together (composed)."
-  },
-  {
-    "objectID": "reference/Arrange.html#methods",
-    "href": "reference/Arrange.html#methods",
-    "title": " plotnine.composition.Arrange",
-    "section": "Methods",
-    "text": "Methods\n\n\n\nName\nDescription\n\n\n\n\ndraw\nRender the arranged plots\n\n\nsave\nSave a composition as an image file\n\n\n\n\n draw\n\ndraw(*, show=False)\n\n\nRender the arranged plots\n\n\nParameters\n\n\nshow : bool = False\n\nWhether to show the plot.\n\n\n\n\n\nReturns\n\n\nFigure\n\nMatplotlib figure\n\n\n\n\n\n\n save\n\nsave(filename, format=None, dpi=None, **kwargs)\n\n\nSave a composition as an image file\n\n\nParameters\n\n\nfilename : str | Path | BytesIO\n\nFile name to write the plot to. If not specified, a name\n\nformat : str | None = None\n\nImage format to use, automatically extract from file name extension.\n\ndpi : int | None = None\n\nDPI to use for raster graphics. If None, defaults to using the dpi of theme to the first plot.\n\nkwargs\n\nThese are ignored. Here to “softly” match the API of ggplot.save()."
-  },
-  {
     "objectID": "reference/PlotnineAnimation.html",
     "href": "reference/PlotnineAnimation.html",
     "title": " plotnine.animation.PlotnineAnimation",
@@ -3763,14 +3700,14 @@
     "href": "reference/element_line.html",
     "title": " plotnine.element_line",
     "section": "",
-    "text": "element_line(\n    *,\n    color=None,\n    size=None,\n    linetype=None,\n    lineend=None,\n    colour=None,\n    alpha=None,\n    **kwargs\n)"
+    "text": "element_line(\n    *,\n    color=None,\n    size=None,\n    linetype=None,\n    lineend=None,\n    colour=None,\n    **kwargs\n)"
   },
   {
     "objectID": "reference/element_line.html#parameters",
     "href": "reference/element_line.html#parameters",
     "title": " plotnine.element_line",
     "section": "Parameters",
-    "text": "Parameters\n\n\ncolor : str | tuple = None\n\nline color\n\ncolour : str | tuple = None\n\nalias of color\n\nlinetype : str | tuple = None\n\nline style. if a string, it should be one of solid, dashed, dashdot or dotted. you can create interesting dashed patterns using tuples, see set_linestyle.\n\nsize : float = None\n\nline thickness\n\nalpha : float = None\n\nOpacity value\n\nkwargs : dict\n\nParameters recognised by line2d."
+    "text": "Parameters\n\n\ncolor : str | tuple = None\n\nline color\n\ncolour : str | tuple = None\n\nalias of color\n\nlinetype : str | tuple = None\n\nline style. if a string, it should be one of solid, dashed, dashdot or dotted. you can create interesting dashed patterns using tuples, see set_linestyle.\n\nsize : float = None\n\nline thickness\n\nkwargs : dict\n\nParameters recognised by line2d."
   },
   {
     "objectID": "reference/element_text.html",
@@ -3910,7 +3847,7 @@
     "href": "reference/geom_area.html",
     "title": " plotnine.geom_area",
     "section": "",
-    "text": "Area plot\n\ngeom_area(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"identity\",\n    position=\"stack\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    outline_type=\"upper\",\n    **kwargs\n)\n\nAn area plot is a special case of geom_ribbon, where the minimum of the range is fixed to 0, and the position adjustment defaults to ‘stack’."
+    "text": "geom_area(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"identity\",\n    position=\"stack\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    outline_type=\"upper\",\n    **kwargs\n)"
   },
   {
     "objectID": "reference/geom_area.html#parameters",
@@ -3931,7 +3868,7 @@
     "href": "reference/geom_bin_2d.html",
     "title": " plotnine.geom_bin_2d",
     "section": "",
-    "text": "Heatmap of 2d bin counts\n\ngeom_bin_2d(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"bin_2d\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    **kwargs\n)\n\nDivides the plane into rectangles, counts the number of cases in each rectangle, and then (by default) maps the number of cases to the rectangle’s fill. This is a useful alternative to geom_point in the presence of overplotting."
+    "text": "geom_bin_2d(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"bin_2d\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    **kwargs\n)"
   },
   {
     "objectID": "reference/geom_bin_2d.html#parameters",
@@ -3945,7 +3882,7 @@
     "href": "reference/geom_boxplot.html",
     "title": " plotnine.geom_boxplot",
     "section": "",
-    "text": "Box and whiskers plot\n\ngeom_boxplot(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"boxplot\",\n    position=\"dodge2\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    width=None,\n    outlier_alpha=1,\n    outlier_color=None,\n    outlier_shape=\"o\",\n    outlier_size=1.5,\n    outlier_stroke=0.5,\n    notch=False,\n    varwidth=False,\n    notchwidth=0.5,\n    fatten=2,\n    **kwargs\n)"
+    "text": "geom_boxplot(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"boxplot\",\n    position=\"dodge2\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    width=None,\n    outlier_alpha=1,\n    outlier_color=None,\n    outlier_shape=\"o\",\n    outlier_size=1.5,\n    outlier_stroke=0.5,\n    notch=False,\n    varwidth=False,\n    notchwidth=0.5,\n    fatten=2,\n    **kwargs\n)"
   },
   {
     "objectID": "reference/geom_boxplot.html#parameters",
@@ -3959,7 +3896,7 @@
     "href": "reference/geom_count.html",
     "title": " plotnine.geom_count",
     "section": "",
-    "text": "Plot overlapping points\n\ngeom_count(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"sum\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    **kwargs\n)\n\nThis is a variant geom_point that counts the number of observations at each location, then maps the count to point area. It useful when you have discrete data and overplotting."
+    "text": "geom_count(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"sum\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    **kwargs\n)"
   },
   {
     "objectID": "reference/geom_count.html#parameters",
@@ -3973,7 +3910,7 @@
     "href": "reference/geom_density.html",
     "title": " plotnine.geom_density",
     "section": "",
-    "text": "Smooth density estimate\n\ngeom_density(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"density\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    outline_type=\"upper\",\n    **kwargs\n)"
+    "text": "geom_density(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"density\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    outline_type=\"upper\",\n    **kwargs\n)"
   },
   {
     "objectID": "reference/geom_density.html#parameters",
@@ -3994,7 +3931,7 @@
     "href": "reference/geom_dotplot.html",
     "title": " plotnine.geom_dotplot",
     "section": "",
-    "text": "Dot plot\n\ngeom_dotplot(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"bindot\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    stackdir=\"up\",\n    stackratio=1,\n    dotsize=1,\n    stackgroups=False,\n    **kwargs\n)"
+    "text": "geom_dotplot(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"bindot\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    stackdir=\"up\",\n    stackratio=1,\n    dotsize=1,\n    stackgroups=False,\n    **kwargs\n)"
   },
   {
     "objectID": "reference/geom_dotplot.html#parameters",
@@ -4015,7 +3952,7 @@
     "href": "reference/geom_errorbarh.html",
     "title": " plotnine.geom_errorbarh",
     "section": "",
-    "text": "Horizontal interval represented as an errorbar\n\ngeom_errorbarh(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"identity\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    height=0.5,\n    **kwargs\n)"
+    "text": "geom_errorbarh(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"identity\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    height=0.5,\n    **kwargs\n)"
   },
   {
     "objectID": "reference/geom_errorbarh.html#parameters",
@@ -4029,7 +3966,7 @@
     "href": "reference/geom_histogram.html",
     "title": " plotnine.geom_histogram",
     "section": "",
-    "text": "Histogram\n\ngeom_histogram(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"bin\",\n    position=\"stack\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    **kwargs\n)"
+    "text": "geom_histogram(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"bin\",\n    position=\"stack\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    **kwargs\n)"
   },
   {
     "objectID": "reference/geom_histogram.html#parameters",
@@ -4050,7 +3987,7 @@
     "href": "reference/geom_jitter.html",
     "title": " plotnine.geom_jitter",
     "section": "",
-    "text": "Scatter plot with points jittered to reduce overplotting\n\ngeom_jitter(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"identity\",\n    position=\"jitter\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    width=None,\n    height=None,\n    random_state=None,\n    **kwargs\n)"
+    "text": "geom_jitter(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"identity\",\n    position=\"jitter\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    width=None,\n    height=None,\n    random_state=None,\n    **kwargs\n)"
   },
   {
     "objectID": "reference/geom_jitter.html#parameters",
@@ -4071,7 +4008,7 @@
     "href": "reference/geom_line.html",
     "title": " plotnine.geom_line",
     "section": "",
-    "text": "Connected points\n\ngeom_line(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"identity\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    lineend=\"butt\",\n    linejoin=\"round\",\n    arrow=None,\n    **kwargs\n)"
+    "text": "geom_line(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"identity\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    lineend=\"butt\",\n    linejoin=\"round\",\n    arrow=None,\n    **kwargs\n)"
   },
   {
     "objectID": "reference/geom_line.html#parameters",
@@ -4092,7 +4029,7 @@
     "href": "reference/geom_map.html",
     "title": " plotnine.geom_map",
     "section": "",
-    "text": "Draw map feature\n\ngeom_map(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"identity\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    **kwargs\n)\n\nThe map feature are drawn without any special projections."
+    "text": "geom_map(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"identity\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    **kwargs\n)"
   },
   {
     "objectID": "reference/geom_map.html#parameters",
@@ -4113,7 +4050,7 @@
     "href": "reference/geom_point.html",
     "title": " plotnine.geom_point",
     "section": "",
-    "text": "Plot points (Scatter plot)\n\ngeom_point(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"identity\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    **kwargs\n)"
+    "text": "geom_point(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"identity\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    **kwargs\n)"
   },
   {
     "objectID": "reference/geom_point.html#parameters",
@@ -4127,7 +4064,7 @@
     "href": "reference/geom_pointrange.html",
     "title": " plotnine.geom_pointrange",
     "section": "",
-    "text": "Vertical interval represented by a line with a point\n\ngeom_pointrange(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"identity\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    fatten=4,\n    **kwargs\n)"
+    "text": "geom_pointrange(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"identity\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    fatten=4,\n    **kwargs\n)"
   },
   {
     "objectID": "reference/geom_pointrange.html#parameters",
@@ -4141,7 +4078,7 @@
     "href": "reference/geom_qq.html",
     "title": " plotnine.geom_qq",
     "section": "",
-    "text": "Quantile-Quantile plot\n\ngeom_qq(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"qq\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    **kwargs\n)"
+    "text": "geom_qq(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"qq\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    **kwargs\n)"
   },
   {
     "objectID": "reference/geom_qq.html#parameters",
@@ -4155,7 +4092,7 @@
     "href": "reference/geom_quantile.html",
     "title": " plotnine.geom_quantile",
     "section": "",
-    "text": "Quantile lines from a quantile regression\n\ngeom_quantile(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"quantile\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    lineend=\"butt\",\n    linejoin=\"round\",\n    **kwargs\n)"
+    "text": "geom_quantile(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"quantile\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    lineend=\"butt\",\n    linejoin=\"round\",\n    **kwargs\n)"
   },
   {
     "objectID": "reference/geom_quantile.html#parameters",
@@ -4169,7 +4106,7 @@
     "href": "reference/geom_rect.html",
     "title": " plotnine.geom_rect",
     "section": "",
-    "text": "Rectangles\n\ngeom_rect(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"identity\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    **kwargs\n)"
+    "text": "geom_rect(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"identity\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    **kwargs\n)"
   },
   {
     "objectID": "reference/geom_rect.html#parameters",
@@ -4183,7 +4120,7 @@
     "href": "reference/geom_rug.html",
     "title": " plotnine.geom_rug",
     "section": "",
-    "text": "Marginal rug plot\n\ngeom_rug(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"identity\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    sides=\"bl\",\n    length=0.03,\n    **kwargs\n)"
+    "text": "geom_rug(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"identity\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    sides=\"bl\",\n    length=0.03,\n    **kwargs\n)"
   },
   {
     "objectID": "reference/geom_rug.html#parameters",
@@ -4197,7 +4134,7 @@
     "href": "reference/geom_sina.html",
     "title": " plotnine.geom_sina",
     "section": "",
-    "text": "Draw a sina plot\n\ngeom_sina(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"sina\",\n    position=\"dodge\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    **kwargs\n)\n\nA sina plot is a data visualization chart suitable for plotting any single variable in a multiclass dataset. It is an enhanced jitter strip chart, where the width of the jitter is controlled by the density distribution of the data within each class."
+    "text": "geom_sina(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"sina\",\n    position=\"dodge\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    **kwargs\n)"
   },
   {
     "objectID": "reference/geom_sina.html#parameters",
@@ -4225,7 +4162,7 @@
     "href": "reference/geom_spoke.html",
     "title": " plotnine.geom_spoke",
     "section": "",
-    "text": "Line segment parameterised by location, direction and distance\n\ngeom_spoke(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"identity\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    lineend=\"butt\",\n    arrow=None,\n    **kwargs\n)"
+    "text": "geom_spoke(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"identity\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    lineend=\"butt\",\n    arrow=None,\n    **kwargs\n)"
   },
   {
     "objectID": "reference/geom_spoke.html#parameters",
@@ -4246,7 +4183,7 @@
     "href": "reference/geom_text.html",
     "title": " plotnine.geom_text",
     "section": "",
-    "text": "Textual annotations\n\ngeom_text(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"identity\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    parse=False,\n    nudge_x=0,\n    nudge_y=0,\n    adjust_text=None,\n    format_string=None,\n    path_effects=None,\n    **kwargs\n)"
+    "text": "geom_text(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"identity\",\n    position=\"identity\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    parse=False,\n    nudge_x=0,\n    nudge_y=0,\n    adjust_text=None,\n    format_string=None,\n    path_effects=None,\n    **kwargs\n)"
   },
   {
     "objectID": "reference/geom_text.html#parameters",
@@ -4267,7 +4204,7 @@
     "href": "reference/geom_violin.html",
     "title": " plotnine.geom_violin",
     "section": "",
-    "text": "Violin Plot\n\ngeom_violin(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"ydensity\",\n    position=\"dodge\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    draw_quantiles=None,\n    style=\"full\",\n    scale=\"area\",\n    trim=True,\n    width=None,\n    **kwargs\n)"
+    "text": "geom_violin(\n    mapping=None,\n    data=None,\n    *,\n    stat=\"ydensity\",\n    position=\"dodge\",\n    na_rm=False,\n    inherit_aes=True,\n    show_legend=None,\n    raster=False,\n    draw_quantiles=None,\n    style=\"full\",\n    scale=\"area\",\n    trim=True,\n    width=None,\n    **kwargs\n)"
   },
   {
     "objectID": "reference/geom_violin.html#parameters",
@@ -4351,7 +4288,7 @@
     "href": "reference/index.html",
     "title": "API Reference",
     "section": "",
-    "text": "ggplot\nCreate a new ggplot object\n\n\nqplot\nQuick plot\n\n\nwatermark\nAdd watermark to plot\n\n\nlayer\nLayer\n\n\nPlotnineAnimation\nAnimation using ggplot objects\n\n\nsave_as_pdf_pages\nSave multiple ggplot objects to a PDF file, one per page.\n\n\n\n\n\n\n\nAesthetics are the visual properties of a plot. The following functions control how the data (and calculations based on the data) is mapped to the aesthetics.\n\n\n\n\naes\nCreate aesthetic mappings\n\n\nafter_stat\nEvaluate mapping after statistic has been calculated\n\n\nafter_scale\nEvaluate mapping after variable has been mapped to the scale\n\n\nstage\nStage allows you evaluating mapping at more than one stage\n\n\n\n\n\n\nThe expressions you write in the aes() call are evaluated inside an environment with a few functions that you may need from time to time. These functions are for your convenience, and you can expect them to to always be there.\n\n\n\n\nfactor\nTurn x in to a categorical (factor) variable\n\n\nreorder\nReorder categorical by sorting along another variable\n\n\n\n\n\n\n\n\nGeometric objects (geoms) are responsible for the visual representation of data points. geom_* classes determine the kind of geometric objects and every plot must have at least one geom added to it. The distinct visual aspects of the representation are controlled by the aes mapping.\n\n\n\n\ngeom\nBase class of all Geoms\n\n\n\n\n\n\n\n\ngeom_abline\nLines specified by slope and intercept\n\n\ngeom_area\nArea plot\n\n\ngeom_bar\nBar plot\n\n\ngeom_bin_2d\nHeatmap of 2d bin counts\n\n\ngeom_blank\nAn empty plot\n\n\ngeom_boxplot\nBox and whiskers plot\n\n\ngeom_col\nBar plot with base on the x-axis\n\n\ngeom_count\nPlot overlapping points\n\n\ngeom_crossbar\nVertical interval represented by a crossbar\n\n\ngeom_density\nSmooth density estimate\n\n\ngeom_density_2d\n2D density estimate\n\n\ngeom_dotplot\nDot plot\n\n\ngeom_errorbar\nVertical interval represented as an errorbar\n\n\ngeom_errorbarh\nHorizontal interval represented as an errorbar\n\n\ngeom_freqpoly\nFrequency polygon\n\n\ngeom_histogram\nHistogram\n\n\ngeom_hline\nHorizontal line\n\n\ngeom_jitter\nScatter plot with points jittered to reduce overplotting\n\n\ngeom_label\nTextual annotations with a background\n\n\ngeom_line\nConnected points\n\n\ngeom_linerange\nVertical interval represented by lines\n\n\ngeom_map\nDraw map feature\n\n\ngeom_path\nConnected points\n\n\ngeom_point\nPlot points (Scatter plot)\n\n\ngeom_pointdensity\nScatterplot with density estimation at each point\n\n\ngeom_pointrange\nVertical interval represented by a line with a point\n\n\ngeom_polygon\nPolygon, a filled path\n\n\ngeom_qq\nQuantile-Quantile plot\n\n\ngeom_qq_line\nQuantile-Quantile Line plot\n\n\ngeom_quantile\nQuantile lines from a quantile regression\n\n\ngeom_raster\nRasterized Rectangles specified using center points\n\n\ngeom_rect\nRectangles\n\n\ngeom_ribbon\nRibbon plot\n\n\ngeom_rug\nMarginal rug plot\n\n\ngeom_segment\nLine segments\n\n\ngeom_sina\nDraw a sina plot\n\n\ngeom_smooth\nA smoothed conditional mean\n\n\ngeom_spoke\nLine segment parameterised by location, direction and distance\n\n\ngeom_step\nStepped connected points\n\n\ngeom_text\nTextual annotations\n\n\ngeom_tile\nRectangles specified using a center points\n\n\ngeom_violin\nViolin Plot\n\n\ngeom_vline\nVertical line\n\n\n\n\n\n\n\n\n\n\nannotate\nCreate an annotation layer\n\n\nannotation_logticks\nMarginal log ticks.\n\n\nannotation_stripes\nAlternating stripes, centered around each label.\n\n\narrow\nDefine arrow (actually an arrowhead)\n\n\n\n\n\n\n\n\n\n\n\nlabs\nAdd labels for any aesthetics with a scale or title, subtitle & caption\n\n\nxlab\nLabel/name for the x aesthetic\n\n\nylab\nLabel/name for the y aesthetic\n\n\nggtitle\nCreate plot title\n\n\n\n\n\n\n\n\nStatistical transformations (stats) do aggregations and other computations on data before it is drawn out. stat_* determine the type of computation done on the data. Different types of computations yield varied results, so a stat must be paired with a geom that can represent all or some of the computations.\n\n\n\n\nstat\nBase class of all stats\n\n\n\n\n\n\n\n\nstat_bin\nCount cases in each interval\n\n\nstat_bin_2d\n2 Dimensional bin counts\n\n\nstat_bindot\nBinning for a dot plot\n\n\nstat_boxplot\nCompute boxplot statistics\n\n\nstat_count\nCounts the number of cases at each x position\n\n\nstat_density\nCompute density estimate\n\n\nstat_density_2d\nCompute 2D kernel density estimation\n\n\nstat_ecdf\nEmpirical Cumulative Density Function\n\n\nstat_ellipse\nCalculate normal confidence interval ellipse\n\n\nstat_function\nSuperimpose a function onto a plot\n\n\nstat_hull\n2 Dimensional Convex Hull\n\n\nstat_identity\nIdentity (do nothing) statistic\n\n\nstat_qq\nCalculation for quantile-quantile plot\n\n\nstat_qq_line\nCalculate line through quantile-quantile plot\n\n\nstat_quantile\nCompute quantile regression lines\n\n\nstat_sina\nCompute Sina plot values\n\n\nstat_smooth\nCalculate a smoothed conditional mean\n\n\nstat_sum\nSum unique values\n\n\nstat_summary\nCalculate summary statistics depending on x\n\n\nstat_summary_bin\nSummarise y values at x intervals\n\n\nstat_unique\nRemove duplicates\n\n\nstat_ydensity\nDensity estimate\n\n\n\n\n\n\n\nFaceting is a way to subset data and plot it on different panels.\n\n\n\n\nfacet\nBase class for all facets\n\n\n\n\n\n\n\n\nfacet_grid\nWrap 1D Panels onto 2D surface\n\n\nfacet_null\nA single Panel\n\n\nfacet_wrap\nWrap 1D Panels onto 2D surface\n\n\nlabeller\nFacet Strip Labelling\n\n\nas_labeller\nCoerse to labeller\n\n\nlabel_value\nKeep value as the label\n\n\nlabel_both\nConcatenate the facet variable with the value\n\n\nlabel_context\nCreate an unabiguous label string\n\n\n\n\n\n\n\nScales control the mapping from data to aesthetics. They take data and adjust it to fit the different aspects of the visual sense i.e. length, colour, size and shape.\n\n\n\n\n\n\nscale\nBase class for all scales\n\n\nscale_discrete\nBase class for all discrete scales\n\n\nscale_continuous\nBase class for all continuous scales\n\n\nscale_datetime\nBase class for all date/datetime scales\n\n\n\n\n\n\n\n\n\n\n\nscale_alpha\nContinuous Alpha Scale\n\n\nscale_alpha_continuous\nalias of scale_alpha\n\n\nscale_alpha_datetime\nDatetime Alpha Scale\n\n\nscale_alpha_discrete\nDiscrete Alpha Scale\n\n\nscale_alpha_ordinal\nOrdinal Alpha Scale\n\n\n\n\n\n\n\n\n\n\n\nscale_color_brewer\nSequential, diverging and qualitative discrete color scales\n\n\nscale_color_cmap\nCreate color scales using Matplotlib colormaps\n\n\nscale_color_cmap_d\nA discrete color scales using Matplotlib colormaps\n\n\nscale_color_continuous\nalias of scale_color_cmap\n\n\nscale_color_datetime\nDatetime color scale\n\n\nscale_color_desaturate\nCreate a desaturated color gradient\n\n\nscale_color_discrete\nalias of scale_color_hue\n\n\nscale_color_distiller\nSequential and diverging continuous color scales\n\n\nscale_color_gradient\nCreate a 2 point color gradient\n\n\nscale_color_gradient2\nCreate a 3 point diverging color gradient\n\n\nscale_color_gradientn\nCreate a n color gradient\n\n\nscale_color_gray\nalias of scale_color_grey\n\n\nscale_color_grey\nSequential grey color scale.\n\n\nscale_color_hue\nQualitative color scale with evenly spaced hues\n\n\nscale_color_ordinal\nalias of scale_color_cmap_d\n\n\nscale_fill_brewer\nSequential, diverging and qualitative color scales\n\n\nscale_fill_cmap\nCreate color scales using Matplotlib colormaps\n\n\nscale_fill_cmap_d\nCreate color scales using Matplotlib colormaps\n\n\nscale_fill_continuous\nalias of scale_fill_cmap\n\n\nscale_fill_datetime\nDatetime fill scale\n\n\nscale_fill_desaturate\nCreate a desaturated color gradient\n\n\nscale_fill_discrete\nalias of scale_fill_hue\n\n\nscale_fill_distiller\nSequential, diverging continuous color scales\n\n\nscale_fill_gradient\nCreate a 2 point color gradient\n\n\nscale_fill_gradient2\nCreate a 3 point diverging color gradient\n\n\nscale_fill_gradientn\nCreate a n color gradient\n\n\nscale_fill_gray\nalias of scale_fill_grey\n\n\nscale_fill_grey\nSequential grey color scale.\n\n\nscale_fill_hue\nQualitative color scale with evenly spaced hues\n\n\nscale_fill_ordinal\nalias of scale_fill_cmap_d\n\n\n\n\n\n\n\n\n\n\n\nscale_alpha_identity\nNo alpha scaling\n\n\nscale_color_identity\nNo color scaling\n\n\nscale_colour_identity\nalias of scale_color_identity\n\n\nscale_fill_identity\nNo color scaling\n\n\nscale_linetype_identity\nNo linetype scaling\n\n\nscale_shape_identity\nNo shape scaling\n\n\nscale_size_identity\nNo size scaling\n\n\n\n\n\n\n\n\n\n\n\nscale_linetype\nScale for line patterns\n\n\nscale_linetype_discrete\nalias of scale_linetype\n\n\n\n\n\n\n\n\n\n\n\nscale_alpha_manual\nCustom discrete alpha scale\n\n\nscale_color_manual\nCustom discrete color scale\n\n\nscale_colour_manual\nalias of scale_color_manual\n\n\nscale_fill_manual\nCustom discrete fill scale\n\n\nscale_linetype_manual\nCustom discrete linetype scale\n\n\nscale_shape_manual\nCustom discrete shape scale\n\n\nscale_size_manual\nCustom discrete size scale\n\n\n\n\n\n\n\n\n\n\n\nscale_x_continuous\nContinuous x position\n\n\nscale_x_date\nalias of scale_x_datetime\n\n\nscale_x_datetime\nContinuous x position for datetime data points\n\n\nscale_x_discrete\nDiscrete x position\n\n\nscale_x_log10\nContinuous x position log10 transformed scale\n\n\nscale_x_reverse\nContinuous x position reverse transformed scale\n\n\nscale_x_sqrt\nContinuous x position sqrt transformed scale\n\n\nscale_x_symlog\nContinuous x position symmetric logarithm transformed scale\n\n\nscale_x_timedelta\nContinuous x position for timedelta data points\n\n\nscale_y_continuous\nContinuous y position\n\n\nscale_y_date\nalias of scale_y_datetime\n\n\nscale_y_datetime\nContinuous y position for datetime data points\n\n\nscale_y_discrete\nDiscrete y position\n\n\nscale_y_log10\nContinuous y position log10 transformed scale\n\n\nscale_y_reverse\nContinuous y position reverse transformed scale\n\n\nscale_y_sqrt\nContinuous y position sqrt transformed scale\n\n\nscale_y_symlog\nContinuous y position symmetric logarithm transformed scale\n\n\nscale_y_timedelta\nContinuous y position for timedelta data points\n\n\n\n\n\n\n\n\n\n\n\nscale_shape\nScale for shapes\n\n\nscale_shape_discrete\nalias of scale_shape\n\n\n\n\n\n\n\n\n\n\n\nscale_size\nalias of scale_size_continuous\n\n\nscale_size_area\nContinuous area size scale\n\n\nscale_size_continuous\nContinuous area size scale\n\n\nscale_size_datetime\nDatetime area-size scale\n\n\nscale_size_discrete\nDiscrete area size scale\n\n\nscale_size_ordinal\nDiscrete area size scale\n\n\nscale_size_radius\nContinuous radius size scale\n\n\n\n\n\n\n\n\n\n\n\nscale_stroke\nalias of scale_stroke_continuous\n\n\nscale_stroke_continuous\nContinuous Stroke Scale\n\n\n\n\n\n\n\n\n\n\n\nlims\nSet aesthetic limits\n\n\nxlim\nSet x-axis limits\n\n\nylim\nSet y-axis limits\n\n\nexpand_limits\nExpand the limits any aesthetic using data\n\n\n\n\n\n\n\n\nGuides allow you to interpret data represented on a scales. Guides include the x and y axes, legends and colorbars.\n\n\n\n\nguide\nBase class for all guides\n\n\n\n\n\n\n\n\nguides\nGuides for each scale\n\n\nguide_legend\nLegend guide\n\n\nguide_colorbar\nGuide colorbar\n\n\n\n\n\n\n\nOverlapping objects can be visualized better if their positions are adjusted. That is what the position_* class do. Each geom is associated with one position adjustment class.\n\n\n\n\nposition\nBase class for all positions\n\n\n\n\n\n\n\n\nposition_dodge\nDodge overlaps and place objects side-by-side\n\n\nposition_dodge2\nDodge overlaps and place objects side-by-side\n\n\nposition_fill\nNormalise stacked objects to unit height\n\n\nposition_identity\nDo not adjust the position\n\n\nposition_jitter\nJitter points to avoid overplotting\n\n\nposition_jitterdodge\nDodge and jitter to minimise overlap\n\n\nposition_nudge\nNudge points\n\n\nposition_stack\nStack plotted objects on top of each other\n\n\n\n\n\n\n\nThemes control the visual appearance of the non-data elements the plot.\n\n\n\n\ntheme\nBase class for themes\n\n\n\n\n\n\n\n\ntheme_538\nTheme in the likeness of fivethirtyeight.com plots\n\n\ntheme_bw\nWhite background with black gridlines\n\n\ntheme_classic\nA classic-looking theme, with x & y axis lines and no gridlines\n\n\ntheme_dark\nThe dark cousin of theme_light\n\n\ntheme_gray\nA gray background with white gridlines.\n\n\ntheme_grey\nalias of theme_gray\n\n\ntheme_light\nA theme similar to theme_linedraw\n\n\ntheme_linedraw\nA theme with only black lines of various widths on white backgrounds\n\n\ntheme_matplotlib\nThe default matplotlib look and feel.\n\n\ntheme_minimal\nA minimalistic theme with no background annotations\n\n\ntheme_seaborn\nTheme for seaborn.\n\n\ntheme_tufte\nTufte Maximal Data, Minimal Ink Theme\n\n\ntheme_void\nA classic-looking theme, with x & y axis lines and\n\n\ntheme_xkcd\nxkcd theme\n\n\n\n\n\n\nThese define aspects of a plot that can be themed. They can be used to create a new theme or modify an existing theme. They define the keyword arguments to theme. Users should never create instances of themeable.\n\n\n\n\nthemeable\nAbstract class of things that can be themed.\n\n\n\n\n\n\n\n\naspect_ratio\nAspect ratio of the panel(s)\n\n\naxis_line\nx & y axis lines\n\n\naxis_line_x\nx-axis line\n\n\naxis_line_y\ny-axis line\n\n\naxis_text\nAxis tick labels\n\n\naxis_text_x\nx-axis tick labels\n\n\naxis_text_y\ny-axis tick labels\n\n\naxis_ticks\nx & y major and minor axis tick lines\n\n\naxis_ticks_length\nAxis tick length\n\n\naxis_ticks_length_major\nAxis major-tick length\n\n\naxis_ticks_length_major_x\nx-axis major-tick length\n\n\naxis_ticks_length_major_y\ny-axis major-tick length\n\n\naxis_ticks_length_minor\nAxis minor-tick length\n\n\naxis_ticks_length_minor_x\nx-axis minor-tick length\n\n\naxis_ticks_length_minor_y\nx-axis minor-tick length\n\n\naxis_ticks_major\nx & y axis major tick lines\n\n\naxis_ticks_major_x\nx-axis major tick lines\n\n\naxis_ticks_major_y\ny-axis major tick lines\n\n\naxis_ticks_minor\nx & y axis minor tick lines\n\n\naxis_ticks_minor_x\nx-axis tick lines\n\n\naxis_ticks_minor_y\ny-axis minor tick lines\n\n\naxis_ticks_x\nx major and minor axis tick lines\n\n\naxis_ticks_y\ny major and minor axis tick lines\n\n\naxis_title\nAxis labels\n\n\naxis_title_x\nx axis label\n\n\naxis_title_y\ny axis label\n\n\ndpi\nDPI with which to draw/save the figure\n\n\nfigure_size\nFigure size in inches\n\n\nlegend_background\nLegend background\n\n\nlegend_box\nHow to box up multiple legends\n\n\nlegend_box_background\nLegend box background\n\n\nlegend_box_just\nJustification of guide boxes\n\n\nlegend_box_margin\nPadding between the legends and the box\n\n\nlegend_box_spacing\nSpacing between the legend and the plotting area\n\n\nlegend_direction\nLayout items in the legend\n\n\nlegend_key_spacing\nSpacing between two entries in a legend\n\n\nlegend_key_spacing_x\nHorizontal spacing between two entries in a legend\n\n\nlegend_key_spacing_y\nVertical spacing between two entries in a legend\n\n\nlegend_frame\nFrame around colorbar\n\n\nlegend_justification\nJustification of any legend\n\n\nlegend_justification_bottom\nJustification of legends placed at the bottom\n\n\nlegend_justification_inside\nJustification of legends placed inside the axes\n\n\nlegend_justification_left\nJustification of legends placed on the left\n\n\nlegend_justification_right\nJustification of legends placed on the right\n\n\nlegend_justification_top\nJustification of legends placed at the top\n\n\nlegend_key\nLegend key background\n\n\nlegend_key_height\nLegend key background height\n\n\nlegend_key_size\nLegend key background width and height\n\n\nlegend_key_width\nLegend key background width\n\n\nlegend_margin\nPadding between the legend and the inner box\n\n\nlegend_position\nLocation of legend\n\n\nlegend_position_inside\nLocation of legend\n\n\nlegend_spacing\nSpacing between two adjacent legends\n\n\nlegend_text\nLegend text\n\n\nlegend_text_colorbar\nColorbar text\n\n\nlegend_text_legend\nLegend text for the common legend\n\n\nlegend_text_position\nPosition of the legend text\n\n\nlegend_ticks_length\nLength of ticks in the legend\n\n\nlegend_title\nLegend title\n\n\nlegend_title_position\nPosition of legend title\n\n\nline\nAll line elements\n\n\npanel_background\nPanel background\n\n\npanel_border\nPanel border\n\n\npanel_grid\nGrid lines\n\n\npanel_grid_major\nMajor grid lines\n\n\npanel_grid_major_x\nVertical major grid lines\n\n\npanel_grid_major_y\nHorizontal major grid lines\n\n\npanel_grid_minor\nMinor grid lines\n\n\npanel_grid_minor_x\nVertical minor grid lines\n\n\npanel_grid_minor_y\nHorizontal minor grid lines\n\n\npanel_ontop\nPlace panel background & gridlines over/under the data layers\n\n\npanel_spacing\nSpacing between the facet panels\n\n\npanel_spacing_x\nHorizontal spacing between the facet panels\n\n\npanel_spacing_y\nVertical spacing between the facet panels\n\n\nplot_background\nPlot background\n\n\nplot_caption\nPlot caption\n\n\nplot_caption_position\nHow to align the plot caption\n\n\nplot_margin\nPlot Margin\n\n\nplot_margin_bottom\nPlot Margin at the bottom\n\n\nplot_margin_left\nPlot Margin on the left\n\n\nplot_margin_right\nPlot Margin on the right\n\n\nplot_margin_top\nPlot Margin at the top\n\n\nplot_subtitle\nPlot subtitle\n\n\nplot_tag\nPlot tag\n\n\nplot_tag_location\nThe area where the tag will be positioned\n\n\nplot_tag_position\nPosition of the tag\n\n\nplot_title\nPlot title\n\n\nplot_title_position\nHow to align the plot title and plot subtitle\n\n\nrect\nAll rectangle elements\n\n\nstrip_align\nAlignment of the strip & its background w.r.t the panel border\n\n\nstrip_align_x\nVertical alignment of the strip & its background w.r.t the panel border\n\n\nstrip_align_y\nHorizontal alignment of the strip & its background w.r.t the panel border\n\n\nstrip_background\nFacet label background\n\n\nstrip_background_x\nHorizontal facet label background\n\n\nstrip_background_y\nVertical facet label background\n\n\nstrip_text\nFacet labels along both axes\n\n\nstrip_text_x\nFacet labels along the horizontal axis\n\n\nstrip_text_y\nFacet labels along the vertical axis\n\n\nsubplots_adjust\n\n\n\nsvg_usefonts\nHow to renderer fonts for svg images\n\n\ntext\nAll text elements in the plot\n\n\ntitle\nAll titles on the plot\n\n\n\n\n\n\n\n\n\n\n\ntheme_set\nChange the current(default) theme\n\n\ntheme_get\nReturn the default theme\n\n\ntheme_update\nModify elements of the current theme\n\n\n\n\n\n\n\n\nelement_line\ntheme element: line\n\n\nelement_rect\nTheme element: Rectangle\n\n\nelement_text\nTheme element: Text\n\n\nelement_blank\nTheme element: Blank\n\n\n\n\n\n\n\n\nCoordinate systems put together the two position scales to produce a 2d location.\n\n\n\n\ncoord\nBase class for all coordinate systems\n\n\n\n\n\n\n\n\ncoord_cartesian\nCartesian coordinate system\n\n\ncoord_equal\nCartesian coordinates with fixed relationship between x and y scales\n\n\ncoord_fixed\nCartesian coordinates with fixed relationship between x and y scales\n\n\ncoord_flip\nFlipped cartesian coordinates\n\n\ncoord_trans\nTransformed cartesian coordinate system\n\n\n\n\n\n\n\n\n\n\n\nArrange\nBase class for those that create plot compositions\n\n\n/ Stack\nPlace plots or compositions on top of each other\n\n\n| Beside\nPlace plots or compositions side by side\n\n\nplot_spacer\nBlank area as wide or as tall as a plot\n\n\n\n\n\n\n\nWhen working interactively, some of the options make it convenient to create plots that have a common look and feel.\n\n\nThese are the methods that access the options.\n\n\n\n\nget_option\nGet package option\n\n\nset_option\nSet package option\n\n\n\n\n\n\n\nThese are all the options that you can set or get the values of.\n\n\n\n\naspect_ratio\nDefault aspect ratio used by the themes\n\n\nbase_family\nThe base font family for all text that is part of the theme.\n\n\nbase_margin\nA size that is proportional of the figure width and\n\n\ncurrent_theme\nTheme used when none is added to the ggplot object\n\n\ndpi\nDefault DPI used by the themes\n\n\nfigure_size\nDefault figure size in inches\n\n\nfigure_format\nThe format for the inline figures outputted by the jupyter kernel.\n\n\n\n\n\n\n\n\nFunctions that you may occasioanally find helpful\n\n\n\n\nget_aesthetic_limits\nGet the limits of an aesthetic\n\n\n\n\n\n\n\nThese datasets ship with the plotnine and you can import them with from the plotnine.data sub-package.\n\n\n\n\nanscombe_quartet\nAnscombe’s Quartet\n\n\ndiamonds\nPrices of 50,000 round cut diamonds\n\n\neconomics\nUS economic time series.\n\n\neconomics_long\nUS economic time series.\n\n\nfaithful\nOld Faithful Geyser Data\n\n\nfaithfuld\nOld Faithful Geyser Data\n\n\nhuron\nLevel of Lake Huron 1875–1972\n\n\nluv_colours\ncolors in Luv space.\n\n\nmeat\nUS Meat Production\n\n\nmidwest\nMidwest demographics.\n\n\nmpg\nFuel economy data from 1999 and 2008 for 38 popular models of car\n\n\nmsleep\nAn updated and expanded version of the mammals sleep dataset.\n\n\nmtcars\nMotor Trend Car Road Tests\n\n\npageviews\n\n\n\npenguins\nPalmer Penguins\n\n\npresidential\nTerms of 11 presidents from Eisenhower to Obama.\n\n\nseals\nVector field of seal movements.\n\n\ntxhousing\nHousing sales in TX."
+    "text": "ggplot\nCreate a new ggplot object\n\n\nqplot\nQuick plot\n\n\nwatermark\nAdd watermark to plot\n\n\nlayer\nLayer\n\n\nPlotnineAnimation\nAnimation using ggplot objects\n\n\nsave_as_pdf_pages\nSave multiple ggplot objects to a PDF file, one per page.\n\n\n\n\n\n\n\nAesthetics are the visual properties of a plot. The following functions control how the data (and calculations based on the data) is mapped to the aesthetics.\n\n\n\n\naes\nCreate aesthetic mappings\n\n\nafter_stat\nEvaluate mapping after statistic has been calculated\n\n\nafter_scale\nEvaluate mapping after variable has been mapped to the scale\n\n\nstage\nStage allows you evaluating mapping at more than one stage\n\n\n\n\n\n\nThe expressions you write in the aes() call are evaluated inside an environment with a few functions that you may need from time to time. These functions are for your convenience, and you can expect them to to always be there.\n\n\n\n\nfactor\nTurn x in to a categorical (factor) variable\n\n\nreorder\nReorder categorical by sorting along another variable\n\n\n\n\n\n\n\n\nGeometric objects (geoms) are responsible for the visual representation of data points. geom_* classes determine the kind of geometric objects and every plot must have at least one geom added to it. The distinct visual aspects of the representation are controlled by the aes mapping.\n\n\n\n\ngeom\nBase class of all Geoms\n\n\n\n\n\n\n\n\ngeom_abline\nLines specified by slope and intercept\n\n\ngeom_area\nArea plot\n\n\ngeom_bar\nBar plot\n\n\ngeom_bin_2d\nHeatmap of 2d bin counts\n\n\ngeom_blank\nAn empty plot\n\n\ngeom_boxplot\nBox and whiskers plot\n\n\ngeom_col\nBar plot with base on the x-axis\n\n\ngeom_count\nPlot overlapping points\n\n\ngeom_crossbar\nVertical interval represented by a crossbar\n\n\ngeom_density\nSmooth density estimate\n\n\ngeom_density_2d\n2D density estimate\n\n\ngeom_dotplot\nDot plot\n\n\ngeom_errorbar\nVertical interval represented as an errorbar\n\n\ngeom_errorbarh\nHorizontal interval represented as an errorbar\n\n\ngeom_freqpoly\nFrequency polygon\n\n\ngeom_histogram\nHistogram\n\n\ngeom_hline\nHorizontal line\n\n\ngeom_jitter\nScatter plot with points jittered to reduce overplotting\n\n\ngeom_label\nTextual annotations with a background\n\n\ngeom_line\nConnected points\n\n\ngeom_linerange\nVertical interval represented by lines\n\n\ngeom_map\nDraw map feature\n\n\ngeom_path\nConnected points\n\n\ngeom_point\nPlot points (Scatter plot)\n\n\ngeom_pointdensity\nScatterplot with density estimation at each point\n\n\ngeom_pointrange\nVertical interval represented by a line with a point\n\n\ngeom_polygon\nPolygon, a filled path\n\n\ngeom_qq\nQuantile-Quantile plot\n\n\ngeom_qq_line\nQuantile-Quantile Line plot\n\n\ngeom_quantile\nQuantile lines from a quantile regression\n\n\ngeom_raster\nRasterized Rectangles specified using center points\n\n\ngeom_rect\nRectangles\n\n\ngeom_ribbon\nRibbon plot\n\n\ngeom_rug\nMarginal rug plot\n\n\ngeom_segment\nLine segments\n\n\ngeom_sina\nDraw a sina plot\n\n\ngeom_smooth\nA smoothed conditional mean\n\n\ngeom_spoke\nLine segment parameterised by location, direction and distance\n\n\ngeom_step\nStepped connected points\n\n\ngeom_text\nTextual annotations\n\n\ngeom_tile\nRectangles specified using a center points\n\n\ngeom_violin\nViolin Plot\n\n\ngeom_vline\nVertical line\n\n\n\n\n\n\n\n\n\n\nannotate\nCreate an annotation layer\n\n\nannotation_logticks\nMarginal log ticks.\n\n\nannotation_stripes\nAlternating stripes, centered around each label.\n\n\narrow\nDefine arrow (actually an arrowhead)\n\n\n\n\n\n\n\n\n\n\n\nlabs\nAdd labels for any aesthetics with a scale or title, subtitle & caption\n\n\nxlab\nLabel/name for the x aesthetic\n\n\nylab\nLabel/name for the y aesthetic\n\n\nggtitle\nCreate plot title\n\n\n\n\n\n\n\n\nStatistical transformations (stats) do aggregations and other computations on data before it is drawn out. stat_* determine the type of computation done on the data. Different types of computations yield varied results, so a stat must be paired with a geom that can represent all or some of the computations.\n\n\n\n\nstat\nBase class of all stats\n\n\n\n\n\n\n\n\nstat_bin\nCount cases in each interval\n\n\nstat_bin_2d\n2 Dimensional bin counts\n\n\nstat_bindot\nBinning for a dot plot\n\n\nstat_boxplot\nCompute boxplot statistics\n\n\nstat_count\nCounts the number of cases at each x position\n\n\nstat_density\nCompute density estimate\n\n\nstat_density_2d\nCompute 2D kernel density estimation\n\n\nstat_ecdf\nEmpirical Cumulative Density Function\n\n\nstat_ellipse\nCalculate normal confidence interval ellipse\n\n\nstat_function\nSuperimpose a function onto a plot\n\n\nstat_hull\n2 Dimensional Convex Hull\n\n\nstat_identity\nIdentity (do nothing) statistic\n\n\nstat_qq\nCalculation for quantile-quantile plot\n\n\nstat_qq_line\nCalculate line through quantile-quantile plot\n\n\nstat_quantile\nCompute quantile regression lines\n\n\nstat_sina\nCompute Sina plot values\n\n\nstat_smooth\nCalculate a smoothed conditional mean\n\n\nstat_sum\nSum unique values\n\n\nstat_summary\nCalculate summary statistics depending on x\n\n\nstat_summary_bin\nSummarise y values at x intervals\n\n\nstat_unique\nRemove duplicates\n\n\nstat_ydensity\nDensity estimate\n\n\n\n\n\n\n\nFaceting is a way to subset data and plot it on different panels.\n\n\n\n\nfacet\nBase class for all facets\n\n\n\n\n\n\n\n\nfacet_grid\nWrap 1D Panels onto 2D surface\n\n\nfacet_null\nA single Panel\n\n\nfacet_wrap\nWrap 1D Panels onto 2D surface\n\n\nlabeller\nFacet Strip Labelling\n\n\nas_labeller\nCoerse to labeller\n\n\nlabel_value\nKeep value as the label\n\n\nlabel_both\nConcatenate the facet variable with the value\n\n\nlabel_context\nCreate an unabiguous label string\n\n\n\n\n\n\n\nScales control the mapping from data to aesthetics. They take data and adjust it to fit the different aspects of the visual sense i.e. length, colour, size and shape.\n\n\n\n\n\n\nscale\nBase class for all scales\n\n\nscale_discrete\nBase class for all discrete scales\n\n\nscale_continuous\nBase class for all continuous scales\n\n\nscale_datetime\nBase class for all date/datetime scales\n\n\n\n\n\n\n\n\n\n\n\nscale_alpha\nContinuous Alpha Scale\n\n\nscale_alpha_continuous\nalias of scale_alpha\n\n\nscale_alpha_datetime\nDatetime Alpha Scale\n\n\nscale_alpha_discrete\nDiscrete Alpha Scale\n\n\nscale_alpha_ordinal\nOrdinal Alpha Scale\n\n\n\n\n\n\n\n\n\n\n\nscale_color_brewer\nSequential, diverging and qualitative discrete color scales\n\n\nscale_color_cmap\nCreate color scales using Matplotlib colormaps\n\n\nscale_color_cmap_d\nA discrete color scales using Matplotlib colormaps\n\n\nscale_color_continuous\nalias of scale_color_cmap\n\n\nscale_color_datetime\nDatetime color scale\n\n\nscale_color_desaturate\nCreate a desaturated color gradient\n\n\nscale_color_discrete\nalias of scale_color_hue\n\n\nscale_color_distiller\nSequential and diverging continuous color scales\n\n\nscale_color_gradient\nCreate a 2 point color gradient\n\n\nscale_color_gradient2\nCreate a 3 point diverging color gradient\n\n\nscale_color_gradientn\nCreate a n color gradient\n\n\nscale_color_gray\nalias of scale_color_grey\n\n\nscale_color_grey\nSequential grey color scale.\n\n\nscale_color_hue\nQualitative color scale with evenly spaced hues\n\n\nscale_color_ordinal\nalias of scale_color_cmap_d\n\n\nscale_fill_brewer\nSequential, diverging and qualitative color scales\n\n\nscale_fill_cmap\nCreate color scales using Matplotlib colormaps\n\n\nscale_fill_cmap_d\nCreate color scales using Matplotlib colormaps\n\n\nscale_fill_continuous\nalias of scale_fill_cmap\n\n\nscale_fill_datetime\nDatetime fill scale\n\n\nscale_fill_desaturate\nCreate a desaturated color gradient\n\n\nscale_fill_discrete\nalias of scale_fill_hue\n\n\nscale_fill_distiller\nSequential, diverging continuous color scales\n\n\nscale_fill_gradient\nCreate a 2 point color gradient\n\n\nscale_fill_gradient2\nCreate a 3 point diverging color gradient\n\n\nscale_fill_gradientn\nCreate a n color gradient\n\n\nscale_fill_gray\nalias of scale_fill_grey\n\n\nscale_fill_grey\nSequential grey color scale.\n\n\nscale_fill_hue\nQualitative color scale with evenly spaced hues\n\n\nscale_fill_ordinal\nalias of scale_fill_cmap_d\n\n\n\n\n\n\n\n\n\n\n\nscale_alpha_identity\nNo alpha scaling\n\n\nscale_color_identity\nNo color scaling\n\n\nscale_colour_identity\nalias of scale_color_identity\n\n\nscale_fill_identity\nNo color scaling\n\n\nscale_linetype_identity\nNo linetype scaling\n\n\nscale_shape_identity\nNo shape scaling\n\n\nscale_size_identity\nNo size scaling\n\n\n\n\n\n\n\n\n\n\n\nscale_linetype\nScale for line patterns\n\n\nscale_linetype_discrete\nalias of scale_linetype\n\n\n\n\n\n\n\n\n\n\n\nscale_alpha_manual\nCustom discrete alpha scale\n\n\nscale_color_manual\nCustom discrete color scale\n\n\nscale_colour_manual\nalias of scale_color_manual\n\n\nscale_fill_manual\nCustom discrete fill scale\n\n\nscale_linetype_manual\nCustom discrete linetype scale\n\n\nscale_shape_manual\nCustom discrete shape scale\n\n\nscale_size_manual\nCustom discrete size scale\n\n\n\n\n\n\n\n\n\n\n\nscale_x_continuous\nContinuous x position\n\n\nscale_x_date\nalias of scale_x_datetime\n\n\nscale_x_datetime\nContinuous x position for datetime data points\n\n\nscale_x_discrete\nDiscrete x position\n\n\nscale_x_log10\nContinuous x position log10 transformed scale\n\n\nscale_x_reverse\nContinuous x position reverse transformed scale\n\n\nscale_x_sqrt\nContinuous x position sqrt transformed scale\n\n\nscale_x_symlog\nContinuous x position symmetric logarithm transformed scale\n\n\nscale_x_timedelta\nContinuous x position for timedelta data points\n\n\nscale_y_continuous\nContinuous y position\n\n\nscale_y_date\nalias of scale_y_datetime\n\n\nscale_y_datetime\nContinuous y position for datetime data points\n\n\nscale_y_discrete\nDiscrete y position\n\n\nscale_y_log10\nContinuous y position log10 transformed scale\n\n\nscale_y_reverse\nContinuous y position reverse transformed scale\n\n\nscale_y_sqrt\nContinuous y position sqrt transformed scale\n\n\nscale_y_symlog\nContinuous y position symmetric logarithm transformed scale\n\n\nscale_y_timedelta\nContinuous y position for timedelta data points\n\n\n\n\n\n\n\n\n\n\n\nscale_shape\nScale for shapes\n\n\nscale_shape_discrete\nalias of scale_shape\n\n\n\n\n\n\n\n\n\n\n\nscale_size\nalias of scale_size_continuous\n\n\nscale_size_area\nContinuous area size scale\n\n\nscale_size_continuous\nContinuous area size scale\n\n\nscale_size_datetime\nDatetime area-size scale\n\n\nscale_size_discrete\nDiscrete area size scale\n\n\nscale_size_ordinal\nDiscrete area size scale\n\n\nscale_size_radius\nContinuous radius size scale\n\n\n\n\n\n\n\n\n\n\n\nscale_stroke\nalias of scale_stroke_continuous\n\n\nscale_stroke_continuous\nContinuous Stroke Scale\n\n\n\n\n\n\n\n\n\n\n\nlims\nSet aesthetic limits\n\n\nxlim\nSet x-axis limits\n\n\nylim\nSet y-axis limits\n\n\nexpand_limits\nExpand the limits any aesthetic using data\n\n\n\n\n\n\n\n\nGuides allow you to interpret data represented on a scales. Guides include the x and y axes, legends and colorbars.\n\n\n\n\nguide\nBase class for all guides\n\n\n\n\n\n\n\n\nguides\nGuides for each scale\n\n\nguide_legend\nLegend guide\n\n\nguide_colorbar\nGuide colorbar\n\n\n\n\n\n\n\nOverlapping objects can be visualized better if their positions are adjusted. That is what the position_* class do. Each geom is associated with one position adjustment class.\n\n\n\n\nposition\nBase class for all positions\n\n\n\n\n\n\n\n\nposition_dodge\nDodge overlaps and place objects side-by-side\n\n\nposition_dodge2\nDodge overlaps and place objects side-by-side\n\n\nposition_fill\nNormalise stacked objects to unit height\n\n\nposition_identity\nDo not adjust the position\n\n\nposition_jitter\nJitter points to avoid overplotting\n\n\nposition_jitterdodge\nDodge and jitter to minimise overlap\n\n\nposition_nudge\nNudge points\n\n\nposition_stack\nStack plotted objects on top of each other\n\n\n\n\n\n\n\nThemes control the visual appearance of the non-data elements the plot.\n\n\n\n\ntheme\nBase class for themes\n\n\n\n\n\n\n\n\ntheme_538\nTheme in the likeness of fivethirtyeight.com plots\n\n\ntheme_bw\nWhite background with black gridlines\n\n\ntheme_classic\nA classic-looking theme, with x & y axis lines and no gridlines\n\n\ntheme_dark\nThe dark cousin of theme_light\n\n\ntheme_gray\nA gray background with white gridlines.\n\n\ntheme_grey\nalias of theme_gray\n\n\ntheme_light\nA theme similar to theme_linedraw\n\n\ntheme_linedraw\nA theme with only black lines of various widths on white backgrounds\n\n\ntheme_matplotlib\nThe default matplotlib look and feel.\n\n\ntheme_minimal\nA minimalistic theme with no background annotations\n\n\ntheme_seaborn\nTheme for seaborn.\n\n\ntheme_tufte\nTufte Maximal Data, Minimal Ink Theme\n\n\ntheme_void\nA classic-looking theme, with x & y axis lines and\n\n\ntheme_xkcd\nxkcd theme\n\n\n\n\n\n\nThese define aspects of a plot that can be themed. They can be used to create a new theme or modify an existing theme. They define the keyword arguments to theme. Users should never create instances of themeable.\n\n\n\n\nthemeable\nAbstract class of things that can be themed.\n\n\n\n\n\n\n\n\naspect_ratio\nAspect ratio of the panel(s)\n\n\naxis_line\nx & y axis lines\n\n\naxis_line_x\nx-axis line\n\n\naxis_line_y\ny-axis line\n\n\naxis_text\nAxis tick labels\n\n\naxis_text_x\nx-axis tick labels\n\n\naxis_text_y\ny-axis tick labels\n\n\naxis_ticks\nx & y major and minor axis tick lines\n\n\naxis_ticks_length\nAxis tick length\n\n\naxis_ticks_length_major\nAxis major-tick length\n\n\naxis_ticks_length_major_x\nx-axis major-tick length\n\n\naxis_ticks_length_major_y\ny-axis major-tick length\n\n\naxis_ticks_length_minor\nAxis minor-tick length\n\n\naxis_ticks_length_minor_x\nx-axis minor-tick length\n\n\naxis_ticks_length_minor_y\nx-axis minor-tick length\n\n\naxis_ticks_major\nx & y axis major tick lines\n\n\naxis_ticks_major_x\nx-axis major tick lines\n\n\naxis_ticks_major_y\ny-axis major tick lines\n\n\naxis_ticks_minor\nx & y axis minor tick lines\n\n\naxis_ticks_minor_x\nx-axis tick lines\n\n\naxis_ticks_minor_y\ny-axis minor tick lines\n\n\naxis_ticks_x\nx major and minor axis tick lines\n\n\naxis_ticks_y\ny major and minor axis tick lines\n\n\naxis_title\nAxis labels\n\n\naxis_title_x\nx axis label\n\n\naxis_title_y\ny axis label\n\n\ndpi\nDPI with which to draw/save the figure\n\n\nfigure_size\nFigure size in inches\n\n\nlegend_background\nLegend background\n\n\nlegend_box\nHow to box up multiple legends\n\n\nlegend_box_background\nLegend box background\n\n\nlegend_box_just\nJustification of guide boxes\n\n\nlegend_box_margin\nPadding between the legends and the box\n\n\nlegend_box_spacing\nSpacing between the legend and the plotting area\n\n\nlegend_direction\nLayout items in the legend\n\n\nlegend_key_spacing\nSpacing between two entries in a legend\n\n\nlegend_key_spacing_x\nHorizontal spacing between two entries in a legend\n\n\nlegend_key_spacing_y\nVertical spacing between two entries in a legend\n\n\nlegend_frame\nFrame around colorbar\n\n\nlegend_justification\nJustification of any legend\n\n\nlegend_justification_bottom\nJustification of legends placed at the bottom\n\n\nlegend_justification_inside\nJustification of legends placed inside the axes\n\n\nlegend_justification_left\nJustification of legends placed on the left\n\n\nlegend_justification_right\nJustification of legends placed on the right\n\n\nlegend_justification_top\nJustification of legends placed at the top\n\n\nlegend_key\nLegend key background\n\n\nlegend_key_height\nLegend key background height\n\n\nlegend_key_size\nLegend key background width and height\n\n\nlegend_key_width\nLegend key background width\n\n\nlegend_margin\nPadding between the legend and the inner box\n\n\nlegend_position\nLocation of legend\n\n\nlegend_position_inside\nLocation of legend\n\n\nlegend_spacing\nSpacing between two adjacent legends\n\n\nlegend_text\nLegend text\n\n\nlegend_text_colorbar\nColorbar text\n\n\nlegend_text_legend\nLegend text for the common legend\n\n\nlegend_text_position\nPosition of the legend text\n\n\nlegend_ticks_length\nLength of ticks in the legend\n\n\nlegend_title\nLegend title\n\n\nlegend_title_position\nPosition of legend title\n\n\nline\nAll line elements\n\n\npanel_background\nPanel background\n\n\npanel_border\nPanel border\n\n\npanel_grid\nGrid lines\n\n\npanel_grid_major\nMajor grid lines\n\n\npanel_grid_major_x\nVertical major grid lines\n\n\npanel_grid_major_y\nHorizontal major grid lines\n\n\npanel_grid_minor\nMinor grid lines\n\n\npanel_grid_minor_x\nVertical minor grid lines\n\n\npanel_grid_minor_y\nHorizontal minor grid lines\n\n\npanel_ontop\nPlace panel background & gridlines over/under the data layers\n\n\npanel_spacing\nSpacing between the facet panels\n\n\npanel_spacing_x\nHorizontal spacing between the facet panels\n\n\npanel_spacing_y\nVertical spacing between the facet panels\n\n\nplot_background\nPlot background\n\n\nplot_caption\nPlot caption\n\n\nplot_caption_position\nHow to align the plot caption\n\n\nplot_margin\nPlot Margin\n\n\nplot_margin_bottom\nPlot Margin at the bottom\n\n\nplot_margin_left\nPlot Margin on the left\n\n\nplot_margin_right\nPlot Margin on the right\n\n\nplot_margin_top\nPlot Margin at the top\n\n\nplot_subtitle\nPlot subtitle\n\n\nplot_tag\nPlot tag\n\n\nplot_tag_location\nThe area where the tag will be positioned\n\n\nplot_tag_position\nPosition of the tag\n\n\nplot_title\nPlot title\n\n\nplot_title_position\nHow to align the plot title and plot subtitle\n\n\nrect\nAll rectangle elements\n\n\nstrip_align\nAlignment of the strip & its background w.r.t the panel border\n\n\nstrip_align_x\nVertical alignment of the strip & its background w.r.t the panel border\n\n\nstrip_align_y\nHorizontal alignment of the strip & its background w.r.t the panel border\n\n\nstrip_background\nFacet label background\n\n\nstrip_background_x\nHorizontal facet label background\n\n\nstrip_background_y\nVertical facet label background\n\n\nstrip_text\nFacet labels along both axes\n\n\nstrip_text_x\nFacet labels along the horizontal axis\n\n\nstrip_text_y\nFacet labels along the vertical axis\n\n\nsubplots_adjust\n\n\n\nsvg_usefonts\nHow to renderer fonts for svg images\n\n\ntext\nAll text elements in the plot\n\n\ntitle\nAll titles on the plot\n\n\n\n\n\n\n\n\n\n\n\ntheme_set\nChange the current(default) theme\n\n\ntheme_get\nReturn the default theme\n\n\ntheme_update\nModify elements of the current theme\n\n\n\n\n\n\n\n\nelement_line\ntheme element: line\n\n\nelement_rect\nTheme element: Rectangle\n\n\nelement_text\nTheme element: Text\n\n\nelement_blank\nTheme element: Blank\n\n\n\n\n\n\n\n\nCoordinate systems put together the two position scales to produce a 2d location.\n\n\n\n\ncoord\nBase class for all coordinate systems\n\n\n\n\n\n\n\n\ncoord_cartesian\nCartesian coordinate system\n\n\ncoord_equal\nCartesian coordinates with fixed relationship between x and y scales\n\n\ncoord_fixed\nCartesian coordinates with fixed relationship between x and y scales\n\n\ncoord_flip\nFlipped cartesian coordinates\n\n\ncoord_trans\nTransformed cartesian coordinate system\n\n\n\n\n\n\n\nWhen working interactively, some of the options make it convenient to create plots that have a common look and feel.\n\n\nThese are the methods that access the options.\n\n\n\n\nget_option\nGet package option\n\n\nset_option\nSet package option\n\n\n\n\n\n\n\nThese are all the options that you can set or get the values of.\n\n\n\n\naspect_ratio\nDefault aspect ratio used by the themes\n\n\nbase_family\nThe base font family for all text that is part of the theme.\n\n\nbase_margin\nA size that is proportional of the figure width and\n\n\ncurrent_theme\nTheme used when none is added to the ggplot object\n\n\ndpi\nDefault DPI used by the themes\n\n\nfigure_size\nDefault figure size in inches\n\n\nfigure_format\nThe format for the inline figures outputted by the jupyter kernel.\n\n\n\n\n\n\n\n\nFunctions that you may occasioanally find helpful\n\n\n\n\nget_aesthetic_limits\nGet the limits of an aesthetic\n\n\n\n\n\n\n\nThese datasets ship with the plotnine and you can import them with from the plotnine.data sub-package.\n\n\n\n\nanscombe_quartet\nAnscombe’s Quartet\n\n\ndiamonds\nPrices of 50,000 round cut diamonds\n\n\neconomics\nUS economic time series.\n\n\neconomics_long\nUS economic time series.\n\n\nfaithful\nOld Faithful Geyser Data\n\n\nfaithfuld\nOld Faithful Geyser Data\n\n\nhuron\nLevel of Lake Huron 1875–1972\n\n\nluv_colours\ncolors in Luv space.\n\n\nmeat\nUS Meat Production\n\n\nmidwest\nMidwest demographics.\n\n\nmpg\nFuel economy data from 1999 and 2008 for 38 popular models of car\n\n\nmsleep\nAn updated and expanded version of the mammals sleep dataset.\n\n\nmtcars\nMotor Trend Car Road Tests\n\n\npageviews\n\n\n\npresidential\nTerms of 11 presidents from Eisenhower to Obama.\n\n\nseals\nVector field of seal movements.\n\n\ntxhousing\nHousing sales in TX."
   },
   {
     "objectID": "reference/index.html#creating-a-plot",
@@ -4424,13 +4361,6 @@
     "text": "Coordinate systems put together the two position scales to produce a 2d location.\n\n\n\n\ncoord\nBase class for all coordinate systems\n\n\n\n\n\n\n\n\ncoord_cartesian\nCartesian coordinate system\n\n\ncoord_equal\nCartesian coordinates with fixed relationship between x and y scales\n\n\ncoord_fixed\nCartesian coordinates with fixed relationship between x and y scales\n\n\ncoord_flip\nFlipped cartesian coordinates\n\n\ncoord_trans\nTransformed cartesian coordinate system"
   },
   {
-    "objectID": "reference/index.html#composing-plots",
-    "href": "reference/index.html#composing-plots",
-    "title": "API Reference",
-    "section": "",
-    "text": "Arrange\nBase class for those that create plot compositions\n\n\n/ Stack\nPlace plots or compositions on top of each other\n\n\n| Beside\nPlace plots or compositions side by side\n\n\nplot_spacer\nBlank area as wide or as tall as a plot"
-  },
-  {
     "objectID": "reference/index.html#options",
     "href": "reference/index.html#options",
     "title": "API Reference",
@@ -4449,7 +4379,7 @@
     "href": "reference/index.html#datasets",
     "title": "API Reference",
     "section": "",
-    "text": "These datasets ship with the plotnine and you can import them with from the plotnine.data sub-package.\n\n\n\n\nanscombe_quartet\nAnscombe’s Quartet\n\n\ndiamonds\nPrices of 50,000 round cut diamonds\n\n\neconomics\nUS economic time series.\n\n\neconomics_long\nUS economic time series.\n\n\nfaithful\nOld Faithful Geyser Data\n\n\nfaithfuld\nOld Faithful Geyser Data\n\n\nhuron\nLevel of Lake Huron 1875–1972\n\n\nluv_colours\ncolors in Luv space.\n\n\nmeat\nUS Meat Production\n\n\nmidwest\nMidwest demographics.\n\n\nmpg\nFuel economy data from 1999 and 2008 for 38 popular models of car\n\n\nmsleep\nAn updated and expanded version of the mammals sleep dataset.\n\n\nmtcars\nMotor Trend Car Road Tests\n\n\npageviews\n\n\n\npenguins\nPalmer Penguins\n\n\npresidential\nTerms of 11 presidents from Eisenhower to Obama.\n\n\nseals\nVector field of seal movements.\n\n\ntxhousing\nHousing sales in TX."
+    "text": "These datasets ship with the plotnine and you can import them with from the plotnine.data sub-package.\n\n\n\n\nanscombe_quartet\nAnscombe’s Quartet\n\n\ndiamonds\nPrices of 50,000 round cut diamonds\n\n\neconomics\nUS economic time series.\n\n\neconomics_long\nUS economic time series.\n\n\nfaithful\nOld Faithful Geyser Data\n\n\nfaithfuld\nOld Faithful Geyser Data\n\n\nhuron\nLevel of Lake Huron 1875–1972\n\n\nluv_colours\ncolors in Luv space.\n\n\nmeat\nUS Meat Production\n\n\nmidwest\nMidwest demographics.\n\n\nmpg\nFuel economy data from 1999 and 2008 for 38 popular models of car\n\n\nmsleep\nAn updated and expanded version of the mammals sleep dataset.\n\n\nmtcars\nMotor Trend Car Road Tests\n\n\npageviews\n\n\n\npresidential\nTerms of 11 presidents from Eisenhower to Obama.\n\n\nseals\nVector field of seal movements.\n\n\ntxhousing\nHousing sales in TX."
   },
   {
     "objectID": "reference/label_context.html",
@@ -4956,86 +4886,58 @@
     "text": "Parameters\n\n\ntheme_element : float\n\nSize as a fraction of the figure width."
   },
   {
-    "objectID": "reference/penguins.html",
-    "href": "reference/penguins.html",
-    "title": " plotnine.data.penguins",
+    "objectID": "reference/plot_background.html",
+    "href": "reference/plot_background.html",
+    "title": " plotnine.themes.themeable.plot_background",
     "section": "",
-    "text": "penguins = pd.read_csv(DATA_DIR / \"penguins.csv\")"
+    "text": "plot_background(theme_element)"
   },
   {
-    "objectID": "reference/penguins.html#description",
-    "href": "reference/penguins.html#description",
-    "title": " plotnine.data.penguins",
-    "section": "Description",
-    "text": "Description\nData about 3 different species of penguins collected from 3 islands in the Palmer Archipelago, Antarctica."
-  },
-  {
-    "objectID": "reference/penguins.html#format",
-    "href": "reference/penguins.html#format",
-    "title": " plotnine.data.penguins",
-    "section": "Format",
-    "text": "Format\nA dataframe with 344 rows and 8 variables\n\n\n\n\n\n\n\nColumn\nDescription\n\n\n\n\nspecies\nPenguin species (Adélie, Chinstrap and Gentoo)\n\n\nisland\nIsland in Palmer Archipelago, Antarctica (Biscoe, Dream or Torgersen)\n\n\nbill_length_mm\nBill length (millimeters)\n\n\nbill_depth_mm\nBill depth (millimeters)\n\n\nflipper_length_mm\nFlipper length (millimeters)\n\n\nbody_mass_g\nBody mass (grams)\n\n\nsex\nPenguin sex (female, male)\n\n\nyear\nThe study year (2007, 2008, or 2009)"
-  },
-  {
-    "objectID": "reference/penguins.html#source",
-    "href": "reference/penguins.html#source",
-    "title": " plotnine.data.penguins",
-    "section": "Source",
-    "text": "Source\nCollected by Dr. Kristen Gorman and the Palmer Station, Antarctica LTER.\nMade conveniently available by Alison Horst to serve as a dataset exploration and visualisation."
-  },
-  {
-    "objectID": "reference/plot_caption.html",
-    "href": "reference/plot_caption.html",
-    "title": " plotnine.themes.themeable.plot_caption",
-    "section": "",
-    "text": "plot_caption(theme_element)"
-  },
-  {
-    "objectID": "reference/plot_caption.html#parameters",
-    "href": "reference/plot_caption.html#parameters",
-    "title": " plotnine.themes.themeable.plot_caption",
+    "objectID": "reference/plot_background.html#parameters",
+    "href": "reference/plot_background.html#parameters",
+    "title": " plotnine.themes.themeable.plot_background",
     "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : element_text"
+    "text": "Parameters\n\n\ntheme_element : element_rect"
   },
   {
-    "objectID": "reference/plot_margin.html",
-    "href": "reference/plot_margin.html",
-    "title": " plotnine.themes.themeable.plot_margin",
+    "objectID": "reference/plot_caption_position.html",
+    "href": "reference/plot_caption_position.html",
+    "title": " plotnine.themes.themeable.plot_caption_position",
     "section": "",
-    "text": "plot_margin(theme_element)"
+    "text": "plot_caption_position(theme_element)"
   },
   {
-    "objectID": "reference/plot_margin.html#parameters",
-    "href": "reference/plot_margin.html#parameters",
-    "title": " plotnine.themes.themeable.plot_margin",
+    "objectID": "reference/plot_caption_position.html#parameters",
+    "href": "reference/plot_caption_position.html#parameters",
+    "title": " plotnine.themes.themeable.plot_caption_position",
+    "section": "Parameters",
+    "text": "Parameters\n\n\ntheme_element : Literal[\"panel\", \"plot\"] = = \"panel\"\n\nIf “panel”, the caption is aligned with respect to the panels. If “plot”, it is aligned with the plot, excluding the margin space."
+  },
+  {
+    "objectID": "reference/plot_margin_bottom.html",
+    "href": "reference/plot_margin_bottom.html",
+    "title": " plotnine.themes.themeable.plot_margin_bottom",
+    "section": "",
+    "text": "plot_margin_bottom(theme_element)"
+  },
+  {
+    "objectID": "reference/plot_margin_bottom.html#parameters",
+    "href": "reference/plot_margin_bottom.html#parameters",
+    "title": " plotnine.themes.themeable.plot_margin_bottom",
     "section": "Parameters",
     "text": "Parameters\n\n\ntheme_element : float\n\nMust be in the [0, 1] range. It is specified as a fraction of the figure width and figure height."
   },
   {
-    "objectID": "reference/plot_margin_left.html",
-    "href": "reference/plot_margin_left.html",
-    "title": " plotnine.themes.themeable.plot_margin_left",
+    "objectID": "reference/plot_margin_right.html",
+    "href": "reference/plot_margin_right.html",
+    "title": " plotnine.themes.themeable.plot_margin_right",
     "section": "",
-    "text": "plot_margin_left(theme_element)"
+    "text": "plot_margin_right(theme_element)"
   },
   {
-    "objectID": "reference/plot_margin_left.html#parameters",
-    "href": "reference/plot_margin_left.html#parameters",
-    "title": " plotnine.themes.themeable.plot_margin_left",
-    "section": "Parameters",
-    "text": "Parameters\n\n\ntheme_element : float\n\nMust be in the [0, 1] range. It is specified as a fraction of the figure width and figure height."
-  },
-  {
-    "objectID": "reference/plot_margin_top.html",
-    "href": "reference/plot_margin_top.html",
-    "title": " plotnine.themes.themeable.plot_margin_top",
-    "section": "",
-    "text": "plot_margin_top(theme_element)"
-  },
-  {
-    "objectID": "reference/plot_margin_top.html#parameters",
-    "href": "reference/plot_margin_top.html#parameters",
-    "title": " plotnine.themes.themeable.plot_margin_top",
+    "objectID": "reference/plot_margin_right.html#parameters",
+    "href": "reference/plot_margin_right.html#parameters",
+    "title": " plotnine.themes.themeable.plot_margin_right",
     "section": "Parameters",
     "text": "Parameters\n\n\ntheme_element : float\n\nMust be in the [0, 1] range. It is specified as a fraction of the figure width and figure height."
   },
@@ -6066,7 +5968,7 @@
     "href": "reference/stat_bin.html",
     "title": " plotnine.stat_bin",
     "section": "",
-    "text": "Count cases in each interval\n\nstat_bin(\n    mapping=None,\n    data=None,\n    *,\n    geom=\"histogram\",\n    position=\"stack\",\n    na_rm=False,\n    binwidth=None,\n    bins=None,\n    breaks=None,\n    center=None,\n    boundary=None,\n    closed=\"right\",\n    pad=False,\n    **kwargs\n)"
+    "text": "stat_bin(\n    mapping=None,\n    data=None,\n    *,\n    geom=\"histogram\",\n    position=\"stack\",\n    na_rm=False,\n    binwidth=None,\n    bins=None,\n    breaks=None,\n    center=None,\n    boundary=None,\n    closed=\"right\",\n    pad=False,\n    **kwargs\n)"
   },
   {
     "objectID": "reference/stat_bin.html#parameters",
@@ -6080,7 +5982,7 @@
     "href": "reference/stat_bindot.html",
     "title": " plotnine.stat_bindot",
     "section": "",
-    "text": "Binning for a dot plot\n\nstat_bindot(\n    mapping=None,\n    data=None,\n    *,\n    geom=\"dotplot\",\n    position=\"identity\",\n    na_rm=False,\n    bins=None,\n    binwidth=None,\n    origin=None,\n    width=0.9,\n    binaxis=\"x\",\n    method=\"dotdensity\",\n    binpositions=\"bygroup\",\n    drop=False,\n    right=True,\n    breaks=None,\n    **kwargs\n)"
+    "text": "stat_bindot(\n    mapping=None,\n    data=None,\n    *,\n    geom=\"dotplot\",\n    position=\"identity\",\n    na_rm=False,\n    bins=None,\n    binwidth=None,\n    origin=None,\n    width=0.9,\n    binaxis=\"x\",\n    method=\"dotdensity\",\n    binpositions=\"bygroup\",\n    drop=False,\n    right=True,\n    breaks=None,\n    **kwargs\n)"
   },
   {
     "objectID": "reference/stat_bindot.html#parameters",
@@ -6101,7 +6003,7 @@
     "href": "reference/stat_count.html",
     "title": " plotnine.stat_count",
     "section": "",
-    "text": "Counts the number of cases at each x position\n\nstat_count(\n    mapping=None,\n    data=None,\n    *,\n    geom=\"histogram\",\n    position=\"stack\",\n    na_rm=False,\n    width=None,\n    **kwargs\n)"
+    "text": "stat_count(\n    mapping=None,\n    data=None,\n    *,\n    geom=\"histogram\",\n    position=\"stack\",\n    na_rm=False,\n    width=None,\n    **kwargs\n)"
   },
   {
     "objectID": "reference/stat_count.html#parameters",
@@ -6143,7 +6045,7 @@
     "href": "reference/stat_ellipse.html",
     "title": " plotnine.stat_ellipse",
     "section": "",
-    "text": "Calculate normal confidence interval ellipse\n\nstat_ellipse(\n    mapping=None,\n    data=None,\n    *,\n    geom=\"path\",\n    position=\"identity\",\n    na_rm=False,\n    type=\"t\",\n    level=0.95,\n    segments=51,\n    **kwargs\n)"
+    "text": "stat_ellipse(\n    mapping=None,\n    data=None,\n    *,\n    geom=\"path\",\n    position=\"identity\",\n    na_rm=False,\n    type=\"t\",\n    level=0.95,\n    segments=51,\n    **kwargs\n)"
   },
   {
     "objectID": "reference/stat_ellipse.html#parameters",
@@ -6157,7 +6059,7 @@
     "href": "reference/stat_hull.html",
     "title": " plotnine.stat_hull",
     "section": "",
-    "text": "2 Dimensional Convex Hull\n\nstat_hull(\n    mapping=None,\n    data=None,\n    *,\n    geom=\"path\",\n    position=\"identity\",\n    na_rm=False,\n    qhull_options=None,\n    **kwargs\n)"
+    "text": "stat_hull(\n    mapping=None,\n    data=None,\n    *,\n    geom=\"path\",\n    position=\"identity\",\n    na_rm=False,\n    qhull_options=None,\n    **kwargs\n)"
   },
   {
     "objectID": "reference/stat_hull.html#parameters",
@@ -6178,7 +6080,7 @@
     "href": "reference/stat_qq.html",
     "title": " plotnine.stat_qq",
     "section": "",
-    "text": "Calculation for quantile-quantile plot\n\nstat_qq(\n    mapping=None,\n    data=None,\n    *,\n    geom=\"qq\",\n    position=\"identity\",\n    na_rm=False,\n    distribution=\"norm\",\n    dparams={},\n    quantiles=None,\n    alpha_beta=(0.375, 0.375),\n    **kwargs\n)"
+    "text": "stat_qq(\n    mapping=None,\n    data=None,\n    *,\n    geom=\"qq\",\n    position=\"identity\",\n    na_rm=False,\n    distribution=\"norm\",\n    dparams={},\n    quantiles=None,\n    alpha_beta=(0.375, 0.375),\n    **kwargs\n)"
   },
   {
     "objectID": "reference/stat_qq.html#parameters",
@@ -6199,7 +6101,7 @@
     "href": "reference/stat_quantile.html",
     "title": " plotnine.stat_quantile",
     "section": "",
-    "text": "Compute quantile regression lines\n\nstat_quantile(\n    mapping=None,\n    data=None,\n    *,\n    geom=\"quantile\",\n    position=\"identity\",\n    na_rm=False,\n    quantiles=(0.25, 0.5, 0.75),\n    formula=\"y ~ x\",\n    method_args={},\n    **kwargs\n)"
+    "text": "stat_quantile(\n    mapping=None,\n    data=None,\n    *,\n    geom=\"quantile\",\n    position=\"identity\",\n    na_rm=False,\n    quantiles=(0.25, 0.5, 0.75),\n    formula=\"y ~ x\",\n    method_args={},\n    **kwargs\n)"
   },
   {
     "objectID": "reference/stat_quantile.html#parameters",
@@ -6220,7 +6122,7 @@
     "href": "reference/stat_smooth.html",
     "title": " plotnine.stat_smooth",
     "section": "",
-    "text": "Calculate a smoothed conditional mean\n\nstat_smooth(\n    mapping=None,\n    data=None,\n    *,\n    geom=\"smooth\",\n    position=\"identity\",\n    na_rm=False,\n    method=\"auto\",\n    se=True,\n    n=80,\n    formula=None,\n    fullrange=False,\n    level=0.95,\n    span=0.75,\n    method_args={},\n    **kwargs\n)"
+    "text": "stat_smooth(\n    mapping=None,\n    data=None,\n    *,\n    geom=\"smooth\",\n    position=\"identity\",\n    na_rm=False,\n    method=\"auto\",\n    se=True,\n    n=80,\n    formula=None,\n    fullrange=False,\n    level=0.95,\n    span=0.75,\n    method_args={},\n    **kwargs\n)"
   },
   {
     "objectID": "reference/stat_smooth.html#parameters",
@@ -6248,7 +6150,7 @@
     "href": "reference/stat_summary.html",
     "title": " plotnine.stat_summary",
     "section": "",
-    "text": "Calculate summary statistics depending on x\n\nstat_summary(\n    mapping=None,\n    data=None,\n    *,\n    geom=\"pointrange\",\n    position=\"identity\",\n    na_rm=False,\n    fun_data=\"mean_cl_boot\",\n    fun_y=None,\n    fun_ymin=None,\n    fun_ymax=None,\n    fun_args=None,\n    random_state=None,\n    **kwargs\n)"
+    "text": "stat_summary(\n    mapping=None,\n    data=None,\n    *,\n    geom=\"pointrange\",\n    position=\"identity\",\n    na_rm=False,\n    fun_data=\"mean_cl_boot\",\n    fun_y=None,\n    fun_ymin=None,\n    fun_ymax=None,\n    fun_args=None,\n    random_state=None,\n    **kwargs\n)"
   },
   {
     "objectID": "reference/stat_summary.html#parameters",
@@ -6276,7 +6178,7 @@
     "href": "reference/stat_unique.html",
     "title": " plotnine.stat_unique",
     "section": "",
-    "text": "Remove duplicates\n\nstat_unique(\n    mapping=None,\n    data=None,\n    *,\n    geom=\"point\",\n    position=\"identity\",\n    na_rm=False,\n    **kwargs\n)"
+    "text": "stat_unique(\n    mapping=None,\n    data=None,\n    *,\n    geom=\"point\",\n    position=\"identity\",\n    na_rm=False,\n    **kwargs\n)"
   },
   {
     "objectID": "reference/stat_unique.html#parameters",
