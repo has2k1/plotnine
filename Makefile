@@ -12,9 +12,9 @@ else
 endif
 
 ifeq ($(HAS_UV),true)
-  PYTHON ?= uv run --active python
+  PYTHON ?= uv run --no-sync --active python
   PIP ?= uv pip
-  UVRUN ?= uv run --active
+  UVRUN ?= uv run --no-sync --active
 else
   PYTHON ?= python
   PIP ?= pip
