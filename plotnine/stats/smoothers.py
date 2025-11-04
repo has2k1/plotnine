@@ -64,7 +64,7 @@ def lm(data, xseq, params) -> pd.DataFrame:
 
     X = sm.add_constant(data["x"])
     Xseq = sm.add_constant(xseq)
-    weights = data.get("weights", None)
+    weights = data.get("weight", None)
 
     if weights is None:
         init_kwargs, fit_kwargs = separate_method_kwargs(
