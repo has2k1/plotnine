@@ -7,13 +7,18 @@ title: Changelog
 
 ### New
 
+- Added [](:class:`~plotnine.composition.plot_layout`) with which you can customise the
+  layout of plots in composition.
+
+## v0.15.1
+(2025-09-30)
+
+### New
+
 - Added [](:class:`~plotnine.scale_stroke_identity`) which was conspicuously missing!
 
 - Added [](:class:`~plotnine.composition.Compose.show`), making it possible to output/show 
   plot composition objects when they are not the last object in a cell.
-
-- Added [](:class:`~plotnine.composition.plot_layout`) with which you can customise the
-  layout of plots in composition.
 
 ### Enhancements
 
@@ -37,7 +42,6 @@ title: Changelog
   The labels will be "x title" and "y title".
 
 - Fixed bug with plot compositions where if a `plot_spacer` is the last plot in the composition, one could not change the figure size or dpi of the composition. ({{< issue 960 >}})
-
 
 ## v0.15.0
 
