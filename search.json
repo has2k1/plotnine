@@ -4,14 +4,14 @@
     "href": "changelog.html",
     "title": "Changelog",
     "section": "",
-    "text": "(not-yet-released)\n\n\n\nAdded plot_layout with which you can customise the layout of plots in composition."
+    "text": "(not-yet-released)\n\n\n\nAdded plot_layout with which you can customise the layout of plots in composition.\n\n\n\n\n\nFixed geom_smooth / stat_smooth when using a linear model via “lm” with weights for the model to do a weighted regression. This bug did not affect the formula API of the linear model. (#1005)"
   },
   {
     "objectID": "changelog.html#v0.16.0",
     "href": "changelog.html#v0.16.0",
     "title": "Changelog",
     "section": "",
-    "text": "(not-yet-released)\n\n\n\nAdded plot_layout with which you can customise the layout of plots in composition."
+    "text": "(not-yet-released)\n\n\n\nAdded plot_layout with which you can customise the layout of plots in composition.\n\n\n\n\n\nFixed geom_smooth / stat_smooth when using a linear model via “lm” with weights for the model to do a weighted regression. This bug did not affect the formula API of the linear model. (#1005)"
   },
   {
     "objectID": "changelog.html#v0.15.1",
