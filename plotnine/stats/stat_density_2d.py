@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING, cast
 import numpy as np
 import pandas as pd
 
+from ..doctools import document
 from .density import get_var_type, kde
 from .stat import stat
 
@@ -12,6 +13,7 @@ if TYPE_CHECKING:
     from plotnine.typing import FloatArrayLike
 
 
+@document
 class stat_density_2d(stat):
     """
     Compute 2D kernel density estimation
