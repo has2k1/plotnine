@@ -1,20 +1,19 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
 from itertools import chain
-from typing import TYPE_CHECKING, cast
+from typing import TYPE_CHECKING
 
 from matplotlib.text import Text
 
 from plotnine._mpl.patches import StripTextPatch
-from plotnine._utils import ha_as_float, va_as_float
 from plotnine.exceptions import PlotnineError
 
 from ..utils import (
-    bbox_in_figure_space,
+    ArtistGeometry,
+    JustifyBoundaries,
+    TextJustifier,
     get_subplotspecs,
     rel_position,
-    tight_bbox_in_figure_space,
 )
 
 if TYPE_CHECKING:
@@ -22,15 +21,12 @@ if TYPE_CHECKING:
         Any,
         Iterator,
         Literal,
-        Sequence,
         TypeAlias,
     )
 
-    from matplotlib.artist import Artist
     from matplotlib.axes import Axes
     from matplotlib.axis import Tick
-    from matplotlib.backend_bases import RendererBase
-    from matplotlib.transforms import Bbox, Transform
+    from matplotlib.transforms import Transform
 
     from plotnine import ggplot
     from plotnine._mpl.offsetbox import FlexibleAnchoredOffsetbox
@@ -38,12 +34,10 @@ if TYPE_CHECKING:
     from plotnine.iapi import legend_artists
     from plotnine.themes.elements import margin as Margin
     from plotnine.typing import (
-        HorizontalJustification,
         StripPosition,
-        VerticalJustification,
     )
 
-    from ._spaces import LayoutSpaces
+    from ._plot_side_space import PlotSideSpaces
 
     AxesLocation: TypeAlias = Literal[
         "all", "first_row", "last_row", "first_col", "last_col"
@@ -64,140 +58,12 @@ if TYPE_CHECKING:
     )
 
 
-@dataclass
-class Calc:
-    """
-    Calculate space taken up by an artist
-    """
-
-    # fig: Figure
-    # renderer: RendererBase
-    plot: ggplot
-
-    def __post_init__(self):
-        self.figure = self.plot.figure
-        self.renderer = cast("RendererBase", self.plot.figure._get_renderer())  # pyright: ignore
-
-    def bbox(self, artist: Artist) -> Bbox:
-        """
-        Bounding box of artist in figure coordinates
-        """
-        return bbox_in_figure_space(artist, self.figure, self.renderer)
-
-    def tight_bbox(self, artist: Artist) -> Bbox:
-        """
-        Bounding box of artist and its children in figure coordinates
-        """
-        return tight_bbox_in_figure_space(artist, self.figure, self.renderer)
-
-    def width(self, artist: Artist) -> float:
-        """
-        Width of artist in figure space
-        """
-        return self.bbox(artist).width
-
-    def tight_width(self, artist: Artist) -> float:
-        """
-        Width of artist and its children in figure space
-        """
-        return self.tight_bbox(artist).width
-
-    def height(self, artist: Artist) -> float:
-        """
-        Height of artist in figure space
-        """
-        return self.bbox(artist).height
-
-    def tight_height(self, artist: Artist) -> float:
-        """
-        Height of artist and its children in figure space
-        """
-        return self.tight_bbox(artist).height
-
-    def size(self, artist: Artist) -> tuple[float, float]:
-        """
-        (width, height) of artist in figure space
-        """
-        bbox = self.bbox(artist)
-        return (bbox.width, bbox.height)
-
-    def tight_size(self, artist: Artist) -> tuple[float, float]:
-        """
-        (width, height) of artist and its children in figure space
-        """
-        bbox = self.tight_bbox(artist)
-        return (bbox.width, bbox.height)
-
-    def left_x(self, artist: Artist) -> float:
-        """
-        x value of the left edge of the artist
-
-         ---
-        x   |
-         ---
-        """
-        return self.bbox(artist).min[0]
-
-    def right_x(self, artist: Artist) -> float:
-        """
-        x value of the left edge of the artist
-
-         ---
-        |   x
-         ---
-        """
-        return self.bbox(artist).max[0]
-
-    def top_y(self, artist: Artist) -> float:
-        """
-        y value of the top edge of the artist
-
-         -y-
-        |   |
-         ---
-        """
-        return self.bbox(artist).max[1]
-
-    def bottom_y(self, artist: Artist) -> float:
-        """
-        y value of the bottom edge of the artist
-
-         ---
-        |   |
-         -y-
-        """
-        return self.bbox(artist).min[1]
-
-    def max_width(self, artists: Sequence[Artist]) -> float:
-        """
-        Return the maximum width of list of artists
-        """
-        widths = [
-            bbox_in_figure_space(a, self.figure, self.renderer).width
-            for a in artists
-        ]
-        return max(widths) if len(widths) else 0
-
-    def max_height(self, artists: Sequence[Artist]) -> float:
-        """
-        Return the maximum height of list of artists
-        """
-        heights = [
-            bbox_in_figure_space(a, self.figure, self.renderer).height
-            for a in artists
-        ]
-        return max(heights) if len(heights) else 0
-
-
-@dataclass
-class LayoutItems:
+class PlotLayoutItems:
     """
     Objects required to compute the layout
     """
 
-    plot: ggplot
-
-    def __post_init__(self):
+    def __init__(self, plot: ggplot):
         def get(name: str) -> Any:
             """
             Return themeable target or None
@@ -210,7 +76,8 @@ class LayoutItems:
                     return None
                 return t
 
-        self.calc = Calc(self.plot)
+        self.plot = plot
+        self.geometry = ArtistGeometry(self.plot.figure)
 
         self.axis_title_x: Text | None = get("axis_title_x")
         self.axis_title_y: Text | None = get("axis_title_y")
@@ -326,7 +193,7 @@ class LayoutItems:
                 if isinstance(a, StripTextPatch)
                 else a.draw_info
             )
-            h = self.calc.height(a)
+            h = self.geometry.height(a)
             heights.append(max(h + h * info.strip_align, 0))
 
         return max(heights)
@@ -352,7 +219,7 @@ class LayoutItems:
                 if isinstance(a, StripTextPatch)
                 else a.draw_info
             )
-            w = self.calc.width(a)
+            w = self.geometry.width(a)
             widths.append(max(w + w * info.strip_align, 0))
 
         return max(widths)
@@ -362,7 +229,7 @@ class LayoutItems:
         Return maximum height[figure space] of x ticks
         """
         heights = [
-            self.calc.tight_height(tick.tick1line)
+            self.geometry.tight_height(tick.tick1line)
             for ax in self._filter_axes(location)
             for tick in self.axis_ticks_x(ax)
         ]
@@ -373,7 +240,7 @@ class LayoutItems:
         Return maximum height[figure space] of x tick labels
         """
         heights = [
-            self.calc.tight_height(label) for label in self.axis_text_x(ax)
+            self.geometry.tight_height(label) for label in self.axis_text_x(ax)
         ]
         return max(heights) if len(heights) else 0
 
@@ -392,7 +259,7 @@ class LayoutItems:
         Return maximum width[figure space] of y ticks
         """
         widths = [
-            self.calc.tight_width(tick.tick1line)
+            self.geometry.tight_width(tick.tick1line)
             for ax in self._filter_axes(location)
             for tick in self.axis_ticks_y(ax)
         ]
@@ -403,7 +270,7 @@ class LayoutItems:
         Return maximum width[figure space] of y tick labels
         """
         widths = [
-            self.calc.tight_width(label) for label in self.axis_text_y(ax)
+            self.geometry.tight_width(label) for label in self.axis_text_y(ax)
         ]
         return max(widths) if len(widths) else 0
 
@@ -423,9 +290,9 @@ class LayoutItems:
         """
         extras = []
         for ax in self._filter_axes(location):
-            ax_top_y = self.calc.top_y(ax)
+            ax_top_y = self.geometry.top_y(ax)
             for label in self.axis_text_y(ax):
-                label_top_y = self.calc.top_y(label)
+                label_top_y = self.geometry.top_y(label)
                 extras.append(max(0, label_top_y - ax_top_y))
 
         return max(extras) if len(extras) else 0
@@ -436,9 +303,9 @@ class LayoutItems:
         """
         extras = []
         for ax in self._filter_axes(location):
-            ax_bottom_y = self.calc.bottom_y(ax)
+            ax_bottom_y = self.geometry.bottom_y(ax)
             for label in self.axis_text_y(ax):
-                label_bottom_y = self.calc.bottom_y(label)
+                label_bottom_y = self.geometry.bottom_y(label)
                 protrusion = abs(min(label_bottom_y - ax_bottom_y, 0))
                 extras.append(protrusion)
 
@@ -450,9 +317,9 @@ class LayoutItems:
         """
         extras = []
         for ax in self._filter_axes(location):
-            ax_left_x = self.calc.left_x(ax)
+            ax_left_x = self.geometry.left_x(ax)
             for label in self.axis_text_x(ax):
-                label_left_x = self.calc.left_x(label)
+                label_left_x = self.geometry.left_x(label)
                 protrusion = abs(min(label_left_x - ax_left_x, 0))
                 extras.append(protrusion)
 
@@ -464,21 +331,21 @@ class LayoutItems:
         """
         extras = []
         for ax in self._filter_axes(location):
-            ax_right_x = self.calc.right_x(ax)
+            ax_right_x = self.geometry.right_x(ax)
             for label in self.axis_text_x(ax):
-                label_right_x = self.calc.right_x(label)
+                label_right_x = self.geometry.right_x(label)
                 extras.append(max(0, label_right_x - ax_right_x))
 
         return max(extras) if len(extras) else 0
 
-    def _adjust_positions(self, spaces: LayoutSpaces):
+    def _move_artists(self, spaces: PlotSideSpaces):
         """
-        Set the x,y position of the artists around the panels
+        Move the artists to their final positions
         """
         theme = self.plot.theme
         plot_title_position = theme.getp("plot_title_position", "panel")
         plot_caption_position = theme.getp("plot_caption_position", "panel")
-        justify = TextJustifier(spaces)
+        justify = PlotTextJustifier(spaces)
 
         if self.plot_tag:
             set_plot_tag_position(self.plot_tag, spaces)
@@ -522,7 +389,7 @@ class LayoutItems:
         self._strip_text_x_background_equal_heights()
         self._strip_text_y_background_equal_widths()
 
-    def _adjust_axis_text_x(self, justify: TextJustifier):
+    def _adjust_axis_text_x(self, justify: PlotTextJustifier):
         """
         Adjust x-axis text, justifying vertically as necessary
         """
@@ -547,13 +414,13 @@ class LayoutItems:
             )
             for text in texts:
                 height = to_vertical_axis_dimensions(
-                    self.calc.tight_height(text), ax
+                    self.geometry.tight_height(text), ax
                 )
                 justify.vertically(
                     text, va, -axis_text_row_height, 0, height=height
                 )
 
-    def _adjust_axis_text_y(self, justify: TextJustifier):
+    def _adjust_axis_text_y(self, justify: PlotTextJustifier):
         """
         Adjust x-axis text, justifying horizontally as necessary
         """
@@ -600,7 +467,7 @@ class LayoutItems:
             )
             for text in texts:
                 width = to_horizontal_axis_dimensions(
-                    self.calc.tight_width(text), ax
+                    self.geometry.tight_width(text), ax
                 )
                 justify.horizontally(
                     text, ha, -axis_text_col_width, 0, width=width
@@ -615,7 +482,9 @@ class LayoutItems:
         if not self.strip_text_x:
             return
 
-        heights = [self.calc.bbox(t.patch).height for t in self.strip_text_x]
+        heights = [
+            self.geometry.bbox(t.patch).height for t in self.strip_text_x
+        ]
         max_height = max(heights)
         relative_heights = [max_height / h for h in heights]
         for text, scale in zip(self.strip_text_x, relative_heights):
@@ -630,7 +499,7 @@ class LayoutItems:
         if not self.strip_text_y:
             return
 
-        widths = [self.calc.bbox(t.patch).width for t in self.strip_text_y]
+        widths = [self.geometry.bbox(t.patch).width for t in self.strip_text_y]
         max_width = max(widths)
         relative_widths = [max_width / w for w in widths]
         for text, scale in zip(self.strip_text_y, relative_widths):
@@ -644,122 +513,30 @@ def _text_is_visible(text: Text) -> bool:
     return text.get_visible() and text._text  # type: ignore
 
 
-@dataclass
-class TextJustifier:
+class PlotTextJustifier(TextJustifier):
     """
-    Justify Text
-
-    The justification methods reinterpret alignment values to be justification
-    about a span.
+    Justify Text about a plot or it's panels
     """
 
-    spaces: LayoutSpaces
-
-    def horizontally(
-        self,
-        text: Text,
-        ha: HorizontalJustification | float,
-        left: float,
-        right: float,
-        width: float | None = None,
-    ):
-        """
-        Horizontally Justify text between left and right
-        """
-        rel = ha_as_float(ha)
-        if width is None:
-            width = self.spaces.items.calc.width(text)
-        x = rel_position(rel, width, left, right)
-        text.set_x(x)
-        text.set_horizontalalignment("left")
-
-    def vertically(
-        self,
-        text: Text,
-        va: VerticalJustification | float,
-        bottom: float,
-        top: float,
-        height: float | None = None,
-    ):
-        """
-        Vertically Justify text between bottom and top
-        """
-        rel = va_as_float(va)
-
-        if height is None:
-            height = self.spaces.items.calc.height(text)
-        y = rel_position(rel, height, bottom, top)
-        text.set_y(y)
-        text.set_verticalalignment("bottom")
-
-    def horizontally_across_panel(
-        self, text: Text, ha: HorizontalJustification | float
-    ):
-        """
-        Horizontally Justify text accross the panel(s) width
-        """
-        self.horizontally(
-            text, ha, self.spaces.l.panel_left, self.spaces.r.panel_right
+    def __init__(self, spaces: PlotSideSpaces):
+        boundaries = JustifyBoundaries(
+            plot_left=spaces.l.plot_left,
+            plot_right=spaces.r.plot_right,
+            plot_bottom=spaces.b.plot_bottom,
+            plot_top=spaces.t.plot_top,
+            panel_left=spaces.l.panel_left,
+            panel_right=spaces.r.panel_right,
+            panel_bottom=spaces.b.panel_bottom,
+            panel_top=spaces.t.panel_top,
         )
-
-    def horizontally_across_plot(
-        self, text: Text, ha: HorizontalJustification | float
-    ):
-        """
-        Horizontally Justify text across the plot's width
-        """
-        self.horizontally(
-            text, ha, self.spaces.l.plot_left, self.spaces.r.plot_right
-        )
-
-    def vertically_along_panel(
-        self, text: Text, va: VerticalJustification | float
-    ):
-        """
-        Horizontally Justify text along the panel(s) height
-        """
-        self.vertically(
-            text, va, self.spaces.b.panel_bottom, self.spaces.t.panel_top
-        )
-
-    def vertically_along_plot(
-        self, text: Text, va: VerticalJustification | float
-    ):
-        """
-        Vertically Justify text along the plot's height
-        """
-        self.vertically(
-            text, va, self.spaces.b.plot_bottom, self.spaces.t.plot_top
-        )
-
-    def horizontally_about(
-        self, text: Text, ratio: float, how: Literal["panel", "plot"]
-    ):
-        """
-        Horizontally Justify text across the panel or plot
-        """
-        if how == "panel":
-            self.horizontally_across_panel(text, ratio)
-        else:
-            self.horizontally_across_plot(text, ratio)
-
-    def vertically_about(
-        self, text: Text, ratio: float, how: Literal["panel", "plot"]
-    ):
-        """
-        Vertically Justify text along the panel or plot
-        """
-        if how == "panel":
-            self.vertically_along_panel(text, ratio)
-        else:
-            self.vertically_along_plot(text, ratio)
+        super().__init__(spaces.plot.figure, boundaries)
 
 
-def set_legends_position(legends: legend_artists, spaces: LayoutSpaces):
+def set_legends_position(legends: legend_artists, spaces: PlotSideSpaces):
     """
     Place legend on the figure and justify is a required
     """
-    panels_gs = spaces.plot.facet._panels_gridspec
+    panels_gs = spaces.plot._sub_gridspec
     params = panels_gs.get_subplot_params()
     transFigure = spaces.plot.figure.transFigure
 
@@ -833,12 +610,12 @@ def set_legends_position(legends: legend_artists, spaces: LayoutSpaces):
             set_position(l.box, l.position, l.justification, transPanels)
 
 
-def set_plot_tag_position(tag: Text, spaces: LayoutSpaces):
+def set_plot_tag_position(tag: Text, spaces: PlotSideSpaces):
     """
     Set the postion of the plot_tag
     """
     theme = spaces.plot.theme
-    panels_gs = spaces.plot.facet._panels_gridspec
+    panels_gs = spaces.plot._sub_gridspec
     location: TagLocation = theme.getp("plot_tag_location")
     position: TagPosition = theme.getp("plot_tag_position")
     margin = theme.get_margin("plot_tag")
@@ -866,7 +643,7 @@ def set_plot_tag_position(tag: Text, spaces: LayoutSpaces):
 
         # Calculate the position when the tag has no margins
         rel_x, rel_y = lookup[position]
-        width, height = spaces.items.calc.size(tag)
+        width, height = spaces.items.geometry.size(tag)
         x = rel_position(rel_x, width, x1, x2)
         y = rel_position(rel_y, height, y1, y2)
 
@@ -894,7 +671,7 @@ def set_plot_tag_position(tag: Text, spaces: LayoutSpaces):
     tag.set_position(position)
 
 
-def set_plot_tag_position_in_margin(tag: Text, spaces: LayoutSpaces):
+def set_plot_tag_position_in_margin(tag: Text, spaces: PlotSideSpaces):
     """
     Place the tag in an inner margin around the plot
 
@@ -932,7 +709,7 @@ def set_plot_tag_position_in_margin(tag: Text, spaces: LayoutSpaces):
         tag.set_y(y)
         tag.set_verticalalignment("bottom")
 
-    justify = TextJustifier(spaces)
+    justify = PlotTextJustifier(spaces)
     if position in ("left", "right"):
         justify.vertically_along_plot(tag, va)
     elif position in ("top", "bottom"):

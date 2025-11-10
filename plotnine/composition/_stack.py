@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 from ._compose import Compose
@@ -9,7 +8,6 @@ if TYPE_CHECKING:
     from plotnine.ggplot import ggplot
 
 
-@dataclass(repr=False)
 class Stack(Compose):
     """
     Place plots or compositions on top of each other
@@ -37,7 +35,7 @@ class Stack(Compose):
         """
         # This is an adjacent div i.e. (DIV | rhs) so we collapse the
         # operands into a single operation
-        return Stack([*self, rhs]) + self.layout
+        return Stack([*self, rhs]) + self.layout + self.annotation
 
     def __or__(self, rhs: ggplot | Compose) -> Compose:
         """
