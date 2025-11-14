@@ -86,10 +86,21 @@ class element_text(element_base):
             | None
         ) = None,
         size: float | Sequence[float] | None = None,
-        ha: Literal["center", "left", "right"] | float | None = None,
+        ha: (
+            Literal["center", "left", "right"]
+            | float
+            | Sequence[Literal["center", "left", "right"] | float]
+            | None
+        ) = None,
         va: (
             Literal["center", "top", "bottom", "baseline", "center_baseline"]
             | float
+            | Sequence[
+                Literal[
+                    "center", "top", "bottom", "baseline", "center_baseline"
+                ]
+                | float
+            ]
             | None
         ) = None,
         ma: Literal["center", "left", "right"] | float | None = None,
