@@ -10,6 +10,9 @@ title: Changelog
 - Added [](:class:`~plotnine.composition.plot_layout`) with which you can customise the
   layout of plots in composition.
 
+- You can now pass a sequence of horizontal and vertical alignment (ha & va) values in
+  element_text for colorbars.
+
 ### Bug Fixes
 
 - Fixed [](:class:`~plotnine.geom_smooth`) / [](:class:`~plotnine.stat_smooth`) when using a linear model via "lm" with weights for the model to do a weighted regression. This bug did not affect the formula API of the linear model. ({{< issue 1005 >}})

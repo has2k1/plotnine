@@ -11,7 +11,7 @@ from .._utils.registry import Register
 from ..themes.theme import theme as Theme
 
 if TYPE_CHECKING:
-    from typing import Literal, Optional, TypeAlias
+    from typing import Literal, Optional, Sequence, TypeAlias
 
     import pandas as pd
     from matplotlib.offsetbox import PackerBase
@@ -176,6 +176,10 @@ class GuideElements:
     theme: Theme
     guide: guide
 
+    @cached_property
+    def text(self):
+        raise NotImplementedError
+
     def __post_init__(self):
         self.guide_kind = type(self.guide).__name__.split("_")[-1]
         self._elements_cls = GuideElements
@@ -275,3 +279,33 @@ class GuideElements:
         Whether the guide is horizontal
         """
         return self.direction == "horizontal"
+
+    def has(self, n: int) -> Sequence[str]:
+        """
+        Horizontal alignments per legend text
+        """
+        ha = self.text.ha
+        if isinstance(ha, (list, tuple)):
+            if len(ha) != n:
+                raise ValueError(
+                    "If `ha` is a sequence, its length should match the "
+                    f"number of texts. ({len(ha)} != {n})"
+                )
+        else:
+            ha = (ha,) * n
+        return ha
+
+    def vas(self, n: int) -> Sequence[str]:
+        """
+        Vertical alignments per legend texts
+        """
+        va = self.text.va
+        if isinstance(va, (list, tuple)):
+            if len(va) != n:
+                raise ValueError(
+                    "If `va` is a sequence, its length should match the "
+                    f"number of texts. ({len(va)} != {n})"
+                )
+        else:
+            va = (va,) * n
+        return va

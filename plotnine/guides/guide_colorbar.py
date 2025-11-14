@@ -420,7 +420,8 @@ def add_labels(
     n = len(labels)
     sep = elements.text.margin
     texts: list[Text] = []
-    props = {"ha": elements.text.ha, "va": elements.text.va}
+    has = elements.has(n)
+    vas = elements.vas(n)
 
     # The horizontal and vertical alignments are set in the theme
     # or dynamically calculates in GuideElements and added to the
@@ -437,8 +438,8 @@ def add_labels(
         else:
             ys = [elements.key_width + sep] * n
 
-    for x, y, s in zip(xs, ys, labels):
-        t = Text(x, y, s, **props)
+    for x, y, s, ha, va in zip(xs, ys, labels, has, vas):
+        t = Text(x, y, s, ha=ha, va=va)
         auxbox.add_artist(t)
         texts.append(t)
 
