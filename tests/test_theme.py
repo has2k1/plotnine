@@ -175,6 +175,21 @@ def test_element_text_with_sequence_values():
     assert p == "element_text_with_sequence_values"
 
 
+def test_guide_colorbar_sequence_alignments():
+    p = (
+        ggplot(mtcars, aes("wt", "mpg", color="cyl"))
+        + geom_point()
+        + theme(
+            legend_text_colorbar=element_text(
+                size=12,
+                va=("bottom", "center", "center", "center", "top"),
+                ha=("left", "center", "center", "center", "right"),
+            ),
+        )
+    )
+    assert p == "test_guide_colorbar_sequence_ha_va"
+
+
 g = (
     ggplot(mtcars, aes(x="wt", y="mpg", color="factor(gear)"))
     + geom_point()
