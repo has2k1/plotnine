@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 from ._compose import Compose
@@ -9,7 +8,6 @@ if TYPE_CHECKING:
     from plotnine.ggplot import ggplot
 
 
-@dataclass(repr=False)
 class Beside(Compose):
     """
     Place plots or compositions side by side
@@ -37,7 +35,7 @@ class Beside(Compose):
         """
         # This is adjacent or i.e. (OR | rhs) so we collapse the
         # operands into a single operation
-        return Beside([*self, rhs]) + self.layout
+        return Beside([*self, rhs]) + self.layout + self.annotation
 
     def __truediv__(self, rhs: ggplot | Compose) -> Compose:
         """

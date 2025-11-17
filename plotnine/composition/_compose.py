@@ -2,9 +2,10 @@ from __future__ import annotations
 
 import abc
 from copy import copy, deepcopy
-from dataclasses import dataclass, field
 from io import BytesIO
 from typing import TYPE_CHECKING, cast, overload
+
+from plotnine.themes.theme import theme, theme_get
 
 from .._utils.context import plot_composition_context
 from .._utils.ipython import (
@@ -13,23 +14,25 @@ from .._utils.ipython import (
     is_inline_backend,
 )
 from .._utils.quarto import is_knitr_engine, is_quarto_environment
+from ..composition._plot_annotation import plot_annotation
 from ..composition._plot_layout import plot_layout
 from ..composition._types import ComposeAddable
 from ..options import get_option
-from ._plotspec import plotspec
 
 if TYPE_CHECKING:
     from pathlib import Path
-    from typing import Generator, Iterator
+    from typing import Iterator
 
     from matplotlib.figure import Figure
 
     from plotnine._mpl.gridspec import p9GridSpec
+    from plotnine._mpl.layout_manager._composition_side_space import (
+        CompositionSideSpaces,
+    )
     from plotnine.ggplot import PlotAddable, ggplot
     from plotnine.typing import FigureFormat, MimeBundle
 
 
-@dataclass
 class Compose:
     """
     Base class for those that create plot compositions
@@ -83,41 +86,66 @@ class Compose:
 
     :    Add right hand side to the last plot in the composition.
 
+    Parameters
+    ----------
+    items :
+        The objects to be arranged (composed)
+
+
     See Also
     --------
     plotnine.composition.Beside : To arrange plots side by side
     plotnine.composition.Stack : To arrange plots vertically
-    plotnine.composition.Stack : To arrange in a grid
+    plotnine.composition.Wrap : To arrange in a grid
     plotnine.composition.plot_spacer : To add a blank space between plots
     """
 
-    items: list[ggplot | Compose]
+    # These are created in the ._create_figure
+    figure: Figure
+    _gridspec: p9GridSpec
     """
-    The objects to be arranged (composed)
+    Gridspec (1x1) that contains the annotations and the composition items
+
+    plot_layout's theme parameter affects this gridspec.
     """
 
-    _layout: plot_layout = field(
-        init=False, repr=False, default_factory=plot_layout
-    )
+    _sub_gridspec: p9GridSpec
     """
-    Every composition gets initiated with an empty plot_layout whose
-    attributes are either dynamically generated before the composition
-    is drawn, or they are overwritten by a layout added by the user.
+    Gridspec (nxn) that contains the composed [ggplot | Compose] items
+
+     -------------------
+    |  title            |<----- ._gridspec
+    |  subtitle         |
+    |                   |
+    |   -------------   |
+    |  |      |      |<-+------ ._sub_gridspec
+    |  |      |      |  |
+    |   -------------   |
+    |                   |
+    |           caption |
+     -------------------
     """
+    _sidespaces: CompositionSideSpaces
 
-    # These are created in the _create_figure method
-    figure: Figure = field(init=False, repr=False)
-    plotspecs: list[plotspec] = field(init=False, repr=False)
-    gridspec: p9GridSpec = field(init=False, repr=False)
-
-    def __post_init__(self):
+    def __init__(self, items: list[ggplot | Compose]):
         # The way we handle the plots has consequences that would
         # prevent having a duplicate plot in the composition.
         # Using copies prevents this.
         self.items = [
-            op if isinstance(op, Compose) else deepcopy(op)
-            for op in self.items
+            op if isinstance(op, Compose) else deepcopy(op) for op in items
         ]
+
+        self._layout = plot_layout()
+        """
+        Every composition gets initiated with an empty plot_layout whose
+        attributes are either dynamically generated before the composition
+        is drawn, or they are overwritten by a layout added by the user.
+        """
+
+        self._annotation = plot_annotation()
+        """
+        The annotations around the composition
+        """
 
     def __repr__(self):
         """
@@ -140,6 +168,7 @@ class Compose:
         """
         The plot_layout of this composition
         """
+        self.items
         return self._layout
 
     @layout.setter
@@ -151,12 +180,43 @@ class Compose:
         self._layout.update(value)
 
     @property
+    def annotation(self) -> plot_annotation:
+        """
+        The plot_annotation of this composition
+        """
+        return self._annotation
+
+    @annotation.setter
+    def annotation(self, value: plot_annotation):
+        """
+        Add (or merge) a plot_annotation to this composition
+        """
+        self._annotation = copy(self.annotation)
+        self._annotation.update(value)
+
+    @property
     def nrow(self) -> int:
         return cast("int", self.layout.nrow)
 
     @property
     def ncol(self) -> int:
         return cast("int", self.layout.ncol)
+
+    @property
+    def theme(self) -> theme:
+        """
+        Theme for this composition
+
+        This is the default theme plus combined with theme from the
+        annotation.
+        """
+        if not getattr(self, "_theme", None):
+            self._theme = theme_get() + self.annotation.theme
+        return self._theme
+
+    @theme.setter
+    def theme(self, value: theme):
+        self._theme = value
 
     @abc.abstractmethod
     def __or__(self, rhs: ggplot | Compose) -> Compose:
@@ -225,7 +285,12 @@ class Compose:
         rhs:
             What to add.
         """
+        from plotnine import theme
+
         self = deepcopy(self)
+
+        if isinstance(rhs, theme):
+            self.annotation.theme = self.annotation.theme + rhs
 
         for i, item in enumerate(self):
             if isinstance(item, Compose):
@@ -298,8 +363,30 @@ class Compose:
 
         buf = BytesIO()
         self.save(buf, "png" if format == "retina" else format)
-        figure_size_px = self.last_plot.theme._figure_size_px
+        figure_size_px = self.theme._figure_size_px
         return get_mimebundle(buf.getvalue(), format, figure_size_px)
+
+    def iter_sub_compositions(self):
+        for item in self:
+            if isinstance(item, Compose):
+                yield item
+
+    def iter_plots(self):
+        from plotnine import ggplot
+
+        for item in self:
+            if isinstance(item, ggplot):
+                yield item
+
+    def iter_plots_all(self):
+        """
+        Recursively generate all plots under this composition
+        """
+        for plot in self.iter_plots():
+            yield plot
+
+        for cmp in self.iter_sub_compositions():
+            yield from cmp.iter_plots_all()
 
     @property
     def last_plot(self) -> ggplot:
@@ -352,81 +439,63 @@ class Compose:
     def _to_retina(self):
         from plotnine import ggplot
 
+        self.theme = self.theme.to_retina()
+
         for item in self:
             if isinstance(item, ggplot):
                 item.theme = item.theme.to_retina()
             else:
                 item._to_retina()
 
-    def _create_gridspec(self, figure, nest_into):
-        """
-        Create the gridspec for this composition
-        """
-        from plotnine._mpl.gridspec import p9GridSpec
-
-        self.layout._setup(self)
-        self.gridspec = p9GridSpec.from_layout(
-            self.layout, figure=figure, nest_into=nest_into
-        )
-
     def _setup(self) -> Figure:
         """
         Setup this instance for the building process
         """
-        if not hasattr(self, "figure"):
-            self._create_figure()
-
+        self._create_figure()
         return self.figure
 
     def _create_figure(self):
+        """
+        Create figure & gridspecs for all sub compositions
+        """
+        if hasattr(self, "figure"):
+            return
+
         import matplotlib.pyplot as plt
 
+        from plotnine._mpl.gridspec import p9GridSpec
+
+        figure = plt.figure()
+        self._generate_gridspecs(
+            figure, p9GridSpec(1, 1, figure, nest_into=None)
+        )
+
+    def _generate_gridspecs(self, figure: Figure, container_gs: p9GridSpec):
         from plotnine import ggplot
         from plotnine._mpl.gridspec import p9GridSpec
 
-        def _make_plotspecs(
-            cmp: Compose, parent_gridspec: p9GridSpec | None
-        ) -> Generator[plotspec]:
-            """
-            Return the plot specification for each subplot in the composition
-            """
-            # This gridspec contains a composition group e.g.
-            # (p2 | p3) of p1 | (p2 | p3)
-            ss_or_none = parent_gridspec[0] if parent_gridspec else None
-            cmp._create_gridspec(self.figure, ss_or_none)
+        self.figure = figure
+        self._gridspec = container_gs
+        self.layout._setup(self)
+        self._sub_gridspec = p9GridSpec.from_layout(
+            self.layout, figure=figure, nest_into=container_gs[0]
+        )
 
-            # Each subplot in the composition will contain one of:
-            #    1. A plot
-            #    2. A plot composition
-            #    3. Nothing
-            # Iterating over the gridspec yields the SubplotSpecs for each
-            # "subplot" in the grid. The SubplotSpec is the handle that
-            # allows us to set it up for a plot or to nest another gridspec
-            # in it.
-            for item, subplot_spec in zip(cmp, cmp.gridspec):
-                if isinstance(item, ggplot):
-                    yield plotspec(
-                        item,
-                        self.figure,
-                        cmp.gridspec,
-                        subplot_spec,
-                        p9GridSpec(1, 1, self.figure, nest_into=subplot_spec),
-                    )
-                elif item:
-                    yield from _make_plotspecs(
-                        item,
-                        p9GridSpec(1, 1, self.figure, nest_into=subplot_spec),
-                    )
-
-        self.figure = plt.figure()
-        self.plotspecs = list(_make_plotspecs(self, None))
-
-    def _draw_plots(self):
-        """
-        Draw all plots in the composition
-        """
-        for ps in self.plotspecs:
-            ps.plot.draw()
+        # Iterating over the gridspec yields the SubplotSpecs for each
+        # "subplot" in the grid. The SubplotSpec is the handle for the
+        # area in the grid; it allows us to put a plot or a nested
+        # composion in that area.
+        for item, subplot_spec in zip(self, self._sub_gridspec):
+            # This container gs will contain a plot or a composition,
+            # i.e. it will be assigned to one of:
+            #    1. ggplot._gridspec
+            #    2. compose._gridspec
+            _container_gs = p9GridSpec(1, 1, figure, nest_into=subplot_spec)
+            if isinstance(item, ggplot):
+                item.figure = figure
+                item._gridspec = _container_gs
+            else:
+                item._generate_gridspecs(figure, _container_gs)
 
     def show(self):
         """
@@ -461,13 +530,77 @@ class Compose:
         :
             Matplotlib figure
         """
-        from .._mpl.layout_manager import PlotnineCompositionLayoutEngine
+        from .._mpl.layout_manager import PlotnineLayoutEngine
 
+        def _draw(cmp):
+            figure = cmp._setup()
+            cmp._draw_plots()
+
+            for sub_cmp in cmp.iter_sub_compositions():
+                _draw(sub_cmp)
+
+            return figure
+
+        # As the plot border and plot background apply to the entire
+        # composition and not the sub compositions, the theme of the
+        # whole composition is applied last (outside _draw).
         with plot_composition_context(self, show):
-            figure = self._setup()
-            self._draw_plots()
-            figure.set_layout_engine(PlotnineCompositionLayoutEngine(self))
+            figure = _draw(self)
+            self.theme._setup(
+                self.figure,
+                None,
+                self.annotation.title,
+                self.annotation.subtitle,
+            )
+            self._draw_annotation()
+            self._draw_composition_background()
+            self.theme.apply()
+            figure.set_layout_engine(PlotnineLayoutEngine(self))
+
         return figure
+
+    def _draw_plots(self):
+        """
+        Draw all plots in the composition
+        """
+        from plotnine import ggplot
+
+        for item in self:
+            if isinstance(item, ggplot):
+                item.draw()
+
+    def _draw_composition_background(self):
+        """
+        Draw the background rectangle of the composition
+        """
+        from matplotlib.patches import Rectangle
+
+        rect = Rectangle((0, 0), 0, 0, facecolor="none", zorder=-1000)
+        self.figure.add_artist(rect)
+        self._gridspec.patch = rect
+        self.theme.targets.plot_background = rect
+
+    def _draw_annotation(self):
+        """
+        Draw the items in the annotation
+
+        Note that, this method puts the artists on the figure, and
+        the layout manager moves them to their final positions.
+        """
+        if self.annotation.empty():
+            return
+
+        figure = self.theme.figure
+        targets = self.theme.targets
+
+        if title := self.annotation.title:
+            targets.plot_title = figure.text(0, 0, title)
+
+        if subtitle := self.annotation.subtitle:
+            targets.plot_subtitle = figure.text(0, 0, subtitle)
+
+        if caption := self.annotation.caption:
+            targets.plot_caption = figure.text(0, 0, caption)
 
     def save(
         self,
