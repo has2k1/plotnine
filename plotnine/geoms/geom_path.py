@@ -425,9 +425,8 @@ class arrow:
         # We need the axes dimensions so that we can
         # compute scaling factors
         width, height = _axes_get_size_inches(ax)
-        ranges = coord.range(panel_params)
-        width_ = np.ptp(ranges.x)
-        height_ = np.ptp(ranges.y)
+        width_ = np.ptp(panel_params.x.range)
+        height_ = np.ptp(panel_params.y.range)
 
         # scaling factors to prevent skewed arrowheads
         lx = self.length * width_ / width
