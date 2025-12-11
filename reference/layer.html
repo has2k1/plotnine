@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.9">
+<meta name="generator" content="quarto-1.9.13">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -73,10 +73,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-5d254f1e278c2921d96b26102a150bb1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-ac077c1e730dfeb5e42400639d17284e.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-4221c6c9ac76c41ce990b9566882c68e.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-ed764075dc29d90dc1aae680d8c7426e.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -116,7 +116,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine 0.15.0a5</span>
+    <span class="navbar-title">plotnine 0.15.2rc1</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -166,6 +166,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#plotnine.layer.layer.map_statistic" id="toc-plotnine.layer.layer.map_statistic" class="nav-link" data-scroll-target="#plotnine.layer.layer.map_statistic"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">map_statistic</span></a></li>
   <li><a href="#plotnine.layer.layer.setup" id="toc-plotnine.layer.layer.setup" class="nav-link" data-scroll-target="#plotnine.layer.layer.setup"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">setup</span></a></li>
   <li><a href="#plotnine.layer.layer.setup_data" id="toc-plotnine.layer.layer.setup_data" class="nav-link" data-scroll-target="#plotnine.layer.layer.setup_data"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">setup_data</span></a></li>
+  <li><a href="#plotnine.layer.layer.update_labels" id="toc-plotnine.layer.layer.update_labels" class="nav-link" data-scroll-target="#plotnine.layer.layer.update_labels"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">update_labels</span></a></li>
   <li><a href="#plotnine.layer.layer.use_defaults" id="toc-plotnine.layer.layer.use_defaults" class="nav-link" data-scroll-target="#plotnine.layer.layer.use_defaults"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">use_defaults</span></a></li>
   </ul></li>
   </ul>
@@ -289,6 +290,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>Prepare/modify data for plotting</td>
 </tr>
 <tr class="even">
+<td><a href="#plotnine.layer.layer.update_labels">update_labels</a></td>
+<td>Update label data for the ggplot from the mappings in this layer</td>
+</tr>
+<tr class="odd">
 <td><a href="#plotnine.layer.layer.use_defaults">use_defaults</a></td>
 <td>Prepare/modify data for plotting</td>
 </tr>
@@ -415,10 +420,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Prepare/modify data for plotting</p>
 </div>
 </section>
+<section id="plotnine.layer.layer.update_labels" class="level3 title doc-object doc-method">
+<h3 class="title doc-object doc-method anchored" data-anchor-id="plotnine.layer.layer.update_labels"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">update_labels</span></h3>
+<div class="doc-signature doc-method">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>update_labels(plot)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="doc-text">
+<p>Update label data for the ggplot from the mappings in this layer</p>
+</div>
+</section>
 <section id="plotnine.layer.layer.use_defaults" class="level3 title doc-object doc-method">
 <h3 class="title doc-object doc-method anchored" data-anchor-id="plotnine.layer.layer.use_defaults"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">use_defaults</span></h3>
 <div class="doc-signature doc-method">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>use_defaults(data, aes_modifiers, scales<span class="op">=</span><span class="va">None</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>use_defaults(data, aes_modifiers, scales<span class="op">=</span><span class="va">None</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="doc-text">
 <p>Prepare/modify data for plotting</p>
