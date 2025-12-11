@@ -47,8 +47,13 @@ def is_knitr_engine() -> bool:
         import json
         from pathlib import Path
 
-        info = json.loads(Path(filename).read_text())
-        return info["format"]["execute"]["engine"] == "knitr"
+        try:
+            info = json.loads(Path(filename).read_text())
+        except FileNotFoundError:
+            # NOTE: Remove this branch some time after quarto 1.9 is released
+            # https://github.com/quarto-dev/quarto-cli/issues/13613
+            return "rpytools" in sys.modules
+        return info["format"]["execute"].get("engine") == "knitr"
     else:
         # NOTE: Remove this branch some time after quarto 1.9 is released
         return "rpytools" in sys.modules
