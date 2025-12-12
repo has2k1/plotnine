@@ -1,6 +1,6 @@
 import pandas as pd
 
-from plotnine import aes, arrow, geom_segment, ggplot
+from plotnine import aes, arrow, coord_flip, geom_segment, ggplot
 
 n = 4
 
@@ -46,3 +46,19 @@ def test_arrow():
     )
 
     assert p == "arrow"
+
+
+def test_arrow_coord_flip():
+    p = (
+        ggplot(data, aes("x", "y", xend="xend", yend="yend"))
+        + geom_segment(aes("x+2", xend="xend+2"), arrow=arrow(), size=2)
+        + geom_segment(
+            aes("x+4", xend="xend+4"), arrow=arrow(ends="first"), size=2
+        )
+        + geom_segment(
+            aes("x+6", xend="xend+6"), arrow=arrow(ends="both"), size=2
+        )
+        + coord_flip()
+    )
+
+    assert p == "arrow_coord_flip"
