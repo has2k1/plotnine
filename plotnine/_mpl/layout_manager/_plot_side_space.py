@@ -11,115 +11,31 @@ such cases as when left or right margin are affected by xlabel.
 
 from __future__ import annotations
 
-from abc import ABC
-from dataclasses import dataclass, field, fields
+from copy import copy
 from functools import cached_property
-from typing import TYPE_CHECKING, cast
+from typing import TYPE_CHECKING
 
 from plotnine.exceptions import PlotnineError
 from plotnine.facets import facet_grid, facet_null, facet_wrap
 
-from ._layout_items import LayoutItems
+from ._plot_layout_items import PlotLayoutItems
+from ._side_space import GridSpecParams, _side_space
 
 if TYPE_CHECKING:
-    from dataclasses import Field
-    from typing import Generator
-
     from plotnine import ggplot
     from plotnine._mpl.gridspec import p9GridSpec
     from plotnine.iapi import outside_legend
-    from plotnine.typing import Side
-
-# Note
-# Margins around the plot are specified in figure coordinates
-# We interpret that value to be a fraction of the width. So along
-# the vertical direction we multiply by W/H to get equal space
-# in both directions
 
 
-@dataclass
-class GridSpecParams:
+class _plot_side_space(_side_space):
     """
-    Gridspec Parameters
+    Base class for the side space around a plot
     """
 
-    left: float
-    right: float
-    top: float
-    bottom: float
-    wspace: float
-    hspace: float
-
-    @property
-    def valid(self) -> bool:
-        """
-        Return True if the params will create a non-empty area
-        """
-        return self.top - self.bottom > 0 and self.right - self.left > 0
-
-
-@dataclass
-class _side_spaces(ABC):
-    """
-    Base class to for spaces
-
-    A *_space class does the book keeping for all the artists that may
-    fall on that side of the panels. The same name may appear in multiple
-    side classes (e.g. legend).
-
-    The amount of space for each artist is computed in figure coordinates.
-    """
-
-    items: LayoutItems
-
-    def __post_init__(self):
-        self.side: Side = cast("Side", self.__class__.__name__[:-7])
-        """
-        Side of the panel(s) that this class applies to
-        """
+    def __init__(self, items: PlotLayoutItems):
+        self.items = items
+        self.gridspec = items.plot._gridspec
         self._calculate()
-
-    def _calculate(self):
-        """
-        Calculate the space taken up by each artist
-        """
-
-    @property
-    def total(self) -> float:
-        """
-        Total space
-        """
-        return sum(getattr(self, f.name) for f in fields(self)[1:])
-
-    def sum_upto(self, item: str) -> float:
-        """
-        Sum of space upto but not including item
-
-        Sums from the edge of the figure i.e. the "plot_margin".
-        """
-
-        def _fields_upto(item: str) -> Generator[Field, None, None]:
-            for f in fields(self)[1:]:
-                if f.name == item:
-                    break
-                yield f
-
-        return sum(getattr(self, f.name) for f in _fields_upto(item))
-
-    def sum_incl(self, item: str) -> float:
-        """
-        Sum of space upto and including the item
-
-        Sums from the edge of the figure i.e. the "plot_margin".
-        """
-
-        def _fields_upto(item: str) -> Generator[Field, None, None]:
-            for f in fields(self)[1:]:
-                yield f
-                if f.name == item:
-                    break
-
-        return sum(getattr(self, f.name) for f in _fields_upto(item))
 
     @cached_property
     def _legend_size(self) -> tuple[float, float]:
@@ -134,7 +50,7 @@ class _side_spaces(ABC):
             return (0, 0)
 
         ol: outside_legend = getattr(self.items.legends, self.side)
-        return self.items.calc.size(ol.box)
+        return self.items.geometry.size(ol.box)
 
     @cached_property
     def legend_width(self) -> float:
@@ -149,62 +65,6 @@ class _side_spaces(ABC):
         Return height of legend in figure coordinates
         """
         return self._legend_size[1]
-
-    @cached_property
-    def gs(self) -> p9GridSpec:
-        """
-        The gridspec of the plot
-        """
-        return self.items.plot._gridspec
-
-    @property
-    def offset(self) -> float:
-        """
-        Distance in figure dimensions from the edge of the figure
-
-        Derived classes should override this method
-
-        The space/margin and size consumed by artists is in figure dimensions
-        but the exact position is relative to the position of the GridSpec
-        within the figure. The offset accounts for the position of the
-        GridSpec and allows us to accurately place artists using figure
-        coordinates.
-
-        Example of an offset
-
-         Figure
-         ----------------------------------------
-        |                                        |
-        |          Plot GridSpec                 |
-        |          --------------------------    |
-        | offset  |                          |   |
-        |<------->| X                        |   |
-        |         |   Panels GridSpec        |   |
-        |         |   --------------------   |   |
-        |         |  |                    |  |   |
-        |         |  |                    |  |   |
-        |         |  |                    |  |   |
-        |         |  |                    |  |   |
-        |         |   --------------------   |   |
-        |         |                          |   |
-        |          --------------------------    |
-        |                                        |
-         ----------------------------------------
-        """
-        return 0
-
-    def to_figure_space(self, rel_value: float) -> float:
-        """
-        Convert value relative to the gridspec to one in figure space
-
-        The result is meant to be used with transFigure transforms.
-
-        Parameters
-        ----------
-        rel_value :
-            Position relative to the position of the gridspec
-        """
-        return self.offset + rel_value
 
     @property
     def has_tag(self) -> bool:
@@ -282,8 +142,7 @@ class _side_spaces(ABC):
             raise PlotnineError("Side has no axis title") from err
 
 
-@dataclass
-class left_spaces(_side_spaces):
+class left_space(_plot_side_space):
     """
     Space in the figure for artists on the left of the panel area
 
@@ -355,7 +214,7 @@ class left_spaces(_side_spaces):
 
     def _calculate(self):
         theme = self.items.plot.theme
-        calc = self.items.calc
+        geometry = self.items.geometry
         items = self.items
 
         self.plot_margin = theme.getp("plot_margin_left")
@@ -363,7 +222,7 @@ class left_spaces(_side_spaces):
         if self.has_tag and items.plot_tag:
             m = theme.get_margin("plot_tag").fig
             self.plot_tag_margin_left = m.l
-            self.plot_tag = calc.width(items.plot_tag)
+            self.plot_tag = geometry.width(items.plot_tag)
             self.plot_tag_margin_right = m.r
 
         if items.legends and items.legends.left:
@@ -373,7 +232,7 @@ class left_spaces(_side_spaces):
         if items.axis_title_y:
             m = theme.get_margin("axis_title_y").fig
             self.axis_title_y_margin_left = m.l
-            self.axis_title_y = calc.width(items.axis_title_y)
+            self.axis_title_y = geometry.width(items.axis_title_y)
             self.axis_title_y_margin_right = m.r
 
         # Account for the space consumed by the axis
@@ -407,7 +266,7 @@ class left_spaces(_side_spaces):
         (0, 0)----------------
 
         """
-        return self.gs.bbox_relative.x0
+        return self.gridspec.bbox_relative.x0
 
     def x1(self, item: str) -> float:
         """
@@ -454,8 +313,7 @@ class left_spaces(_side_spaces):
         )
 
 
-@dataclass
-class right_spaces(_side_spaces):
+class right_space(_plot_side_space):
     """
     Space in the figure for artists on the right of the panel area
 
@@ -475,14 +333,14 @@ class right_spaces(_side_spaces):
     def _calculate(self):
         items = self.items
         theme = self.items.plot.theme
-        calc = self.items.calc
+        geometry = self.items.geometry
 
         self.plot_margin = theme.getp("plot_margin_right")
 
         if self.has_tag and items.plot_tag:
             m = theme.get_margin("plot_tag").fig
             self.plot_tag_margin_right = m.r
-            self.plot_tag = calc.width(items.plot_tag)
+            self.plot_tag = geometry.width(items.plot_tag)
             self.plot_tag_margin_left = m.l
 
         if items.legends and items.legends.right:
@@ -513,7 +371,7 @@ class right_spaces(_side_spaces):
         (0, 0)---------------
 
         """
-        return self.gs.bbox_relative.x1 - 1
+        return self.gridspec.bbox_relative.x1 - 1
 
     def x1(self, item: str) -> float:
         """
@@ -560,8 +418,7 @@ class right_spaces(_side_spaces):
         )
 
 
-@dataclass
-class top_spaces(_side_spaces):
+class top_space(_plot_side_space):
     """
     Space in the figure for artists above the panel area
 
@@ -587,7 +444,7 @@ class top_spaces(_side_spaces):
     def _calculate(self):
         items = self.items
         theme = self.items.plot.theme
-        calc = self.items.calc
+        geometry = self.items.geometry
         W, H = theme.getp("figure_size")
         F = W / H
 
@@ -596,19 +453,19 @@ class top_spaces(_side_spaces):
         if self.has_tag and items.plot_tag:
             m = theme.get_margin("plot_tag").fig
             self.plot_tag_margin_top = m.t
-            self.plot_tag = calc.height(items.plot_tag)
+            self.plot_tag = geometry.height(items.plot_tag)
             self.plot_tag_margin_bottom = m.b
 
         if items.plot_title:
             m = theme.get_margin("plot_title").fig
             self.plot_title_margin_top = m.t * F
-            self.plot_title = calc.height(items.plot_title)
+            self.plot_title = geometry.height(items.plot_title)
             self.plot_title_margin_bottom = m.b * F
 
         if items.plot_subtitle:
             m = theme.get_margin("plot_subtitle").fig
             self.plot_subtitle_margin_top = m.t * F
-            self.plot_subtitle = calc.height(items.plot_subtitle)
+            self.plot_subtitle = geometry.height(items.plot_subtitle)
             self.plot_subtitle_margin_bottom = m.b * F
 
         if items.legends and items.legends.top:
@@ -642,7 +499,7 @@ class top_spaces(_side_spaces):
              |                |
         (0, 0)----------------
         """
-        return self.gs.bbox_relative.y1 - 1
+        return self.gridspec.bbox_relative.y1 - 1
 
     def y1(self, item: str) -> float:
         """
@@ -689,8 +546,7 @@ class top_spaces(_side_spaces):
         )
 
 
-@dataclass
-class bottom_spaces(_side_spaces):
+class bottom_space(_plot_side_space):
     """
     Space in the figure for artists below the panel area
 
@@ -728,7 +584,7 @@ class bottom_spaces(_side_spaces):
     def _calculate(self):
         items = self.items
         theme = self.items.plot.theme
-        calc = self.items.calc
+        geometry = self.items.geometry
         W, H = theme.getp("figure_size")
         F = W / H
 
@@ -737,13 +593,13 @@ class bottom_spaces(_side_spaces):
         if self.has_tag and items.plot_tag:
             m = theme.get_margin("plot_tag").fig
             self.plot_tag_margin_bottom = m.b
-            self.plot_tag = calc.height(items.plot_tag)
+            self.plot_tag = geometry.height(items.plot_tag)
             self.plot_tag_margin_top = m.t
 
         if items.plot_caption:
             m = theme.get_margin("plot_caption").fig
             self.plot_caption_margin_bottom = m.b * F
-            self.plot_caption = calc.height(items.plot_caption)
+            self.plot_caption = geometry.height(items.plot_caption)
             self.plot_caption_margin_top = m.t * F
 
         if items.legends and items.legends.bottom:
@@ -753,7 +609,7 @@ class bottom_spaces(_side_spaces):
         if items.axis_title_x:
             m = theme.get_margin("axis_title_x").fig
             self.axis_title_x_margin_bottom = m.b * F
-            self.axis_title_x = calc.height(items.axis_title_x)
+            self.axis_title_x = geometry.height(items.axis_title_x)
             self.axis_title_x_margin_top = m.t * F
 
         # Account for the space consumed by the axis
@@ -789,7 +645,7 @@ class bottom_spaces(_side_spaces):
              |       v        |
         (0, 0)----------------
         """
-        return self.gs.bbox_relative.y0
+        return self.gridspec.bbox_relative.y0
 
     def y1(self, item: str) -> float:
         """
@@ -836,8 +692,7 @@ class bottom_spaces(_side_spaces):
         )
 
 
-@dataclass
-class LayoutSpaces:
+class PlotSideSpaces:
     """
     Compute the all the spaces required in the layout
 
@@ -853,56 +708,67 @@ class LayoutSpaces:
     them in their final positions.
     """
 
-    plot: ggplot
-
-    l: left_spaces = field(init=False)
-    """All subspaces to the left of the panels"""
-
-    r: right_spaces = field(init=False)
-    """All subspaces to the right of the panels"""
-
-    t: top_spaces = field(init=False)
-    """All subspaces above the top of the panels"""
-
-    b: bottom_spaces = field(init=False)
-    """All subspaces below the bottom of the panels"""
-
-    W: float = field(init=False, default=0)
+    W: float
     """Figure Width [inches]"""
 
-    H: float = field(init=False, default=0)
+    H: float
     """Figure Height [inches]"""
 
-    w: float = field(init=False, default=0)
+    w: float
     """Axes width w.r.t figure in [0, 1]"""
 
-    h: float = field(init=False, default=0)
+    h: float
     """Axes height w.r.t figure in [0, 1]"""
 
-    sh: float = field(init=False, default=0)
+    sh: float
     """horizontal spacing btn panels w.r.t figure"""
 
-    sw: float = field(init=False, default=0)
+    sw: float
     """vertical spacing btn panels w.r.t figure"""
 
-    gsparams: GridSpecParams = field(init=False, repr=False)
-    """Grid spacing btn panels w.r.t figure"""
+    def __init__(self, plot: ggplot):
+        self.plot = plot
+        self.gridspec = plot._gridspec
+        self.sub_gridspec = plot._sub_gridspec
+        self.items = PlotLayoutItems(plot)
 
-    def __post_init__(self):
-        self.items = LayoutItems(self.plot)
-        self.W, self.H = self.plot.theme.getp("figure_size")
+        self.l = left_space(self.items)
+        """All subspaces to the left of the panels"""
 
-        # Calculate the spacing along the edges of the panel area
-        # (spacing required by plotnine)
-        self.l = left_spaces(self.items)
-        self.r = right_spaces(self.items)
-        self.t = top_spaces(self.items)
-        self.b = bottom_spaces(self.items)
+        self.r = right_space(self.items)
+        """All subspaces to the right of the panels"""
 
-    def get_gridspec_params(self) -> GridSpecParams:
-        # Calculate the gridspec params
-        # (spacing required by mpl)
-        self.gsparams = self._calculate_panel_spacing()
+        self.t = top_space(self.items)
+        """All subspaces above the top of the panels"""
+
+        self.b = bottom_space(self.items)
+        """All subspaces below the bottom of the panels"""
+
+        self.W, self.H = plot.theme.getp("figure_size")
+
+    def arrange(self):
+        """
+        Resize plot and place artists in final positions around the panels
+        """
+        self.resize_gridspec()
+        self.items._move_artists(self)
+
+    def resize_gridspec(self):
+        """
+        Apply the space calculations to the sub_gridspec
+
+        After calling this method, the sub_gridspec will be appropriately
+        sized to accomodate the artists around the panels.
+        """
+        gsparams = self.calculate_gridspec_params()
+        gsparams.validate()
+        self.sub_gridspec.update_params_and_artists(gsparams)
+
+    def calculate_gridspec_params(self) -> GridSpecParams:
+        """
+        Grid spacing between panels w.r.t figure
+        """
+        gsparams = self._calculate_panel_spacing()
 
         # Adjust the spacing parameters for the desired aspect ratio
         # It is simpler to adjust for the aspect ratio than to calculate
@@ -912,26 +778,26 @@ class LayoutSpaces:
             current_ratio = self.aspect_ratio
             if ratio > current_ratio:
                 # Increase aspect ratio, taller panels
-                self._reduce_width(ratio)
+                gsparams = self._reduce_width(gsparams, ratio)
             elif ratio < current_ratio:
                 # Increase aspect ratio, wider panels
-                self._reduce_height(ratio)
+                gsparams = self._reduce_height(gsparams, ratio)
 
-        return self.gsparams
+        return gsparams
 
     @property
     def plot_width(self) -> float:
         """
         Width [figure dimensions] of the whole plot
         """
-        return float(self.plot._gridspec.width)
+        return float(self.gridspec.width)
 
     @property
     def plot_height(self) -> float:
         """
         Height [figure dimensions] of the whole plot
         """
-        return float(self.plot._gridspec.height)
+        return float(self.gridspec.height)
 
     @property
     def panel_width(self) -> float:
@@ -946,6 +812,22 @@ class LayoutSpaces:
         Height [figure dimensions] of panels
         """
         return self.t.panel_top - self.b.panel_bottom
+
+    @property
+    def horizontal_space(self) -> float:
+        """
+        Horizontal non-panel space [figure dimensions]
+        """
+        # The same as plot_width - panel_width
+        return self.l.total + self.r.total
+
+    @property
+    def vertical_space(self) -> float:
+        """
+        Vertical non-panel space [figure dimensions]
+        """
+        # The same as plot_height - panel_height
+        return self.t.total + self.b.total
 
     def increase_horizontal_plot_margin(self, dw: float):
         """
@@ -1022,9 +904,6 @@ class LayoutSpaces:
         ncol = self.plot.facet.ncol
         nrow = self.plot.facet.nrow
 
-        left, right = self.l.panel_left, self.r.panel_right
-        top, bottom = self.t.panel_top, self.b.panel_bottom
-
         # Both spacings are specified as fractions of the figure width
         # Multiply the vertical by (W/H) so that the gullies along both
         # directions are equally spaced.
@@ -1032,8 +911,8 @@ class LayoutSpaces:
         self.sh = theme.getp("panel_spacing_y") * self.W / self.H
 
         # width and height of axes as fraction of figure width & height
-        self.w = ((right - left) - self.sw * (ncol - 1)) / ncol
-        self.h = ((top - bottom) - self.sh * (nrow - 1)) / nrow
+        self.w = (self.panel_width - self.sw * (ncol - 1)) / ncol
+        self.h = (self.panel_height - self.sh * (nrow - 1)) / nrow
 
         # Spacing as fraction of axes width & height
         wspace = self.sw / self.w
@@ -1049,9 +928,6 @@ class LayoutSpaces:
 
         ncol = facet.ncol
         nrow = facet.nrow
-
-        left, right = self.l.panel_left, self.r.panel_right
-        top, bottom = self.t.panel_top, self.b.panel_bottom
 
         # Both spacings are specified as fractions of the figure width
         self.sw = theme.getp("panel_spacing_x")
@@ -1081,8 +957,8 @@ class LayoutSpaces:
             ) + self.items.axis_ticks_y_max_width_at("all")
 
         # width and height of axes as fraction of figure width & height
-        self.w = ((right - left) - self.sw * (ncol - 1)) / ncol
-        self.h = ((top - bottom) - self.sh * (nrow - 1)) / nrow
+        self.w = (self.panel_width - self.sw * (ncol - 1)) / ncol
+        self.h = (self.panel_height - self.sh * (nrow - 1)) / nrow
 
         # Spacing as fraction of axes width & height
         wspace = self.sw / self.w
@@ -1093,16 +969,18 @@ class LayoutSpaces:
         """
         Calculate spacing parts for facet_null
         """
-        self.w = self.r.panel_right - self.l.panel_left
-        self.h = self.t.panel_top - self.b.panel_bottom
+        self.w = self.panel_width
+        self.h = self.panel_height
         self.sw = 0
         self.sh = 0
         return 0, 0
 
-    def _reduce_height(self, ratio: float):
+    def _reduce_height(self, gsparams: GridSpecParams, ratio: float):
         """
         Reduce the height of axes to get the aspect ratio
         """
+        gsparams = copy(gsparams)
+
         # New height w.r.t figure height
         h1 = ratio * self.w * (self.W / self.H)
 
@@ -1110,17 +988,20 @@ class LayoutSpaces:
         dh = (self.h - h1) * self.plot.facet.nrow / 2
 
         # Reduce plot area height
-        self.gsparams.top -= dh
-        self.gsparams.bottom += dh
-        self.gsparams.hspace = self.sh / h1
+        gsparams.top -= dh
+        gsparams.bottom += dh
+        gsparams.hspace = self.sh / h1
 
         # Add more vertical plot margin
         self.increase_vertical_plot_margin(dh)
+        return gsparams
 
-    def _reduce_width(self, ratio: float):
+    def _reduce_width(self, gsparams: GridSpecParams, ratio: float):
         """
         Reduce the width of axes to get the aspect ratio
         """
+        gsparams = copy(gsparams)
+
         # New width w.r.t figure width
         w1 = (self.h * self.H) / (ratio * self.W)
 
@@ -1128,12 +1009,13 @@ class LayoutSpaces:
         dw = (self.w - w1) * self.plot.facet.ncol / 2
 
         # Reduce width
-        self.gsparams.left += dw
-        self.gsparams.right -= dw
-        self.gsparams.wspace = self.sw / w1
+        gsparams.left += dw
+        gsparams.right -= dw
+        gsparams.wspace = self.sw / w1
 
         # Add more horizontal margin
         self.increase_horizontal_plot_margin(dw)
+        return gsparams
 
     @property
     def aspect_ratio(self) -> float:
