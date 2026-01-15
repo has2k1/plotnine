@@ -5,12 +5,13 @@ from contextlib import suppress
 from dataclasses import dataclass, field
 from functools import cached_property
 from itertools import islice
-from types import SimpleNamespace as NS
 from typing import TYPE_CHECKING, cast
 from warnings import warn
 
 import numpy as np
 import pandas as pd
+
+from plotnine.iapi import guide_text
 
 from .._utils import remove_missing
 from ..exceptions import PlotnineError, PlotnineWarning
@@ -18,7 +19,7 @@ from ..mapping.aes import rename_aesthetics
 from .guide import GuideElements, guide
 
 if TYPE_CHECKING:
-    from typing import Any, Optional
+    from typing import Any, Optional, Sequence
 
     from matplotlib.artist import Artist
     from matplotlib.offsetbox import PackerBase
@@ -209,7 +210,7 @@ class guide_legend(guide):
         self, elements: GuideElementsLegend
     ) -> tuple[int, int]:
         nrow, ncol = self.nrow, self.ncol
-        nbreak = len(self.key)
+        nbreak = self.num_breaks
 
         if nrow and ncol:
             if nrow * ncol < nbreak:
@@ -248,7 +249,7 @@ class guide_legend(guide):
 
         obverse = slice(0, None)
         reverse = slice(None, None, -1)
-        nbreak = len(self.key)
+        nbreak = self.num_breaks
         targets = self.theme.targets
         keys_order = reverse if self.reverse else obverse
         elements = self.elements
@@ -259,8 +260,12 @@ class guide_legend(guide):
         targets.legend_title = title_box._text  # type: ignore
 
         # labels
-        props = {"ha": elements.text.ha, "va": elements.text.va}
-        labels = [TextArea(s, textprops=props) for s in self.key["label"]]
+        has = elements.text.has
+        vas = elements.text.vas
+        labels = [
+            TextArea(s, textprops={"ha": ha, "va": va})
+            for s, ha, va in zip(self.key["label"], has, vas)
+        ]
         _texts = [l._text for l in labels]  # type: ignore
         targets.legend_text_legend = _texts
 
@@ -287,18 +292,28 @@ class guide_legend(guide):
             "bottom": (VPacker, reverse),
             "top": (VPacker, obverse),
         }
-        packer, slc = lookup[elements.text_position]
+
         if self.elements.text.is_blank:
             key_boxes = [d for d in drawings][keys_order]
         else:
+            packers, slices = [], []
+            for side in elements.text_positions:
+                tup = lookup[side]
+                packers.append(tup[0])
+                slices.append(tup[1])
+
+            seps = elements.text.margins
+            aligns = elements.text.aligns
             key_boxes = [
                 packer(
                     children=[l, d][slc],
-                    sep=elements.text.margin,
-                    align=elements.text.align,
+                    sep=sep,
+                    align=align,
                     pad=0,
                 )
-                for d, l in zip(drawings, labels)
+                for d, l, packer, slc, sep, align in zip(
+                    drawings, labels, packers, slices, seps, aligns
+                )
             ][keys_order]
 
         # Put the entries together in rows or columns
@@ -326,7 +341,7 @@ class guide_legend(guide):
                 break
 
         chunk_boxes: list[Artist] = [
-            packer_dim1(children=chunk, align="left", sep=sep1, pad=0)
+            packer_dim1(children=chunk, align="right", sep=sep1, pad=0)
             for chunk in chunks
         ]
 
@@ -364,26 +379,38 @@ class GuideElementsLegend(GuideElements):
         ha = self.theme.getp(("legend_text_legend", "ha"), "center")
         va = self.theme.getp(("legend_text_legend", "va"), "center")
         is_blank = self.theme.T.is_blank("legend_text_legend")
+        n = self.guide.num_breaks
 
         # The original ha & va values are used by the HPacker/VPacker
         # to align the TextArea with the DrawingArea.
         # We set ha & va to values that combine best with the aligning
         # for the text area.
-        align = va if self.text_position in {"left", "right"} else ha
-        return NS(
-            margin=self._text_margin,
-            align=align,
+        has = (ha,) * n if isinstance(ha, str) else ha
+        vas = (va,) * n if isinstance(va, str) else va
+        aligns = [
+            va if side in ("right", "left") else ha
+            for side, ha, va in zip(self.text_positions, has, vas)
+        ]
+        return guide_text(
+            margins=self._text_margin,
+            aligns=aligns,  # pyright: ignore[reportArgumentType]
             fontsize=size,
-            ha="center",
-            va="baseline",
+            has=("center",) * n,
+            vas=("baseline",) * n,
             is_blank=is_blank,
         )
 
     @cached_property
-    def text_position(self) -> Side:
-        if not (pos := self.theme.getp("legend_text_position")):
-            pos = "right"
-        return pos
+    def text_positions(self) -> Sequence[Side]:
+        if not (position := self.theme.getp("legend_text_position")):
+            return ("right",) * self.guide.num_breaks
+
+        position = cast("Side | Sequence[Side]", position)
+
+        if isinstance(position, str):
+            position = (position,) * self.guide.num_breaks
+
+        return position
 
     @cached_property
     def key_spacing_x(self) -> float:
