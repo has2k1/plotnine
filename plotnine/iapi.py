@@ -14,7 +14,7 @@ from functools import cached_property
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from typing import Any, Iterator, Optional, Sequence
+    from typing import Any, Iterator, Literal, Optional, Sequence
 
     from matplotlib.axes import Axes
     from matplotlib.figure import Figure
@@ -26,8 +26,10 @@ if TYPE_CHECKING:
         FloatArrayLike,
         HorizontalJustification,
         ScaledAestheticsName,
+        Side,
         StripPosition,
         VerticalJustification,
+        VerticalTextJustification,
     )
 
     from ._mpl.offsetbox import FlexibleAnchoredOffsetbox
@@ -385,3 +387,17 @@ class legend_artists:
         )
         inside = (l.box for l in self.inside)
         return list(itertools.chain([*lrtb, *inside]))
+
+
+@dataclass
+class guide_text:
+    """
+    Processed guide text
+    """
+
+    margins: Sequence[float]
+    aligns: Sequence[Side | Literal["center"]]
+    fontsize: float
+    has: Sequence[HorizontalJustification]
+    vas: Sequence[VerticalTextJustification]
+    is_blank: bool

@@ -18,6 +18,7 @@ if TYPE_CHECKING:
     from typing_extensions import Self
 
     from plotnine import aes, guides
+    from plotnine.iapi import guide_text
     from plotnine.layer import Layers, layer
     from plotnine.scales.scale import scale
     from plotnine.typing import (
@@ -139,6 +140,13 @@ class guide(ABC, metaclass=Register):
             just = cast("tuple[float, float]", just)
             return (pos, just)
 
+    @property
+    def num_breaks(self) -> int:
+        """
+        Number of breaks
+        """
+        return len(self.key)
+
     def train(
         self, scale: scale, aesthetic: Optional[str] = None
     ) -> Self | None:
@@ -177,7 +185,7 @@ class GuideElements:
     guide: guide
 
     @cached_property
-    def text(self):
+    def text(self) -> guide_text:
         raise NotImplementedError
 
     def __post_init__(self):
@@ -214,16 +222,16 @@ class GuideElements:
         )
 
     @cached_property
-    def text_position(self) -> Side:
+    def text_positions(self) -> Sequence[Side]:
         raise NotImplementedError
 
     @cached_property
-    def _text_margin(self) -> float:
+    def _text_margin(self) -> Sequence[float]:
         _margin = self.theme.getp(
             (f"legend_text_{self.guide_kind}", "margin")
         ).pt
-        _loc = get_opposite_side(self.text_position)[0]
-        return getattr(_margin, _loc)
+        locs = (get_opposite_side(p)[0] for p in self.text_positions)
+        return [getattr(_margin, loc) for loc in locs]
 
     @cached_property
     def title_position(self) -> Side:
@@ -279,33 +287,3 @@ class GuideElements:
         Whether the guide is horizontal
         """
         return self.direction == "horizontal"
-
-    def has(self, n: int) -> Sequence[str]:
-        """
-        Horizontal alignments per legend text
-        """
-        ha = self.text.ha
-        if isinstance(ha, (list, tuple)):
-            if len(ha) != n:
-                raise ValueError(
-                    "If `ha` is a sequence, its length should match the "
-                    f"number of texts. ({len(ha)} != {n})"
-                )
-        else:
-            ha = (ha,) * n
-        return ha
-
-    def vas(self, n: int) -> Sequence[str]:
-        """
-        Vertical alignments per legend texts
-        """
-        va = self.text.va
-        if isinstance(va, (list, tuple)):
-            if len(va) != n:
-                raise ValueError(
-                    "If `va` is a sequence, its length should match the "
-                    f"number of texts. ({len(va)} != {n})"
-                )
-        else:
-            va = (va,) * n
-        return va

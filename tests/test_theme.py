@@ -13,8 +13,11 @@ from plotnine import (
     geom_blank,
     geom_point,
     ggplot,
+    guide_colorbar,
+    guides,
     labs,
     lims,
+    scale_color_cmap,
     theme,
     theme_538,
     theme_bw,
@@ -188,6 +191,33 @@ def test_guide_colorbar_sequence_alignments():
         )
     )
     assert p == "test_guide_colorbar_sequence_ha_va"
+
+
+def test_guide_colorbar_text_sequence():
+    p = (
+        ggplot(mtcars)
+        + geom_point(aes("wt", "mpg", fill="wt", color="cyl"))
+        + scale_color_cmap("Greens")
+        + scale_color_cmap("Blues")
+        + guides(
+            fill=guide_colorbar(
+                theme=theme(
+                    legend_title=element_text(ha="center"),
+                    legend_text_position="left-right",
+                )
+            ),
+            color=guide_colorbar(
+                theme=theme(
+                    legend_position="bottom",
+                    legend_text_position="bottom-top",
+                )
+            ),
+        )
+        + theme(
+            legend_ticks=element_line(color=["red", "none", "none", "red"] * 2)
+        )
+    )
+    assert p == "guide_colorbar_text_sequence"
 
 
 g = (
