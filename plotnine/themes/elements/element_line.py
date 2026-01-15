@@ -37,6 +37,7 @@ class element_line(element_base):
         *,
         color: (
             str
+            | Sequence[str]
             | tuple[float, float, float]
             | tuple[float, float, float, float]
             | None
@@ -46,6 +47,7 @@ class element_line(element_base):
         lineend: Literal["butt", "projecting", "round"] | None = None,
         colour: (
             str
+            | Sequence[str]
             | tuple[float, float, float]
             | tuple[float, float, float, float]
             | None

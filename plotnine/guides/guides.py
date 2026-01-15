@@ -31,12 +31,12 @@ if TYPE_CHECKING:
     from plotnine.scales.scale import scale
     from plotnine.scales.scales import Scales
     from plotnine.typing import (
+        Justification,
         LegendPosition,
         NoGuide,
         Orientation,
         ScaledAestheticsName,
         Side,
-        TextJustification,
     )
 
     LegendOrColorbar: TypeAlias = (
@@ -437,7 +437,7 @@ class GuidesElements:
         return ensure_xy_location(just)
 
     @cached_property
-    def box_just(self) -> TextJustification:
+    def box_just(self) -> Justification | Literal["baseline"]:
         if not (box_just := self.theme.getp("legend_box_just")):
             box_just = (
                 "left" if self.position in {"left", "right"} else "right"

@@ -2368,9 +2368,23 @@ class legend_text_position(themeable):
 
     Parameters
     ----------
-    theme_element : Literal["top", "bottom", "left", "right"] | None
-        Position of the legend key text. The default depends on the
-        position of the legend.
+    theme_element : Literal["top", "bottom", "left", "right"] | \
+                    Sequence[Literal["top", "bottom"]] | \
+                    Sequence[Literal["left", "right"]] | \
+                    Literal["top-bottom", "bottom-top"] | \
+                    Literal["left-right", "right-left"] | \
+                    None
+        Position of the legend key text.
+        It must be compatible with the position of the legend e.g.
+        when the legend is at the top or bottom, text can only be top
+        or bottom as well.
+        The default depends on the position of the legend.
+        Use a sequence to specify the position of each text, or
+        hyphenated values like `"left-right"` to alternate the position.
+
+    Notes
+    -----
+    Sequences and alternation only works well for colorbars.
     """
 
 
