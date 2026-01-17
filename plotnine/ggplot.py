@@ -129,7 +129,7 @@ class ggplot:
         self.watermarks: list[watermark] = []
 
         # build artefacts
-        self._build_objs = NS()
+        self._build_objs = NS(meta={})
 
     def __str__(self) -> str:
         """
@@ -595,6 +595,9 @@ class ggplot:
         This method has the same arguments as [](`~plotnine.ggplot.save`).
         Use it to get access to the figure that will be saved.
         """
+        if format is None and isinstance(filename, (str, Path)):
+            format = str(filename).split(".")[-1]
+
         fig_kwargs: Dict[str, Any] = {"format": format, **kwargs}
 
         if limitsize is None:
@@ -644,6 +647,7 @@ class ggplot:
         if dpi is not None:
             self.theme = self.theme + theme(dpi=dpi)
 
+        self._build_objs.meta["figure_format"] = format
         figure = self.draw(show=False)
         return mpl_save_view(figure, fig_kwargs)
 

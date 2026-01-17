@@ -28,6 +28,7 @@ if TYPE_CHECKING:
     from matplotlib.text import Text
 
     from plotnine import theme
+    from plotnine.guides import guides
     from plotnine.scales.scale import scale
     from plotnine.typing import Side
 
@@ -50,7 +51,12 @@ class guide_colorbar(guide):
     """
 
     display: Literal["gradient", "rectangles", "raster"] = "gradient"
-    """How to render the colorbar."""
+    """
+    How to render the colorbar
+
+    SVG figures will always use "rectangles" to create gradients. This has
+    better support across applications that render svg images.
+    """
 
     alpha: Optional[float] = None
     """
@@ -75,6 +81,12 @@ class guide_colorbar(guide):
 
         if self.nbin is None:
             self.nbin = 300  # if self.display == "gradient" else 300
+
+    def setup(self, guides: guides):
+        super().setup(guides)
+        # See: add_segmented_colorbar
+        if guides.plot._build_objs.meta.get("figure_format") == "svg":
+            self.display = "rectangles"
 
     def train(self, scale: scale, aesthetic=None):
         self.nbin = cast("int", self.nbin)
@@ -173,6 +185,7 @@ class guide_colorbar(guide):
         nbars = len(self.bar)
         elements = self.elements
         raster = self.display == "raster"
+        alpha = self.alpha
 
         colors = self.bar["color"].tolist()
         labels = self.key["label"].tolist()
@@ -221,9 +234,9 @@ class guide_colorbar(guide):
 
         # colorbar
         if self.display == "rectangles":
-            add_segmented_colorbar(auxbox, colors, elements)
+            add_segmented_colorbar(auxbox, colors, alpha, elements)
         else:
-            add_gradient_colorbar(auxbox, colors, elements, raster)
+            add_gradient_colorbar(auxbox, colors, alpha, elements, raster)
 
         # ticks
         visible = slice(
@@ -266,6 +279,7 @@ guide_colourbar = guide_colorbar
 def add_gradient_colorbar(
     auxbox: AuxTransformBox,
     colors: Sequence[str],
+    alpha: float | None,
     elements: GuideElementsColorbar,
     raster: bool = False,
 ):
@@ -321,6 +335,7 @@ def add_gradient_colorbar(
         shading="gouraud",
         cmap=cmap,
         array=Z.ravel(),
+        alpha=alpha,
         rasterized=raster,
     )
     auxbox.add_artist(coll)
@@ -329,6 +344,7 @@ def add_gradient_colorbar(
 def add_segmented_colorbar(
     auxbox: AuxTransformBox,
     colors: Sequence[str],
+    alpha: float | None,
     elements: GuideElementsColorbar,
 ):
     """
@@ -337,6 +353,21 @@ def add_segmented_colorbar(
     from matplotlib.collections import PolyCollection
 
     nbreak = len(colors)
+    # Problem:
+    # 1. Webbrowsers do not properly render SVG with QuadMesh
+    #    colorbars. Also when the QuadMesh is "rasterized",
+    #    the colorbar is misplaced within the SVG (and pdfs!).
+    #    So SVGs cannot use `add_gradient_colobar` at all.
+    # 2. Webbrowsers do not properly render SVG with PolyCollection
+    #    colorbars when the adjacent rectangles that make up the
+    #    colorbar touch each other precisely. The "bars" appear to
+    #    be separated by lines.
+    #
+    # For a wayout, we overlap the bars. Overlapping creates artefacts
+    # when alpha < 1, but having a gradient + alpha is rare. And, we can
+    # minimise apparent artefacts by using a large overlap_factor.
+    # A value of 2 gives the best results in the rare case should alpha < 1.
+    overlap_factor = 2
     if elements.is_vertical:
         colorbar_height = elements.key_height
         colorbar_width = elements.key_width
@@ -347,6 +378,8 @@ def add_segmented_colorbar(
         for i in range(nbreak):
             y1 = i * linewidth
             y2 = y1 + linewidth
+            if i > 1:
+                y1 -= linewidth * overlap_factor
             verts.append(((x1, y1), (x1, y2), (x2, y2), (x2, y1)))
     else:
         colorbar_width = elements.key_height
@@ -358,12 +391,15 @@ def add_segmented_colorbar(
         for i in range(nbreak):
             x1 = i * linewidth
             x2 = x1 + linewidth
+            if i > 1:
+                x1 -= linewidth * overlap_factor
             verts.append(((x1, y1), (x1, y2), (x2, y2), (x2, y1)))
 
     coll = PolyCollection(
         verts,
         facecolors=colors,
         linewidth=0,
+        alpha=alpha,
         antialiased=False,
     )
     auxbox.add_artist(coll)
