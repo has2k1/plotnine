@@ -123,12 +123,6 @@ class guide_colorbar(guide):
         self.hash = hashlib.sha256(info.encode("utf-8")).hexdigest()
         return self
 
-    def merge(self, other):
-        """
-        Simply discards the other guide
-        """
-        return self
-
     def create_geoms(self):
         """
         Return self if colorbar will be drawn and None if not

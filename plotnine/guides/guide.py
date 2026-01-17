@@ -156,6 +156,12 @@ class guide(ABC, metaclass=Register):
         Returns guide if training is successful
         """
 
+    def merge(self, other: Self) -> Self:
+        """
+        Merge with another guide
+        """
+        return self
+
     def draw(self) -> PackerBase:
         """
         Draw guide
