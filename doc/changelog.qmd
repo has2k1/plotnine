@@ -16,6 +16,9 @@ title: Changelog
 - You can now use a sequence to set the position of each text on colorbar, or have the
   positions alternate left and right or bottom and top.
 
+- Added [](:class:`~plotnine.composition.plot_annotation`), allowing you to add title,
+  subtitle or caption to a composition.
+
 ### Bug Fixes
 
 - Fixed [](:class:`~plotnine.geom_smooth`) / [](:class:`~plotnine.stat_smooth`) when using a linear model via "lm" with weights for the model to do a weighted regression. This bug did not affect the formula API of the linear model. ({{< issue 1005 >}})
