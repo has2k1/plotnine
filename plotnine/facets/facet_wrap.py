@@ -115,7 +115,7 @@ class facet_wrap(facet):
 
         layout = pd.DataFrame(
             {
-                "PANEL": pd.Categorical(range(1, n + 1)),
+                "PANEL": pd.Categorical(range(1, n + 1)),  # pyright: ignore[reportArgumentType]
                 "ROW": row.astype(int),
                 "COL": col.astype(int),
             }

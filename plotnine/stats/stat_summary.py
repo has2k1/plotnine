@@ -1,3 +1,5 @@
+from typing import cast
+
 import numpy as np
 import pandas as pd
 
@@ -314,8 +316,8 @@ class stat_summary(stat):
         summaries = []
         for (group, x), df in data.groupby(["group", "x"]):
             summary = func(df)
-            summary["x"] = x
-            summary["group"] = group
+            summary["x"] = x  # pyright: ignore[reportCallIssue,reportArgumentType]
+            summary["group"] = cast("int", group)
             summary["n"] = len(df)
             unique = uniquecols(df)
             if "y" in unique:

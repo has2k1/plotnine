@@ -126,18 +126,18 @@ class geom_map(geom):
         params = self.params
         data.loc[data["color"].isna(), "color"] = "none"
         data.loc[data["fill"].isna(), "fill"] = "none"
-        data["fill"] = to_rgba(data["fill"], data["alpha"])
 
         geom_type = data.geometry.iloc[0].geom_type
         if geom_type in ("Polygon", "MultiPolygon"):
             from matplotlib.collections import PatchCollection
 
             linewidth = data["size"] * SIZE_FACTOR
+            fill = to_rgba(data["fill"], data["alpha"])
             patches = [PolygonPatch(g) for g in data["geometry"]]
             coll = PatchCollection(
                 patches,
                 edgecolor=data["color"],
-                facecolor=data["fill"],
+                facecolor=fill,
                 linestyle=data["linetype"],
                 linewidth=linewidth,
                 zorder=params["zorder"],
@@ -152,7 +152,6 @@ class geom_map(geom):
             data["y"] = arr[:, 1]
             for _, gdata in data.groupby("group"):
                 gdata.reset_index(inplace=True, drop=True)
-                gdata.is_copy = None
                 geom_point.draw_group(gdata, panel_params, coord, ax, params)
         elif geom_type == "MultiPoint":
             # Where n is the length of the dataframe (no. of multipoints),
@@ -173,7 +172,7 @@ class geom_map(geom):
             from matplotlib.collections import LineCollection
 
             linewidth = data["size"] * SIZE_FACTOR
-            data["color"] = to_rgba(data["color"], data["alpha"])
+            color = to_rgba(data["color"], data["alpha"])
             segments = []
             for g in data["geometry"]:
                 if g.geom_type == "LineString":
@@ -183,7 +182,7 @@ class geom_map(geom):
 
             coll = LineCollection(
                 segments,
-                edgecolor=data["color"],
+                edgecolor=color,
                 linewidth=linewidth,
                 linestyle=data["linetype"],
                 zorder=params["zorder"],

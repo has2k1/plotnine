@@ -35,7 +35,6 @@ if TYPE_CHECKING:
         FloatArray,
         FloatArrayLike,
         HorizontalJustification,
-        IntArray,
         Side,
         VerticalJustification,
     )
@@ -309,7 +308,7 @@ def ninteraction(df: pd.DataFrame, drop: bool = False) -> list[int]:
     def len_unique(x):
         return len(np.unique(x))
 
-    ndistinct: IntArray = ids.apply(len_unique, axis=0).to_numpy()
+    ndistinct = ids.apply(len_unique, axis=0).to_numpy()
 
     combs = np.array(np.hstack([1, np.cumprod(ndistinct[:-1])]))
     mat = np.array(ids)
@@ -743,7 +742,7 @@ def ungroup(data: DataLike) -> DataLike:
     """Return an ungrouped DataFrame, or pass the original data back."""
 
     if isinstance(data, DataFrameGroupBy):
-        return data.obj
+        return data.obj  # pyright: ignore[reportReturnType]
 
     return data
 

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-import typing
 from contextlib import suppress
+from typing import TYPE_CHECKING, cast
 from warnings import warn
 
 import numpy as np
@@ -12,7 +12,7 @@ from ..exceptions import PlotnineError, PlotnineWarning
 from ..positions import position_nudge
 from .geom import geom
 
-if typing.TYPE_CHECKING:
+if TYPE_CHECKING:
     from typing import Any, Sequence
 
     import pandas as pd
@@ -244,7 +244,7 @@ class geom_text(geom):
             axis=1,
             inplace=True,
         )
-        plot_data["color"] = color
+        plot_data["color"] = color  # pyright: ignore[reportCallIssue,reportArgumentType]
         plot_data["zorder"] = zorder
         plot_data["rasterized"] = params["raster"]
         plot_data["clip_on"] = True
@@ -255,7 +255,7 @@ class geom_text(geom):
             fill = to_rgba(data.pop("fill"), data["alpha"])
             if isinstance(fill, tuple):
                 fill = [list(fill)] * len(data["x"])
-            plot_data["facecolor"] = fill
+            plot_data["facecolor"] = fill  # pyright: ignore[reportCallIssue,reportArgumentType]
 
             tokens = [params["boxstyle"], f"pad={params['label_padding']}"]
             if params["boxstyle"] in {"round", "round4"}:
@@ -272,7 +272,7 @@ class geom_text(geom):
 
         # For labels add a bbox
         for i in range(len(data)):
-            kw: dict[str, Any] = plot_data.iloc[i].to_dict()
+            kw = cast("dict[str, Any]", plot_data.iloc[i].to_dict())
             if draw_label:
                 kw["bbox"] = bbox
                 kw["bbox"]["edgecolor"] = params["boxcolor"] or kw["color"]

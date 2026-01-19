@@ -13,6 +13,8 @@ from ..exceptions import PlotnineError, PlotnineWarning
 if TYPE_CHECKING:
     import statsmodels.api as sm
 
+    from plotnine.typing import FloatArray
+
 
 def predictdf(data, xseq, params) -> pd.DataFrame:
     """
@@ -454,12 +456,14 @@ def gpr(data, xseq, params):
     if params["se"]:
         y, stderr = regressor.predict(Xseq, return_std=True)
         data["y"] = y
-        data["se"] = stderr
+        data["se"] = cast("FloatArray", stderr)
         data["ymin"], data["ymax"] = tdist_ci(
             y, n - 1, stderr, params["level"]
         )
     else:
-        data["y"] = regressor.predict(Xseq, return_std=True)
+        data["y"] = cast(
+            "FloatArray", regressor.predict(Xseq, return_std=False)
+        )
 
     return data
 

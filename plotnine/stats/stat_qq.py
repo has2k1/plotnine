@@ -11,9 +11,9 @@ from ..mapping.evaluation import after_stat
 from .stat import stat
 
 if TYPE_CHECKING:
-    from typing import Any, Sequence
+    from typing import Any
 
-    from plotnine.typing import FloatArray
+    from plotnine.typing import FloatArray, FloatArrayLike
 
 
 # Note: distribution should be a name from scipy.stat.distribution
@@ -93,7 +93,7 @@ def theoretical_qq(
     distribution: str,
     alpha: float,
     beta: float,
-    quantiles: Sequence[float] | None,
+    quantiles: FloatArrayLike | None,
     distribution_params: dict[str, Any],
 ) -> FloatArray:
     """

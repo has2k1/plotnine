@@ -302,7 +302,7 @@ class arrow:
         last = self.ends in ("last", "both")
 
         data = data.sort_values("group", kind="mergesort")
-        data["color"] = to_rgba(data["color"], data["alpha"])
+        data["color"] = to_rgba(data["color"], data["alpha"])  # pyright: ignore[reportCallIssue,reportArgumentType]
 
         if self.type == "open":
             data["facecolor"] = "none"
