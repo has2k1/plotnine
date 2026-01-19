@@ -13,20 +13,21 @@ jobs:
 
     strategy:
       matrix:
-        python-version: [3.13]
+        python-version: [3.14]
 
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Install a specific version of uv
-        uses: astral-sh/setup-uv@v6
+        uses: astral-sh/setup-uv@v7
         with:
           python-version: ${{ matrix.python-version }}
 
       - name: Install Packages
         run: |
-          uv run uv pip install ".[extra,test]"
+          uv sync
+          uv pip install ".[extra,test]"
           uv pip install --upgrade git+https://github.com/matplotlib/matplotlib
 
       - name: Environment Information
@@ -47,21 +48,22 @@ jobs:
 
     strategy:
       matrix:
-        python-version: [3.13]
+        python-version: [3.14]
 
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Install a specific version of uv
-        uses: astral-sh/setup-uv@v6
+        uses: astral-sh/setup-uv@v7
         with:
           python-version: ${{ matrix.python-version }}
 
 
       - name: Install Packages
         run: |
-          uv run uv pip install ".[extra,test]"
+          uv sync
+          uv pip install ".[extra,test]"
           uv pip install --upgrade git+https://github.com/pandas-dev/pandas
 
       - name: Environment Information
@@ -83,7 +85,7 @@ jobs:
 
     strategy:
       matrix:
-        python-version: [3.13]
+        python-version: [3.14]
 
     steps:
       - name: Get latest release with tag from GitHub API
@@ -96,18 +98,19 @@ jobs:
           echo ${{ steps.latestrelease.outputs.latestrelease }}
 
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: ${{ steps.latestrelease.outputs.latestrelease }}
 
       - name: Install a specific version of uv
-        uses: astral-sh/setup-uv@v6
+        uses: astral-sh/setup-uv@v7
         with:
           python-version: ${{ matrix.python-version }}
 
       - name: Install Packages
         run: |
-          uv run uv pip install --upgrade git+https://github.com/matplotlib/matplotlib
+          uv sync
+          uv pip install --upgrade git+https://github.com/matplotlib/matplotlib
           uv pip install ".[extra,test]"
 
       - name: Environment Information
@@ -128,7 +131,7 @@ jobs:
 
     strategy:
       matrix:
-        python-version: [3.13]
+        python-version: [3.14]
 
     steps:
       - name: Get latest release with tag from GitHub API
@@ -141,18 +144,19 @@ jobs:
           echo ${{ steps.latestrelease.outputs.latestrelease }}
 
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: ${{ steps.latestrelease.outputs.latestrelease }}
 
       - name: Install a specific version of uv
-        uses: astral-sh/setup-uv@v6
+        uses: astral-sh/setup-uv@v7
         with:
           python-version: ${{ matrix.python-version }}
 
       - name: Install Packages
         run: |
-          uv run uv pip install --upgrade git+https://github.com/pandas-dev/pandas
+          uv sync
+          uv pip install --upgrade git+https://github.com/pandas-dev/pandas
           uv pip install ".[extra,test]"
 
       - name: Environment Information
@@ -176,11 +180,11 @@ jobs:
 
     strategy:
       matrix:
-        python-version: [3.13]
+        python-version: [3.14]
 
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Install a specific version of uv
         uses: astral-sh/setup-uv@v6
@@ -189,7 +193,8 @@ jobs:
 
       - name: Install Packages
         run: |
-          uv run uv pip install ".[extra,typing]"
+          uv sync
+          uv pip install ".[extra,typing]"
           uv pip install --upgrade git+https://github.com/matplotlib/matplotlib
 
       - name: Environment Information
@@ -205,11 +210,11 @@ jobs:
 
     strategy:
       matrix:
-        python-version: [3.13]
+        python-version: [3.14]
 
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Install a specific version of uv
         uses: astral-sh/setup-uv@v6
@@ -218,7 +223,8 @@ jobs:
 
       - name: Install Packages
         run: |
-          uv run uv pip install ".[extra,typing]"
+          uv sync
+          uv pip install ".[extra,typing]"
           uv pip install --upgrade git+https://github.com/pandas-dev/pandas
 
       - name: Environment Information
