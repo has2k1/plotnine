@@ -112,6 +112,9 @@ build: dist
 install: clean
 	$(PIP) install ".[extra]"
 
+sync:
+	uv sync --all-extras
+
 doc-dependencies:
 	$(PIP) install -e ".[doc]"
 	$(PIP) install -r requirements/doc.txt
