@@ -166,10 +166,10 @@ class geom(ABC, metaclass=Register):
         shallow = {"data", "_kwargs", "environment"}
         for key, item in old.items():
             if key in shallow:
-                new[key] = item
+                new[key] = item  # pyright: ignore[reportIndexIssue]
                 memo[id(new[key])] = new[key]
             else:
-                new[key] = deepcopy(item, memo)
+                new[key] = deepcopy(item, memo)  # pyright: ignore[reportIndexIssue]
 
         return result
 
