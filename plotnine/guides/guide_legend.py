@@ -341,7 +341,7 @@ class guide_legend(guide):
                 break
 
         chunk_boxes: list[Artist] = [
-            packer_dim1(children=chunk, align="right", sep=sep1, pad=0)
+            packer_dim1(children=chunk, align="left", sep=sep1, pad=0)
             for chunk in chunks
         ]
 
