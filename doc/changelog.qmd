@@ -23,6 +23,8 @@ title: Changelog
 
 - Fixed [](:class:`~plotnine.geom_smooth`) / [](:class:`~plotnine.stat_smooth`) when using a linear model via "lm" with weights for the model to do a weighted regression. This bug did not affect the formula API of the linear model. ({{< issue 1005 >}})
 
+- Fixed rendering of SVGs in jupyter notebooks.
+
 ## v0.15.2
 (2025-12-12)
 

@@ -55,6 +55,7 @@ def get_mimebundle(
     }
     mimetype = lookup[format]
 
+    image: bytes | str = b
     metadata: dict[str, DisplayMetadata] = {}
     w, h = figure_size_px
     if format in ("png", "jpeg"):
@@ -62,5 +63,7 @@ def get_mimebundle(
     elif format == "retina":
         # `retina=True` in IPython.display.Image just halves width/height
         metadata = {mimetype: {"width": w // 2, "height": h // 2}}
+    elif format == "svg":
+        image = b.decode()
 
-    return {mimetype: b}, metadata
+    return {mimetype: image}, metadata
