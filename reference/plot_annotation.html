@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>plot_subtitle – plotnine {{&lt; var version &gt;}}</title>
+<title>plot_annotation – plotnine {{&lt; var version &gt;}}</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -152,9 +152,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#plotnine.themes.themeable.plot_subtitle" id="toc-plotnine.themes.themeable.plot_subtitle" class="nav-link active" data-scroll-target="#plotnine.themes.themeable.plot_subtitle"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.themes.themeable.plot_subtitle</span></a></li>
-  <li><a href="#parameters" id="toc-parameters" class="nav-link" data-scroll-target="#parameters">Parameters</a></li>
-  <li><a href="#notes" id="toc-notes" class="nav-link" data-scroll-target="#notes">Notes</a></li>
+  <li><a href="#plotnine.composition.plot_annotation" id="toc-plotnine.composition.plot_annotation" class="nav-link active" data-scroll-target="#plotnine.composition.plot_annotation"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.composition.plot_annotation</span></a></li>
+  <li><a href="#parameter-attributes" id="toc-parameter-attributes" class="nav-link" data-scroll-target="#parameter-attributes">Parameter Attributes</a></li>
+  <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods">Methods</a>
+  <ul class="collapse">
+  <li><a href="#plotnine.composition.plot_annotation.empty" id="toc-plotnine.composition.plot_annotation.empty" class="nav-link" data-scroll-target="#plotnine.composition.plot_annotation.empty"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">empty</span></a></li>
+  <li><a href="#plotnine.composition.plot_annotation.update" id="toc-plotnine.composition.plot_annotation.update" class="nav-link" data-scroll-target="#plotnine.composition.plot_annotation.update"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">update</span></a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -165,32 +169,81 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <header id="title-block-header" class="quarto-title-block default">
-<section id="plotnine.themes.themeable.plot_subtitle" class="level1 title doc-object doc-class doc-has-member-docs quarto-title display-7">
-<h1 class="title doc-object doc-class doc-has-member-docs"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.themes.themeable.plot_subtitle</span></h1>
+<section id="plotnine.composition.plot_annotation" class="level1 title doc-object doc-class doc-has-member-docs quarto-title display-7">
+<h1 class="title doc-object doc-class doc-has-member-docs"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.composition.plot_annotation</span></h1>
 </section>
 </header>
 <div class="doc-signature doc-class">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>plot_subtitle(theme_element)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>plot_annotation(<span class="op">*</span>, title<span class="op">=</span><span class="va">None</span>, subtitle<span class="op">=</span><span class="va">None</span>, caption<span class="op">=</span><span class="va">None</span>, theme<span class="op">=</span>theme())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="doc-text">
-<p>Plot subtitle</p>
+<p>Annotate a composition</p>
+<p>This applies to only the top-level composition. When a composition with an annotation is added to larger composition, the annotation of the sub-composition becomes irrelevant.</p>
 </div>
-<section id="parameters" class="level2 doc-parameters">
-<h2 class="doc-parameters anchored" data-anchor-id="parameters">Parameters</h2>
+<section id="parameter-attributes" class="level2 doc-parameter-attributes">
+<h2 class="doc-parameter-attributes anchored" data-anchor-id="parameter-attributes">Parameter Attributes</h2>
 <div class="doc-definition-items">
 <dl>
-<dt><code><span class="doc-parameter-name">theme_element</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">element_text</span></code></dt>
+<dt><code>title: <a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> | None = None</code></dt>
 <dd>
-
+<p>The title of the composition</p>
+</dd>
+<dt><code>subtitle: <a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> | None = None</code></dt>
+<dd>
+<p>The subtitle of the composition</p>
+</dd>
+<dt><code>caption: <a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> | None = None</code></dt>
+<dd>
+<p>The caption of the composition</p>
+</dd>
+<dt><code><a href="../reference/plot_annotation.html#plotnine.composition._plot_annotation.plot_annotation.theme">theme</a>: <a href="../reference/plot_annotation.html#plotnine.composition._plot_annotation.plot_annotation.theme">theme</a> = field(default_factory=<a href="../reference/plot_annotation.html#plotnine.composition._plot_annotation.plot_annotation.theme">theme</a>) # pyright: ignore[reportUnboundVariable]</code></dt>
+<dd>
+<p>Theme to use for the plot title, subtitle, caption, margin and background</p>
+<p>It also controls the <code>figure_size</code> of the composition. The default theme is the same as the default one used for the plots, which you can change with <a href="../reference/theme_set.html#plotnine.theme_set"><code>theme_set</code></a>.</p>
 </dd>
 </dl>
 </div>
 </section>
-<section id="notes" class="level2 doc-notes">
-<h2 class="doc-notes anchored" data-anchor-id="notes">Notes</h2>
-<p>The default horizontal alignment for the subtitle is left. And when it is present, by default it drags the title to the left. The subtitle drags the title to the left only if none of the two has their horizontal alignment are set.</p>
+<section id="methods" class="level2 doc-methods">
+<h2 class="doc-methods anchored" data-anchor-id="methods">Methods</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="#plotnine.composition.plot_annotation.empty">empty</a></td>
+<td>Whether the annotation has any content</td>
+</tr>
+<tr class="even">
+<td><a href="#plotnine.composition.plot_annotation.update">update</a></td>
+<td>Update this annotation with the contents of other</td>
+</tr>
+</tbody>
+</table>
+<section id="plotnine.composition.plot_annotation.empty" class="level3 title doc-object doc-method">
+<h3 class="title doc-object doc-method anchored" data-anchor-id="plotnine.composition.plot_annotation.empty"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">empty</span></h3>
+<div class="doc-signature doc-method">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>empty()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="doc-text">
+<p>Whether the annotation has any content</p>
+</div>
+</section>
+<section id="plotnine.composition.plot_annotation.update" class="level3 title doc-object doc-method">
+<h3 class="title doc-object doc-method anchored" data-anchor-id="plotnine.composition.plot_annotation.update"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">update</span></h3>
+<div class="doc-signature doc-method">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>update(other)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="doc-text">
+<p>Update this annotation with the contents of other</p>
+</div>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
