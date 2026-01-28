@@ -25,6 +25,14 @@ title: Changelog
 
 - Fixed rendering of SVGs in jupyter notebooks.
 
+## v0.15.3
+(2025-01-28)
+
+### Enhancements
+
+- Removed warnings about copy-on-write for pandas >= 3.0.0
+
+
 ## v0.15.2
 (2025-12-12)
 

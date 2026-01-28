@@ -28,7 +28,7 @@ dependencies = [
     "mizani~=0.14.0",
     "numpy>=1.23.5",
     "scipy>=1.8.0",
-    "statsmodels>=0.14.5",
+    "statsmodels>=0.14.6",
 ]
 requires-python = ">=3.10"
 
