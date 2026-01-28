@@ -5,6 +5,7 @@ import numpy as np
 import numpy.testing as npt
 import pandas as pd
 import pytest
+from packaging.version import Version
 
 import plotnine as p9
 from plotnine import (
@@ -56,6 +57,8 @@ from plotnine.scales.scale_xy import (
     scale_y_log10,
 )
 from plotnine.scales.scales import make_scale
+
+PANDAS_LT_3 = Version(pd.__version__) < Version("3.0")
 
 
 # test palettes
@@ -630,6 +633,7 @@ def test_missing_data_discrete_scale():
     assert p == "missing_data_discrete_scale"
 
 
+@pytest.mark.skipif(PANDAS_LT_3, reason="Fails on pandas<3")
 def test_missing_data_discrete_position_scale():
     data = pd.DataFrame({"a": [1, 2, 3], "b": ["a", "b", None]})
 
