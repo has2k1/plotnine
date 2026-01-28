@@ -2,13 +2,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.16">
+<meta name="generator" content="quarto-1.9.17">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
 <title>compose – plotnine {{&lt; var version &gt;}}</title>
 <style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -73,7 +76,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-a67ac2868200dddf7a4f0e3ae403775c.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-ce4278342a015d016477ed09bce942c5.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../site_libs/bootstrap/bootstrap-85b4de2bf33afbfb074cbe3ad37e92ce.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
@@ -116,7 +119,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine 0.16.0a2</span>
+    <span class="navbar-title">plotnine 0.15.3rc1</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -153,12 +156,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#plotnine.composition.Compose" id="toc-plotnine.composition.Compose" class="nav-link active" data-scroll-target="#plotnine.composition.Compose"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.composition.Compose</span></a></li>
-  <li><a href="#parameters" id="toc-parameters" class="nav-link" data-scroll-target="#parameters">Parameters</a></li>
+  <li><a href="#parameter-attributes" id="toc-parameter-attributes" class="nav-link" data-scroll-target="#parameter-attributes">Parameter Attributes</a></li>
   <li><a href="#see-also" id="toc-see-also" class="nav-link" data-scroll-target="#see-also">See Also</a></li>
   <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods">Methods</a>
   <ul class="collapse">
   <li><a href="#plotnine.composition.Compose.draw" id="toc-plotnine.composition.Compose.draw" class="nav-link" data-scroll-target="#plotnine.composition.Compose.draw"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">draw</span></a></li>
-  <li><a href="#plotnine.composition.Compose.iter_plots_all" id="toc-plotnine.composition.Compose.iter_plots_all" class="nav-link" data-scroll-target="#plotnine.composition.Compose.iter_plots_all"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">iter_plots_all</span></a></li>
   <li><a href="#plotnine.composition.Compose.save" id="toc-plotnine.composition.Compose.save" class="nav-link" data-scroll-target="#plotnine.composition.Compose.save"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">save</span></a></li>
   <li><a href="#plotnine.composition.Compose.show" id="toc-plotnine.composition.Compose.show" class="nav-link" data-scroll-target="#plotnine.composition.Compose.show"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">show</span></a></li>
   </ul></li>
@@ -198,10 +200,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <dd>
 <p>Arrange operands side by side <em>and</em> at the same nesting level. Also powered by the subclass <a href="../reference/Beside.html#plotnine.composition.Beside"><code>Beside</code></a>.</p>
 </dd>
-<dt><code>+</code></dt>
-<dd>
-<p>Arrange operands in a 2D grid. Powered by the subclass <a href="../reference/Wrap.html#plotnine.composition.Wrap"><code>Wrap</code></a>.</p>
-</dd>
 </dl>
 </section>
 <section id="plot-modifying-operators" class="level3">
@@ -218,18 +216,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </dd>
 <dt><code>+</code></dt>
 <dd>
-<p>Add right hand side to the last plot in the composition.</p>
+Add right hand side to the last plot in the composition.
 </dd>
 </dl>
 </section>
 </div>
-<section id="parameters" class="level2 doc-parameters">
-<h2 class="doc-parameters anchored" data-anchor-id="parameters">Parameters</h2>
+<section id="parameter-attributes" class="level2 doc-parameter-attributes">
+<h2 class="doc-parameter-attributes anchored" data-anchor-id="parameter-attributes">Parameter Attributes</h2>
 <div class="doc-definition-items">
 <dl>
-<dt><code><span class="doc-parameter-name">items</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#list">list</a>[<a href="../reference/ggplot.html#plotnine.ggplot">ggplot</a> | <a href="../reference/Compose.html#plotnine.composition.Compose">Compose</a>]</span></code></dt>
+<dt><code>items: <a href="https://docs.python.org/3/library/stdtypes.html#list">list</a>[<a href="../reference/ggplot.html#plotnine.ggplot">ggplot</a> | <a href="../reference/Compose.html#plotnine.composition.Compose">Compose</a>]</code></dt>
 <dd>
-<p>The objects to be arranged (composed)</p>
+The objects to be arranged (composed).
 </dd>
 </dl>
 </div>
@@ -244,10 +242,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <dt><a href="../reference/Stack.html#plotnine.composition.Stack"><code>Stack</code></a></dt>
 <dd>
 <p>To arrange plots vertically</p>
-</dd>
-<dt><a href="../reference/Wrap.html#plotnine.composition.Wrap"><code>Wrap</code></a></dt>
-<dd>
-<p>To arrange in a grid</p>
 </dd>
 <dt><a href="../reference/plot_spacer.html#plotnine.composition.plot_spacer"><code>plot_spacer</code></a></dt>
 <dd>
@@ -270,14 +264,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>Render the arranged plots</td>
 </tr>
 <tr class="even">
-<td><a href="#plotnine.composition.Compose.iter_plots_all">iter_plots_all</a></td>
-<td>Recursively generate all plots under this composition</td>
-</tr>
-<tr class="odd">
 <td><a href="#plotnine.composition.Compose.save">save</a></td>
 <td>Save a composition as an image file</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><a href="#plotnine.composition.Compose.show">show</a></td>
 <td>Display plot in the cells output</td>
 </tr>
@@ -291,13 +281,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="doc-text">
 <p>Render the arranged plots</p>
 </div>
-<section id="parameters-1" class="level4 doc-parameters">
-<h4 class="doc-parameters anchored" data-anchor-id="parameters-1">Parameters</h4>
+<section id="parameters" class="level4 doc-parameters">
+<h4 class="doc-parameters anchored" data-anchor-id="parameters">Parameters</h4>
 <div class="doc-definition-items">
 <dl>
 <dt><code><span class="doc-parameter-name">show</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#bool">bool</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">False</span></code></dt>
 <dd>
-<p>Whether to show the plot.</p>
+Whether to show the plot.
 </dd>
 </dl>
 </div>
@@ -308,31 +298,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <dl>
 <dt><code><span class="doc-parameter-annotation"><a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure">Figure</a></span></code></dt>
 <dd>
-<p>Matplotlib figure</p>
+Matplotlib figure
 </dd>
 </dl>
 </div>
 </section>
 </section>
-<section id="plotnine.composition.Compose.iter_plots_all" class="level3 title doc-object doc-method">
-<h3 class="title doc-object doc-method anchored" data-anchor-id="plotnine.composition.Compose.iter_plots_all"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">iter_plots_all</span></h3>
-<div class="doc-signature doc-method">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>iter_plots_all()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div class="doc-text">
-<p>Recursively generate all plots under this composition</p>
-</div>
-</section>
 <section id="plotnine.composition.Compose.save" class="level3 title doc-object doc-method">
 <h3 class="title doc-object doc-method anchored" data-anchor-id="plotnine.composition.Compose.save"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">save</span></h3>
 <div class="doc-signature doc-method">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>save(filename, <span class="bu">format</span><span class="op">=</span><span class="va">None</span>, dpi<span class="op">=</span><span class="va">None</span>, <span class="op">**</span>kwargs)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>save(filename, <span class="bu">format</span><span class="op">=</span><span class="va">None</span>, dpi<span class="op">=</span><span class="va">None</span>, <span class="op">**</span>kwargs)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="doc-text">
 <p>Save a composition as an image file</p>
 </div>
-<section id="parameters-2" class="level4 doc-parameters">
-<h4 class="doc-parameters anchored" data-anchor-id="parameters-2">Parameters</h4>
+<section id="parameters-1" class="level4 doc-parameters">
+<h4 class="doc-parameters anchored" data-anchor-id="parameters-1">Parameters</h4>
 <div class="doc-definition-items">
 <dl>
 <dt><code><span class="doc-parameter-name">filename</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> | <a href="https://docs.python.org/3/library/pathlib.html#pathlib.Path">Path</a> | <a href="https://docs.python.org/3/library/io.html#io.BytesIO">BytesIO</a></span></code></dt>
@@ -349,7 +330,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </dd>
 <dt><code><span class="doc-parameter-name">**kwargs</span></code></dt>
 <dd>
-<p>These are ignored. Here to “softly” match the API of <code>ggplot.save()</code>.</p>
+These are ignored. Here to “softly” match the API of <code>ggplot.save()</code>.
 </dd>
 </dl>
 </div>
@@ -358,7 +339,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="plotnine.composition.Compose.show" class="level3 title doc-object doc-method">
 <h3 class="title doc-object doc-method anchored" data-anchor-id="plotnine.composition.Compose.show"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">show</span></h3>
 <div class="doc-signature doc-method">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="doc-text">
 <p>Display plot in the cells output</p>
