@@ -633,12 +633,11 @@ def test_missing_data_discrete_scale():
 def test_missing_data_discrete_position_scale():
     data = pd.DataFrame({"a": [1, 2, 3], "b": ["a", "b", None]})
 
+    # The missing data is not removed
     p = ggplot(data, aes("a", "b")) + geom_point(
         aes(fill="b"), stroke=0, size=10
     )
-
-    with pytest.warns(PlotnineWarning):
-        assert p == "missing_data_discrete_position_scale"
+    assert p == "missing_data_discrete_position_scale"
 
 
 data = pd.DataFrame(
