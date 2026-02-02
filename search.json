@@ -4,14 +4,14 @@
     "href": "changelog.html",
     "title": "Changelog",
     "section": "",
-    "text": "(not-yet-released)\n\n\n\nAdded plot_layout with which you can customise the layout of plots in composition.\nYou can now pass a sequence of horizontal and vertical alignment (ha & va) values in element_text for colorbars.\nYou can now use a sequence to set the position of each text on colorbar, or have the positions alternate left and right or bottom and top.\nAdded plot_annotation, allowing you to add title, subtitle or caption to a composition.\n\n\n\n\n\nFixed geom_smooth / stat_smooth when using a linear model via “lm” with weights for the model to do a weighted regression. This bug did not affect the formula API of the linear model. (#1005)\nFixed rendering of SVGs in jupyter notebooks."
+    "text": "(not-yet-released)\n\n\n\nAdded plot_layout with which you can customise the layout of plots in composition.\nYou can now pass a sequence of horizontal and vertical alignment (ha & va) values in element_text for colorbars.\nYou can now use a sequence to set the position of each text on colorbar, or have the positions alternate left and right or bottom and top.\nAdded plot_annotation, allowing you to add title, subtitle or caption to a composition.\n\n\n\n\n\nFixed geom_smooth / stat_smooth when using a linear model via “lm” with weights for the model to do a weighted regression. This bug did not affect the formula API of the linear model. (#1005)\nFixed rendering of SVGs in jupyter notebooks.\nFixed geom_legend to show an empty key for geom_point when the shape is mapped to variable with missing values."
   },
   {
     "objectID": "changelog.html#v0.16.0",
     "href": "changelog.html#v0.16.0",
     "title": "Changelog",
     "section": "",
-    "text": "(not-yet-released)\n\n\n\nAdded plot_layout with which you can customise the layout of plots in composition.\nYou can now pass a sequence of horizontal and vertical alignment (ha & va) values in element_text for colorbars.\nYou can now use a sequence to set the position of each text on colorbar, or have the positions alternate left and right or bottom and top.\nAdded plot_annotation, allowing you to add title, subtitle or caption to a composition.\n\n\n\n\n\nFixed geom_smooth / stat_smooth when using a linear model via “lm” with weights for the model to do a weighted regression. This bug did not affect the formula API of the linear model. (#1005)\nFixed rendering of SVGs in jupyter notebooks."
+    "text": "(not-yet-released)\n\n\n\nAdded plot_layout with which you can customise the layout of plots in composition.\nYou can now pass a sequence of horizontal and vertical alignment (ha & va) values in element_text for colorbars.\nYou can now use a sequence to set the position of each text on colorbar, or have the positions alternate left and right or bottom and top.\nAdded plot_annotation, allowing you to add title, subtitle or caption to a composition.\n\n\n\n\n\nFixed geom_smooth / stat_smooth when using a linear model via “lm” with weights for the model to do a weighted regression. This bug did not affect the formula API of the linear model. (#1005)\nFixed rendering of SVGs in jupyter notebooks.\nFixed geom_legend to show an empty key for geom_point when the shape is mapped to variable with missing values."
   },
   {
     "objectID": "changelog.html#v0.15.3",
