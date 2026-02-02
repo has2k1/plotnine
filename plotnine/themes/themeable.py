@@ -768,6 +768,28 @@ class plot_caption(themeable):
             text.set_visible(False)
 
 
+class plot_footer(themeable):
+    """
+    Plot footer
+
+    Parameters
+    ----------
+    theme_element : element_text
+    """
+
+    _omit = ["margin"]
+
+    def apply_figure(self, figure: Figure, targets: ThemeTargets):
+        super().apply_figure(figure, targets)
+        if text := targets.plot_footer:
+            text.set(**self.properties)
+
+    def blank_figure(self, figure: Figure, targets: ThemeTargets):
+        super().blank_figure(figure, targets)
+        if text := targets.plot_footer:
+            text.set_visible(False)
+
+
 class plot_tag(themeable):
     """
     Plot tag
@@ -829,6 +851,19 @@ class plot_caption_position(themeable):
     ----------
     theme_element : Literal["panel", "plot"], default = "panel"
         If "panel", the caption is aligned with respect to the
+        panels. If "plot", it is aligned with the plot, excluding
+        the margin space.
+    """
+
+
+class plot_footer_position(themeable):
+    """
+    How to align the plot footer
+
+    Parameters
+    ----------
+    theme_element : Literal["panel", "plot"], default = "plot"
+        If "panel", the footer is aligned with respect to the
         panels. If "plot", it is aligned with the plot, excluding
         the margin space.
     """
@@ -919,7 +954,13 @@ class strip_text(strip_text_x, strip_text_y):
 
 
 class title(
-    axis_title, legend_title, plot_title, plot_subtitle, plot_caption, plot_tag
+    axis_title,
+    legend_title,
+    plot_title,
+    plot_subtitle,
+    plot_caption,
+    plot_footer,
+    plot_tag,
 ):
     """
     All titles on the plot

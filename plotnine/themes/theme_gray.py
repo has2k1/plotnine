@@ -109,6 +109,13 @@ class theme_gray(theme):
                 ma="left",
                 margin=margin(t=m, unit="fig"),
             ),
+            plot_footer=element_text(
+                size=base_size * 0.8,
+                ha="left",
+                va="bottom",
+                ma="left",
+                margin=margin(t=1 / 3, b=1 / 3, unit="lines"),
+            ),
             plot_margin=m,
             plot_subtitle=element_text(
                 va="top",
@@ -128,6 +135,7 @@ class theme_gray(theme):
             ),
             plot_title_position="panel",
             plot_caption_position="panel",
+            plot_footer_position="plot",
             plot_tag_location="margin",
             plot_tag_position="topleft",
             strip_align=0,

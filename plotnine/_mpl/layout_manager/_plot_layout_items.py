@@ -86,6 +86,7 @@ class PlotLayoutItems:
         # # AnchoredOffsetboxes (groups of legends)
         self.legends: legend_artists | None = get("legends")
         self.plot_caption: Text | None = get("plot_caption")
+        self.plot_footer: Text | None = get("plot_footer")
         self.plot_subtitle: Text | None = get("plot_subtitle")
         self.plot_title: Text | None = get("plot_title")
         self.plot_tag: Text | None = get("plot_tag")
@@ -345,6 +346,7 @@ class PlotLayoutItems:
         theme = self.plot.theme
         plot_title_position = theme.getp("plot_title_position", "panel")
         plot_caption_position = theme.getp("plot_caption_position", "panel")
+        plot_footer_position = theme.getp("plot_footer_position", "plot")
         justify = PlotTextJustifier(spaces)
 
         if self.plot_tag:
@@ -369,6 +371,13 @@ class PlotLayoutItems:
             self.plot_caption.set_y(spaces.b.y1("plot_caption"))
             justify.horizontally_about(
                 self.plot_caption, ha, plot_caption_position
+            )
+
+        if self.plot_footer:
+            ha = theme.getp(("plot_footer", "ha"), "left")
+            self.plot_footer.set_y(spaces.b.y1("plot_footer"))
+            justify.horizontally_about(
+                self.plot_footer, ha, plot_footer_position
             )
 
         if self.axis_title_x:

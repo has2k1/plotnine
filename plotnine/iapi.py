@@ -66,7 +66,7 @@ class range_view:
 @dataclass
 class labels_view:
     """
-    Scale labels (incl. caption & title) for the plot
+    Scale labels (incl. caption, title, footer) for the plot
     """
 
     x: Optional[str] = None
@@ -80,8 +80,9 @@ class labels_view:
     size: Optional[str] = None
     stroke: Optional[str] = None
     title: Optional[str] = None
-    caption: Optional[str] = None
     subtitle: Optional[str] = None
+    caption: Optional[str] = None
+    footer: Optional[str] = None
     tag: Optional[str] = None
 
     def update(self, other: labels_view):

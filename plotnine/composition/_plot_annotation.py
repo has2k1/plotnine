@@ -36,9 +36,14 @@ class plot_annotation(ComposeAddable):
     The caption of the composition
     """
 
+    footer: str | None = None
+    """
+    The footer of the composition
+    """
+
     theme: theme = field(default_factory=theme)  # pyright: ignore[reportUnboundVariable]
     """
-    Theme to use for the plot title, subtitle, caption, margin and background
+    Theme for the plot title, subtitle, caption, footer, margin and background
 
     It also controls the [](`~plotnine.themes.themeables.figure_size`) of the
     composition. The default theme is the same as the default one used for the
