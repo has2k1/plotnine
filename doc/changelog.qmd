@@ -25,6 +25,10 @@ title: Changelog
 
 - Fixed rendering of SVGs in jupyter notebooks.
 
+- Fixed [](:class:`~plotnine.geom_legend`) to show an empty key for
+  [](:class:`~plotnine.geom_point`) when the shape is mapped to variable with missing
+  values.
+
 ## v0.15.3
 (2025-01-28)
 

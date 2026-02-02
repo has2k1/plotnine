@@ -272,9 +272,12 @@ class guide_legend(guide):
         # Drawings
         drawings: list[ColoredDrawingArea] = []
         for i in range(nbreak):
-            da = ColoredDrawingArea(
-                elements.key_widths[i], elements.key_heights[i], 0, 0
-            )
+            try:
+                w, h = elements.key_widths[i], elements.key_heights[i]
+            except IndexError:
+                w, h = elements.empty_key_size
+
+            da = ColoredDrawingArea(w, h, 0, 0)
 
             # overlay geoms
             for params in self._layer_parameters:
@@ -482,3 +485,14 @@ class GuideElementsLegend(GuideElements):
         if self.is_horizontal:
             return [max(hs)] * len(hs)
         return hs
+
+    @cached_property
+    def empty_key_size(self) -> tuple[float, float]:
+        """
+        Size of an empty key
+        """
+        return (
+            (max(self.key_widths), min(self.key_heights))
+            if self.is_vertical
+            else (min(self.key_widths), max(self.key_heights))
+        )
