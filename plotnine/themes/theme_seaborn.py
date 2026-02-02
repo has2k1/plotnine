@@ -108,6 +108,7 @@ class theme_seaborn(theme):
                 margin=margin(t=1 / 3, b=1 / 3, unit="lines"),
             ),
             plot_footer_background=element_blank(),
+            plot_footer_line=element_blank(),
             plot_margin=m,
             plot_subtitle=element_text(
                 size=base_size * 1,

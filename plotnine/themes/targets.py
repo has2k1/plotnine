@@ -7,6 +7,7 @@ if TYPE_CHECKING:
     from typing import Optional
 
     from matplotlib.collections import LineCollection
+    from matplotlib.lines import Line2D
     from matplotlib.patches import Rectangle
     from matplotlib.text import Text
 
@@ -42,6 +43,7 @@ class ThemeTargets:
     plot_title: Optional[Text] = None
     plot_background: Optional[Rectangle] = None
     plot_footer_background: Optional[Rectangle] = None
+    plot_footer_line: Optional[Line2D] = None
     strip_background_x: list[StripTextPatch] = field(default_factory=list)
     strip_background_y: list[StripTextPatch] = field(default_factory=list)
     strip_text_x: list[StripText] = field(default_factory=list)

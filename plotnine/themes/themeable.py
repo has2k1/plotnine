@@ -1517,7 +1517,27 @@ class panel_grid(panel_grid_major, panel_grid_minor):
     """
 
 
-class line(axis_line, axis_ticks, panel_grid, legend_ticks):
+class plot_footer_line(themeable):
+    """
+    Line above the footer
+
+    Parameters
+    ----------
+    theme_element : element_line
+    """
+
+    def apply_figure(self, figure: Figure, targets: ThemeTargets):
+        super().apply_figure(figure, targets)
+        if targets.plot_footer_line:
+            targets.plot_footer_line.set(**self.properties)
+
+    def blank_figure(self, figure: Figure, targets: ThemeTargets):
+        super().blank_figure(figure, targets)
+        if targets.plot_footer_line:
+            targets.plot_footer_line.set_visible(False)
+
+
+class line(axis_line, axis_ticks, panel_grid, legend_ticks, plot_footer_line):
     """
     All line elements
 

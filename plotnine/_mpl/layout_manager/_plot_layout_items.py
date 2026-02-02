@@ -26,6 +26,7 @@ if TYPE_CHECKING:
 
     from matplotlib.axes import Axes
     from matplotlib.axis import Tick
+    from matplotlib.lines import Line2D
     from matplotlib.patches import Rectangle
     from matplotlib.transforms import Transform
 
@@ -97,6 +98,7 @@ class PlotLayoutItems:
         self.plot_footer_background: Rectangle | None = get(
             "plot_footer_background"
         )
+        self.plot_footer_line: Line2D | None = get("plot_footer_line")
 
     def _is_blank(self, name: str) -> bool:
         return self.plot.theme.T.is_blank(name)
@@ -385,6 +387,7 @@ class PlotLayoutItems:
                 self.plot_footer, ha, plot_footer_position
             )
             self._resize_plot_footer_background(spaces)
+            self._resize_plot_footer_line(spaces)
 
         if self.axis_title_x:
             ha = theme.getp(("axis_title_x", "ha"), "center")
@@ -531,6 +534,19 @@ class PlotLayoutItems:
         self.plot_footer_background.set_y(spaces.b.offset)
         self.plot_footer_background.set_height(spaces.b.footer_height)
         self.plot_footer_background.set_width(spaces.plot_width)
+
+    def _resize_plot_footer_line(self, spaces: PlotSideSpaces):
+        """
+        Resize the footer line to be a border above the footer
+        """
+        if not self.plot_footer_line:
+            return
+
+        x1 = spaces.l.offset
+        x2 = x1 + spaces.plot_width
+        y1 = y2 = spaces.b.offset + spaces.b.footer_height
+        self.plot_footer_line.set_xdata([x1, x2])
+        self.plot_footer_line.set_ydata([y1, y2])
 
 
 def _text_is_visible(text: Text) -> bool:
