@@ -218,10 +218,10 @@ class composition_bottom_space(_composition_side_space):
     Ordered from the edge of the figure and going inwards
     """
 
-    plot_margin: float = 0
     plot_footer_margin_bottom: float = 0
     plot_footer: float = 0
     plot_footer_margin_top: float = 0
+    plot_margin: float = 0
     plot_caption_margin_bottom: float = 0
     plot_caption: float = 0
     plot_caption_margin_top: float = 0
@@ -276,6 +276,17 @@ class composition_bottom_space(_composition_side_space):
         Higher y-coordinate in figure space of the item
         """
         return self.to_figure_space(self.sum_incl(item))
+
+    @property
+    def footer_height(self):
+        """
+        The height of the footer including the margins
+        """
+        return (
+            self.plot_footer_margin_bottom
+            + self.plot_footer
+            + self.plot_footer_margin_top
+        )
 
     @property
     def items_bottom_relative(self):
@@ -368,6 +379,20 @@ class CompositionSideSpaces:
             0,
             0,
         )
+
+    @property
+    def plot_width(self) -> float:
+        """
+        Width [figure dimensions] of the whole plot composition
+        """
+        return float(self.gridspec.width)
+
+    @property
+    def plot_height(self) -> float:
+        """
+        Height [figure dimensions] of the whole plot composition
+        """
+        return float(self.gridspec.height)
 
     @property
     def horizontal_space(self) -> float:

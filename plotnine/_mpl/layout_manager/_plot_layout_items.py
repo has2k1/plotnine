@@ -26,6 +26,7 @@ if TYPE_CHECKING:
 
     from matplotlib.axes import Axes
     from matplotlib.axis import Tick
+    from matplotlib.patches import Rectangle
     from matplotlib.transforms import Transform
 
     from plotnine import ggplot
@@ -92,6 +93,10 @@ class PlotLayoutItems:
         self.plot_tag: Text | None = get("plot_tag")
         self.strip_text_x: list[StripText] | None = get("strip_text_x")
         self.strip_text_y: list[StripText] | None = get("strip_text_y")
+
+        self.plot_footer_background: Rectangle | None = get(
+            "plot_footer_background"
+        )
 
     def _is_blank(self, name: str) -> bool:
         return self.plot.theme.T.is_blank(name)
@@ -379,6 +384,7 @@ class PlotLayoutItems:
             justify.horizontally_about(
                 self.plot_footer, ha, plot_footer_position
             )
+            self._resize_plot_footer_background(spaces)
 
         if self.axis_title_x:
             ha = theme.getp(("axis_title_x", "ha"), "center")
@@ -513,6 +519,18 @@ class PlotLayoutItems:
         relative_widths = [max_width / w for w in widths]
         for text, scale in zip(self.strip_text_y, relative_widths):
             text.patch.expand = scale
+
+    def _resize_plot_footer_background(self, spaces: PlotSideSpaces):
+        """
+        Resize the plot footer to the size of the footer
+        """
+        if not self.plot_footer_background:
+            return
+
+        self.plot_footer_background.set_x(spaces.l.offset)
+        self.plot_footer_background.set_y(spaces.b.offset)
+        self.plot_footer_background.set_height(spaces.b.footer_height)
+        self.plot_footer_background.set_width(spaces.plot_width)
 
 
 def _text_is_visible(text: Text) -> bool:

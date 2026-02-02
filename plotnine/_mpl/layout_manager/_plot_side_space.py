@@ -553,15 +553,15 @@ class bottom_space(_plot_side_space):
     Ordered from the edge of the figure and going inwards
     """
 
+    plot_footer_margin_bottom: float = 0
+    plot_footer: float = 0
+    plot_footer_margin_top: float = 0
     plot_margin: float = 0
     tag_alignment: float = 0
     plot_tag_margin_bottom: float = 0
     plot_tag: float = 0
     plot_tag_margin_top: float = 0
     margin_alignment: float = 0
-    plot_footer_margin_bottom: float = 0
-    plot_footer: float = 0
-    plot_footer_margin_top: float = 0
     plot_caption_margin_bottom: float = 0
     plot_caption: float = 0
     plot_caption_margin_top: float = 0
@@ -688,6 +688,17 @@ class bottom_space(_plot_side_space):
         Distance up to the bottom-most artist in figure space
         """
         return self.y1("legend")
+
+    @property
+    def footer_height(self):
+        """
+        The height of the footer including the margins
+        """
+        return (
+            self.plot_footer_margin_bottom
+            + self.plot_footer
+            + self.plot_footer_margin_top
+        )
 
     @property
     def tag_height(self):

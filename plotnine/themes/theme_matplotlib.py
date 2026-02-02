@@ -98,6 +98,7 @@ class theme_matplotlib(theme):
                 ma="left",
                 margin=margin(b=m, unit="fig"),
             ),
+            plot_footer_background=element_blank(),
             plot_title=element_text(
                 va="top",
                 ma="left",

@@ -19,6 +19,24 @@ title: Changelog
 - Added [](:class:`~plotnine.composition.plot_annotation`), allowing you to add title,
   subtitle or caption to a composition.
 
+
+- [](:class:`~plotnine.labs`) can now be used to create a `footer`.
+  This footer can be styled using the `plot_footer` parameter to [](:class:`~plotnine.theme`).
+
+  ```python
+  theme(plot_footer=element_text(size=13))
+  ```
+  And you can also give the footer a background with:
+
+  ```python
+  theme(plot_footer_background=element_text(fill="pink"))
+  ```
+
+- Added footer labels which are placed below the caption.
+
+  which you can set with  [](:class:`~plotnine.themeable.`), allowing you to add title,
+  subtitle or caption to a composition.
+
 ### Bug Fixes
 
 - Fixed [](:class:`~plotnine.geom_smooth`) / [](:class:`~plotnine.stat_smooth`) when using a linear model via "lm" with weights for the model to do a weighted regression. This bug did not affect the formula API of the linear model. ({{< issue 1005 >}})

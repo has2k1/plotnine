@@ -41,6 +41,7 @@ class ThemeTargets:
     plot_tag: Optional[Text] = None
     plot_title: Optional[Text] = None
     plot_background: Optional[Rectangle] = None
+    plot_footer_background: Optional[Rectangle] = None
     strip_background_x: list[StripTextPatch] = field(default_factory=list)
     strip_background_y: list[StripTextPatch] = field(default_factory=list)
     strip_text_x: list[StripText] = field(default_factory=list)
