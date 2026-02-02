@@ -159,6 +159,7 @@ class theme:
         panel_grid_major=None,
         panel_grid_minor=None,
         panel_grid=None,
+        plot_footer_line=None,
         line=None,
         legend_key=None,
         legend_frame=None,

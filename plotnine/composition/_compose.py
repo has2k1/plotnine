@@ -123,6 +123,7 @@ class Compose:
     |   -------------   |
     |                   |
     |           caption |
+    |-------------------|
     |       footer      |
      -------------------
     """
@@ -574,6 +575,7 @@ class Compose:
         """
         Draw the background rectangle of the composition
         """
+        from matplotlib.lines import Line2D
         from matplotlib.patches import Rectangle
 
         zorder = -1000
@@ -588,6 +590,12 @@ class Compose:
             )
             self.figure.add_artist(rect)
             self.theme.targets.plot_footer_background = rect
+
+            line = Line2D(
+                [0, 0], [0, 0], color="none", linewidth=0, zorder=zorder + 2
+            )
+            self.figure.add_artist(line)
+            self.theme.targets.plot_footer_line = line
 
     def _draw_annotation(self):
         """

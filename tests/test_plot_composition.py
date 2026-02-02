@@ -1,6 +1,8 @@
 import pytest
 
 from plotnine import (
+    element_line,
+    element_rect,
     element_text,
     facet_grid,
     facet_wrap,
@@ -397,3 +399,39 @@ def test_plot_annotation_addition():
 
     assert p == "plot_annotation_addition"
     assert p_alt == "plot_annotation_addition"
+
+
+def test_footers():
+    def _make_footer(color):
+        return [
+            labs(
+                footer=f"{color.title()} Footer",
+                caption=f"The {color} caption",
+            ),
+            theme(
+                plot_footer=element_text(color=color),
+                plot_footer_line=element_line(color=color),
+                plot_caption=element_text(color=color, style="italic", size=8),
+                plot_footer_position="panel",
+            ),
+        ]
+
+    p1 = plot.red + _make_footer("red")
+    p2 = plot.green + _make_footer("green")
+    p3 = plot.blue + _make_footer("blue")
+    ann = plot_annotation(
+        title="The Title of the Red, Green and Blue Composition",
+        subtitle="The subtitle of the red, green and blue composition",
+        caption="The caption of the red, green and blue composition",
+        footer="THE COMPOSITION FOOTER",
+        theme=theme(
+            plot_margin_left=0,
+            plot_margin_right=0,
+            plot_title_position="plot",
+            plot_footer=element_text(weight="bold"),
+            plot_footer_line=element_line(size=0.75),
+            plot_footer_background=element_rect(fill="lightgray"),
+        ),
+    )
+    p = ((p1 | p2) / p3) + ann
+    assert p == "footers"
