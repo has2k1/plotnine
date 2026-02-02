@@ -168,6 +168,10 @@ class TestLayout:
         )
         assert p == "plot_titles_and_caption_positioning"
 
+    def test_plot_footer(self):
+        p = self.g + labs(footer="Source: Data Vault | By: The Team")
+        assert p == "plot_footer"
+
 
 class TestLegendPositioning:
     g = ggplot(mtcars, aes(x="wt", y="mpg", color="gear")) + geom_point()

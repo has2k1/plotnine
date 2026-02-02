@@ -127,6 +127,7 @@ class ggplot:
     |   axis_text             |
     |   axis_title            |
     |                 caption |
+    |          footer         |
      -------------------------
     """
 
@@ -553,6 +554,7 @@ class ggplot:
         subtitle = self.labels.get("subtitle", "")
         caption = self.labels.get("caption", "")
         tag = self.labels.get("tag", "")
+        footer = self.labels.get("footer", "")
 
         # Get the axis labels (default or specified by user)
         # and let the coordinate modify them e.g. flip
@@ -569,6 +571,9 @@ class ggplot:
 
         if caption:
             targets.plot_caption = figure.text(0, 0, caption)
+
+        if footer:
+            targets.plot_footer = figure.text(0, 0, footer)
 
         if tag:
             targets.plot_tag = figure.text(0, 0, tag)

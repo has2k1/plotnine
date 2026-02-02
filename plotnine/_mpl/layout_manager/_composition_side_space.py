@@ -219,6 +219,9 @@ class composition_bottom_space(_composition_side_space):
     """
 
     plot_margin: float = 0
+    plot_footer_margin_bottom: float = 0
+    plot_footer: float = 0
+    plot_footer_margin_top: float = 0
     plot_caption_margin_bottom: float = 0
     plot_caption: float = 0
     plot_caption_margin_top: float = 0
@@ -231,6 +234,11 @@ class composition_bottom_space(_composition_side_space):
         F = W / H
 
         self.plot_margin = theme.getp("plot_margin_bottom") * F
+        if items.plot_footer:
+            m = theme.get_margin("plot_footer").fig
+            self.plot_footer_margin_bottom = m.b * F
+            self.plot_footer = geometry.height(items.plot_footer)
+            self.plot_footer_margin_top = m.t * F
 
         if items.plot_caption:
             m = theme.get_margin("plot_caption").fig

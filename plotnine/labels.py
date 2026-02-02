@@ -90,6 +90,13 @@ class labs:
     The caption at the bottom of the plot.
     """
 
+    footer: str | None = None
+    """
+    The footer at the bottom of the plot
+
+    The footer when added is below the caption
+    """
+
     tag: str | None = None
     """
     A plot tag

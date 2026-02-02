@@ -44,6 +44,7 @@ class CompositionLayoutItems:
         self.plot_title: Text | None = get("plot_title")
         self.plot_subtitle: Text | None = get("plot_subtitle")
         self.plot_caption: Text | None = get("plot_caption")
+        self.plot_footer: Text | None = get("plot_footer")
 
     def _is_blank(self, name: str) -> bool:
         return self.cmp.theme.T.is_blank(name)
@@ -55,6 +56,7 @@ class CompositionLayoutItems:
         theme = self.cmp.theme
         plot_title_position = theme.getp("plot_title_position", "panel")
         plot_caption_position = theme.getp("plot_caption_position", "panel")
+        plot_footer_position = theme.getp("plot_footer_position", "plot")
         justify = CompositionTextJustifier(spaces)
 
         if self.plot_title:
@@ -76,6 +78,13 @@ class CompositionLayoutItems:
             self.plot_caption.set_y(spaces.b.y1("plot_caption"))
             justify.horizontally_about(
                 self.plot_caption, ha, plot_caption_position
+            )
+
+        if self.plot_footer:
+            ha = theme.getp(("plot_footer", "ha"), "left")
+            self.plot_footer.set_y(spaces.b.y1("plot_footer"))
+            justify.horizontally_about(
+                self.plot_footer, ha, plot_footer_position
             )
 
 

@@ -123,6 +123,7 @@ class Compose:
     |   -------------   |
     |                   |
     |           caption |
+    |       footer      |
      -------------------
     """
     _sidespaces: CompositionSideSpaces
@@ -601,6 +602,9 @@ class Compose:
 
         if caption := self.annotation.caption:
             targets.plot_caption = figure.text(0, 0, caption)
+
+        if footer := self.annotation.footer:
+            targets.plot_footer = figure.text(0, 0, footer)
 
     def save(
         self,

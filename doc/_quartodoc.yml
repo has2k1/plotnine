@@ -477,6 +477,8 @@ quartodoc:
         - plot_background
         - plot_caption
         - plot_caption_position
+        - plot_footer
+        - plot_footer_position
         - plot_margin
         - plot_margin_bottom
         - plot_margin_left
