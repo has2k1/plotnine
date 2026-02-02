@@ -41,3 +41,9 @@ def test_guide_legend_after_scale():
     )
 
     assert p == "guide_legend_after_scale"
+
+
+def test_guide_legend_missing_value_for_shapes():
+    data = pd.DataFrame({"a": [1, 2, 3], "b": ["a", None, "z"]})
+    p = ggplot(data, aes("a", "b")) + geom_point(aes(shape="b"), na_rm=True)
+    assert p == "guide_legend_missing_value_for_shapes"
