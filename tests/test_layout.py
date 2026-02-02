@@ -172,6 +172,18 @@ class TestLayout:
         p = self.g + labs(footer="Source: Data Vault | By: The Team")
         assert p == "plot_footer"
 
+    def test_plot_footer_background(self):
+        p = (
+            self.g
+            + labs(footer="Source: Data Vault | By: The Team")
+            + theme(
+                rect=element_rect(fill="#F2F2F2"),
+                plot_footer=element_text(color="white", size=10),
+                plot_footer_background=element_rect(fill="black"),
+            )
+        )
+        assert p == "plot_footer_background"
+
 
 class TestLegendPositioning:
     g = ggplot(mtcars, aes(x="wt", y="mpg", color="gear")) + geom_point()

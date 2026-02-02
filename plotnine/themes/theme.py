@@ -167,6 +167,7 @@ class theme:
         panel_background=None,
         panel_border=None,
         plot_background=None,
+        plot_footer_background=None,
         strip_background_x=None,
         strip_background_y=None,
         strip_background=None,

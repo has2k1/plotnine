@@ -576,10 +576,18 @@ class Compose:
         """
         from matplotlib.patches import Rectangle
 
-        rect = Rectangle((0, 0), 0, 0, facecolor="none", zorder=-1000)
+        zorder = -1000
+        rect = Rectangle((0, 0), 0, 0, facecolor="none", zorder=zorder)
         self.figure.add_artist(rect)
         self._gridspec.patch = rect
         self.theme.targets.plot_background = rect
+
+        if self.annotation.footer:
+            rect = Rectangle(
+                (0, 0), 0, 0, facecolor="none", linewidth=0, zorder=zorder + 1
+            )
+            self.figure.add_artist(rect)
+            self.theme.targets.plot_footer_background = rect
 
     def _draw_annotation(self):
         """

@@ -14,6 +14,8 @@ from plotnine._mpl.utils import (
 if TYPE_CHECKING:
     from typing import Any
 
+    from matplotlib.patches import Rectangle
+
     from plotnine.composition._compose import Compose
 
     from ._composition_side_space import CompositionSideSpaces
@@ -45,6 +47,9 @@ class CompositionLayoutItems:
         self.plot_subtitle: Text | None = get("plot_subtitle")
         self.plot_caption: Text | None = get("plot_caption")
         self.plot_footer: Text | None = get("plot_footer")
+        self.plot_footer_background: Rectangle | None = get(
+            "plot_footer_background"
+        )
 
     def _is_blank(self, name: str) -> bool:
         return self.cmp.theme.T.is_blank(name)
@@ -86,6 +91,19 @@ class CompositionLayoutItems:
             justify.horizontally_about(
                 self.plot_footer, ha, plot_footer_position
             )
+            self._resize_plot_footer_background(spaces)
+
+    def _resize_plot_footer_background(self, spaces: CompositionSideSpaces):
+        """
+        Resize the plot footer to the size of the footer
+        """
+        if not self.plot_footer_background:
+            return
+
+        self.plot_footer_background.set_x(spaces.l.offset)
+        self.plot_footer_background.set_y(spaces.b.offset)
+        self.plot_footer_background.set_height(spaces.b.footer_height)
+        self.plot_footer_background.set_width(spaces.plot_width)
 
 
 class CompositionTextJustifier(TextJustifier):

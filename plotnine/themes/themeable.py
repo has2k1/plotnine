@@ -1732,6 +1732,33 @@ class plot_background(themeable):
             targets.plot_background.set_visible(False)
 
 
+class plot_footer_background(themeable):
+    """
+    Footer background
+
+    The background is placed across the entire with of the plot,
+    or the composition. And the height is determined by the height
+    of the footer including the top and bottom margin.
+
+    Parameters
+    ----------
+    theme_element : element_rect
+    """
+
+    def apply_figure(self, figure: Figure, targets: ThemeTargets):
+        super().apply_figure(figure, targets)
+        if targets.plot_footer_background:
+            props = self.properties
+            props["linewidth"] = 0
+            props["edgecolor"] = "none"
+            targets.plot_footer_background.set(**props)
+
+    def blank_figure(self, figure: Figure, targets: ThemeTargets):
+        super().blank_figure(figure, targets)
+        if targets.plot_footer_background:
+            targets.plot_footer_background.set_visible(False)
+
+
 class strip_background_x(MixinSequenceOfValues):
     """
     Horizontal facet label background
@@ -1788,6 +1815,7 @@ class rect(
     panel_background,
     panel_border,
     plot_background,
+    plot_footer_background,
     strip_background,
 ):
     """

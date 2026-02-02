@@ -594,10 +594,20 @@ class ggplot:
     def _draw_plot_background(self):
         from matplotlib.patches import Rectangle
 
-        rect = Rectangle((0, 0), 0, 0, facecolor="none", zorder=-1000)
+        zorder = -1000
+        rect = Rectangle((0, 0), 0, 0, facecolor="none", zorder=zorder)
         self.figure.add_artist(rect)
         self._gridspec.patch = rect
         self.theme.targets.plot_background = rect
+
+        # Footer background only if there is a footer, and put it on top of
+        # the plot background
+        if self.labels.get("footer", ""):
+            rect = Rectangle(
+                (0, 0), 0, 0, facecolor="none", linewidth=0, zorder=zorder + 1
+            )
+            self.figure.add_artist(rect)
+            self.theme.targets.plot_footer_background = rect
 
     def _save_filename(self, ext: str) -> Path:
         """
