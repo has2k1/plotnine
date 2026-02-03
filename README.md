@@ -162,12 +162,5 @@ Testing
 -------
 
 Plotnine has tests that generate images which are compared to baseline images known
-to be correct. To generate images that are consistent across all systems you have
-to install matplotlib from source. You can do that with ``pip`` using the command.
-
-```console
-$ pip install matplotlib --no-binary matplotlib
-```
-
-Otherwise there may be small differences in the text rendering that throw off the
-image comparisons.
+to be correct. There may be small differences in the text rendering that throw off the
+image comparisons, and the tests allow some very small differences.
