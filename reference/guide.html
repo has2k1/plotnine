@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.17">
+<meta name="generator" content="quarto-1.9.18">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -76,10 +76,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-ce4278342a015d016477ed09bce942c5.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-e3fecfe3565d481478fb93785bd05dc0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-85b4de2bf33afbfb074cbe3ad37e92ce.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-de654b59408d1b981da0ecff2d395fd7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -119,7 +119,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine 0.15.3rc1</span>
+    <span class="navbar-title">plotnine 0.16.0a3</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -163,6 +163,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#plotnine.guides.guide.guide.create_geoms" id="toc-plotnine.guides.guide.guide.create_geoms" class="nav-link" data-scroll-target="#plotnine.guides.guide.guide.create_geoms"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">create_geoms</span></a></li>
   <li><a href="#plotnine.guides.guide.guide.draw" id="toc-plotnine.guides.guide.guide.draw" class="nav-link" data-scroll-target="#plotnine.guides.guide.guide.draw"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">draw</span></a></li>
   <li><a href="#plotnine.guides.guide.guide.legend_aesthetics" id="toc-plotnine.guides.guide.guide.legend_aesthetics" class="nav-link" data-scroll-target="#plotnine.guides.guide.guide.legend_aesthetics"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">legend_aesthetics</span></a></li>
+  <li><a href="#plotnine.guides.guide.guide.merge" id="toc-plotnine.guides.guide.guide.merge" class="nav-link" data-scroll-target="#plotnine.guides.guide.guide.merge"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">merge</span></a></li>
   <li><a href="#plotnine.guides.guide.guide.setup" id="toc-plotnine.guides.guide.guide.setup" class="nav-link" data-scroll-target="#plotnine.guides.guide.guide.setup"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">setup</span></a></li>
   <li><a href="#plotnine.guides.guide.guide.train" id="toc-plotnine.guides.guide.guide.train" class="nav-link" data-scroll-target="#plotnine.guides.guide.guide.train"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">train</span></a></li>
   </ul></li>
@@ -251,10 +252,14 @@ Order of this guide among multiple guides.
 <td>Return the aesthetics that contribute to the legend</td>
 </tr>
 <tr class="even">
+<td><a href="#plotnine.guides.guide.guide.merge">merge</a></td>
+<td>Merge with another guide</td>
+</tr>
+<tr class="odd">
 <td><a href="#plotnine.guides.guide.guide.setup">setup</a></td>
 <td>Setup guide for drawing process</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><a href="#plotnine.guides.guide.guide.train">train</a></td>
 <td>Create the key for the guide</td>
 </tr>
@@ -320,10 +325,19 @@ List of the names of the aethetics that contribute to the legend.
 </div>
 </section>
 </section>
+<section id="plotnine.guides.guide.guide.merge" class="level3 title doc-object doc-method">
+<h3 class="title doc-object doc-method anchored" data-anchor-id="plotnine.guides.guide.guide.merge"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">merge</span></h3>
+<div class="doc-signature doc-method">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>merge(other)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="doc-text">
+<p>Merge with another guide</p>
+</div>
+</section>
 <section id="plotnine.guides.guide.guide.setup" class="level3 title doc-object doc-method">
 <h3 class="title doc-object doc-method anchored" data-anchor-id="plotnine.guides.guide.guide.setup"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">setup</span></h3>
 <div class="doc-signature doc-method">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>setup(guides)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>setup(guides)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="doc-text">
 <p>Setup guide for drawing process</p>
@@ -332,7 +346,7 @@ List of the names of the aethetics that contribute to the legend.
 <section id="plotnine.guides.guide.guide.train" class="level3 title doc-object doc-method">
 <h3 class="title doc-object doc-method anchored" data-anchor-id="plotnine.guides.guide.guide.train"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">train</span></h3>
 <div class="doc-signature doc-method">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>train(scale, aesthetic<span class="op">=</span><span class="va">None</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>train(scale, aesthetic<span class="op">=</span><span class="va">None</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="doc-text">
 <p>Create the key for the guide</p>
