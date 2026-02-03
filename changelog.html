@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Changelog – plotnine 999.post1+g26728c6af</title>
+<title>Changelog – plotnine 999.post1+g0368b663e</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -119,7 +119,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">plotnine 999.post1+g26728c6af</span>
+    <span class="navbar-title">plotnine 999.post1+g0368b663e</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -359,7 +359,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>You can now pass a sequence of horizontal and vertical alignment (ha &amp; va) values in element_text for colorbars.</p></li>
 <li><p>You can now use a sequence to set the position of each text on colorbar, or have the positions alternate left and right or bottom and top.</p></li>
 <li><p>Added <a href="./reference/plot_annotation.html#plotnine.composition.plot_annotation"><code>plot_annotation</code></a>, allowing you to add title, subtitle or caption to a composition.</p></li>
+<li><p><a href="./reference/labs.html#plotnine.labs"><code>labs</code></a> can now be used to create a <code>footer</code>. This footer can be styled using the <code>plot_footer</code> parameter to <a href="./reference/theme.html#plotnine.theme"><code>theme</code></a>.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>theme(plot_footer<span class="op">=</span>element_text(size<span class="op">=</span><span class="dv">13</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>And you can also give the footer a background with:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>theme(plot_footer_background<span class="op">=</span>element_text(fill<span class="op">=</span><span class="st">"pink"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
 </ul>
+<p>Or separate it from the <code>caption</code> or the rest of the plot with a line.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>theme(plot_footer_line<span class="op">=</span>element_line(color<span class="op">=</span><span class="st">"black"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="bug-fixes" class="level3">
 <h3 class="anchored" data-anchor-id="bug-fixes">Bug Fixes</h3>
@@ -411,7 +417,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="bug-fixes-2">Bug Fixes</h3>
 <ul>
 <li><p>Fixed labels set with the <code>labs</code> call so that they are only ever overwritten by a call to <code>labs</code> or setting the <code>name</code> of a scale. Previously, if a global mapping was added after <code>labs</code>, it over-wrote the previously set labels.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>ggplot(mtcars) <span class="op">+</span> labs(x<span class="op">=</span><span class="st">"x title"</span>, y<span class="op">=</span><span class="st">"y title"</span>) <span class="op">+</span> geom_point() <span class="op">+</span> aes(<span class="st">"wt"</span>, <span class="st">"mpg"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>ggplot(mtcars) <span class="op">+</span> labs(x<span class="op">=</span><span class="st">"x title"</span>, y<span class="op">=</span><span class="st">"y title"</span>) <span class="op">+</span> geom_point() <span class="op">+</span> aes(<span class="st">"wt"</span>, <span class="st">"mpg"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The labels will be “x title” and “y title”.</p></li>
 <li><p>Fixed bug with plot compositions where if a <code>plot_spacer</code> is the last plot in the composition, one could not change the figure size or dpi of the composition. (<a href="https://github.com/has2k1/plotnine/issues/960" title="Issue: #960">#960</a>)</p></li>
 </ul>
@@ -433,34 +439,34 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="new-features">New Features</h3>
 <ul>
 <li><p>Plot Composition is here. Using an intuitive algebra, you can now put combine multiple plots into a single graphic. e.g.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="op">=</span> ggplot(...)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>p2 <span class="op">=</span> ggplot(...)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>p3 <span class="op">=</span> ggplot(...)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>(p1 <span class="op">|</span> p2) <span class="op">/</span> p3</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="op">=</span> ggplot(...)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>p2 <span class="op">=</span> ggplot(...)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>p3 <span class="op">=</span> ggplot(...)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>(p1 <span class="op">|</span> p2) <span class="op">/</span> p3</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
 <li><p>Using <code>plot_title_position</code> and <code>plot_caption_position</code> e.g.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>theme(</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>   plot_title_position<span class="op">=</span><span class="st">"plot"</span>,</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>   plot_caption_position<span class="op">=</span><span class="st">"plot"</span>,</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>theme(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>   plot_title_position<span class="op">=</span><span class="st">"plot"</span>,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>   plot_caption_position<span class="op">=</span><span class="st">"plot"</span>,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>You can now position the <code>plot_title</code>, <code>plot_subtitle</code> and <code>plot_caption</code> by alignment them with respect to the plot. (<a href="https://github.com/has2k1/plotnine/issues/838" title="Issue: #838">#838</a>)</p></li>
 <li><p>Gained new label <code>tag</code> to create a tag for a plot. You can set it with <a href="./reference/labs.html#plotnine.labs"><code>labs</code></a> e.g.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>labs(tag<span class="op">=</span><span class="st">"A"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>labs(tag<span class="op">=</span><span class="st">"A"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>and customise it using these themeables</p>
 <p><code>plot_tag</code> and <code>plot_tag_position</code> and <code>plot_tag_location</code></p>
 <p>e.g.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>theme(</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>   plot_tag<span class="op">=</span><span class="st">"plot"</span>,</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>   plot_tag_location<span class="op">=</span><span class="st">"plot"</span>,</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>   plot_tag_position<span class="op">=</span><span class="st">"topright"</span>,</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>theme(</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>   plot_tag<span class="op">=</span><span class="st">"plot"</span>,</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>   plot_tag_location<span class="op">=</span><span class="st">"plot"</span>,</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>   plot_tag_position<span class="op">=</span><span class="st">"topright"</span>,</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
 <li><p>Geoms <a href="./reference/geom_bar.html#plotnine.geom_bar"><code>geom_bar</code></a> and <a href="./reference/geom_col.html#plotnine.geom_col"><code>geom_col</code></a> have gained new parameter <code>just</code> that controls how the bars align with the axis break point.</p></li>
 <li><p><a href="./reference/geom_sina.html#plotnine.geom_sina"><code>geom_sina</code></a> has gained new parameter <code>style</code> just like <a href="./reference/geom_violin.html#plotnine.geom_violin"><code>geom_violin</code></a>, which make one-sided (half) sina plots.</p></li>
 <li><p>Gained the Anscombe Quartet dataset, <a href="./reference/anscombe_quartet.html#plotnine.data.anscombe_quartet"><code>anscombe_quartet</code></a>.</p></li>
 <li><p>Gained new module <code>plotnine.helpers</code> to be a place for some helper functions.</p></li>
 <li><p>Gained new helper function <a href="./reference/get_aesthetic_limits.html#plotnine.helpers.get_aesthetic_limits"><code>get_aesthetic_limits</code></a>.</p></li>
 <li><p><a href="./reference/geom_point.html#plotnine.geom_point"><code>geom_point</code></a> gained the ability to handle shapes of the form <code>Sequence[tuple[float, float]]</code> e.g.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>((<span class="op">-</span><span class="dv">2</span>, <span class="op">-</span><span class="dv">4</span>), (<span class="op">-</span><span class="dv">2</span>, <span class="op">-</span><span class="dv">1</span>), (<span class="dv">0</span>, <span class="dv">1</span>), (<span class="dv">2</span>, <span class="op">-</span><span class="dv">1</span>), (<span class="dv">2</span>, <span class="op">-</span><span class="dv">4</span>), (<span class="op">-</span><span class="dv">2</span>, <span class="op">-</span><span class="dv">4</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>((<span class="op">-</span><span class="dv">2</span>, <span class="op">-</span><span class="dv">4</span>), (<span class="op">-</span><span class="dv">2</span>, <span class="op">-</span><span class="dv">1</span>), (<span class="dv">0</span>, <span class="dv">1</span>), (<span class="dv">2</span>, <span class="op">-</span><span class="dv">1</span>), (<span class="dv">2</span>, <span class="op">-</span><span class="dv">4</span>), (<span class="op">-</span><span class="dv">2</span>, <span class="op">-</span><span class="dv">4</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Which declares the vertices of a polygon shape.</p></li>
 </ul>
 </section>
@@ -511,7 +517,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>Fixed <a href="./reference/geom_text.html#plotnine.geom_text"><code>geom_text</code></a> with <code>adjust_text</code> so that the the arrows are drawn at the same layer (zorder) as the text.</p></li>
 <li><p>Fixed <a href="./reference/geom_text.html#plotnine.geom_text"><code>geom_text</code></a> with <code>adjust_text</code> for some cases where the text are placed outside the panels. (<a href="https://github.com/has2k1/plotnine/issues/899" title="Issue: #899">#899</a>)</p></li>
 <li><p>The default aesthetics and aesthetic parameters of geoms (and stats) are now transformed. So you can now set date values as aesthetic parameters. e.g.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>geom_point(y<span class="op">=</span>datetime(<span class="dv">2024</span>, <span class="dv">12</span>, <span class="dv">11</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>geom_point(y<span class="op">=</span>datetime(<span class="dv">2024</span>, <span class="dv">12</span>, <span class="dv">11</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>if the <code>y</code> aesthetic is mapped to datetime column in another layer.</p></li>
 <li><p>Fixed bug for matplotlib&gt;3.10 where the <code>axis_ticks_length</code> for the x-axis had no effect.</p></li>
 </ul>
@@ -573,9 +579,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>plotnine now responds to the <code>fig-width</code>, <code>fig-height</code> and <code>fig-format</code> settings in the meta section of a quarto document.</p></li>
 <li><p><a href="./reference/ggtitle.html#plotnine.ggtitle"><code>ggtitle</code></a> now accepts <code>title</code> and <code>subtitle</code> as keyword arguments. (<a href="https://github.com/has2k1/plotnine/issues/804" title="Issue: #804">#804</a>)</p></li>
 <li><p>Gained the option <code>limitsize</code> that makes it possible to display plots of any size.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine.options <span class="im">import</span> set_option</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>set_option(<span class="st">"figure_format"</span>, <span class="va">False</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine.options <span class="im">import</span> set_option</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>set_option(<span class="st">"figure_format"</span>, <span class="va">False</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
 <li><p>For <a href="./reference/geom_boxplot.html#plotnine.geom_boxplot"><code>geom_boxplot</code></a> when the outliers are made invisible by giving them no shape, now they do not affect the limits of the plot. (<a href="https://github.com/has2k1/plotnine/issues/814" title="Issue: #814">#814</a>)</p></li>
 <li><p>Made it possile to map an aesthetic value to <code>None</code>. (<a href="https://github.com/has2k1/plotnine/issues/791" title="Issue: #791">#791</a>)</p></li>
 <li><p>The signatures for the scale classes now list all the allowed parameters.</p></li>
@@ -709,12 +715,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>Themeables <code>legend_entry_spacing</code>, <code>legend_entry_spacing_x</code> and <code>legend_entry_spacing_y</code> have been renamed to <code>legend_key_spacing</code>, <code>legend_key_spacing_x</code> and <code>legend_key_spacing_y</code> respectively</p></li>
 <li><p><a href="./reference/facet_grid.html#plotnine.facet_grid"><code>facet_grid</code></a> now accepts two parameters, <code>rows</code> and <code>cols</code>, to specify the variables along the two dimensions of the panels.</p>
 <p>The previous way of using a single parameter will still work if it is a string. For cases where the value was a list, e.g.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>facet_grid(facets<span class="op">=</span>[<span class="st">"col1"</span>, <span class="st">"col2"</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>facet_grid(facets<span class="op">=</span>[<span class="st">"col1"</span>, <span class="st">"col2"</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>can be rewritten as any one of;</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>facet_grid(<span class="st">"col1"</span>, <span class="st">"col2"</span>)</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>facet_grid([<span class="st">"col1"</span>], [<span class="st">"col2"</span>])</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>facet_grid(rows<span class="op">=</span><span class="st">"col1"</span>, cols<span class="op">=</span><span class="st">"col2"</span>)</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>facet_grid(rows<span class="op">=</span>[<span class="st">"col1"</span>], cols<span class="op">=</span>[<span class="st">"col2"</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>facet_grid(<span class="st">"col1"</span>, <span class="st">"col2"</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>facet_grid([<span class="st">"col1"</span>], [<span class="st">"col2"</span>])</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>facet_grid(rows<span class="op">=</span><span class="st">"col1"</span>, cols<span class="op">=</span><span class="st">"col2"</span>)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>facet_grid(rows<span class="op">=</span>[<span class="st">"col1"</span>], cols<span class="op">=</span>[<span class="st">"col2"</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
 <li><p>The <code>facets</code> parameter in <a href="./reference/facet_wrap.html#plotnine.facet_wrap"><code>facet_wrap</code></a> has also changed to a more straight forward specification for the column variables. It expects a single string or a list/tuple of strings. (<a href="https://github.com/has2k1/plotnine/issues/545" title="Issue: #545">#545</a>)</p>
 <p>However, the R-style formula strings are still silently accepted.</p></li>
 </ul>
@@ -747,23 +753,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>to control the x &amp; y tick padding.</p></li>
 <li><p>Some parameters in <a href="./reference/element_text.html#plotnine.element_text"><code>element_text</code></a> can now accept lists/tuples to set the values on individual text objects. (<a href="https://github.com/has2k1/plotnine/issues/724" title="Issue: #724">#724</a>)</p></li>
 <li><p>Gained the option <a href="./reference/options.figure_format.html#plotnine.options.figure_format"><code>figure_format</code></a> to set the format of the inline figures in an interactive session. e.g.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine.options <span class="im">import</span> set_option</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>set_option(<span class="st">"figure_format"</span>, <span class="st">"svg"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine.options <span class="im">import</span> set_option</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>set_option(<span class="st">"figure_format"</span>, <span class="st">"svg"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>will output all subsequent figures in svg format.</p></li>
 <li><p>Improved support for customizing guides/legends.</p>
 <ul>
 <li><p>You can now add a frame to the colobar</p></li>
 <li><p>You can now apply themes to individual guides, e.g.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="op">+</span> guides(color<span class="op">=</span>guide_colorbar(theme<span class="op">=</span>theme_xkcd()))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="op">+</span> guides(color<span class="op">=</span>guide_colorbar(theme<span class="op">=</span>theme_xkcd()))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>or</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="op">+</span> guides(color<span class="op">=</span>guide_legend(theme<span class="op">=</span>theme_minimal())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="op">+</span> guides(color<span class="op">=</span>guide_legend(theme<span class="op">=</span>theme_minimal())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
 <li><p>You can now place legends at more than one position around the panels. e.g.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="op">+</span> guides(</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    color<span class="op">=</span>guide_colorbar(position<span class="op">=</span><span class="st">"left"</span>),</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    fill<span class="op">=</span>guide_legend(position<span class="op">=</span><span class="st">"bottom"</span>),</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    size<span class="op">=</span>guide_legend(position<span class="op">=</span><span class="st">"bottom"</span>)</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="op">+</span> guides(</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    color<span class="op">=</span>guide_colorbar(position<span class="op">=</span><span class="st">"left"</span>),</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    fill<span class="op">=</span>guide_legend(position<span class="op">=</span><span class="st">"bottom"</span>),</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    size<span class="op">=</span>guide_legend(position<span class="op">=</span><span class="st">"bottom"</span>)</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Puts the <code>fill</code> and <code>size</code> guides at the bottom, and the <code>color</code> guide on the left.</p></li>
 <li><p>You can easily justify the legend along the four edges of the space around the panel area.</p></li>
 <li><p>You can now place the legend inside the panels with easily control its location.</p></li>
@@ -848,7 +854,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ol>
 <p>You can now also align the <code>plot_title</code>, <code>axis_title_x</code>, <code>axis_title_y</code> and <code>plot_caption</code> with respect to the panels. Set these to “left”, “right” &amp; “center” for the horizontal flowing text. And “top”, “right” &amp; “center” for the vertical flowing text.</p>
 <p>Also, the size of the figure is exactly determined by the theme setting. For example, this:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>theme(figure_size<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">6</span>), dpi<span class="op">=</span><span class="dv">100</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>theme(figure_size<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">6</span>), dpi<span class="op">=</span><span class="dv">100</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>will create an <code>800px x 600px</code> image.</p></li>
 <li><p>You can create a <code>subtitle</code> using <a href="./reference/labs.html#plotnine.labs"><code>labs</code></a> and style it using the <code>plot_subtitle</code> parameter to <a href="./reference/theme.html#plotnine.theme"><code>theme</code></a>.</p>
 <p>```py theme(plot_subtitle=element_text(size=8))</p></li>
@@ -859,7 +865,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ul>
 <li><p><a href="./reference/ggplot.html#plotnine.ggplot"><code>ggplot</code></a> object gained a new method <a href="./reference/ggplot.html#plotnine.ggplot.save_helper"><code>save_helper</code></a>. It gives you access to the matplotlib figure that will be saved to file.</p></li>
 <li><p>When plotting with an ipython interactive backend (e.g.&nbsp;in a jupyter notebook). The default image output is retina. You do not need to run this command.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>config InlineBackend.figure_format <span class="op">=</span> <span class="st">"retina"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>config InlineBackend.figure_format <span class="op">=</span> <span class="st">"retina"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Plotnine still respects any values set the user.</p></li>
 <li><p>In an interactive setting, after drawing an image. The size of the figure (in pixels) is printed e.g.&nbsp;<code>&lt;Figure Size: (640 x 480)&gt;</code>. Previously, something like <code>&lt;ggplot: (336175301)&gt;</code> was printed.</p></li>
 </ul>
@@ -939,9 +945,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p><a href="./reference/position_dodge2.html#plotnine.position_dodge2"><code>position_dodge2</code></a> gained the ability to reverse the order of the plotted groups. (<a href="https://github.com/has2k1/plotnine/issues/515" title="Issue: #515">#515</a>)</p></li>
 <li><p>Added <a href="./reference/theme_tufte.html#plotnine.theme_tufte"><code>theme_tufte</code></a>, a theme that reduces the distractions around plot data.</p></li>
 <li><p><a href="./reference/labs.html#plotnine.labs"><code>labs</code></a> can now be used to create a <code>caption</code>. This caption can be styled using the <code>plot_caption</code> parameter to <a href="./reference/theme.html#plotnine.theme"><code>theme</code></a>.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>theme(plot_caption<span class="op">=</span>element_text(size<span class="op">=</span><span class="dv">13</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>theme(plot_caption<span class="op">=</span>element_text(size<span class="op">=</span><span class="dv">13</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
 <li><p>You can now align the <code>plot_title</code> horizontally to the left or right.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>theme(plot_title<span class="op">=</span>element_text(ha<span class="op">=</span><span class="st">"left"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>theme(plot_title<span class="op">=</span>element_text(ha<span class="op">=</span><span class="st">"left"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Before, the title was always centered.</p></li>
 </ul>
 </section>
@@ -1017,8 +1023,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>Manual scales now match the values of the breaks if the breaks are given. (<a href="https://github.com/has2k1/plotnine/issues/445" title="Issue: #445">#445</a>)</p></li>
 <li><p>Using <code>print</code> to show a ggplot object will not show the hash (<code>&lt;ggplot: ...&gt;</code>) anymore. There is now a difference between <code>repr(p)</code> and <code>str(p)</code>. (<a href="https://github.com/has2k1/plotnine/issues/453" title="Issue: #453">#453</a>)</p></li>
 <li><p>Added option to for the <code>base_family</code> of a theme, now you can set it once with and have it be applied to all themes. (<a href="https://github.com/has2k1/plotnine/issues/436" title="Issue: #436">#436</a>)</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine.options <span class="im">import</span> set_option</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>set_option(<span class="st">'base_family'</span>, <span class="st">'Comic Sans MS'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine.options <span class="im">import</span> set_option</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>set_option(<span class="st">'base_family'</span>, <span class="st">'Comic Sans MS'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
 <li><p>You can now add <code>None</code> to a ggplot, doing so returns a copy of the the ggplot object. (<a href="https://github.com/has2k1/plotnine/issues/474" title="Issue: #474">#474</a>)</p></li>
 <li><p>Better handling of multiline facet labels. (<a href="https://github.com/has2k1/plotnine/issues/484" title="Issue: #484">#484</a>)</p></li>
 </ul>
@@ -1265,8 +1271,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>When using loess smoothing, the control parameter <code>surface</code> is only set to the value <code>'direct'</code> if predictions will be made outside the data range.</li>
 </ol></li>
 <li><p>Better control of scale limits. You can now specify individual limits of a scale.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>scale_y_continuous(limits<span class="op">=</span>(<span class="dv">0</span>, <span class="va">None</span>))</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>xlim(<span class="va">None</span>, <span class="dv">100</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>scale_y_continuous(limits<span class="op">=</span>(<span class="dv">0</span>, <span class="va">None</span>))</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>xlim(<span class="va">None</span>, <span class="dv">100</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>You can also use <a href="./reference/expand_limits.html#plotnine.expand_limits"><code>expand_limits</code></a></p></li>
 <li><p>Low and high <a href="./reference/scale.html#plotnine.scales.scale.scale"><code>scale</code></a> limits can now be expanded separately with different factors multiplicative and additive factors.</p></li>
 <li><p>The layer parameter <code>show_legend</code> can now accept a <code>dict</code> for finer grained control of which aesthetics to exclude in the legend.</p></li>
@@ -1274,9 +1280,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><code>stats</code> also gained new parameter <code>na_rm</code>, that controls whether missing values are removed before statistical computations.</p></li>
 <li><p><a href="./reference/qplot.html#plotnine.qplot"><code>qplot</code></a> can now use the name and a Pandas series to label the scales of the aesthetics.</p></li>
 <li><p>You can now put stuff to add to a ggplot object into a list and add that that instead. No need to wrap the list around the internal class <code>Layers</code>.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>lst <span class="op">=</span> [geom_point(), geom_line()]</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>g <span class="op">=</span> ggplot(df, aes(<span class="st">'x'</span>, <span class="st">'y'</span>))</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(g <span class="op">+</span> lst)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>lst <span class="op">=</span> [geom_point(), geom_line()]</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>g <span class="op">=</span> ggplot(df, aes(<span class="st">'x'</span>, <span class="st">'y'</span>))</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(g <span class="op">+</span> lst)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Using a list allows you to bundle up objects. It can be convenient when creating some complicated plots. See the Periodic Table Example.</p></li>
 <li><p>You can now use a <code>dict</code> (with manual scales) to map data values to aesthetics. (<a href="https://github.com/has2k1/plotnine/issues/169" title="Issue: #169">#169</a>)</p></li>
 <li><p>You can now specify infinite coordinates with <a href="./reference/geom_rect.html#plotnine.geom_rect"><code>geom_rect</code></a>. (<a href="https://github.com/has2k1/plotnine/issues/166" title="Issue: #166">#166</a>)</p></li>
