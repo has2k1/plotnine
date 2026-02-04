@@ -47,7 +47,7 @@ class theme_gray(theme):
                 color="black",
                 ma="center",
                 size=base_size,
-                linespacing=0.9,
+                linespacing=1.2,
                 rotation=0,
                 margin=margin(),
             ),

@@ -36,7 +36,7 @@ class theme_void(theme):
                 style="normal",
                 color="black",
                 size=base_size,
-                linespacing=0.9,
+                linespacing=1.2,
                 rotation=0,
                 margin=margin(),
             ),

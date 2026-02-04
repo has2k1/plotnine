@@ -48,6 +48,11 @@ title: Changelog
   [](:class:`~plotnine.geom_point`) when the shape is mapped to variable with missing
   values.
 
+### Enhancements
+
+- Increased the default linespacing used by themes from `0.9` to `1.2`.
+  This gives multiline titles, subtitles and captions a better balance between looking compact and looking crumpled.
+
 ## v0.15.3
 (2025-01-28)
 
