@@ -13,8 +13,6 @@ from plotnine import (
 )
 from plotnine.stats.binning import freedman_diaconis_bins
 
-from .conftest import layer_data
-
 n = 10  # Some even number greater than 2
 
 # ladder: 0 1 times, 1 2 times, 2 3 times, ...
@@ -60,8 +58,8 @@ def test_histogram_count():
 def test_scale_transformed_breaks():
     data = pd.DataFrame({"x": np.repeat(range(1, 5), range(1, 5))})
     p = ggplot(data, aes("x")) + geom_histogram(breaks=[1, 2.5, 4])
-    out1 = layer_data(p)
-    out2 = layer_data(p + scale_x_sqrt())
+    out1 = p.layer_data()
+    out2 = (p + scale_x_sqrt()).layer_data()
     np.testing.assert_allclose(out1.xmin, [1, 2.5])
     np.testing.assert_allclose(out2.xmin, np.sqrt([1, 2.5]))
 

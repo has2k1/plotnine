@@ -47,6 +47,7 @@ from .themes.theme import theme, theme_get
 if TYPE_CHECKING:
     from typing import Protocol
 
+    import pandas as pd
     from matplotlib.axes import Axes
     from matplotlib.figure import Figure
     from typing_extensions import Self
@@ -770,6 +771,25 @@ class ggplot:
 
         with plot_context(self).rc_context:
             sv.figure.savefig(**sv.kwargs)
+
+    def layer_data(self, i: int = 0) -> pd.DataFrame:
+        """
+        Return the data used to draw a specific plot layer
+
+        Parameters
+        ----------
+        i :
+            Index of the layer to retrieve, starting from 0.
+
+        Returns
+        -------
+        pd.DataFrame
+            Data used by the specified layer after all transformations,
+            statistics, and position adjustments have been applied.
+        """
+        p = deepcopy(self)
+        p._build()
+        return p.layers.data[i]
 
 
 ggsave = ggplot.save
