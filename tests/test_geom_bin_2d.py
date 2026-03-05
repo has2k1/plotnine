@@ -3,8 +3,6 @@ import pandas as pd
 
 from plotnine import aes, geom_bin_2d, ggplot, scale_x_log10
 
-from .conftest import layer_data
-
 n = 20  # Make even for best results
 reps = np.hstack(
     [np.arange(int(np.ceil(n / 2))), np.arange(int(np.ceil(n // 2)))[::-1]]
@@ -34,7 +32,7 @@ def test_scale_transformed_breaks():
     p = ggplot(data, aes("x", "y")) + geom_bin_2d(
         breaks=([5, 50, 500], [0.5, 1.5, 2.5])
     )
-    out1 = layer_data(p)
-    out2 = layer_data(p + scale_x_log10())
+    out1 = p.layer_data()
+    out2 = (p + scale_x_log10()).layer_data()
     np.testing.assert_allclose(out1.xmax, [50, 500])
     np.testing.assert_allclose(out2.xmax, np.log10([50, 500]))
