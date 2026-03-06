@@ -118,7 +118,7 @@ class geom(ABC, metaclass=Register):
         PlotnineError
             If unable to create a `geom`.
         """
-        name = stat.params["geom"]
+        name = stat.params.get("geom", "blank")
 
         if isinstance(name, geom):
             return name
@@ -494,18 +494,21 @@ class geom(ABC, metaclass=Register):
         geom_stat_args = kwargs.keys() | self._stat._kwargs.keys()
         unknown = (
             geom_stat_args
-            - self.aesthetics()
-            - self.DEFAULT_PARAMS.keys()  # geom aesthetics
-            - self._stat.aesthetics()  # geom parameters
-            - self._stat.DEFAULT_PARAMS.keys()  # stat aesthetics
-            - {  # stat parameters
+            - self.aesthetics()  # geom aesthetics
+            - self.DEFAULT_PARAMS.keys()  # geom parameters
+            - self._stat.aesthetics()  # stat aesthetics
+            - self._stat.DEFAULT_PARAMS.keys()  # stat parameters
+            - {
+                # stat parameters
                 "data",
                 "mapping",
-                "show_legend",  # layer parameters
+                "geom",
+                # layer parameters
+                "show_legend",
                 "inherit_aes",
                 "raster",
             }
-        )  # layer parameters
+        )
         if unknown:
             msg = (
                 "Parameters {}, are not understood by "

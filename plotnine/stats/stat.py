@@ -42,7 +42,7 @@ class stat(ABC, metaclass=Register):
     NON_MISSING_AES: set[str] = set()
     """Required aesthetics for the stat"""
 
-    DEFAULT_PARAMS: dict[str, Any] = {}
+    DEFAULT_PARAMS: dict[str, Any] = {"geom": "blank"}
     """Required parameters for the stat"""
 
     CREATES: set[str] = set()
