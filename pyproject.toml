@@ -57,8 +57,9 @@ extra = [
 doc = [
     "jupyter",
     "click",
+    "griffe==1.15.0",
     "numpydoc>=0.9.1",
-    "quartodoc>=0.7.2",
+    "quartodoc>=0.11.1",
 ]
 
 lint = [
