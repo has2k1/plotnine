@@ -18,6 +18,7 @@ from ..composition._plot_annotation import plot_annotation
 from ..composition._plot_layout import plot_layout
 from ..composition._types import ComposeAddable
 from ..options import get_option
+from ..session import set_last_plot
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -559,6 +560,7 @@ class Compose:
             self.theme.apply()
             figure.set_layout_engine(PlotnineLayoutEngine(self))
 
+        set_last_plot(self)
         return figure
 
     def _draw_plots(self):

@@ -586,6 +586,10 @@ quartodoc:
       contents:
           - get_aesthetic_limits
 
+    - package: plotnine.session
+      contents:
+          - last_plot
+
     - title: Datasets
       desc: |
         These datasets ship with the plotnine and you can import them with
