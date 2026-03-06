@@ -62,6 +62,18 @@ def test_stat_parameter_sharing():
     assert "weight" in g._stat.params
 
 
+def test_stat_extending():
+    class stat_xyz(stat):
+        REQUIRED_AES = {"x", "y"}
+
+        def compute_group(self, data, scales):
+            return data
+
+    p = ggplot(mtcars, aes("wt", "mpg")) + stat_xyz(geom="point", size=1)
+
+    p.draw_test()  # pyright: ignore[reportAttributeAccessIssue]
+
+
 def test_calculated_expressions():
     p = ggplot(mtcars, aes(x="factor(cyl)", y="..count..+1")) + geom_bar()
     # No exception
