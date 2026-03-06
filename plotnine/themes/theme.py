@@ -105,6 +105,7 @@ class theme:
     # be targeted for theming by the themeables
     # It is initialised in the setup method.
     targets: ThemeTargets
+    _is_retina = False
 
     def __init__(
         self,
@@ -463,8 +464,13 @@ class theme:
 
         The result is a theme that has double the dpi.
         """
+        if self._is_retina:
+            return deepcopy(self)
+
         dpi = self.getp("dpi")
-        return self + theme(dpi=dpi * 2)
+        self = self + theme(dpi=dpi * 2)
+        self._is_retina = True
+        return self
 
     def _smart_title_and_subtitle_ha(
         self, title: str | None, subtitle: str | None
