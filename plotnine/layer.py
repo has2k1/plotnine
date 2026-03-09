@@ -137,6 +137,26 @@ class layer:
         return layer(**lkwargs)
 
     @staticmethod
+    def from_stat(stat: stat) -> layer:
+        """
+        Create a layer given a [](`~plotnine.stats.stat`)
+
+        Parameters
+        ----------
+        stat :
+            `stat` from which a layer will be created
+
+        Returns
+        -------
+        out : layer
+            Layer that represents the specific `stat`.
+        """
+        from .geoms.geom import geom as geom_cls
+
+        _geom = geom_cls.from_stat(stat)
+        return layer.from_geom(_geom)
+
+    @staticmethod
     def _verify_arguments(geom: geom, stat: stat) -> None:
         """
         Verify arguments for the geom, stat and layer

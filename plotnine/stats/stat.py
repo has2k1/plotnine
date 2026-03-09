@@ -406,7 +406,4 @@ class stat(ABC, metaclass=Register):
         out :
             Layer
         """
-        # Create, geom from stat, then layer from geom
-        from ..geoms.geom import geom
-
-        return layer.from_geom(geom.from_stat(self))
+        return layer.from_stat(self)
