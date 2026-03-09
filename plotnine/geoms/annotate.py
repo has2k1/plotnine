@@ -15,7 +15,6 @@ if typing.TYPE_CHECKING:
     from typing import Any
 
     from plotnine import ggplot
-    from plotnine.layer import layer
 
 
 class annotate:
@@ -135,16 +134,7 @@ class annotate:
         """
         Add to ggplot
         """
-        other += self.to_layer()  # Add layer
+        from ..layer import layer
+
+        other += layer(geom=self._annotation_geom)
         return other
-
-    def to_layer(self) -> layer:
-        """
-        Make a layer that represents this annotation
-
-        Returns
-        -------
-        out : layer
-            Layer
-        """
-        return self._annotation_geom.to_layer()

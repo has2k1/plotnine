@@ -78,7 +78,7 @@ class layer:
 
     def __init__(
         self,
-        geom: geom | type[geom] | str = "blank",
+        geom: geom | type[geom] | str | None = None,
         stat: stat | type[stat] | str | None = None,
         *,
         mapping: aes | None = None,
@@ -89,14 +89,30 @@ class layer:
         raster: bool = False,
         **kwargs: Any,
     ):
+        # Stat-first: derive geom from stat's default
+        if stat is not None:
+            stat_ref = _lookup_stat(stat)
+            if isinstance(stat_ref, type):
+                geom = stat_ref.DEFAULT_PARAMS.get("geom", "blank")
+            else:
+                geom = stat_ref.params.get("geom", "blank")
+                # Forward stat instance's kwargs to the geom
+                if mapping is None and data is None and not kwargs:
+                    mapping = stat_ref._raw_kwargs.get("mapping")
+                    data = stat_ref._raw_kwargs.get("data")
+                    kwargs = {
+                        k: v
+                        for k, v in stat_ref._raw_kwargs.items()
+                        if k not in ("mapping", "data")
+                    }
+
+        if geom is None:
+            geom = "blank"
+
         _geom = _resolve_geom(geom, mapping, data, kwargs)
         _stat = _resolve_stat(stat, _geom)
         _pos = _resolve_position(position, _geom)
         self._verify_arguments(_geom, _stat)
-
-        # Set back-references for pipeline compat
-        _geom._stat = _stat  # pyright: ignore[reportAttributeAccessIssue]
-        _geom._position = _pos  # pyright: ignore[reportAttributeAccessIssue]
 
         # Layer params: prefer explicit kwargs, fall back to
         # geom._raw_kwargs, then geom.DEFAULT_PARAMS
@@ -120,56 +136,6 @@ class layer:
         self.mapping = _geom.mapping
         self.position = _pos
         self.zorder = 0
-
-    @staticmethod
-    def from_geom(geom: geom) -> layer:
-        """
-        Create a layer given a [](`~plotnine.geoms.geom`)
-
-        Parameters
-        ----------
-        geom :
-            `geom` from which a layer will be created
-
-        Returns
-        -------
-        :
-            Layer that represents the specific `geom`.
-        """
-        return layer(geom=geom)
-
-    @staticmethod
-    def from_stat(stat: stat) -> layer:
-        """
-        Create a layer given a [](`~plotnine.stats.stat`)
-
-        Parameters
-        ----------
-        stat :
-            `stat` from which a layer will be created
-
-        Returns
-        -------
-        :
-            Layer that represents the specific `stat`.
-        """
-        from .geoms.geom import geom as geom_cls
-
-        name = stat.params.get("geom", "blank")
-
-        if isinstance(name, geom_cls):
-            return layer(geom=name)
-
-        if isinstance(name, type) and issubclass(name, geom_cls):
-            klass = name
-        elif isinstance(name, str):
-            if not name.startswith("geom_"):
-                name = f"geom_{name}"
-            klass = Registry[name]
-        else:
-            raise PlotnineError(f"Unknown geom of type {type(name)}")
-
-        return layer(geom=klass(stat=stat, **stat._raw_kwargs))
 
     @staticmethod
     def _verify_arguments(geom: geom, stat: stat) -> None:
@@ -683,6 +649,43 @@ def _resolve_geom(
     return klass(mapping, data, **kwargs)
 
 
+def _lookup_stat(
+    stat_spec: stat | type[stat] | str,
+) -> stat | type[stat]:
+    """
+    Look up a stat specification without instantiation
+
+    Parameters
+    ----------
+    stat_spec :
+        A stat instance, class, or string name.
+
+    Returns
+    -------
+    :
+        The stat instance or class.
+    """
+    from .stats.stat import stat as stat_cls
+
+    # Duck-type guard for module reloads
+    if not isinstance(stat_spec, type) and hasattr(stat_spec, "compute_layer"):
+        return stat_spec  # type: ignore[return-value]
+
+    if isinstance(stat_spec, stat_cls):
+        return stat_spec
+
+    if isinstance(stat_spec, type) and issubclass(stat_spec, stat_cls):
+        return stat_spec
+
+    if isinstance(stat_spec, str):
+        name = stat_spec
+        if not name.startswith("stat_"):
+            name = f"stat_{name}"
+        return Registry[name]
+
+    raise PlotnineError(f"Unknown stat of type {type(stat_spec)}")
+
+
 def _resolve_stat(
     stat_spec: stat | type[stat] | str | None,
     geom_obj: geom,
@@ -703,24 +706,13 @@ def _resolve_stat(
     if stat_spec is None:
         stat_spec = geom_obj.params["stat"]
 
-    # Duck-type guard for module reloads
-    if not isinstance(stat_spec, type) and hasattr(stat_spec, "compute_layer"):
-        return stat_spec  # type: ignore[return-value]
+    result = _lookup_stat(stat_spec)  # type: ignore[arg-type]
 
-    if isinstance(stat_spec, stat_cls):
-        return stat_spec
+    if isinstance(result, stat_cls):
+        return result
 
-    if isinstance(stat_spec, type) and issubclass(stat_spec, stat_cls):
-        klass = stat_spec
-    elif isinstance(stat_spec, str):
-        name = stat_spec
-        if not name.startswith("stat_"):
-            name = f"stat_{name}"
-        klass = Registry[name]
-    else:
-        raise PlotnineError(f"Unknown stat of type {type(stat_spec)}")
-
-    # Filter geom's raw kwargs to stat-relevant keys
+    # It's a class — instantiate with filtered geom kwargs
+    klass = result
     kwargs = geom_obj._raw_kwargs
     valid_kwargs = (
         klass.aesthetics() | klass.DEFAULT_PARAMS.keys()

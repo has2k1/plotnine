@@ -430,19 +430,8 @@ class geom(ABC, metaclass=Register):
         :
             ggplot object with added layer.
         """
-        other += self.to_layer()  # Add layer
+        other += layer(geom=self)
         return other
-
-    def to_layer(self) -> layer:
-        """
-        Make a layer that represents this geom
-
-        Returns
-        -------
-        :
-            Layer
-        """
-        return layer.from_geom(self)
 
     def handle_na(self, data: pd.DataFrame) -> pd.DataFrame:
         """
