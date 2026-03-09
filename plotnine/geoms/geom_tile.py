@@ -36,11 +36,6 @@ class geom_tile(geom_rect):
         "height": None,
     }
     REQUIRED_AES = {"x", "y"}
-    DEFAULT_PARAMS = {
-        "stat": "identity",
-        "position": "identity",
-        "na_rm": False,
-    }
 
     def setup_data(self, data: pd.DataFrame) -> pd.DataFrame:
         try:

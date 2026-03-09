@@ -68,7 +68,6 @@ class geom_violin(geom):
         "scale": "area",
         "trim": True,
         "width": None,
-        "na_rm": False,
     }
     draw_legend = staticmethod(geom_polygon.draw_legend)
 

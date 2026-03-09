@@ -43,12 +43,7 @@ class stat_hull(stat):
 
     """
     REQUIRED_AES = {"x", "y"}
-    DEFAULT_PARAMS = {
-        "geom": "path",
-        "position": "identity",
-        "na_rm": False,
-        "qhull_options": None,
-    }
+    DEFAULT_PARAMS = {"geom": "path", "qhull_options": None}
     CREATES = {"area"}
 
     def compute_group(self, data, scales):

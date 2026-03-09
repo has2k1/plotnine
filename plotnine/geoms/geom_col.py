@@ -33,10 +33,4 @@ class geom_col(geom_bar):
 
     REQUIRED_AES = {"x", "y"}
     NON_MISSING_AES = {"xmin", "xmax", "ymin", "ymax"}
-    DEFAULT_PARAMS = {
-        "stat": "identity",
-        "position": "stack",
-        "na_rm": False,
-        "just": 0.5,
-        "width": None,
-    }
+    DEFAULT_PARAMS = {"position": "stack", "just": 0.5, "width": None}

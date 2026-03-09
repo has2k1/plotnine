@@ -50,13 +50,7 @@ class geom_crossbar(geom):
         "size": 0.5,
     }
     REQUIRED_AES = {"x", "y", "ymin", "ymax"}
-    DEFAULT_PARAMS = {
-        "stat": "identity",
-        "position": "identity",
-        "na_rm": False,
-        "width": 0.5,
-        "fatten": 2,
-    }
+    DEFAULT_PARAMS = {"width": 0.5, "fatten": 2}
 
     legend_key_size = staticmethod(geom_segment.legend_key_size)
 

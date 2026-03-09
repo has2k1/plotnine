@@ -82,9 +82,6 @@ class geom_raster(geom):
     REQUIRED_AES = {"x", "y"}
     NON_MISSING_AES = {"fill", "xmin", "xmax", "ymin", "ymax"}
     DEFAULT_PARAMS = {
-        "stat": "identity",
-        "position": "identity",
-        "na_rm": False,
         "vjust": 0.5,
         "hjust": 0.5,
         "interpolation": None,

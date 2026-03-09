@@ -143,8 +143,6 @@ class stat_smooth(stat):
     REQUIRED_AES = {"x", "y"}
     DEFAULT_PARAMS = {
         "geom": "smooth",
-        "position": "identity",
-        "na_rm": False,
         "method": "auto",
         "se": True,
         "n": 80,

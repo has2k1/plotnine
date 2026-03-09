@@ -58,9 +58,6 @@ class geom_path(geom):
 
     REQUIRED_AES = {"x", "y"}
     DEFAULT_PARAMS = {
-        "stat": "identity",
-        "position": "identity",
-        "na_rm": False,
         "lineend": "butt",
         "linejoin": "round",
         "arrow": None,

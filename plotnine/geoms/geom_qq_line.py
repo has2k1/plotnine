@@ -18,8 +18,4 @@ class geom_qq_line(geom_path):
     plotnine.stat_qq_line : The default `stat` for this `geom`.
     """
 
-    DEFAULT_PARAMS = {
-        "stat": "qq_line",
-        "position": "identity",
-        "na_rm": False,
-    }
+    DEFAULT_PARAMS = {"stat": "qq_line"}

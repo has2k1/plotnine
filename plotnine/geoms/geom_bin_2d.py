@@ -23,7 +23,7 @@ class geom_bin_2d(geom_rect):
     plotnine.stat_bin_2d : The default stat for this `geom`.
     """
 
-    DEFAULT_PARAMS = {"stat": "bin_2d", "position": "identity", "na_rm": False}
+    DEFAULT_PARAMS = {"stat": "bin_2d"}
 
 
 geom_bin2d = geom_bin_2d

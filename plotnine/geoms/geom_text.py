@@ -144,9 +144,6 @@ class geom_text(geom):
     }
     REQUIRED_AES = {"label", "x", "y"}
     DEFAULT_PARAMS = {
-        "stat": "identity",
-        "position": "identity",
-        "na_rm": False,
         "parse": False,
         "nudge_x": 0,
         "nudge_y": 0,

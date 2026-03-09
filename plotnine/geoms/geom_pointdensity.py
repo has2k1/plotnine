@@ -18,8 +18,4 @@ class geom_pointdensity(geom_point):
     plotnine.stat_pointdensity : The default `stat` for this `geom`.
     """
 
-    DEFAULT_PARAMS = {
-        "stat": "pointdensity",
-        "position": "identity",
-        "na_rm": False,
-    }
+    DEFAULT_PARAMS = {"stat": "pointdensity"}

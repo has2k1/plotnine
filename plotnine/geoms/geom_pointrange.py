@@ -45,12 +45,7 @@ class geom_pointrange(geom):
         "size": 0.5,
     }
     REQUIRED_AES = {"x", "y", "ymin", "ymax"}
-    DEFAULT_PARAMS = {
-        "stat": "identity",
-        "position": "identity",
-        "na_rm": False,
-        "fatten": 4,
-    }
+    DEFAULT_PARAMS = {"fatten": 4}
 
     @staticmethod
     def draw_group(

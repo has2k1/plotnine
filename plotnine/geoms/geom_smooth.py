@@ -50,12 +50,7 @@ class geom_smooth(geom):
         "ymax": None,
     }
     REQUIRED_AES = {"x", "y"}
-    DEFAULT_PARAMS = {
-        "stat": "smooth",
-        "position": "identity",
-        "na_rm": False,
-        "legend_fill_ratio": 0.5,
-    }
+    DEFAULT_PARAMS = {"stat": "smooth", "legend_fill_ratio": 0.5}
 
     legend_key_size = staticmethod(geom_path.legend_key_size)
 

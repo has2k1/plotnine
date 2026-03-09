@@ -33,9 +33,6 @@ class _geom_logticks(geom_rug):
 
     DEFAULT_AES = {}
     DEFAULT_PARAMS = {
-        "stat": "identity",
-        "position": "identity",
-        "na_rm": False,
         "sides": "bl",
         "alpha": 1,
         "color": "black",

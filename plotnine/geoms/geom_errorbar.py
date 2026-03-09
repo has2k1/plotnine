@@ -41,12 +41,8 @@ class geom_errorbar(geom):
         "size": 0.5,
     }
     REQUIRED_AES = {"x", "ymin", "ymax"}
-    DEFAULT_PARAMS = {
-        "stat": "identity",
-        "position": "identity",
-        "na_rm": False,
-        "width": 0.5,
-    }
+    DEFAULT_PARAMS = {"width": 0.5}
+
     draw_legend = staticmethod(geom_path.draw_legend)
 
     def setup_data(self, data: pd.DataFrame) -> pd.DataFrame:

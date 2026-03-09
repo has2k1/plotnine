@@ -33,6 +33,13 @@ if typing.TYPE_CHECKING:
     from plotnine.typing import DataLike
 
 
+_BASE_PARAMS: dict[str, Any] = {
+    "stat": "identity",
+    "position": "identity",
+    "na_rm": False,
+}
+
+
 class geom(ABC, metaclass=Register):
     """Base class of all Geoms"""
 
@@ -82,11 +89,12 @@ class geom(ABC, metaclass=Register):
         self._raw_kwargs = kwargs  # Will be used to create stat & layer
 
         # separate aesthetics and parameters
+        possible_params = _BASE_PARAMS | self.DEFAULT_PARAMS
         self.aes_params = {
             ae: kwargs[ae] for ae in self.aesthetics() & set(kwargs)
         }
-        self.params = self.DEFAULT_PARAMS | {
-            k: v for k, v in kwargs.items() if k in self.DEFAULT_PARAMS
+        self.params = possible_params | {
+            k: v for k, v in kwargs.items() if k in possible_params
         }
         self.mapping = kwargs["mapping"]
         self.data = kwargs["data"]

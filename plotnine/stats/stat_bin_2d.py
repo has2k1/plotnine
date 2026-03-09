@@ -59,8 +59,6 @@ class stat_bin_2d(stat):
     REQUIRED_AES = {"x", "y"}
     DEFAULT_PARAMS = {
         "geom": "rect",
-        "position": "identity",
-        "na_rm": False,
         "bins": 30,
         "breaks": None,
         "binwidth": None,

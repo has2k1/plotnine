@@ -39,11 +39,7 @@ class geom_rect(geom):
         "alpha": 1,
     }
     REQUIRED_AES = {"xmax", "xmin", "ymax", "ymin"}
-    DEFAULT_PARAMS = {
-        "stat": "identity",
-        "position": "identity",
-        "na_rm": False,
-    }
+
     draw_legend = staticmethod(geom_polygon.draw_legend)
 
     def draw_panel(

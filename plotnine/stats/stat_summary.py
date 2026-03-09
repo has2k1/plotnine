@@ -270,8 +270,6 @@ class stat_summary(stat):
     REQUIRED_AES = {"x", "y"}
     DEFAULT_PARAMS = {
         "geom": "pointrange",
-        "position": "identity",
-        "na_rm": False,
         "fun_data": "mean_cl_boot",
         "fun_y": None,
         "fun_ymin": None,

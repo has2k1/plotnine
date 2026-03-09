@@ -54,8 +54,6 @@ class geom_dotplot(geom):
     NON_MISSING_AES = {"size", "shape"}
     DEFAULT_PARAMS = {
         "stat": "bindot",
-        "position": "identity",
-        "na_rm": False,
         "stackdir": "up",
         "stackratio": 1,
         "dotsize": 1,

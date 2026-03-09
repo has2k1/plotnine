@@ -25,12 +25,6 @@ class geom_blank(geom):
     {common_parameters}
     """
 
-    DEFAULT_PARAMS = {
-        "stat": "identity",
-        "position": "identity",
-        "na_rm": False,
-    }
-
     def draw_panel(
         self,
         data: pd.DataFrame,

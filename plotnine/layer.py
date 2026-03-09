@@ -94,9 +94,9 @@ class layer:
             if stat is not None:
                 stat_ref = _lookup_stat(stat)
                 if isinstance(stat_ref, type):
-                    geom = stat_ref.DEFAULT_PARAMS.get("geom", "blank")
+                    geom = stat_ref.DEFAULT_PARAMS["geom"]
                 else:
-                    geom = stat_ref.params.get("geom", "blank")
+                    geom = stat_ref.params["geom"]
                     # Forward stat instance's kwargs to the geom
                     if mapping is None and data is None and not kwargs:
                         mapping = stat_ref._raw_kwargs.get("mapping")
@@ -154,6 +154,9 @@ class layer:
                 "data",
                 "mapping",
                 "geom",
+                "stat",
+                "position",
+                "na_rm",
                 "show_legend",
                 "inherit_aes",
                 "raster",

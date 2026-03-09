@@ -90,8 +90,6 @@ class stat_summary_bin(stat):
     REQUIRED_AES = {"x", "y"}
     DEFAULT_PARAMS = {
         "geom": "pointrange",
-        "position": "identity",
-        "na_rm": False,
         "bins": 30,
         "breaks": None,
         "binwidth": None,

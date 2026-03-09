@@ -44,12 +44,7 @@ class geom_vline(geom):
         "alpha": 1,
     }
     REQUIRED_AES = {"xintercept"}
-    DEFAULT_PARAMS = {
-        "stat": "identity",
-        "position": "identity",
-        "na_rm": False,
-        "inherit_aes": False,
-    }
+    DEFAULT_PARAMS = {"inherit_aes": False}
 
     legend_key_size = staticmethod(geom_segment.legend_key_size)
 

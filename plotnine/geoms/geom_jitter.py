@@ -43,9 +43,7 @@ class geom_jitter(geom_point):
     """
 
     DEFAULT_PARAMS = {
-        "stat": "identity",
         "position": "jitter",
-        "na_rm": False,
         "width": None,
         "height": None,
         "random_state": None,
