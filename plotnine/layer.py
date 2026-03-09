@@ -155,8 +155,21 @@ class layer:
         """
         from .geoms.geom import geom as geom_cls
 
-        _geom = geom_cls.from_stat(stat)
-        return layer(geom=_geom)
+        name = stat.params.get("geom", "blank")
+
+        if isinstance(name, geom_cls):
+            return layer(geom=name)
+
+        if isinstance(name, type) and issubclass(name, geom_cls):
+            klass = name
+        elif isinstance(name, str):
+            if not name.startswith("geom_"):
+                name = f"geom_{name}"
+            klass = Registry[name]
+        else:
+            raise PlotnineError(f"Unknown geom of type {type(name)}")
+
+        return layer(geom=klass(stat=stat, **stat._raw_kwargs))
 
     @staticmethod
     def _verify_arguments(geom: geom, stat: stat) -> None:
@@ -688,7 +701,7 @@ def _resolve_stat(
     from .stats.stat import stat as stat_cls
 
     if stat_spec is None:
-        return stat_cls.from_geom(geom_obj)
+        stat_spec = geom_obj.params["stat"]
 
     # Duck-type guard for module reloads
     if not isinstance(stat_spec, type) and hasattr(stat_spec, "compute_layer"):
@@ -734,7 +747,7 @@ def _resolve_position(
     from .positions.position import position as position_cls
 
     if position_spec is None:
-        return position_cls.from_geom(geom_obj)
+        position_spec = geom_obj.params["position"]
 
     if isinstance(position_spec, position_cls):
         return position_spec

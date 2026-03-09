@@ -12,8 +12,7 @@ from .._utils import (
     remove_missing,
     uniquecols,
 )
-from .._utils.registry import Register, Registry
-from ..exceptions import PlotnineError
+from .._utils.registry import Register
 from ..layer import layer
 from ..mapping import aes
 
@@ -22,7 +21,6 @@ if typing.TYPE_CHECKING:
 
     from plotnine import ggplot
     from plotnine.facets.layout import Layout
-    from plotnine.geoms.geom import geom
     from plotnine.iapi import pos_scales
     from plotnine.mapping import Environment
     from plotnine.typing import DataLike
@@ -81,52 +79,6 @@ class stat(ABC, metaclass=Register):
         self.aes_params = {
             ae: kwargs[ae] for ae in self.aesthetics() & set(kwargs)
         }
-
-    @staticmethod
-    def from_geom(geom: geom) -> stat:
-        """
-        Return an instantiated stat object
-
-        stats should not override this method.
-
-        Parameters
-        ----------
-        geom :
-            A geom object
-
-        Returns
-        -------
-        stat
-            A stat object
-
-        Raises
-        ------
-        [](`~plotnine.exceptions.PlotnineError`) if unable to create a `stat`.
-        """
-        name = geom.params["stat"]
-        kwargs = geom._raw_kwargs
-        # More stable when reloading modules than
-        # using issubclass
-        if not isinstance(name, type) and hasattr(name, "compute_layer"):
-            return name
-
-        if isinstance(name, stat):
-            return name
-        elif isinstance(name, type) and issubclass(name, stat):
-            klass = name
-        elif isinstance(name, str):
-            if not name.startswith("stat_"):
-                name = f"stat_{name}"
-            klass = Registry[name]
-        else:
-            raise PlotnineError(f"Unknown stat of type {type(name)}")
-
-        valid_kwargs = (
-            klass.aesthetics() | klass.DEFAULT_PARAMS.keys()
-        ) & kwargs.keys()
-
-        params = {k: kwargs[k] for k in valid_kwargs}
-        return klass(geom=geom, **params)
 
     def __deepcopy__(self, memo: dict[Any, Any]) -> stat:
         """

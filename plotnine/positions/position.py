@@ -8,7 +8,7 @@ from warnings import warn
 import numpy as np
 
 from .._utils import check_required_aesthetics, groupby_apply
-from .._utils.registry import Register, Registry
+from .._utils.registry import Register
 from ..exceptions import PlotnineError, PlotnineWarning
 from ..mapping.aes import X_AESTHETICS, Y_AESTHETICS
 
@@ -18,7 +18,6 @@ if typing.TYPE_CHECKING:
     import pandas as pd
 
     from plotnine.facets.layout import Layout
-    from plotnine.geoms.geom import geom
     from plotnine.iapi import pos_scales
     from plotnine.typing import TransformCol
 
@@ -131,41 +130,6 @@ class position(ABC, metaclass=Register):
             data[ys] = data[ys].apply(trans_y)
 
         return data
-
-    @staticmethod
-    def from_geom(geom: geom) -> position:
-        """
-        Create and return a position object for the geom
-
-        Parameters
-        ----------
-        geom : geom
-            An instantiated geom object.
-
-        Returns
-        -------
-        out : position
-            A position object
-
-        Raises
-        ------
-        PlotnineError
-            If unable to create a `position`.
-        """
-        name = geom.params["position"]
-        if issubclass(type(name), position):
-            return name
-
-        if isinstance(name, type) and issubclass(name, position):
-            klass = name
-        elif isinstance(name, str):
-            if not name.startswith("position_"):
-                name = f"position_{name}"
-            klass = Registry[name]
-        else:
-            raise PlotnineError(f"Unknown position of type {type(name)}")
-
-        return klass()
 
     @staticmethod
     def strategy(data: pd.DataFrame, params: dict[str, Any]) -> pd.DataFrame:
