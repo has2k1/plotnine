@@ -12,7 +12,7 @@ from .._utils import (
     data_mapping_as_kwargs,
     remove_missing,
 )
-from .._utils.registry import Register, Registry
+from .._utils.registry import Register
 from ..exceptions import PlotnineError
 from ..layer import layer
 from ..mapping.aes import rename_aesthetics
@@ -30,7 +30,6 @@ if typing.TYPE_CHECKING:
     from plotnine.facets.layout import Layout
     from plotnine.iapi import panel_view
     from plotnine.mapping import Environment
-    from plotnine.stats.stat import stat
     from plotnine.typing import DataLike
 
 
@@ -91,44 +90,6 @@ class geom(ABC, metaclass=Register):
         }
         self.mapping = kwargs["mapping"]
         self.data = kwargs["data"]
-
-    @staticmethod
-    def from_stat(stat: stat) -> geom:
-        """
-        Return an instantiated geom object
-
-        geoms should not override this method.
-
-        Parameters
-        ----------
-        stat :
-            `stat`
-
-        Returns
-        -------
-        :
-            A geom object
-
-        Raises
-        ------
-        PlotnineError
-            If unable to create a `geom`.
-        """
-        name = stat.params.get("geom", "blank")
-
-        if isinstance(name, geom):
-            return name
-
-        if isinstance(name, type) and issubclass(name, geom):
-            klass = name
-        elif isinstance(name, str):
-            if not name.startswith("geom_"):
-                name = f"geom_{name}"
-            klass = Registry[name]
-        else:
-            raise PlotnineError(f"Unknown geom of type {type(name)}")
-
-        return klass(stat=stat, **stat._raw_kwargs)
 
     @classmethod
     def aesthetics(cls: type[geom]) -> set[str]:

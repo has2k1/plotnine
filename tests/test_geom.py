@@ -4,6 +4,7 @@ import pytest
 from plotnine import aes, geom_point, ggplot, stat_identity
 from plotnine.exceptions import PlotnineError
 from plotnine.geoms.geom import geom
+from plotnine.layer import layer
 
 data = pd.DataFrame({"col1": [1, 2, 3, 4], "col2": 2, "col3": list("abcd")})
 
@@ -51,13 +52,13 @@ def test_geom_with_invalid_argument():
 
 def test_geom_from_stat():
     stat = stat_identity(geom="point")
-    assert isinstance(geom.from_stat(stat), geom_point)
+    assert isinstance(layer.from_stat(stat).geom, geom_point)
 
     stat = stat_identity(geom="geom_point")
-    assert isinstance(geom.from_stat(stat), geom_point)
+    assert isinstance(layer.from_stat(stat).geom, geom_point)
 
     stat = stat_identity(geom=geom_point())
-    assert isinstance(geom.from_stat(stat), geom_point)
+    assert isinstance(layer.from_stat(stat).geom, geom_point)
 
     stat = stat_identity(geom=geom_point)
-    assert isinstance(geom.from_stat(stat), geom_point)
+    assert isinstance(layer.from_stat(stat).geom, geom_point)
