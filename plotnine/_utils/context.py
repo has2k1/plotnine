@@ -1,10 +1,13 @@
 from __future__ import annotations
 
+from copy import copy
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 import pandas as pd
 from packaging.version import Version
+
+from ..session import set_last_plot
 
 if TYPE_CHECKING:
     from typing_extensions import Self
@@ -38,6 +41,7 @@ def is_closed(fig) -> bool:
     return not plt.fignum_exists(fig.number)
 
 
+@dataclass
 class plot_context:
     """
     Context within which the plot is built
@@ -50,14 +54,14 @@ class plot_context:
         Whether to show the plot.
     """
 
-    def __init__(self, plot: ggplot, show: bool = False):
+    plot: ggplot
+    show: bool = False
+
+    def __post_init__(self):
         import matplotlib as mpl
 
-        self.plot = plot
-        self.show = show
-
         # Contexts
-        self.rc_context = mpl.rc_context(plot.theme.rcParams)
+        self.rc_context = mpl.rc_context(self.plot.theme.rcParams)
         if PANDAS_LT_3:
             self.pd_option_context = pd.option_context(
                 "mode.copy_on_write",
@@ -69,6 +73,7 @@ class plot_context:
         Enclose in matplolib & pandas environments
         """
 
+        self._last_plot = copy(self.plot)
         self.rc_context.__enter__()
         if PANDAS_LT_3:
             self.pd_option_context.__enter__()
@@ -86,6 +91,7 @@ class plot_context:
                 plt.show()
             else:
                 plt.close(self.plot.figure)
+            set_last_plot(self._last_plot)
         else:
             # There is an exception, close any figure
             if hasattr(self.plot, "figure"):
@@ -127,6 +133,7 @@ class plot_composition_context:
         """
         Enclose in matplolib & pandas environments
         """
+        self._last_plot = copy(self.cmp)
         self._rc_context.__enter__()
         return self
 
@@ -140,6 +147,7 @@ class plot_composition_context:
                 plt.show()
             else:
                 plt.close(self.cmp.figure)
+            set_last_plot(self._last_plot)
         else:
             # There is an exception, close any figure
             if hasattr(self.cmp, "figure"):
