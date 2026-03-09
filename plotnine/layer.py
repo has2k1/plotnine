@@ -635,6 +635,11 @@ def _resolve_geom(
     from .geoms.geom import geom as geom_cls
 
     if isinstance(geom_spec, geom_cls):
+        for param in set(geom_spec.aesthetics()) & set(kwargs):
+            geom_spec.aes_params[param] = kwargs[param]
+
+        for param in set(geom_spec.DEFAULT_PARAMS) & set(kwargs):
+            geom_spec.params[param] = kwargs[param]
         return geom_spec
 
     if isinstance(geom_spec, type) and issubclass(geom_spec, geom_cls):
@@ -670,7 +675,7 @@ def _lookup_stat(
 
     # Duck-type guard for module reloads
     if not isinstance(stat_spec, type) and hasattr(stat_spec, "compute_layer"):
-        return stat_spec  # type: ignore[return-value]
+        return stat_spec  # pyright: ignore[reportReturnType]
 
     if isinstance(stat_spec, stat_cls):
         return stat_spec
@@ -707,9 +712,15 @@ def _resolve_stat(
     if stat_spec is None:
         stat_spec = geom_obj.params["stat"]
 
-    result = _lookup_stat(stat_spec)  # type: ignore[arg-type]
+    result = _lookup_stat(stat_spec)  # pyright: ignore[reportArgumentType]
 
     if isinstance(result, stat_cls):
+        kwargs = result._raw_kwargs
+        for param in set(result.aesthetics()) & set(kwargs):
+            result.aes_params[param] = kwargs[param]
+
+        for param in set(result.DEFAULT_PARAMS) & set(kwargs):
+            result.params[param] = kwargs[param]
         return result
 
     # It's a class — instantiate with filtered geom kwargs
