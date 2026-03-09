@@ -751,7 +751,7 @@ def _resolve_position(
     from .positions.position import position as position_cls
 
     if position_spec is None:
-        position_spec = geom_obj.params["position"]
+        position_spec = geom_obj.params.get("position", "identity")
 
     if isinstance(position_spec, position_cls):
         return position_spec
