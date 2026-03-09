@@ -42,7 +42,6 @@ from .layer import Layers
 from .mapping.aes import aes
 from .options import get_option
 from .scales.scales import Scales
-from .session import set_last_plot
 from .themes.theme import theme, theme_get
 
 if TYPE_CHECKING:
@@ -376,7 +375,6 @@ class ggplot:
             self.theme.apply()
             figure.set_layout_engine(PlotnineLayoutEngine(self))
 
-        set_last_plot(self)
         return figure
 
     def _setup(self) -> Figure:
