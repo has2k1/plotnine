@@ -46,7 +46,7 @@ def test_geom_with_invalid_argument():
         DEFAULT_PARAMS = {"stat": "identity", "position": "identity"}
 
     with pytest.raises(PlotnineError):
-        geom_abc(do_the_impossible=True)
+        geom_abc(do_the_impossible=True).to_layer()
 
 
 def test_geom_from_stat():

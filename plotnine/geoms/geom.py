@@ -17,8 +17,6 @@ from ..exceptions import PlotnineError
 from ..layer import layer
 from ..mapping.aes import rename_aesthetics
 from ..mapping.evaluation import evaluate
-from ..positions.position import position
-from ..stats.stat import stat
 
 if typing.TYPE_CHECKING:
     from typing import Any
@@ -32,6 +30,7 @@ if typing.TYPE_CHECKING:
     from plotnine.facets.layout import Layout
     from plotnine.iapi import panel_view
     from plotnine.mapping import Environment
+    from plotnine.stats.stat import stat
     from plotnine.typing import DataLike
 
 
@@ -92,9 +91,6 @@ class geom(ABC, metaclass=Register):
         }
         self.mapping = kwargs["mapping"]
         self.data = kwargs["data"]
-        self._stat = stat.from_geom(self)
-        self._position = position.from_geom(self)
-        self._verify_arguments(kwargs)  # geom, stat, layer
 
     @staticmethod
     def from_stat(stat: stat) -> geom:
@@ -486,35 +482,6 @@ class geom(ABC, metaclass=Register):
             Layer
         """
         return layer.from_geom(self)
-
-    def _verify_arguments(self, kwargs: dict[str, Any]):
-        """
-        Verify arguments passed to the geom
-        """
-        geom_stat_args = kwargs.keys() | self._stat._raw_kwargs.keys()
-        unknown = (
-            geom_stat_args
-            - self.aesthetics()  # geom aesthetics
-            - self.DEFAULT_PARAMS.keys()  # geom parameters
-            - self._stat.aesthetics()  # stat aesthetics
-            - self._stat.DEFAULT_PARAMS.keys()  # stat parameters
-            - {
-                # stat parameters
-                "data",
-                "mapping",
-                "geom",
-                # layer parameters
-                "show_legend",
-                "inherit_aes",
-                "raster",
-            }
-        )
-        if unknown:
-            msg = (
-                "Parameters {}, are not understood by "
-                "either the geom, stat or layer."
-            )
-            raise PlotnineError(msg.format(unknown))
 
     def handle_na(self, data: pd.DataFrame) -> pd.DataFrame:
         """
