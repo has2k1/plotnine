@@ -90,25 +90,26 @@ class layer:
         **kwargs: Any,
     ):
         # Stat-first: derive geom from stat's default
-        if stat is not None:
-            stat_ref = _lookup_stat(stat)
-            if isinstance(stat_ref, type):
-                geom = stat_ref.DEFAULT_PARAMS.get("geom", "blank")
-            else:
-                geom = stat_ref.params.get("geom", "blank")
-                # Forward stat instance's kwargs to the geom
-                if mapping is None and data is None and not kwargs:
-                    mapping = stat_ref._raw_kwargs.get("mapping")
-                    data = stat_ref._raw_kwargs.get("data")
-                    kwargs = {
-                        k: v
-                        for k, v in stat_ref._raw_kwargs.items()
-                        if k not in ("mapping", "data")
-                    }
-
         if geom is None:
-            geom = "blank"
+            if stat is not None:
+                stat_ref = _lookup_stat(stat)
+                if isinstance(stat_ref, type):
+                    geom = stat_ref.DEFAULT_PARAMS.get("geom", "blank")
+                else:
+                    geom = stat_ref.params.get("geom", "blank")
+                    # Forward stat instance's kwargs to the geom
+                    if mapping is None and data is None and not kwargs:
+                        mapping = stat_ref._raw_kwargs.get("mapping")
+                        data = stat_ref._raw_kwargs.get("data")
+                        kwargs = {
+                            k: v
+                            for k, v in stat_ref._raw_kwargs.items()
+                            if k not in ("mapping", "data")
+                        }
+            else:
+                geom = "blank"
 
+        geom = cast("geom | type[geom] | str", geom)
         _geom = _resolve_geom(geom, mapping, data, kwargs)
         _stat = _resolve_stat(stat, _geom)
         _pos = _resolve_position(position, _geom)
