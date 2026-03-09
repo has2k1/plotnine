@@ -118,7 +118,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine 999.post1+ge7a73fa16</span>
+    <span class="navbar-title">plotnine 999.post1+gfcd4ea3c3</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -161,7 +161,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#plotnine.positions.position.position.collide2" id="toc-plotnine.positions.position.position.collide2" class="nav-link" data-scroll-target="#plotnine.positions.position.position.collide2"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">collide2</span> <span class="doc-labels"><code class="doc-label doc-label-classmethod"></code></span></a></li>
   <li><a href="#plotnine.positions.position.position.compute_layer" id="toc-plotnine.positions.position.position.compute_layer" class="nav-link" data-scroll-target="#plotnine.positions.position.position.compute_layer"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">compute_layer</span> <span class="doc-labels"><code class="doc-label doc-label-classmethod"></code></span></a></li>
   <li><a href="#plotnine.positions.position.position.compute_panel" id="toc-plotnine.positions.position.position.compute_panel" class="nav-link" data-scroll-target="#plotnine.positions.position.position.compute_panel"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">compute_panel</span> <span class="doc-labels"><code class="doc-label doc-label-classmethod"></code></span></a></li>
-  <li><a href="#plotnine.positions.position.position.from_geom" id="toc-plotnine.positions.position.position.from_geom" class="nav-link" data-scroll-target="#plotnine.positions.position.position.from_geom"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">from_geom</span> <span class="doc-labels"><code class="doc-label doc-label-staticmethod"></code></span></a></li>
   <li><a href="#plotnine.positions.position.position.setup_data" id="toc-plotnine.positions.position.position.setup_data" class="nav-link" data-scroll-target="#plotnine.positions.position.position.setup_data"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">setup_data</span></a></li>
   <li><a href="#plotnine.positions.position.position.setup_params" id="toc-plotnine.positions.position.position.setup_params" class="nav-link" data-scroll-target="#plotnine.positions.position.position.setup_params"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">setup_params</span></a></li>
   <li><a href="#plotnine.positions.position.position.strategy" id="toc-plotnine.positions.position.position.strategy" class="nav-link" data-scroll-target="#plotnine.positions.position.position.strategy"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">strategy</span> <span class="doc-labels"><code class="doc-label doc-label-staticmethod"></code></span></a></li>
@@ -214,22 +213,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>Positions must override this function</td>
 </tr>
 <tr class="odd">
-<td><a href="#plotnine.positions.position.position.from_geom">from_geom</a></td>
-<td>Create and return a position object for the geom</td>
-</tr>
-<tr class="even">
 <td><a href="#plotnine.positions.position.position.setup_data">setup_data</a></td>
 <td>Verify &amp; return data</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><a href="#plotnine.positions.position.position.setup_params">setup_params</a></td>
 <td>Verify, modify &amp; return a copy of the params.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><a href="#plotnine.positions.position.position.strategy">strategy</a></td>
 <td>Calculate boundaries of geometry object</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><a href="#plotnine.positions.position.position.transform_position">transform_position</a></td>
 <td>Transform all the variables that map onto the x and y scales.</td>
 </tr>
@@ -288,52 +283,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </dl>
 </section>
 </section>
-<section id="plotnine.positions.position.position.from_geom" class="level3 title doc-object doc-method">
-<h3 class="title doc-object doc-method anchored" data-anchor-id="plotnine.positions.position.position.from_geom"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">from_geom</span> <span class="doc-labels"><code class="doc-label doc-label-staticmethod"></code></span></h3>
-<div class="doc-signature doc-method">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>from_geom(geom)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div class="doc-text">
-<p>Create and return a position object for the geom</p>
-</div>
-<section id="parameters" class="level4 doc-parameters">
-<h4 class="doc-parameters anchored" data-anchor-id="parameters">Parameters</h4>
-<div class="doc-definition-items">
-<dl>
-<dt><code><span class="doc-parameter-name">geom</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="../reference/geom.html#plotnine.geoms.geom.geom">geom</a></span></code></dt>
-<dd>
-An instantiated geom object.
-</dd>
-</dl>
-</div>
-</section>
-<section id="returns" class="level4 doc-returns">
-<h4 class="doc-returns anchored" data-anchor-id="returns">Returns</h4>
-<div class="doc-definition-items">
-<dl>
-<dt><code><span class="doc-parameter-name">out</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="../reference/position.html#plotnine.positions.position.position">position</a></span></code></dt>
-<dd>
-A position object
-</dd>
-</dl>
-</div>
-</section>
-<section id="raises" class="level4 doc-raises">
-<h4 class="doc-raises anchored" data-anchor-id="raises">Raises</h4>
-<div class="doc-definition-items">
-<dl>
-<dt><code><span class="doc-parameter-annotation">PlotnineError</span></code></dt>
-<dd>
-If unable to create a <code>position</code>.
-</dd>
-</dl>
-</div>
-</section>
-</section>
 <section id="plotnine.positions.position.position.setup_data" class="level3 title doc-object doc-method">
 <h3 class="title doc-object doc-method anchored" data-anchor-id="plotnine.positions.position.position.setup_data"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">setup_data</span></h3>
 <div class="doc-signature doc-method">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>setup_data(data, params)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>setup_data(data, params)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="doc-text">
 <p>Verify &amp; return data</p>
@@ -342,7 +295,7 @@ If unable to create a <code>position</code>.
 <section id="plotnine.positions.position.position.setup_params" class="level3 title doc-object doc-method">
 <h3 class="title doc-object doc-method anchored" data-anchor-id="plotnine.positions.position.position.setup_params"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">setup_params</span></h3>
 <div class="doc-signature doc-method">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>setup_params(data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>setup_params(data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="doc-text">
 <p>Verify, modify &amp; return a copy of the params.</p>
@@ -351,7 +304,7 @@ If unable to create a <code>position</code>.
 <section id="plotnine.positions.position.position.strategy" class="level3 title doc-object doc-method">
 <h3 class="title doc-object doc-method anchored" data-anchor-id="plotnine.positions.position.position.strategy"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">strategy</span> <span class="doc-labels"><code class="doc-label doc-label-staticmethod"></code></span></h3>
 <div class="doc-signature doc-method">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>strategy(data, params)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>strategy(data, params)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="doc-text">
 <p>Calculate boundaries of geometry object</p>
@@ -360,13 +313,13 @@ If unable to create a <code>position</code>.
 <section id="plotnine.positions.position.position.transform_position" class="level3 title doc-object doc-method">
 <h3 class="title doc-object doc-method anchored" data-anchor-id="plotnine.positions.position.position.transform_position"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">transform_position</span> <span class="doc-labels"><code class="doc-label doc-label-staticmethod"></code></span></h3>
 <div class="doc-signature doc-method">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>transform_position(data, trans_x<span class="op">=</span><span class="va">None</span>, trans_y<span class="op">=</span><span class="va">None</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>transform_position(data, trans_x<span class="op">=</span><span class="va">None</span>, trans_y<span class="op">=</span><span class="va">None</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="doc-text">
 <p>Transform all the variables that map onto the x and y scales.</p>
 </div>
-<section id="parameters-1" class="level4 doc-parameters">
-<h4 class="doc-parameters anchored" data-anchor-id="parameters-1">Parameters</h4>
+<section id="parameters" class="level4 doc-parameters">
+<h4 class="doc-parameters anchored" data-anchor-id="parameters">Parameters</h4>
 <div class="doc-definition-items">
 <dl>
 <dt><code><span class="doc-parameter-name">data</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">dataframe</span></code></dt>

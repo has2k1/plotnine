@@ -118,7 +118,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine 999.post1+ge7a73fa16</span>
+    <span class="navbar-title">plotnine 999.post1+gfcd4ea3c3</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -170,10 +170,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#plotnine.stats.stat.stat.compute_layer" id="toc-plotnine.stats.stat.stat.compute_layer" class="nav-link" data-scroll-target="#plotnine.stats.stat.stat.compute_layer"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">compute_layer</span></a></li>
   <li><a href="#plotnine.stats.stat.stat.compute_panel" id="toc-plotnine.stats.stat.stat.compute_panel" class="nav-link" data-scroll-target="#plotnine.stats.stat.stat.compute_panel"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">compute_panel</span></a></li>
   <li><a href="#plotnine.stats.stat.stat.finish_layer" id="toc-plotnine.stats.stat.stat.finish_layer" class="nav-link" data-scroll-target="#plotnine.stats.stat.stat.finish_layer"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">finish_layer</span></a></li>
-  <li><a href="#plotnine.stats.stat.stat.from_geom" id="toc-plotnine.stats.stat.stat.from_geom" class="nav-link" data-scroll-target="#plotnine.stats.stat.stat.from_geom"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">from_geom</span> <span class="doc-labels"><code class="doc-label doc-label-staticmethod"></code></span></a></li>
   <li><a href="#plotnine.stats.stat.stat.setup_data" id="toc-plotnine.stats.stat.stat.setup_data" class="nav-link" data-scroll-target="#plotnine.stats.stat.stat.setup_data"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">setup_data</span></a></li>
   <li><a href="#plotnine.stats.stat.stat.setup_params" id="toc-plotnine.stats.stat.stat.setup_params" class="nav-link" data-scroll-target="#plotnine.stats.stat.stat.setup_params"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">setup_params</span></a></li>
-  <li><a href="#plotnine.stats.stat.stat.to_layer" id="toc-plotnine.stats.stat.stat.to_layer" class="nav-link" data-scroll-target="#plotnine.stats.stat.stat.to_layer"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">to_layer</span></a></li>
   <li><a href="#plotnine.stats.stat.stat.use_defaults" id="toc-plotnine.stats.stat.stat.use_defaults" class="nav-link" data-scroll-target="#plotnine.stats.stat.stat.use_defaults"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">use_defaults</span></a></li>
   </ul></li>
   </ul>
@@ -305,20 +303,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>Modify data after the aesthetics have been mapped</td>
 </tr>
 <tr class="even">
-<td><a href="#plotnine.stats.stat.stat.from_geom">from_geom</a></td>
-<td>Return an instantiated stat object</td>
-</tr>
-<tr class="odd">
 <td><a href="#plotnine.stats.stat.stat.setup_data">setup_data</a></td>
 <td>Override to modify data before compute_layer is called</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><a href="#plotnine.stats.stat.stat.setup_params">setup_params</a></td>
 <td>Override this to verify and/or adjust parameters</td>
-</tr>
-<tr class="odd">
-<td><a href="#plotnine.stats.stat.stat.to_layer">to_layer</a></td>
-<td>Make a layer that represents this stat</td>
 </tr>
 <tr class="even">
 <td><a href="#plotnine.stats.stat.stat.use_defaults">use_defaults</a></td>
@@ -464,22 +454,21 @@ Modified data
 </div>
 </section>
 </section>
-<section id="plotnine.stats.stat.stat.from_geom" class="level3 title doc-object doc-method">
-<h3 class="title doc-object doc-method anchored" data-anchor-id="plotnine.stats.stat.stat.from_geom"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">from_geom</span> <span class="doc-labels"><code class="doc-label doc-label-staticmethod"></code></span></h3>
+<section id="plotnine.stats.stat.stat.setup_data" class="level3 title doc-object doc-method">
+<h3 class="title doc-object doc-method anchored" data-anchor-id="plotnine.stats.stat.stat.setup_data"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">setup_data</span></h3>
 <div class="doc-signature doc-method">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>from_geom(geom)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>setup_data(data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="doc-text">
-<p>Return an instantiated stat object</p>
-<p>stats should not override this method.</p>
+<p>Override to modify data before compute_layer is called</p>
 </div>
 <section id="parameters-4" class="level4 doc-parameters">
 <h4 class="doc-parameters anchored" data-anchor-id="parameters-4">Parameters</h4>
 <div class="doc-definition-items">
 <dl>
-<dt><code><span class="doc-parameter-name">geom</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="../reference/geom.html#plotnine.geoms.geom.geom">geom</a></span></code></dt>
+<dt><code><span class="doc-parameter-name">data</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://pandas.pydata.org/pandas-docs/stable/index.html#module-pandas">pd</a>.<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span></code></dt>
 <dd>
-A geom object
+Data
 </dd>
 </dl>
 </div>
@@ -488,32 +477,21 @@ A geom object
 <h4 class="doc-returns anchored" data-anchor-id="returns-1">Returns</h4>
 <div class="doc-definition-items">
 <dl>
-<dt><code><span class="doc-parameter-annotation"><a href="../reference/stat.html#plotnine.stats.stat.stat">stat</a></span></code></dt>
+<dt><code><span class="doc-parameter-name">out</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://pandas.pydata.org/pandas-docs/stable/index.html#module-pandas">pd</a>.<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span></code></dt>
 <dd>
-A stat object
-</dd>
-</dl>
-</div>
-</section>
-<section id="raises" class="level4 doc-raises">
-<h4 class="doc-raises anchored" data-anchor-id="raises">Raises</h4>
-<div class="doc-definition-items">
-<dl>
-<dt><code><span class="doc-parameter-annotation"><code>PlotnineError</code> if unable to create a <code>stat</code>.</span></code></dt>
-<dd>
-
+Data
 </dd>
 </dl>
 </div>
 </section>
 </section>
-<section id="plotnine.stats.stat.stat.setup_data" class="level3 title doc-object doc-method">
-<h3 class="title doc-object doc-method anchored" data-anchor-id="plotnine.stats.stat.stat.setup_data"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">setup_data</span></h3>
+<section id="plotnine.stats.stat.stat.setup_params" class="level3 title doc-object doc-method">
+<h3 class="title doc-object doc-method anchored" data-anchor-id="plotnine.stats.stat.stat.setup_params"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">setup_params</span></h3>
 <div class="doc-signature doc-method">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>setup_data(data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>setup_params(data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="doc-text">
-<p>Override to modify data before compute_layer is called</p>
+<p>Override this to verify and/or adjust parameters</p>
 </div>
 <section id="parameters-5" class="level4 doc-parameters">
 <h4 class="doc-parameters anchored" data-anchor-id="parameters-5">Parameters</h4>
@@ -530,37 +508,6 @@ Data
 <h4 class="doc-returns anchored" data-anchor-id="returns-2">Returns</h4>
 <div class="doc-definition-items">
 <dl>
-<dt><code><span class="doc-parameter-name">out</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://pandas.pydata.org/pandas-docs/stable/index.html#module-pandas">pd</a>.<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span></code></dt>
-<dd>
-Data
-</dd>
-</dl>
-</div>
-</section>
-</section>
-<section id="plotnine.stats.stat.stat.setup_params" class="level3 title doc-object doc-method">
-<h3 class="title doc-object doc-method anchored" data-anchor-id="plotnine.stats.stat.stat.setup_params"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">setup_params</span></h3>
-<div class="doc-signature doc-method">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>setup_params(data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div class="doc-text">
-<p>Override this to verify and/or adjust parameters</p>
-</div>
-<section id="parameters-6" class="level4 doc-parameters">
-<h4 class="doc-parameters anchored" data-anchor-id="parameters-6">Parameters</h4>
-<div class="doc-definition-items">
-<dl>
-<dt><code><span class="doc-parameter-name">data</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://pandas.pydata.org/pandas-docs/stable/index.html#module-pandas">pd</a>.<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span></code></dt>
-<dd>
-Data
-</dd>
-</dl>
-</div>
-</section>
-<section id="returns-3" class="level4 doc-returns">
-<h4 class="doc-returns anchored" data-anchor-id="returns-3">Returns</h4>
-<div class="doc-definition-items">
-<dl>
 <dt><code><span class="doc-parameter-name">out</span></code></dt>
 <dd>
 Parameters used by the stats.
@@ -569,37 +516,17 @@ Parameters used by the stats.
 </div>
 </section>
 </section>
-<section id="plotnine.stats.stat.stat.to_layer" class="level3 title doc-object doc-method">
-<h3 class="title doc-object doc-method anchored" data-anchor-id="plotnine.stats.stat.stat.to_layer"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">to_layer</span></h3>
-<div class="doc-signature doc-method">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>to_layer()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div class="doc-text">
-<p>Make a layer that represents this stat</p>
-</div>
-<section id="returns-4" class="level4 doc-returns">
-<h4 class="doc-returns anchored" data-anchor-id="returns-4">Returns</h4>
-<div class="doc-definition-items">
-<dl>
-<dt><code><span class="doc-parameter-name">out</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="../reference/layer.html#plotnine.layer.layer">layer</a></span></code></dt>
-<dd>
-Layer
-</dd>
-</dl>
-</div>
-</section>
-</section>
 <section id="plotnine.stats.stat.stat.use_defaults" class="level3 title doc-object doc-method">
 <h3 class="title doc-object doc-method anchored" data-anchor-id="plotnine.stats.stat.stat.use_defaults"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">use_defaults</span></h3>
 <div class="doc-signature doc-method">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>use_defaults(data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>use_defaults(data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="doc-text">
 <p>Combine data with defaults and set aesthetics from parameters</p>
 <p>stats should not override this method.</p>
 </div>
-<section id="parameters-7" class="level4 doc-parameters">
-<h4 class="doc-parameters anchored" data-anchor-id="parameters-7">Parameters</h4>
+<section id="parameters-6" class="level4 doc-parameters">
+<h4 class="doc-parameters anchored" data-anchor-id="parameters-6">Parameters</h4>
 <div class="doc-definition-items">
 <dl>
 <dt><code><span class="doc-parameter-name">data</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://pandas.pydata.org/pandas-docs/stable/index.html#module-pandas">pd</a>.<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span></code></dt>
@@ -609,8 +536,8 @@ Data used for drawing the geom.
 </dl>
 </div>
 </section>
-<section id="returns-5" class="level4 doc-returns">
-<h4 class="doc-returns anchored" data-anchor-id="returns-5">Returns</h4>
+<section id="returns-3" class="level4 doc-returns">
+<h4 class="doc-returns anchored" data-anchor-id="returns-3">Returns</h4>
 <div class="doc-definition-items">
 <dl>
 <dt><code><span class="doc-parameter-name">out</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://pandas.pydata.org/pandas-docs/stable/index.html#module-pandas">pd</a>.<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span></code></dt>
