@@ -95,7 +95,6 @@ class stat_sina(stat):
     DEFAULT_PARAMS = {
         "geom": "sina",
         "position": "dodge",
-        "na_rm": False,
         "binwidth": None,
         "bins": None,
         "method": "density",

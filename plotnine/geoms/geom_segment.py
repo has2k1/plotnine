@@ -47,13 +47,7 @@ class geom_segment(geom):
     }
     REQUIRED_AES = {"x", "y", "xend", "yend"}
     NON_MISSING_AES = {"linetype", "size", "shape"}
-    DEFAULT_PARAMS = {
-        "stat": "identity",
-        "position": "identity",
-        "na_rm": False,
-        "lineend": "butt",
-        "arrow": None,
-    }
+    DEFAULT_PARAMS = {"lineend": "butt", "arrow": None}
 
     draw_legend = staticmethod(geom_path.draw_legend)
     legend_key_size = staticmethod(geom_path.legend_key_size)

@@ -82,9 +82,6 @@ class _geom_stripes(geom):
     DEFAULT_AES = {}
     REQUIRED_AES = set()
     DEFAULT_PARAMS = {
-        "stat": "identity",
-        "position": "identity",
-        "na_rm": False,
         "color": None,
         "fill": ("#AAAAAA", "#CCCCCC"),
         "linetype": "solid",

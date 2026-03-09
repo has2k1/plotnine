@@ -92,7 +92,6 @@ class stat_ydensity(stat):
     DEFAULT_PARAMS = {
         "geom": "violin",
         "position": "dodge",
-        "na_rm": False,
         "adjust": 1,
         "kernel": "gaussian",
         "n": 1024,

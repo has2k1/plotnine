@@ -111,7 +111,6 @@ class stat_density(stat):
     DEFAULT_PARAMS = {
         "geom": "density",
         "position": "stack",
-        "na_rm": False,
         "kernel": "gaussian",
         "adjust": 1,
         "trim": False,

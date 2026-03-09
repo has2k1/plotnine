@@ -30,8 +30,6 @@ class geom_quantile(geom_path):
     }
     DEFAULT_PARAMS = {
         "stat": "quantile",
-        "position": "identity",
-        "na_rm": False,
         "lineend": "butt",
         "linejoin": "round",
     }

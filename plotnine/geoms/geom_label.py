@@ -15,27 +15,6 @@ if typing.TYPE_CHECKING:
     from plotnine.layer import layer
 
 
-_aes = geom_text.DEFAULT_AES.copy()
-_aes["fill"] = "white"
-
-_params = geom_text.DEFAULT_PARAMS.copy()
-_params.update(
-    {
-        # boxstyle is one of
-        #   circle, larrow, rarrow, round, round4,
-        #   roundtooth, sawtooth, square
-        #
-        # Documentation at matplotlib.patches.BoxStyle
-        "boxstyle": "round",
-        "boxcolor": None,
-        "label_padding": 0.25,
-        "label_r": 0.25,
-        "label_size": 0.7,
-        "tooth_size": None,
-    }
-)
-
-
 @document
 class geom_label(geom_text):
     """
@@ -80,8 +59,21 @@ class geom_label(geom_text):
         parameters that affect the boxstyle.
     """
 
-    DEFAULT_AES = _aes
-    DEFAULT_PARAMS = _params
+    DEFAULT_AES = {**geom_text.DEFAULT_AES, "fill": "white"}
+    DEFAULT_PARAMS = {
+        **geom_text.DEFAULT_PARAMS,
+        # boxstyle is one of
+        #   circle, larrow, rarrow, round, round4,
+        #   roundtooth, sawtooth, square
+        #
+        # Documentation at matplotlib.patches.BoxStyle
+        "boxstyle": "round",
+        "boxcolor": None,
+        "label_padding": 0.25,
+        "label_r": 0.25,
+        "label_size": 0.7,
+        "tooth_size": None,
+    }
 
     @staticmethod
     def draw_legend(

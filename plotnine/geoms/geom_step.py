@@ -40,12 +40,8 @@ class geom_step(geom_path):
     plotnine.geom_path : For documentation of extra parameters.
     """
 
-    DEFAULT_PARAMS = {
-        "stat": "identity",
-        "position": "identity",
-        "na_rm": False,
-        "direction": "hv",
-    }
+    DEFAULT_PARAMS = {"direction": "hv"}
+
     draw_panel = geom.draw_panel
 
     @staticmethod

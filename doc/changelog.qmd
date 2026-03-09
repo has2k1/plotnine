@@ -60,6 +60,12 @@ title: Changelog
   layer(geom=geom_point())
   ```
 
+- `geom.DEFAULT_PARAMS` now implicitly includes `stat="identity"`, `position="identity`
+  and `na_rm=False`.
+
+- `stat.DEFAULT_PARAMS` now implicitly includes `geom="blank"`, `position="identity`
+  and `na_rm=False`.
+
 ### Bug Fixes
 
 - Fixed [](:class:`~plotnine.geom_smooth`) / [](:class:`~plotnine.stat_smooth`) when using a linear model via "lm" with weights for the model to do a weighted regression. This bug did not affect the formula API of the linear model. ({{< issue 1005 >}})

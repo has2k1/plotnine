@@ -77,7 +77,6 @@ class stat_bin(stat):
     DEFAULT_PARAMS = {
         "geom": "histogram",
         "position": "stack",
-        "na_rm": False,
         "binwidth": None,
         "bins": None,
         "breaks": None,

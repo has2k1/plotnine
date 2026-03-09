@@ -49,8 +49,6 @@ class stat_pointdensity(stat):
     DEFAULT_AES = {"color": after_stat("density")}
     DEFAULT_PARAMS = {
         "geom": "density_2d",
-        "position": "identity",
-        "na_rm": False,
         "package": "statsmodels",
         "kde_params": None,
     }

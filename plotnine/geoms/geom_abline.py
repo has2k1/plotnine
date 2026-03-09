@@ -43,12 +43,7 @@ class geom_abline(geom):
         "alpha": 1,
         "size": 0.5,
     }
-    DEFAULT_PARAMS = {
-        "stat": "identity",
-        "position": "identity",
-        "na_rm": False,
-        "inherit_aes": False,
-    }
+    DEFAULT_PARAMS = {"inherit_aes": False}
     REQUIRED_AES = {"slope", "intercept"}
     draw_legend = staticmethod(geom_path.draw_legend)
 

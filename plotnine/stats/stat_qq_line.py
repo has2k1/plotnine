@@ -54,8 +54,6 @@ class stat_qq_line(stat):
     REQUIRED_AES = {"sample"}
     DEFAULT_PARAMS = {
         "geom": "qq_line",
-        "position": "identity",
-        "na_rm": False,
         "distribution": "norm",
         "dparams": {},
         "quantiles": None,

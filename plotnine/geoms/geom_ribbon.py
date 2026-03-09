@@ -68,12 +68,7 @@ class geom_ribbon(geom):
         "where": True,
     }
     REQUIRED_AES = {"x", "ymax", "ymin"}
-    DEFAULT_PARAMS = {
-        "stat": "identity",
-        "position": "identity",
-        "outline_type": "both",
-        "na_rm": False,
-    }
+    DEFAULT_PARAMS = {"outline_type": "both"}
     draw_legend = staticmethod(geom_polygon.draw_legend)
 
     def handle_na(self, data: pd.DataFrame) -> pd.DataFrame:

@@ -1,13 +1,13 @@
 from __future__ import annotations
 
-import typing
+from typing import TYPE_CHECKING
 
 import numpy as np
 
 from ..doctools import document
 from .geom_segment import geom_segment
 
-if typing.TYPE_CHECKING:
+if TYPE_CHECKING:
     import pandas as pd
 
 

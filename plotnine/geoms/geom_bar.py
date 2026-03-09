@@ -40,7 +40,6 @@ class geom_bar(geom_rect):
     DEFAULT_PARAMS = {
         "stat": "count",
         "position": "stack",
-        "na_rm": False,
         "just": 0.5,
         "width": None,
     }

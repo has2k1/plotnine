@@ -27,6 +27,12 @@ if typing.TYPE_CHECKING:
 
 from abc import ABC
 
+_BASE_PARAMS = {
+    "geom": "blank",
+    "position": "identity",
+    "na_rm": False,
+}
+
 
 class stat(ABC, metaclass=Register):
     """Base class of all stats"""
@@ -70,10 +76,12 @@ class stat(ABC, metaclass=Register):
         data: DataLike | None = None,
         **kwargs: Any,
     ):
+        possible_params = _BASE_PARAMS | self.DEFAULT_PARAMS
+        possible_params_set = set(possible_params)
         kwargs = data_mapping_as_kwargs((data, mapping), kwargs)
         self._raw_kwargs = kwargs  # Will be used to create the geom
-        self.params = self.DEFAULT_PARAMS | {
-            k: v for k, v in kwargs.items() if k in self.DEFAULT_PARAMS
+        self.params = possible_params | {
+            k: v for k, v in kwargs.items() if k in possible_params_set
         }
         self.DEFAULT_AES = aes(**self.DEFAULT_AES)
         self.aes_params = {

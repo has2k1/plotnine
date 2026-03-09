@@ -18,7 +18,7 @@ class stat_identity(stat):
     plotnine.geom_point : The default `geom` for this `stat`.
     """
 
-    DEFAULT_PARAMS = {"geom": "point", "position": "identity", "na_rm": False}
+    DEFAULT_PARAMS = {"geom": "point"}
 
     def compute_panel(self, data, scales):
         return data

@@ -3,11 +3,11 @@ from __future__ import annotations
 import itertools
 import os
 import re
-import typing
 from functools import lru_cache
 from textwrap import dedent, indent
+from typing import TYPE_CHECKING
 
-if typing.TYPE_CHECKING:
+if TYPE_CHECKING:
     from typing import Any, Sequence, Type, TypeVar
 
     from plotnine.geoms.geom import geom
@@ -429,13 +429,15 @@ def document_geom(geom: type[geom]) -> type[geom]:
     It replaces `{usage}`, `{common_parameters}` and
     `{aesthetics}` with generated documentation.
     """
+    from plotnine.geoms.geom import _BASE_PARAMS
+
     docstring = dedent(geom.__doc__ or "")
     docstring = append_to_section(geom_kwargs, docstring, "Parameters")
 
     # usage
     signature = make_signature(
         geom.__name__,
-        geom.DEFAULT_PARAMS,
+        _BASE_PARAMS | geom.DEFAULT_PARAMS,
         common_geom_params,
         common_geom_param_values,
     )
@@ -479,6 +481,8 @@ def document_stat(stat: type[stat]) -> type[stat]:
     It replaces `{usage}`, `{common_parameters}` and
     `{aesthetics}` with generated documentation.
     """
+    from plotnine.stats.stat import _BASE_PARAMS
+
     # Dedented so that it lineups (in sphinx) with the part
     # generated parts when put together
     docstring = dedent(stat.__doc__ or "")
@@ -487,7 +491,7 @@ def document_stat(stat: type[stat]) -> type[stat]:
     # usage:
     signature = make_signature(
         stat.__name__,
-        stat.DEFAULT_PARAMS,
+        _BASE_PARAMS | stat.DEFAULT_PARAMS,
         common_stat_params,
         common_stat_param_values,
     )

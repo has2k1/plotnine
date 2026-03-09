@@ -20,8 +20,4 @@ class geom_density_2d(geom_path):
     plotnine.stat_density_2d : The default `stat` for this `geom`.
     """
 
-    DEFAULT_PARAMS = {
-        "stat": "density_2d",
-        "position": "identity",
-        "na_rm": False,
-    }
+    DEFAULT_PARAMS = {"stat": "density_2d"}

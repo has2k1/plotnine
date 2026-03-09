@@ -43,11 +43,6 @@ class geom_point(geom):
     }
     REQUIRED_AES = {"x", "y"}
     NON_MISSING_AES = {"color", "shape", "size"}
-    DEFAULT_PARAMS = {
-        "stat": "identity",
-        "position": "identity",
-        "na_rm": False,
-    }
 
     def draw_panel(
         self,

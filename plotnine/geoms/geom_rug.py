@@ -45,13 +45,8 @@ class geom_rug(geom):
         "size": 0.5,
         "linetype": "solid",
     }
-    DEFAULT_PARAMS = {
-        "stat": "identity",
-        "position": "identity",
-        "na_rm": False,
-        "sides": "bl",
-        "length": 0.03,
-    }
+    DEFAULT_PARAMS = {"sides": "bl", "length": 0.03}
+
     draw_legend = staticmethod(geom_path.draw_legend)
 
     @staticmethod

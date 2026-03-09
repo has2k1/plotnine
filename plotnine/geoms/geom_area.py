@@ -30,11 +30,7 @@ class geom_area(geom_ribbon):
     """
 
     REQUIRED_AES = {"x", "y"}
-    DEFAULT_PARAMS = {
-        **geom_ribbon.DEFAULT_PARAMS,
-        "position": "stack",
-        "outline_type": "upper",
-    }
+    DEFAULT_PARAMS = {"position": "stack", "outline_type": "upper"}
 
     def setup_data(self, data: pd.DataFrame) -> pd.DataFrame:
         data["ymin"] = 0

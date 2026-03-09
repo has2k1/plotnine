@@ -63,8 +63,6 @@ class stat_density_2d(stat):
     REQUIRED_AES = {"x"}
     DEFAULT_PARAMS = {
         "geom": "density_2d",
-        "position": "identity",
-        "na_rm": False,
         "contour": True,
         "package": "statsmodels",
         "kde_params": None,

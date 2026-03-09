@@ -18,4 +18,4 @@ class geom_qq(geom_point):
     plotnine.stat_qq : The default `stat` for this `geom`.
     """
 
-    DEFAULT_PARAMS = {"stat": "qq", "position": "identity", "na_rm": False}
+    DEFAULT_PARAMS = {"stat": "qq"}

@@ -43,12 +43,7 @@ class geom_hline(geom):
         "alpha": 1,
     }
     REQUIRED_AES = {"yintercept"}
-    DEFAULT_PARAMS = {
-        "stat": "identity",
-        "position": "identity",
-        "na_rm": False,
-        "inherit_aes": False,
-    }
+    DEFAULT_PARAMS = {"inherit_aes": False}
 
     draw_legend = staticmethod(geom_path.draw_legend)
     legend_key_size = staticmethod(geom_path.legend_key_size)

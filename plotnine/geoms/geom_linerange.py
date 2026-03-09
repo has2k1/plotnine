@@ -36,11 +36,7 @@ class geom_linerange(geom):
         "size": 0.5,
     }
     REQUIRED_AES = {"x", "ymin", "ymax"}
-    DEFAULT_PARAMS = {
-        "stat": "identity",
-        "position": "identity",
-        "na_rm": False,
-    }
+
     draw_legend = staticmethod(geom_path.draw_legend)
 
     @staticmethod

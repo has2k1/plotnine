@@ -57,11 +57,6 @@ class geom_map(geom):
         "size": 0.5,
         "stroke": 0.5,
     }
-    DEFAULT_PARAMS = {
-        "stat": "identity",
-        "position": "identity",
-        "na_rm": False,
-    }
     REQUIRED_AES = {"geometry"}
 
     def __init__(

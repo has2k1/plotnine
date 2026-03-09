@@ -90,8 +90,6 @@ class stat_bindot(stat):
     NON_MISSING_AES = {"weight"}
     DEFAULT_PARAMS = {
         "geom": "dotplot",
-        "position": "identity",
-        "na_rm": False,
         "bins": None,
         "binwidth": None,
         "origin": None,

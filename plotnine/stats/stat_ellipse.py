@@ -46,8 +46,6 @@ class stat_ellipse(stat):
     REQUIRED_AES = {"x", "y"}
     DEFAULT_PARAMS = {
         "geom": "path",
-        "position": "identity",
-        "na_rm": False,
         "type": "t",
         "level": 0.95,
         "segments": 51,

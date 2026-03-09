@@ -89,7 +89,6 @@ class geom_boxplot(geom):
     DEFAULT_PARAMS = {
         "stat": "boxplot",
         "position": "dodge2",
-        "na_rm": False,
         "width": None,
         "outlier_alpha": 1,
         "outlier_color": None,

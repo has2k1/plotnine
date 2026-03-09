@@ -44,11 +44,6 @@ class geom_polygon(geom):
         "linetype": "solid",
         "size": 0.5,
     }
-    DEFAULT_PARAMS = {
-        "stat": "identity",
-        "position": "identity",
-        "na_rm": False,
-    }
     REQUIRED_AES = {"x", "y"}
 
     legend_key_size = staticmethod(geom_path.legend_key_size)

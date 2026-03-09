@@ -43,7 +43,6 @@ class stat_count(stat):
     DEFAULT_PARAMS = {
         "geom": "histogram",
         "position": "stack",
-        "na_rm": False,
         "width": None,
     }
     DEFAULT_AES = {"y": after_stat("count")}
