@@ -108,7 +108,7 @@ class layer:
         out : layer
             Layer that represents the specific `geom`.
         """
-        kwargs = geom._kwargs
+        kwargs = geom._raw_kwargs
         lkwargs = {
             "geom": geom,
             "mapping": geom.mapping,

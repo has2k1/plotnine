@@ -73,7 +73,7 @@ class stat(ABC, metaclass=Register):
         **kwargs: Any,
     ):
         kwargs = data_mapping_as_kwargs((data, mapping), kwargs)
-        self._kwargs = kwargs  # Will be used to create the geom
+        self._raw_kwargs = kwargs  # Will be used to create the geom
         self.params = self.DEFAULT_PARAMS | {
             k: v for k, v in kwargs.items() if k in self.DEFAULT_PARAMS
         }
@@ -104,7 +104,7 @@ class stat(ABC, metaclass=Register):
         [](`~plotnine.exceptions.PlotnineError`) if unable to create a `stat`.
         """
         name = geom.params["stat"]
-        kwargs = geom._kwargs
+        kwargs = geom._raw_kwargs
         # More stable when reloading modules than
         # using issubclass
         if not isinstance(name, type) and hasattr(name, "compute_layer"):
@@ -140,8 +140,8 @@ class stat(ABC, metaclass=Register):
         old = self.__dict__
         new = result.__dict__
 
-        # don't make a _kwargs
-        shallow = {"_kwargs"}
+        # don't make a _raw_kwargs
+        shallow = {"_raw_kwargs"}
         for key, item in old.items():
             if key in shallow:
                 new[key] = item  # pyright: ignore[reportIndexIssue]
