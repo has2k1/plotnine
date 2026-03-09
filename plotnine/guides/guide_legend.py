@@ -196,7 +196,7 @@ class guide_legend(guide):
 
             data = remove_missing(
                 data,
-                l.geom.params["na_rm"],
+                l.geom.params.get("na_rm", False),
                 list(l.geom.REQUIRED_AES | l.geom.NON_MISSING_AES),
                 f"{l.geom.__class__.__name__} legend",
             )

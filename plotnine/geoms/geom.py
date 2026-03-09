@@ -459,7 +459,7 @@ class geom(ABC, metaclass=Register):
         """
         return remove_missing(
             data,
-            self.params["na_rm"],
+            self.params.get("na_rm", False),
             list(self.REQUIRED_AES | self.NON_MISSING_AES),
             self.__class__.__name__,
         )
