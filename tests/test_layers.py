@@ -42,7 +42,7 @@ class TestLayers:
         assert _get_colors(p2) == colors
 
         # Real layers
-        lyrs = Layers(layer.from_geom(obj) for obj in self.lyrs)
+        lyrs = Layers(layer(geom=obj) for obj in self.lyrs)
         p3 = p + lyrs
         assert _get_colors(p3) == colors
 
@@ -50,7 +50,7 @@ class TestLayers:
         assert _get_colors(p) == colors
 
         with pytest.raises(PlotnineError):
-            geom_point() + layer.from_geom(geom_point())
+            geom_point() + layer(geom=geom_point())
 
         with pytest.raises(PlotnineError):
             geom_point() + self.lyrs
@@ -77,7 +77,7 @@ def test_inserting_layers():
             self.obj = obj
 
         def __radd__(self, other):
-            other.layers.insert(0, self.obj.to_layer())
+            other.layers.insert(0, layer(geom=self.obj))
             return other
 
     p = (

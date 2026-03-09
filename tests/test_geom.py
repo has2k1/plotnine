@@ -47,18 +47,18 @@ def test_geom_with_invalid_argument():
         DEFAULT_PARAMS = {"stat": "identity", "position": "identity"}
 
     with pytest.raises(PlotnineError):
-        geom_abc(do_the_impossible=True).to_layer()
+        layer(geom=geom_abc(do_the_impossible=True))
 
 
 def test_geom_from_stat():
     stat = stat_identity(geom="point")
-    assert isinstance(layer.from_stat(stat).geom, geom_point)
+    assert isinstance(layer(stat=stat).geom, geom_point)
 
     stat = stat_identity(geom="geom_point")
-    assert isinstance(layer.from_stat(stat).geom, geom_point)
+    assert isinstance(layer(stat=stat).geom, geom_point)
 
     stat = stat_identity(geom=geom_point())
-    assert isinstance(layer.from_stat(stat).geom, geom_point)
+    assert isinstance(layer(stat=stat).geom, geom_point)
 
     stat = stat_identity(geom=geom_point)
-    assert isinstance(layer.from_stat(stat).geom, geom_point)
+    assert isinstance(layer(stat=stat).geom, geom_point)

@@ -26,6 +26,7 @@ from plotnine import (
     stage,
 )
 from plotnine.exceptions import PlotnineError
+from plotnine.layer import layer
 
 n = 6
 m = 10
@@ -240,16 +241,16 @@ def test_jitterdodge():
 
 
 def test_position_from_geom():
-    lyr = geom_point(position="jitter").to_layer()
+    lyr = layer(geom=geom_point(position="jitter"))
     assert isinstance(lyr.position, position_jitter)
 
-    lyr = geom_point(position="position_jitter").to_layer()
+    lyr = layer(geom=geom_point(position="position_jitter"))
     assert isinstance(lyr.position, position_jitter)
 
-    lyr = geom_point(position=position_jitter()).to_layer()
+    lyr = layer(geom=geom_point(position=position_jitter()))
     assert isinstance(lyr.position, position_jitter)
 
-    lyr = geom_point(position=position_jitter).to_layer()
+    lyr = layer(geom=geom_point(position=position_jitter))
     assert isinstance(lyr.position, position_jitter)
 
 

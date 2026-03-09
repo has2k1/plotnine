@@ -5,6 +5,7 @@ from plotnine import aes, geom_bar, ggplot
 from plotnine.data import mtcars
 from plotnine.exceptions import PlotnineError, PlotnineWarning
 from plotnine.geoms.geom import geom
+from plotnine.layer import layer
 from plotnine.stats.stat import stat
 
 
@@ -55,12 +56,12 @@ def test_stat_parameter_sharing():
     # not a geom manual setting
     g = geom_abc(weight=4)
     assert "weight" in g.aes_params
-    lyr = g.to_layer()
+    lyr = layer(geom=g)
     assert "weight" in lyr.stat.params
 
     g = geom_abc(aes(weight="mpg"))
     assert "weight" in g.mapping
-    lyr = g.to_layer()
+    lyr = layer(geom=g)
     assert "weight" in lyr.stat.params
 
 

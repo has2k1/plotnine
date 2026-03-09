@@ -346,16 +346,5 @@ class stat(ABC, metaclass=Register):
         out :
             ggplot object with added layer
         """
-        other += self.to_layer()  # Add layer
+        other += layer(stat=self)
         return other
-
-    def to_layer(self) -> layer:
-        """
-        Make a layer that represents this stat
-
-        Returns
-        -------
-        out :
-            Layer
-        """
-        return layer.from_stat(self)
