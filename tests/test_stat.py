@@ -55,11 +55,13 @@ def test_stat_parameter_sharing():
     # not a geom manual setting
     g = geom_abc(weight=4)
     assert "weight" in g.aes_params
-    assert "weight" in g._stat.params
+    lyr = g.to_layer()
+    assert "weight" in lyr.stat.params
 
     g = geom_abc(aes(weight="mpg"))
     assert "weight" in g.mapping
-    assert "weight" in g._stat.params
+    lyr = g.to_layer()
+    assert "weight" in lyr.stat.params
 
 
 def test_stat_extending():

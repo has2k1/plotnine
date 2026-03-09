@@ -108,13 +108,24 @@ class layer:
         out : layer
             Layer that represents the specific `geom`.
         """
+        from .positions.position import position as position_cls
+        from .stats.stat import stat as stat_cls
+
+        _stat = stat_cls.from_geom(geom)
+        _position = position_cls.from_geom(geom)
+        layer._verify_arguments(geom, _stat)
+
+        # Set back-references for pipeline compat
+        geom._stat = _stat  # pyright: ignore[reportAttributeAccessIssue]
+        geom._position = _position  # pyright: ignore[reportAttributeAccessIssue]
+
         kwargs = geom._raw_kwargs
-        lkwargs = {
+        lkwargs: dict[str, Any] = {
             "geom": geom,
             "mapping": geom.mapping,
             "data": geom.data,
-            "stat": geom._stat,
-            "position": geom._position,
+            "stat": _stat,
+            "position": _position,
         }
 
         layer_params = ("inherit_aes", "show_legend", "raster")
@@ -124,6 +135,34 @@ class layer:
             elif param in geom.DEFAULT_PARAMS:
                 lkwargs[param] = geom.DEFAULT_PARAMS[param]
         return layer(**lkwargs)
+
+    @staticmethod
+    def _verify_arguments(geom: geom, stat: stat) -> None:
+        """
+        Verify arguments for the geom, stat and layer
+        """
+        geom_stat_args = geom._raw_kwargs.keys() | stat._raw_kwargs.keys()
+        unknown = (
+            geom_stat_args
+            - geom.aesthetics()
+            - geom.DEFAULT_PARAMS.keys()
+            - stat.aesthetics()
+            - stat.DEFAULT_PARAMS.keys()
+            - {
+                "data",
+                "mapping",
+                "geom",
+                "show_legend",
+                "inherit_aes",
+                "raster",
+            }
+        )
+        if unknown:
+            msg = (
+                "Parameters {}, are not understood by "
+                "either the geom, stat or layer."
+            )
+            raise PlotnineError(msg.format(unknown))
 
     def __radd__(self, other: ggplot) -> ggplot:
         """
