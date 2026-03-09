@@ -81,7 +81,7 @@ class geom(ABC, metaclass=Register):
     ):
         kwargs = rename_aesthetics(kwargs)
         kwargs = data_mapping_as_kwargs((data, mapping), kwargs)
-        self._kwargs = kwargs  # Will be used to create stat & layer
+        self._raw_kwargs = kwargs  # Will be used to create stat & layer
 
         # separate aesthetics and parameters
         self.aes_params = {
@@ -132,7 +132,7 @@ class geom(ABC, metaclass=Register):
         else:
             raise PlotnineError(f"Unknown geom of type {type(name)}")
 
-        return klass(stat=stat, **stat._kwargs)
+        return klass(stat=stat, **stat._raw_kwargs)
 
     @classmethod
     def aesthetics(cls: type[geom]) -> set[str]:
@@ -163,7 +163,7 @@ class geom(ABC, metaclass=Register):
         new = result.__dict__
 
         # don't make a deepcopy of data, or environment
-        shallow = {"data", "_kwargs", "environment"}
+        shallow = {"data", "_raw_kwargs", "environment"}
         for key, item in old.items():
             if key in shallow:
                 new[key] = item  # pyright: ignore[reportIndexIssue]
@@ -491,7 +491,7 @@ class geom(ABC, metaclass=Register):
         """
         Verify arguments passed to the geom
         """
-        geom_stat_args = kwargs.keys() | self._stat._kwargs.keys()
+        geom_stat_args = kwargs.keys() | self._stat._raw_kwargs.keys()
         unknown = (
             geom_stat_args
             - self.aesthetics()  # geom aesthetics
