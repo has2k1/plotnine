@@ -7,12 +7,13 @@ from typing import Iterable, List, cast, overload
 import pandas as pd
 
 from ._utils import array_kind, check_required_aesthetics, ninteraction
+from ._utils.registry import Registry
 from .exceptions import PlotnineError
 from .mapping.aes import NO_GROUP, SCALED_AESTHETICS, aes, make_labels
 from .mapping.evaluation import evaluate, stage
 
 if typing.TYPE_CHECKING:
-    from typing import Any, Optional, Sequence, SupportsIndex
+    from typing import Any, Sequence, SupportsIndex
 
     from plotnine import ggplot
     from plotnine.coords.coord import coord
@@ -34,38 +35,42 @@ class layer:
     """
     Layer
 
-    When a `geom` or `stat` is added to a [](`~plotnine.ggplot`) object,
-    it creates a single layer. This class is a representation of that layer.
+    When a `geom` or `stat` is added to a
+    [](`~plotnine.ggplot`) object, it creates a single layer.
+    This class is a representation of that layer.
 
     Parameters
     ----------
     geom :
-        geom to used to draw this layer.
+        Geom used to draw this layer. Accepts an instance,
+        a class, or a string name (e.g. ``"point"``).
     stat :
-        stat used for the statistical transformation of
-        data in this layer
+        Stat used for the statistical transformation of data
+        in this layer. Accepts an instance, a class, or a
+        string name. If ``None``, the geom's default stat is
+        used.
     mapping :
         Aesthetic mappings.
     data :
         Data plotted in this layer. If `None`, the data from
         the [](`~plotnine.ggplot`) object will be used.
     position :
-        Position object to adjust the geometries in this layer.
+        Position adjustment for geometries in this layer.
+        Accepts an instance, a class, or a string name. If
+        ``None``, the geom's default position is used.
     inherit_aes :
         If `True` inherit from the aesthetic mappings of
         the [](`~plotnine.ggplot`) object.
     show_legend :
         Whether to make up and show a legend for the mappings
         of this layer. If `None` then an automatic/good choice
-        is made
+        is made.
     raster :
-        If `True`, draw onto this layer a raster (bitmap) object
-        even if the final image format is vector.
-
-    Notes
-    -----
-    There is no benefit to manually creating a layer. You should
-    always use a `geom` or `stat`.
+        If `True`, draw onto this layer a raster (bitmap)
+        object even if the final image format is vector.
+    **kwargs :
+        Keyword arguments passed to the geom constructor when
+        *geom* is a class or string.
     """
 
     # Data for this layer
@@ -73,24 +78,47 @@ class layer:
 
     def __init__(
         self,
-        geom: geom,
-        stat: stat,
+        geom: geom | type[geom] | str = "blank",
+        stat: stat | type[stat] | str | None = None,
         *,
-        mapping: aes,
-        data: Optional[LayerDataLike],
-        position: position,
+        mapping: aes | None = None,
+        data: LayerDataLike | None = None,
+        position: position | type[position] | str | None = None,
         inherit_aes: bool = True,
         show_legend: bool | dict[str, bool] | None = None,
         raster: bool = False,
+        **kwargs: Any,
     ):
-        self.geom = geom
-        self.stat = stat
-        self._data = data
-        self.mapping = mapping
-        self.position = position
-        self.inherit_aes = inherit_aes
-        self.show_legend = show_legend
-        self.raster = raster
+        _geom = _resolve_geom(geom, mapping, data, kwargs)
+        _stat = _resolve_stat(stat, _geom)
+        _pos = _resolve_position(position, _geom)
+        self._verify_arguments(_geom, _stat)
+
+        # Set back-references for pipeline compat
+        _geom._stat = _stat  # pyright: ignore[reportAttributeAccessIssue]
+        _geom._position = _pos  # pyright: ignore[reportAttributeAccessIssue]
+
+        # Layer params: prefer explicit kwargs, fall back to
+        # geom._raw_kwargs, then geom.DEFAULT_PARAMS
+        raw = _geom._raw_kwargs
+        self.inherit_aes = raw.get(
+            "inherit_aes",
+            _geom.DEFAULT_PARAMS.get("inherit_aes", inherit_aes),
+        )
+        self.show_legend = raw.get(
+            "show_legend",
+            _geom.DEFAULT_PARAMS.get("show_legend", show_legend),
+        )
+        self.raster = raw.get(
+            "raster",
+            _geom.DEFAULT_PARAMS.get("raster", raster),
+        )
+
+        self.geom = _geom
+        self.stat = _stat
+        self._data = _geom.data
+        self.mapping = _geom.mapping
+        self.position = _pos
         self.zorder = 0
 
     @staticmethod
@@ -105,36 +133,10 @@ class layer:
 
         Returns
         -------
-        out : layer
+        :
             Layer that represents the specific `geom`.
         """
-        from .positions.position import position as position_cls
-        from .stats.stat import stat as stat_cls
-
-        _stat = stat_cls.from_geom(geom)
-        _position = position_cls.from_geom(geom)
-        layer._verify_arguments(geom, _stat)
-
-        # Set back-references for pipeline compat
-        geom._stat = _stat  # pyright: ignore[reportAttributeAccessIssue]
-        geom._position = _position  # pyright: ignore[reportAttributeAccessIssue]
-
-        kwargs = geom._raw_kwargs
-        lkwargs: dict[str, Any] = {
-            "geom": geom,
-            "mapping": geom.mapping,
-            "data": geom.data,
-            "stat": _stat,
-            "position": _position,
-        }
-
-        layer_params = ("inherit_aes", "show_legend", "raster")
-        for param in layer_params:
-            if param in kwargs:
-                lkwargs[param] = kwargs[param]
-            elif param in geom.DEFAULT_PARAMS:
-                lkwargs[param] = geom.DEFAULT_PARAMS[param]
-        return layer(**lkwargs)
+        return layer(geom=geom)
 
     @staticmethod
     def from_stat(stat: stat) -> layer:
@@ -148,13 +150,13 @@ class layer:
 
         Returns
         -------
-        out : layer
+        :
             Layer that represents the specific `stat`.
         """
         from .geoms.geom import geom as geom_cls
 
         _geom = geom_cls.from_stat(stat)
-        return layer.from_geom(_geom)
+        return layer(geom=_geom)
 
     @staticmethod
     def _verify_arguments(geom: geom, stat: stat) -> None:
@@ -627,3 +629,126 @@ def discrete_columns(
                 continue
             lst.append(str(col))
     return lst
+
+
+def _resolve_geom(
+    geom_spec: geom | type[geom] | str,
+    mapping: aes | None,
+    data: LayerDataLike | None,
+    kwargs: dict[str, Any],
+) -> geom:
+    """
+    Resolve a geom specification to an instantiated geom
+
+    Parameters
+    ----------
+    geom_spec :
+        A geom instance, class, or string name.
+    mapping :
+        Aesthetic mappings.
+    data :
+        Layer data.
+    kwargs :
+        Additional keyword arguments forwarded to the geom
+        constructor.
+    """
+    from .geoms.geom import geom as geom_cls
+
+    if isinstance(geom_spec, geom_cls):
+        return geom_spec
+
+    if isinstance(geom_spec, type) and issubclass(geom_spec, geom_cls):
+        klass = geom_spec
+    elif isinstance(geom_spec, str):
+        name = geom_spec
+        if not name.startswith("geom_"):
+            name = f"geom_{name}"
+        klass = Registry[name]
+    else:
+        raise PlotnineError(f"Unknown geom of type {type(geom_spec)}")
+
+    return klass(mapping, data, **kwargs)
+
+
+def _resolve_stat(
+    stat_spec: stat | type[stat] | str | None,
+    geom_obj: geom,
+) -> stat:
+    """
+    Resolve a stat specification to an instantiated stat
+
+    Parameters
+    ----------
+    stat_spec :
+        A stat instance, class, string name, or None to use
+        the geom's default.
+    geom_obj :
+        The resolved geom (used to derive defaults).
+    """
+    from .stats.stat import stat as stat_cls
+
+    if stat_spec is None:
+        return stat_cls.from_geom(geom_obj)
+
+    # Duck-type guard for module reloads
+    if not isinstance(stat_spec, type) and hasattr(stat_spec, "compute_layer"):
+        return stat_spec  # type: ignore[return-value]
+
+    if isinstance(stat_spec, stat_cls):
+        return stat_spec
+
+    if isinstance(stat_spec, type) and issubclass(stat_spec, stat_cls):
+        klass = stat_spec
+    elif isinstance(stat_spec, str):
+        name = stat_spec
+        if not name.startswith("stat_"):
+            name = f"stat_{name}"
+        klass = Registry[name]
+    else:
+        raise PlotnineError(f"Unknown stat of type {type(stat_spec)}")
+
+    # Filter geom's raw kwargs to stat-relevant keys
+    kwargs = geom_obj._raw_kwargs
+    valid_kwargs = (
+        klass.aesthetics() | klass.DEFAULT_PARAMS.keys()
+    ) & kwargs.keys()
+    params = {k: kwargs[k] for k in valid_kwargs}
+    return klass(**params)
+
+
+def _resolve_position(
+    position_spec: position | type[position] | str | None,
+    geom_obj: geom,
+) -> position:
+    """
+    Resolve a position specification to an instantiated position
+
+    Parameters
+    ----------
+    position_spec :
+        A position instance, class, string name, or None to use
+        the geom's default.
+    geom_obj :
+        The resolved geom (used to derive defaults).
+    """
+    from .positions.position import position as position_cls
+
+    if position_spec is None:
+        return position_cls.from_geom(geom_obj)
+
+    if isinstance(position_spec, position_cls):
+        return position_spec
+
+    if isinstance(position_spec, type) and issubclass(
+        position_spec, position_cls
+    ):
+        klass = position_spec
+    elif isinstance(position_spec, str):
+        name = position_spec
+        if not name.startswith("position_"):
+            name = f"position_{name}"
+        klass = Registry[name]
+    else:
+        raise PlotnineError(f"Unknown position of type {type(position_spec)}")
+
+    return klass()
