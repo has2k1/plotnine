@@ -390,7 +390,7 @@ class layer:
         if len(data) == 0:
             return
 
-        self.geom.params.update(self.stat.params)
+        self.geom.params["stat_params"] = self.stat.params
         self.geom.setup_params(data)
         self.geom.setup_aes_params(data)
         data = self.geom.setup_data(data)

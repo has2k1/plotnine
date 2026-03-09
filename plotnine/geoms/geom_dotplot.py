@@ -66,7 +66,7 @@ class geom_dotplot(geom):
 
     def setup_data(self, data: pd.DataFrame) -> pd.DataFrame:
         gp = self.params
-        sp = self._stat.params
+        sp = self.params["stat_params"]
 
         # Issue warnings when parameters don't make sense
         if gp["position"] == "stack":
@@ -207,16 +207,15 @@ class geom_dotplot(geom):
         size = data["binwidth"].iloc[0] * params["dotsize"]
         offsets = data["stackpos"] * params["stackratio"]
 
-        if params["binaxis"] == "x":
+        binaxis = params["stat_params"]["binaxis"]
+        if binaxis == "x":
             width, height = size, size * factor
             xpos, ypos = data["x"], data["y"] + height * offsets
-        elif params["binaxis"] == "y":
+        elif binaxis == "y":
             width, height = size / factor, size
             xpos, ypos = data["x"] + width * offsets, data["y"]
         else:
-            raise ValueError(
-                f"Invalid valid value binaxis={params['binaxis']}"
-            )
+            raise ValueError(f"Invalid valid value binaxis={binaxis}")
 
         circles = []
         for xy in zip(xpos, ypos):
