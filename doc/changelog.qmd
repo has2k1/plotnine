@@ -38,6 +38,28 @@ title: Changelog
   theme(plot_footer_line=element_line(color="black"))
   ```
 
+### API Changes
+
+- Removed `geom.to_layer()`, `stat.to_layer()`, `annotate.to_layer()`,
+  `layer.from_geom()` and `layer.from_stat()`. Use
+  `layer(geom=...)` and `layer(stat=...)` directly.
+
+  The [](:class:`~plotnine.layer.layer`) constructor now handles both geom-first
+  and stat-first creation. When only a `stat` is provided, the geom is
+  automatically derived from the stat's default.
+
+  ```python
+  # Before
+  layer.from_geom(geom_point())
+  layer.from_stat(stat_bin())
+  geom_point().to_layer()
+
+  # After
+  layer(geom=geom_point())
+  layer(stat=stat_bin())
+  layer(geom=geom_point())
+  ```
+
 ### Bug Fixes
 
 - Fixed [](:class:`~plotnine.geom_smooth`) / [](:class:`~plotnine.stat_smooth`) when using a linear model via "lm" with weights for the model to do a weighted regression. This bug did not affect the formula API of the linear model. ({{< issue 1005 >}})
