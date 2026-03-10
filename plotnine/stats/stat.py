@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import typing
 from copy import deepcopy
+from warnings import warn
 
 import pandas as pd
 
@@ -32,6 +33,13 @@ _BASE_PARAMS = {
     "position": "identity",
     "na_rm": False,
 }
+
+DROPPED_TPL = """
+The following aesthetics were dropped during processing: {dropped}.
+plotnine could not infer the correct grouping.
+Did you forget to specify a `group` aesthetic or to convert a numerical \
+variable into a categorial?
+"""
 
 
 class stat(ABC, metaclass=Register):
@@ -307,6 +315,9 @@ class stat(ABC, metaclass=Register):
             stats.append(group_result)
 
         stats = pd.concat(stats, axis=0, ignore_index=True)
+        dropped = data.columns.difference(stats.columns).to_list()
+        if dropped:
+            warn(DROPPED_TPL.format(dropped=dropped))
         # Note: If the data coming in has columns with non-unique
         # values with-in group(s), this implementation loses the
         # columns. Individual stats may want to do some preparation
