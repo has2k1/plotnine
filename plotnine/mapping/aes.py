@@ -198,13 +198,14 @@ class aes(Dict[str, Any]):
     """
 
     def __init__(self, x=None, y=None, **kwargs):
-        kwargs = rename_aesthetics(kwargs)
-        if x is not None:
-            kwargs["x"] = x
-        if y is not None:
-            kwargs["y"] = y
+        xy_kwargs = {k: v for k, v in [("x", x), ("y", y)] if v is not None}
+        kwargs = {**xy_kwargs, **rename_aesthetics(kwargs)}
         kwargs = self._convert_deprecated_expr(kwargs)
         self.update(kwargs)
+
+    def __repr__(self):
+        items = ", ".join([f"{k}={v!r}" for k, v in self.items()])
+        return f"aes({items})"
 
     def __iter__(self):
         return iter(self.keys())
