@@ -104,9 +104,10 @@ class layer:
                         kwargs = {
                             k: v
                             for k, v in stat_ref._raw_kwargs.items()
-                            if k not in ("mapping", "data")
+                            if k not in ("mapping", "data", "geom")
                         }
             else:
+                # i.e. layer()
                 geom = "blank"
 
         geom = cast("geom | type[geom] | str", geom)
