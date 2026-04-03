@@ -218,6 +218,10 @@ class p9GridSpec(GridSpecBase):
         parent_bbox = self._parent_subplot_spec.get_position(figure)  # pyright: ignore
         _left, _bottom, _right, _top = parent_bbox.extents
 
+        # params.left/bottom are insets from the parent's left/bottom
+        # edges. params.right/top represent where the right/top edges
+        # are (e.g. 0.95 means 5% margin), so (1 - params.right) is
+        # the right margin, subtracted from the parent's right edge.
         left = _left + params.left
         bottom = _bottom + params.bottom
         right = _right - (1 - params.right)
