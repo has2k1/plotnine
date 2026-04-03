@@ -10,7 +10,6 @@ from plotnine.exceptions import PlotnineError
 
 from ..utils import (
     ArtistGeometry,
-    JustifyBoundaries,
     TextJustifier,
     get_subplotspecs,
     rel_position,
@@ -354,7 +353,17 @@ class PlotLayoutItems:
         plot_title_position = theme.getp("plot_title_position", "panel")
         plot_caption_position = theme.getp("plot_caption_position", "panel")
         plot_footer_position = theme.getp("plot_footer_position", "plot")
-        justify = PlotTextJustifier(spaces)
+        justify = TextJustifier.from_boundaries(
+            spaces.plot.figure,
+            plot_left=spaces.l.plot_left,
+            plot_right=spaces.r.plot_right,
+            plot_bottom=spaces.b.plot_bottom,
+            plot_top=spaces.t.plot_top,
+            panel_left=spaces.l.panel_left,
+            panel_right=spaces.r.panel_right,
+            panel_bottom=spaces.b.panel_bottom,
+            panel_top=spaces.t.panel_top,
+        )
 
         if self.plot_tag:
             set_plot_tag_position(self.plot_tag, spaces)
@@ -407,7 +416,7 @@ class PlotLayoutItems:
         self._strip_text_x_background_equal_heights()
         self._strip_text_y_background_equal_widths()
 
-    def _adjust_axis_text_x(self, justify: PlotTextJustifier):
+    def _adjust_axis_text_x(self, justify: TextJustifier):
         """
         Adjust x-axis text, justifying vertically as necessary
         """
@@ -438,7 +447,7 @@ class PlotLayoutItems:
                     text, va, -axis_text_row_height, 0, height=height
                 )
 
-    def _adjust_axis_text_y(self, justify: PlotTextJustifier):
+    def _adjust_axis_text_y(self, justify: TextJustifier):
         """
         Adjust x-axis text, justifying horizontally as necessary
         """
@@ -554,25 +563,6 @@ def _text_is_visible(text: Text) -> bool:
     Return True if text is visible and is not empty
     """
     return text.get_visible() and text._text  # type: ignore
-
-
-class PlotTextJustifier(TextJustifier):
-    """
-    Justify Text about a plot or it's panels
-    """
-
-    def __init__(self, spaces: PlotSideSpaces):
-        boundaries = JustifyBoundaries(
-            plot_left=spaces.l.plot_left,
-            plot_right=spaces.r.plot_right,
-            plot_bottom=spaces.b.plot_bottom,
-            plot_top=spaces.t.plot_top,
-            panel_left=spaces.l.panel_left,
-            panel_right=spaces.r.panel_right,
-            panel_bottom=spaces.b.panel_bottom,
-            panel_top=spaces.t.panel_top,
-        )
-        super().__init__(spaces.plot.figure, boundaries)
 
 
 def set_legends_position(legends: legend_artists, spaces: PlotSideSpaces):
@@ -752,7 +742,17 @@ def set_plot_tag_position_in_margin(tag: Text, spaces: PlotSideSpaces):
         tag.set_y(y)
         tag.set_verticalalignment("bottom")
 
-    justify = PlotTextJustifier(spaces)
+    justify = TextJustifier.from_boundaries(
+        spaces.plot.figure,
+        plot_left=spaces.l.plot_left,
+        plot_right=spaces.r.plot_right,
+        plot_bottom=spaces.b.plot_bottom,
+        plot_top=spaces.t.plot_top,
+        panel_left=spaces.l.panel_left,
+        panel_right=spaces.r.panel_right,
+        panel_bottom=spaces.b.panel_bottom,
+        panel_top=spaces.t.panel_top,
+    )
     if position in ("left", "right"):
         justify.vertically_along_plot(tag, va)
     elif position in ("top", "bottom"):
