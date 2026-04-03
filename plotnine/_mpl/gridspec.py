@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from dataclasses import asdict
-from functools import cached_property
 from typing import TYPE_CHECKING, cast
 
 try:
@@ -15,6 +13,7 @@ from matplotlib.gridspec import SubplotSpec
 from matplotlib.transforms import Bbox, BboxTransformTo, TransformedBbox
 
 if TYPE_CHECKING:
+    from matplotlib.axes import Axes
     from matplotlib.figure import Figure
     from matplotlib.patches import Rectangle
     from matplotlib.transforms import Transform
@@ -66,6 +65,7 @@ class p9GridSpec(GridSpecBase):
     ):
         self.figure = figure
         self._nested_gridspecs = []
+        self._nested = nest_into is not None
         self.byrow = byrow
 
         super().__init__(
@@ -85,7 +85,7 @@ class p9GridSpec(GridSpecBase):
             gs = cast("p9GridSpec", nest_into.get_gridspec())
             gs._nested_gridspecs.append(self)
 
-        self.update(
+        self._subplot_params = SubplotParams(
             left=0,
             bottom=0,
             top=1,
@@ -138,35 +138,11 @@ class p9GridSpec(GridSpecBase):
         self._update_patch_position()
 
     @property
-    def nested(self):
+    def nested(self) -> bool:
         """
         Return True if this gridspec is nested
         """
-        return hasattr(self, "_parent_subplot_spec")
-
-    def update(
-        self,
-        left=None,
-        bottom=None,
-        right=None,
-        top=None,
-        wspace=None,
-        hspace=None,
-    ):
-        """
-        Update the gridpec's suplot parameters and all that depend on them
-        """
-        if not hasattr(self, "_subplot_params"):
-            self._subplot_params = SubplotParams()
-
-        self._subplot_params.update(
-            left=left,
-            bottom=bottom,
-            top=top,
-            right=right,
-            wspace=wspace,
-            hspace=hspace,
-        )
+        return self._nested
 
     def _update_patch_position(self):
         """
@@ -183,13 +159,25 @@ class p9GridSpec(GridSpecBase):
         self.patch.set_width(ss_bbox.width)
         self.patch.set_height(ss_bbox.height)
 
+    @property
+    def _axes(self) -> list[Axes]:
+        """
+        Axes that belong to this gridspec
+        """
+        return [
+            ax
+            for ax in self.figure.axes
+            if (ss := ax.get_subplotspec()) is not None
+            and ss.get_gridspec() is self
+        ]
+
     def _update_axes_position(self):
         """
         Update the position of the axes in this gridspec
         """
-        for ax in self.figure.axes:
-            if ss := ax.get_subplotspec():
-                ax._set_position(ss.get_position(self))  # pyright: ignore[reportAttributeAccessIssue, reportArgumentType]
+        for ax in self._axes:
+            ss = ax.get_subplotspec()
+            ax._set_position(ss.get_position(self.figure))  # pyright: ignore[reportAttributeAccessIssue, reportOptionalMemberAccess]
 
     def _update_artists(self):
         """
@@ -202,9 +190,16 @@ class p9GridSpec(GridSpecBase):
 
     def update_params_and_artists(self, gsparams: GridSpecParams):
         """
-        Update gridpspec params and the artists
+        Update gridspec params and the artists
         """
-        self.update(**asdict(gsparams))
+        self._subplot_params.update(
+            left=gsparams.left,
+            bottom=gsparams.bottom,
+            top=gsparams.top,
+            right=gsparams.right,
+            wspace=gsparams.wspace,
+            hspace=gsparams.hspace,
+        )
         self._update_artists()
 
     def get_subplot_params(self, figure=None) -> SubplotParams:
@@ -247,11 +242,6 @@ class p9GridSpec(GridSpecBase):
         this class when it is nested into a subplot.
         """
         return self._parent_subplot_spec.get_topmost_subplotspec()
-
-    @cached_property
-    def parent_gridspec(self) -> p9GridSpec | None:
-        if self.nested and (ss := self._parent_subplot_spec):
-            return ss.get_gridspec()  # pyright: ignore[reportReturnType]
 
     @property
     def bbox_relative(self):
