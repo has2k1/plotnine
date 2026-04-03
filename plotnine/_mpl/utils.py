@@ -17,6 +17,8 @@ if TYPE_CHECKING:
     from matplotlib.backend_bases import RendererBase
     from matplotlib.figure import Figure
     from matplotlib.gridspec import SubplotSpec
+    from matplotlib.lines import Line2D
+    from matplotlib.patches import Rectangle
     from matplotlib.text import Text
     from matplotlib.transforms import Transform
 
@@ -274,6 +276,35 @@ class ArtistGeometry:
             for a in artists
         ]
         return max(heights) if len(heights) else 0
+
+
+def resize_footer_background(
+    background: Rectangle,
+    x: float,
+    y: float,
+    height: float,
+    width: float,
+):
+    """
+    Resize the plot footer background to the given dimensions
+    """
+    background.set_x(x)
+    background.set_y(y)
+    background.set_height(height)
+    background.set_width(width)
+
+
+def resize_footer_line(
+    line: Line2D,
+    x: float,
+    width: float,
+    y: float,
+):
+    """
+    Resize the footer line to be a horizontal border
+    """
+    line.set_xdata([x, x + width])
+    line.set_ydata([y, y])
 
 
 @dataclass
