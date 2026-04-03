@@ -7,7 +7,6 @@ from matplotlib.text import Text
 
 from plotnine._mpl.utils import (
     ArtistGeometry,
-    JustifyBoundaries,
     TextJustifier,
 )
 
@@ -64,7 +63,17 @@ class CompositionLayoutItems:
         plot_title_position = theme.getp("plot_title_position", "panel")
         plot_caption_position = theme.getp("plot_caption_position", "panel")
         plot_footer_position = theme.getp("plot_footer_position", "plot")
-        justify = CompositionTextJustifier(spaces)
+        justify = TextJustifier.from_boundaries(
+            spaces.cmp.figure,
+            plot_left=spaces.plot_left,
+            plot_right=spaces.plot_right,
+            plot_bottom=spaces.plot_bottom,
+            plot_top=spaces.plot_top,
+            panel_left=spaces.panel_left,
+            panel_right=spaces.panel_right,
+            panel_bottom=spaces.panel_bottom,
+            panel_top=spaces.panel_top,
+        )
 
         if self.plot_title:
             ha = theme.getp(("plot_title", "ha"))
@@ -120,22 +129,3 @@ class CompositionLayoutItems:
         y1 = y2 = spaces.b.offset + spaces.b.footer_height
         self.plot_footer_line.set_xdata([x1, x2])
         self.plot_footer_line.set_ydata([y1, y2])
-
-
-class CompositionTextJustifier(TextJustifier):
-    """
-    Justify Text about a composition or it's panels
-    """
-
-    def __init__(self, spaces: CompositionSideSpaces):
-        boundaries = JustifyBoundaries(
-            plot_left=spaces.plot_left,
-            plot_right=spaces.plot_right,
-            plot_bottom=spaces.plot_bottom,
-            plot_top=spaces.plot_top,
-            panel_left=spaces.panel_left,
-            panel_right=spaces.panel_right,
-            panel_bottom=spaces.panel_bottom,
-            panel_top=spaces.panel_top,
-        )
-        super().__init__(spaces.cmp.figure, boundaries)

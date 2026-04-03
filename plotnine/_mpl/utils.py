@@ -304,6 +304,35 @@ class TextJustifier:
         self.geometry = ArtistGeometry(figure)
         self.boundaries = boundaries
 
+    @classmethod
+    def from_boundaries(
+        cls,
+        figure: Figure,
+        *,
+        plot_left: float,
+        plot_right: float,
+        plot_bottom: float,
+        plot_top: float,
+        panel_left: float,
+        panel_right: float,
+        panel_bottom: float,
+        panel_top: float,
+    ) -> TextJustifier:
+        """
+        Create a TextJustifier from boundary coordinates
+        """
+        boundaries = JustifyBoundaries(
+            plot_left=plot_left,
+            plot_right=plot_right,
+            plot_bottom=plot_bottom,
+            plot_top=plot_top,
+            panel_left=panel_left,
+            panel_right=panel_right,
+            panel_bottom=panel_bottom,
+            panel_top=panel_top,
+        )
+        return cls(figure, boundaries)
+
     def horizontally(
         self,
         text: Text,
