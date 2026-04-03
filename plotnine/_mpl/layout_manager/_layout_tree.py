@@ -10,7 +10,7 @@ from ._grid import Grid
 from ._plot_side_space import PlotSideSpaces
 
 if TYPE_CHECKING:
-    from typing import Sequence, TypeAlias
+    from typing import Any, Callable, Literal, Sequence, TypeAlias
 
     from plotnine._mpl.gridspec import p9GridSpec
     from plotnine._mpl.layout_manager._plot_side_space import (
@@ -508,73 +508,53 @@ class LayoutTree:
         """
         Align the edges of the panels in the composition
         """
-        for spaces in self.iter_bottom_spaces():
-            bottoms = [space.panel_bottom for space in spaces]
-            high = max(bottoms)
-            diffs = [high - b for b in bottoms]
-            for space, diff in zip(spaces, diffs):
-                space.margin_alignment += diff
-
-        for spaces in self.iter_top_spaces():
-            tops = [space.panel_top for space in spaces]
-            low = min(tops)
-            diffs = [b - low for b in tops]
-            for space, diff in zip(spaces, diffs):
-                space.margin_alignment += diff
-
-        for spaces in self.iter_left_spaces():
-            lefts = [space.panel_left for space in spaces]
-            high = max(lefts)
-            diffs = [high - l for l in lefts]
-            for space, diff in zip(spaces, diffs):
-                space.margin_alignment += diff
-
-        for spaces in self.iter_right_spaces():
-            rights = [space.panel_right for space in spaces]
-            low = min(rights)
-            diffs = [r - low for r in rights]
-            for space, diff in zip(spaces, diffs):
-                space.margin_alignment += diff
+        _equalize(
+            self.iter_bottom_spaces(),
+            lambda s: s.panel_bottom,
+            "margin_alignment",
+        )
+        _equalize(
+            self.iter_top_spaces(),
+            lambda s: s.panel_top,
+            "margin_alignment",
+            how="min",
+        )
+        _equalize(
+            self.iter_left_spaces(),
+            lambda s: s.panel_left,
+            "margin_alignment",
+        )
+        _equalize(
+            self.iter_right_spaces(),
+            lambda s: s.panel_right,
+            "margin_alignment",
+            how="min",
+        )
 
     def align_tags(self):
         """
         Align the tags in the composition
         """
-        for spaces in self.iter_bottom_spaces():
-            heights = [
-                space.tag_height + space.tag_alignment for space in spaces
-            ]
-            high = max(heights)
-            diffs = [high - h for h in heights]
-            for space, diff in zip(spaces, diffs):
-                space.tag_alignment += diff
-
-        for spaces in self.iter_top_spaces():
-            heights = [
-                space.tag_height + space.tag_alignment for space in spaces
-            ]
-            high = max(heights)
-            diffs = [high - h for h in heights]
-            for space, diff in zip(spaces, diffs):
-                space.tag_alignment += diff
-
-        for spaces in self.iter_left_spaces():
-            widths = [
-                space.tag_width + space.tag_alignment for space in spaces
-            ]
-            high = max(widths)
-            diffs = [high - w for w in widths]
-            for space, diff in zip(spaces, diffs):
-                space.tag_alignment += diff
-
-        for spaces in self.iter_right_spaces():
-            widths = [
-                space.tag_width + space.tag_alignment for space in spaces
-            ]
-            high = max(widths)
-            diffs = [high - w for w in widths]
-            for space, diff in zip(spaces, diffs):
-                space.tag_alignment += diff
+        _equalize(
+            self.iter_bottom_spaces(),
+            lambda s: s.tag_height + s.tag_alignment,
+            "tag_alignment",
+        )
+        _equalize(
+            self.iter_top_spaces(),
+            lambda s: s.tag_height + s.tag_alignment,
+            "tag_alignment",
+        )
+        _equalize(
+            self.iter_left_spaces(),
+            lambda s: s.tag_width + s.tag_alignment,
+            "tag_alignment",
+        )
+        _equalize(
+            self.iter_right_spaces(),
+            lambda s: s.tag_width + s.tag_alignment,
+            "tag_alignment",
+        )
 
     def align_axis_titles(self):
         """
@@ -588,20 +568,16 @@ class LayoutTree:
         to store the value outside the _side_space and pick it up when
         setting the position of the texts!
         """
-
-        for spaces in self.iter_bottom_spaces():
-            clearances = [space.axis_title_clearance for space in spaces]
-            high = max(clearances)
-            diffs = [high - b for b in clearances]
-            for space, diff in zip(spaces, diffs):
-                space.axis_title_alignment += diff
-
-        for spaces in self.iter_left_spaces():
-            clearances = [space.axis_title_clearance for space in spaces]
-            high = max(clearances)
-            diffs = [high - l for l in clearances]
-            for space, diff in zip(spaces, diffs):
-                space.axis_title_alignment += diff
+        _equalize(
+            self.iter_bottom_spaces(),
+            lambda s: s.axis_title_clearance,
+            "axis_title_alignment",
+        )
+        _equalize(
+            self.iter_left_spaces(),
+            lambda s: s.axis_title_clearance,
+            "axis_title_alignment",
+        )
 
         for tree in self.sub_compositions:
             tree.align_axis_titles()
@@ -630,6 +606,50 @@ class LayoutTree:
         new_plot_heights = new_panel_heights + self.vertical_spaces
         height_ratios = new_plot_heights / new_plot_heights.max()
         self.sub_gridspec.set_height_ratios(height_ratios)
+
+
+def _equalize(
+    spaces_iter: Iterator[Sequence[Any]],
+    measure: Callable[[Any], float],
+    attr: str,
+    how: Literal["max", "min"] = "max",
+):
+    """
+    Equalize a measurement across spaces by adjusting an attribute
+
+    For each group of spaces yielded by the iterator, find the extreme
+    value (max or min) of the measurement, then add the difference to
+    each space's alignment attribute so that all spaces in the group end
+    up with the same measurement.
+
+    Parameters
+    ----------
+    spaces_iter
+        Iterator yielding groups of side spaces to equalize.
+        Each group is a sequence of spaces along the same row or column of
+        the composition.
+    measure
+        Function that extracts the value to equalize from a side space.
+    attr
+        Name of the alignment attribute on the side space to adjust.
+        The difference is added to the current value.
+    how
+        Whether to equalize to the maximum or minimum value in each group.
+        For "max", spaces with smaller measurements get extra alignment to
+        match the largest.
+        For "min", spaces with larger measurements get extra alignment to
+        match the smallest.
+    """
+    for spaces in spaces_iter:
+        values = [measure(s) for s in spaces]
+        if how == "max":
+            target = max(values)
+            diffs = [target - v for v in values]
+        else:
+            target = min(values)
+            diffs = [v - target for v in values]
+        for space, diff in zip(spaces, diffs):
+            setattr(space, attr, getattr(space, attr) + diff)
 
 
 # For debugging
