@@ -512,53 +512,27 @@ class LayoutTree:
         """
         Align the edges of the panels in the composition
         """
-        _equalize(
-            self.bottom_spaces,
-            lambda s: s.panel_bottom,
-            "margin_alignment",
-        )
-        _equalize(
-            self.top_spaces,
-            lambda s: s.panel_top,
-            "margin_alignment",
-            how="min",
-        )
-        _equalize(
-            self.left_spaces,
-            lambda s: s.panel_left,
-            "margin_alignment",
-        )
-        _equalize(
-            self.right_spaces,
-            lambda s: s.panel_right,
-            "margin_alignment",
-            how="min",
-        )
+        align_args = [
+            (self.bottom_spaces, lambda s: s.panel_bottom, "max"),
+            (self.top_spaces, lambda s: s.panel_top, "min"),
+            (self.left_spaces, lambda s: s.panel_left, "max"),
+            (self.right_spaces, lambda s: s.panel_right, "min"),
+        ]
+        for spaces, measure, how in align_args:
+            _align(spaces, measure, "margin_alignment", how)
 
     def align_tags(self):
         """
         Align the tags in the composition
         """
-        _equalize(
-            self.bottom_spaces,
-            lambda s: s.tag_height + s.tag_alignment,
-            "tag_alignment",
-        )
-        _equalize(
-            self.top_spaces,
-            lambda s: s.tag_height + s.tag_alignment,
-            "tag_alignment",
-        )
-        _equalize(
-            self.left_spaces,
-            lambda s: s.tag_width + s.tag_alignment,
-            "tag_alignment",
-        )
-        _equalize(
-            self.right_spaces,
-            lambda s: s.tag_width + s.tag_alignment,
-            "tag_alignment",
-        )
+        align_args = [
+            (self.bottom_spaces, lambda s: s.tag_height + s.tag_alignment),
+            (self.top_spaces, lambda s: s.tag_height + s.tag_alignment),
+            (self.left_spaces, lambda s: s.tag_width + s.tag_alignment),
+            (self.right_spaces, lambda s: s.tag_width + s.tag_alignment),
+        ]
+        for spaces, measure in align_args:
+            _align(spaces, measure, "tag_alignment")
 
     def align_axis_titles(self):
         """
@@ -572,16 +546,12 @@ class LayoutTree:
         to store the value outside the _side_space and pick it up when
         setting the position of the texts!
         """
-        _equalize(
-            self.bottom_spaces,
-            lambda s: s.axis_title_clearance,
-            "axis_title_alignment",
-        )
-        _equalize(
-            self.left_spaces,
-            lambda s: s.axis_title_clearance,
-            "axis_title_alignment",
-        )
+
+        def axis_title_clearance(s):
+            return s.axis_title_clearance
+
+        for spaces in [self.bottom_spaces, self.left_spaces]:
+            _align(spaces, axis_title_clearance, "axis_title_alignment")
 
         for tree in self.sub_compositions:
             tree.align_axis_titles()
@@ -612,14 +582,14 @@ class LayoutTree:
         self.sub_gridspec.set_height_ratios(height_ratios)
 
 
-def _equalize(
+def _align(
     spaces_iter: Iterator[Sequence[Any]],
     measure: Callable[[Any], float],
     attr: str,
     how: Literal["max", "min"] = "max",
 ):
     """
-    Equalize a measurement across spaces by adjusting an attribute
+    Align spaces by adjusting an attribute
 
     For each group of spaces yielded by the iterator, find the extreme
     value (max or min) of the measurement, then add the difference to
