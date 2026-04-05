@@ -460,7 +460,8 @@ class LayoutTree:
                 spaces.extend(node.right_most_spaces)
         return spaces
 
-    def iter_left_spaces(self) -> Iterator[list[left_space]]:
+    @property
+    def left_spaces(self) -> Iterator[list[left_space]]:
         """
         Left spaces for each non-empty column
 
@@ -471,7 +472,8 @@ class LayoutTree:
             if spaces:
                 yield spaces
 
-    def iter_right_spaces(self) -> Iterator[list[right_space]]:
+    @property
+    def right_spaces(self) -> Iterator[list[right_space]]:
         """
         Right spaces for each non-empty column
 
@@ -482,7 +484,8 @@ class LayoutTree:
             if spaces:
                 yield spaces
 
-    def iter_bottom_spaces(self) -> Iterator[list[bottom_space]]:
+    @property
+    def bottom_spaces(self) -> Iterator[list[bottom_space]]:
         """
         Bottom spaces for each non-empty row
 
@@ -493,7 +496,8 @@ class LayoutTree:
             if spaces:
                 yield spaces
 
-    def iter_top_spaces(self) -> Iterator[list[top_space]]:
+    @property
+    def top_spaces(self) -> Iterator[list[top_space]]:
         """
         Top spaces for each non-empty row
 
@@ -509,23 +513,23 @@ class LayoutTree:
         Align the edges of the panels in the composition
         """
         _equalize(
-            self.iter_bottom_spaces(),
+            self.bottom_spaces,
             lambda s: s.panel_bottom,
             "margin_alignment",
         )
         _equalize(
-            self.iter_top_spaces(),
+            self.top_spaces,
             lambda s: s.panel_top,
             "margin_alignment",
             how="min",
         )
         _equalize(
-            self.iter_left_spaces(),
+            self.left_spaces,
             lambda s: s.panel_left,
             "margin_alignment",
         )
         _equalize(
-            self.iter_right_spaces(),
+            self.right_spaces,
             lambda s: s.panel_right,
             "margin_alignment",
             how="min",
@@ -536,22 +540,22 @@ class LayoutTree:
         Align the tags in the composition
         """
         _equalize(
-            self.iter_bottom_spaces(),
+            self.bottom_spaces,
             lambda s: s.tag_height + s.tag_alignment,
             "tag_alignment",
         )
         _equalize(
-            self.iter_top_spaces(),
+            self.top_spaces,
             lambda s: s.tag_height + s.tag_alignment,
             "tag_alignment",
         )
         _equalize(
-            self.iter_left_spaces(),
+            self.left_spaces,
             lambda s: s.tag_width + s.tag_alignment,
             "tag_alignment",
         )
         _equalize(
-            self.iter_right_spaces(),
+            self.right_spaces,
             lambda s: s.tag_width + s.tag_alignment,
             "tag_alignment",
         )
@@ -569,12 +573,12 @@ class LayoutTree:
         setting the position of the texts!
         """
         _equalize(
-            self.iter_bottom_spaces(),
+            self.bottom_spaces,
             lambda s: s.axis_title_clearance,
             "axis_title_alignment",
         )
         _equalize(
-            self.iter_left_spaces(),
+            self.left_spaces,
             lambda s: s.axis_title_clearance,
             "axis_title_alignment",
         )
