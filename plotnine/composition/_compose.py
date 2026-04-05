@@ -466,11 +466,13 @@ class Compose:
         import matplotlib.pyplot as plt
 
         from plotnine._mpl.gridspec import p9GridSpec
+        from plotnine._mpl.layout_manager import PlotnineLayoutEngine
 
         figure = plt.figure()
         self._generate_gridspecs(
             figure, p9GridSpec(1, 1, figure, nest_into=None)
         )
+        figure.set_layout_engine(PlotnineLayoutEngine(self))
 
     def _generate_gridspecs(self, figure: Figure, container_gs: p9GridSpec):
         from plotnine import ggplot
@@ -532,7 +534,6 @@ class Compose:
         :
             Matplotlib figure
         """
-        from .._mpl.layout_manager import PlotnineLayoutEngine
 
         def _draw(cmp):
             figure = cmp._setup()
@@ -557,7 +558,6 @@ class Compose:
             self._draw_annotation()
             self._draw_composition_background()
             self.theme.apply()
-            figure.set_layout_engine(PlotnineLayoutEngine(self))
 
         return figure
 
