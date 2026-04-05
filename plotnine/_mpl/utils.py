@@ -17,6 +17,8 @@ if TYPE_CHECKING:
     from matplotlib.backend_bases import RendererBase
     from matplotlib.figure import Figure
     from matplotlib.gridspec import SubplotSpec
+    from matplotlib.lines import Line2D
+    from matplotlib.patches import Rectangle
     from matplotlib.text import Text
     from matplotlib.transforms import Transform
 
@@ -276,6 +278,35 @@ class ArtistGeometry:
         return max(heights) if len(heights) else 0
 
 
+def resize_footer_background(
+    background: Rectangle,
+    x: float,
+    y: float,
+    height: float,
+    width: float,
+):
+    """
+    Resize the plot footer background to the given dimensions
+    """
+    background.set_x(x)
+    background.set_y(y)
+    background.set_height(height)
+    background.set_width(width)
+
+
+def resize_footer_line(
+    line: Line2D,
+    x: float,
+    width: float,
+    y: float,
+):
+    """
+    Resize the footer line to be a horizontal border
+    """
+    line.set_xdata([x, x + width])
+    line.set_ydata([y, y])
+
+
 @dataclass
 class JustifyBoundaries:
     """
@@ -303,6 +334,35 @@ class TextJustifier:
     def __init__(self, figure: Figure, boundaries: JustifyBoundaries):
         self.geometry = ArtistGeometry(figure)
         self.boundaries = boundaries
+
+    @classmethod
+    def from_boundaries(
+        cls,
+        figure: Figure,
+        *,
+        plot_left: float,
+        plot_right: float,
+        plot_bottom: float,
+        plot_top: float,
+        panel_left: float,
+        panel_right: float,
+        panel_bottom: float,
+        panel_top: float,
+    ) -> TextJustifier:
+        """
+        Create a TextJustifier from boundary coordinates
+        """
+        boundaries = JustifyBoundaries(
+            plot_left=plot_left,
+            plot_right=plot_right,
+            plot_bottom=plot_bottom,
+            plot_top=plot_top,
+            panel_left=panel_left,
+            panel_right=panel_right,
+            panel_bottom=panel_bottom,
+            panel_top=panel_top,
+        )
+        return cls(figure, boundaries)
 
     def horizontally(
         self,

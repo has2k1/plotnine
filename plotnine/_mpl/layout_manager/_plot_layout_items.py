@@ -10,10 +10,11 @@ from plotnine.exceptions import PlotnineError
 
 from ..utils import (
     ArtistGeometry,
-    JustifyBoundaries,
     TextJustifier,
     get_subplotspecs,
     rel_position,
+    resize_footer_background,
+    resize_footer_line,
 )
 
 if TYPE_CHECKING:
@@ -354,7 +355,17 @@ class PlotLayoutItems:
         plot_title_position = theme.getp("plot_title_position", "panel")
         plot_caption_position = theme.getp("plot_caption_position", "panel")
         plot_footer_position = theme.getp("plot_footer_position", "plot")
-        justify = PlotTextJustifier(spaces)
+        justify = TextJustifier.from_boundaries(
+            spaces.plot.figure,
+            plot_left=spaces.l.plot_left,
+            plot_right=spaces.r.plot_right,
+            plot_bottom=spaces.b.plot_bottom,
+            plot_top=spaces.t.plot_top,
+            panel_left=spaces.l.panel_left,
+            panel_right=spaces.r.panel_right,
+            panel_bottom=spaces.b.panel_bottom,
+            panel_top=spaces.t.panel_top,
+        )
 
         if self.plot_tag:
             set_plot_tag_position(self.plot_tag, spaces)
@@ -386,8 +397,21 @@ class PlotLayoutItems:
             justify.horizontally_about(
                 self.plot_footer, ha, plot_footer_position
             )
-            self._resize_plot_footer_background(spaces)
-            self._resize_plot_footer_line(spaces)
+            if self.plot_footer_background:
+                resize_footer_background(
+                    self.plot_footer_background,
+                    x=spaces.l.offset,
+                    y=spaces.b.offset,
+                    height=spaces.b.footer_height,
+                    width=spaces.plot_width,
+                )
+            if self.plot_footer_line:
+                resize_footer_line(
+                    self.plot_footer_line,
+                    x=spaces.l.offset,
+                    width=spaces.plot_width,
+                    y=spaces.b.offset + spaces.b.footer_height,
+                )
 
         if self.axis_title_x:
             ha = theme.getp(("axis_title_x", "ha"), "center")
@@ -407,7 +431,7 @@ class PlotLayoutItems:
         self._strip_text_x_background_equal_heights()
         self._strip_text_y_background_equal_widths()
 
-    def _adjust_axis_text_x(self, justify: PlotTextJustifier):
+    def _adjust_axis_text_x(self, justify: TextJustifier):
         """
         Adjust x-axis text, justifying vertically as necessary
         """
@@ -438,7 +462,7 @@ class PlotLayoutItems:
                     text, va, -axis_text_row_height, 0, height=height
                 )
 
-    def _adjust_axis_text_y(self, justify: PlotTextJustifier):
+    def _adjust_axis_text_y(self, justify: TextJustifier):
         """
         Adjust x-axis text, justifying horizontally as necessary
         """
@@ -523,56 +547,12 @@ class PlotLayoutItems:
         for text, scale in zip(self.strip_text_y, relative_widths):
             text.patch.expand = scale
 
-    def _resize_plot_footer_background(self, spaces: PlotSideSpaces):
-        """
-        Resize the plot footer to the size of the footer
-        """
-        if not self.plot_footer_background:
-            return
-
-        self.plot_footer_background.set_x(spaces.l.offset)
-        self.plot_footer_background.set_y(spaces.b.offset)
-        self.plot_footer_background.set_height(spaces.b.footer_height)
-        self.plot_footer_background.set_width(spaces.plot_width)
-
-    def _resize_plot_footer_line(self, spaces: PlotSideSpaces):
-        """
-        Resize the footer line to be a border above the footer
-        """
-        if not self.plot_footer_line:
-            return
-
-        x1 = spaces.l.offset
-        x2 = x1 + spaces.plot_width
-        y1 = y2 = spaces.b.offset + spaces.b.footer_height
-        self.plot_footer_line.set_xdata([x1, x2])
-        self.plot_footer_line.set_ydata([y1, y2])
-
 
 def _text_is_visible(text: Text) -> bool:
     """
     Return True if text is visible and is not empty
     """
     return text.get_visible() and text._text  # type: ignore
-
-
-class PlotTextJustifier(TextJustifier):
-    """
-    Justify Text about a plot or it's panels
-    """
-
-    def __init__(self, spaces: PlotSideSpaces):
-        boundaries = JustifyBoundaries(
-            plot_left=spaces.l.plot_left,
-            plot_right=spaces.r.plot_right,
-            plot_bottom=spaces.b.plot_bottom,
-            plot_top=spaces.t.plot_top,
-            panel_left=spaces.l.panel_left,
-            panel_right=spaces.r.panel_right,
-            panel_bottom=spaces.b.panel_bottom,
-            panel_top=spaces.t.panel_top,
-        )
-        super().__init__(spaces.plot.figure, boundaries)
 
 
 def set_legends_position(legends: legend_artists, spaces: PlotSideSpaces):
@@ -752,7 +732,17 @@ def set_plot_tag_position_in_margin(tag: Text, spaces: PlotSideSpaces):
         tag.set_y(y)
         tag.set_verticalalignment("bottom")
 
-    justify = PlotTextJustifier(spaces)
+    justify = TextJustifier.from_boundaries(
+        spaces.plot.figure,
+        plot_left=spaces.l.plot_left,
+        plot_right=spaces.r.plot_right,
+        plot_bottom=spaces.b.plot_bottom,
+        plot_top=spaces.t.plot_top,
+        panel_left=spaces.l.panel_left,
+        panel_right=spaces.r.panel_right,
+        panel_bottom=spaces.b.panel_bottom,
+        panel_top=spaces.t.panel_top,
+    )
     if position in ("left", "right"):
         justify.vertically_along_plot(tag, va)
     elif position in ("top", "bottom"):
