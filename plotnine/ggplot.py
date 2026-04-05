@@ -346,8 +346,6 @@ class ggplot:
         :
             Matplotlib figure
         """
-        from ._mpl.layout_manager import PlotnineLayoutEngine
-
         with plot_context(self, show=show):
             figure = self._setup()
             self._build()
@@ -373,7 +371,6 @@ class ggplot:
 
             # Artist object theming
             self.theme.apply()
-            figure.set_layout_engine(PlotnineLayoutEngine(self))
 
         return figure
 
@@ -395,9 +392,11 @@ class ggplot:
         import matplotlib.pyplot as plt
 
         from ._mpl.gridspec import p9GridSpec
+        from ._mpl.layout_manager import PlotnineLayoutEngine
 
         self.figure = plt.figure()
         self._gridspec = p9GridSpec(1, 1, self.figure)
+        self.figure.set_layout_engine(PlotnineLayoutEngine(self))
 
     def _build(self):
         """
