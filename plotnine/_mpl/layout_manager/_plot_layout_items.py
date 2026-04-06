@@ -27,6 +27,7 @@ if TYPE_CHECKING:
 
     from matplotlib.axes import Axes
     from matplotlib.axis import Tick
+    from matplotlib.figure import Figure
     from matplotlib.lines import Line2D
     from matplotlib.patches import Rectangle
     from matplotlib.transforms import Transform
@@ -36,10 +37,13 @@ if TYPE_CHECKING:
     from plotnine._mpl.text import StripText
     from plotnine.iapi import legend_artists
     from plotnine.themes.elements import margin as Margin
+    from plotnine.themes.theme import theme
     from plotnine.typing import (
         StripPosition,
     )
 
+    from ._composition_layout_items import CompositionLayoutItems
+    from ._composition_side_space import CompositionSideSpaces
     from ._plot_side_space import PlotSideSpaces
 
     AxesLocation: TypeAlias = Literal[
@@ -352,66 +356,12 @@ class PlotLayoutItems:
         Move the artists to their final positions
         """
         theme = self.plot.theme
-        plot_title_position = theme.getp("plot_title_position", "panel")
-        plot_caption_position = theme.getp("plot_caption_position", "panel")
-        plot_footer_position = theme.getp("plot_footer_position", "plot")
-        justify = TextJustifier.from_boundaries(
-            spaces.plot.figure,
-            plot_left=spaces.l.plot_left,
-            plot_right=spaces.r.plot_right,
-            plot_bottom=spaces.b.plot_bottom,
-            plot_top=spaces.t.plot_top,
-            panel_left=spaces.l.panel_left,
-            panel_right=spaces.r.panel_right,
-            panel_bottom=spaces.b.panel_bottom,
-            panel_top=spaces.t.panel_top,
+        justify = _position_plot_labels(
+            spaces.plot.figure, theme, spaces, self
         )
 
         if self.plot_tag:
             set_plot_tag_position(self.plot_tag, spaces)
-
-        if self.plot_title:
-            ha = theme.getp(("plot_title", "ha"))
-            self.plot_title.set_y(spaces.t.y2("plot_title"))
-            justify.horizontally_about(
-                self.plot_title, ha, plot_title_position
-            )
-
-        if self.plot_subtitle:
-            ha = theme.getp(("plot_subtitle", "ha"))
-            self.plot_subtitle.set_y(spaces.t.y2("plot_subtitle"))
-            justify.horizontally_about(
-                self.plot_subtitle, ha, plot_title_position
-            )
-
-        if self.plot_caption:
-            ha = theme.getp(("plot_caption", "ha"), "right")
-            self.plot_caption.set_y(spaces.b.y1("plot_caption"))
-            justify.horizontally_about(
-                self.plot_caption, ha, plot_caption_position
-            )
-
-        if self.plot_footer:
-            ha = theme.getp(("plot_footer", "ha"), "left")
-            self.plot_footer.set_y(spaces.b.y1("plot_footer"))
-            justify.horizontally_about(
-                self.plot_footer, ha, plot_footer_position
-            )
-            if self.plot_footer_background:
-                resize_footer_background(
-                    self.plot_footer_background,
-                    x=spaces.l.offset,
-                    y=spaces.b.offset,
-                    height=spaces.b.footer_height,
-                    width=spaces.plot_width,
-                )
-            if self.plot_footer_line:
-                resize_footer_line(
-                    self.plot_footer_line,
-                    x=spaces.l.offset,
-                    width=spaces.plot_width,
-                    y=spaces.b.offset + spaces.b.footer_height,
-                )
 
         if self.axis_title_x:
             ha = theme.getp(("axis_title_x", "ha"), "center")
@@ -553,6 +503,75 @@ def _text_is_visible(text: Text) -> bool:
     Return True if text is visible and is not empty
     """
     return text.get_visible() and text._text  # type: ignore
+
+
+def _position_plot_labels(
+    figure: Figure,
+    theme: theme,
+    spaces: PlotSideSpaces | CompositionSideSpaces,
+    items: PlotLayoutItems | CompositionLayoutItems,
+) -> TextJustifier:
+    """
+    Position title, subtitle, caption, footer, and footer decorations
+
+    Returns the TextJustifier so the caller can reuse it for
+    additional positioning (e.g. axis titles).
+    """
+    plot_title_position = theme.getp("plot_title_position", "panel")
+    plot_caption_position = theme.getp("plot_caption_position", "panel")
+    plot_footer_position = theme.getp("plot_footer_position", "plot")
+    justify = TextJustifier.from_boundaries(
+        figure,
+        plot_left=spaces.plot_left,
+        plot_right=spaces.plot_right,
+        plot_bottom=spaces.plot_bottom,
+        plot_top=spaces.plot_top,
+        panel_left=spaces.panel_left,
+        panel_right=spaces.panel_right,
+        panel_bottom=spaces.panel_bottom,
+        panel_top=spaces.panel_top,
+    )
+
+    if items.plot_title:
+        ha = theme.getp(("plot_title", "ha"))
+        items.plot_title.set_y(spaces.t.y2("plot_title"))
+        justify.horizontally_about(items.plot_title, ha, plot_title_position)
+
+    if items.plot_subtitle:
+        ha = theme.getp(("plot_subtitle", "ha"))
+        items.plot_subtitle.set_y(spaces.t.y2("plot_subtitle"))
+        justify.horizontally_about(
+            items.plot_subtitle, ha, plot_title_position
+        )
+
+    if items.plot_caption:
+        ha = theme.getp(("plot_caption", "ha"), "right")
+        items.plot_caption.set_y(spaces.b.y1("plot_caption"))
+        justify.horizontally_about(
+            items.plot_caption, ha, plot_caption_position
+        )
+
+    if items.plot_footer:
+        ha = theme.getp(("plot_footer", "ha"), "left")
+        items.plot_footer.set_y(spaces.b.y1("plot_footer"))
+        justify.horizontally_about(items.plot_footer, ha, plot_footer_position)
+        if items.plot_footer_background:
+            resize_footer_background(
+                items.plot_footer_background,
+                x=spaces.l.offset,
+                y=spaces.b.offset,
+                height=spaces.b.footer_height,
+                width=spaces.plot_width,
+            )
+        if items.plot_footer_line:
+            resize_footer_line(
+                items.plot_footer_line,
+                x=spaces.l.offset,
+                width=spaces.plot_width,
+                y=spaces.b.offset + spaces.b.footer_height,
+            )
+
+    return justify
 
 
 def set_legends_position(legends: legend_artists, spaces: PlotSideSpaces):

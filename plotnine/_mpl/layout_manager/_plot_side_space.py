@@ -834,6 +834,38 @@ class PlotSideSpaces:
         return self.t.panel_top - self.b.panel_bottom
 
     @property
+    def plot_left(self) -> float:
+        return self.l.plot_left
+
+    @property
+    def plot_right(self) -> float:
+        return self.r.plot_right
+
+    @property
+    def plot_bottom(self) -> float:
+        return self.b.plot_bottom
+
+    @property
+    def plot_top(self) -> float:
+        return self.t.plot_top
+
+    @property
+    def panel_left(self) -> float:
+        return self.l.panel_left
+
+    @property
+    def panel_right(self) -> float:
+        return self.r.panel_right
+
+    @property
+    def panel_bottom(self) -> float:
+        return self.b.panel_bottom
+
+    @property
+    def panel_top(self) -> float:
+        return self.t.panel_top
+
+    @property
     def horizontal_space(self) -> float:
         """
         Horizontal non-panel space [figure dimensions]
