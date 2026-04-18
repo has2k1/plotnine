@@ -42,7 +42,8 @@ class ae_value(Generic[T]):
     aesthetic values. e.g. if a value is a tuple, we don't want it to be
     seen as a sequence of values when assigning it to a dataframe column.
     The subclasses should be able to recognise valid aesthetic values and
-    repeat (using multiplication) the value any number of times.
+    repeat (using multiplication) the value any number of times. i.e.
+    broadcast the aesthetic.
     """
 
     value: T
@@ -176,3 +177,45 @@ def is_shape_points(obj: Any) -> bool:
         return all(is_numeric(a) and is_numeric(b) for a, b in obj)
     except (ValueError, TypeError):
         return False
+
+
+def broadcast_ae_value(value: T, ae: str, n: int) -> Sequence[T]:
+    """
+    Repeat an aesthetic value n times
+
+    Parameters
+    ----------
+    value :
+        A single aesthetic value (e.g. a color tuple or linetype tuple)
+        that should not be expanded element-wise.
+    ae :
+        Name of the aesthetic. Determines which [](`ae_value`) subclass
+        validates and repeats the value.
+    n :
+        Number of times to repeat the value.
+
+    Returns
+    -------
+    :
+        A sequence of length `n` containing the (validated) value.
+
+    Raises
+    ------
+    ValueError
+        If `ae` is not one of the aesthetics
+        (`color`, `colour`, `fill`, `linetype`, `shape`)
+        that has an "atomic" handler.
+    """
+    lookup: dict[str, type[ae_value]] = {
+        "color": color,
+        "linetype": linetype,
+        "colour": color,
+        "fill": fill,
+        "shape": shape,
+    }
+    try:
+        return lookup[ae](value) * n
+    except KeyError as err:
+        raise ValueError(
+            f"Aesthetic {ae!r} does not have a broadcast handler."
+        ) from err
