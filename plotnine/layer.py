@@ -9,7 +9,7 @@ import pandas as pd
 from ._utils import array_kind, check_required_aesthetics, ninteraction
 from ._utils.registry import Registry
 from .exceptions import PlotnineError
-from .mapping.aes import NO_GROUP, SCALED_AESTHETICS, aes, make_labels
+from .mapping.aes import NO_GROUP, aes, make_labels
 from .mapping.evaluation import evaluate, stage
 
 if typing.TYPE_CHECKING:
@@ -577,7 +577,12 @@ def add_group(data: pd.DataFrame) -> pd.DataFrame:
         return data
 
     if "group" not in data:
-        ignore = data.columns.difference(list(SCALED_AESTHETICS))
+        # Exclude some "special" aesthetics from contributing towards
+        # the grouping.
+        # label - geom_text, geom_label
+        # geometry - geom_map
+        # where - geom_ribbon
+        ignore = ["PANEL", "label", "geometry", "where"]
         disc = discrete_columns(data, ignore=ignore)
         if disc:
             data["group"] = ninteraction(data[disc], drop=True)
