@@ -1,10 +1,10 @@
 from __future__ import annotations
 
-import typing
 from abc import ABC
 from contextlib import suppress
 from copy import deepcopy
 from itertools import chain, repeat
+from typing import TYPE_CHECKING
 
 import numpy as np
 
@@ -18,7 +18,7 @@ from ..layer import layer
 from ..mapping.aes import rename_aesthetics
 from ..mapping.evaluation import evaluate
 
-if typing.TYPE_CHECKING:
+if TYPE_CHECKING:
     from typing import Any
 
     import pandas as pd
@@ -211,8 +211,7 @@ class geom(ABC, metaclass=Register):
         :
             Data used for drawing the geom.
         """
-        from plotnine.mapping import _atomic as atomic
-        from plotnine.mapping._atomic import ae_value
+        from plotnine.mapping._atomic import ae_value, broadcast_ae_value
 
         missing_aes = (
             self.DEFAULT_AES.keys()
@@ -244,11 +243,9 @@ class geom(ABC, metaclass=Register):
             else:
                 # Try to make sense of aesthetics whose values can be tuples
                 # or sequences of sorts.
-                ae_value_cls: type[ae_value] | None = getattr(atomic, ae, None)
-                if ae_value_cls:
-                    with suppress(ValueError):
-                        data[ae] = ae_value_cls(value) * len(data)
-                        continue
+                with suppress(ValueError):
+                    data[ae] = broadcast_ae_value(value, ae, len(data))
+                    continue
 
                 # This should catch the aesthetic assignments to
                 # non-numeric or non-string values or sequence of values.
