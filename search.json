@@ -4358,7 +4358,7 @@
     "href": "reference/geom_violin.html#parameters",
     "title": " plotnine.geom_violin",
     "section": "Parameters",
-    "text": "Parameters\n\n\ndraw_quantiles : float | list[float] = None\n\ndraw horizontal lines at the given quantiles (0..1) of the density estimate.\n\nstyle : str = \"full\"\n\nThe type of violin plot to draw. The options are:\n'full'        # Regular (2 sided violins)\n'left'        # Left-sided half violins\n'right'       # Right-sided half violins\n'left-right'  # Alternate (left first) half violins by the group\n'right-left'  # Alternate (right first) half violins by the group"
+    "text": "Parameters\n\n\ndraw_quantiles : float | list[float] = None\n\ndraw horizontal lines at the given quantiles (0..1) of the density estimate.\n\nstyle : str = \"full\"\n\nThe type of violin plot to draw. The options are:\n'full'        # Regular (2 sided violins)\n'left'        # Left-sided half violins\n'right'       # Right-sided half violins\n'left-right'  # Alternate (left first) half violins by the group\n'right-left'  # Alternate (right first) half violins by the group\n\nquantile_color : str | tuple = None\n\nColor of the quantile lines.\n\nquantile_size : str = \"o\"\n\nThe linewidth of the quantile lines.\n\nquantile_linetype : float = 1.5\n\nThe linetype of the quantile lines."
   },
   {
     "objectID": "reference/geom_violin.html#see-also",
