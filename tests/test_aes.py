@@ -17,6 +17,7 @@ from plotnine import (
     stat_ecdf,
     stat_function,
 )
+from plotnine.mapping._atomic import broadcast_ae_value, color
 from plotnine.mapping.aes import make_labels
 
 data = pd.DataFrame(
@@ -134,3 +135,11 @@ def test_make_labels():
     mapping = {"y": "y", "color": ["Treatment", "Control"]}
     labels = make_labels(mapping)
     assert labels.color is None
+
+
+def test_broadcast_ae_value():
+    result = broadcast_ae_value("red", "color", 3)
+    assert result == [color("red").value] * 3
+
+    with pytest.raises(ValueError):
+        broadcast_ae_value("red", "not_an_aesthetic", 3)
