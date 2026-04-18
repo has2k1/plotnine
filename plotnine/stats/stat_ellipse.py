@@ -50,6 +50,7 @@ class stat_ellipse(stat):
         "level": 0.95,
         "segments": 51,
     }
+    DROPPED_AES = ["weight"]
 
     def compute_group(self, data, scales):
         import scipy.stats as stats

@@ -87,6 +87,7 @@ class stat_bin(stat):
     }
     DEFAULT_AES = {"y": after_stat("count"), "weight": None}
     CREATES = {"width", "count", "density", "ncount", "ndensity", "ngroup"}
+    DROPPED_AES = ["weight"]
 
     def setup_params(self, data):
         params = self.params

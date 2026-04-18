@@ -55,6 +55,7 @@ class stat_quantile(stat):
         "method_args": {},
     }
     CREATES = {"quantile", "group"}
+    DROPPED_AES = ["weight"]
 
     def setup_params(self, data):
         params = self.params

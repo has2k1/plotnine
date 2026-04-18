@@ -43,6 +43,7 @@ class stat_ecdf(stat):
     DEFAULT_PARAMS = {"geom": "step", "n": None, "pad": True}
     DEFAULT_AES = {"y": after_stat("ecdf")}
     CREATES = {"ecdf"}
+    DROPPED_AES = ["weight"]
 
     def compute_group(self, data, scales):
         from statsmodels.distributions.empirical_distribution import ECDF

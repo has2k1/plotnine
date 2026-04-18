@@ -123,6 +123,7 @@ class stat_density(stat):
     }
     DEFAULT_AES = {"y": after_stat("density")}
     CREATES = {"density", "count", "scaled", "n"}
+    DROPPED_AES = ["weight"]
 
     def setup_params(self, data):
         params = self.params

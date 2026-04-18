@@ -66,6 +66,7 @@ class stat_bin_2d(stat):
     }
     DEFAULT_AES = {"fill": after_stat("count"), "weight": None}
     CREATES = {"xmin", "xmax", "ymin", "ymax", "count", "density"}
+    DROPPED_AES = ["weight"]
 
     def setup_params(self, data):
         params = self.params

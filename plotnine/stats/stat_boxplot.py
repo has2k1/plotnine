@@ -80,6 +80,7 @@ class stat_boxplot(stat):
         "relvarwidth",
         "n",
     }
+    DROPPED_AES: list[str] = ["x", "y", "weight"]
 
     def setup_data(self, data):
         if "x" not in data:

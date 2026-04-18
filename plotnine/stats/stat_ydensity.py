@@ -101,6 +101,7 @@ class stat_ydensity(stat):
     }
     DEFAULT_AES = {"weight": None}
     CREATES = {"width", "violinwidth"}
+    DROPPED_AES = ["weight"]
 
     def setup_data(self, data):
         if "x" not in data:

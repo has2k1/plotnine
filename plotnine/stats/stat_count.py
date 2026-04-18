@@ -47,6 +47,7 @@ class stat_count(stat):
     }
     DEFAULT_AES = {"y": after_stat("count")}
     CREATES = {"count", "prop"}
+    DROPPED_AES = ["weight"]
 
     def setup_params(self, data):
         if self.params["width"] is None:
