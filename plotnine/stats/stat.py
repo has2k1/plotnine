@@ -57,6 +57,15 @@ class stat(ABC, metaclass=Register):
     DEFAULT_PARAMS: dict[str, Any] = {}
     """Required parameters for the stat"""
 
+    DROPPED_AES: list[str] = []
+    """
+    Aesthetics that may be dropped during processing.
+
+    These are typically common aesthetics that a particular stat does not use.
+    If a value is mapped to any of these aesthetics, the stat may discard them
+    silently (without issuing a warning).
+    """
+
     CREATES: set[str] = set()
     """
     Stats may modify existing columns or create extra
@@ -315,7 +324,9 @@ class stat(ABC, metaclass=Register):
             stats.append(group_result)
 
         stats = pd.concat(stats, axis=0, ignore_index=True)
-        dropped = data.columns.difference(stats.columns).to_list()
+        dropped = data.columns.difference(
+            stats.columns.union(self.DROPPED_AES)
+        ).to_list()
         if dropped:
             warn(DROPPED_TPL.format(dropped=dropped))
         # Note: If the data coming in has columns with non-unique

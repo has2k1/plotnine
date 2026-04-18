@@ -103,6 +103,7 @@ class stat_bindot(stat):
     }
     DEFAULT_AES = {"y": after_stat("count")}
     CREATES = {"width", "count", "density", "ncount", "ndensity"}
+    DROPPED_AES = ["weight", "bin", "bincenter"]
 
     def setup_params(self, data):
         params = self.params

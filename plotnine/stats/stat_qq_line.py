@@ -62,6 +62,7 @@ class stat_qq_line(stat):
         "fullrange": False,
     }
     CREATES = {"x", "y"}
+    DROPPED_AES = ["sample"]
 
     def setup_params(self, data):
         if len(self.params["line_p"]) != 2:

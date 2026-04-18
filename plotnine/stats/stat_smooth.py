@@ -153,6 +153,7 @@ class stat_smooth(stat):
         "method_args": {},
     }
     CREATES = {"se", "ymin", "ymax"}
+    DROPPED_AES = ["weight"]
 
     def setup_data(self, data):
         """
