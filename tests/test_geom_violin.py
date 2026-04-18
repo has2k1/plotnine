@@ -140,3 +140,15 @@ def test_overlap():
     )
 
     assert p == "overlap"
+
+
+def test_quantile_aesthetics():
+    p = ggplot(data, aes("x")) + geom_violin(
+        aes(y="y"),
+        size=0.5,
+        draw_quantiles=[0.25, 0.5, 0.75],
+        quantile_size=1,
+        quantile_color=(0.9, 0.2, 0.8),
+        quantile_linetype=(0, (4, 4, 1, 4)),
+    )
+    assert p == "quantile_aesthetics"

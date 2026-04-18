@@ -45,6 +45,12 @@ class geom_violin(geom):
         'left-right'  # Alternate (left first) half violins by the group
         'right-left'  # Alternate (right first) half violins by the group
         ```
+    quantile_color : str | tuple, default=None
+        Color of the quantile lines.
+    quantile_size : str, default="o"
+        The linewidth of the quantile lines.
+    quantile_linetype : float, default=1.5
+        The linetype of the quantile lines.
 
     See Also
     --------
@@ -64,6 +70,10 @@ class geom_violin(geom):
         "stat": "ydensity",
         "position": "dodge",
         "draw_quantiles": None,
+        "quantile_color": None,
+        "quantile_colour": None,
+        "quantile_size": None,
+        "quantile_linetype": None,
         "style": "full",
         "scale": "area",
         "trim": True,
@@ -175,6 +185,8 @@ class geom_violin(geom):
             )
 
             if quantiles is not None:
+                from plotnine.mapping._atomic import broadcast_ae_value
+
                 # Get dataframe with quantile segments and that
                 # with aesthetics then put them together
                 # Each quantile segment is defined by 2 points and
@@ -186,6 +198,19 @@ class geom_violin(geom):
                 segment_df = pd.concat(
                     [make_quantile_df(df, quantiles), aes_df], axis=1
                 )
+
+                color = params["quantile_colour"] or params["quantile_color"]
+                n = len(segment_df)
+                if color:
+                    segment_df["color"] = broadcast_ae_value(color, "color", n)
+                if linetype := params["quantile_linetype"]:
+                    segment_df["linetype"] = broadcast_ae_value(
+                        linetype,
+                        "linetype",
+                        n,
+                    )
+                if size := params["quantile_size"]:
+                    segment_df["size"] = size
 
                 # plot quantile segments
                 geom_path.draw_group(
