@@ -70,7 +70,6 @@ class margin:
         convert them to different units as is required. Here we get
         all the parameters that we shall need to do the conversions.
         """
-        self.themeable_name = themeable_name
         self.fontsize = theme.getp((themeable_name, "size"), 11)
         self.figure_size = theme.getp("figure_size")
         self._is_setup = True
