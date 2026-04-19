@@ -22,10 +22,12 @@ if TYPE_CHECKING:
 
 
 # Note
-# Margins around the plot are specified in figure coordinates
-# We interpret that value to be a fraction of the width. So along
-# the vertical direction we multiply by W/H to get equal space
-# in both directions
+# * theme.getp("plot_margin_*") values are raw floats interpreted as
+# fraction of width — multiply by F = W/H for vertical use.
+#
+# * margin.to("fig") values are already in the correct per-edge
+# fractional basis (t|b: fraction of H, l|r: fraction of W) and
+# should be used as-is.
 
 
 class GridSpecParamsError(Exception):
