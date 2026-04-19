@@ -19,7 +19,30 @@ if TYPE_CHECKING:
 @dataclass
 class margin:
     """
-    Margin
+    Margin around a themeable
+
+    Holds four edge values (top, right, bottom, left) in one of
+    several coordinate spaces selected by the `unit` attribute.
+
+    Notes
+    -----
+    Supported units:
+
+    - `"pt"`: typographic points (1/72 in).
+    - `"in"`: inches.
+    - `"lines"`: multiples of the element's font size, applied
+      uniformly to all four edges. One line equals `fontsize/72`
+      inches of space on every edge — roughly a CSS em horizontally
+      and fontsize-tall vertically, not a line-height-with-leading
+      as the name may suggest.
+    - `"fig"`: figure-fraction, interpreted per edge: top and bottom
+      as a fraction of figure height, left and right as a fraction
+      of figure width.
+
+    For `pt`, `in`, and `lines`, equal edge values produce equal
+    physical distances regardless of figure aspect ratio. For `fig`,
+    top/bottom and left/right are fractions of different dimensions
+    by design.
     """
 
     t: float = 0
@@ -44,7 +67,8 @@ class margin:
 
     unit: Literal["pt", "in", "lines", "fig"] = "pt"
     """
-    The units (coordinate space) of the values
+    Coordinate space of the edge values. See the class docstring
+    for the meaning of each option.
     """
 
     # These are set by the themeable when it is applied
