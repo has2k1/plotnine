@@ -55,7 +55,7 @@ if TYPE_CHECKING:
     from plotnine import watermark
     from plotnine._mpl.gridspec import p9GridSpec
     from plotnine._mpl.layout_manager._plot_side_space import PlotSideSpaces
-    from plotnine.composition import Compose
+    from plotnine.composition import Compose, inset_element
     from plotnine.coords.coord import coord
     from plotnine.facets.facet import facet
     from plotnine.typing import DataLike, FigureFormat, MimeBundle
@@ -156,6 +156,7 @@ class ggplot:
         self.environment = Environment.capture(1)
         self.layout = Layout()
         self.watermarks: list[watermark] = []
+        self._insets: list[inset_element] = []
 
         # build artefacts
         self._build_objs = NS(meta={})
