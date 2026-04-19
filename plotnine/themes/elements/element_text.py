@@ -189,7 +189,7 @@ class element_text(element_base):
         Setup the theme_element before drawing
         """
         if m := self.properties.get("margin"):
-            m = m.setup(theme, themeable_name)
+            m.setup(theme, themeable_name)
 
     def _translate_hjust(
         self, just: float
