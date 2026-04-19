@@ -4,10 +4,11 @@ Margin
 
 from __future__ import annotations
 
-from contextlib import suppress
 from copy import copy
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
+
+from ...exceptions import PlotnineError
 
 if TYPE_CHECKING:
     from typing import Callable, Literal
@@ -57,6 +58,10 @@ class margin:
     Size of the figure in inches
     """
 
+    _is_setup: bool = field(
+        init=False, default=False, repr=False, compare=False
+    )
+
     def setup(self, theme: theme, themeable_name: str):
         """
         Setup the margin to be used in the layout
@@ -68,6 +73,7 @@ class margin:
         self.themeable_name = themeable_name
         self.fontsize = theme.getp((themeable_name, "size"), 11)
         self.figure_size = theme.getp("figure_size")
+        self._is_setup = True
 
     @property
     def pt(self) -> margin:
@@ -107,22 +113,23 @@ class margin:
         """
         Return margin in request unit
         """
+        if not self._is_setup:
+            raise PlotnineError(
+                "Cannot convert a margin that has not been set up. "
+                "Call margin.setup() (or attach the margin to a "
+                "themeable in a theme) first."
+            )
+
         m = copy(self)
         if self.unit == unit:
             return m
 
         conversion = f"{self.unit}-{unit}"
         W, H = self.figure_size
-
-        with suppress(ZeroDivisionError):
-            m.t = self._convert(conversion, H, self.t)
-        with suppress(ZeroDivisionError):
-            m.r = self._convert(conversion, W, self.r)
-        with suppress(ZeroDivisionError):
-            m.b = self._convert(conversion, H, self.b)
-        with suppress(ZeroDivisionError):
-            m.l = self._convert(conversion, W, self.l)
-
+        m.t = self._convert(conversion, H, self.t)
+        m.r = self._convert(conversion, W, self.r)
+        m.b = self._convert(conversion, H, self.b)
+        m.l = self._convert(conversion, W, self.l)
         m.unit = unit
         return m
 
