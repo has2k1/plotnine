@@ -458,15 +458,15 @@ class top_space(_plot_side_space):
 
         if items.plot_title:
             m = theme.get_margin("plot_title").fig
-            self.plot_title_margin_top = m.t * F
+            self.plot_title_margin_top = m.t
             self.plot_title = geometry.height(items.plot_title)
-            self.plot_title_margin_bottom = m.b * F
+            self.plot_title_margin_bottom = m.b
 
         if items.plot_subtitle:
             m = theme.get_margin("plot_subtitle").fig
-            self.plot_subtitle_margin_top = m.t * F
+            self.plot_subtitle_margin_top = m.t
             self.plot_subtitle = geometry.height(items.plot_subtitle)
-            self.plot_subtitle_margin_bottom = m.b * F
+            self.plot_subtitle_margin_bottom = m.b
 
         if items.legends and items.legends.top:
             self.legend = self.legend_height
@@ -601,15 +601,15 @@ class bottom_space(_plot_side_space):
 
         if items.plot_caption:
             m = theme.get_margin("plot_caption").fig
-            self.plot_caption_margin_bottom = m.b * F
+            self.plot_caption_margin_bottom = m.b
             self.plot_caption = geometry.height(items.plot_caption)
-            self.plot_caption_margin_top = m.t * F
+            self.plot_caption_margin_top = m.t
 
         if items.plot_footer:
             m = theme.get_margin("plot_footer").fig
-            self.plot_footer_margin_bottom = m.b * F
+            self.plot_footer_margin_bottom = m.b
             self.plot_footer = geometry.height(items.plot_footer)
-            self.plot_footer_margin_top = m.t * F
+            self.plot_footer_margin_top = m.t
 
         if items.legends and items.legends.bottom:
             self.legend = self.legend_height
@@ -617,9 +617,9 @@ class bottom_space(_plot_side_space):
 
         if items.axis_title_x:
             m = theme.get_margin("axis_title_x").fig
-            self.axis_title_x_margin_bottom = m.b * F
+            self.axis_title_x_margin_bottom = m.b
             self.axis_title_x = geometry.height(items.axis_title_x)
-            self.axis_title_x_margin_top = m.t * F
+            self.axis_title_x_margin_top = m.t
 
         # Account for the space consumed by the axis
         self.axis_text_x = items.axis_text_x_max_height_at("last_row")
