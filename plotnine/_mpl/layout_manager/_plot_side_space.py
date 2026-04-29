@@ -772,6 +772,49 @@ class PlotSideSpaces:
         """
         self.resize_gridspec()
         self.items._move_artists(self)
+        self._arrange_insets()
+
+    def _arrange_insets(self):
+        """
+        Position and arrange every inset attached to this plot
+
+        The host's panel/plot/full region is now finalised, so the
+        inset's fractional bounding box is scaled into figure
+        coordinates and applied to the inset's own gridspec. The
+        inset's side-space layout then runs to lay out its content
+        within those bounds.
+        """
+        from plotnine import ggplot
+
+        from ._composition_side_space import CompositionSideSpaces
+
+        for inset in self.plot._insets:
+            if inset.align_to == "panel":
+                (x1, y1), (x2, y2) = self.panel_area_coordinates
+            elif inset.align_to == "plot":
+                (x1, y1), (x2, y2) = self.plot_area_coordinates
+            else:  # "full"
+                # Note that this isn't necessarily the figure's coordinates,
+                # rather the entire ggplot area.
+                bbox = self.plot._gridspec.bbox_relative
+                (x1, y1), (x2, y2) = (bbox.x0, bbox.y0), (bbox.x1, bbox.y1)
+
+            params = GridSpecParams(
+                left=x1 + inset.left * (x2 - x1),
+                bottom=y1 + inset.bottom * (y2 - y1),
+                right=x1 + inset.right * (x2 - x1),
+                top=y1 + inset.top * (y2 - y1),
+                wspace=0,
+                hspace=0,
+            )
+            params.validate()
+            inset.obj._gridspec.update_params_and_artists(params)
+
+            if isinstance(inset.obj, ggplot):
+                inset.obj._sidespaces = PlotSideSpaces(inset.obj)
+            else:
+                inset.obj._sidespaces = CompositionSideSpaces(inset.obj)
+            inset.obj._sidespaces.arrange()
 
     def resize_gridspec(self):
         """
