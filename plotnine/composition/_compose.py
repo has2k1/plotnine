@@ -130,6 +130,15 @@ class Compose:
     """
     _sidespaces: CompositionSideSpaces
 
+    _zorder: int = 0
+    """
+    Drawing zorder for every axes in this composition
+
+    It is propagated down the tree at draw time so sub-plots inherit their
+    parent's value, and raised on inset compositions so their axes paint
+    above the host.
+    """
+
     def __init__(self, items: list[ggplot | Compose]):
         # The way we handle the plots has consequences that would
         # prevent having a duplicate plot in the composition.
@@ -461,19 +470,21 @@ class Compose:
         """
         Create figure & gridspecs for all sub compositions
         """
-        if hasattr(self, "figure"):
-            return
+        if not hasattr(self, "figure"):
+            import matplotlib.pyplot as plt
 
-        import matplotlib.pyplot as plt
+            from plotnine._mpl.layout_manager import PlotnineLayoutEngine
 
-        from plotnine._mpl.gridspec import p9GridSpec
-        from plotnine._mpl.layout_manager import PlotnineLayoutEngine
+            self.figure = plt.figure()
+            self.figure.set_layout_engine(PlotnineLayoutEngine(self))
 
-        figure = plt.figure()
-        self._generate_gridspecs(
-            figure, p9GridSpec(1, 1, figure, nest_into=None)
-        )
-        figure.set_layout_engine(PlotnineLayoutEngine(self))
+        if not hasattr(self, "_gridspec"):
+            from plotnine._mpl.gridspec import p9GridSpec
+
+            self._generate_gridspecs(
+                self.figure,
+                p9GridSpec(1, 1, self.figure, nest_into=None),
+            )
 
     def _generate_gridspecs(self, figure: Figure, container_gs: p9GridSpec):
         from plotnine import ggplot
