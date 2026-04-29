@@ -399,7 +399,9 @@ class facet:
         # Create axes
         it = itertools.product(range(self.nrow), range(self.ncol))
         for i, (row, col) in enumerate(it):
-            axsarr[row, col] = self.figure.add_subplot(gs[i])
+            axsarr[row, col] = self.figure.add_subplot(
+                gs[i], zorder=self.plot._zorder
+            )
 
         # Rearrange axes
         # They are ordered to match the positions in the layout table
