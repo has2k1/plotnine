@@ -23,10 +23,10 @@ class inset_element:
     obj :
         The object to render as an inset.
     left, bottom, right, top :
-        Bounding box of the inset in normalised parent coordinates,
-        in the range ``[0, 1]``. The bottom-left corner of the region
-        selected by `align_to` is ``(0, 0)`` and the top-right is
-        ``(1, 1)``.
+        Bounding box of the inset as fractional coordinates in the
+        range ``[0, 1]``, relative to the host region selected by
+        `align_to`. The bottom-left corner of that region is
+        ``(0, 0)`` and the top-right is ``(1, 1)``.
     align_to :
         Which region of the host plot the bounding box is relative to:
 
