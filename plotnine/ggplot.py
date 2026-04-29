@@ -135,6 +135,14 @@ class ggplot:
 
     _sidespaces: PlotSideSpaces
 
+    _zorder: int = 0
+    """
+    Drawing zorder for every axes created for this plot
+
+    The default (``0``) keeps the plot at the base layer. `_draw_insets`
+    raises this on inset plots so they render above their host.
+    """
+
     def __init__(
         self,
         data: Optional[DataLike] = None,
@@ -373,6 +381,10 @@ class ggplot:
             # Artist object theming
             self.theme.apply()
 
+            # Insets render after host theming is finalised so their
+            # own draw picks up a fully-realised host figure.
+            self._draw_insets()
+
         return figure
 
     def _setup(self) -> Figure:
@@ -387,17 +399,18 @@ class ggplot:
         """
         Create gridspec for the panels
         """
-        if hasattr(self, "figure"):
-            return
+        if not hasattr(self, "figure"):
+            import matplotlib.pyplot as plt
 
-        import matplotlib.pyplot as plt
+            from ._mpl.layout_manager import PlotnineLayoutEngine
 
-        from ._mpl.gridspec import p9GridSpec
-        from ._mpl.layout_manager import PlotnineLayoutEngine
+            self.figure = plt.figure()
+            self.figure.set_layout_engine(PlotnineLayoutEngine(self))
 
-        self.figure = plt.figure()
-        self._gridspec = p9GridSpec(1, 1, self.figure)
-        self.figure.set_layout_engine(PlotnineLayoutEngine(self))
+        if not hasattr(self, "_gridspec"):
+            from ._mpl.gridspec import p9GridSpec
+
+            self._gridspec = p9GridSpec(1, 1, self.figure)
 
     def _build(self):
         """
@@ -592,6 +605,20 @@ class ggplot:
         """
         for wm in self.watermarks:
             wm.draw(self.figure)
+
+    def _draw_insets(self):
+        """
+        Draw every inset attached to this plot into the host figure
+
+        Each inset reuses the host's figure instead of creating its own.
+        The inset's zorder is raised above the host's so its axes paint
+        on top; for Compose insets this zorder is propagated down the
+        sub-tree when the composition is drawn.
+        """
+        for inset in self._insets:
+            inset.obj.figure = self.figure
+            inset.obj._zorder = self._zorder + 1
+            inset.obj.draw()
 
     def _draw_plot_background(self):
         from matplotlib.lines import Line2D
