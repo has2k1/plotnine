@@ -549,6 +549,13 @@ class Compose:
 
         def _draw(cmp):
             figure = cmp._setup()
+
+            # Propagate the composition's zorder to its direct children
+            # before they draw, so axes are created at the right layer.
+            # Recursion carries the value down sub-compositions.
+            for item in cmp:
+                item._zorder = cmp._zorder
+
             cmp._draw_plots()
 
             for sub_cmp in cmp.iter_sub_compositions():
