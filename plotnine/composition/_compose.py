@@ -590,6 +590,20 @@ class Compose:
             if isinstance(item, ggplot):
                 item.draw()
 
+    def _add_figure_artist(self, artist):
+        """
+        Add an artist to this composition's figure with the right zorder
+
+        For a top-level composition this is a no-op offset; on an inset
+        composition every figure-level artist (titles, panel borders,
+        legends, ...) is shifted up by the composition's `_zorder` so
+        the inset sits wholly above the host. Returns the artist so the
+        call site can keep a single-statement assignment.
+        """
+        artist.set_zorder(artist.get_zorder() + self._zorder)
+        self.figure.add_artist(artist)
+        return artist
+
     def _draw_composition_background(self):
         """
         Draw the background rectangle of the composition
@@ -601,22 +615,27 @@ class Compose:
         # backgrounds (which are at zorder=-1000), so the per-plot
         # backgrounds layer on top of it instead of being covered.
         zorder = -2000
-        rect = Rectangle((0, 0), 0, 0, facecolor="none", zorder=zorder)
-        self.figure.add_artist(rect)
+        rect = Rectangle((0, 0), 0, 0, facecolor="none", zorder=zorder - 0.5)
+        self._add_figure_artist(rect)
         self._gridspec.patch = rect
         self.theme.targets.plot_background = rect
 
         if self.annotation.footer:
             rect = Rectangle(
-                (0, 0), 0, 0, facecolor="none", linewidth=0, zorder=zorder + 1
+                (0, 0),
+                0,
+                0,
+                facecolor="none",
+                linewidth=0,
+                zorder=zorder - 0.4,
             )
-            self.figure.add_artist(rect)
+            self._add_figure_artist(rect)
             self.theme.targets.plot_footer_background = rect
 
             line = Line2D(
-                [0, 0], [0, 0], color="none", linewidth=0, zorder=zorder + 2
+                [0, 0], [0, 0], color="none", linewidth=0, zorder=zorder - 0.3
             )
-            self.figure.add_artist(line)
+            self._add_figure_artist(line)
             self.theme.targets.plot_footer_line = line
 
     def _draw_annotation(self):
@@ -629,20 +648,23 @@ class Compose:
         if self.annotation.empty():
             return
 
-        figure = self.theme.figure
+        from matplotlib.text import Text
+
         targets = self.theme.targets
 
         if title := self.annotation.title:
-            targets.plot_title = figure.text(0, 0, title)
+            targets.plot_title = self._add_figure_artist(Text(text=title))
 
         if subtitle := self.annotation.subtitle:
-            targets.plot_subtitle = figure.text(0, 0, subtitle)
+            targets.plot_subtitle = self._add_figure_artist(
+                Text(text=subtitle)
+            )
 
         if caption := self.annotation.caption:
-            targets.plot_caption = figure.text(0, 0, caption)
+            targets.plot_caption = self._add_figure_artist(Text(text=caption))
 
         if footer := self.annotation.footer:
-            targets.plot_footer = figure.text(0, 0, footer)
+            targets.plot_footer = self._add_figure_artist(Text(text=footer))
 
     def save(
         self,

@@ -516,7 +516,7 @@ class ggplot:
                 clip_path=ax.patch,
                 clip_on=False,
             )
-            self.figure.add_artist(rect)
+            self._add_figure_artist(rect)
             self.theme.targets.panel_border.append(rect)
 
     def _draw_layers(self):
@@ -561,15 +561,27 @@ class ggplot:
         """
         Draw title, x label, y label and caption onto the figure
         """
-        figure = self.figure
-        theme = self.theme
-        targets = theme.targets
+        from matplotlib.text import Text
 
-        title = self.labels.get("title", "")
-        subtitle = self.labels.get("subtitle", "")
-        caption = self.labels.get("caption", "")
-        tag = self.labels.get("tag", "")
-        footer = self.labels.get("footer", "")
+        targets = self.theme.targets
+
+        # The locations are handled by the layout manager
+        if title := self.labels.get("title", ""):
+            targets.plot_title = self._add_figure_artist(Text(text=title))
+
+        if subtitle := self.labels.get("subtitle", ""):
+            targets.plot_subtitle = self._add_figure_artist(
+                Text(text=subtitle)
+            )
+
+        if caption := self.labels.get("caption", ""):
+            targets.plot_caption = self._add_figure_artist(Text(text=caption))
+
+        if footer := self.labels.get("footer", ""):
+            targets.plot_footer = self._add_figure_artist(Text(text=footer))
+
+        if tag := self.labels.get("tag", ""):
+            targets.plot_tag = self._add_figure_artist(Text(text=tag))
 
         # Get the axis labels (default or specified by user)
         # and let the coordinate modify them e.g. flip
@@ -577,27 +589,11 @@ class ggplot:
             self.layout.set_xy_labels(self.labels)
         )
 
-        # The locations are handled by the layout manager
-        if title:
-            targets.plot_title = figure.text(0, 0, title)
-
-        if subtitle:
-            targets.plot_subtitle = figure.text(0, 0, subtitle)
-
-        if caption:
-            targets.plot_caption = figure.text(0, 0, caption)
-
-        if footer:
-            targets.plot_footer = figure.text(0, 0, footer)
-
-        if tag:
-            targets.plot_tag = figure.text(0, 0, tag)
-
         if labels.x:
-            targets.axis_title_x = figure.text(0, 0, labels.x)
+            targets.axis_title_x = self._add_figure_artist(Text(text=labels.x))
 
         if labels.y:
-            targets.axis_title_y = figure.text(0, 0, labels.y)
+            targets.axis_title_y = self._add_figure_artist(Text(text=labels.y))
 
     def _draw_watermarks(self):
         """
@@ -611,39 +607,60 @@ class ggplot:
         Draw every inset attached to this plot into the host figure
 
         Each inset reuses the host's figure instead of creating its own.
-        The inset's zorder is raised above the host's so its axes paint
-        on top; for Compose insets this zorder is propagated down the
-        sub-tree when the composition is drawn.
+        The inset's zorder is raised by `INSET_ZORDER_STEP` so every
+        figure-level artist on the inset sits above the host's; for
+        Compose insets this zorder is propagated down the sub-tree when
+        the composition is drawn.
         """
+        from .composition._inset_element import INSET_ZORDER_STEP
+
         for inset in self._insets:
             inset.obj.figure = self.figure
-            inset.obj._zorder = self._zorder + 1
+            inset.obj._zorder = self._zorder + INSET_ZORDER_STEP
             inset.obj.draw()
+
+    def _add_figure_artist(self, artist):
+        """
+        Add an artist to this plot's figure with the right zorder offset
+
+        For a top-level plot this is a no-op offset; on an inset every
+        figure-level artist (titles, panel borders, legends, strip text,
+        ...) is shifted up by the inset's `_zorder` so the inset sits
+        wholly above the host. Returns the artist so the call site can
+        keep a single-statement assignment.
+        """
+        artist.set_zorder(artist.get_zorder() + self._zorder)
+        self.figure.add_artist(artist)
+        return artist
 
     def _draw_plot_background(self):
         from matplotlib.lines import Line2D
         from matplotlib.patches import Rectangle
 
-        zorder = -1000
-        rect = Rectangle((0, 0), 0, 0, facecolor="none", zorder=zorder)
-        self.figure.add_artist(rect)
-        self._gridspec.patch = rect
-        self.theme.targets.plot_background = rect
+        targets = self.theme.targets
+
+        # The background sits just below this plot's own axes layer.
+        # _add_figure_artist offsets every figure-level artist by
+        # self._zorder, so for a top-level plot this stays at -0.5
+        # and for an inset it sits between the host's axes and the
+        # inset's axes — the inset background covers the host.
+        targets.plot_background = self._add_figure_artist(
+            Rectangle((0, 0), 0, 0, facecolor="none", zorder=-0.5)
+        )
+        self._gridspec.patch = targets.plot_background
 
         # Footer background and line only if there is a footer, and put
         # it on top of the plot background
         if self.labels.get("footer", ""):
-            rect = Rectangle(
-                (0, 0), 0, 0, facecolor="none", linewidth=0, zorder=zorder + 1
+            targets.plot_footer_background = self._add_figure_artist(
+                Rectangle(
+                    (0, 0), 0, 0, facecolor="none", linewidth=0, zorder=-0.4
+                )
             )
-            self.figure.add_artist(rect)
-            self.theme.targets.plot_footer_background = rect
 
-            line = Line2D(
-                [0, 0], [0, 0], color="none", linewidth=0, zorder=zorder + 2
+            targets.plot_footer_line = self._add_figure_artist(
+                Line2D([0, 0], [0, 0], color="none", linewidth=0, zorder=-0.3)
             )
-            self.figure.add_artist(line)
-            self.theme.targets.plot_footer_line = line
 
     def _save_filename(self, ext: str) -> Path:
         """

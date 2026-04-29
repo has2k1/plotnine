@@ -9,6 +9,16 @@ if TYPE_CHECKING:
     from ._compose import Compose
 
 
+INSET_ZORDER_STEP = 1000
+"""
+Zorder added to the host's value when an inset is drawn, so every
+figure-level artist on the inset (axes, plot_background, titles,
+strip text, legends, ...) sits above every figure-level artist on the
+host. Must exceed the largest existing zorder used inside a single
+plot — watermarks at 99.9 — so the host and inset stacks never overlap.
+"""
+
+
 @dataclass
 class inset_element:
     """

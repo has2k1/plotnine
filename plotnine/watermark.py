@@ -1,6 +1,9 @@
 from __future__ import annotations
 
 import typing
+from warnings import warn
+
+from .exceptions import PlotnineWarning
 
 if typing.TYPE_CHECKING:
     import pathlib
@@ -11,6 +14,15 @@ if typing.TYPE_CHECKING:
     import plotnine as p9
 
 __all__ = ("watermark",)
+
+
+_BASE_ZORDER = 99.9
+"""
+Default zorder for a watermark on a top-level plot
+
+Plotnine manages the zorder of every figure-level artist so that insets
+stack predictably above their host.
+"""
 
 
 class watermark:
@@ -29,12 +41,15 @@ class watermark:
         Alpha blending value.
     kwargs :
         Additional parameters passed to
-        [](`~matplotlib.figure.figimage`)
+        [](`~matplotlib.figure.figimage`). Note that ``zorder`` is
+        managed by plotnine and any user-supplied value is dropped.
 
     Notes
     -----
     You can add more than one watermark to a plot.
     """
+
+    _parent: p9.ggplot
 
     def __init__(
         self,
@@ -45,15 +60,22 @@ class watermark:
         **kwargs: Any,
     ):
         self.filename = filename
+        if "zorder" in kwargs:
+            warn(
+                "watermark zorder is managed by plotnine; "
+                "the user-supplied value is being ignored.",
+                PlotnineWarning,
+                stacklevel=2,
+            )
+            kwargs.pop("zorder")
         kwargs.update(xo=xo, yo=yo, alpha=alpha)
-        if "zorder" not in kwargs:
-            kwargs["zorder"] = 99.9
         self.kwargs = kwargs
 
     def __radd__(self, other: p9.ggplot) -> p9.ggplot:
         """
         Add watermark to ggplot object
         """
+        self._parent = other
         other.watermarks.append(self)
         return other
 
@@ -68,5 +90,8 @@ class watermark:
         """
         from matplotlib.image import imread
 
-        X = imread(self.filename)
-        figure.figimage(X, **self.kwargs)
+        figure.figimage(
+            imread(self.filename),
+            zorder=_BASE_ZORDER + self._parent._zorder,
+            **self.kwargs,
+        )

@@ -127,7 +127,7 @@ class strip:
         text = StripText(draw_info)
         rect = text.patch
 
-        self.figure.add_artist(text)
+        self.facet.plot._add_figure_artist(text)
 
         if draw_info.position == "right":
             targets.strip_background_y.append(rect)
