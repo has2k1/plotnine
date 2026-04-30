@@ -21,18 +21,10 @@ from plotnine.options import set_option
 p = ggplot(mtcars, aes(x="wt", y="mpg", label="name")) + geom_text()
 
 
-def sequential_filenames():
-    """
-    Generate filenames for the tests
-    """
-    for i in range(100):
-        yield Path(f"filename-{i}.png")
-
-
-filename_gen = sequential_filenames()
-
-
 def assert_exist_and_clean(filename, msg=None):
+    if isinstance(filename, str):
+        filename = Path(filename)
+
     if not msg:
         msg = f"File {filename} does not exist"
     assert filename.exists(), msg
@@ -46,11 +38,11 @@ class TestArguments:
         assert_exist_and_clean(fn, "default filename")
 
     def test_save_method(self):
-        fn = next(filename_gen)
+        fn1 = "save_method-01.png"
         with pytest.warns(PlotnineWarning) as record:
-            p.save(fn)
+            p.save(fn1)
 
-        assert_exist_and_clean(fn, "save method")
+        assert_exist_and_clean(fn1, "save method")
 
         res = ("saving" in str(item.message).lower() for item in record)
         assert any(res)
@@ -58,15 +50,14 @@ class TestArguments:
         res = ("filename" in str(item.message).lower() for item in record)
         assert any(res)
 
-        # verbose
-        fn = next(filename_gen)
+        fn2 = "save_method-02.png"
         with warnings.catch_warnings(record=True) as record:
-            p.save(fn, verbose=False)
-            assert_exist_and_clean(fn, "save method")
+            p.save(fn2, verbose=False)
+            assert_exist_and_clean(fn2, "save method")
             assert not record, "Issued an unexpected warning"
 
     def test_filename_plot_path(self):
-        fn = next(filename_gen)
+        fn = "filename_plot_path.png"
         p.save(fn, path=".", verbose=False)
         assert_exist_and_clean(fn, "fn, plot and path")
 
@@ -76,7 +67,7 @@ class TestArguments:
         assert_exist_and_clean(fn, "format png")
 
     def test_dpi(self):
-        fn = next(filename_gen)
+        fn = "dpi.png"
         p.save(fn, dpi=100, verbose=False)
         assert_exist_and_clean(fn, "dpi = 100")
 
@@ -86,24 +77,21 @@ class TestArguments:
         assert_exist_and_clean(fn, "default filename")
 
     def test_save_big(self):
-        fn = next(filename_gen)
         # supplying the ggplot object will work without
         # printing it first! 26 is the current limit, just go
         # over it to not use too much memory
-        p.save(fn, width=26, height=26, limitsize=False, verbose=False)
-        assert_exist_and_clean(fn, "big height and width")
+        fn1 = "save_big-01.png"
+        p.save(fn1, width=26, height=26, limitsize=False, verbose=False)
+        assert_exist_and_clean(fn1, "big height and width")
 
         # Using the global option
-        fn = next(filename_gen)
+        fn2 = "save_big-02.png"
         set_option("limitsize", False)
-        p.save(fn, width=26, height=26, verbose=False)
+        p.save(fn2, width=26, height=26, verbose=False)
         set_option("limitsize", True)
-        assert_exist_and_clean(fn, "big height and width")
+        assert_exist_and_clean(fn2, "big height and width")
 
     def test_dpi_theme_xkcd(self):
-        fn1 = next(filename_gen)
-        fn2 = next(filename_gen)
-
         data = pd.DataFrame({"x": range(4), "y": range(4), "b": list("aabb")})
 
         p = (
@@ -112,9 +100,11 @@ class TestArguments:
             + facet_wrap("b")
             + theme_xkcd()
         )
+        fn1 = "dpi_theme_xkcd-01.png"
         p.save(fn1, verbose=False)
         assert_exist_and_clean(fn1, "Saving with theme_xkcd and dpi (1)")
 
+        fn2 = "dpi_theme_xkcd-02.png"
         p.save(fn2, dpi=72, verbose=False)
         assert_exist_and_clean(fn2, "Saving with theme_xkcd and dpi (2)")
 
@@ -149,7 +139,7 @@ class TestExceptions:
 # "leakages" due to the tests in this test module.
 def test_ggsave_closes_plot():
     assert plt.get_fignums() == [], "There are unsaved test plots"
-    fn = next(filename_gen)
+    fn = "ggsave_closes_plot.png"
     p.save(fn, verbose=False)
     assert_exist_and_clean(fn, "exist")
     assert plt.get_fignums() == [], "ggplot.save did not close the plot"
