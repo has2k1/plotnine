@@ -578,7 +578,10 @@ class Compose:
         from matplotlib.lines import Line2D
         from matplotlib.patches import Rectangle
 
-        zorder = -1000
+        # The composition background sits underneath the per-plot
+        # backgrounds (which are at zorder=-1000), so the per-plot
+        # backgrounds layer on top of it instead of being covered.
+        zorder = -2000
         rect = Rectangle((0, 0), 0, 0, facecolor="none", zorder=zorder)
         self.figure.add_artist(rect)
         self._gridspec.patch = rect
