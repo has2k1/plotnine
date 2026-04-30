@@ -93,14 +93,6 @@ class themeable(metaclass=RegistryHierarchyMeta):
     [](`~plotnine.themes.themeable.Themeable`) or subclasses of it.
     """
 
-    _omit: Sequence[str] = ()
-    """
-    Properties to ignore during the apply stage.
-
-    These properties may have been used when creating the artists and
-    applying them would create a conflict or an error.
-    """
-
     def __init__(self, theme_element: element_base | str | float):
         self.theme_element = theme_element
         if isinstance(theme_element, element_base):
@@ -198,12 +190,17 @@ class themeable(metaclass=RegistryHierarchyMeta):
     @property
     def properties(self):
         """
-        Return only the properties that can be applied
+        Return the properties of the themeable
         """
-        d = self._properties.copy()
-        for key in self._omit:
-            with suppress(KeyError):
-                del d[key]
+        return self._properties.copy()
+
+    def _get_properties(self, *, omit: Sequence[str] = ()) -> dict[str, Any]:
+        """
+        Return the properties of the themeable, optionally omitting some keys
+        """
+        d = self.properties
+        for k in omit:
+            d.pop(k, None)
         return d
 
     def apply(self, theme: theme):
@@ -535,16 +532,11 @@ class axis_title_x(themeable):
     theme_element : element_text
     """
 
-    _omit = ["margin"]
-
     def apply_figure(self, figure: Figure, targets: ThemeTargets):
         super().apply_figure(figure, targets)
         if text := targets.axis_title_x:
-            props = self.properties
             # ha can be a float and is handled by the layout manager
-            with suppress(KeyError):
-                del props["ha"]
-            text.set(**props)
+            text.set(**self._get_properties(omit=("margin", "ha")))
 
     def blank_figure(self, figure: Figure, targets: ThemeTargets):
         super().blank_figure(figure, targets)
@@ -561,16 +553,11 @@ class axis_title_y(themeable):
     theme_element : element_text
     """
 
-    _omit = ["margin"]
-
     def apply_figure(self, figure: Figure, targets: ThemeTargets):
         super().apply_figure(figure, targets)
         if text := targets.axis_title_y:
-            props = self.properties
             # va can be a float and is handled by the layout manager
-            with suppress(KeyError):
-                del props["va"]
-            text.set(**props)
+            text.set(**self._get_properties(omit=("margin", "va")))
 
     def blank_figure(self, figure: Figure, targets: ThemeTargets):
         super().blank_figure(figure, targets)
@@ -597,12 +584,10 @@ class legend_title(themeable):
     theme_element : element_text
     """
 
-    _omit = ["margin", "ha", "va"]
-
     def apply_figure(self, figure: Figure, targets: ThemeTargets):
         super().apply_figure(figure, targets)
         if text := targets.legend_title:
-            text.set(**self.properties)
+            text.set(**self._get_properties(omit=("margin", "ha", "va")))
 
     def blank_figure(self, figure: Figure, targets: ThemeTargets):
         super().blank_figure(figure, targets)
@@ -625,12 +610,13 @@ class legend_text_legend(MixinSequenceOfValues):
     effect when the text at the top or the bottom.
     """
 
-    _omit = ["margin", "ha", "va"]
-
     def apply_figure(self, figure: Figure, targets: ThemeTargets):
         super().apply_figure(figure, targets)
         if texts := targets.legend_text_legend:
-            self.set(texts)
+            self.set(
+                texts,
+                self._get_properties(omit=("margin", "ha", "va")),
+            )
 
     def blank_figure(self, figure: Figure, targets: ThemeTargets):
         super().blank_figure(figure, targets)
@@ -654,12 +640,13 @@ class legend_text_colorbar(MixinSequenceOfValues):
     effect when the text at the top or the bottom.
     """
 
-    _omit = ["margin", "ha", "va"]
-
     def apply_figure(self, figure: Figure, targets: ThemeTargets):
         super().apply_figure(figure, targets)
         if texts := targets.legend_text_colorbar:
-            self.set(texts)
+            self.set(
+                texts,
+                self._get_properties(omit=("margin", "ha", "va")),
+            )
 
     def blank_figure(self, figure: Figure, targets: ThemeTargets):
         super().blank_figure(figure, targets)
@@ -700,16 +687,11 @@ class plot_title(themeable):
     the center or with different alignments.
     """
 
-    _omit = ["margin"]
-
     def apply_figure(self, figure: Figure, targets: ThemeTargets):
         super().apply_figure(figure, targets)
         if text := targets.plot_title:
-            props = self.properties
             # ha can be a float and is handled by the layout manager
-            with suppress(KeyError):
-                del props["ha"]
-            text.set(**props)
+            text.set(**self._get_properties(omit=("margin", "ha")))
 
     def blank_figure(self, figure: Figure, targets: ThemeTargets):
         super().blank_figure(figure, targets)
@@ -733,12 +715,10 @@ class plot_subtitle(themeable):
     alignment are set.
     """
 
-    _omit = ["margin"]
-
     def apply_figure(self, figure: Figure, targets: ThemeTargets):
         super().apply_figure(figure, targets)
         if text := targets.plot_subtitle:
-            text.set(**self.properties)
+            text.set(**self._get_properties(omit=("margin",)))
 
     def blank_figure(self, figure: Figure, targets: ThemeTargets):
         super().blank_figure(figure, targets)
@@ -755,12 +735,10 @@ class plot_caption(themeable):
     theme_element : element_text
     """
 
-    _omit = ["margin"]
-
     def apply_figure(self, figure: Figure, targets: ThemeTargets):
         super().apply_figure(figure, targets)
         if text := targets.plot_caption:
-            text.set(**self.properties)
+            text.set(**self._get_properties(omit=("margin",)))
 
     def blank_figure(self, figure: Figure, targets: ThemeTargets):
         super().blank_figure(figure, targets)
@@ -777,12 +755,10 @@ class plot_footer(themeable):
     theme_element : element_text
     """
 
-    _omit = ["margin"]
-
     def apply_figure(self, figure: Figure, targets: ThemeTargets):
         super().apply_figure(figure, targets)
         if text := targets.plot_footer:
-            text.set(**self.properties)
+            text.set(**self._get_properties(omit=("margin",)))
 
     def blank_figure(self, figure: Figure, targets: ThemeTargets):
         super().blank_figure(figure, targets)
@@ -809,11 +785,9 @@ class plot_tag(themeable):
     other tags in a composition.
     """
 
-    _omit = ["margin"]
-
     def apply_figure(self, figure: Figure, targets: ThemeTargets):
         super().apply_figure(figure, targets)
-        props = self.properties
+        props = self._get_properties(omit=("margin",))
 
         if "va" in props and not isinstance(props["va"], str):
             del props["va"]
@@ -906,12 +880,13 @@ class strip_text_x(MixinSequenceOfValues):
     theme_element : element_text
     """
 
-    _omit = ["margin", "ha", "va"]
-
     def apply_figure(self, figure: Figure, targets: ThemeTargets):
         super().apply_figure(figure, targets)
         if texts := targets.strip_text_x:
-            self.set(texts)
+            self.set(
+                texts,
+                self._get_properties(omit=("margin", "ha", "va")),
+            )
 
     def blank_figure(self, figure: Figure, targets: ThemeTargets):
         super().blank_figure(figure, targets)
@@ -929,12 +904,13 @@ class strip_text_y(MixinSequenceOfValues):
     theme_element : element_text
     """
 
-    _omit = ["margin", "ha", "va"]
-
     def apply_figure(self, figure: Figure, targets: ThemeTargets):
         super().apply_figure(figure, targets)
         if texts := targets.strip_text_y:
-            self.set(texts)
+            self.set(
+                texts,
+                self._get_properties(omit=("margin", "ha", "va")),
+            )
 
     def blank_figure(self, figure: Figure, targets: ThemeTargets):
         super().blank_figure(figure, targets)
@@ -991,8 +967,6 @@ class axis_text_x(MixinSequenceOfValues):
     creates a margin of 5 points.
     """
 
-    _omit = ["margin", "va"]
-
     def apply_ax(self, ax: Axes):
         super().apply_ax(ax)
 
@@ -1011,7 +985,10 @@ class axis_text_x(MixinSequenceOfValues):
         #     return
 
         labels = [t.label1 for t in ax.xaxis.get_major_ticks()]
-        self.set(labels)
+        self.set(
+            labels,
+            self._get_properties(omit=("margin", "va")),
+        )
 
     def blank_ax(self, ax: Axes):
         super().blank_ax(ax)
@@ -1039,8 +1016,6 @@ class axis_text_y(MixinSequenceOfValues):
     creates a margin of 5 points.
     """
 
-    _omit = ["margin", "ha"]
-
     def apply_ax(self, ax: Axes):
         super().apply_ax(ax)
 
@@ -1048,7 +1023,10 @@ class axis_text_y(MixinSequenceOfValues):
             return
 
         labels = [t.label1 for t in ax.yaxis.get_major_ticks()]
-        self.set(labels)
+        self.set(
+            labels,
+            self._get_properties(omit=("margin", "ha")),
+        )
 
     def blank_ax(self, ax: Axes):
         super().blank_ax(ax)
@@ -1127,11 +1105,10 @@ class axis_line_x(themeable):
     """
 
     position = "bottom"
-    _omit = ["solid_capstyle"]
 
     def apply_ax(self, ax: Axes):
         super().apply_ax(ax)
-        properties = self.properties
+        properties = self._get_properties(omit=("solid_capstyle",))
         # MPL has a default zorder of 2.5 for spines
         # so layers 3+ would be drawn on top of the spines
         if "zorder" not in properties:
@@ -1155,11 +1132,10 @@ class axis_line_y(themeable):
     """
 
     position = "left"
-    _omit = ["solid_capstyle"]
 
     def apply_ax(self, ax: Axes):
         super().apply_ax(ax)
-        properties = self.properties
+        properties = self._get_properties(omit=("solid_capstyle",))
         # MPL has a default zorder of 2.5 for spines
         # so layers 3+ would be drawn on top of the spines
         if "zorder" not in properties:
@@ -1402,12 +1378,10 @@ class legend_ticks(themeable):
     theme_element : element_line
     """
 
-    _omit = ["solid_capstyle"]
-
     def apply_figure(self, figure: Figure, targets: ThemeTargets):
         super().apply_figure(figure, targets)
         if coll := targets.legend_ticks:
-            coll.set(**self.properties)
+            coll.set(**self._get_properties(omit=("solid_capstyle",)))
 
     def blank_figure(self, figure: Figure, targets: ThemeTargets):
         super().blank_figure(figure, targets)
@@ -1615,12 +1589,10 @@ class legend_frame(themeable):
     theme_element : element_rect
     """
 
-    _omit = ["facecolor"]
-
     def apply_figure(self, figure: Figure, targets: ThemeTargets):
         super().apply_figure(figure, targets)
         if rect := targets.legend_frame:
-            rect.set(**self.properties)
+            rect.set(**self._get_properties(omit=("facecolor",)))
 
     def blank_figure(self, figure: Figure, targets: ThemeTargets):
         super().blank_figure(figure, targets)
@@ -1711,14 +1683,12 @@ class panel_border(MixinSequenceOfValues):
     theme_element : element_rect
     """
 
-    _omit = ["facecolor"]
-
     def apply_figure(self, figure: Figure, targets: ThemeTargets):
         super().apply_figure(figure, targets)
         if not (rects := targets.panel_border):
             return
 
-        d = blend_alpha(self.properties, "edgecolor")
+        d = blend_alpha(self._get_properties(omit=("facecolor",)), "edgecolor")
 
         with suppress(KeyError):
             if d["edgecolor"] == "none" or d["size"] == 0:
