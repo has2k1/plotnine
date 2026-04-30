@@ -67,7 +67,9 @@ lint = [
 ]
 
 test = [
-    "pytest-cov>=4.0.0"
+    "pytest-cov>=4.0.0",
+    "pytest-xdist>=3.8.0",
+    "pytest-sugar>=1.1.1",
 ]
 
 build = [
