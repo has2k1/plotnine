@@ -74,15 +74,12 @@ typecheck:
 	$(UVRUN) pyright
 
 test0: clean-test
-	export MATPLOTLIB_BACKEND=agg
 	$(UVRUN) pytest
 
 test: clean-test
-	export MATPLOTLIB_BACKEND=agg
 	$(UVRUN) pytest -n auto
 
 test1: clean-test
-	export MATPLOTLIB_BACKEND=agg
 	$(UVRUN) pytest -n auto -p no:sugar
 
 visualize-tests:
