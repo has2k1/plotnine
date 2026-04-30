@@ -73,9 +73,17 @@ fix: format-fix lint-fix
 typecheck:
 	$(UVRUN) pyright
 
-test: clean-test
+test0: clean-test
 	export MATPLOTLIB_BACKEND=agg
 	$(UVRUN) pytest
+
+test: clean-test
+	export MATPLOTLIB_BACKEND=agg
+	$(UVRUN) pytest -n auto
+
+test1: clean-test
+	export MATPLOTLIB_BACKEND=agg
+	$(UVRUN) pytest -n auto -p no:sugar
 
 visualize-tests:
 	$(PYTHON) tools/visualize_tests.py
