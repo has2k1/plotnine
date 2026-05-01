@@ -546,6 +546,7 @@ class ggplot:
         """
         # Draw the geoms
         self.layers.draw(self.layout, self.coordinates)
+        self.coordinates.draw(self.axs)
 
     def _draw_breaks_and_labels(self):
         """
