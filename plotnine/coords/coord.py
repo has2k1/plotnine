@@ -299,6 +299,14 @@ class coord:
         p9ax.sides_with_an_axis.add(sec.position)
         ax.spines[sec.position].set_visible(True)
 
+    def draw(self, axs: list) -> None:
+        """
+        Draw coordinate-system decorations onto each panel axes.
+
+        Called after all layers are drawn. Subclasses override this to
+        add elements such as polar grid lines.
+        """
+
     def labels(self, cur_labels: labels_view) -> labels_view:
         """
         Modify labels
