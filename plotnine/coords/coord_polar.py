@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING
 
 import numpy as np
 
+from ..iapi import panel_ranges
 from .coord import coord, dist_euclidean
 
 if TYPE_CHECKING:
@@ -18,10 +19,10 @@ class coord_polar(coord):
     """
     Polar coordinate system.
 
-    Maps one aesthetic to angle (theta) and the other to radius.
-    Data is transformed at the Cartesian level so every standard geom
-    works without modification.  Concentric circle and radial-spoke
-    grid lines are drawn automatically from the scale breaks.
+    Uses Matplotlib's native ``PolarAxes`` so every standard geom
+    (including bar → pie/bullseye) renders correctly without manual
+    Cartesian conversion.  Concentric-circle and radial-spoke grid
+    lines are drawn automatically by Matplotlib.
 
     Parameters
     ----------
@@ -33,7 +34,7 @@ class coord_polar(coord):
     direction :
         ``1`` = clockwise (default), ``-1`` = counter-clockwise.
     expand :
-        Add a small buffer around the unit circle. Default ``True``.
+        Add a small buffer around the data on the radius axis. Default ``True``.
     """
 
     is_linear = False
@@ -51,44 +52,68 @@ class coord_polar(coord):
         self.expand = expand
         self.params: dict = {}
 
+    # ------------------------------------------------------------------
+    # Panel params
+    # ------------------------------------------------------------------
+
     def setup_panel_params(
         self, scale_x: scale, scale_y: scale
     ) -> panel_view:
         from .coord_cartesian import coord_cartesian
 
-        # Theta should always fill exactly one full revolution — no expansion.
-        # R uses the caller-controlled expand flag (for padding around data).
-        pv_theta = coord_cartesian(expand=False).setup_panel_params(scale_x, scale_y)
-        pv_r     = coord_cartesian(expand=self.expand).setup_panel_params(scale_x, scale_y)
+        # Theta fills exactly one full revolution — no expansion on that axis.
+        # R uses the caller-controlled expand flag.
+        pv_no_exp = coord_cartesian(expand=False).setup_panel_params(
+            scale_x, scale_y
+        )
+        pv_exp = coord_cartesian(expand=self.expand).setup_panel_params(
+            scale_x, scale_y
+        )
 
-        # Store original ranges and breaks so transform() and
-        # draw() can use them.
         if self.theta == "x":
-            self.params["theta_range"] = pv_theta.x.range
-            self.params["r_range"]     = pv_r.y.range
-            self.params["r_breaks"]    = list(pv_r.y.breaks)
-            self.params["theta_breaks"] = list(pv_theta.x.breaks)
+            theta_range = pv_no_exp.x.range
+            r_sv = pv_exp.y
         else:
-            self.params["theta_range"] = pv_theta.y.range
-            self.params["r_range"]     = pv_r.x.range
-            self.params["r_breaks"]    = list(pv_r.x.breaks)
-            self.params["theta_breaks"] = list(pv_theta.y.breaks)
+            theta_range = pv_no_exp.y.range
+            r_sv = pv_exp.x
 
-        pv = pv_r  # use r-expanded view as the base for output ranges
+        self.params["theta_range"] = theta_range
+        self.params["r_range"] = r_sv.range
 
-        # Return a fixed unit-square output range; drop all tick marks so
-        # the Cartesian theming draws nothing — the polar grid is drawn
-        # explicitly in draw().
-        pad = 0.1 if self.expand else 0.0
-        out_range = (-1.0 - pad, 1.0 + pad)
         empty = np.array([], dtype=float)
+
+        # x → theta axis: PolarAxes expects radians in [0, 2π]; suppress ticks
+        # because our data ticks would be in original data units, not radians.
         new_x = replace(
-            pv.x, limits=out_range, range=out_range, breaks=[], minor_breaks=empty, labels=[]
+            pv_exp.x,
+            limits=(0.0, 2 * np.pi),
+            range=(0.0, 2 * np.pi),
+            breaks=[],
+            minor_breaks=empty,
+            labels=[],
         )
-        new_y = replace(
-            pv.y, limits=out_range, range=out_range, breaks=[], minor_breaks=empty, labels=[]
-        )
-        return replace(pv, x=new_x, y=new_y)
+
+        # y → r axis: use the scale for the r dimension with its natural breaks.
+        new_y = replace(r_sv)
+
+        return replace(pv_exp, x=new_x, y=new_y)
+
+    # ------------------------------------------------------------------
+    # Helpers
+    # ------------------------------------------------------------------
+
+    def _to_radians(self, vals: np.ndarray) -> np.ndarray:
+        """Normalise data-space theta values to [start, start + 2π]."""
+        t_min, t_max = self.params["theta_range"]
+        denom = float(t_max) - float(t_min)
+        if denom == 0:
+            return np.zeros_like(vals, dtype=float)
+        norm = (np.asarray(vals, dtype=float) - float(t_min)) / denom
+        return self.start + self.direction * norm * 2.0 * np.pi
+
+    # ------------------------------------------------------------------
+    # Data transformation
+    # ------------------------------------------------------------------
 
     def transform(
         self,
@@ -96,6 +121,11 @@ class coord_polar(coord):
         panel_params: panel_view,
         munch: bool = False,
     ) -> pd.DataFrame:
+        # Munch first (in original data space) so curved edges get enough
+        # interpolation points before we convert theta → radians.
+        if munch:
+            data = self.munch(data, panel_params)
+
         if self.theta == "x":
             theta_col, r_col = "x", "y"
         else:
@@ -104,93 +134,19 @@ class coord_polar(coord):
         if theta_col not in data.columns or r_col not in data.columns:
             return data
 
-        theta_vals = data[theta_col].to_numpy(dtype=float)
-        r_vals = data[r_col].to_numpy(dtype=float)
-
-        t_min, t_max = (
-            float(self.params["theta_range"][0]),
-            float(self.params["theta_range"][1]),
-        )
-        r_min, r_max = (
-            float(self.params["r_range"][0]),
-            float(self.params["r_range"][1]),
-        )
-
-        # Normalise theta → [0, 1] → radians.
-        denom_t = t_max - t_min
-        theta_norm = (theta_vals - t_min) / denom_t if denom_t else np.zeros_like(theta_vals)
-        angle = self.start + self.direction * theta_norm * 2.0 * np.pi
-
-        # Normalise r → [0, 1].  Clamp below zero only; values slightly above
-        # 1.0 land between the unit circle and the panel edge (which extends
-        # to 1 + pad ≈ 1.1) and are used for axis-label annotations.
-        denom_r = r_max - r_min
-        r_norm = (r_vals - r_min) / denom_r if denom_r else np.zeros_like(r_vals)
-        r_norm = np.clip(r_norm, 0.0, None)
-
-        # Project to Cartesian.  Angle is measured from the positive-y axis
-        # (12 o'clock) so x = r·sin(θ), y = r·cos(θ).
         data = data.copy()
-        data[theta_col] = r_norm * np.sin(angle)
-        data[r_col] = r_norm * np.cos(angle)
+        data[theta_col] = self._to_radians(data[theta_col].to_numpy())
+
+        # PolarAxes always expects x = theta (radians) and y = r.
+        # When theta = "y" we need to swap the columns.
+        if self.theta == "y":
+            data["x"], data["y"] = data["y"].copy(), data["x"].copy()
+
         return data
 
-    def _r_norm(self, r_val: float) -> float:
-        r_min, r_max = self.params["r_range"]
-        denom = float(r_max) - float(r_min)
-        return (float(r_val) - float(r_min)) / denom if denom else 0.0
-
-    def _theta_angle(self, t_val: float) -> float:
-        t_min, t_max = self.params["theta_range"]
-        denom = float(t_max) - float(t_min)
-        t_norm = (float(t_val) - float(t_min)) / denom if denom else 0.0
-        return self.start + self.direction * t_norm * 2.0 * np.pi
-
-    def draw(self, axs: list[Axes]) -> None:
-        """Draw concentric circles and radial spokes onto each panel axes."""
-        import matplotlib.patches as mpatches
-        import matplotlib.lines as mlines
-
-        r_breaks = [v for v in self.params.get("r_breaks", []) if v is not None]
-        t_breaks = [v for v in self.params.get("theta_breaks", []) if v is not None]
-
-        if not r_breaks and not t_breaks:
-            return
-
-        # Outermost circle radius (used as spoke length).
-        valid_r = [self._r_norm(v) for v in r_breaks if np.isfinite(v)]
-        r_outer = max(valid_r) if valid_r else 1.0
-
-        grid_kw = dict(color="gray", alpha=0.3, linewidth=0.5, zorder=0.5)
-
-        for ax in axs:
-            # Concentric circles at each r break.
-            for r_val in r_breaks:
-                if not np.isfinite(r_val):
-                    continue
-                r = self._r_norm(r_val)
-                circle = mpatches.Circle(
-                    (0, 0), r,
-                    fill=False, transform=ax.transData,
-                    **grid_kw,
-                )
-                ax.add_patch(circle)
-
-            # Radial spokes at each theta break.
-            for t_val in t_breaks:
-                if not np.isfinite(t_val):
-                    continue
-                angle = self._theta_angle(t_val)
-                line = mlines.Line2D(
-                    [0, r_outer * np.sin(angle)],
-                    [0, r_outer * np.cos(angle)],
-                    transform=ax.transData,
-                    **grid_kw,
-                )
-                ax.add_line(line)
-
-    def aspect(self, panel_params: panel_view) -> float:
-        return 1.0
+    # ------------------------------------------------------------------
+    # Distance (used by munch, called before transform)
+    # ------------------------------------------------------------------
 
     def distance(
         self,
@@ -198,5 +154,50 @@ class coord_polar(coord):
         y: pd.Series,
         panel_params: panel_view,
     ) -> np.ndarray:
-        # Output space is [-1, 1]² so max diagonal ≈ 2√2.
-        return dist_euclidean(x, y) / (2.0 * np.sqrt(2.0))
+        # Normalise theta and r to [0, 1] then compute Euclidean distance.
+        t_min, t_max = self.params["theta_range"]
+        r_min, r_max = self.params["r_range"]
+        t_denom = float(t_max - t_min) or 1.0
+        r_denom = float(r_max - r_min) or 1.0
+
+        if self.theta == "x":
+            theta_vals = np.asarray(x, dtype=float)
+            r_vals = np.asarray(y, dtype=float)
+        else:
+            theta_vals = np.asarray(y, dtype=float)
+            r_vals = np.asarray(x, dtype=float)
+
+        theta_norm = (theta_vals - float(t_min)) / t_denom
+        r_norm = (r_vals - float(r_min)) / r_denom
+        return dist_euclidean(theta_norm, r_norm)
+
+    def backtransform_range(self, panel_params: panel_view) -> panel_ranges:
+        t_range = tuple(self.params["theta_range"])
+        r_range = tuple(self.params["r_range"])
+        if self.theta == "x":
+            return panel_ranges(x=t_range, y=r_range)  # type: ignore[arg-type]
+        return panel_ranges(x=r_range, y=t_range)  # type: ignore[arg-type]
+
+    # ------------------------------------------------------------------
+    # Draw decorations on PolarAxes
+    # ------------------------------------------------------------------
+
+    def draw(self, axs: list[Axes]) -> None:
+        """Configure each PolarAxes: zero location, direction, r limits."""
+        r_min, r_max = self.params.get("r_range", (0.0, 1.0))
+
+        # Matplotlib PolarAxes theta_direction: -1 = clockwise, 1 = counter-CW.
+        mpl_direction = -1 if self.direction == 1 else 1
+
+        for ax in axs:
+            ax.set_theta_zero_location("N")   # 12 o'clock = 0
+            ax.set_theta_direction(mpl_direction)
+            if np.isfinite(r_min) and np.isfinite(r_max) and r_min != r_max:
+                ax.set_rlim(float(r_min), float(r_max))
+
+    # ------------------------------------------------------------------
+    # Misc
+    # ------------------------------------------------------------------
+
+    def aspect(self, panel_params: panel_view) -> float:
+        return 1.0
