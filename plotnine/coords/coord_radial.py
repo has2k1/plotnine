@@ -254,7 +254,7 @@ class coord_radial(coord_polar):
                 else:
                     ax.set_rlabel_position(np.degrees(float(self.r_axis_inside)))
 
-            # Push theta tick labels away from the outer circle so they don't
-            # sit right on the spine.
-            if self.theta_labels or self.end is not None:
-                ax.tick_params(axis="x", pad=self.theta_label_pad)
+    def post_setup_ax(self, ax: Axes) -> None:
+        """Apply theta label pad after facet has set tick positions and padding."""
+        if self.theta_labels or self.end is not None:
+            ax.tick_params(axis="x", pad=self.theta_label_pad)
