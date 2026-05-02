@@ -21,6 +21,7 @@ from .coords import (
     coord_fixed,
     coord_flip,
     coord_polar,
+    coord_radial,
     coord_trans,
 )
 from .facets import (
@@ -291,6 +292,7 @@ __all__ = (
     "coord_fixed",
     "coord_flip",
     "coord_polar",
+    "coord_radial",
     "coord_trans",
     "element_blank",
     "element_line",
