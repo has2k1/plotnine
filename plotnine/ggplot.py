@@ -222,7 +222,7 @@ class ggplot:
         else:
             self.draw(show=True)
 
-    def __deepcopy__(self, memo: dict[Any, Any]) -> ggplot:
+    def __deepcopy__(self, memo: dict[Any, Any]) -> Self:
         """
         Deep copy without copying the dataframe and environment
         """
@@ -264,15 +264,15 @@ class ggplot:
     def __add__(
         self,
         rhs: PlotAddable | list[PlotAddable] | None,
-    ) -> ggplot: ...
+    ) -> Self: ...
 
     @overload
-    def __add__(self, rhs: ggplot) -> Compose: ...
+    def __add__(self, rhs: Self) -> Compose: ...
 
     def __add__(
         self,
-        rhs: PlotAddable | list[PlotAddable] | None | ggplot,
-    ) -> ggplot | Compose:
+        rhs: PlotAddable | list[PlotAddable] | None | Self,
+    ) -> Self | Compose:
         """
         Add to ggplot
 
@@ -293,7 +293,7 @@ class ggplot:
 
         return self.__iadd__(rhs)
 
-    def __or__(self, rhs: ggplot | Compose) -> Compose:
+    def __or__(self, rhs: Self | Compose) -> Compose:
         """
         Compose 2 plots columnwise
         """
@@ -301,7 +301,7 @@ class ggplot:
 
         return Beside([self, rhs])
 
-    def __truediv__(self, rhs: ggplot | Compose) -> Compose:
+    def __truediv__(self, rhs: Self | Compose) -> Compose:
         """
         Compose 2 plots rowwise
         """
@@ -309,7 +309,7 @@ class ggplot:
 
         return Stack([self, rhs])
 
-    def __sub__(self, rhs: ggplot | Compose) -> Compose:
+    def __sub__(self, rhs: Self | Compose) -> Compose:
         """
         Compose 2 plots columnwise
         """
@@ -317,7 +317,7 @@ class ggplot:
 
         return Beside([self, rhs])
 
-    def __rrshift__(self, other: DataLike) -> ggplot:
+    def __rrshift__(self, other: DataLike) -> Self:
         """
         Overload the >> operator to receive a dataframe
         """

@@ -24,6 +24,7 @@ if TYPE_CHECKING:
     from typing import Iterator
 
     from matplotlib.figure import Figure
+    from typing_extensions import Self
 
     from plotnine._mpl.gridspec import p9GridSpec
     from plotnine._mpl.layout_manager._composition_side_space import (
@@ -278,7 +279,7 @@ class Compose:
 
         return Beside([self, rhs])
 
-    def __and__(self, rhs: PlotAddable) -> Compose:
+    def __and__(self, rhs: PlotAddable) -> Self:
         """
         Add rhs to all plots in the composition
 
@@ -302,7 +303,7 @@ class Compose:
 
         return self
 
-    def __mul__(self, rhs: PlotAddable) -> Compose:
+    def __mul__(self, rhs: PlotAddable) -> Self:
         """
         Add rhs to the outermost nesting level of the composition
 
