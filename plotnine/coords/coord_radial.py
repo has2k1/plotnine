@@ -248,3 +248,8 @@ class coord_radial(coord_polar):
                         ax.set_rlabel_position(np.degrees(self.start) + 10)
                 else:
                     ax.set_rlabel_position(np.degrees(float(self.r_axis_inside)))
+
+            # Push theta tick labels away from the outer circle so they don't
+            # sit right on the spine.
+            if self.theta_labels or self.end is not None:
+                ax.tick_params(axis="x", pad=8)
