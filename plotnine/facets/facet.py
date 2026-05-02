@@ -355,6 +355,7 @@ class facet:
 
         ax.tick_params(axis="x", which="major", pad=pad_x)
         ax.tick_params(axis="y", which="major", pad=pad_y)
+        self.coordinates.post_setup_ax(ax)
 
     def __deepcopy__(self, memo: dict[Any, Any]) -> facet:
         """

@@ -112,6 +112,14 @@ class coord:
         add elements such as polar grid lines.
         """
 
+    def post_setup_ax(self, ax: Any) -> None:
+        """
+        Hook called for each axes after set_limits_breaks_and_labels.
+
+        Override in subclasses to apply per-axes settings that must
+        run after the facet has set tick positions and label padding.
+        """
+
     def labels(self, cur_labels: labels_view) -> labels_view:
         """
         Modify labels
