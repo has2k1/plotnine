@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import replace
 from typing import TYPE_CHECKING
 
 import numpy as np
@@ -10,6 +11,7 @@ if TYPE_CHECKING:
     import pandas as pd
     from matplotlib.axes import Axes
     from plotnine.iapi import panel_view
+    from plotnine.scales.scale import scale
 
 
 class coord_radial(coord_polar):
@@ -53,6 +55,14 @@ class coord_radial(coord_polar):
         If ``True``, automatically add the local theta angle (in degrees) to
         the ``angle`` aesthetic so that text or other rotated marks align with
         the spoke direction.  Default ``False``.
+    thetalim :
+        Data-space limits for the theta axis as ``(lo, hi)``.  Only data
+        within this range is mapped to the arc; equivalent to zooming on the
+        angular axis.  ``None`` (default) uses the full data range.
+    rlim :
+        Data-space limits for the r axis as ``(lo, hi)``.  Only data within
+        this range is shown; equivalent to zooming on the radial axis.
+        ``None`` (default) uses the full data range.
     """
 
     def __init__(
@@ -65,6 +75,8 @@ class coord_radial(coord_polar):
         inner_radius: float = 0,
         r_axis_inside: bool | float | None = None,
         rotate_angle: bool = False,
+        thetalim: tuple[float, float] | None = None,
+        rlim: tuple[float, float] | None = None,
     ) -> None:
         super().__init__(
             theta=theta,
@@ -76,6 +88,78 @@ class coord_radial(coord_polar):
         self.inner_radius = inner_radius
         self.r_axis_inside = r_axis_inside
         self.rotate_angle = rotate_angle
+        self.thetalim = thetalim
+        self.rlim = rlim
+
+    # ------------------------------------------------------------------
+    # Panel params
+    # ------------------------------------------------------------------
+
+    def setup_panel_params(self, scale_x: scale, scale_y: scale) -> panel_view:
+        from .coord_cartesian import coord_cartesian
+
+        # Capture data-space theta breaks before super() clears them.
+        pv_data = coord_cartesian(expand=False).setup_panel_params(scale_x, scale_y)
+        if self.theta == "x":
+            theta_breaks = list(pv_data.x.breaks)
+            theta_labels = list(pv_data.x.labels)
+        else:
+            theta_breaks = list(pv_data.y.breaks)
+            theta_labels = list(pv_data.y.labels)
+
+        pv = super().setup_panel_params(scale_x, scale_y)
+
+        # thetalim: zoom the theta data range — only this slice maps to the arc.
+        if self.thetalim is not None:
+            self.params["theta_range"] = tuple(self.thetalim)
+
+        # rlim: zoom the r data range — update params, panel view y axis, and
+        # filter breaks/labels to within rlim so set_yticks doesn't force the
+        # PolarAxes r-axis to expand beyond the requested limits.
+        if self.rlim is not None:
+            self.params["r_range"] = tuple(self.rlim)
+            rlo, rhi = self.rlim
+            breaks, labels = pv.y.breaks, pv.y.labels
+            mask = [rlo <= b <= rhi for b in breaks]
+            new_y = replace(
+                pv.y,
+                limits=tuple(self.rlim),
+                range=tuple(self.rlim),
+                breaks=[b for b, m in zip(breaks, mask) if m],
+                labels=[l for l, m in zip(labels, mask) if m],
+            )
+            pv = replace(pv, y=new_y)
+
+        # Compute arc bounds for partial-arc plots (None means full circle).
+        arc_lo = arc_hi = None
+        if self.end is not None:
+            arc = self._arc
+            arc_lo = min(self.start, self.start + arc)
+            arc_hi = max(self.start, self.start + arc)
+
+        # For partial arcs only: convert data-space theta breaks to radian
+        # positions and restore them as theta axis tick labels on the outer edge.
+        # Full-circle charts (pac-man, coxcomb) keep breaks=[] as set by super().
+        x_updates: dict = {}
+        if theta_breaks and arc_lo is not None:
+            radian_pos = list(self._to_radians(np.asarray(theta_breaks, dtype=float)))
+            keep = [arc_lo <= r <= arc_hi for r in radian_pos]
+            radian_pos = [r for r, k in zip(radian_pos, keep) if k]
+            theta_labels = [l for l, k in zip(theta_labels, keep) if k]
+            x_updates["breaks"] = radian_pos
+            x_updates["labels"] = theta_labels
+
+        # Partial arc: x panel range must match [arc_lo, arc_hi] so that
+        # set_limits_breaks_and_labels calls ax.set_xlim(arc_lo, arc_hi) rather
+        # than ax.set_xlim(0, 2π), which would override set_thetalim.
+        if arc_lo is not None:
+            x_updates["limits"] = (arc_lo, arc_hi)
+            x_updates["range"] = (arc_lo, arc_hi)
+
+        if x_updates:
+            pv = replace(pv, x=replace(pv.x, **x_updates))
+
+        return pv
 
     # ------------------------------------------------------------------
     # Helpers
