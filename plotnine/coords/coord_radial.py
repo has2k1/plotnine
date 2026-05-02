@@ -68,6 +68,9 @@ class coord_radial(coord_polar):
         circle for full-circle plots, using the breaks and labels from the
         theta scale.  Default ``False``.  Partial-arc plots always show
         theta labels (filtered to the visible arc) regardless of this flag.
+    theta_label_pad :
+        Distance in points between the outer circle spine and the theta tick
+        labels.  Default ``8``.  Only applied when theta labels are shown.
     """
 
     def __init__(
@@ -83,6 +86,7 @@ class coord_radial(coord_polar):
         thetalim: tuple[float, float] | None = None,
         rlim: tuple[float, float] | None = None,
         theta_labels: bool = False,
+        theta_label_pad: float = 8,
     ) -> None:
         super().__init__(
             theta=theta,
@@ -97,6 +101,7 @@ class coord_radial(coord_polar):
         self.thetalim = thetalim
         self.rlim = rlim
         self.theta_labels = theta_labels
+        self.theta_label_pad = theta_label_pad
 
     # ------------------------------------------------------------------
     # Panel params
@@ -252,4 +257,4 @@ class coord_radial(coord_polar):
             # Push theta tick labels away from the outer circle so they don't
             # sit right on the spine.
             if self.theta_labels or self.end is not None:
-                ax.tick_params(axis="x", pad=8)
+                ax.tick_params(axis="x", pad=self.theta_label_pad)
