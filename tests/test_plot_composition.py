@@ -12,7 +12,7 @@ from plotnine import (
 )
 from plotnine._utils.yippie import geom as g
 from plotnine._utils.yippie import legend, plot, rotate, tag
-from plotnine.composition import plot_annotation, plot_layout
+from plotnine.composition import plot_annotation, plot_layout, plot_spacer
 
 
 def test_basic_horizontal_align_resize():
@@ -435,3 +435,19 @@ def test_footers():
     )
     p = ((p1 | p2) / p3) + ann
     assert p == "footers"
+
+
+def test_spacer_under_and_theme():
+    # theme_gray is applied to all plots,
+    # for the spacer is only applied to the plot background.
+    p1 = plot.red
+    p2 = plot.green
+    p = (p1 | p2) / (p1 | plot_spacer() | p2) & theme_gray()
+    assert p == "spacer_under_and_theme"
+
+
+def test_spacer_first_plus_plot():
+    # spacer + plot composes into a Wrap, matching ggplot + ggplot.
+    # Putting the spacer on the LHS exercises plot_spacer.__add__.
+    p = plot_spacer() + plot.red
+    assert p == "spacer_first_plus_plot"
