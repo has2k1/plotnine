@@ -63,6 +63,11 @@ class coord_radial(coord_polar):
         Data-space limits for the r axis as ``(lo, hi)``.  Only data within
         this range is shown; equivalent to zooming on the radial axis.
         ``None`` (default) uses the full data range.
+    theta_labels :
+        If ``True``, show theta axis tick labels on the outer edge of the
+        circle for full-circle plots, using the breaks and labels from the
+        theta scale.  Default ``False``.  Partial-arc plots always show
+        theta labels (filtered to the visible arc) regardless of this flag.
     """
 
     def __init__(
@@ -77,6 +82,7 @@ class coord_radial(coord_polar):
         rotate_angle: bool = False,
         thetalim: tuple[float, float] | None = None,
         rlim: tuple[float, float] | None = None,
+        theta_labels: bool = False,
     ) -> None:
         super().__init__(
             theta=theta,
@@ -90,6 +96,7 @@ class coord_radial(coord_polar):
         self.rotate_angle = rotate_angle
         self.thetalim = thetalim
         self.rlim = rlim
+        self.theta_labels = theta_labels
 
     # ------------------------------------------------------------------
     # Panel params
@@ -137,15 +144,17 @@ class coord_radial(coord_polar):
             arc_lo = min(self.start, self.start + arc)
             arc_hi = max(self.start, self.start + arc)
 
-        # For partial arcs only: convert data-space theta breaks to radian
-        # positions and restore them as theta axis tick labels on the outer edge.
-        # Full-circle charts (pac-man, coxcomb) keep breaks=[] as set by super().
+        # Convert data-space theta breaks to radian positions and restore them
+        # as theta axis tick labels on the outer edge.  Always done for partial
+        # arcs; for full circles only when theta_labels=True (opt-in, so that
+        # pac-man / coxcomb charts keep breaks=[] as set by super()).
         x_updates: dict = {}
-        if theta_breaks and arc_lo is not None:
+        if theta_breaks and (arc_lo is not None or self.theta_labels):
             radian_pos = list(self._to_radians(np.asarray(theta_breaks, dtype=float)))
-            keep = [arc_lo <= r <= arc_hi for r in radian_pos]
-            radian_pos = [r for r, k in zip(radian_pos, keep) if k]
-            theta_labels = [l for l, k in zip(theta_labels, keep) if k]
+            if arc_lo is not None:
+                keep = [arc_lo <= r <= arc_hi for r in radian_pos]
+                radian_pos = [r for r, k in zip(radian_pos, keep) if k]
+                theta_labels = [l for l, k in zip(theta_labels, keep) if k]
             x_updates["breaks"] = radian_pos
             x_updates["labels"] = theta_labels
 
