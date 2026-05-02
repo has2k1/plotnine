@@ -49,12 +49,5 @@ class plot_spacer(ggplot):
         self = deepcopy(self)
         if isinstance(rhs, theme):
             fill = rhs.getp(("plot_background", "facecolor"))
-            self.theme += theme(
-                plot_background=element_rect(fill=fill),
-                # When a spacer is the "last plot" in a composition,
-                # it is used to determine the figure size and dpi
-                # and therefore those aspects should be modifiable.
-                figure_size=rhs.getp("figure_size"),
-                dpi=rhs.getp("dpi"),
-            )
+            self.theme += theme(plot_background=element_rect(fill=fill))
         return self
