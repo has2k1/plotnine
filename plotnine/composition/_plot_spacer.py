@@ -1,8 +1,13 @@
 from __future__ import annotations
 
-from copy import deepcopy
+from typing import TYPE_CHECKING
 
 from plotnine import element_rect, ggplot, theme, theme_void
+
+if TYPE_CHECKING:
+    from typing_extensions import Self
+
+    from plotnine.ggplot import PlotAddable
 
 
 class plot_spacer(ggplot):
@@ -16,6 +21,12 @@ class plot_spacer(ggplot):
         can be changed through this parameter.
 
         The color can also be modified by adding a [](`~plotnine.theme`)
+        and setting the [](`~plotnine.themes.themeable.plot_background`).
+    alpha :
+        Opacity of the background fill, between 0 (transparent) and 1
+        (opaque). The default leaves the area transparent.
+
+        The opacity can also be modified by adding a [](`~plotnine.theme`)
         and setting the [](`~plotnine.themes.themeable.plot_background`).
 
     See Also
@@ -33,21 +44,26 @@ class plot_spacer(ggplot):
             | tuple[float, float, float, float]
             | None
         ) = None,
+        alpha: float | None = None,
     ):
         super().__init__()
-        self.theme = theme_void()
-        if fill:
-            self.theme += theme(plot_background=element_rect(fill=fill))
+        self.theme = theme_void() + theme(
+            plot_background=element_rect(fill=fill, alpha=alpha)
+        )
 
-    def __add__(self, rhs) -> plot_spacer:  # pyright: ignore[reportIncompatibleMethodOverride]
+    def __iadd__(self, rhs: PlotAddable | list[PlotAddable] | None) -> Self:
         """
         Add to spacer
 
-        All added objects are no ops except the `plot_background` in
-        in a theme.
+        Only the `plot_background` of a [](`~plotnine.theme`) on the
+        right-hand side is merged into the spacer's own theme; every
+        other addable is dropped so the spacer keeps its blank
+        appearance.
         """
-        self = deepcopy(self)
         if isinstance(rhs, theme):
             fill = rhs.getp(("plot_background", "facecolor"))
-            self.theme += theme(plot_background=element_rect(fill=fill))
+            alpha = rhs.getp(("plot_background", "alpha"))
+            self.theme += theme(
+                plot_background=element_rect(fill=fill, alpha=alpha)
+            )
         return self
