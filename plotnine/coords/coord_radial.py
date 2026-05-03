@@ -160,12 +160,6 @@ class coord_radial(coord_polar):
                 keep = [arc_lo <= r <= arc_hi for r in radian_pos]
                 radian_pos = [r for r, k in zip(radian_pos, keep) if k]
                 theta_labels = [l for l, k in zip(theta_labels, keep) if k]
-            else:
-                # Full circle: ax.set_xticks with negative values silently extends
-                # xlim below 0, turning the full circle into a partial arc.  Wrap
-                # all break positions into [0, 2π] to avoid this.
-                tau = 2.0 * np.pi
-                radian_pos = [r % tau for r in radian_pos]
             x_updates["breaks"] = radian_pos
             x_updates["labels"] = theta_labels
 
