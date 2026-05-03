@@ -258,3 +258,7 @@ class coord_radial(coord_polar):
         """Apply theta label pad after facet has set tick positions and padding."""
         if self.theta_labels or self.end is not None:
             ax.tick_params(axis="x", pad=self.theta_label_pad)
+        # Allow geom_text labels to extend past the polar axes bounding box
+        # (e.g. spoke labels placed just beyond the outermost bar tip).
+        for text in ax.texts:
+            text.set_clip_on(False)
