@@ -130,19 +130,31 @@ class coord_polar(coord):
 
         if self.theta == "x":
             theta_col, r_col = "x", "y"
+            theta_end_col, r_end_col = "xend", "yend"
         else:
             theta_col, r_col = "y", "x"
+            theta_end_col, r_end_col = "yend", "xend"
 
         if theta_col not in data.columns or r_col not in data.columns:
             return data
 
         data = data.copy()
         data[theta_col] = self._to_radians(data[theta_col].to_numpy())
+        has_endpoints = theta_end_col in data.columns and r_end_col in data.columns
+        if has_endpoints:
+            data[theta_end_col] = self._to_radians(
+                data[theta_end_col].to_numpy()
+            )
 
         # PolarAxes always expects x = theta (radians) and y = r.
         # When theta = "y" we need to swap the columns.
         if self.theta == "y":
             data["x"], data["y"] = data["y"].copy(), data["x"].copy()
+            if has_endpoints:
+                data["xend"], data["yend"] = (
+                    data["yend"].copy(),
+                    data["xend"].copy(),
+                )
 
         return data
 
