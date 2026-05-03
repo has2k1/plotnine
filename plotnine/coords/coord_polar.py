@@ -82,12 +82,14 @@ class coord_polar(coord):
 
         empty = np.array([], dtype=float)
 
-        # x → theta axis: PolarAxes expects radians in [0, 2π]; suppress ticks
-        # because our data ticks would be in original data units, not radians.
+        # x → theta axis: data ticks are in original units (not radians), so
+        # suppress them.  Limits span [start, start+2π] so that bars rotated
+        # by a non-zero start angle stay within the displayed theta range.
+        theta_start = float(self.start)
         new_x = replace(
             pv_exp.x,
-            limits=(0.0, 2 * np.pi),
-            range=(0.0, 2 * np.pi),
+            limits=(theta_start, theta_start + 2 * np.pi),
+            range=(theta_start, theta_start + 2 * np.pi),
             breaks=[],
             minor_breaks=empty,
             labels=[],
