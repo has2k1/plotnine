@@ -1796,14 +1796,14 @@
     "href": "reference/plot_spacer.html",
     "title": " plotnine.composition.plot_spacer",
     "section": "",
-    "text": "plot_spacer(fill=None)"
+    "text": "plot_spacer(fill=None, alpha=None)"
   },
   {
     "objectID": "reference/plot_spacer.html#parameters",
     "href": "reference/plot_spacer.html#parameters",
     "title": " plotnine.composition.plot_spacer",
     "section": "Parameters",
-    "text": "Parameters\n\n\nfill : str | tuple[float, float, float] | tuple[float, float, float, float] | None = None\n\nBackground color. The default is a transparent area, but it can be changed through this parameter.\nThe color can also be modified by adding a theme and setting the plot_background."
+    "text": "Parameters\n\n\nfill : str | tuple[float, float, float] | tuple[float, float, float, float] | None = None\n\nBackground color. The default is a transparent area, but it can be changed through this parameter.\nThe color can also be modified by adding a theme and setting the plot_background.\n\nalpha : float | None = None\n\nOpacity of the background fill, between 0 (transparent) and 1 (opaque). The default leaves the area transparent.\nThe opacity can also be modified by adding a theme and setting the plot_background."
   },
   {
     "objectID": "reference/plot_spacer.html#see-also",
