@@ -10,20 +10,19 @@ from .coord_polar import coord_polar
 if TYPE_CHECKING:
     import pandas as pd
     from matplotlib.axes import Axes
+
     from plotnine.iapi import panel_view
     from plotnine.scales.scale import scale
 
 
 class coord_radial(coord_polar):
     """
-    Radial coordinate system.
+    Radial coordinate system
 
-    A modernised polar coordinate system that adds support for partial arcs,
-    inner radius (donut/gauge charts), configurable radial-axis placement, and
-    automatic rotation of the ``angle`` aesthetic to align with theta.
-
-    Inherits from :class:`coord_polar`; all standard geoms work without
-    modification.
+    `coord_radial` maps one position aesthetic to the angle and the other
+    to the radius. Compared with ``coord_polar``, it adds support for
+    partial arcs, inner radius holes, theta/radius limits, radial-axis
+    placement, and rotation of the ``angle`` aesthetic.
 
     Parameters
     ----------
@@ -39,7 +38,8 @@ class coord_radial(coord_polar):
         ``1`` = clockwise (default), ``-1`` = counter-clockwise.
         Only used when *end* is ``None``.
     expand :
-        Add a small buffer around the data on the radius axis. Default ``True``.
+        Add a small buffer around the data on the radius axis.
+        Default ``True``.
     inner_radius :
         Size of the inner hole as a fraction of the outer radius, in
         ``[0, 1)``.  ``0`` (default) means no hole; ``0.3`` creates a 30 %
@@ -50,7 +50,11 @@ class coord_radial(coord_polar):
         * ``None`` (default) — let Matplotlib decide (usually outside).
         * ``True`` — force inside, aligned just past the *start* angle.
         * ``False`` — force outside (Matplotlib default).
-        * *float* — place at this theta angle in radians (clockwise from North).
+        * *float* — place at this theta angle in radians (clockwise from
+          North).
+
+        Unlike ggplot2's ``r.axis.inside``, a length-2 value for separate
+        primary and secondary axis placement is not supported.
     rotate_angle :
         If ``True``, automatically add the local theta angle (in degrees) to
         the ``angle`` aesthetic so that text or other rotated marks align with
@@ -71,6 +75,52 @@ class coord_radial(coord_polar):
     theta_label_pad :
         Distance in points between the outer circle spine and the theta tick
         labels.  Default ``8``.  Only applied when theta labels are shown.
+
+    Notes
+    -----
+    The Python API uses snake_case names for arguments that are dotted in
+    ggplot2: ``inner_radius``, ``r_axis_inside``, and ``rotate_angle``.
+
+    Unlike ggplot2, plotnine coordinate systems do not currently expose a
+    ``clip`` argument. The ggplot2 ``reverse`` argument is not currently
+    implemented.
+
+    Examples
+    --------
+    A donut chart is a stacked bar chart with an inner radius.
+
+    ```python
+    import pandas as pd
+    from plotnine import aes, coord_radial, geom_col, ggplot
+
+    df = pd.DataFrame({
+        "x": [1, 1, 1],
+        "y": [2, 3, 5],
+        "group": ["a", "b", "c"],
+    })
+
+    (
+        ggplot(df, aes("x", "y", fill="group"))
+        + geom_col()
+        + coord_radial(theta="y", inner_radius=0.4)
+    )
+    ```
+
+    Partial arcs can be used for gauge-like displays.
+
+    ```python
+    import numpy as np
+    import pandas as pd
+    from plotnine import aes, coord_radial, geom_point, ggplot
+
+    df = pd.DataFrame({"x": [1, 2, 3], "y": [2, 4, 3]})
+
+    ggplot(df, aes("x", "y")) + geom_point() + coord_radial(
+        start=-0.4 * np.pi,
+        end=0.4 * np.pi,
+        inner_radius=0.3,
+    )
+    ```
     """
 
     def __init__(
@@ -111,7 +161,9 @@ class coord_radial(coord_polar):
         from .coord_cartesian import coord_cartesian
 
         # Capture data-space theta breaks before super() clears them.
-        pv_data = coord_cartesian(expand=False).setup_panel_params(scale_x, scale_y)
+        pv_data = coord_cartesian(expand=False).setup_panel_params(
+            scale_x, scale_y
+        )
         if self.theta == "x":
             theta_breaks = list(pv_data.x.breaks)
             theta_labels = list(pv_data.x.labels)
@@ -121,7 +173,8 @@ class coord_radial(coord_polar):
 
         pv = super().setup_panel_params(scale_x, scale_y)
 
-        # thetalim: zoom the theta data range — only this slice maps to the arc.
+        # thetalim: zoom the theta data range — only this slice maps to the
+        # arc.
         if self.thetalim is not None:
             self.params["theta_range"] = tuple(self.thetalim)
 
@@ -155,7 +208,9 @@ class coord_radial(coord_polar):
         # pac-man / coxcomb charts keep breaks=[] as set by super()).
         x_updates: dict = {}
         if theta_breaks and (arc_lo is not None or self.theta_labels):
-            radian_pos = list(self._to_radians(np.asarray(theta_breaks, dtype=float)))
+            radian_pos = list(
+                self._to_radians(np.asarray(theta_breaks, dtype=float))
+            )
             if arc_lo is not None:
                 keep = [arc_lo <= r <= arc_hi for r in radian_pos]
                 radian_pos = [r for r, k in zip(radian_pos, keep) if k]
@@ -181,7 +236,11 @@ class coord_radial(coord_polar):
 
     @property
     def _arc(self) -> float:
-        """Total arc in radians (signed: positive when going clockwise for direction=1)."""
+        """
+        Total arc in radians.
+
+        A positive value represents clockwise movement when ``direction=1``.
+        """
         if self.end is not None:
             return self.end - self.start
         return self.direction * 2.0 * np.pi
@@ -207,7 +266,11 @@ class coord_radial(coord_polar):
     ) -> pd.DataFrame:
         data = super().transform(data, panel_params, munch=munch)
         # After super().transform(), data["x"] is always theta in radians.
-        if self.rotate_angle and "angle" in data.columns and "x" in data.columns:
+        if (
+            self.rotate_angle
+            and "angle" in data.columns
+            and "x" in data.columns
+        ):
             data = data.copy()
             data["angle"] = data["angle"] + np.degrees(data["x"])
         return data
@@ -252,10 +315,14 @@ class coord_radial(coord_polar):
                         # Just inside the start angle keeps it out of the data.
                         ax.set_rlabel_position(np.degrees(self.start) + 10)
                 else:
-                    ax.set_rlabel_position(np.degrees(float(self.r_axis_inside)))
+                    ax.set_rlabel_position(
+                        np.degrees(float(self.r_axis_inside))
+                    )
 
     def post_setup_ax(self, ax: Axes) -> None:
-        """Apply theta label pad after facet has set tick positions and padding."""
+        """
+        Apply theta label pad after facet has set tick positions and padding.
+        """
         if self.theta_labels or self.end is not None:
             ax.tick_params(axis="x", pad=self.theta_label_pad)
         # Allow geom_text labels to extend past the polar axes bounding box
