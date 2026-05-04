@@ -75,9 +75,42 @@ class inset_element:
                 f"bottom={self.bottom!r}, top={self.top!r}."
             )
 
+    def _setup(self, parent: ggplot):
+        """
+        Receive the host figure and zorder from parent
+        """
+        self.obj.figure = parent.figure
+        self.obj._zorder = parent._zorder + INSET_ZORDER_STEP
+
+    def draw(self):
+        """
+        Render this inset
+        """
+        self.obj.draw()
+
     def __radd__(self, other: ggplot) -> ggplot:
         """
         Attach this inset to a ggplot
         """
         other._insets.append(deepcopy(self))
         return other
+
+
+class Insets(list[inset_element]):
+    """
+    List of insets attached to a ggplot
+    """
+
+    def _setup(self, parent: ggplot):
+        """
+        Receive the host figure and zorder for every inset
+        """
+        for inset in self:
+            inset._setup(parent)
+
+    def draw(self):
+        """
+        Render every inset attached to the host
+        """
+        for inset in self:
+            inset.draw()
