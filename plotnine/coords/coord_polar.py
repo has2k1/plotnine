@@ -11,18 +11,18 @@ from .coord import coord, dist_euclidean
 if TYPE_CHECKING:
     import pandas as pd
     from matplotlib.axes import Axes
+
     from plotnine.iapi import panel_view
     from plotnine.scales.scale import scale
 
 
 class coord_polar(coord):
     """
-    Polar coordinate system.
+    Polar coordinate system
 
-    Uses Matplotlib's native ``PolarAxes`` so every standard geom
-    (including bar → pie/bullseye) renders correctly without manual
-    Cartesian conversion.  Concentric-circle and radial-spoke grid
-    lines are drawn automatically by Matplotlib.
+    `coord_polar` maps one position aesthetic to the angle and the other
+    to the radius. It is commonly used for pie charts, which are stacked
+    bar charts in polar coordinates.
 
     Parameters
     ----------
@@ -34,7 +34,33 @@ class coord_polar(coord):
     direction :
         ``1`` = clockwise (default), ``-1`` = counter-clockwise.
     expand :
-        Add a small buffer around the data on the radius axis. Default ``True``.
+        Add a small buffer around the data on the radius axis.
+        Default ``True``.
+
+    Notes
+    -----
+    Unlike ggplot2, plotnine coordinate systems do not currently expose a
+    ``clip`` argument.
+
+    For partial arcs, donut charts, and theta/radius limits, use
+    ``coord_radial``.
+
+    Examples
+    --------
+    A pie chart is a stacked bar chart with the y position mapped to angle.
+
+    ```python
+    import pandas as pd
+    from plotnine import aes, coord_polar, geom_col, ggplot
+
+    df = pd.DataFrame({
+        "x": [1, 1, 1],
+        "y": [2, 3, 5],
+        "group": ["a", "b", "c"],
+    })
+
+    ggplot(df, aes("x", "y", fill="group")) + geom_col() + coord_polar("y")
+    ```
     """
 
     is_linear = False
@@ -56,9 +82,7 @@ class coord_polar(coord):
     # Panel params
     # ------------------------------------------------------------------
 
-    def setup_panel_params(
-        self, scale_x: scale, scale_y: scale
-    ) -> panel_view:
+    def setup_panel_params(self, scale_x: scale, scale_y: scale) -> panel_view:
         from .coord_cartesian import coord_cartesian
 
         # Theta fills exactly one full revolution — no expansion on that axis.
@@ -95,7 +119,8 @@ class coord_polar(coord):
             labels=[],
         )
 
-        # y → r axis: use the scale for the r dimension with its natural breaks.
+        # y → r axis: use the scale for the r dimension with its natural
+        # breaks.
         new_y = replace(r_sv)
 
         return replace(pv_exp, x=new_x, y=new_y)
@@ -140,7 +165,9 @@ class coord_polar(coord):
 
         data = data.copy()
         data[theta_col] = self._to_radians(data[theta_col].to_numpy())
-        has_endpoints = theta_end_col in data.columns and r_end_col in data.columns
+        has_endpoints = (
+            theta_end_col in data.columns and r_end_col in data.columns
+        )
         if has_endpoints:
             data[theta_end_col] = self._to_radians(
                 data[theta_end_col].to_numpy()
@@ -204,7 +231,7 @@ class coord_polar(coord):
         mpl_direction = -1 if self.direction == 1 else 1
 
         for ax in axs:
-            ax.set_theta_zero_location("N")   # 12 o'clock = 0
+            ax.set_theta_zero_location("N")  # 12 o'clock = 0
             ax.set_theta_direction(mpl_direction)
             if np.isfinite(r_min) and np.isfinite(r_max) and r_min != r_max:
                 ax.set_rlim(float(r_min), float(r_max))
