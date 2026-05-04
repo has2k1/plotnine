@@ -41,9 +41,9 @@ class inset_element:
         Which region of the host plot the bounding box is relative to:
 
         - ``"panel"`` — the data area only (default).
-        - ``"plot"``  — the panel plus axes, labels, and plot margins.
-        - ``"full"``  — everything the host plot occupies, including
-          any titles, captions, and legends.
+        - ``"plot"``  — the panel plus axes, labels, titles, captions
+           and legends
+        - ``"full"``  — everything the host plot occupies plus plot margin
     """
 
     obj: ggplot | Compose
