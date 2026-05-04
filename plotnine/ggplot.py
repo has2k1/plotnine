@@ -55,7 +55,7 @@ if TYPE_CHECKING:
     from plotnine import watermark
     from plotnine._mpl.gridspec import p9GridSpec
     from plotnine._mpl.layout_manager._plot_side_space import PlotSideSpaces
-    from plotnine.composition import Compose, inset_element
+    from plotnine.composition import Compose
     from plotnine.coords.coord import coord
     from plotnine.facets.facet import facet
     from plotnine.typing import DataLike, FigureFormat, MimeBundle
@@ -139,8 +139,9 @@ class ggplot:
     """
     Drawing zorder for every axes created for this plot
 
-    The default (``0``) keeps the plot at the base layer. `_draw_insets`
-    raises this on inset plots so they render above their host.
+    The default (``0``) keeps the plot at the base layer.
+    `inset_element._setup` raises this on inset plots so they render
+    above their host.
     """
 
     def __init__(
@@ -148,6 +149,7 @@ class ggplot:
         data: Optional[DataLike] = None,
         mapping: Optional[aes] = None,
     ):
+        from .composition._inset_element import Insets
         from .mapping._env import Environment
 
         # Allow some sloppiness
@@ -164,7 +166,7 @@ class ggplot:
         self.environment = Environment.capture(1)
         self.layout = Layout()
         self.watermarks: list[watermark] = []
-        self._insets: list[inset_element] = []
+        self._insets: Insets = Insets()
 
         # build artefacts
         self._build_objs = NS(meta={})
@@ -383,7 +385,7 @@ class ggplot:
 
             # Insets render after host theming is finalised so their
             # own draw picks up a fully-realised host figure.
-            self._draw_insets()
+            self._insets.draw()
 
         return figure
 
@@ -392,6 +394,7 @@ class ggplot:
         Setup this instance for the building process
         """
         self._create_figure()
+        self._insets._setup(self)
         self.labels.add_defaults(self.mapping.labels)
         return self.figure
 
@@ -601,23 +604,6 @@ class ggplot:
         """
         for wm in self.watermarks:
             wm.draw(self.figure)
-
-    def _draw_insets(self):
-        """
-        Draw every inset attached to this plot into the host figure
-
-        Each inset reuses the host's figure instead of creating its own.
-        The inset's zorder is raised by `INSET_ZORDER_STEP` so every
-        figure-level artist on the inset sits above the host's; for
-        Compose insets this zorder is propagated down the sub-tree when
-        the composition is drawn.
-        """
-        from .composition._inset_element import INSET_ZORDER_STEP
-
-        for inset in self._insets:
-            inset.obj.figure = self.figure
-            inset.obj._zorder = self._zorder + INSET_ZORDER_STEP
-            inset.obj.draw()
 
     def _add_figure_artist(self, artist):
         """
