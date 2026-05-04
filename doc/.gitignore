@@ -13,3 +13,5 @@ objects.json
 objects.txt
 objects.inv
 gallery/thumbnails
+
+**/*.quarto_ipynb
