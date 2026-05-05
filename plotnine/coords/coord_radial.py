@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import replace
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Sequence, cast
 
 import numpy as np
 
@@ -10,6 +10,7 @@ from .coord_polar import coord_polar
 if TYPE_CHECKING:
     import pandas as pd
     from matplotlib.axes import Axes
+    from matplotlib.projections.polar import PolarAxes
 
     from plotnine.iapi import panel_view
     from plotnine.scales.scale import scale
@@ -184,7 +185,8 @@ class coord_radial(coord_polar):
         if self.rlim is not None:
             self.params["r_range"] = tuple(self.rlim)
             rlo, rhi = self.rlim
-            breaks, labels = pv.y.breaks, pv.y.labels
+            breaks = cast("Sequence[float]", pv.y.breaks)
+            labels = pv.y.labels
             mask = [rlo <= b <= rhi for b in breaks]
             new_y = replace(
                 pv.y,
@@ -287,11 +289,12 @@ class coord_radial(coord_polar):
         arc = self._arc
 
         for ax in axs:
+            polar_ax = cast("PolarAxes", ax)
             # Restrict visible theta range for partial arcs.
             if self.end is not None:
                 theta_lo = min(self.start, self.start + arc)
                 theta_hi = max(self.start, self.start + arc)
-                ax.set_thetalim(theta_lo, theta_hi)
+                polar_ax.set_thetalim(theta_lo, theta_hi)
 
             # Inner radius: push the data away from the centre by setting a
             # virtual r-origin below r_min.  Formula: solve
@@ -306,16 +309,18 @@ class coord_radial(coord_polar):
                 r_origin = (r_min - self.inner_radius * r_max) / (
                     1.0 - self.inner_radius
                 )
-                ax.set_rorigin(r_origin)
+                polar_ax.set_rorigin(r_origin)
 
             # Radial axis label placement.
             if self.r_axis_inside is not None:
                 if isinstance(self.r_axis_inside, bool):
                     if self.r_axis_inside:
                         # Just inside the start angle keeps it out of the data.
-                        ax.set_rlabel_position(np.degrees(self.start) + 10)
+                        polar_ax.set_rlabel_position(
+                            np.degrees(self.start) + 10
+                        )
                 else:
-                    ax.set_rlabel_position(
+                    polar_ax.set_rlabel_position(
                         np.degrees(float(self.r_axis_inside))
                     )
 
