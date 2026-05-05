@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import replace
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 
 import numpy as np
 
@@ -11,6 +11,7 @@ from .coord import coord, dist_euclidean
 if TYPE_CHECKING:
     import pandas as pd
     from matplotlib.axes import Axes
+    from matplotlib.projections.polar import PolarAxes
 
     from plotnine.iapi import panel_view
     from plotnine.scales.scale import scale
@@ -216,8 +217,8 @@ class coord_polar(coord):
         t_range = tuple(self.params["theta_range"])
         r_range = tuple(self.params["r_range"])
         if self.theta == "x":
-            return panel_ranges(x=t_range, y=r_range)  # type: ignore[arg-type]
-        return panel_ranges(x=r_range, y=t_range)  # type: ignore[arg-type]
+            return panel_ranges(x=t_range, y=r_range)
+        return panel_ranges(x=r_range, y=t_range)
 
     # ------------------------------------------------------------------
     # Draw decorations on PolarAxes
@@ -231,10 +232,11 @@ class coord_polar(coord):
         mpl_direction = -1 if self.direction == 1 else 1
 
         for ax in axs:
-            ax.set_theta_zero_location("N")  # 12 o'clock = 0
-            ax.set_theta_direction(mpl_direction)
+            polar_ax = cast("PolarAxes", ax)
+            polar_ax.set_theta_zero_location("N")  # 12 o'clock = 0
+            polar_ax.set_theta_direction(mpl_direction)
             if np.isfinite(r_min) and np.isfinite(r_max) and r_min != r_max:
-                ax.set_rlim(float(r_min), float(r_max))
+                polar_ax.set_rlim(float(r_min), float(r_max))
 
     # ------------------------------------------------------------------
     # Misc
