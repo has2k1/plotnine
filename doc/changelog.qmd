@@ -9,6 +9,11 @@ title: Changelog
 
 - Bundled agent skills
 
+### Bug Fixes
+
+- Allow `statsmodels==0.14.4` on pyodide, which bundles that version. Other
+  platforms still require `statsmodels>=0.14.6` for pandas 3 compatibility.
+
 
 ## v0.15.3
 (2025-01-28)
