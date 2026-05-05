@@ -1,10 +1,6 @@
 ---
 name: plotnine
-description: >
-  Generate, refine and export data visualizations using plotnine. Use this skill
-  when the user asks to create plots or charts with plotnine. Also use when
-  customizing themes, applying colorblind-safe palettes, reshaping data for
-  plotting with plotnine, or saving figures to PNG/PDF/SVG/JPEG.
+description: Generate, refine and export data visualizations using plotnine. Use this skill when the user asks to create plots or charts with plotnine. Also use when customizing themes, applying colorblind-safe palettes, reshaping data for plotting with plotnine, or saving figures to PNG/PDF/SVG/JPEG.
 ---
 
 # plotnine
