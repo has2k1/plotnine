@@ -4,14 +4,21 @@
     "href": "changelog.html",
     "title": "Changelog",
     "section": "",
-    "text": "(2025-01-28)\n\n\n\nRemoved warnings about copy-on-write for pandas &gt;= 3.0.0"
+    "text": "(2026-05-05)\n\n\n\nBundled agent skills\n\n\n\n\n\nAllow statsmodels==0.14.4 on pyodide, which bundles that version. Other platforms still require statsmodels&gt;=0.14.6 for pandas 3 compatibility."
+  },
+  {
+    "objectID": "changelog.html#v0.15.4",
+    "href": "changelog.html#v0.15.4",
+    "title": "Changelog",
+    "section": "",
+    "text": "(2026-05-05)\n\n\n\nBundled agent skills\n\n\n\n\n\nAllow statsmodels==0.14.4 on pyodide, which bundles that version. Other platforms still require statsmodels&gt;=0.14.6 for pandas 3 compatibility."
   },
   {
     "objectID": "changelog.html#v0.15.3",
     "href": "changelog.html#v0.15.3",
     "title": "Changelog",
-    "section": "",
-    "text": "(2025-01-28)\n\n\n\nRemoved warnings about copy-on-write for pandas &gt;= 3.0.0"
+    "section": "v0.15.3",
+    "text": "v0.15.3\n(2025-01-28)\n\nEnhancements\n\nRemoved warnings about copy-on-write for pandas &gt;= 3.0.0"
   },
   {
     "objectID": "changelog.html#v0.15.2",
