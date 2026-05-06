@@ -577,7 +577,7 @@ JS = """
       const file = r.dataset.file;
       subdirs.add(sub);
       lines.push(
-        'cp tests/result_images/' + sub + '/' + file +
+        '\\\\cp tests/result_images/' + sub + '/' + file +
         ' tests/baseline_images/' + sub + '/' + file
       );
     }
