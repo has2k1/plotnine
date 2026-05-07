@@ -9,13 +9,16 @@ if TYPE_CHECKING:
     from ._compose import Compose
 
 
-INSET_ZORDER_STEP = 1000
+INSET_ZORDER_STEP = 10
 """
-Zorder added to the host's value when an inset is drawn, so every
-figure-level artist on the inset (axes, plot_background, titles,
-strip text, legends, ...) sits above every figure-level artist on the
-host. Must exceed the largest existing zorder used inside a single
-plot — watermarks at 99.9 — so the host and inset stacks never overlap.
+Width of the zorder band reserved for each inset
+
+The Nth sibling inset is drawn at `host._zorder + N * INSET_ZORDER_STEP`,
+so every figure-level artist on a later inset (axes, plot_background,
+titles, strip text, legends, ...) sits above every figure-level artist
+on an earlier inset and the host. The step must exceed the largest
+within-plot figure-level zorder — watermarks at 9 — by enough that the
+next band's lowest artist (`plot_background` at -0.5) still clears it.
 """
 
 
@@ -75,12 +78,16 @@ class inset_element:
                 f"bottom={self.bottom!r}, top={self.top!r}."
             )
 
-    def _setup(self, parent: ggplot):
+    def _setup(self, parent: ggplot, index: int):
         """
         Receive the host figure and zorder from parent
+
+        `index` is the 1-based position of this inset among its siblings.
+        Each sibling occupies its own zorder band so a later inset's
+        figure-level artists all sit above an earlier inset's.
         """
         self.obj.figure = parent.figure
-        self.obj._zorder = parent._zorder + INSET_ZORDER_STEP
+        self.obj._zorder = parent._zorder + index * INSET_ZORDER_STEP
 
     def draw(self):
         """
@@ -105,8 +112,8 @@ class Insets(list[inset_element]):
         """
         Receive the host figure and zorder for every inset
         """
-        for inset in self:
-            inset._setup(parent)
+        for i, inset in enumerate(self, start=1):
+            inset._setup(parent, i)
 
     def draw(self):
         """

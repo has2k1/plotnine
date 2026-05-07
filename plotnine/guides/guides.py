@@ -321,7 +321,6 @@ class guides:
                 bbox_to_anchor=(0, 0),
                 bbox_transform=self.plot.figure.transFigure,
                 borderpad=0.0,
-                zorder=99.1,
             )
 
         # Group together guides for each position
