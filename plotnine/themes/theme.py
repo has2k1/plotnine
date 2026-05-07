@@ -472,6 +472,20 @@ class theme:
         self._is_retina = True
         return self
 
+    def _inherit_figure_props(self, other: theme) -> None:
+        """
+        Copy themeables that modify the figure
+
+        Used when this theme is attached to a plot that does not own
+        its figure (an inset, or a member of a composition). Such a plot
+        has no figure to size or DPI; the values must come from the
+        figure's owner.
+        """
+        self += theme(
+            figure_size=other.getp("figure_size"),
+            dpi=other.getp("dpi"),
+        )
+
     def _smart_title_and_subtitle_ha(
         self, title: str | None, subtitle: str | None
     ):
