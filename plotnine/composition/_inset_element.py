@@ -47,6 +47,13 @@ class inset_element:
         - ``"plot"``  — the panel plus axes, labels, titles, captions
            and legends
         - ``"full"``  — everything the host plot occupies plus plot margin
+
+    Notes
+    -----
+    `figure_size` and `dpi` set on the inset's theme are ignored. The
+    inset shares the host's figure, so these values come from the host
+    theme. The canvas size of the inset is determined by the bounding
+    box and the area it is `align_to`.
     """
 
     obj: ggplot | Compose
@@ -88,6 +95,7 @@ class inset_element:
         """
         self.obj.figure = parent.figure
         self.obj._zorder = parent._zorder + index * INSET_ZORDER_STEP
+        self.obj.theme._inherit_figure_props(parent.theme)
 
     def draw(self):
         """
