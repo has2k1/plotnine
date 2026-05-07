@@ -16,12 +16,14 @@ if typing.TYPE_CHECKING:
 __all__ = ("watermark",)
 
 
-_BASE_ZORDER = 99.9
+_BASE_ZORDER = 9
 """
 Default zorder for a watermark on a top-level plot
 
 Plotnine manages the zorder of every figure-level artist so that insets
-stack predictably above their host.
+stack predictably above their host. This value must stay below
+`INSET_ZORDER_STEP - 0.5` so a sibling inset's `plot_background`
+(at `_zorder - 0.5`) clears the watermark of the inset below it.
 """
 
 
