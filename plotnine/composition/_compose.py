@@ -572,12 +572,7 @@ class Compose:
         # whole composition is applied last (outside _draw).
         with plot_composition_context(self, show):
             figure = _draw(self)
-            self.theme._setup(
-                self.figure,
-                None,
-                self.annotation.title,
-                self.annotation.subtitle,
-            )
+            self.theme._setup(self)
             self._draw_annotation()
             self._draw_composition_background()
             self.theme.apply()

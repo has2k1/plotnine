@@ -364,12 +364,7 @@ class ggplot:
             # setup
             self._sub_gridspec, self.axs = self.facet.setup(self)
             self.guides._setup(self)
-            self.theme._setup(
-                figure,
-                self.axs,
-                self.labels.title,
-                self.labels.subtitle,
-            )
+            self.theme._setup(self)
 
             # Drawing
             self._draw_layers()

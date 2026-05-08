@@ -14,6 +14,7 @@ if TYPE_CHECKING:
     from typing import Literal, Optional, Sequence, TypeAlias
 
     import pandas as pd
+    from matplotlib.figure import Figure
     from matplotlib.offsetbox import PackerBase
     from typing_extensions import Self
 
@@ -71,6 +72,9 @@ class guide(ABC, metaclass=Register):
     # Non-Parameter Attributes
     available_aes: set[str] = field(init=False, default_factory=set)
 
+    # Set in `setup()`; the guide's theme reads it via `self.owner.figure`.
+    figure: Figure = field(init=False)
+
     def __post_init__(self):
         self.hash: str
         self.key: pd.DataFrame
@@ -113,8 +117,9 @@ class guide(ABC, metaclass=Register):
         """
         # guide theme has priority and its targets are tracked
         # independently.
+        self.figure = guides.plot.figure
         self.theme = guides.plot.theme + self.theme
-        self.theme._setup(guides.plot.figure)
+        self.theme._setup(self)
         self.plot_layers = guides.plot.layers
         self.plot_mapping = guides.plot.mapping
         self.elements = self._elements_cls(self.theme, self)

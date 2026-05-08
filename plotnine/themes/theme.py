@@ -18,6 +18,8 @@ if typing.TYPE_CHECKING:
     from typing_extensions import Self
 
     from plotnine import ggplot
+    from plotnine.composition import Compose
+    from plotnine.guides.guide import guide
 
     from .elements import margin
 
@@ -94,16 +96,13 @@ class theme:
 
     complete: bool
 
-    # This is set when the figure is created,
-    # it is useful at legend drawing time and
-    # when applying the theme.
-    plot: ggplot
-    figure: Figure
-    axs: list[Axes]
+    # The ggplot, Compose, or guide this theme is bound to.
+    # Set in ._setup; figure and axs are derived from it.
+    owner: ggplot | Compose | guide
 
     # Dictionary to collect matplotlib objects that will
     # be targeted for theming by the themeables
-    # It is initialised in the setup method.
+    # It is initialised in the ._setup method.
     targets: ThemeTargets
     _is_retina = False
 
@@ -300,31 +299,73 @@ class theme:
         for th in self.T.values():
             th.apply(self)
 
-    def _setup(
-        self,
-        figure: Figure,
-        axs: list[Axes] | None = None,
-        title: str | None = None,
-        subtitle: str | None = None,
-    ):
+    def _setup(self, owner: ggplot | Compose | guide):
         """
-        Setup theme for applying
+        Bind this theme to its owner
 
-        This method will be called when the figure and axes have been created
-        but before any plotting or other artists have been added to the
-        figure. This method gives the theme and the elements references to
-        the figure and/or axes.
+        `theme.figure` and `theme.axs` resolve to the owner's current state
+        at access time, so this method can run before the owner's axes are
+        created — they will be present by the time `theme.apply()` reads
+        `theme.axs`.
 
-        It also initialises where the artists to be themed will be stored.
+        `targets` is initialised here. Re-calling `_setup` rebinds
+        `self.owner` and re-creates `targets`.
+
+        Parameters
+        ----------
+        owner :
+            The plot, composition or guide this theme is attached to.
         """
-        self.figure = figure
-        self.axs = axs if axs is not None else []
+        self.owner = owner
 
+        title, subtitle = self._owner_title_subtitle()
         if title or subtitle:
             self._smart_title_and_subtitle_ha(title, subtitle)
 
         self.targets = ThemeTargets()
         self.T.setup(self)
+
+    @property
+    def figure(self) -> Figure:
+        """
+        Matplotlib figure the theme renders onto
+
+        Resolves to the owner's figure. All three owner types
+        (ggplot, Compose, guide) expose `figure` directly.
+        """
+        return self.owner.figure
+
+    @property
+    def axs(self) -> list[Axes]:
+        """
+        Axes the theme iterates over at apply time
+
+        Empty for `Compose` and `guide` owners — only ggplot has
+        per-panel axes. Reads the owner's current `axs` lazily,
+        so this property reflects post-`facet.setup` state even
+        if `_setup` ran earlier.
+        """
+        from ..ggplot import ggplot
+
+        if isinstance(self.owner, ggplot):
+            return self.owner.axs
+        return []
+
+    def _owner_title_subtitle(self) -> tuple[str | None, str | None]:
+        """
+        Title and subtitle text from the owner
+
+        ggplot stores these on `labels`; Compose stores them on
+        `annotation`; guide has neither.
+        """
+        from ..composition._compose import Compose
+        from ..ggplot import ggplot
+
+        if isinstance(self.owner, ggplot):
+            return self.owner.labels.title, self.owner.labels.subtitle
+        if isinstance(self.owner, Compose):
+            return self.owner.annotation.title, self.owner.annotation.subtitle
+        return None, None
 
     @property
     def rcParams(self):
