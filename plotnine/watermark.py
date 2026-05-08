@@ -20,10 +20,18 @@ _BASE_ZORDER = 9
 """
 Default zorder for a watermark on a top-level plot
 
-Plotnine manages the zorder of every figure-level artist so that insets
-stack predictably above their host. This value must stay below
-`INSET_ZORDER_STEP - 0.5` so a sibling inset's `plot_background`
-(at `_zorder - 0.5`) clears the watermark of the inset below it.
+The watermark sits at the top of a plot's within-band stack. It must
+stay below the next band's `plot_background` so a sibling inset's bg
+cleanly covers the watermark of the inset below it:
+
+    +9.5  -----  next band's `plot_background`  --+
+                                                  | 0.5 gap
+    +9    -----  watermark   (_BASE_ZORDER)     --+
+     ...         (rest of this band's stack)
+    -0.5  -----  this band's `plot_background`
+
+`INSET_ZORDER_STEP = 10` reserves the gap; the same step separates
+below-bands when `on_top=False`.
 """
 
 

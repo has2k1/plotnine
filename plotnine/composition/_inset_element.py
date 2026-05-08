@@ -13,12 +13,20 @@ INSET_ZORDER_STEP = 10
 """
 Width of the zorder band reserved for each inset
 
-The Nth sibling inset is drawn at `host._zorder + N * INSET_ZORDER_STEP`,
-so every figure-level artist on a later inset (axes, plot_background,
-titles, strip text, legends, ...) sits above every figure-level artist
-on an earlier inset and the host. The step must exceed the largest
-within-plot figure-level zorder — watermarks at 9 — by enough that the
-next band's lowest artist (`plot_background` at -0.5) still clears it.
+Each inset occupies its own zorder band above or below the host. With zorder
+offsets relative to the host's `_zorder`:
+
+    +20  -----  above-inset 2
+    +10  -----  above-inset 1     (on_top=True)
+      0  =====  host
+    -10  -----  below-inset 1     (on_top=False, last declared)
+    -20  -----  below-inset 2     (first declared)
+
+A band's within-plot stack runs from `plot_background` (-0.5) to
+`watermark` (+9), so STEP = 10 keeps consecutive bands clear. When
+the host has below-insets, `_draw_plot_background` drops the host's
+`plot_background` one STEP beneath the lowest below-band, so they
+all paint above it.
 """
 
 
@@ -27,9 +35,11 @@ class inset_element:
     """
     Place a plot as an inset within another plot
 
-    The inset is rendered on top of the host. Adding an `inset_element`
-    to a composition attaches it to the most recently added plot in that
-    composition.
+    By default the inset is rendered on top of the host (`on_top=True`).
+    With `on_top=False` it is rendered behind the host's panel and
+    labels but above the host's `plot_background`. Adding an
+    `inset_element` to a composition attaches it to the most recently
+    added plot in that composition.
 
     Parameters
     ----------
@@ -47,6 +57,13 @@ class inset_element:
         - ``"plot"``  — the panel plus axes, labels, titles, captions
            and legends
         - ``"full"``  — everything the host plot occupies plus plot margin
+    on_top :
+        When `True` (default) the inset paints above the host plot.
+        When `False`, the inset paints between the host's
+        `plot_background` and the rest of the host (panel, titles,
+        legends, ...), so the host's panel area covers the inset.
+        Useful for backdrops, decorations, or branding that should
+        look like part of the page rather than an overlay.
 
     Notes
     -----
@@ -62,6 +79,7 @@ class inset_element:
     right: float
     top: float
     align_to: Literal["panel", "plot", "full"] = "panel"
+    on_top: bool = True
 
     def __post_init__(self):
         from ..ggplot import ggplot
@@ -85,16 +103,20 @@ class inset_element:
                 f"bottom={self.bottom!r}, top={self.top!r}."
             )
 
-    def _setup(self, parent: ggplot, index: int):
+    def _setup(self, parent: ggplot, zorder_offset: int):
         """
         Receive the host figure and zorder from parent
 
-        `index` is the 1-based position of this inset among its siblings.
-        Each sibling occupies its own zorder band so a later inset's
-        figure-level artists all sit above an earlier inset's.
+        Parameters
+        ----------
+        parent :
+            The host plot whose figure and zorder this inset adopts.
+        zorder_offset :
+            How to place this inset relative to the host.
+            Positive for above-insets, negative for below-insets.
         """
         self.obj.figure = parent.figure
-        self.obj._zorder = parent._zorder + index * INSET_ZORDER_STEP
+        self.obj._zorder = parent._zorder + zorder_offset
         self.obj.theme._inherit_figure_props(parent.theme)
 
     def draw(self):
@@ -119,9 +141,42 @@ class Insets(list[inset_element]):
     def _setup(self, parent: ggplot):
         """
         Receive the host figure and zorder for every inset
+
+        Later-declared insets paint above earlier-declared insets in
+        *both* bands: above-band stacks upward in declaration order;
+        below-band reverses so the last-declared inset gets the
+        smallest `|offset|` (closest to the host).
         """
-        for i, inset in enumerate(self, start=1):
-            inset._setup(parent, i)
+        above = [i for i in self if i.on_top]
+        below = [i for i in self if not i.on_top]
+
+        for n, inset in enumerate(above, start=1):
+            inset._setup(parent, n * INSET_ZORDER_STEP)
+
+        for n, inset in enumerate(reversed(below), start=1):
+            inset._setup(parent, -n * INSET_ZORDER_STEP)
+
+    @property
+    def plot_background_offset(self) -> float:
+        """
+        zorder offset for the host's `plot_background`
+
+        It is a relative offset used to place the `plot_background`
+        below every below-inset's stack.
+
+        Returns
+        -------
+        :
+            Zorder offset relative to the host's `_zorder`.
+            `-0.5` when no below-insets are attached.
+        """
+        n_below = sum(not i.on_top for i in self)
+        if n_below == 0:
+            return -0.5
+        # Sit one full band below the deepest below-inset, whose
+        # own plot_background lives at this offset:
+        deepest_below_bg = -n_below * INSET_ZORDER_STEP - 0.5
+        return deepest_below_bg - INSET_ZORDER_STEP
 
     def draw(self):
         """
