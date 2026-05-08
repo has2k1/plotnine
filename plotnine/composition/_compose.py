@@ -14,6 +14,7 @@ from .._utils.ipython import (
     is_inline_backend,
 )
 from .._utils.quarto import is_knitr_engine, is_quarto_environment
+from ..composition._inset_element import INSET_ZORDER_STEP
 from ..composition._plot_annotation import plot_annotation
 from ..composition._plot_layout import plot_layout
 from ..composition._types import ComposeAddable
@@ -135,8 +136,8 @@ class Compose:
     Drawing zorder for every axes in this composition
 
     It is propagated down the tree at draw time so sub-plots inherit their
-    parent's value, and raised on inset compositions so their axes paint
-    above the host.
+    parent's value, and raised or lowered on inset compositions so their
+    axes paint above the host.
     """
 
     def __init__(self, items: list[ggplot | Compose]):
@@ -598,10 +599,8 @@ class Compose:
         Add an artist to this composition's figure with the right zorder
 
         For a top-level composition this is a no-op offset; on an inset
-        composition every figure-level artist (titles, panel borders,
-        legends, ...) is shifted up by the composition's `_zorder` so
-        the inset sits wholly above the host. Returns the artist so the
-        call site can keep a single-statement assignment.
+        composition every figure-level artist is shifted by the
+        composition's `_zorder` so the inset sits in its own band.
         """
         artist.set_zorder(artist.get_zorder() + self._zorder)
         self.figure.add_artist(artist)
@@ -614,11 +613,32 @@ class Compose:
         from matplotlib.lines import Line2D
         from matplotlib.patches import Rectangle
 
-        # The composition background sits underneath the per-plot
-        # backgrounds (which are at zorder=-1000), so the per-plot
-        # backgrounds layer on top of it instead of being covered.
-        zorder = -2000
-        rect = Rectangle((0, 0), 0, 0, facecolor="none", zorder=zorder - 0.5)
+        # The composition background sits below the per-plot backgrounds.
+        # Two regimes, picked from `self._zorder`:
+        #
+        # - As a top-level composition (`_zorder == 0`): sit one full
+        #   INSET_ZORDER_STEP below the deepest per-plot bg in the
+        #   tree. Items with no below-insets give -0.5; items with
+        #   below-insets push the floor deeper automatically, with no
+        #   cap.
+        # - As an inset composition (`_zorder != 0`): `_add_figure_artist`
+        #   shifts every artist by `self._zorder`, so a deep absolute
+        #   anchor would land far below the host's stack and the bg
+        #   would disappear. -0.6 sits between the host's stack ceiling
+        #   (host_z + 9) and the items' bgs at `self._zorder - 0.5`.
+        if self._zorder == 0:
+            deepest_per_plot_bg = min(
+                (
+                    p._insets.plot_background_offset
+                    for p in self.iter_plots_all()
+                ),
+                default=-0.5,
+            )
+            bg_z = deepest_per_plot_bg - INSET_ZORDER_STEP
+        else:
+            bg_z = -0.6
+
+        rect = Rectangle((0, 0), 0, 0, facecolor="none", zorder=bg_z)
         self._add_figure_artist(rect)
         self._gridspec.patch = rect
         self.theme.targets.plot_background = rect
@@ -630,13 +650,13 @@ class Compose:
                 0,
                 facecolor="none",
                 linewidth=0,
-                zorder=zorder - 0.4,
+                zorder=bg_z + 0.1,
             )
             self._add_figure_artist(rect)
             self.theme.targets.plot_footer_background = rect
 
             line = Line2D(
-                [0, 0], [0, 0], color="none", linewidth=0, zorder=zorder - 0.3
+                [0, 0], [0, 0], color="none", linewidth=0, zorder=bg_z + 0.2
             )
             self._add_figure_artist(line)
             self.theme.targets.plot_footer_line = line

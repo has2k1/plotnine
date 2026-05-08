@@ -139,9 +139,9 @@ class ggplot:
     """
     Drawing zorder for every axes created for this plot
 
-    The default (``0``) keeps the plot at the base layer.
-    `inset_element._setup` raises this on inset plots so they render
-    above their host.
+    The default (`0`) keeps the plot at the base layer.
+    For an inset, it is shifted positive / negative to render
+    above the host or below the host but above its `plot_background`.
     """
 
     def __init__(
@@ -610,10 +610,8 @@ class ggplot:
         Add an artist to this plot's figure with the right zorder offset
 
         For a top-level plot this is a no-op offset; on an inset every
-        figure-level artist (titles, panel borders, legends, strip text,
-        ...) is shifted up by the inset's `_zorder` so the inset sits
-        wholly above the host. Returns the artist so the call site can
-        keep a single-statement assignment.
+        figure-level artist is shifted by the inset's `_zorder` so the
+        inset sits in its own band.
         """
         artist.set_zorder(artist.get_zorder() + self._zorder)
         self.figure.add_artist(artist)
@@ -624,28 +622,39 @@ class ggplot:
         from matplotlib.patches import Rectangle
 
         targets = self.theme.targets
+        bg_z = self._insets.plot_background_offset
 
-        # The background sits just below this plot's own axes layer.
-        # _add_figure_artist offsets every figure-level artist by
-        # self._zorder, so for a top-level plot this stays at -0.5
-        # and for an inset it sits between the host's axes and the
-        # inset's axes — the inset background covers the host.
+        # The background sits below this plot's own axes layer and,
+        # when below-insets are present, below all of them too.
+        # _add_figure_artist then shifts by self._zorder so an inset's
+        # plot_background also clears its host's stack.
         targets.plot_background = self._add_figure_artist(
-            Rectangle((0, 0), 0, 0, facecolor="none", zorder=-0.5)
+            Rectangle((0, 0), 0, 0, facecolor="none", zorder=bg_z)
         )
         self._gridspec.patch = targets.plot_background
 
         # Footer background and line only if there is a footer, and put
-        # it on top of the plot background
+        # it on top of the plot background.
         if self.labels.get("footer", ""):
             targets.plot_footer_background = self._add_figure_artist(
                 Rectangle(
-                    (0, 0), 0, 0, facecolor="none", linewidth=0, zorder=-0.4
+                    (0, 0),
+                    0,
+                    0,
+                    facecolor="none",
+                    linewidth=0,
+                    zorder=bg_z + 0.1,
                 )
             )
 
             targets.plot_footer_line = self._add_figure_artist(
-                Line2D([0, 0], [0, 0], color="none", linewidth=0, zorder=-0.3)
+                Line2D(
+                    [0, 0],
+                    [0, 0],
+                    color="none",
+                    linewidth=0,
+                    zorder=bg_z + 0.2,
+                )
             )
 
     def _save_filename(self, ext: str) -> Path:
