@@ -400,9 +400,10 @@ class ggplot:
         if not hasattr(self, "figure"):
             import matplotlib.pyplot as plt
 
+            from ._mpl.figure import p9Figure
             from ._mpl.layout_manager import PlotnineLayoutEngine
 
-            self.figure = plt.figure()
+            self.figure = plt.figure(FigureClass=p9Figure)
             self.figure.set_layout_engine(PlotnineLayoutEngine(self))
 
         if not hasattr(self, "_gridspec"):
