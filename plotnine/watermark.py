@@ -16,25 +16,6 @@ if typing.TYPE_CHECKING:
 __all__ = ("watermark",)
 
 
-_BASE_ZORDER = 9
-"""
-Default zorder for a watermark on a top-level plot
-
-The watermark sits at the top of a plot's within-band stack. It must
-stay below the next band's `plot_background` so a sibling inset's bg
-cleanly covers the watermark of the inset below it:
-
-    +9.5  -----  next band's `plot_background`  --+
-                                                  | 0.5 gap
-    +9    -----  watermark   (_BASE_ZORDER)     --+
-     ...         (rest of this band's stack)
-    -0.5  -----  this band's `plot_background`
-
-`INSET_ZORDER_STEP = 10` reserves the gap; the same step separates
-below-bands when `on_top=False`.
-"""
-
-
 class watermark:
     """
     Add watermark to plot
@@ -100,8 +81,4 @@ class watermark:
         """
         from matplotlib.image import imread
 
-        figure.figimage(
-            imread(self.filename),
-            zorder=_BASE_ZORDER + self._parent._zorder,
-            **self.kwargs,
-        )
+        figure.figimage(imread(self.filename), **self.kwargs)

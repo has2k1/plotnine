@@ -14,7 +14,6 @@ from .._utils.ipython import (
     is_inline_backend,
 )
 from .._utils.quarto import is_knitr_engine, is_quarto_environment
-from ..composition._inset_element import INSET_ZORDER_STEP
 from ..composition._plot_annotation import plot_annotation
 from ..composition._plot_layout import plot_layout
 from ..composition._types import ComposeAddable
@@ -27,6 +26,7 @@ if TYPE_CHECKING:
     from matplotlib.figure import Figure
     from typing_extensions import Self
 
+    from plotnine._mpl.figure import p9Figure
     from plotnine._mpl.gridspec import p9GridSpec
     from plotnine._mpl.layout_manager._composition_side_space import (
         CompositionSideSpaces,
@@ -103,7 +103,7 @@ class Compose:
     """
 
     # These are created in the ._create_figure
-    figure: Figure
+    figure: p9Figure
     _gridspec: p9GridSpec
     """
     Gridspec (1x1) that contains the annotations and the composition items
@@ -130,15 +130,6 @@ class Compose:
      -------------------
     """
     _sidespaces: CompositionSideSpaces
-
-    _zorder: int = 0
-    """
-    Drawing zorder for every axes in this composition
-
-    It is propagated down the tree at draw time so sub-plots inherit their
-    parent's value, and raised or lowered on inset compositions so their
-    axes paint above the host.
-    """
 
     def __init__(self, items: list[ggplot | Compose]):
         # The way we handle the plots has consequences that would
@@ -477,7 +468,7 @@ class Compose:
             from plotnine._mpl.figure import p9Figure
             from plotnine._mpl.layout_manager import PlotnineLayoutEngine
 
-            self.figure = plt.figure(FigureClass=p9Figure)
+            self.figure = cast("p9Figure", plt.figure(FigureClass=p9Figure))
             self.figure.set_layout_engine(PlotnineLayoutEngine(self))
 
         if not hasattr(self, "_gridspec"):
@@ -488,7 +479,7 @@ class Compose:
                 p9GridSpec(1, 1, self.figure, nest_into=None),
             )
 
-    def _generate_gridspecs(self, figure: Figure, container_gs: p9GridSpec):
+    def _generate_gridspecs(self, figure: p9Figure, container_gs: p9GridSpec):
         from plotnine import ggplot
         from plotnine._mpl.gridspec import p9GridSpec
 
@@ -550,12 +541,11 @@ class Compose:
         """
 
         def _draw_items(cmp):
-            # Propagate the composition's zorder & figure-owner-only
-            # theme props to its direct children, so axes are created
-            # at the right layer and child layout uses the composition's
-            # figure_size/dpi. Then walk plots and sub-compositions.
+            # Propagate figure-owner-only theme props (figure_size,
+            # dpi, ...) onto direct children so child layout uses
+            # the composition's values. Then walk plots and
+            # sub-compositions.
             for item in cmp:
-                item._zorder = cmp._zorder
                 item.theme._inherit_figure_props(cmp.theme)
             cmp._draw_plots()
             for sub_cmp in cmp.iter_sub_compositions():
@@ -583,18 +573,6 @@ class Compose:
             if isinstance(item, ggplot):
                 item.draw()
 
-    def _add_figure_artist(self, artist):
-        """
-        Add an artist to this composition's figure with the right zorder
-
-        For a top-level composition this is a no-op offset; on an inset
-        composition every figure-level artist is shifted by the
-        composition's `_zorder` so the inset sits in its own band.
-        """
-        artist.set_zorder(artist.get_zorder() + self._zorder)
-        self.figure.add_artist(artist)
-        return artist
-
     def _draw_composition_background(self):
         """
         Draw the background rectangle of the composition
@@ -602,52 +580,18 @@ class Compose:
         from matplotlib.lines import Line2D
         from matplotlib.patches import Rectangle
 
-        # The composition background sits below the per-plot backgrounds.
-        # Two regimes, picked from `self._zorder`:
-        #
-        # - As a top-level composition (`_zorder == 0`): sit one full
-        #   INSET_ZORDER_STEP below the deepest per-plot bg in the
-        #   tree. Items with no below-insets give -0.5; items with
-        #   below-insets push the floor deeper automatically, with no
-        #   cap.
-        # - As an inset composition (`_zorder != 0`): `_add_figure_artist`
-        #   shifts every artist by `self._zorder`, so a deep absolute
-        #   anchor would land far below the host's stack and the bg
-        #   would disappear. -0.6 sits between the host's stack ceiling
-        #   (host_z + 9) and the items' bgs at `self._zorder - 0.5`.
-        if self._zorder == 0:
-            deepest_per_plot_bg = min(
-                (
-                    p._insets.plot_background_offset
-                    for p in self.iter_plots_all()
-                ),
-                default=-0.5,
-            )
-            bg_z = deepest_per_plot_bg - INSET_ZORDER_STEP
-        else:
-            bg_z = -0.6
-
-        rect = Rectangle((0, 0), 0, 0, facecolor="none", zorder=bg_z)
-        self._add_figure_artist(rect)
+        rect = Rectangle((0, 0), 0, 0, facecolor="none")
+        self.figure.add_artist(rect)
         self._gridspec.patch = rect
         self.theme.targets.plot_background = rect
 
         if self.annotation.footer:
-            rect = Rectangle(
-                (0, 0),
-                0,
-                0,
-                facecolor="none",
-                linewidth=0,
-                zorder=bg_z + 0.1,
-            )
-            self._add_figure_artist(rect)
+            rect = Rectangle((0, 0), 0, 0, facecolor="none", linewidth=0)
+            self.figure.add_artist(rect)
             self.theme.targets.plot_footer_background = rect
 
-            line = Line2D(
-                [0, 0], [0, 0], color="none", linewidth=0, zorder=bg_z + 0.2
-            )
-            self._add_figure_artist(line)
+            line = Line2D([0, 0], [0, 0], color="none", linewidth=0)
+            self.figure.add_artist(line)
             self.theme.targets.plot_footer_line = line
 
     def _draw_annotation(self):
@@ -665,18 +609,16 @@ class Compose:
         targets = self.theme.targets
 
         if title := self.annotation.title:
-            targets.plot_title = self._add_figure_artist(Text(text=title))
+            targets.plot_title = self.figure.add_artist(Text(text=title))
 
         if subtitle := self.annotation.subtitle:
-            targets.plot_subtitle = self._add_figure_artist(
-                Text(text=subtitle)
-            )
+            targets.plot_subtitle = self.figure.add_artist(Text(text=subtitle))
 
         if caption := self.annotation.caption:
-            targets.plot_caption = self._add_figure_artist(Text(text=caption))
+            targets.plot_caption = self.figure.add_artist(Text(text=caption))
 
         if footer := self.annotation.footer:
-            targets.plot_footer = self._add_figure_artist(Text(text=footer))
+            targets.plot_footer = self.figure.add_artist(Text(text=footer))
 
     def save(
         self,
