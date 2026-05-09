@@ -178,9 +178,21 @@ class Insets(list[inset_element]):
         deepest_below_bg = -n_below * INSET_ZORDER_STEP - 0.5
         return deepest_below_bg - INSET_ZORDER_STEP
 
-    def draw(self):
+    def draw(self, which: Literal["above", "below"]):
         """
-        Render every inset attached to the host
+        Render insets in a single band, in paint order
+
+        Parameters
+        ----------
+        which :
+            ``"above"`` paints above-insets only, in declaration
+            order. ``"below"`` paints below-insets only,
+            last-declared first so it lands closest to the host.
         """
-        for inset in self:
+        if which == "above":
+            insets = [inset for inset in self if inset.on_top]
+        else:
+            insets = [inset for inset in self if not inset.on_top][::-1]
+
+        for inset in insets:
             inset.draw()

@@ -380,7 +380,8 @@ class ggplot:
 
             # Insets render after host theming is finalised so their
             # own draw picks up a fully-realised host figure.
-            self._insets.draw()
+            self._insets.draw(which="below")
+            self._insets.draw(which="above")
 
         return figure
 
