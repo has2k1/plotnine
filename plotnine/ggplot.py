@@ -53,6 +53,7 @@ if TYPE_CHECKING:
     from typing_extensions import Self
 
     from plotnine import watermark
+    from plotnine._mpl.figure import p9Figure
     from plotnine._mpl.gridspec import p9GridSpec
     from plotnine._mpl.layout_manager._plot_side_space import PlotSideSpaces
     from plotnine.composition import Compose
@@ -104,7 +105,7 @@ class ggplot:
     by pickled objects should not reference variables in the namespace.
     """
 
-    figure: Figure
+    figure: p9Figure
     axs: list[Axes]
     _gridspec: p9GridSpec
     """
@@ -134,15 +135,6 @@ class ggplot:
     """
 
     _sidespaces: PlotSideSpaces
-
-    _zorder: int = 0
-    """
-    Drawing zorder for every axes created for this plot
-
-    The default (`0`) keeps the plot at the base layer.
-    For an inset, it is shifted positive / negative to render
-    above the host or below the host but above its `plot_background`.
-    """
 
     def __init__(
         self,
@@ -403,7 +395,7 @@ class ggplot:
             from ._mpl.figure import p9Figure
             from ._mpl.layout_manager import PlotnineLayoutEngine
 
-            self.figure = plt.figure(FigureClass=p9Figure)
+            self.figure = cast("p9Figure", plt.figure(FigureClass=p9Figure))
             self.figure.set_layout_engine(PlotnineLayoutEngine(self))
 
         if not hasattr(self, "_gridspec"):
@@ -515,7 +507,7 @@ class ggplot:
                 clip_path=ax.patch,
                 clip_on=False,
             )
-            self._add_figure_artist(rect)
+            self.figure.add_artist(rect)
             self.theme.targets.panel_border.append(rect)
 
     def _draw_layers(self):
@@ -566,21 +558,19 @@ class ggplot:
 
         # The locations are handled by the layout manager
         if title := self.labels.get("title", ""):
-            targets.plot_title = self._add_figure_artist(Text(text=title))
+            targets.plot_title = self.figure.add_artist(Text(text=title))
 
         if subtitle := self.labels.get("subtitle", ""):
-            targets.plot_subtitle = self._add_figure_artist(
-                Text(text=subtitle)
-            )
+            targets.plot_subtitle = self.figure.add_artist(Text(text=subtitle))
 
         if caption := self.labels.get("caption", ""):
-            targets.plot_caption = self._add_figure_artist(Text(text=caption))
+            targets.plot_caption = self.figure.add_artist(Text(text=caption))
 
         if footer := self.labels.get("footer", ""):
-            targets.plot_footer = self._add_figure_artist(Text(text=footer))
+            targets.plot_footer = self.figure.add_artist(Text(text=footer))
 
         if tag := self.labels.get("tag", ""):
-            targets.plot_tag = self._add_figure_artist(Text(text=tag))
+            targets.plot_tag = self.figure.add_artist(Text(text=tag))
 
         # Get the axis labels (default or specified by user)
         # and let the coordinate modify them e.g. flip
@@ -589,10 +579,10 @@ class ggplot:
         )
 
         if labels.x:
-            targets.axis_title_x = self._add_figure_artist(Text(text=labels.x))
+            targets.axis_title_x = self.figure.add_artist(Text(text=labels.x))
 
         if labels.y:
-            targets.axis_title_y = self._add_figure_artist(Text(text=labels.y))
+            targets.axis_title_y = self.figure.add_artist(Text(text=labels.y))
 
     def _draw_watermarks(self):
         """
@@ -601,56 +591,24 @@ class ggplot:
         for wm in self.watermarks:
             wm.draw(self.figure)
 
-    def _add_figure_artist(self, artist):
-        """
-        Add an artist to this plot's figure with the right zorder offset
-
-        For a top-level plot this is a no-op offset; on an inset every
-        figure-level artist is shifted by the inset's `_zorder` so the
-        inset sits in its own band.
-        """
-        artist.set_zorder(artist.get_zorder() + self._zorder)
-        self.figure.add_artist(artist)
-        return artist
-
     def _draw_plot_background(self):
         from matplotlib.lines import Line2D
         from matplotlib.patches import Rectangle
 
         targets = self.theme.targets
-        bg_z = self._insets.plot_background_offset
 
-        # The background sits below this plot's own axes layer and,
-        # when below-insets are present, below all of them too.
-        # _add_figure_artist then shifts by self._zorder so an inset's
-        # plot_background also clears its host's stack.
-        targets.plot_background = self._add_figure_artist(
-            Rectangle((0, 0), 0, 0, facecolor="none", zorder=bg_z)
+        targets.plot_background = self.figure.add_artist(
+            Rectangle((0, 0), 0, 0, facecolor="none")
         )
         self._gridspec.patch = targets.plot_background
 
-        # Footer background and line only if there is a footer, and put
-        # it on top of the plot background.
+        # Footer background and line only if there is a footer.
         if self.labels.get("footer", ""):
-            targets.plot_footer_background = self._add_figure_artist(
-                Rectangle(
-                    (0, 0),
-                    0,
-                    0,
-                    facecolor="none",
-                    linewidth=0,
-                    zorder=bg_z + 0.1,
-                )
+            targets.plot_footer_background = self.figure.add_artist(
+                Rectangle((0, 0), 0, 0, facecolor="none", linewidth=0)
             )
-
-            targets.plot_footer_line = self._add_figure_artist(
-                Line2D(
-                    [0, 0],
-                    [0, 0],
-                    color="none",
-                    linewidth=0,
-                    zorder=bg_z + 0.2,
-                )
+            targets.plot_footer_line = self.figure.add_artist(
+                Line2D([0, 0], [0, 0], color="none", linewidth=0)
             )
 
     def _save_filename(self, ext: str) -> Path:
