@@ -549,33 +549,26 @@ class Compose:
             Matplotlib figure
         """
 
-        def _draw(cmp):
-            figure = cmp._setup()
-
+        def _draw_items(cmp):
             # Propagate the composition's zorder & figure-owner-only
-            # theme props to its direct children before they draw, so
-            # axes are created at the right layer and child layout uses
-            # the composition's figure_size/dpi. Recursion carries the
-            # values down sub-compositions.
+            # theme props to its direct children, so axes are created
+            # at the right layer and child layout uses the composition's
+            # figure_size/dpi. Then walk plots and sub-compositions.
             for item in cmp:
                 item._zorder = cmp._zorder
                 item.theme._inherit_figure_props(cmp.theme)
-
             cmp._draw_plots()
-
             for sub_cmp in cmp.iter_sub_compositions():
-                _draw(sub_cmp)
+                sub_cmp._setup()
+                _draw_items(sub_cmp)
 
-            return figure
-
-        # As the plot border and plot background apply to the entire
-        # composition and not the sub compositions, the theme of the
-        # whole composition is applied last (outside _draw).
+        # Drawing (order matters)
         with plot_composition_context(self, show):
-            figure = _draw(self)
+            figure = self._setup()
             self.theme._setup(self)
-            self._draw_annotation()
             self._draw_composition_background()
+            _draw_items(self)
+            self._draw_annotation()
             self.theme.apply()
 
         return figure
