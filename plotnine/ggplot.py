@@ -362,25 +362,24 @@ class ggplot:
             self._build()
 
             # setup
-            self._sub_gridspec, self.axs = self.facet.setup(self)
             self.guides._setup(self)
             self.theme._setup(self)
 
-            # Drawing
+            # Drawing (order matters)
+            self._draw_plot_background()
+            self._insets.draw(which="below")
+
+            self._sub_gridspec, self.axs = self.facet.setup(self)
             self._draw_layers()
             self._draw_panel_borders()
             self._draw_breaks_and_labels()
             self.guides.draw()
             self._draw_figure_texts()
             self._draw_watermarks()
-            self._draw_plot_background()
 
             # Artist object theming
             self.theme.apply()
 
-            # Insets render after host theming is finalised so their
-            # own draw picks up a fully-realised host figure.
-            self._insets.draw(which="below")
             self._insets.draw(which="above")
 
         return figure
