@@ -780,11 +780,15 @@ class PlotSideSpaces:
 
         The host's panel/plot/full region is now finalised, so the
         inset's fractional bounding box is scaled into figure
-        coordinates and applied to the inset's own gridspec. The
-        inset's side-space layout then runs to lay out its content
-        within those bounds.
+        coordinates. For ggplot / Compose insets the bbox drives the
+        inset's gridspec and its side-space layout runs to position
+        its content. For image insets the adapter's `_arrange_in_box`
+        does the aspect-fit math directly — no gridspec or side-space
+        work needed.
         """
         from plotnine import ggplot
+        from plotnine.composition import Compose
+        from plotnine.composition._inset_image import _InsetImage
 
         from ._composition_side_space import CompositionSideSpaces
 
@@ -799,21 +803,28 @@ class PlotSideSpaces:
                 bbox = self.plot._gridspec.bbox_relative
                 (x1, y1), (x2, y2) = (bbox.x0, bbox.y0), (bbox.x1, bbox.y1)
 
-            params = GridSpecParams(
-                left=x1 + inset.left * (x2 - x1),
-                bottom=y1 + inset.bottom * (y2 - y1),
-                right=x1 + inset.right * (x2 - x1),
-                top=y1 + inset.top * (y2 - y1),
-                wspace=0,
-                hspace=0,
-            )
-            inset.obj._gridspec.update_params_and_artists(params)
+            left = x1 + inset.left * (x2 - x1)
+            bottom = y1 + inset.bottom * (y2 - y1)
+            right = x1 + inset.right * (x2 - x1)
+            top = y1 + inset.top * (y2 - y1)
 
-            if isinstance(inset.obj, ggplot):
-                inset.obj._sidespaces = PlotSideSpaces(inset.obj)
-            else:
-                inset.obj._sidespaces = CompositionSideSpaces(inset.obj)
-            inset.obj._sidespaces.arrange()
+            if isinstance(inset.obj, (ggplot, Compose)):
+                params = GridSpecParams(
+                    left=left,
+                    bottom=bottom,
+                    right=right,
+                    top=top,
+                    wspace=0,
+                    hspace=0,
+                )
+                inset.obj._gridspec.update_params_and_artists(params)
+                if isinstance(inset.obj, ggplot):
+                    inset.obj._sidespaces = PlotSideSpaces(inset.obj)
+                else:
+                    inset.obj._sidespaces = CompositionSideSpaces(inset.obj)
+                inset.obj._sidespaces.arrange()
+            elif isinstance(inset.obj, _InsetImage):
+                inset.obj._arrange_in_box(left, bottom, right, top)
 
     def resize_gridspec(self):
         """

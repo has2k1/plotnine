@@ -11,7 +11,13 @@ import matplotlib.pyplot as plt
 from matplotlib.testing.compare import compare_images
 
 from plotnine import ggplot, theme
-from plotnine.composition import Beside, Compose, Stack, plot_annotation
+from plotnine.composition import (
+    Beside,
+    Compose,
+    Stack,
+    inset_element,
+    plot_annotation,
+)
 from plotnine.themes.theme import DEFAULT_RCPARAMS
 
 TOLERANCE = 2  # Default tolerance for the tests
@@ -259,3 +265,41 @@ def composition_equals(cmp: Compose, name: str) -> bool:
 Compose.__eq__ = composition_equals  # pyright: ignore[reportAttributeAccessIssue]
 Beside.__eq__ = composition_equals  # pyright: ignore[reportAttributeAccessIssue]
 Stack.__eq__ = composition_equals  # pyright: ignore[reportAttributeAccessIssue]
+
+
+def inset_element_equals(inset: inset_element, name: str) -> bool:
+    """
+    Compare standalone-rendered inset_element to its baseline image
+
+    Parameters
+    ----------
+    inset :
+        The inset under test.
+    name :
+        Identifier for the test image.
+
+    This function is meant to monkey patch inset_element.__eq__ so
+    tests can use the `assert` statement. The test theme is applied to
+    the implicit blank host (not the inset itself) because
+    `figure_size` and `dpi` on an inset's theme are deliberately
+    ignored — they belong to the host.
+    """
+    test_file = inspect.stack()[1][1]
+    filenames = make_test_image_filenames(name, test_file)
+
+    host = inset._blank_host + theme(figure_size=(8, 6), dpi=DPI)
+    with _test_cleanup():
+        (host + inset).save(filenames.result, verbose=False)
+
+    if filenames.baseline.exists():
+        shutil.copyfile(filenames.baseline, filenames.expected)
+    else:
+        raise_no_baseline_image(filenames.baseline)
+    err = compare_images(
+        filenames.expected, filenames.result, TOLERANCE, in_decorator=True
+    )
+    inset._err = err  # pyright: ignore[reportAttributeAccessIssue]
+    return not err
+
+
+inset_element.__eq__ = inset_element_equals  # pyright: ignore[reportAttributeAccessIssue]
