@@ -4,8 +4,12 @@ from copy import deepcopy
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any, Literal
 
+from ._inset_image import _InsetImage
+
 if TYPE_CHECKING:
+    import numpy as np
     from matplotlib.figure import Figure
+    from PIL.Image import Image as PILImage
 
     from ..ggplot import ggplot
     from ._compose import Compose
@@ -25,7 +29,12 @@ class inset_element:
     Parameters
     ----------
     obj :
-        The object to render as an inset.
+        The object to render as an inset. One of:
+
+        - `ggplot` or `Compose` — full plot pipeline.
+        - `PIL.Image.Image` or `numpy.ndarray` — raster image. The
+          image is letterboxed inside the user's bbox so its aspect
+          ratio is preserved.
     left, bottom, right, top :
         Bounding box of the inset as fractional coordinates in the
         range ``[0, 1]``, relative to the host region selected by
@@ -52,9 +61,28 @@ class inset_element:
     inset shares the host's figure, so these values come from the host
     theme. The canvas size of the inset is determined by the bounding
     box and the area it is `align_to`.
+
+    For image insets, ``inset_element(...) + theme(...)`` draws a
+    sibling rectangle around the image; only `plot_background` is
+    honored today.
+
+    Examples
+    --------
+    Composed with a host plot:
+
+    >>> p = ggplot(mtcars, aes("wt", "mpg")) + geom_point()  # doctest: +SKIP
+    >>> p + inset_element(p, 0.6, 0.6, 1, 1)                 # doctest: +SKIP
+
+    Image inset with a black border:
+
+    >>> from PIL import Image                                # doctest: +SKIP
+    >>> p + (                                                # doctest: +SKIP
+    ...     inset_element(Image.open("logo.png"), 0.7, 0.7, 1, 1)
+    ...     + theme(plot_background=element_rect(color="black", size=1))
+    ... )
     """
 
-    obj: ggplot | Compose
+    obj: ggplot | Compose | PILImage | np.ndarray | _InsetImage
     left: float
     bottom: float
     right: float
@@ -63,13 +91,20 @@ class inset_element:
     on_top: bool = True
 
     def __post_init__(self):
+        import numpy as np
+        from PIL.Image import Image as PILImage
+
         from ..ggplot import ggplot
         from ._compose import Compose
 
-        if not isinstance(self.obj, (ggplot, Compose)):
+        if isinstance(self.obj, (ggplot, Compose)):
+            pass
+        elif isinstance(self.obj, (PILImage, np.ndarray)):
+            self.obj = _InsetImage(self.obj)
+        else:
             raise TypeError(
-                "inset_element requires a ggplot or Compose, got "
-                f"{type(self.obj).__name__!r}."
+                "inset_element requires a ggplot, Compose, PIL image, "
+                f"or ndarray, got {type(self.obj).__name__!r}."
             )
 
         if not 0.0 <= self.left < self.right <= 1.0:
@@ -93,8 +128,35 @@ class inset_element:
         parent :
             The host plot whose figure this inset adopts.
         """
-        self.obj.figure = parent.figure
-        self.obj.theme._inherit_figure_props(parent.theme)
+        from ..ggplot import ggplot
+        from ._compose import Compose
+
+        if isinstance(self.obj, (ggplot, Compose)):
+            self.obj.figure = parent.figure
+            self.obj.theme._inherit_figure_props(parent.theme)
+        elif isinstance(self.obj, _InsetImage):
+            self.obj._setup(parent)
+
+    def __add__(self, other: object) -> inset_element:
+        """
+        Attach a theme to this inset
+
+        Returns a new `inset_element` with the theme folded into the
+        underlying `obj`. For `ggplot` / `Compose` insets this is a
+        shortcut for ``obj + theme``; for image insets the theme is
+        stored on the adapter and drives a sibling `Rectangle` via
+        `plot_background`.
+        """
+        from ..ggplot import ggplot
+        from ..themes.theme import theme
+        from ._compose import Compose
+
+        if not isinstance(other, theme):
+            return NotImplemented
+        new = deepcopy(self)
+        if isinstance(new.obj, (ggplot, Compose, _InsetImage)):
+            new.obj = new.obj + other
+        return new
 
     @property
     def _blank_host(self) -> ggplot:
@@ -156,7 +218,11 @@ class inset_element:
 
         For standalone use, call `draw()` instead.
         """
-        self.obj.draw()
+        from ..ggplot import ggplot
+        from ._compose import Compose
+
+        if isinstance(self.obj, (ggplot, Compose, _InsetImage)):
+            self.obj.draw()
 
     def __radd__(self, other: ggplot) -> ggplot:
         """
