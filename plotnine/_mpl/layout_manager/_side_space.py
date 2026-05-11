@@ -49,9 +49,12 @@ class GridSpecParams:
     wspace: float
     hspace: float
 
-    def validate(self):
+    def __post_init__(self):
+        self._validate()
+
+    def _validate(self):
         """
-        Return True if the params will create a non-empty area
+        Raise if the params do not enclose a positive-area rectangle
         """
         if not (self.top - self.bottom > 0 and self.right - self.left > 0):
             raise GridSpecParamsError(
