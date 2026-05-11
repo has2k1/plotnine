@@ -364,7 +364,6 @@ class CompositionSideSpaces:
         sized to accomodate the content of the annotations.
         """
         gsparams = self.calculate_gridspec_params()
-        gsparams.validate()
         self.sub_gridspec.update_params_and_artists(gsparams)
 
     def calculate_gridspec_params(self) -> GridSpecParams:

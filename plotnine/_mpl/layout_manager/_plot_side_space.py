@@ -11,7 +11,7 @@ such cases as when left or right margin are affected by xlabel.
 
 from __future__ import annotations
 
-from copy import copy
+from dataclasses import replace
 from functools import cached_property
 from typing import TYPE_CHECKING
 
@@ -807,7 +807,6 @@ class PlotSideSpaces:
                 wspace=0,
                 hspace=0,
             )
-            params.validate()
             inset.obj._gridspec.update_params_and_artists(params)
 
             if isinstance(inset.obj, ggplot):
@@ -824,7 +823,6 @@ class PlotSideSpaces:
         sized to accomodate the artists around the panels.
         """
         gsparams = self.calculate_gridspec_params()
-        gsparams.validate()
         self.sub_gridspec.update_params_and_artists(gsparams)
 
     def calculate_gridspec_params(self) -> GridSpecParams:
@@ -1074,43 +1072,41 @@ class PlotSideSpaces:
         """
         Reduce the height of axes to get the aspect ratio
         """
-        gsparams = copy(gsparams)
-
         # New height w.r.t figure height
         h1 = ratio * self.w * (self.W / self.H)
 
         # Half of the total vertical reduction w.r.t figure height
         dh = (self.h - h1) * self.plot.facet.nrow / 2
 
-        # Reduce plot area height
-        gsparams.top -= dh
-        gsparams.bottom += dh
-        gsparams.hspace = self.sh / h1
-
         # Add more vertical plot margin
         self.increase_vertical_plot_margin(dh)
-        return gsparams
+
+        return replace(
+            gsparams,
+            top=gsparams.top - dh,
+            bottom=gsparams.bottom + dh,
+            hspace=self.sh / h1,
+        )
 
     def _reduce_width(self, gsparams: GridSpecParams, ratio: float):
         """
         Reduce the width of axes to get the aspect ratio
         """
-        gsparams = copy(gsparams)
-
         # New width w.r.t figure width
         w1 = (self.h * self.H) / (ratio * self.W)
 
         # Half of the total horizontal reduction w.r.t figure width
         dw = (self.w - w1) * self.plot.facet.ncol / 2
 
-        # Reduce width
-        gsparams.left += dw
-        gsparams.right -= dw
-        gsparams.wspace = self.sw / w1
-
         # Add more horizontal margin
         self.increase_horizontal_plot_margin(dw)
-        return gsparams
+
+        return replace(
+            gsparams,
+            left=gsparams.left + dw,
+            right=gsparams.right - dw,
+            wspace=self.sw / w1,
+        )
 
     @property
     def aspect_ratio(self) -> float:
