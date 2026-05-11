@@ -2,9 +2,11 @@ from __future__ import annotations
 
 from copy import deepcopy
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Literal
+from typing import TYPE_CHECKING, Any, Literal
 
 if TYPE_CHECKING:
+    from matplotlib.figure import Figure
+
     from ..ggplot import ggplot
     from ._compose import Compose
 
@@ -94,9 +96,65 @@ class inset_element:
         self.obj.figure = parent.figure
         self.obj.theme._inherit_figure_props(parent.theme)
 
-    def draw(self):
+    @property
+    def _blank_host(self) -> ggplot:
         """
-        Render this inset
+        Implicit host for rendering this inset standalone
+
+        The host is a `ggplot` with no data and a theme override that
+        erases the panel background. Figure size, plot margin, fonts,
+        etc. come from the user's default theme. A fresh host is built
+        per access — no shared state.
+        """
+        from ..ggplot import ggplot
+        from ..themes.elements import element_rect
+        from ..themes.theme import theme
+
+        return ggplot() + theme(panel_background=element_rect(fill="none"))
+
+    def draw(self, *, show: bool = False) -> Figure:
+        """
+        Render this inset standalone on an implicit blank host
+
+        Parameters
+        ----------
+        show :
+            Whether to show the plot.
+        """
+        return (self._blank_host + self).draw(show=show)
+
+    def show(self):
+        """
+        Display this inset using the matplotlib backend set by the user
+        """
+        (self._blank_host + self).show()
+
+    def save(self, *args: Any, **kwargs: Any):
+        """
+        Save this inset as an image file
+
+        Accepts the same arguments as [](`~plotnine.ggplot.save`).
+        """
+        (self._blank_host + self).save(*args, **kwargs)
+
+    def _repr_mimebundle_(self, include=None, exclude=None):
+        return (self._blank_host + self)._repr_mimebundle_(
+            include=include, exclude=exclude
+        )
+
+    def __repr__(self):
+        from .._utils.quarto import is_knitr_engine
+
+        if is_knitr_engine():
+            self.show()
+            return ""
+        return super().__repr__()
+
+    def _draw_in_host(self):
+        """
+        Render this inset against an already-set-up host figure
+
+        For standalone use, call `draw()` instead.
         """
         self.obj.draw()
 
@@ -137,4 +195,4 @@ class Insets(list[inset_element]):
             insets = [inset for inset in self if not inset.on_top][::-1]
 
         for inset in insets:
-            inset.draw()
+            inset._draw_in_host()
