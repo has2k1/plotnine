@@ -262,3 +262,23 @@ class Insets(list[inset_element]):
 
         for inset in insets:
             inset._draw_in_host()
+
+    def __and__(self, rhs) -> Insets:
+        """
+        Apply rhs to every inset's obj, recursing into nested structure
+
+        Insets that themselves have insets receive `obj & rhs` so the
+        broadcast reaches every nested child.
+        """
+        from ..ggplot import ggplot
+        from ._compose import Compose
+
+        new = Insets(deepcopy(self))
+        for inset in new:
+            if isinstance(inset.obj, Compose) or (
+                isinstance(inset.obj, ggplot) and inset.obj._insets
+            ):
+                inset.obj = inset.obj & rhs
+            else:
+                inset.obj = inset.obj + rhs
+        return new
