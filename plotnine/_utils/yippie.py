@@ -9,8 +9,12 @@ from plotnine import (
     element_blank,
     element_rect,
     element_text,
+    geom_area,
     geom_col,
+    geom_line,
     geom_point,
+    geom_text,
+    geom_tile,
     ggplot,
     labs,
     theme,
@@ -68,6 +72,26 @@ class _Geom:
     @property
     def cols(self):
         return geom_col(aes("cat", "value", fill="cat"), self.data)
+
+    @property
+    def lines(self):
+        return geom_line(
+            aes("cat", "value", color="cat2", group="cat2"), self.data
+        )
+
+    @property
+    def areas(self):
+        return geom_area(
+            aes("cat", "value", fill="cat2", group="cat2"), self.data
+        )
+
+    @property
+    def texts(self):
+        return geom_text(aes("cat", "value", label="cat"), self.data, size=16)
+
+    @property
+    def tiles(self):
+        return geom_tile(aes("cat", "cat2", fill="value"), self.data)
 
 
 class _Legend:
