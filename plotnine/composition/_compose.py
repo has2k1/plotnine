@@ -284,12 +284,15 @@ class Compose:
         """
         Add rhs to all plots in the composition
 
+        Recurses into ggplot insets too: a plot with insets receives
+        `item & rhs` (which broadcasts to its own host and insets).
+
         Parameters
         ----------
         rhs:
             What to add.
         """
-        from plotnine import theme
+        from plotnine import ggplot, theme
 
         self = deepcopy(self)
 
@@ -297,7 +300,9 @@ class Compose:
             self.annotation.theme = self.annotation.theme + rhs
 
         for i, item in enumerate(self):
-            if isinstance(item, Compose):
+            if isinstance(item, Compose) or (
+                isinstance(item, ggplot) and item._insets
+            ):
                 self[i] = item & rhs
             else:
                 item += copy(rhs)

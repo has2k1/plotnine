@@ -312,6 +312,35 @@ class ggplot:
 
         return Stack([self, rhs])
 
+    def __and__(self, rhs: PlotAddable) -> Self:
+        """
+        Broadcast rhs to this plot and every inset
+
+        Only defined when the plot has insets. On a plot with no insets
+        use `+` instead.
+        """
+        if not self._insets:
+            return NotImplemented
+
+        new = deepcopy(self)
+        new += rhs
+        new._insets = new._insets & rhs
+        return new
+
+    def __mul__(self, rhs: PlotAddable) -> Self:
+        """
+        Apply rhs to this plot only, leaving insets untouched
+
+        Only defined when the plot has insets. On a plot with no insets
+        use `+` instead.
+        """
+        if not self._insets:
+            return NotImplemented
+
+        new = deepcopy(self)
+        new += rhs
+        return new
+
     def __sub__(self, rhs: Self | Compose) -> Compose:
         """
         Compose 2 plots columnwise
