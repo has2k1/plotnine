@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from copy import deepcopy
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Literal
 
 import numpy as np
 from PIL.Image import Image as PILImage
@@ -18,6 +18,19 @@ if TYPE_CHECKING:
     from ..ggplot import ggplot
     from ..themes.theme import theme as theme_type
 
+    AnchorName = Literal[
+        "center",
+        "top",
+        "right",
+        "bottom",
+        "left",
+        "top-left",
+        "top-right",
+        "bottom-left",
+        "bottom-right",
+    ]
+    Anchor = AnchorName | tuple[float, float]
+
 
 class _InsetImage:
     """
@@ -25,7 +38,8 @@ class _InsetImage:
 
     The image keeps its intrinsic aspect ratio — when the bbox does
     not match, the image is letterboxed with transparent padding on
-    the two opposing edges so it stays centred.
+    the two opposing edges. The `anchor` parameter chooses where the
+    image sits inside the bbox (centered by default).
 
     Theming the inset (`inset_element(...) + theme(...)`) draws a
     background rectangle around the image; only `plot_background`
@@ -44,12 +58,22 @@ class _InsetImage:
     # this bbox sets where on the figure it lands and how big it is.
     _frac_bbox: Bbox
 
-    def __init__(self, image: PILImage | np.ndarray):
+    # Where the image sits inside the user's bbox when its aspect
+    # ratio doesn't match.
+    _anchor: tuple[float, float]
+
+    def __init__(
+        self,
+        image: PILImage | np.ndarray,
+        *,
+        anchor: Anchor = "center",
+    ):
         from matplotlib.transforms import Bbox
 
         self._image = image
         self._image_size = _image_size(image)  # (W, H) px
         self._frac_bbox = Bbox.unit()
+        self._anchor = _resolve_anchor(anchor)
         self.theme = theme()
 
     def __add__(self, other: object) -> _InsetImage:
@@ -69,10 +93,10 @@ class _InsetImage:
         """
         Place the image inside the given box, preserving aspect ratio
 
-        The image is letterboxed — centered inside the box with
-        transparent padding on the two opposing edges — so its
-        intrinsic aspect ratio survives. The background rectangle
-        tracks the same fitted box.
+        The image is letterboxed inside the box with transparent
+        padding on the two opposing edges, positioned by the
+        configured `anchor`. The background rectangle tracks the
+        same fitted box.
 
         Parameters
         ----------
@@ -81,7 +105,13 @@ class _InsetImage:
             inset by `inset_element.align_to`.
         """
         l, b, r, t = _fit_aspect(
-            left, bottom, right, top, self._image_size, self.figure
+            left,
+            bottom,
+            right,
+            top,
+            self._image_size,
+            self.figure,
+            anchor=self._anchor,
         )
         w, h = r - l, t - b
         self._frac_bbox.bounds = (l, b, w, h)  # pyright: ignore[reportAttributeAccessIssue]
@@ -128,6 +158,52 @@ def _image_size(obj: PILImage | np.ndarray) -> tuple[int, int]:
     return w, h
 
 
+# Named anchors → (h, v) fractions in [0, 1]², where `h = 0`
+# aligns the image to the bbox's left edge / `h = 1` to the right,
+# and `v = 0` aligns to the bottom / `v = 1` to the top.
+_ANCHOR_FRACTIONS: dict[str, tuple[float, float]] = {
+    "center": (0.5, 0.5),
+    "top": (0.5, 1.0),
+    "top-right": (1.0, 1.0),
+    "right": (1.0, 0.5),
+    "bottom-right": (1.0, 0.0),
+    "bottom": (0.5, 0.0),
+    "bottom-left": (0.0, 0.0),
+    "left": (0.0, 0.5),
+    "top-left": (0.0, 1.0),
+}
+
+
+def _resolve_anchor(anchor: Anchor) -> tuple[float, float]:
+    """
+    Normalise an anchor spec to a (h, v) tuple in [0, 1]²
+
+    Accepts a named anchor (e.g. `"top-right"`) or a numeric
+    `(h, v)` tuple. Raises `ValueError` on unknown names or
+    out-of-range tuple values.
+    """
+    if isinstance(anchor, str):
+        try:
+            return _ANCHOR_FRACTIONS[anchor]
+        except KeyError:
+            names = ", ".join(repr(k) for k in _ANCHOR_FRACTIONS)
+            raise ValueError(
+                f"Unknown anchor {anchor!r}. Expected one of: "
+                f"{names}, or a (h, v) tuple in [0, 1]²."
+            ) from None
+    try:
+        h, v = anchor
+    except (TypeError, ValueError):
+        raise ValueError(
+            f"Anchor must be a name or (h, v) tuple, got {anchor!r}."
+        ) from None
+    if not (0.0 <= h <= 1.0 and 0.0 <= v <= 1.0):
+        raise ValueError(
+            f"Anchor tuple values must lie in [0, 1], got ({h}, {v})."
+        )
+    return float(h), float(v)
+
+
 def _fit_aspect(
     left: float,
     bottom: float,
@@ -135,10 +211,18 @@ def _fit_aspect(
     top: float,
     image_size: tuple[int, int],
     fig: Figure,
+    anchor: tuple[float, float] = (0.5, 0.5),
 ) -> tuple[float, float, float, float]:
     """
-    Shrink the user's bbox to the largest centered sub-bbox with the
-    image's intrinsic aspect ratio
+    Shrink the user's bbox to the largest sub-bbox with the image's
+    intrinsic aspect ratio, positioned by `anchor`
+
+    `anchor` defaults to `"center"` (image centered, padding split
+    50/50 on the short axis). Named anchors map to corners and edges
+    of the bbox; a `(h, v)` tuple in [0, 1]² sets the anchor
+    point directly, where `h = 0` aligns the image to the bbox's
+    left edge / `h = 1` to the right, and `v = 0` to the bottom /
+    `v = 1` to the top.
     """
     # figure size in px
     W, H = fig.bbox.size
@@ -151,13 +235,15 @@ def _fit_aspect(
     img_aspect = img_w / img_h
     box_aspect = box_w / box_h
 
+    h, v = anchor
+
     if img_aspect > box_aspect:
         # Wider than the box: fit width, letterbox vertically
         new_box_h = box_w / img_aspect
-        pad_frac = (box_h - new_box_h) / 2 / H
-        return left, bottom + pad_frac, right, top - pad_frac
+        pad = (box_h - new_box_h) / H
+        return left, bottom + v * pad, right, top - (1 - v) * pad
 
     # Taller (or equal): fit height, letterbox horizontally
     new_box_w = box_h * img_aspect
-    pad_frac = (box_w - new_box_w) / 2 / W
-    return left + pad_frac, bottom, right - pad_frac, top
+    pad = (box_w - new_box_w) / W
+    return left + h * pad, bottom, right - (1 - h) * pad, top

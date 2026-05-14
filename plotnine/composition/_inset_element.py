@@ -13,6 +13,7 @@ if TYPE_CHECKING:
 
     from ..ggplot import ggplot
     from ._compose import Compose
+    from ._inset_image import Anchor
 
 
 @dataclass
@@ -37,16 +38,16 @@ class inset_element:
           ratio is preserved.
     left, bottom, right, top :
         Bounding box of the inset as fractional coordinates in the
-        range ``[0, 1]``, relative to the host region selected by
+        range `[0, 1]`, relative to the host region selected by
         `align_to`. The bottom-left corner of that region is
-        ``(0, 0)`` and the top-right is ``(1, 1)``.
+        `(0, 0)` and the top-right is `(1, 1)`.
     align_to :
         Which region of the host plot the bounding box is relative to:
 
-        - ``"panel"`` — the data area only (default).
-        - ``"plot"``  — the panel plus axes, labels, titles, captions
+        - `"panel"` — the data area only (default).
+        - `"plot"`  — the panel plus axes, labels, titles, captions
            and legends
-        - ``"full"``  — everything the host plot occupies plus plot margin
+        - `"full"`  — everything the host plot occupies plus plot margin
     on_top :
         When `True` (default) the inset paints above the host plot.
         When `False`, the inset paints between the host's
@@ -54,6 +55,16 @@ class inset_element:
         legends, ...), so the host's panel area covers the inset.
         Useful for backdrops, decorations, or branding that should
         look like part of the page rather than an overlay.
+    anchor :
+        Where to anchor the image inside the user's bbox when its
+        aspect ratio doesn't match. One of `"center"` (default),
+        `"top"`, `"top-right"`, `"right"`, `"bottom-right"`,
+        `"bottom"`, `"bottom-left"`, `"left"`, `"top-left"`,
+        or a `(h, v)` tuple in [0, 1]² with `h = 0` left / `h = 1`
+        right and `v = 0` bottom / `v = 1` top. Only meaningful for
+        image insets; plot / composition insets fill the entire area by
+        resizing without constraining the aspect ratio, so the anchor
+        has no effect.
 
     Notes
     -----
@@ -62,7 +73,7 @@ class inset_element:
     theme. The canvas size of the inset is determined by the bounding
     box and the area it is `align_to`.
 
-    For image insets, ``inset_element(...) + theme(...)`` draws a
+    For image insets, `inset_element(...) + theme(...)` draws a
     sibling rectangle around the image; only `plot_background` is
     honored today.
 
@@ -89,6 +100,7 @@ class inset_element:
     top: float
     align_to: Literal["panel", "plot", "full"] = "panel"
     on_top: bool = True
+    anchor: Anchor = "center"
 
     def __post_init__(self):
         import numpy as np
@@ -100,7 +112,7 @@ class inset_element:
         if isinstance(self.obj, (ggplot, Compose)):
             pass
         elif isinstance(self.obj, (PILImage, np.ndarray)):
-            self.obj = _InsetImage(self.obj)
+            self.obj = _InsetImage(self.obj, anchor=self.anchor)
         else:
             raise TypeError(
                 "inset_element requires a ggplot, Compose, PIL image, "
