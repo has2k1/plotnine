@@ -38,6 +38,9 @@ title: Changelog
   theme(plot_footer_line=element_line(color="black"))
   ```
 
+- Added [](:class:`~plotnine.composition.inset_element`) with which you can insert plot
+  compositions or images into another plot.
+
 ### API Changes
 
 - Removed `geom.to_layer()`, `stat.to_layer()`, `annotate.to_layer()`,
