@@ -95,8 +95,10 @@ class _InsetImage:
 
         The image is letterboxed inside the box with transparent
         padding on the two opposing edges, positioned by the
-        configured `anchor`. The background rectangle tracks the
-        same fitted box.
+        configured `anchor`. The background rectangle wraps the full
+        user bbox (the letterbox envelope), so a themed fill or
+        border surrounds the entire requested region — not just the
+        fitted image.
 
         Parameters
         ----------
@@ -113,13 +115,17 @@ class _InsetImage:
             self.figure,
             anchor=self._anchor,
         )
-        w, h = r - l, t - b
-        self._frac_bbox.bounds = (l, b, w, h)  # pyright: ignore[reportAttributeAccessIssue]
-        self.patch.set_bounds(l, b, w, h)
+        self._frac_bbox.bounds = (l, b, r - l, t - b)  # pyright: ignore[reportAttributeAccessIssue]
+        self.patch.set_bounds(left, bottom, right - left, top - bottom)
 
     def draw(self):
         from matplotlib.image import BboxImage
         from matplotlib.transforms import TransformedBbox
+
+        # Background first so its fill sits behind the image — the
+        # letterbox.
+        self.theme._setup(self)  # pyright: ignore[reportArgumentType]
+        self._draw_plot_background()
 
         image_artist = BboxImage(
             TransformedBbox(self._frac_bbox, self.figure.transFigure)
@@ -127,8 +133,6 @@ class _InsetImage:
         image_artist.set_data(np.asarray(self._image))
         self.figure.add_artist(image_artist)
 
-        self.theme._setup(self)  # pyright: ignore[reportArgumentType]
-        self._draw_plot_background()
         self.theme.apply()
 
     def _draw_plot_background(self):
