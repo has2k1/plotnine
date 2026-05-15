@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>scale_fill_datetime – plotnine {{&lt; var version &gt;}}</title>
+<title>inset_element – plotnine {{&lt; var version &gt;}}</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -154,9 +154,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#plotnine.scale_fill_datetime" id="toc-plotnine.scale_fill_datetime" class="nav-link active" data-scroll-target="#plotnine.scale_fill_datetime"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.scale_fill_datetime</span></a></li>
-  <li><a href="#init-parameters" id="toc-init-parameters" class="nav-link" data-scroll-target="#init-parameters">Init Parameters</a></li>
-  <li><a href="#parameter-attributes" id="toc-parameter-attributes" class="nav-link" data-scroll-target="#parameter-attributes">Parameter Attributes</a></li>
+  <li><a href="#plotnine.composition.inset_element" id="toc-plotnine.composition.inset_element" class="nav-link active" data-scroll-target="#plotnine.composition.inset_element"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.composition.inset_element</span></a></li>
+  <li><a href="#parameters" id="toc-parameters" class="nav-link" data-scroll-target="#parameters">Parameters</a></li>
+  <li><a href="#notes" id="toc-notes" class="nav-link" data-scroll-target="#notes">Notes</a></li>
+  <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a></li>
+  <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods">Methods</a>
+  <ul class="collapse">
+  <li><a href="#plotnine.composition.inset_element.draw" id="toc-plotnine.composition.inset_element.draw" class="nav-link" data-scroll-target="#plotnine.composition.inset_element.draw"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">draw</span></a></li>
+  <li><a href="#plotnine.composition.inset_element.save" id="toc-plotnine.composition.inset_element.save" class="nav-link" data-scroll-target="#plotnine.composition.inset_element.save"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">save</span></a></li>
+  <li><a href="#plotnine.composition.inset_element.show" id="toc-plotnine.composition.inset_element.show" class="nav-link" data-scroll-target="#plotnine.composition.inset_element.show"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">show</span></a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -167,125 +174,156 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <header id="title-block-header" class="quarto-title-block default">
-<section id="plotnine.scale_fill_datetime" class="level1 title doc-object doc-class doc-has-member-docs quarto-title display-7">
-<h1 class="title doc-object doc-class doc-has-member-docs"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.scale_fill_datetime</span></h1>
+<section id="plotnine.composition.inset_element" class="level1 title doc-object doc-class doc-has-member-docs quarto-title display-7">
+<h1 class="title doc-object doc-class doc-has-member-docs"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.composition.inset_element</span></h1>
 </section>
 </header>
 <div class="doc-signature doc-class">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>scale_fill_datetime(</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    cmap_name<span class="op">=</span><span class="st">"viridis"</span>,</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    date_breaks<span class="op">=</span><span class="va">None</span>,</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    date_labels<span class="op">=</span><span class="va">None</span>,</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    date_minor_breaks<span class="op">=</span><span class="va">None</span>,</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span>,</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    name<span class="op">=</span><span class="va">None</span>,</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    breaks<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    limits<span class="op">=</span><span class="va">None</span>,</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    labels<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    expand<span class="op">=</span><span class="va">None</span>,</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    guide<span class="op">=</span><span class="st">"colorbar"</span>,</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    na_value<span class="op">=</span><span class="st">"#7F7F7F"</span>,</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    aesthetics<span class="op">=</span>(),</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    rescaler<span class="op">=</span>rescale,</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    oob<span class="op">=</span>censor,</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    minor_breaks<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    trans<span class="op">=</span><span class="st">"datetime"</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>inset_element(</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    obj,</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    left,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    bottom,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    right,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    top,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    align_to<span class="op">=</span><span class="st">"panel"</span>,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    on_top<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    anchor<span class="op">=</span><span class="st">"center"</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="doc-text">
-<p>Datetime fill scale</p>
+<p>Place a plot as an inset within another plot</p>
+<p>By default the inset is rendered on top of the host (<code>on_top=True</code>). With <code>on_top=False</code> it is rendered behind the host’s panel and labels but above the host’s <code>plot_background</code>. Adding an <code>inset_element</code> to a composition attaches it to the most recently added plot in that composition.</p>
 </div>
-<section id="init-parameters" class="level2 doc-init-parameters">
-<h2 class="doc-init-parameters anchored" data-anchor-id="init-parameters">Init Parameters</h2>
+<section id="parameters" class="level2 doc-parameters">
+<h2 class="doc-parameters anchored" data-anchor-id="parameters">Parameters</h2>
 <div class="doc-definition-items">
 <dl>
-<dt><code>cmap_name: <a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> = <span class="st">'viridis'</span></code></dt>
+<dt><code><span class="doc-parameter-name">obj</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="../reference/ggplot.html#plotnine.ggplot">ggplot</a> | <a href="../reference/Compose.html#plotnine.composition.Compose">Compose</a> | PILImage | <a href="https://numpy.org/doc/stable/reference/index.html#module-numpy">np</a>.<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray">ndarray</a> | _InsetImage</span></code></dt>
 <dd>
-<p>A standard Matplotlib colormap name. The default is <code>viridis</code>. For the list of names checkout the output of <code>matplotlib.cm.cmap_d.keys()</code> or see <a href="https://matplotlib.org/stable/users/explain/colors/colormaps.html">colormaps</a>.</p>
+<p>The object to render as an inset. One of:</p>
+<ul>
+<li><code>ggplot</code> or <code>Compose</code> — full plot pipeline.</li>
+<li><code>PIL.Image.Image</code> or <code>numpy.ndarray</code> — raster image. The image is letterboxed inside the user’s bbox so its aspect ratio is preserved.</li>
+</ul>
 </dd>
-<dt><code>date_breaks: <a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> | None = None</code></dt>
+<dt><code><span class="doc-parameter-name">left</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#float">float</a></span></code></dt>
 <dd>
-<p>A string giving the distance between major breaks. For example <code>'2 weeks'</code>, <code>'5 years'</code>. If specified, <code>date_breaks</code> takes precedence over <code>breaks</code>.</p>
+<p>Bounding box of the inset as fractional coordinates in the range <code>[0, 1]</code>, relative to the host region selected by <code>align_to</code>. The bottom-left corner of that region is <code>(0, 0)</code> and the top-right is <code>(1, 1)</code>.</p>
 </dd>
-<dt><code>date_labels: <a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> | None = None</code></dt>
+<dt><code><span class="doc-parameter-name">bottom</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#float">float</a></span></code></dt>
 <dd>
-<p>Format string for the labels. See strftime. If specified, <code>date_labels</code> takes precedence over <code>labels</code>.</p>
+<p>Bounding box of the inset as fractional coordinates in the range <code>[0, 1]</code>, relative to the host region selected by <code>align_to</code>. The bottom-left corner of that region is <code>(0, 0)</code> and the top-right is <code>(1, 1)</code>.</p>
 </dd>
-<dt><code>date_minor_breaks: <a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> | None = None</code></dt>
+<dt><code><span class="doc-parameter-name">right</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#float">float</a></span></code></dt>
 <dd>
-A string giving the distance between minor breaks. For example <code>'2 weeks'</code>, <code>'5 years'</code>. If specified, <code>date_minor_breaks</code> takes precedence over <code>minor_breaks</code>.
+<p>Bounding box of the inset as fractional coordinates in the range <code>[0, 1]</code>, relative to the host region selected by <code>align_to</code>. The bottom-left corner of that region is <code>(0, 0)</code> and the top-right is <code>(1, 1)</code>.</p>
+</dd>
+<dt><code><span class="doc-parameter-name">top</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#float">float</a></span></code></dt>
+<dd>
+<p>Bounding box of the inset as fractional coordinates in the range <code>[0, 1]</code>, relative to the host region selected by <code>align_to</code>. The bottom-left corner of that region is <code>(0, 0)</code> and the top-right is <code>(1, 1)</code>.</p>
+</dd>
+<dt><code><span class="doc-parameter-name">align_to</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/typing.html#typing.Literal">Literal</a>[<span class="st">"panel"</span>, <span class="st">"plot"</span>, <span class="st">"full"</span>]</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default"><span class="st">"panel"</span></span></code></dt>
+<dd>
+<p>Which region of the host plot the bounding box is relative to:</p>
+<ul>
+<li><code>"panel"</code> — the data area only (default).</li>
+<li><code>"plot"</code> — the panel plus axes, labels, titles, captions and legends</li>
+<li><code>"full"</code> — everything the host plot occupies plus plot margin</li>
+</ul>
+</dd>
+<dt><code><span class="doc-parameter-name">on_top</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#bool">bool</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">True</span></code></dt>
+<dd>
+<p>When <code>True</code> (default) the inset paints above the host plot. When <code>False</code>, the inset paints between the host’s <code>plot_background</code> and the rest of the host (panel, titles, legends, …), so the host’s panel area covers the inset. Useful for backdrops, decorations, or branding that should look like part of the page rather than an overlay.</p>
+</dd>
+<dt><code><span class="doc-parameter-name">anchor</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">Anchor</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default"><span class="st">"center"</span></span></code></dt>
+<dd>
+Where to anchor the image inside the user’s bbox when its aspect ratio doesn’t match. One of <code>"center"</code> (default), <code>"top"</code>, <code>"top-right"</code>, <code>"right"</code>, <code>"bottom-right"</code>, <code>"bottom"</code>, <code>"bottom-left"</code>, <code>"left"</code>, <code>"top-left"</code>, or a <code>(h, v)</code> tuple in [0, 1]² with <code>h = 0</code> left / <code>h = 1</code> right and <code>v = 0</code> bottom / <code>v = 1</code> top. Only meaningful for image insets; plot / composition insets fill the entire area by resizing without constraining the aspect ratio, so the anchor has no effect.
 </dd>
 </dl>
 </div>
 </section>
-<section id="parameter-attributes" class="level2 doc-parameter-attributes">
-<h2 class="doc-parameter-attributes anchored" data-anchor-id="parameter-attributes">Parameter Attributes</h2>
+<section id="notes" class="level2 doc-notes">
+<h2 class="doc-notes anchored" data-anchor-id="notes">Notes</h2>
+<p><code>figure_size</code> and <code>dpi</code> set on the inset’s theme are ignored. The inset shares the host’s figure, so these values come from the host theme. The canvas size of the inset is determined by the bounding box and the area it is <code>align_to</code>.</p>
+<p>For image insets, <code>inset_element(...) + theme(...)</code> draws a sibling rectangle around the image; only <code>plot_background</code> is honored today.</p>
+</section>
+<section id="examples" class="level2 doc-examples">
+<h2 class="doc-examples anchored" data-anchor-id="examples">Examples</h2>
+<p>Composed with a host plot:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> p <span class="op">=</span> ggplot(mtcars, aes(<span class="st">"wt"</span>, <span class="st">"mpg"</span>)) <span class="op">+</span> geom_point()</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> p <span class="op">+</span> inset_element(p, <span class="fl">0.6</span>, <span class="fl">0.6</span>, <span class="dv">1</span>, <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Image inset with a black border:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> <span class="im">from</span> PIL <span class="im">import</span> Image</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> p <span class="op">+</span> (</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>...     inset_element(Image.<span class="bu">open</span>(<span class="st">"logo.png"</span>), <span class="fl">0.7</span>, <span class="fl">0.7</span>, <span class="dv">1</span>, <span class="dv">1</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>...     <span class="op">+</span> theme(plot_background<span class="op">=</span>element_rect(color<span class="op">=</span><span class="st">"black"</span>, size<span class="op">=</span><span class="dv">1</span>))</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>... )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="methods" class="level2 doc-methods">
+<h2 class="doc-methods anchored" data-anchor-id="methods">Methods</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="#plotnine.composition.inset_element.draw">draw</a></td>
+<td>Render this inset standalone on an implicit blank host</td>
+</tr>
+<tr class="even">
+<td><a href="#plotnine.composition.inset_element.save">save</a></td>
+<td>Save this inset as an image file</td>
+</tr>
+<tr class="odd">
+<td><a href="#plotnine.composition.inset_element.show">show</a></td>
+<td>Display this inset using the matplotlib backend set by the user</td>
+</tr>
+</tbody>
+</table>
+<section id="plotnine.composition.inset_element.draw" class="level3 title doc-object doc-method">
+<h3 class="title doc-object doc-method anchored" data-anchor-id="plotnine.composition.inset_element.draw"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">draw</span></h3>
+<div class="doc-signature doc-method">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>draw(<span class="op">*</span>, show<span class="op">=</span><span class="va">False</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="doc-text">
+<p>Render this inset standalone on an implicit blank host</p>
+</div>
+<section id="parameters-1" class="level4 doc-parameters">
+<h4 class="doc-parameters anchored" data-anchor-id="parameters-1">Parameters</h4>
 <div class="doc-definition-items">
 <dl>
-<dt><code>name: <a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> | None = None</code></dt>
+<dt><code><span class="doc-parameter-name">show</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#bool">bool</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">False</span></code></dt>
 <dd>
-<p>The name of the scale. It is used as the label of the axis or the title of the guide. Suitable defaults are chosen depending on the type of scale.</p>
-</dd>
-<dt><code>breaks: <a href="../reference/scales._runtime_typing.html#plotnine.scales._runtime_typing.ContinuousBreaksUser">ContinuousBreaksUser</a> = True</code></dt>
-<dd>
-<p>Major breaks</p>
-</dd>
-<dt><code>limits: <a href="../reference/scales._runtime_typing.html#plotnine.scales._runtime_typing.ContinuousLimitsUser">ContinuousLimitsUser</a> = None</code></dt>
-<dd>
-<p>Limits of the scale. Most commonly, these are the minimum &amp; maximum values for the scale. If not specified they are derived from the data. It may also be a function that takes the derived limits and transforms them into the final limits.</p>
-</dd>
-<dt><code>labels: <a href="../reference/scales._runtime_typing.html#plotnine.scales._runtime_typing.ScaleLabelsUser">ScaleLabelsUser</a> = True</code></dt>
-<dd>
-<p>Labels at the <code>breaks</code>. Alternatively, a callable that takes an array_like of break points as input and returns a list of strings.</p>
-</dd>
-<dt><code>expand: ( # pyright: ignore[reportIncompatibleVariableOverride]<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://docs.python.org/3/library/stdtypes.html#tuple">tuple</a>[<a href="https://docs.python.org/3/library/functions.html#float">float</a>, <a href="https://docs.python.org/3/library/datetime.html#datetime.timedelta">timedelta</a>]<br>&nbsp;&nbsp;&nbsp;&nbsp;| <a href="https://docs.python.org/3/library/stdtypes.html#tuple">tuple</a>[<a href="https://docs.python.org/3/library/functions.html#float">float</a>, <a href="https://docs.python.org/3/library/datetime.html#datetime.timedelta">timedelta</a>, <a href="https://docs.python.org/3/library/functions.html#float">float</a>, <a href="https://docs.python.org/3/library/datetime.html#datetime.timedelta">timedelta</a>]<br>&nbsp;&nbsp;&nbsp;&nbsp;| None<br>) = None</code></dt>
-<dd>
-<p>Multiplicative and additive expansion constants that determine how the scale is expanded. If specified must be of length 2 or 4. Specifically the values are in this order:</p>
-<pre><code>(mul, add)
-(mul_low, add_low, mul_high, add_high)</code></pre>
-<p>For example,</p>
-<ul>
-<li><code>(0, timedelta(0))</code> - Do not expand.</li>
-<li><code>(0, timedelta(days=1))</code> - Expand lower and upper limits by 1 day.</li>
-<li><code>(1, 0)</code> - Expand lower and upper limits by 100%.</li>
-<li><code>(0, 0, 0, timedelta(hours=6))</code> - Expand upper limit by 6 hours.</li>
-<li><code>(0, timedelta(minutes=5), 0.1, timdelta(0))</code> - Expand lower limit by 5 minutes and upper limit by 10%.</li>
-<li><code>(0, 0, 0.1, timedelta(weeks=2))</code> - Expand upper limit by 10% plus 2 weeks.</li>
-</ul>
-<p>If not specified, suitable defaults are chosen.</p>
-</dd>
-<dt><code>guide: <a href="https://docs.python.org/3/library/typing.html#typing.Literal">Literal</a>[<span class="st">"legend"</span>, <span class="st">"colorbar"</span>] | None = <span class="st">"colorbar"</span></code></dt>
-<dd>
-
-</dd>
-<dt><code>na_value: <a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> = <span class="st">"#7F7F7F"</span></code></dt>
-<dd>
-<p>Color of missing values.</p>
-</dd>
-<dt><code>aesthetics: <a href="https://docs.python.org/3/library/typing.html#typing.Sequence">Sequence</a>[<a href="../reference/typing.html#plotnine.typing.ScaledAestheticsName">ScaledAestheticsName</a>] = ()</code></dt>
-<dd>
-<p>Aesthetics affected by this scale. These are defined by each scale and the user should probably not change them. Have fun.</p>
-</dd>
-<dt><code>rescaler: PRescale = rescale</code></dt>
-<dd>
-<p>Function to rescale data points so that they can be handled by the palette. Default is to rescale them onto the [0, 1] range. Scales that inherit from this class may have another default.</p>
-</dd>
-<dt><code>oob: PCensor = censor</code></dt>
-<dd>
-<p>Function to deal with out of bounds (limits) data points. Default is to turn them into <code>np.nan</code>, which then get dropped.</p>
-</dd>
-<dt><code>minor_breaks: <a href="../reference/scales._runtime_typing.html#plotnine.scales._runtime_typing.MinorBreaksUser">MinorBreaksUser</a> = True</code></dt>
-<dd>
-<p>If a list-like, it is the minor breaks points. If an integer, it is the number of minor breaks between any set of major breaks. If a function, it should have the signature <code>func(limits)</code> and return a list-like of consisting of the minor break points. If <code>None</code>, no minor breaks are calculated. The default is to automatically calculate them.</p>
-</dd>
-<dt><code>trans: <a href="../reference/scales._runtime_typing.html#plotnine.scales._runtime_typing.TransUser">TransUser</a> = <span class="st">"datetime"</span></code></dt>
-<dd>
-
+Whether to show the plot.
 </dd>
 </dl>
 </div>
+</section>
+</section>
+<section id="plotnine.composition.inset_element.save" class="level3 title doc-object doc-method">
+<h3 class="title doc-object doc-method anchored" data-anchor-id="plotnine.composition.inset_element.save"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">save</span></h3>
+<div class="doc-signature doc-method">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>save(<span class="op">*</span>args, <span class="op">**</span>kwargs)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="doc-text">
+<p>Save this inset as an image file</p>
+<p>Accepts the same arguments as <a href="../reference/ggplot.html#plotnine.ggplot.save"><code>save</code></a>.</p>
+</div>
+</section>
+<section id="plotnine.composition.inset_element.show" class="level3 title doc-object doc-method">
+<h3 class="title doc-object doc-method anchored" data-anchor-id="plotnine.composition.inset_element.show"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">show</span></h3>
+<div class="doc-signature doc-method">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="doc-text">
+<p>Display this inset using the matplotlib backend set by the user</p>
+</div>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
