@@ -22,14 +22,17 @@ from ..mapping.aes import rename_aesthetics
 from .guide import guide
 
 if TYPE_CHECKING:
-    from typing import Literal, Optional, Sequence, TypeAlias
+    from typing import Literal, Optional, Protocol, Sequence, TypeAlias
 
+    from matplotlib.figure import Figure
     from matplotlib.offsetbox import OffsetBox, PackerBase
 
     from plotnine import ggplot, guide_colorbar, guide_legend, theme
     from plotnine.iapi import labels_view
     from plotnine.scales.scale import scale
     from plotnine.scales.scales import Scales
+    from plotnine.themes.targets import ThemeTargets
+    from plotnine.themes.theme import theme as Theme
     from plotnine.typing import (
         Justification,
         LegendPosition,
@@ -43,6 +46,26 @@ if TYPE_CHECKING:
         guide_legend | guide_colorbar | Literal["legend", "colorbar"]
     )
     LegendOnly: TypeAlias = guide_legend | Literal["legend"]
+
+    class LegendOwner(Protocol):
+        """
+        Anything that can render and host legends
+
+        A `LegendOwner` is the rendering context for a set of guides:
+        it provides the theme that styles them and the figure they
+        are attached to. Both `ggplot` and `Compose` satisfy this
+        contract.
+
+        The properties are declared read-only so Protocol matching
+        stays covariant on the attribute types (e.g. `p9Figure`
+        satisfies `Figure`).
+        """
+
+        @property
+        def theme(self) -> Theme: ...
+
+        @property
+        def figure(self) -> Figure: ...
 
 
 # Terminology
@@ -136,12 +159,20 @@ class guides:
         """
         return self._create_geoms(self._merge(self._train()))
 
-    def _setup(self, plot: ggplot):
+    def _bind_source(self, plot: ggplot):
         """
-        Setup all guides that will be active
+        Bind to the source plot
+
+        Resolves which guide applies to which aesthetic by inspecting
+        the plot's scales, then captures each resolved guide's
+        data-source state (layers, mapping).
+
+        Parameters
+        ----------
+        plot :
+            The plot whose scales decide which guides to draw.
         """
         self.plot = plot
-        self.elements = GuidesElements(self.plot.theme)
 
         guide_lookup = {
             f.name: g
@@ -173,8 +204,35 @@ class guides:
                 elif not isinstance(g, guide):
                     raise PlotnineError(f"Unknown guide: {g}")
 
-                g.setup(self)
+                g._bind_source(plot)
                 self._lookup[(scale.__class__.__name__, ae)] = (scale, g)
+
+    def _bind_owner(self, owner: LegendOwner):
+        """
+        Bind to the rendering owner
+
+        Captures the rendering context (theme, figure) and propagates
+        the owner-binding to every resolved guide.
+
+        Parameters
+        ----------
+        owner :
+            Whoever renders these guides — its theme and figure
+            drive layout and attachment.
+        """
+        self.elements = GuidesElements(owner.theme)
+        self._owner_theme = owner.theme
+        self._owner_figure = owner.figure
+        for _, g in self._lookup.values():
+            g.guides_elements = self.elements
+            g._bind_owner(owner)
+
+    def _setup(self, plot: ggplot):
+        """
+        Setup all guides that will be active
+        """
+        self._bind_source(plot)
+        self._bind_owner(plot)
 
     def _train(self) -> Sequence[guide]:
         """
@@ -277,76 +335,6 @@ class guides:
         for g in gdefs:
             g.theme.apply()
 
-    def _assemble_guides(
-        self,
-        gdefs: list[guide],
-        boxes: list[PackerBase],
-    ) -> legend_artists:
-        """
-        Assemble guides into Anchored Offset boxes depending on location
-        """
-        from matplotlib.font_manager import FontProperties
-        from matplotlib.offsetbox import HPacker, VPacker
-
-        from .._mpl.offsetbox import FlexibleAnchoredOffsetbox
-
-        elements = self.elements
-
-        # Combine all the guides into a single box
-        # The direction matters only when there is more than legend
-        lookup: dict[Orientation, type[PackerBase]] = {
-            "horizontal": HPacker,
-            "vertical": VPacker,
-        }
-
-        def _anchored_offset_box(boxes: list[PackerBase]):
-            """
-            Put a group of guides into a single box for drawing
-            """
-            packer = lookup[elements.box]
-
-            box = packer(
-                children=boxes,  # type: ignore
-                align=elements.box_just,
-                pad=elements.box_margin,
-                sep=elements.spacing,
-            )
-
-            return FlexibleAnchoredOffsetbox(
-                xy_loc=(0.5, 0.5),
-                child=box,
-                pad=1,
-                frameon=False,
-                prop=FontProperties(size=1, stretch=0),
-                bbox_to_anchor=(0, 0),
-                bbox_transform=self.plot.figure.transFigure,
-                borderpad=0.0,
-            )
-
-        # Group together guides for each position
-        groups: dict[
-            tuple[Side, float]
-            | tuple[tuple[float, float], tuple[float, float]],
-            list[PackerBase],
-        ] = defaultdict(list)
-
-        for g, b in zip(gdefs, boxes):
-            groups[g._resolved_position_justification].append(b)
-
-        legends = legend_artists()
-
-        # Create an anchoredoffsetbox for each group/position
-        for (position, just), group in groups.items():
-            aob = _anchored_offset_box(group)
-            if isinstance(position, str) and isinstance(just, (float, int)):
-                setattr(legends, position, outside_legend(aob, just))
-            else:
-                position = cast("tuple[float, float]", position)
-                just = cast("tuple[float, float]", just)
-                legends.inside.append(inside_legend(aob, just, position))
-
-        return legends
-
     def draw(self) -> Optional[OffsetBox]:
         """
         Draw guides onto the figure
@@ -377,11 +365,117 @@ class guides:
         guide_boxes = [g.draw() for g in gdefs]
 
         self._apply_guide_themes(gdefs)
-        legends = self._assemble_guides(gdefs, guide_boxes)
-        for aob in legends.boxes:
-            self.plot.figure.add_artist(aob)
+        legends = assemble_legend_artists(
+            gdefs, guide_boxes, self.elements, self._owner_figure
+        )
+        attach_legend_artists(
+            legends, self._owner_figure, self._owner_theme.targets
+        )
 
-        self.plot.theme.targets.legends = legends
+
+def assemble_legend_artists(
+    gdefs: list[guide],
+    boxes: list[PackerBase],
+    elements: GuidesElements,
+    figure: Figure,
+) -> legend_artists:
+    """
+    Assemble guides into AnchoredOffsetboxes depending on location
+
+    Parameters
+    ----------
+    gdefs :
+        Trained guides whose `_resolved_position_justification`
+        decides which side group each lands in.
+    boxes :
+        The per-guide drawn boxes, one per `gdefs` entry.
+    elements :
+        Theme-resolved layout elements (direction, box justification,
+        margins, spacing).
+    figure :
+        The figure the offsetboxes will be anchored to.
+    """
+    from matplotlib.font_manager import FontProperties
+    from matplotlib.offsetbox import HPacker, VPacker
+
+    from .._mpl.offsetbox import FlexibleAnchoredOffsetbox
+
+    # Combine all the guides into a single box
+    # The direction matters only when there is more than legend
+    lookup: dict[Orientation, type[PackerBase]] = {
+        "horizontal": HPacker,
+        "vertical": VPacker,
+    }
+
+    def _anchored_offset_box(boxes: list[PackerBase]):
+        """
+        Put a group of guides into a single box for drawing
+        """
+        packer = lookup[elements.box]
+
+        box = packer(
+            children=boxes,  # type: ignore
+            align=elements.box_just,
+            pad=elements.box_margin,
+            sep=elements.spacing,
+        )
+
+        return FlexibleAnchoredOffsetbox(
+            xy_loc=(0.5, 0.5),
+            child=box,
+            pad=1,
+            frameon=False,
+            prop=FontProperties(size=1, stretch=0),
+            bbox_to_anchor=(0, 0),
+            bbox_transform=figure.transFigure,
+            borderpad=0.0,
+        )
+
+    # Group together guides for each position
+    groups: dict[
+        tuple[Side, float] | tuple[tuple[float, float], tuple[float, float]],
+        list[PackerBase],
+    ] = defaultdict(list)
+
+    for g, b in zip(gdefs, boxes):
+        groups[g._resolved_position_justification].append(b)
+
+    legends = legend_artists()
+
+    # Create an anchoredoffsetbox for each group/position
+    for (position, just), group in groups.items():
+        aob = _anchored_offset_box(group)
+        if isinstance(position, str) and isinstance(just, (float, int)):
+            setattr(legends, position, outside_legend(aob, just))
+        else:
+            position = cast("tuple[float, float]", position)
+            just = cast("tuple[float, float]", just)
+            legends.inside.append(inside_legend(aob, just, position))
+
+    return legends
+
+
+def attach_legend_artists(
+    legends: legend_artists,
+    figure: Figure,
+    theme_targets: ThemeTargets,
+):
+    """
+    Attach legend offsetboxes to the figure and register them
+
+    Parameters
+    ----------
+    legends :
+        The assembled legend artists to attach.
+    figure :
+        The matplotlib figure to add the offsetboxes to.
+    theme_targets :
+        Theme targets where the `legends` record is stored for the
+        layout engine to pick up.
+    """
+    for aob in legends.boxes:
+        figure.add_artist(aob)
+    theme_targets.legends = legends
 
 
 VALID_JUSTIFICATION_WORDS = {"left", "right", "top", "bottom", "center"}
