@@ -18,7 +18,8 @@ if TYPE_CHECKING:
     from matplotlib.offsetbox import PackerBase
     from typing_extensions import Self
 
-    from plotnine import aes, guides
+    from plotnine import aes, ggplot, guides
+    from plotnine.guides.guides import LegendOwner
     from plotnine.iapi import guide_text
     from plotnine.layer import Layers, layer
     from plotnine.scales.scale import scale
@@ -111,19 +112,49 @@ class guide(ABC, metaclass=Register):
         matched = list(matched - set(l.geom.aes_params))
         return matched
 
+    def _bind_source(self, plot: ggplot):
+        """
+        Bind to the source plot
+
+        Captures the data-source state: layers and mapping. These
+        determine which geoms contribute glyphs to the guide.
+
+        Parameters
+        ----------
+        plot :
+            The plot that supplies layers and mapping for this guide.
+        """
+        self.plot_layers = plot.layers
+        self.plot_mapping = plot.mapping
+
+    def _bind_owner(self, owner: LegendOwner):
+        """
+        Bind to the rendering owner
+
+        Captures the rendering context: the owner's theme and figure.
+        The parent container's `guides_elements` is assigned separately
+        by the container's own owner-binding loop.
+
+        Parameters
+        ----------
+        owner :
+            Whoever renders this guide — its theme and figure drive
+            layout and attachment.
+        """
+        # guide theme has priority and its targets are tracked
+        # independently.
+        self.figure = owner.figure
+        self.theme = owner.theme + self.theme
+        self.theme._setup(self)
+        self.elements = self._elements_cls(self.theme, self)
+
     def setup(self, guides: guides):
         """
         Setup guide for drawing process
         """
-        # guide theme has priority and its targets are tracked
-        # independently.
-        self.figure = guides.plot.figure
-        self.theme = guides.plot.theme + self.theme
-        self.theme._setup(self)
-        self.plot_layers = guides.plot.layers
-        self.plot_mapping = guides.plot.mapping
-        self.elements = self._elements_cls(self.theme, self)
+        self._bind_source(guides.plot)
         self.guides_elements = guides.elements
+        self._bind_owner(guides.plot)
 
     @property
     def _resolved_position_justification(
