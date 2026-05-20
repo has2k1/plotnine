@@ -69,7 +69,8 @@ class _side_space(ABC):
 
     A *_space class does the book keeping for all the artists that may
     fall on that side of the panels. The same name may appear in multiple
-    side classes (e.g. legend).
+    side classes (e.g. legend). The expected naming convention for the
+    subclasses is  `*(left|right|top|bottom)_space`.
 
     The amount of space for each artist is computed in figure coordinates.
     """
@@ -89,7 +90,7 @@ class _side_space(ABC):
         """
         Side of the panel(s) that this class applies to
         """
-        return cast("Side", self.__class__.__name__.split("_")[0])
+        return cast("Side", self.__class__.__name__.split("_")[-2])
 
     @cached_property
     def parts(self) -> list[str]:

@@ -152,6 +152,7 @@ class ggplot:
         self.labels = labels_view()
         self.layers = Layers()
         self.guides = guides()
+        self.guides._owner = self
         self.scales = Scales()
         self.theme = theme_get()
         self.coordinates: coord = coord_cartesian()

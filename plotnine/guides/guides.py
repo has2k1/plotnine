@@ -28,10 +28,10 @@ if TYPE_CHECKING:
     from matplotlib.offsetbox import OffsetBox, PackerBase
 
     from plotnine import ggplot, guide_colorbar, guide_legend, theme
+    from plotnine.composition import Compose
     from plotnine.iapi import labels_view
     from plotnine.scales.scale import scale
     from plotnine.scales.scales import Scales
-    from plotnine.themes.targets import ThemeTargets
     from plotnine.themes.theme import theme as Theme
     from plotnine.typing import (
         Justification,
@@ -120,6 +120,7 @@ class guides:
         self.plot_scales: Scales
         self.plot_labels: labels_view
         self.elements: GuidesElements
+        self._owner: LegendOwner | None = None
         self._lookup: dict[
             tuple[str, ScaledAestheticsName], tuple[scale, guide]
         ] = {}
@@ -157,7 +158,7 @@ class guides:
             The individual guides for which the geoms that draw them have
             have been created.
         """
-        return self._create_geoms(self._merge(self._train()))
+        return self._create_geoms(_merge_guides(self._train()))
 
     def _bind_source(self, plot: ggplot):
         """
@@ -220,9 +221,8 @@ class guides:
             Whoever renders these guides — its theme and figure
             drive layout and attachment.
         """
+        self._owner = owner
         self.elements = GuidesElements(owner.theme)
-        self._owner_theme = owner.theme
-        self._owner_figure = owner.figure
         for _, g in self._lookup.values():
             g.guides_elements = self.elements
             g._bind_owner(owner)
@@ -230,9 +230,16 @@ class guides:
     def _setup(self, plot: ggplot):
         """
         Setup all guides that will be active
+
+        Always binds the source plot. Owner-binding is deferred only
+        when a `Compose` collector has claimed the leaf
         """
+        from plotnine.composition import Compose
+
         self._bind_source(plot)
-        self._bind_owner(plot)
+        if not isinstance(self._owner, Compose):
+            self._owner = plot
+            self._bind_owner(plot)
 
     def _train(self) -> Sequence[guide]:
         """
@@ -283,42 +290,6 @@ class guides:
 
         return gdefs
 
-    def _merge(self, gdefs: Sequence[guide]) -> Sequence[guide]:
-        """
-        Merge overlapped guides
-
-        For example:
-
-        ```python
-         from plotnine import *
-         p = (
-            ggplot(mtcars, aes(y="wt", x="mpg", colour="factor(cyl)"))
-            + stat_smooth(aes(fill="factor(cyl)"), method="lm")
-            + geom_point()
-         )
-        ```
-
-        would create two guides with the same hash
-        """
-        if not gdefs:
-            return []
-
-        # group guide definitions by hash, and
-        # reduce each group to a single guide
-        # using the guide.merge method
-        definitions = pd.DataFrame(
-            {"gdef": gdefs, "hash": [g.hash for g in gdefs]}
-        )
-        grouped = definitions.groupby("hash", sort=False)
-        gdefs = []
-        for name, group in grouped:
-            # merge
-            gdef = group["gdef"].iloc[0]
-            for g in group["gdef"].iloc[1:]:
-                gdef = gdef.merge(g)
-            gdefs.append(gdef)
-        return gdefs
-
     def _create_geoms(
         self,
         gdefs: Sequence[guide],
@@ -328,16 +299,19 @@ class guides:
         """
         return [_g for g in gdefs if (_g := g.create_geoms())]
 
-    def _apply_guide_themes(self, gdefs: list[guide]):
-        """
-        Apply the theme for each guide
-        """
-        for g in gdefs:
-            g.theme.apply()
-
     def draw(self) -> Optional[OffsetBox]:
         """
         Draw guides onto the figure
+
+        For a `ggplot` owner, renders the trained guides set up via
+        `_setup`. For a `Compose` owner whose
+        `layout.guides == "collect"`, gathers trained guides from
+        descendant leaves whose `_owner` points at this composition,
+        merges them by hash, and renders the result.
+
+        If this is a leaf's guides whose owner is a `Compose`, the
+        call is a no-op — that composition's own `.guides.draw()`
+        will collect and render these guides.
 
         Returns
         -------
@@ -345,32 +319,73 @@ class guides:
             A box that contains all the guides for the plot.
             If there are no guides, **None** is returned.
         """
-        if self.elements.position == "none":
+        from plotnine.composition import Compose
+
+        if self._owner is None:
             return
 
-        if not (gdefs := self._build()):
+        figure = self._owner.figure
+        targets = self._owner.theme.targets
+
+        if isinstance(self._owner, Compose):
+            # A collected leaf's guides reach this method via
+            # `ggplot.draw`; the Compose's own `.guides.draw()`
+            # handles the rendering, so we skip here to avoid
+            # double-collection.
+            if self._owner.guides is not self:
+                return
+            # Only "collect" compositions produce guides at this
+            # level. For "keep" or `None`, the composition holds no
+            # legend artists of its own.
+            if self._owner.layout.guides != "collect":
+                return
+            gdefs = self._collect_from_leaves()
+        else:
+            if self.elements.position == "none":
+                return
+            gdefs = list(self._build())
+
+        if not gdefs:
             return
 
-        # Order of guides
-        # 0 do not sort, any other sorts
-        # place the guides according to the guide.order
+        # Order of guides: 0 keeps original order, any other sorts
         default = max(g.order for g in gdefs) + 1
         orders = [default if g.order == 0 else g.order for g in gdefs]
         idx = cast("Sequence[int]", np.argsort(orders))
         gdefs = [gdefs[i] for i in idx]
 
-        # Draw each guide into a box
-        # Because we can have more than one guide, we keep record of
-        # the drawn artists using lists
         guide_boxes = [g.draw() for g in gdefs]
+        for g in gdefs:
+            g.theme.apply()
 
-        self._apply_guide_themes(gdefs)
         legends = assemble_legend_artists(
-            gdefs, guide_boxes, self.elements, self._owner_figure
+            gdefs, guide_boxes, self.elements, figure
         )
-        attach_legend_artists(
-            legends, self._owner_figure, self._owner_theme.targets
-        )
+
+        # Attach legend offsetboxes to the figure and register them
+        for aob in legends.boxes:
+            figure.add_artist(aob)
+        targets.legends = legends
+
+    def _collect_from_leaves(self) -> list[guide]:
+        """
+        The guides this composition will render
+
+        Each entry is a unique-by-hash legend contributed by a
+        descendant plot in this composition's collection scope,
+        with its rendering context resolved against the
+        composition's theme and figure. Empty when no descendant
+        plot contributes.
+        """
+        cmp = cast("Compose", self._owner)
+        gdefs: list[guide] = []
+        for leaf in cmp.iter_plots_all():
+            if leaf.guides._owner is cmp:
+                leaf.guides._bind_owner(cmp)
+                built = leaf.guides._build()
+                if built:
+                    gdefs.extend(built)
+        return _merge_guides(gdefs) if gdefs else []
 
 
 def assemble_legend_artists(
@@ -455,27 +470,29 @@ def assemble_legend_artists(
     return legends
 
 
-def attach_legend_artists(
-    legends: legend_artists,
-    figure: Figure,
-    theme_targets: ThemeTargets,
-):
+def _merge_guides(gdefs: Sequence[guide]) -> list[guide]:
     """
-    Attach legend offsetboxes to the figure and register them
+    Group guides by hash and fold each group
 
-    Parameters
-    ----------
-    legends :
-        The assembled legend artists to attach.
-    figure :
-        The matplotlib figure to add the offsetboxes to.
-    theme_targets :
-        Theme targets where the `legends` record is stored for the
-        layout engine to pick up.
+    Used both within a single plot (intra-plot dedupe) and across
+    plots in a composition (cross-plot dedupe at a guide owner).
+    The function does not care about that distinction — the caller's
+    choice of input list does.
     """
-    for aob in legends.boxes:
-        figure.add_artist(aob)
-    theme_targets.legends = legends
+    if not gdefs:
+        return []
+    definitions = pd.DataFrame(
+        {"gdef": list(gdefs), "hash": [g.hash for g in gdefs]}
+    )
+    grouped = definitions.groupby("hash", sort=False)
+    out: list[guide] = []
+    for _, group in grouped:
+        gs = list(group["gdef"])
+        survivor = gs[0]
+        for other in gs[1:]:
+            survivor = survivor.merge(other)
+        out.append(survivor)
+    return out
 
 
 VALID_JUSTIFICATION_WORDS = {"left", "right", "top", "bottom", "center"}

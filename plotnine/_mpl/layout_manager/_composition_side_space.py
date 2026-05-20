@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from functools import cached_property
 from typing import TYPE_CHECKING
 
 from plotnine._mpl.layout_manager._layout_tree import LayoutTree
@@ -10,11 +11,16 @@ from ._side_space import GridSpecParams, _side_space
 
 if TYPE_CHECKING:
     from plotnine.composition._compose import Compose
+    from plotnine.iapi import outside_legend
 
 
 class _composition_side_space(_side_space):
     """
     Base class for the side space around a composition
+
+    The `plot_margin_*` figure-edge buffer is reserved only for the root
+    composition. Nested compositions sit inside that buffer and would
+    double-count it.
     """
 
     def __init__(self, items: CompositionLayoutItems):
@@ -22,13 +28,49 @@ class _composition_side_space(_side_space):
         self.gridspec = items.cmp._gridspec
         self._calculate()
 
+    @cached_property
+    def _legend_size(self) -> tuple[float, float]:
+        """
+        Return size of the side legend in figure coordinates
+        """
+        if not self.has_legend:
+            return (0, 0)
+
+        ol: outside_legend = getattr(self.items.legends, self.side)
+        return self.items.geometry.size(ol.box)
+
+    @cached_property
+    def legend_width(self) -> float:
+        return self._legend_size[0]
+
+    @cached_property
+    def legend_height(self) -> float:
+        return self._legend_size[1]
+
+    @property
+    def has_legend(self) -> bool:
+        """
+        Return True if this side has a legend to lay out
+        """
+        if not self.items.legends:
+            return False
+        return getattr(self.items.legends, self.side, None) is not None
+
 
 class composition_left_space(_composition_side_space):
     plot_margin: float = 0
+    legend: float = 0
+    legend_box_spacing: float = 0
 
     def _calculate(self):
-        theme = self.items.cmp.theme
-        self.plot_margin = theme.getp("plot_margin_left")
+        items = self.items
+        theme = items.cmp.theme
+        if items.is_root:
+            self.plot_margin = theme.getp("plot_margin_left")
+
+        if items.legends and items.legends.left:
+            self.legend = self.legend_width
+            self.legend_box_spacing = theme.getp("legend_box_spacing")
 
     @property
     def offset(self) -> float:
@@ -81,10 +123,18 @@ class composition_right_space(_composition_side_space):
     """
 
     plot_margin: float = 0
+    legend: float = 0
+    legend_box_spacing: float = 0
 
     def _calculate(self):
-        theme = self.items.cmp.theme
-        self.plot_margin = theme.getp("plot_margin_right")
+        items = self.items
+        theme = items.cmp.theme
+        if items.is_root:
+            self.plot_margin = theme.getp("plot_margin_right")
+
+        if items.legends and items.legends.right:
+            self.legend = self.legend_width
+            self.legend_box_spacing = theme.getp("legend_box_spacing")
 
     @property
     def offset(self):
@@ -143,6 +193,8 @@ class composition_top_space(_composition_side_space):
     plot_subtitle_margin_top: float = 0
     plot_subtitle: float = 0
     plot_subtitle_margin_bottom: float = 0
+    legend: float = 0
+    legend_box_spacing: float = 0
 
     def _calculate(self):
         items = self.items
@@ -151,7 +203,8 @@ class composition_top_space(_composition_side_space):
         W, H = theme.getp("figure_size")
         F = W / H
 
-        self.plot_margin = theme.getp("plot_margin_top") * F
+        if items.is_root:
+            self.plot_margin = theme.getp("plot_margin_top") * F
 
         if items.plot_title:
             m = theme.get_margin("plot_title").fig
@@ -164,6 +217,10 @@ class composition_top_space(_composition_side_space):
             self.plot_subtitle_margin_top = m.t
             self.plot_subtitle = geometry.height(items.plot_subtitle)
             self.plot_subtitle_margin_bottom = m.b
+
+        if items.legends and items.legends.top:
+            self.legend = self.legend_height
+            self.legend_box_spacing = theme.getp("legend_box_spacing") * F
 
     @property
     def offset(self) -> float:
@@ -225,6 +282,8 @@ class composition_bottom_space(_composition_side_space):
     plot_caption_margin_bottom: float = 0
     plot_caption: float = 0
     plot_caption_margin_top: float = 0
+    legend: float = 0
+    legend_box_spacing: float = 0
 
     def _calculate(self):
         items = self.items
@@ -233,12 +292,17 @@ class composition_bottom_space(_composition_side_space):
         W, H = theme.getp("figure_size")
         F = W / H
 
-        self.plot_margin = theme.getp("plot_margin_bottom") * F
+        if items.is_root:
+            self.plot_margin = theme.getp("plot_margin_bottom") * F
         if items.plot_footer:
             m = theme.get_margin("plot_footer").fig
             self.plot_footer_margin_bottom = m.b
             self.plot_footer = geometry.height(items.plot_footer)
             self.plot_footer_margin_top = m.t
+
+        if items.legends and items.legends.bottom:
+            self.legend = self.legend_height
+            self.legend_box_spacing = theme.getp("legend_box_spacing") * F
 
         if items.plot_caption:
             m = theme.get_margin("plot_caption").fig
@@ -307,14 +371,17 @@ class CompositionSideSpaces:
     """
     Compute the spaces required to layout the composition
 
-    This is meant for the top-most composition
+    Built for the top-most composition and additionally for any
+    nested composition that collects guides (`layout.guides ==
+    "collect"`) — those need their own legend positioned within
+    the area their parent allocates.
     """
 
-    def __init__(self, cmp: Compose):
+    def __init__(self, cmp: Compose, *, is_root: bool = True):
         self.cmp = cmp
         self.gridspec = cmp._gridspec
         self.sub_gridspec = cmp._sub_gridspec
-        self.items = CompositionLayoutItems(cmp)
+        self.items = CompositionLayoutItems(cmp, is_root=is_root)
 
         self.l = composition_left_space(self.items)
         """All subspaces to the left of the panels"""
@@ -328,8 +395,24 @@ class CompositionSideSpaces:
         self.b = composition_bottom_space(self.items)
         """All subspaces below the bottom of the panels"""
 
-        self._create_plot_sidespaces()
+        # The root creates PlotSideSpaces for every leaf in the
+        # tree, and side-spaces for every collecting nested cmp.
+        # Nested instances skip both to avoid double-creation.
+        self._nested_owners: list[Compose] = []
+        if is_root:
+            self._create_plot_sidespaces()
+            for sub in cmp._walk_guide_owners():
+                if sub is not cmp:
+                    sub._sidespaces = CompositionSideSpaces(sub, is_root=False)
+                    self._nested_owners.append(sub)
         self.tree = LayoutTree.create(cmp)
+
+    @property
+    def owner(self) -> Compose:
+        """
+        The composition these side-spaces are calculated against
+        """
+        return self.cmp
 
     def arrange(self):
         """
@@ -338,8 +421,16 @@ class CompositionSideSpaces:
         # We first resize the compositions gridspec so that the tree
         # algorithms can work with the final position and total area.
         self.resize_gridspec()
+        # Collecting nested cmps shrink their own outer 1×1 to make
+        # room for their legend BEFORE alignment runs, so the tree's
+        # `align_panels` sees the actual panel area and lines panels
+        # up across nested boundaries.
+        for sub in self._nested_owners:
+            sub._sidespaces.resize_gridspec()
         self.tree.arrange_layout()
         self.items._move_artists(self)
+        for sub in self._nested_owners:
+            sub._sidespaces.items._move_artists(sub._sidespaces)
         self._arrange_plots()
 
     def _arrange_plots(self):

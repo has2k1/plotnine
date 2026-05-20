@@ -13,6 +13,7 @@ if TYPE_CHECKING:
     from matplotlib.patches import Rectangle
 
     from plotnine.composition._compose import Compose
+    from plotnine.iapi import legend_artists
 
     from ._composition_side_space import CompositionSideSpaces
 
@@ -22,7 +23,7 @@ class CompositionLayoutItems:
     plot_annotation artists
     """
 
-    def __init__(self, cmp: Compose):
+    def __init__(self, cmp: Compose, *, is_root: bool = True):
         def get(name: str) -> Any:
             """
             Return themeable target or None
@@ -36,6 +37,7 @@ class CompositionLayoutItems:
                 return t
 
         self.cmp = cmp
+        self.is_root = is_root
         self.geometry = ArtistGeometry(cmp.figure)
 
         self.plot_title: Text | None = get("plot_title")
@@ -46,14 +48,25 @@ class CompositionLayoutItems:
             "plot_footer_background"
         )
         self.plot_footer_line: Line2D | None = get("plot_footer_line")
+        self.legends: legend_artists | None = get("legends")
 
     def _is_blank(self, name: str) -> bool:
         return self.cmp.theme.T.is_blank(name)
 
     def _move_artists(self, spaces: CompositionSideSpaces):
         """
-        Move the annotations to their final positions
+        Move the annotations and legends to their final positions
         """
-        from ._plot_layout_items import _position_plot_labels
+        from ._plot_layout_items import (
+            _position_plot_labels,
+            set_legends_position,
+        )
 
-        _position_plot_labels(spaces.cmp.figure, self.cmp.theme, spaces, self)
+        # Only the root composition can have annotations (labels).
+        # So positioning them is a no-op. Skip the traversal entirely.
+        if self.is_root:
+            _position_plot_labels(
+                spaces.cmp.figure, self.cmp.theme, spaces, self
+            )
+        if self.legends:
+            set_legends_position(self.legends, spaces)

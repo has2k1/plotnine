@@ -17,6 +17,7 @@ from .._utils.quarto import is_knitr_engine, is_quarto_environment
 from ..composition._plot_annotation import plot_annotation
 from ..composition._plot_layout import plot_layout
 from ..composition._types import ComposeAddable
+from ..guides.guides import guides
 from ..options import get_option
 
 if TYPE_CHECKING:
@@ -150,6 +151,10 @@ class Compose:
         """
         The annotations around the composition
         """
+
+        # Composition-level guides populated if "collect"ing
+        self.guides = guides()
+        self.guides._owner = self
 
     def __repr__(self):
         """
@@ -397,6 +402,59 @@ class Compose:
         for cmp in self.iter_sub_compositions():
             yield from cmp.iter_plots_all()
 
+    def _resolve_guide_owners(self, owner: Compose | None = None):
+        """
+        Decide which `Compose` (if any) owns each leaf's guides
+
+        Walks the composition tree and overrides `leaf.guides._owner`
+        to the nearest `"collect"` ancestor (with `"keep"`
+        interrupting propagation). Leaves not under a collector keep
+        their default `_owner = leaf` from `ggplot.__init__`.
+
+        Parameters
+        ----------
+        owner :
+            The `Compose` inherited as guide owner from a higher
+            ancestor, or `None` if no `"collect"` ancestor is active.
+        """
+        from plotnine import ggplot
+
+        own = self.layout.guides
+        if own == "keep":
+            new_owner = None
+        elif own == "collect":
+            new_owner = self
+        else:  # None — propagate inherited owner unchanged
+            new_owner = owner
+
+        for item in self:
+            if isinstance(item, ggplot):
+                # If the guides are inside a plot, they are not "collected"
+                # / assigned to any composition.
+                # And, always assign the ggplot as the owner to guard against
+                # prior (and now stale) ownership when the same plot is
+                # reused in different compositions
+                if new_owner is not None and not _renders_legend_inside(
+                    item.theme
+                ):
+                    item.guides._owner = new_owner
+                else:
+                    item.guides._owner = item
+            else:
+                item._resolve_guide_owners(owner=new_owner)
+
+    def _walk_guide_owners(self):
+        """
+        Yield every composition in this tree that collects guides
+
+        A composition is a guide owner when its
+        `layout.guides == "collect"`. Includes `self` if it qualifies.
+        """
+        if self.layout.guides == "collect":
+            yield self
+        for sub in self.iter_sub_compositions():
+            yield from sub._walk_guide_owners()
+
     @property
     def last_plot(self) -> ggplot:
         """
@@ -555,6 +613,10 @@ class Compose:
             cmp._draw_plots()
             for sub_cmp in cmp.iter_sub_compositions():
                 sub_cmp._setup()
+                # Initialise the sub-cmp's theme targets so a
+                # downstream `cmp.guides.draw()` (or annotation pass)
+                # can write into `sub_cmp.theme.targets`.
+                sub_cmp.theme._setup(sub_cmp)
                 _draw_items(sub_cmp)
 
         # Drawing (order matters)
@@ -562,7 +624,13 @@ class Compose:
             figure = self._setup()
             self.theme._setup(self)
             self._draw_composition_background()
+            self._resolve_guide_owners()
             _draw_items(self)
+            # Render guides at every collecting Compose — each binds
+            # itself as the owner just before drawing.
+            for cmp in self._walk_guide_owners():
+                cmp.guides._bind_owner(cmp)
+                cmp.guides.draw()
             self._draw_annotation()
             self.theme.apply()
 
@@ -656,3 +724,15 @@ class Compose:
         plot = (self + theme(dpi=dpi)) if dpi else self
         figure = plot.draw()
         figure.savefig(filename, format=format)
+
+
+def _renders_legend_inside(t: theme) -> bool:
+    """
+    Whether the theme places the legend inside the panel area
+
+    True for the string `"inside"` and for a tuple `(x, y)` value
+    of `legend_position`, which is also interpreted as an inside
+    position.
+    """
+    pos = t.getp("legend_position")
+    return pos == "inside" or isinstance(pos, tuple)
