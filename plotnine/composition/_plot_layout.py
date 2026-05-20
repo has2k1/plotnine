@@ -2,12 +2,14 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from itertools import cycle
-from typing import TYPE_CHECKING, Sequence
+from typing import TYPE_CHECKING, Literal, Sequence
 
 from ..composition._types import ComposeAddable
 
 if TYPE_CHECKING:
     from ._compose import Compose
+
+    GuidesMode = Literal["collect", "keep"]
 
 
 @dataclass(kw_only=True)
@@ -41,6 +43,18 @@ class plot_layout(ComposeAddable):
     heights: Sequence[float] | None = None
     """
     Relative heights of each column
+    """
+
+    guides: GuidesMode | None = None
+    """
+    How to handle guides in this composition.
+
+    - `"collect"`: dedupe and render guides from descendants once at
+      this level.
+    - `"keep"`: block any ancestor's collect from reaching this
+      subtree.
+    - `None` (default): neither collect nor block — propagate any
+      ancestor's setting through unchanged.
     """
 
     _cmp: Compose = field(init=False, repr=False)
@@ -124,6 +138,8 @@ class plot_layout(ComposeAddable):
             self.nrow = other.nrow
         if other.byrow is not None:
             self.byrow = other.byrow
+        if other.guides is not None:
+            self.guides = other.guides
 
 
 def repeat(seq: Sequence[float], n: int) -> list[float]:

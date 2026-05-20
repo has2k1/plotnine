@@ -574,13 +574,21 @@ def _position_plot_labels(
     return justify
 
 
-def set_legends_position(legends: legend_artists, spaces: PlotSideSpaces):
+def set_legends_position(
+    legends: legend_artists,
+    spaces: PlotSideSpaces | CompositionSideSpaces,
+):
     """
-    Place legend on the figure and justify is a required
+    Place legends on the figure, justifying each as required
+
+    Works for both plot-level and composition-level legends. Both
+    side-space hierarchies expose an `owner` property — a `ggplot`
+    or `Compose` — which provides the `_sub_gridspec` to anchor
+    against and the `figure` to transform onto.
     """
-    panels_gs = spaces.plot._sub_gridspec
+    panels_gs = spaces.owner._sub_gridspec
     params = panels_gs.get_subplot_params()
-    transFigure = spaces.plot.figure.transFigure
+    transFigure = spaces.owner.figure.transFigure
 
     def set_position(
         aob: FlexibleAnchoredOffsetbox,

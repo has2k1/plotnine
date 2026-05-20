@@ -766,6 +766,13 @@ class PlotSideSpaces:
 
         self.W, self.H = plot.theme.getp("figure_size")
 
+    @property
+    def owner(self) -> ggplot:
+        """
+        The plot these side-spaces are calculated against
+        """
+        return self.plot
+
     def arrange(self):
         """
         Resize plot and place artists in final positions around the panels

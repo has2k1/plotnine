@@ -140,6 +140,18 @@ class guide_legend(guide):
         self.override_aes.update(other.override_aes)
         for ae in duplicated:
             del self.override_aes[ae]
+        # Cross-plot merge unions the per-plot layer parameters so the
+        # surviving guide overlays glyphs from every contributing plot.
+        # For an intra-plot merge this is a no-op because
+        # `_layer_parameters` is populated later, by `create_geoms`.
+        # Deduplicate by identity to guard against the same guide
+        # entering a cross-plot merge twice (which would silently
+        # double-draw glyphs).
+        seen: set[int] = {id(p) for p in self._layer_parameters}
+        for p in other._layer_parameters:
+            if id(p) not in seen:
+                self._layer_parameters.append(p)
+                seen.add(id(p))
         return self
 
     def create_geoms(self):
