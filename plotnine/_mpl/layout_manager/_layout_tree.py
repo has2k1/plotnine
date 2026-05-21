@@ -331,14 +331,8 @@ class LayoutTree:
         For each column, the representative number for the panel width
         is the maximum width among all panels in the column.
         """
-        # This method is used after aligning the panels. Therefore, the
-        # wides panel_width (i.e. max()) is the good representative width
-        # of the column.
         w = self.plot_width / self.ncol
-        return [
-            max(node.panel_width for node in col if node) if any(col) else w
-            for col in self.grid.iter_cols()
-        ]
+        return self.grid.reduce_cols(lambda n: n.panel_width, default=w)
 
     @property
     def panel_heights(self) -> Sequence[float]:
@@ -349,10 +343,7 @@ class LayoutTree:
         is the maximum height among all panels in the row.
         """
         h = self.plot_height / self.nrow
-        return [
-            max([node.panel_height for node in row if node]) if any(row) else h
-            for row in self.grid.iter_rows()
-        ]
+        return self.grid.reduce_rows(lambda n: n.panel_height, default=h)
 
     @property
     def plot_widths(self) -> Sequence[float]:
@@ -363,10 +354,10 @@ class LayoutTree:
         the widest plot.
         """
         w = self.sub_gridspec.width / self.ncol
-        return [
-            max([node.plot_width if node else w for node in col])
-            for col in self.grid.iter_cols()
-        ]
+        return self.grid.reduce_cols(
+            lambda n: max(n.plot_width, w),
+            default=w,
+        )
 
     @property
     def plot_heights(self) -> Sequence[float]:
@@ -377,10 +368,10 @@ class LayoutTree:
         the tallest plot.
         """
         h = self.sub_gridspec.height / self.nrow
-        return [
-            max([node.plot_height if node else h for node in row])
-            for row in self.grid.iter_rows()
-        ]
+        return self.grid.reduce_rows(
+            lambda n: max(n.plot_height, h),
+            default=h,
+        )
 
     @property
     def panel_width_ratios(self) -> Sequence[float]:
@@ -408,7 +399,7 @@ class LayoutTree:
         bottom_spaces in the bottom row of that composition.
         """
         spaces: list[bottom_space] = []
-        for node in self.grid[r, :]:
+        for node in self.grid.items_on_edge("bottom", r):
             if isinstance(node, PlotSideSpaces):
                 spaces.append(node.b)
             elif isinstance(node, LayoutTree):
@@ -423,7 +414,7 @@ class LayoutTree:
         top_spaces in the top row of that composition.
         """
         spaces: list[top_space] = []
-        for node in self.grid[r, :]:
+        for node in self.grid.items_on_edge("top", r):
             if isinstance(node, PlotSideSpaces):
                 spaces.append(node.t)
             elif isinstance(node, LayoutTree):
@@ -438,7 +429,7 @@ class LayoutTree:
         left_spaces in the left most column of that composition.
         """
         spaces: list[left_space] = []
-        for node in self.grid[:, c]:
+        for node in self.grid.items_on_edge("left", c):
             if isinstance(node, PlotSideSpaces):
                 spaces.append(node.l)
             elif isinstance(node, LayoutTree):
@@ -453,7 +444,7 @@ class LayoutTree:
         right_spaces in the right most column of that composition.
         """
         spaces: list[right_space] = []
-        for node in self.grid[:, c]:
+        for node in self.grid.items_on_edge("right", c):
             if isinstance(node, PlotSideSpaces):
                 spaces.append(node.r)
             elif isinstance(node, LayoutTree):

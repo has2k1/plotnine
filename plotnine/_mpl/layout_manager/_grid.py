@@ -1,6 +1,7 @@
 from collections.abc import Iterator
 from dataclasses import InitVar, dataclass
 from typing import (
+    Callable,
     Generic,
     Literal,
     Sequence,
@@ -92,3 +93,85 @@ class Grid(Generic[T]):
         n = self._grid.shape[1]
         for col in range(n):
             yield self[:, col]
+
+    def reduce_cols(
+        self,
+        fn: Callable[[T], float],
+        default: float,
+    ) -> list[float]:
+        """
+        One value per column: the largest `fn(item)` in that column
+
+        Parameters
+        ----------
+        fn
+            Mapping from an item to the numeric value being compared.
+        default
+            Value used for columns whose cells are all None.
+
+        Returns
+        -------
+        out
+            One value per column, in left-to-right order.
+        """
+        out: list[float] = []
+        for c in range(self._grid.shape[1]):
+            items = [n for n in self[:, c] if n is not None]
+            out.append(max(fn(n) for n in items) if items else default)
+        return out
+
+    def reduce_rows(
+        self,
+        fn: Callable[[T], float],
+        default: float,
+    ) -> list[float]:
+        """
+        One value per row: the largest `fn(item)` in that row
+
+        Parameters
+        ----------
+        fn
+            Mapping from an item to the numeric value being compared.
+        default
+            Value used for rows whose cells are all None.
+
+        Returns
+        -------
+        out
+            One value per row, in top-to-bottom order.
+        """
+        out: list[float] = []
+        for r in range(self._grid.shape[0]):
+            items = [n for n in self[r, :] if n is not None]
+            out.append(max(fn(n) for n in items) if items else default)
+        return out
+
+    def items_on_edge(
+        self,
+        side: Literal["top", "bottom", "left", "right"],
+        idx: int,
+    ) -> list[T]:
+        """
+        Items whose `side` edge sits at row/col `idx`
+
+        In a grid where no item spans more than one cell, an item in
+        row `r` has both its top and bottom edges at row `r`, and
+        analogously for columns; so all four sides return the same
+        items for that row or column.
+
+        Parameters
+        ----------
+        side
+            Which edge of an item to match: `"top"` and `"bottom"`
+            select by row, `"left"` and `"right"` select by column.
+        idx
+            Row index when `side` is `"top"` or `"bottom"`; column
+            index when `side` is `"left"` or `"right"`.
+
+        Returns
+        -------
+        out
+            The matching items, with None cells filtered out.
+        """
+        cells = self[idx, :] if side in ("top", "bottom") else self[:, idx]
+        return [n for n in cells if n is not None]
