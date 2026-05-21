@@ -28,6 +28,7 @@ if TYPE_CHECKING:
     from matplotlib.offsetbox import OffsetBox, PackerBase
 
     from plotnine import ggplot, guide_colorbar, guide_legend, theme
+    from plotnine._mpl.offsetbox import FlexibleAnchoredOffsetbox
     from plotnine.composition import Compose
     from plotnine.iapi import labels_view
     from plotnine.scales.scale import scale
@@ -358,9 +359,21 @@ class guides:
         for g in gdefs:
             g.theme.apply()
 
-        legends = assemble_legend_artists(
-            gdefs, guide_boxes, self.elements, figure
-        )
+        # Rendering in a guide_area is simpler because we render all guides
+        # together and at the center
+        use_guide_area = (
+            self._owner._guide_area
+            if isinstance(self._owner, Compose)
+            else None
+        ) is not None
+        if use_guide_area:
+            legends = assemble_guide_area_legend(
+                guide_boxes, self.elements, figure
+            )
+        else:
+            legends = assemble_legend_artists(
+                gdefs, guide_boxes, self.elements, figure
+            )
 
         # Attach legend offsetboxes to the figure and register them
         for aob in legends.boxes:
@@ -410,42 +423,6 @@ def assemble_legend_artists(
     figure :
         The figure the offsetboxes will be anchored to.
     """
-    from matplotlib.font_manager import FontProperties
-    from matplotlib.offsetbox import HPacker, VPacker
-
-    from .._mpl.offsetbox import FlexibleAnchoredOffsetbox
-
-    # Combine all the guides into a single box
-    # The direction matters only when there is more than legend
-    lookup: dict[Orientation, type[PackerBase]] = {
-        "horizontal": HPacker,
-        "vertical": VPacker,
-    }
-
-    def _anchored_offset_box(boxes: list[PackerBase]):
-        """
-        Put a group of guides into a single box for drawing
-        """
-        packer = lookup[elements.box]
-
-        box = packer(
-            children=boxes,  # type: ignore
-            align=elements.box_just,
-            pad=elements.box_margin,
-            sep=elements.spacing,
-        )
-
-        return FlexibleAnchoredOffsetbox(
-            xy_loc=(0.5, 0.5),
-            child=box,
-            pad=1,
-            frameon=False,
-            prop=FontProperties(size=1, stretch=0),
-            bbox_to_anchor=(0, 0),
-            bbox_transform=figure.transFigure,
-            borderpad=0.0,
-        )
-
     # Group together guides for each position
     groups: dict[
         tuple[Side, float] | tuple[tuple[float, float], tuple[float, float]],
@@ -459,7 +436,7 @@ def assemble_legend_artists(
 
     # Create an anchoredoffsetbox for each group/position
     for (position, just), group in groups.items():
-        aob = _anchored_offset_box(group)
+        aob = _anchored_offset_box(group, elements, figure)
         if isinstance(position, str) and isinstance(just, (float, int)):
             setattr(legends, position, outside_legend(aob, just))
         else:
@@ -468,6 +445,79 @@ def assemble_legend_artists(
             legends.inside.append(inside_legend(aob, just, position))
 
     return legends
+
+
+def assemble_guide_area_legend(
+    boxes: list[PackerBase],
+    elements: GuidesElements,
+    figure: Figure,
+) -> legend_artists:
+    """
+    Pack collected guides into one centered legend for a `guide_area`
+
+    All trained guides are combined into a single AnchoredOffsetbox
+    centered in panel coordinates, irrespective of their individual
+    `legend_position` settings. Used when the rendering owner is a
+    `Compose` whose `_guide_area` selects a host cell.
+
+    Parameters
+    ----------
+    boxes :
+        The per-guide drawn boxes that will be packed together.
+    elements :
+        Theme-resolved layout elements (direction, box justification,
+        margins, spacing).
+    figure :
+        The figure the offsetbox will be anchored to.
+
+    Returns
+    -------
+    out :
+        A `legend_artists` whose only entry is a single inside
+        legend at `(0.5, 0.5)`.
+    """
+    aob = _anchored_offset_box(boxes, elements, figure)
+    legends = legend_artists()
+    legends.inside.append(inside_legend(aob, (0.5, 0.5), (0.5, 0.5)))
+    return legends
+
+
+def _anchored_offset_box(
+    boxes: list[PackerBase],
+    elements: GuidesElements,
+    figure: Figure,
+) -> FlexibleAnchoredOffsetbox:
+    """
+    Pack a list of guide boxes into a single AnchoredOffsetbox
+    """
+    from matplotlib.font_manager import FontProperties
+    from matplotlib.offsetbox import HPacker, VPacker
+
+    from .._mpl.offsetbox import FlexibleAnchoredOffsetbox
+
+    lookup: dict[Orientation, type[PackerBase]] = {
+        "horizontal": HPacker,
+        "vertical": VPacker,
+    }
+    packer = lookup[elements.box]
+
+    box = packer(
+        children=boxes,  # type: ignore
+        align=elements.box_just,
+        pad=elements.box_margin,
+        sep=elements.spacing,
+    )
+
+    return FlexibleAnchoredOffsetbox(
+        xy_loc=(0.5, 0.5),
+        child=box,
+        pad=1,
+        frameon=False,
+        prop=FontProperties(size=1, stretch=0),
+        bbox_to_anchor=(0, 0),
+        bbox_transform=figure.transFigure,
+        borderpad=0.0,
+    )
 
 
 def _merge_guides(gdefs: Sequence[guide]) -> list[guide]:

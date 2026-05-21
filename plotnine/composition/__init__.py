@@ -1,5 +1,6 @@
 from ._beside import Beside
 from ._compose import Compose
+from ._guide_area import guide_area
 from ._inset_element import inset_element
 from ._plot_annotation import plot_annotation
 from ._plot_layout import plot_layout
@@ -12,6 +13,7 @@ __all__ = (
     "Stack",
     "Beside",
     "Wrap",
+    "guide_area",
     "inset_element",
     "plot_annotation",
     "plot_layout",

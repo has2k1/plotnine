@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import abc
 from copy import copy, deepcopy
+from functools import cached_property
 from io import BytesIO
 from typing import TYPE_CHECKING, cast, overload
 
@@ -32,6 +33,7 @@ if TYPE_CHECKING:
     from plotnine._mpl.layout_manager._composition_side_space import (
         CompositionSideSpaces,
     )
+    from plotnine.composition._guide_area import guide_area
     from plotnine.ggplot import PlotAddable, ggplot
     from plotnine.typing import FigureFormat, MimeBundle
 
@@ -454,6 +456,31 @@ class Compose:
             yield self
         for sub in self.iter_sub_compositions():
             yield from sub._walk_guide_owners()
+
+    @cached_property
+    def _guide_area(self) -> guide_area | None:
+        """
+        The cell that hosts this composition's collected legend
+
+        Only a `guide_area` placed directly at this composition's
+        level is eligible; one nested inside a sub-composition
+        belongs to that sub-grid, so an outer collector cannot
+        reach it.
+
+        Returns
+        -------
+        out :
+            The first matching `guide_area` among the composition's
+            direct items, or `None` when no eligible cell exists —
+            in which case collected guides fall back to side
+            placement.
+        """
+        from ._guide_area import guide_area
+
+        for item in self.iter_plots():
+            if isinstance(item, guide_area):
+                return item
+        return None
 
     @property
     def last_plot(self) -> ggplot:

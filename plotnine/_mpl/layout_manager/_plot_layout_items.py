@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING
 from matplotlib.text import Text
 
 from plotnine._mpl.patches import StripTextPatch
+from plotnine.composition._compose import Compose
 from plotnine.exceptions import PlotnineError
 
 from ..utils import (
@@ -653,8 +654,13 @@ def set_legends_position(
         y = spaces.b.y1("legend")
         set_position(legends.bottom.box, (x, y), (0, 0))
 
-    # Inside legends are placed using the panels coordinate system
+    # Inside legends are placed using the panels coordinate system.
+    # For a `Compose` owner with a `guide_area` host, the guides are
+    # rendered in the guide_areas panel, so we need that gridspec
     if legends.inside:
+        if isinstance(spaces.owner, Compose) and spaces.owner._guide_area:
+            panels_gs = spaces.owner._guide_area._sub_gridspec
+
         transPanels = panels_gs.to_transform()
         for l in legends.inside:
             set_position(l.box, l.position, l.justification, transPanels)
