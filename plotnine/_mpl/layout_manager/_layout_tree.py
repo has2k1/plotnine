@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING, Iterator, cast
 
 import numpy as np
 
-from ._grid import Grid
+from ._grid import DesignGrid, Grid
 from ._plot_side_space import PlotSideSpaces
 
 if TYPE_CHECKING:
@@ -124,6 +124,12 @@ class LayoutTree:
     represents.
     """
 
+    grid: Grid["Node"]
+    """
+    Per-cell layout of `nodes`. `Grid` for compositions without a
+    design; `DesignGrid` when `plot_layout(design=...)` is used.
+    """
+
     sub_gridspec: p9GridSpec = field(init=False, repr=False)
     """
     Gridspec (nxn) that contains the composed items
@@ -131,12 +137,6 @@ class LayoutTree:
 
     def __post_init__(self):
         self.sub_gridspec = self.cmp._sub_gridspec
-        self.grid = Grid["Node"](
-            self.nrow,
-            self.ncol,
-            self.nodes,
-            order="row_major" if self.cmp.layout.byrow else "col_major",
-        )
 
     @property
     def ncol(self) -> int:
@@ -172,7 +172,18 @@ class LayoutTree:
             else:
                 nodes.append(LayoutTree.create(item))
 
-        return LayoutTree(cmp, nodes)
+        if (spec := getattr(cmp, "_design_spec", None)) is not None:
+            grid = DesignGrid["Node"](spec.nrow, spec.ncol, nodes, spec.rects)
+        else:
+            order = "row_major" if cmp.layout.byrow else "col_major"
+            grid = Grid["Node"](
+                cast("int", cmp.layout.nrow),
+                cast("int", cmp.layout.ncol),
+                nodes,
+                order=order,
+            )
+
+        return LayoutTree(cmp, nodes, grid)
 
     @cached_property
     def sub_compositions(self) -> list[LayoutTree]:
