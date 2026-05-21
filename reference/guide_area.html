@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>plot_title – plotnine {{&lt; var version &gt;}}</title>
+<title>guide_area – plotnine {{&lt; var version &gt;}}</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -154,9 +154,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#plotnine.themes.themeable.plot_title" id="toc-plotnine.themes.themeable.plot_title" class="nav-link active" data-scroll-target="#plotnine.themes.themeable.plot_title"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.themes.themeable.plot_title</span></a></li>
+  <li><a href="#plotnine.composition.guide_area" id="toc-plotnine.composition.guide_area" class="nav-link active" data-scroll-target="#plotnine.composition.guide_area"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.composition.guide_area</span></a></li>
   <li><a href="#parameters" id="toc-parameters" class="nav-link" data-scroll-target="#parameters">Parameters</a></li>
-  <li><a href="#notes" id="toc-notes" class="nav-link" data-scroll-target="#notes">Notes</a></li>
+  <li><a href="#see-also" id="toc-see-also" class="nav-link" data-scroll-target="#see-also">See Also</a></li>
   </ul>
 </nav>
     </div>
@@ -167,31 +167,45 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <header id="title-block-header" class="quarto-title-block default">
-<section id="plotnine.themes.themeable.plot_title" class="level1 title doc-object doc-class doc-has-member-docs quarto-title display-7">
-<h1 class="title doc-object doc-class doc-has-member-docs"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.themes.themeable.plot_title</span></h1>
+<section id="plotnine.composition.guide_area" class="level1 title doc-object doc-class quarto-title display-7">
+<h1 class="title doc-object doc-class"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.composition.guide_area</span></h1>
 </section>
 </header>
 <div class="doc-signature doc-class">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>plot_title(theme_element)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>guide_area(fill<span class="op">=</span><span class="va">None</span>, alpha<span class="op">=</span><span class="va">None</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="doc-text">
-<p>Plot title</p>
+<p>A grid cell that hosts collected guides</p>
+<p>Used in a composition that collects guides with <code>plot_layout(guides="collect")</code> to route the merged legend into a cell of the grid instead of placing it on the side of the composition.</p>
+<p>Renders empty (like <a href="../reference/plot_spacer.html#plotnine.composition.plot_spacer"><code>plot_spacer</code></a>) when no collection is in effect, no guides exist to collect, or another <code>guide_area</code> was selected first.</p>
 </div>
 <section id="parameters" class="level2 doc-parameters">
 <h2 class="doc-parameters anchored" data-anchor-id="parameters">Parameters</h2>
 <div class="doc-definition-items">
 <dl>
-<dt><code><span class="doc-parameter-name">theme_element</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">element_text</span></code></dt>
+<dt><code><span class="doc-parameter-name">fill</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> | <a href="https://docs.python.org/3/library/stdtypes.html#tuple">tuple</a>[<a href="https://docs.python.org/3/library/functions.html#float">float</a>, <a href="https://docs.python.org/3/library/functions.html#float">float</a>, <a href="https://docs.python.org/3/library/functions.html#float">float</a>] | <a href="https://docs.python.org/3/library/stdtypes.html#tuple">tuple</a>[<a href="https://docs.python.org/3/library/functions.html#float">float</a>, <a href="https://docs.python.org/3/library/functions.html#float">float</a>, <a href="https://docs.python.org/3/library/functions.html#float">float</a>, <a href="https://docs.python.org/3/library/functions.html#float">float</a>] | None</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
 <dd>
-
+<p>Background color. The default is a transparent area.</p>
+</dd>
+<dt><code><span class="doc-parameter-name">alpha</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#float">float</a> | None</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
+<dd>
+Opacity of the background fill, between 0 (transparent) and 1 (opaque). The default leaves the area transparent.
 </dd>
 </dl>
 </div>
 </section>
-<section id="notes" class="level2 doc-notes">
-<h2 class="doc-notes anchored" data-anchor-id="notes">Notes</h2>
-<p>The default horizontal alignment for the title is center. However the title will be left aligned if and only if there is a subtitle and its horizontal alignment has not been set (so it defaults to the left).</p>
-<p>The defaults ensure that, short titles are not awkwardly left-aligned, and that a title and a subtitle will not be awkwardly mis-aligned in the center or with different alignments.</p>
+<section id="see-also" class="level2 doc-see-also">
+<h2 class="doc-see-also anchored" data-anchor-id="see-also">See Also</h2>
+<dl>
+<dt><a href="../reference/plot_spacer.html#plotnine.composition.plot_spacer"><code>plot_spacer</code></a></dt>
+<dd>
+<p>Blank cell with the same styling.</p>
+</dd>
+<dt><a href="../reference/plot_layout.html#plotnine.composition.plot_layout"><code>plot_layout</code></a></dt>
+<dd>
+<p>Set <code>guides="collect"</code> to enable collection.</p>
+</dd>
+</dl>
 
 
 </section>
