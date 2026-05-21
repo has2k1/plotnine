@@ -13,6 +13,9 @@ import numpy as np
 
 T = TypeVar("T")
 
+Rect = tuple[int, int, int, int]
+"""Inclusive (r0, r1, c0, c1) rectangle in grid coordinates."""
+
 
 @dataclass
 class Grid(Generic[T]):
@@ -175,3 +178,101 @@ class Grid(Generic[T]):
         """
         cells = self[idx, :] if side in ("top", "bottom") else self[:, idx]
         return [n for n in cells if n is not None]
+
+
+class DesignGrid(Grid[T]):
+    """
+    Grid where items span rectangular regions
+
+    Each item is associated with an inclusive rectangle
+    `(r0, r1, c0, c1)` and placed at every cell within it; this
+    keeps base-class `__getitem__`, `iter_rows`, and `iter_cols`
+    working as in `Grid`. The reductions are overridden to be
+    span-aware: an item spanning multiple columns contributes its
+    measurement divided by its column span to each column it
+    covers (and analogously for rows).
+
+    Parameters
+    ----------
+    nrow
+        Number of rows in the grid.
+    ncol
+        Number of columns in the grid.
+    items
+        Items to place. One per rectangle, in the order rectangles
+        appear in `rects`.
+    rects
+        Inclusive `(r0, r1, c0, c1)` rectangle for each item.
+        Trusted: overlap and shape are not validated here.
+    """
+
+    # Bypass Grid's dataclass __init__ — rectangle expansion is a
+    # different placement scheme than row/col-major.
+    def __init__(
+        self,
+        nrow: int,
+        ncol: int,
+        items: Sequence[T],
+        rects: Sequence[Rect],
+    ):
+        if len(items) != len(rects):
+            raise ValueError(
+                f"Got {len(items)} items but {len(rects)} rectangles"
+            )
+        self._grid = np.empty((nrow, ncol), dtype=object)
+        self._items: list[T] = list(items)
+        self._rects: list[Rect] = list(rects)
+        # Place each item at every cell of its rectangle so the base
+        # class's __getitem__ / iter_rows / iter_cols keep working.
+        for item, (r0, r1, c0, c1) in zip(self._items, self._rects):
+            self._grid[r0 : r1 + 1, c0 : c1 + 1] = item
+
+    def reduce_cols(
+        self,
+        fn: Callable[[T], float],
+        default: float,
+    ) -> list[float]:
+        # An item spanning multiple columns shares its measurement
+        # across the columns it covers: fn(item) / colspan goes into
+        # each. Then per-column max as in Grid.reduce_cols.
+        out: list[float] = []
+        for c in range(self._grid.shape[1]):
+            contribs = [
+                fn(item) / (c1 - c0 + 1)
+                for item, (_, _, c0, c1) in zip(self._items, self._rects)
+                if c0 <= c <= c1
+            ]
+            out.append(max(contribs) if contribs else default)
+        return out
+
+    def reduce_rows(
+        self,
+        fn: Callable[[T], float],
+        default: float,
+    ) -> list[float]:
+        # Mirror of reduce_cols: fn(item) / rowspan into each row the
+        # item covers, then per-row max.
+        out: list[float] = []
+        for r in range(self._grid.shape[0]):
+            contribs = [
+                fn(item) / (r1 - r0 + 1)
+                for item, (r0, r1, _, _) in zip(self._items, self._rects)
+                if r0 <= r <= r1
+            ]
+            out.append(max(contribs) if contribs else default)
+        return out
+
+    def items_on_edge(
+        self,
+        side: Literal["top", "bottom", "left", "right"],
+        idx: int,
+    ) -> list[T]:
+        # An item's top/bottom edge is its r0/r1; left/right is c0/c1.
+        # Match the requested edge to idx exactly — not "the item is
+        # present at row/col idx", which would include spanned cells.
+        out: list[T] = []
+        for item, (r0, r1, c0, c1) in zip(self._items, self._rects):
+            edge = {"top": r0, "bottom": r1, "left": c0, "right": c1}[side]
+            if edge == idx:
+                out.append(item)
+        return out
