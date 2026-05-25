@@ -50,8 +50,8 @@ class plot_layout(ComposeAddable):
     Text-grid layout specification
 
     Each line is one row of the grid; each character is one cell.
-    Use `#` or `.` for empty cells; use any other character to label
-    a region. Cells with the same label form a rectangular area that
+    Use `#`, `.`, or a space for empty cells; use any other character
+    to label a region. Cells with the same label form a rectangular area that
     hosts one composition item.
 
     Areas are assigned to items in the sorted order of the label
@@ -84,6 +84,14 @@ class plot_layout(ComposeAddable):
     """
     Composition that this layout is attached to
     """
+
+    def __post_init__(self):
+        if self.design is not None and (
+            self.nrow is not None or self.ncol is not None
+        ):
+            raise ValueError(
+                "plot_layout(design=...) cannot be combined with nrow or ncol"
+            )
 
     def __radd__(self, cmp: Compose) -> Compose:
         """
@@ -178,8 +186,10 @@ class plot_layout(ComposeAddable):
             self.heights = other.heights
         if other.ncol:
             self.ncol = other.ncol
+            self.design = None
         if other.nrow:
             self.nrow = other.nrow
+            self.design = None
         if other.byrow is not None:
             self.byrow = other.byrow
         if other.guides is not None:

@@ -13,7 +13,7 @@ if TYPE_CHECKING:
 
 T = TypeVar("T")
 
-EMPTY_CHARS = frozenset({"#", "."})
+EMPTY_CHARS = frozenset({"#", ".", " "})
 
 
 @dataclass
@@ -72,7 +72,7 @@ def parse_design(s: str) -> DesignSpec:
     """
     # Pipeline:
     # 1. Strip & split into rows; require equal row widths.
-    # 2. Build the cell grid, normalising empty markers (#, .) to "".
+    # 2. Build the cell grid, normalising empty markers (#, ., space) to "".
     # 3. Group cell positions by label character.
     # 4. For each label in sorted order, take the bounding rectangle
     #    of its cells and verify every cell inside is the same label

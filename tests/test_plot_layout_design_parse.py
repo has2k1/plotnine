@@ -22,6 +22,16 @@ def test_dot_and_hash_are_both_empty():
     assert a.grid == b.grid
 
 
+def test_space_is_empty():
+    # Spaces inside a row act as empty markers, so users can add
+    # visual breathing room without producing an opaque "not
+    # rectangular" error.
+    a = parse_design("1.2\n1.2")
+    b = parse_design("1 2\n1 2")
+    assert a._rects == b._rects
+    assert a.grid == b.grid
+
+
 def test_character_identity_is_irrelevant():
     base = parse_design("1##\n123\n##3")
     letters = parse_design("A##\nABC\n##C")

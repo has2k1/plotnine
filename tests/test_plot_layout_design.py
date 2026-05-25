@@ -32,7 +32,7 @@ def test_design_with_nrow_raises():
 def test_design_with_ncol_raises():
     p1 = plot.red
     p2 = plot.green
-    with pytest.raises(ValueError, match="cannot be combined with nrow"):
+    with pytest.raises(ValueError, match="nrow or ncol"):
         ((p1 | p2) + plot_layout(ncol=2, design="12")).draw()
 
 
