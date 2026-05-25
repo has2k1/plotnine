@@ -33,6 +33,7 @@ if TYPE_CHECKING:
     from plotnine._mpl.layout_manager._composition_side_space import (
         CompositionSideSpaces,
     )
+    from plotnine.composition._design import DesignSpec
     from plotnine.composition._guide_area import guide_area
     from plotnine.ggplot import PlotAddable, ggplot
     from plotnine.typing import FigureFormat, MimeBundle
@@ -112,6 +113,11 @@ class Compose:
     Gridspec (1x1) that contains the annotations and the composition items
 
     plot_layout's theme parameter affects this gridspec.
+    """
+
+    _design_spec: DesignSpec | None = None
+    """
+    Parsed `plot_layout(design=...)`. `None` when no design is set.
     """
 
     _sub_gridspec: p9GridSpec
@@ -584,7 +590,15 @@ class Compose:
         # "subplot" in the grid. The SubplotSpec is the handle for the
         # area in the grid; it allows us to put a plot or a nested
         # composion in that area.
-        for item, subplot_spec in zip(self, self._sub_gridspec):
+        # With plot_layout(design=...), each item gets a SubplotSpec
+        # sliced from its rectangle (potentially spanning multiple cells)
+        # instead of one cell per item.
+        if (spec := getattr(self, "_design_spec", None)) is not None:
+            pairs = list(zip(self, spec.get_subplotspecs(self._sub_gridspec)))
+        else:
+            pairs = list(zip(self, self._sub_gridspec))
+
+        for item, subplot_spec in pairs:
             # This container gs will contain a plot or a composition,
             # i.e. it will be assigned to one of:
             #    1. ggplot._gridspec
