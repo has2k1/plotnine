@@ -45,6 +45,29 @@ class plot_layout(ComposeAddable):
     Relative heights of each column
     """
 
+    design: str | None = None
+    '''
+    Text-grid layout specification
+
+    Each line is one row of the grid; each character is one cell.
+    Use `#` or `.` for empty cells; use any other character to label
+    a region. Cells with the same label form a rectangular area that
+    hosts one composition item.
+
+    Areas are assigned to items in the sorted order of the label
+    characters: the lexicographically first label gets the first
+    composition item. Cannot be combined with `nrow` or `ncol`.
+    `byrow` is silently ignored.
+
+    Example::
+
+        design = """
+            #33#
+            #2#4
+            11#4
+        """
+    '''
+
     guides: GuidesMode | None = None
     """
     How to handle guides in this composition.
@@ -79,7 +102,23 @@ class plot_layout(ComposeAddable):
         from . import Beside, Stack
 
         # setup nrow & ncol
-        if isinstance(cmp, Beside):
+        if self.design is not None:
+            if self.nrow is not None or self.ncol is not None:
+                raise ValueError(
+                    "plot_layout(design=...) cannot be combined with "
+                    "nrow or ncol"
+                )
+            from ._design import parse_design
+
+            spec = parse_design(self.design)
+            if spec.n_regions != len(cmp):
+                raise ValueError(
+                    f"plot_layout(design=...) has {spec.n_regions} "
+                    f"regions but the composition has {len(cmp)} items"
+                )
+            self.nrow, self.ncol = spec.nrow, spec.ncol
+            cmp._design_spec = spec
+        elif isinstance(cmp, Beside):
             if self.ncol is None:
                 self.ncol = len(cmp)
             elif self.ncol < len(cmp):
@@ -128,6 +167,11 @@ class plot_layout(ComposeAddable):
         """
         Update this layout with the contents of other
         """
+        if other.design is not None:
+            self.design = other.design
+            # Re-_setup will populate these from the new design.
+            self.nrow = None
+            self.ncol = None
         if other.widths:
             self.widths = other.widths
         if other.heights:
