@@ -85,6 +85,9 @@ class theme:
 
         These simply bind together all the aspects of a themeable
         that can be themed. See [](`~plotnine.themes.themeable.themeable`).
+        Extension packages may provide additional themeables by defining
+        and importing subclasses of `themeable`, then passing values for
+        them as keyword arguments to `theme`.
 
     Notes
     -----
