@@ -12,8 +12,9 @@ if typing.TYPE_CHECKING:
 
     import numpy.typing as npt
     import pandas as pd
+    from matplotlib.axes import Axes
 
-    from plotnine import ggplot
+    from plotnine import ggplot, theme
     from plotnine.iapi import labels_view, panel_view
     from plotnine.scales.scale import scale
     from plotnine.typing import (
@@ -103,6 +104,54 @@ class coord:
         system does not influence the aspect ratio.
         """
         return None
+
+    def setup_ax(
+        self, ax: Axes, panel_params: panel_view, theme: theme
+    ) -> None:
+        """
+        Set limits, breaks and labels for one panel axes
+
+        Subclasses can override this to customize axes setup, or call
+        `super().setup_ax(...)` and add coordinate-specific behavior.
+        """
+        from .._mpl.ticker import MyFixedFormatter
+
+        def _inf_to_none(
+            t: tuple[float, float],
+        ) -> tuple[float | None, float | None]:
+            """
+            Replace infinities with None
+            """
+            a = t[0] if np.isfinite(t[0]) else None
+            b = t[1] if np.isfinite(t[1]) else None
+            return (a, b)
+
+        # limits
+        ax.set_xlim(*_inf_to_none(panel_params.x.range))
+        ax.set_ylim(*_inf_to_none(panel_params.y.range))
+
+        # breaks, labels
+        ax.set_xticks(panel_params.x.breaks, panel_params.x.labels)
+        ax.set_yticks(panel_params.y.breaks, panel_params.y.labels)
+
+        # minor breaks
+        ax.set_xticks(panel_params.x.minor_breaks, minor=True)
+        ax.set_yticks(panel_params.y.minor_breaks, minor=True)
+
+        # When you manually set the tick labels MPL changes the locator
+        # so that it no longer reports the x & y positions
+        # Fixes https://github.com/has2k1/plotnine/issues/187
+        ax.xaxis.set_major_formatter(MyFixedFormatter(panel_params.x.labels))
+        ax.yaxis.set_major_formatter(MyFixedFormatter(panel_params.y.labels))
+
+        # Blank axis text is not drawn, so its margin may be absent
+        # (resolves to None). Skip the tick-label padding in that case.
+        if not theme.T.is_blank("axis_text_x"):
+            pad_x = theme.get_margin("axis_text_x").pt.t
+            ax.tick_params(axis="x", which="major", pad=pad_x)
+        if not theme.T.is_blank("axis_text_y"):
+            pad_y = theme.get_margin("axis_text_y").pt.r
+            ax.tick_params(axis="y", which="major", pad=pad_y)
 
     def labels(self, cur_labels: labels_view) -> labels_view:
         """
