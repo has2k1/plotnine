@@ -398,16 +398,11 @@ class facet:
         gs = self._make_gridspec()
 
         # Create axes
-        from ..coords.coord_polar import coord_polar
-
-        subplot_kw = (
-            {"projection": "polar"}
-            if isinstance(self.plot.coordinates, coord_polar)
-            else {}
-        )
         it = itertools.product(range(self.nrow), range(self.ncol))
         for i, (row, col) in enumerate(it):
-            axsarr[row, col] = self.figure.add_subplot(gs[i], **subplot_kw)
+            axsarr[row, col] = self.figure.add_subplot(
+                gs[i], projection=self.plot.coordinates._projection
+            )
 
         # Rearrange axes
         # They are ordered to match the positions in the layout table

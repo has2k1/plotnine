@@ -28,6 +28,9 @@ class coord:
     Base class for all coordinate systems
     """
 
+    # Matplotlib projection name to use when creating panel axes.
+    _projection: str | None = None
+
     # If the coordinate system is linear
     is_linear = False
 

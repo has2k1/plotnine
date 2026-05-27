@@ -65,6 +65,7 @@ class coord_polar(coord):
     """
 
     is_linear = False
+    _projection = "polar"
 
     def __init__(
         self,
