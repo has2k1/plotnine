@@ -10,6 +10,7 @@ from plotnine import (
     element_line,
     geom_col,
     geom_point,
+    geom_text,
     ggplot,
     theme,
 )
@@ -291,14 +292,18 @@ def test_coord_radial_draw_float_r_axis_position():
         plt.close(fig)
 
 
-def test_coord_radial_post_setup_ax_sets_pad_and_unclips_text():
-    coord = coord_radial(theta_label_pad=17, theta_labels=True)
-    fig, ax = plt.subplots(subplot_kw={"projection": "polar"})
-    text = ax.text(0, 1, "label", clip_on=True)
+def test_coord_radial_setup_ax_sets_pad_and_unclips_text():
+    data = pd.DataFrame({"x": [1], "y": [1], "label": ["label"]})
+    p = (
+        ggplot(data, aes("x", "y", label="label"))
+        + geom_text()
+        + coord_radial(theta_label_pad=17, theta_labels=True)
+    )
 
+    fig = p.draw()
     try:
-        coord.post_setup_ax(ax)
+        ax = fig.axes[0]
         assert ax.xaxis.get_tick_params()["pad"] == 17
-        assert not text.get_clip_on()
+        assert not ax.texts[0].get_clip_on()
     finally:
         plt.close(fig)

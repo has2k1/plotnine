@@ -567,7 +567,7 @@ class ggplot:
             pidx = layout_info.panel_index
             ax = self.axs[pidx]
             panel_params = self.layout.panel_params[pidx]
-            self.facet.set_limits_breaks_and_labels(panel_params, ax)
+            self.coordinates.setup_ax(ax, panel_params, self.theme)
 
             # Remove unnecessary ticks and labels
             if not layout_info.axis_x:
