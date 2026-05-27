@@ -26,7 +26,7 @@ if typing.TYPE_CHECKING:
     from plotnine.coords.coord import coord
     from plotnine.facets.labelling import CanBeStripLabellingFunc
     from plotnine.facets.layout import Layout
-    from plotnine.iapi import layout_details, panel_view
+    from plotnine.iapi import layout_details
     from plotnine.layer import Layers
     from plotnine.mapping import Environment
     from plotnine.scales.scale import scale
@@ -302,62 +302,6 @@ class facet:
             Axes to label
         """
         return Strips()
-
-    def set_limits_breaks_and_labels(self, panel_params: panel_view, ax: Axes):
-        """
-        Add limits, breaks and labels to the axes
-
-        Parameters
-        ----------
-        panel_params :
-            range information for the axes
-        ax :
-            Axes
-        """
-        from .._mpl.ticker import MyFixedFormatter
-
-        def _inf_to_none(
-            t: tuple[float, float],
-        ) -> tuple[float | None, float | None]:
-            """
-            Replace infinities with None
-            """
-            a = t[0] if np.isfinite(t[0]) else None
-            b = t[1] if np.isfinite(t[1]) else None
-            return (a, b)
-
-        theme = self.theme
-
-        # limits
-        ax.set_xlim(*_inf_to_none(panel_params.x.range))
-        ax.set_ylim(*_inf_to_none(panel_params.y.range))
-
-        if typing.TYPE_CHECKING:
-            assert callable(ax.set_xticks)
-            assert callable(ax.set_yticks)
-
-        # breaks, labels
-        ax.set_xticks(panel_params.x.breaks, panel_params.x.labels)
-        ax.set_yticks(panel_params.y.breaks, panel_params.y.labels)
-
-        # minor breaks
-        ax.set_xticks(panel_params.x.minor_breaks, minor=True)
-        ax.set_yticks(panel_params.y.minor_breaks, minor=True)
-
-        # When you manually set the tick labels MPL changes the locator
-        # so that it no longer reports the x & y positions
-        # Fixes https://github.com/has2k1/plotnine/issues/187
-        ax.xaxis.set_major_formatter(MyFixedFormatter(panel_params.x.labels))
-        ax.yaxis.set_major_formatter(MyFixedFormatter(panel_params.y.labels))
-
-        # Blank axis text is not drawn, so its margin may be absent
-        # (resolves to None). Skip the tick-label padding in that case.
-        if not theme.T.is_blank("axis_text_x"):
-            pad_x = theme.get_margin("axis_text_x").pt.t
-            ax.tick_params(axis="x", which="major", pad=pad_x)
-        if not theme.T.is_blank("axis_text_y"):
-            pad_y = theme.get_margin("axis_text_y").pt.r
-            ax.tick_params(axis="y", which="major", pad=pad_y)
 
     def __deepcopy__(self, memo: dict[Any, Any]) -> facet:
         """
