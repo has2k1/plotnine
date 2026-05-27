@@ -1711,6 +1711,11 @@ class panel_border(MixinSequenceOfValues):
         for rect in targets.panel_border:
             rect.set_visible(False)
 
+    def blank_ax(self, ax: Axes):
+        super().blank_ax(ax)
+        if "polar" in ax.spines:
+            ax.spines["polar"].set_visible(False)
+
 
 class plot_background(themeable):
     """
