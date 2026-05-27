@@ -9,9 +9,11 @@ from plotnine import (
     element_blank,
     element_line,
     geom_col,
+    geom_point,
     ggplot,
     theme,
 )
+from plotnine.coords.coord_cartesian import coord_cartesian
 from plotnine.coords.coord_polar import coord_polar
 from plotnine.scales import scale_x_continuous, scale_y_continuous
 
@@ -178,6 +180,21 @@ def test_coord_polar_draw_uses_polar_axes_and_hides_blank_border():
         ax = fig.axes[0]
         assert ax.name == "polar"
         assert not ax.spines["polar"].get_visible()
+    finally:
+        plt.close(fig)
+
+
+def test_coord_projection_creates_projected_axes():
+    class coord_custom(coord_cartesian):
+        _projection = "polar"
+
+    data = pd.DataFrame({"x": [1, 2], "y": [1, 2]})
+    p = ggplot(data, aes("x", "y")) + geom_point() + coord_custom()
+
+    fig = p.draw()
+
+    try:
+        assert fig.axes[0].name == "polar"
     finally:
         plt.close(fig)
 

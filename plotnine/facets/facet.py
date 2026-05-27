@@ -342,17 +342,15 @@ class facet:
         """
         Create and return subplot axes
         """
-        from ..coords.coord_polar import coord_polar
-
         num_panels = len(self.layout.layout)
         axsarr = np.empty((self.nrow, self.ncol), dtype=object)
         gs = self._make_gridspec()
 
         # Create axes
         projection = (
-            "polar"
-            if isinstance(self.plot.coordinates, coord_polar)
-            else p9Axes.name
+            p9Axes.name
+            if self.plot.coordinates._projection is None
+            else self.plot.coordinates._projection
         )
         it = itertools.product(range(self.nrow), range(self.ncol))
         for i, (row, col) in enumerate(it):
