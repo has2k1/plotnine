@@ -89,8 +89,11 @@ class themeable(metaclass=RegistryHierarchyMeta):
 
     Notes
     -----
-    A user should never create instances of class
-    [](`~plotnine.themes.themeable.Themeable`) or subclasses of it.
+    Most users should not create instances of class
+    [](`~plotnine.themes.themeable.themeable`) or subclasses of it
+    directly. Extension authors may define subclasses; they are registered
+    by class name when their module is imported and can be used through
+    [](`~plotnine.themes.theme.theme`) keyword arguments.
     """
 
     def __init__(self, theme_element: element_base | str | float):
