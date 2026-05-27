@@ -12,6 +12,7 @@ if TYPE_CHECKING:
     from matplotlib.axes import Axes
     from matplotlib.projections.polar import PolarAxes
 
+    from plotnine import theme
     from plotnine.iapi import panel_view
     from plotnine.scales.scale import scale
 
@@ -221,8 +222,8 @@ class coord_radial(coord_polar):
             x_updates["labels"] = theta_labels
 
         # Partial arc: x panel range must match [arc_lo, arc_hi] so that
-        # set_limits_breaks_and_labels calls ax.set_xlim(arc_lo, arc_hi) rather
-        # than ax.set_xlim(0, 2π), which would override set_thetalim.
+        # coord.setup_ax calls ax.set_xlim(arc_lo, arc_hi) rather than
+        # ax.set_xlim(0, 2π), which would override set_thetalim.
         if arc_lo is not None:
             x_updates["limits"] = (arc_lo, arc_hi)
             x_updates["range"] = (arc_lo, arc_hi)
@@ -324,10 +325,13 @@ class coord_radial(coord_polar):
                         np.degrees(float(self.r_axis_inside))
                     )
 
-    def post_setup_ax(self, ax: Axes) -> None:
+    def setup_ax(
+        self, ax: Axes, panel_params: panel_view, theme: theme
+    ) -> None:
         """
-        Apply theta label pad after facet has set tick positions and padding.
+        Apply theta label pad after setting tick positions and padding.
         """
+        super().setup_ax(ax, panel_params, theme)
         if self.theta_labels or self.end is not None:
             ax.tick_params(axis="x", pad=self.theta_label_pad)
         # Allow geom_text labels to extend past the polar axes bounding box
