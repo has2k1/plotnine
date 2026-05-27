@@ -12,6 +12,8 @@ from plotnine import (
     geom_point,
     geom_text,
     ggplot,
+    guide_axis_theta,
+    guides,
     theme,
 )
 from plotnine.coords.coord_cartesian import coord_cartesian
@@ -305,5 +307,27 @@ def test_coord_radial_setup_ax_sets_pad_and_unclips_text():
         ax = fig.axes[0]
         assert ax.xaxis.get_tick_params()["pad"] == 17
         assert not ax.texts[0].get_clip_on()
+    finally:
+        plt.close(fig)
+
+
+def test_coord_radial_uses_guide_axis_theta_angle():
+    data = pd.DataFrame({"x": [1, 2, 3], "y": [1, 2, 3]})
+    p = (
+        ggplot(data, aes("x", "y"))
+        + geom_point()
+        + coord_radial(theta_labels=True)
+        + guides(theta=guide_axis_theta(angle=35))
+    )
+
+    fig = p.draw()
+    try:
+        rotations = [
+            label.get_rotation()
+            for label in fig.axes[0].get_xticklabels()
+            if label.get_text()
+        ]
+        assert rotations
+        assert rotations == [35] * len(rotations)
     finally:
         plt.close(fig)

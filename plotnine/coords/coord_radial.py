@@ -334,7 +334,21 @@ class coord_radial(coord_polar):
         super().setup_ax(ax, panel_params, theme)
         if self.theta_labels or self.end is not None:
             ax.tick_params(axis="x", pad=self.theta_label_pad)
+            if (angle := self._theta_guide_angle(theme)) is not None:
+                ax.tick_params(axis="x", labelrotation=angle)
+                for label in ax.get_xticklabels():
+                    label.set_rotation(angle)
+                    label.set_rotation_mode("anchor")
         # Allow geom_text labels to extend past the polar axes bounding box
         # (e.g. spoke labels placed just beyond the outermost bar tip).
         for text in ax.texts:
             text.set_clip_on(False)
+
+    @staticmethod
+    def _theta_guide_angle(theme: theme) -> float | None:
+        """
+        Return the angle from guides(theta=guide_axis_theta(...)).
+        """
+        guide = getattr(getattr(theme, "owner", None), "guides", None)
+        guide = getattr(guide, "theta", None)
+        return getattr(guide, "angle", None)
