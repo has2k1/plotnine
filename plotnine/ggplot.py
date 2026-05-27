@@ -520,11 +520,6 @@ class ggplot:
         # grid lines below the borders. We leave ax.patch for the
         # background only.
         if self.theme.T.is_blank("panel_border"):
-            # For PolarAxes the default circular spine is separate from the
-            # panel border Rectangle; hide it explicitly when blank.
-            for ax in self.axs:
-                if "polar" in ax.spines:
-                    ax.spines["polar"].set_visible(False)
             return
 
         from matplotlib.patches import Rectangle
