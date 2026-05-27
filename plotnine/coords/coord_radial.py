@@ -335,10 +335,13 @@ class coord_radial(coord_polar):
         if self.theta_labels or self.end is not None:
             ax.tick_params(axis="x", pad=self.theta_label_pad)
             if (angle := self._theta_guide_angle(theme)) is not None:
-                ax.tick_params(axis="x", labelrotation=angle)
-                for label in ax.get_xticklabels():
-                    label.set_rotation(angle)
-                    label.set_rotation_mode("anchor")
+                # Use Matplotlib's 'auto' mode so labels orient tangentially
+                # to the arc, with `angle` as an offset — matching ggplot2's
+                # guide_axis_theta() semantics where angle=0 means tangential.
+                # ax.tick_params(labelrotation=...) always sets 'default' mode
+                # (absolute degrees), so we patch each tick directly instead.
+                for tick in ax.xaxis.get_major_ticks():
+                    tick._labelrotation = ("auto", angle)
         # Allow geom_text labels to extend past the polar axes bounding box
         # (e.g. spoke labels placed just beyond the outermost bar tip).
         for text in ax.texts:
