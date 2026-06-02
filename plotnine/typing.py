@@ -152,4 +152,4 @@ class DisplayMetadata(TypedDict):
     height: NotRequired[int]
 
 
-MimeBundle: TypeAlias = tuple[dict[str, bytes], dict[str, DisplayMetadata]]
+MimeBundle: TypeAlias = tuple[dict[str, str], dict[str, DisplayMetadata]]

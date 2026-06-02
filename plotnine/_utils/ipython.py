@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import base64
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -63,4 +64,14 @@ def get_mimebundle(
         # `retina=True` in IPython.display.Image just halves width/height
         metadata = {mimetype: {"width": w // 2, "height": h // 2}}
 
-    return {mimetype: b}, metadata
+    # The display data for a binary image must be base64 encoded and for
+    # svg it must be text. The jupyter messaging layer encodes the bytes
+    # automatically, but consumers that read the MIME bundle directly
+    # (e.g. quarto-live's pyodide engine) do not.
+    data: str = (
+        b.decode("utf-8")
+        if mimetype == "image/svg+xml"
+        else base64.b64encode(b).decode("ascii")
+    )
+
+    return {mimetype: data}, metadata
