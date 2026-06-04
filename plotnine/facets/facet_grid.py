@@ -189,7 +189,7 @@ class facet_grid(facet):
 
         n = len(base)
         panel = ninteraction(base, drop=True)
-        panel = pd.Categorical(panel, categories=range(1, n + 1))  # pyright: ignore[reportArgumentType]
+        panel = pd.Categorical(panel, categories=range(1, n + 1))
 
         if self.rows:
             rows = ninteraction(base[self.rows], drop=True)
