@@ -1,0 +1,286 @@
+from typing import TYPE_CHECKING, cast
+
+import numpy as np
+import pandas as pd
+
+from .._utils import array_kind, jitter, nextafter_range, resolution
+from ..doctools import document
+from ..exceptions import PlotnineError
+from ..mapping.aes import has_groups
+from .binning import breaks_from_bins, breaks_from_binwidth
+from .stat import stat
+from .stat_density import compute_density
+
+if TYPE_CHECKING:
+    from plotnine.typing import FloatArray, IntArray
+
+
+def van_der_corput(n: int) -> np.ndarray:
+    """Van der Corput low-discrepancy sequence of length n.
+
+    Rotated so the value closest to 0.5 comes first, placing the
+    minimum-y point at the swarm centre.
+    """
+    if n <= 0:
+        return np.array([])
+    indices = np.arange(n, dtype=np.uint32)
+    bytes_ = indices.astype(">u4").view(np.uint8).reshape(n, 4)
+    vdc = np.unpackbits(bytes_, axis=1) @ np.exp2(-np.arange(32, 0, -1))
+    start = int(np.argmin(np.abs(vdc - 0.5)))
+    return np.roll(vdc, -start)
+
+
+@document
+class stat_beeswarm(stat):
+    """
+    Compute beeswarm plot values
+
+    {usage}
+
+    Parameters
+    ----------
+    {common_parameters}
+    binwidth : float, default=None
+        The width of the bins. The default is to use bins that
+        cover the range of the data. You should always override this
+        value, exploring multiple widths to find the best to
+        illustrate the stories in your data.
+    bins : int, default=50
+        Number of bins. Overridden by binwidth.
+    method : Literal["density", "counts"], default="density"
+        Choose the method to spread the samples within the same bin
+        along the x-axis. Available methods: "density", "counts"
+        (can be abbreviated, e.g. "d"). See Details.
+    maxwidth : float, default=None
+        Control the maximum width the points can spread into.
+        Values should be in the range (0, 1).
+    adjust : float, default=1
+        Adjusts the bandwidth of the density kernel when
+        `method="density"`. see [](`~plotnine.stats.stat_density`).
+    bw : str | float, default="nrd0"
+        The bandwidth to use, If a float is given, it is the bandwidth.
+        The `str`{.py} choices are:
+        `"nrd0", "normal_reference", "scott", "silverman"`{.py}
+
+        `nrd0` is a port of `stats::bw.nrd0` in R; it is eqiuvalent
+        to `silverman` when there is more than 1 value in a group.
+    bin_limit : int, default=1
+        If the samples within the same y-axis bin are more
+        than `bin_limit`, the samples's X coordinates will be adjusted.
+        This parameter is effective only when `method="counts"`{.py}
+    scale : Literal["area", "count", "width"], default="area"
+        How to scale the beeswarm groups.
+
+        - `area` - Scale by the largest density/bin among the
+          different beeswarms.
+        - `count` - areas are scaled proportionally to the number of points
+        - `width` - Only scale according to the maxwidth parameter.
+    style :
+        Type of beeswarm plot to draw. The options are
+        ```python
+        'full'        # Regular (2 sided)
+        'left'        # Left-sided half
+        'right'       # Right-sided half
+        'left-right'  # Alternate (left first) half by the group
+        'right-left'  # Alternate (right first) half by the group
+        ```
+
+    See Also
+    --------
+    plotnine.geom_beeswarm : The default `geom` for this `stat`.
+    """
+
+    _aesthetics_doc = """
+    {aesthetics_table}
+
+    **Options for computed aesthetics**
+
+    ```python
+    "quantile"  # quantile
+    "group"     # group identifier
+    ```
+
+    Calculated aesthetics are accessed using the `after_stat` function.
+    e.g. `after_stat('quantile')`{.py}.
+    """
+
+    REQUIRED_AES = {"x", "y"}
+    DEFAULT_PARAMS = {
+        "geom": "beeswarm",
+        "position": "dodge",
+        "binwidth": None,
+        "bins": None,
+        "method": "density",
+        "bw": "nrd0",
+        "maxwidth": None,
+        "adjust": 1,
+        "bin_limit": 1,
+        "scale": "area",
+        "style": "full",
+    }
+    CREATES = {"scaled"}
+
+    def setup_data(self, data):
+        if (
+            array_kind.continuous(data["x"])
+            and not has_groups(data)
+            and (data["x"] != data["x"].iloc[0]).any()
+        ):
+            raise TypeError(
+                "Continuous x aesthetic -- did you forget aes(group=...)?"
+            )
+        return data
+
+    def setup_params(self, data):
+        params = self.params
+
+        if params["maxwidth"] is None:
+            params["maxwidth"] = resolution(data["x"], False) * 0.9
+
+        if params["binwidth"] is None and self.params["bins"] is None:
+            params["bins"] = 50
+
+        # Required by compute_density
+        params["kernel"] = "gau"  # It has to be a gaussian kernel
+        params["cut"] = 0
+        params["gridsize"] = None
+        params["clip"] = (-np.inf, np.inf)
+        params["bounds"] = (-np.inf, np.inf)
+        params["n"] = 512
+
+    def compute_panel(self, data, scales):
+        params = self.params
+        maxwidth = params["maxwidth"]
+        data = super().compute_panel(data, scales)
+
+        if not len(data):
+            return data
+
+        if params["scale"] == "area":
+            data["swarmwidth"] = data["density"] / data["density"].max()
+        elif params["scale"] == "count":
+            data["swarmwidth"] = (
+                data["density"]
+                / data["density"].max()
+                * data["n"]
+                / data["n"].max()
+            )
+        elif params["scale"] == "width":
+            data["swarmwidth"] = data["scaled"]
+        else:
+            msg = "Unknown scale value '{}'"
+            raise PlotnineError(msg.format(params["scale"]))
+
+        is_infinite = ~np.isfinite(data["swarmwidth"])
+        if is_infinite.any():
+            data.loc[is_infinite, "swarmwidth"] = 0
+
+        data["xmin"] = data["x"] - maxwidth / 2
+        data["xmax"] = data["x"] + maxwidth / 2
+        data["x_diff"] = 0.0
+        data["width"] = maxwidth
+
+        for _, grp in data.groupby("group", sort=False):
+            idx = grp.index
+            n = len(grp)
+            y_rank = np.argsort(np.argsort(grp["y"].to_numpy()))
+            seq = van_der_corput(n)
+            data.loc[idx, "x_diff"] = (
+                (seq[y_rank] - 0.5) * maxwidth * grp["swarmwidth"].to_numpy()
+            )
+
+        # jitter y values if the input is integer,
+        # but not if it is the same value
+        y = data["y"].to_numpy()
+        all_integers = (y == np.floor(y)).all()
+        some_are_unique = len(np.unique(y)) > 1
+        if all_integers and some_are_unique:
+            # TODO: expose random_state as a stat parameter for reproducibility
+            data["y"] = jitter(y, random_state=42)
+
+        return data
+
+    def compute_group(self, data, scales):
+        binwidth = self.params["binwidth"]
+        maxwidth = self.params["maxwidth"]
+        bin_limit = self.params["bin_limit"]
+        weight = None
+        y = data["y"]
+
+        if len(data) == 0:
+            return pd.DataFrame()
+
+        elif len(data) < 3 or len(np.unique(y)) < 2:
+            data["density"] = 1
+            data["scaled"] = 1
+        elif self.params["method"] == "density":
+            from scipy.interpolate import interp1d
+
+            # density kernel estimation
+            range_y = y.min(), y.max()
+            dens = compute_density(y, weight, range_y, self.params)
+            densf = interp1d(
+                dens["x"],
+                dens["density"],
+                bounds_error=False,
+                fill_value="extrapolate",  # pyright: ignore
+            )
+            data["density"] = densf(y)
+            data["scaled"] = data["density"] / dens["density"].max()
+        else:
+            expanded_y_range = nextafter_range(scales.y.dimension())
+            if binwidth is not None:
+                bins = breaks_from_binwidth(expanded_y_range, binwidth)
+            else:
+                bins = breaks_from_bins(expanded_y_range, self.params["bins"])
+
+            # bin based estimation
+            bin_index = pd.cut(y, bins, include_lowest=True, labels=False)  # pyright: ignore[reportCallIssue,reportArgumentType]
+            data["density"] = (
+                pd.Series(bin_index)
+                .groupby(bin_index)
+                .apply(len)[bin_index]
+                .to_numpy()
+            )
+            data.loc[data["density"] <= bin_limit, "density"] = 0
+            data["scaled"] = data["density"] / data["density"].max()
+
+        # Compute width if x has multiple values
+        if len(data["x"].unique()) > 1:
+            width = np.ptp(data["x"]) * maxwidth
+        else:
+            width = maxwidth
+
+        data["width"] = width
+        data["n"] = len(data)
+        data["x"] = np.mean([data["x"].max(), data["x"].min()])
+
+        return data
+
+    def finish_layer(self, data):
+        # Rescale x in case positions have been adjusted
+        style = self.params["style"]
+        x_mean = cast("FloatArray", data["x"].to_numpy())
+        x_mod = (data["xmax"] - data["xmin"]) / data["width"]
+        data["x"] = data["x"] + data["x_diff"] * x_mod
+        group = cast("IntArray", data["group"].to_numpy())
+        x = cast("FloatArray", data["x"].to_numpy())
+        even = group % 2 == 0
+
+        def mirror_x(bool_idx):
+            """
+            Mirror x locations along the mean value
+            """
+            data.loc[bool_idx, "x"] = 2 * x_mean[bool_idx] - x[bool_idx]
+
+        match style:
+            case "left":
+                mirror_x(x_mean < x)
+            case "right":
+                mirror_x(x < x_mean)
+            case "left-right":
+                mirror_x(even & (x < x_mean) | ~even & (x_mean < x))
+            case "right-left":
+                mirror_x(even & (x_mean < x) | ~even & (x < x_mean))
+
+        return data
