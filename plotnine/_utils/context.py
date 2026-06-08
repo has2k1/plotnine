@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from copy import copy
+from copy import copy, deepcopy
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
@@ -73,7 +73,7 @@ class plot_context:
         Enclose in matplolib & pandas environments
         """
 
-        self._last_plot = copy(self.plot)
+        self._last_plot = deepcopy(self.plot)
         self.rc_context.__enter__()
         if PANDAS_LT_3:
             self.pd_option_context.__enter__()
