@@ -2,6 +2,27 @@
 title: Changelog
 ---
 
+## v0.15.6
+(2026-06-08)
+
+### Bug Fixes
+
+- Fixed `last_plot()` so that it returns an independent, pristine snapshot of
+  the plot. Previously the plot was stored as a shallow copy and building it
+  mutated shared nested state (e.g. the theme), leaving `last_plot()`
+  referencing a half-built plot.
+
+## v0.15.5
+(2026-06-03)
+
+### Bug Fixes
+
+- Fixed the MIME bundle returned for a plot so that binary images
+  (`image/png`, `image/jpeg` and `application/pdf`) are base64-encoded. This
+  makes the bundle valid for consumers that read it directly, e.g.
+  quarto-live's pyodide engine.
+
+
 ## v0.15.4
 (2026-05-05)
 
