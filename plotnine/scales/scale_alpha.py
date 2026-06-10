@@ -1,8 +1,9 @@
 from dataclasses import KW_ONLY, InitVar, dataclass
-from typing import Literal
 from warnings import warn
 
 import numpy as np
+
+from plotnine.scales._runtime_typing import OptionalLegend
 
 from .._utils.registry import alias
 from ..exceptions import PlotnineWarning
@@ -12,7 +13,7 @@ from .scale_discrete import scale_discrete
 
 
 @dataclass
-class scale_alpha(scale_continuous[Literal["legend"]]):
+class scale_alpha(scale_continuous[OptionalLegend]):
     """
     Continuous Alpha Scale
     """
@@ -25,7 +26,7 @@ class scale_alpha(scale_continuous[Literal["legend"]]):
     """
 
     _: KW_ONLY
-    guide: Literal["legend"] = "legend"
+    guide: OptionalLegend = "legend"
 
     def __post_init__(self, range):
         from mizani.palettes import rescale_pal
@@ -40,10 +41,13 @@ class scale_alpha_continuous(scale_alpha):
 
 
 @dataclass
-class scale_alpha_ordinal(scale_discrete):
+class scale_alpha_ordinal(scale_discrete[OptionalLegend]):
     """
     Ordinal Alpha Scale
     """
+
+    _: KW_ONLY
+    guide: OptionalLegend = "legend"
 
     _aesthetics = ["alpha"]
     range: InitVar[tuple[float, float]] = (0.1, 1)
@@ -89,7 +93,7 @@ class scale_alpha_datetime(scale_datetime):
     """
 
     _: KW_ONLY
-    guide: Literal["legend"] = "legend"
+    guide: OptionalLegend = "legend"
 
     def __post_init__(
         self,

@@ -1,5 +1,7 @@
-from dataclasses import dataclass
+from dataclasses import KW_ONLY, dataclass
 from warnings import warn
+
+from plotnine.scales._runtime_typing import OptionalLegend
 
 from .._utils.registry import alias
 from ..exceptions import PlotnineError, PlotnineWarning
@@ -10,7 +12,7 @@ LINETYPES = ["solid", "dashed", "dashdot", "dotted"]
 
 
 @dataclass
-class scale_linetype(scale_discrete):
+class scale_linetype(scale_discrete[OptionalLegend]):
     """
     Scale for line patterns
 
@@ -23,6 +25,9 @@ class scale_linetype(scale_discrete):
     """
 
     _aesthetics = ["linetype"]
+
+    _: KW_ONLY
+    guide: OptionalLegend = "legend"
 
     def __post_init__(self):
         from mizani.palettes import manual_pal

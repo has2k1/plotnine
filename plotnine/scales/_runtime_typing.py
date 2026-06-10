@@ -5,7 +5,7 @@ out so that we can refer to them as plotnine.scales._runtime_typing for
 the documentation.
 """
 
-from typing import Callable, Sequence, Type, TypeAlias, TypeVar
+from typing import Callable, Literal, Sequence, Type, TypeAlias, TypeVar
 
 from mizani.transforms import trans
 
@@ -50,6 +50,10 @@ ScaleLabelsUser: TypeAlias = (
 )
 
 TransUser: TypeAlias = trans | str | Type[trans] | None
+
+OptionalLegend: TypeAlias = Literal["legend"] | None
+OptionalColorbar: TypeAlias = Literal["colorbar"] | None
+OptionalGuide: TypeAlias = Literal["legend", "colorbar"] | None
 
 RangeT = TypeVar("RangeT", bound=Range)
 BreaksUserT = TypeVar("BreaksUserT")

@@ -4,6 +4,8 @@ from dataclasses import KW_ONLY, InitVar, dataclass, field
 from typing import Literal, Sequence
 from warnings import warn
 
+from plotnine.scales._runtime_typing import OptionalGuide, OptionalLegend
+
 from .._utils.registry import alias
 from ..exceptions import PlotnineWarning
 from .scale_continuous import scale_continuous
@@ -12,13 +14,14 @@ from .scale_discrete import scale_discrete
 
 
 @dataclass
-class _scale_color_discrete(scale_discrete):
+class _scale_color_discrete(scale_discrete[OptionalLegend]):
     """
     Base class for all discrete color scales
     """
 
     _aesthetics = ["color"]
     _: KW_ONLY
+    guide: OptionalLegend = "legend"
     na_value: str = "#7F7F7F"
     """
     Color of missing values.
@@ -27,7 +30,7 @@ class _scale_color_discrete(scale_discrete):
 
 @dataclass
 class _scale_color_continuous(
-    scale_continuous[Literal["legend", "colorbar"] | None],
+    scale_continuous[OptionalGuide],
 ):
     """
     Base class for all continuous color scales
@@ -35,7 +38,7 @@ class _scale_color_continuous(
 
     _aesthetics = ["color"]
     _: KW_ONLY
-    guide: Literal["legend", "colorbar"] | None = "colorbar"
+    guide: OptionalGuide = "colorbar"
     na_value: str = "#7F7F7F"
     """
     Color of missing values.
@@ -563,7 +566,7 @@ class scale_color_datetime(scale_datetime, scale_color_cmap):  # pyright: ignore
     """
 
     _: KW_ONLY
-    guide: Literal["legend", "colorbar"] | None = "colorbar"
+    guide: OptionalGuide = "colorbar"
 
     def __post_init__(
         self,
