@@ -4,14 +4,28 @@
     "href": "changelog.html",
     "title": "Changelog",
     "section": "",
-    "text": "(2026-05-05)\n\n\n\nBundled agent skills\n\n\n\n\n\nAllow statsmodels==0.14.4 on pyodide, which bundles that version. Other platforms still require statsmodels&gt;=0.14.6 for pandas 3 compatibility."
+    "text": "(2026-06-08)\n\n\n\nFixed last_plot() so that it returns an independent, pristine snapshot of the plot. Previously the plot was stored as a shallow copy and building it mutated shared nested state (e.g. the theme), leaving last_plot() referencing a half-built plot."
+  },
+  {
+    "objectID": "changelog.html#v0.15.6",
+    "href": "changelog.html#v0.15.6",
+    "title": "Changelog",
+    "section": "",
+    "text": "(2026-06-08)\n\n\n\nFixed last_plot() so that it returns an independent, pristine snapshot of the plot. Previously the plot was stored as a shallow copy and building it mutated shared nested state (e.g. the theme), leaving last_plot() referencing a half-built plot."
+  },
+  {
+    "objectID": "changelog.html#v0.15.5",
+    "href": "changelog.html#v0.15.5",
+    "title": "Changelog",
+    "section": "v0.15.5",
+    "text": "v0.15.5\n(2026-06-03)\n\nBug Fixes\n\nFixed the MIME bundle returned for a plot so that binary images (image/png, image/jpeg and application/pdf) are base64-encoded. This makes the bundle valid for consumers that read it directly, e.g. quarto-live’s pyodide engine."
   },
   {
     "objectID": "changelog.html#v0.15.4",
     "href": "changelog.html#v0.15.4",
     "title": "Changelog",
-    "section": "",
-    "text": "(2026-05-05)\n\n\n\nBundled agent skills\n\n\n\n\n\nAllow statsmodels==0.14.4 on pyodide, which bundles that version. Other platforms still require statsmodels&gt;=0.14.6 for pandas 3 compatibility."
+    "section": "v0.15.4",
+    "text": "v0.15.4\n(2026-05-05)\n\nNew\n\nBundled agent skills\n\n\n\nBug Fixes\n\nAllow statsmodels==0.14.4 on pyodide, which bundles that version. Other platforms still require statsmodels&gt;=0.14.6 for pandas 3 compatibility."
   },
   {
     "objectID": "changelog.html#v0.15.3",
