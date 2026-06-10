@@ -28,7 +28,11 @@ dependencies = [
     "mizani~=0.14.0",
     "numpy>=1.23.5",
     "scipy>=1.8.0",
-    "statsmodels>=0.14.6",
+    # pyodide ships with statmodels==0.14.4 which is broken for later versions
+    # of numpy and pandas
+    # https://github.com/statsmodels/statsmodels/releases/tag/v0.14.6
+    "statsmodels<=0.14.4; sys_platform == 'emscripten'",
+    "statsmodels>=0.14.6; sys_platform != 'emscripten'",
 ]
 requires-python = ">=3.10"
 
