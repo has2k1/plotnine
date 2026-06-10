@@ -5,13 +5,15 @@ from dataclasses import KW_ONLY, InitVar, dataclass
 from typing import Any, Sequence
 from warnings import warn
 
+from plotnine.scales._runtime_typing import OptionalLegend
+
 from .._utils.registry import alias
 from ..exceptions import PlotnineWarning
 from .scale_discrete import scale_discrete
 
 
 @dataclass
-class _scale_manual(scale_discrete):
+class _scale_manual(scale_discrete[OptionalLegend]):
     """
     Abstract class for manual scales
     """
@@ -20,6 +22,8 @@ class _scale_manual(scale_discrete):
     """
     Exact values the scale should map to.
     """
+    _: KW_ONLY
+    guide: OptionalLegend = "legend"
 
     def __post_init__(self, values):
         from collections.abc import Iterable, Sized

@@ -1,5 +1,7 @@
-from dataclasses import InitVar, dataclass
+from dataclasses import KW_ONLY, InitVar, dataclass
 from warnings import warn
+
+from plotnine.scales._runtime_typing import OptionalLegend
 
 from .._utils.registry import alias
 from ..exceptions import PlotnineError, PlotnineWarning
@@ -50,7 +52,7 @@ UNFILLED_SHAPES = set(unfilled_shapes)
 
 
 @dataclass
-class scale_shape(scale_discrete):
+class scale_shape(scale_discrete[OptionalLegend]):
     """
     Scale for shapes
     """
@@ -61,6 +63,8 @@ class scale_shape(scale_discrete):
     If `True`, then all shapes will have no interiors
     that can be a filled.
     """
+    _: KW_ONLY
+    guide: OptionalLegend = "legend"
 
     def __post_init__(self, unfilled):
         from mizani.palettes import manual_pal

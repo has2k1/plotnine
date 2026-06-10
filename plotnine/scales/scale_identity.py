@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 from dataclasses import KW_ONLY, dataclass
-from typing import TYPE_CHECKING, Literal
+from typing import TYPE_CHECKING
+
+from plotnine.scales._runtime_typing import OptionalLegend
 
 from .._utils.registry import alias
 from .scale_continuous import scale_continuous
@@ -37,14 +39,14 @@ class MapTrainMixin:
 
 
 @dataclass
-class scale_color_identity(MapTrainMixin, scale_discrete):
+class scale_color_identity(MapTrainMixin, scale_discrete[OptionalLegend]):
     """
     No color scaling
     """
 
     _aesthetics = ["color"]
     _: KW_ONLY
-    guide: Literal["legend"] | None = None
+    guide: OptionalLegend = "legend"
 
 
 @dataclass
@@ -54,67 +56,61 @@ class scale_fill_identity(scale_color_identity):
     """
 
     _aesthetics = ["fill"]
-    _: KW_ONLY
-    guide: Literal["legend"] | None = None
 
 
 @dataclass
-class scale_shape_identity(MapTrainMixin, scale_discrete):
+class scale_shape_identity(MapTrainMixin, scale_discrete[OptionalLegend]):
     """
     No shape scaling
     """
 
     _aesthetics = ["shape"]
     _: KW_ONLY
-    guide: Literal["legend"] | None = None
+    guide: OptionalLegend = "legend"
 
 
 @dataclass
-class scale_linetype_identity(MapTrainMixin, scale_discrete):
+class scale_linetype_identity(MapTrainMixin, scale_discrete[OptionalLegend]):
     """
     No linetype scaling
     """
 
     _aesthetics = ["linetype"]
     _: KW_ONLY
-    guide: Literal["legend"] | None = None
+    guide: OptionalLegend = "legend"
 
 
 @dataclass
-class scale_alpha_identity(
-    MapTrainMixin, scale_continuous[Literal["legend"] | None]
-):
+class scale_alpha_identity(MapTrainMixin, scale_continuous[OptionalLegend]):
     """
     No alpha scaling
     """
 
     _aesthetics = ["alpha"]
     _: KW_ONLY
-    guide: Literal["legend"] | None = None
+    guide: OptionalLegend = "legend"
 
 
 @dataclass
-class scale_size_identity(
-    MapTrainMixin, scale_continuous[Literal["legend"] | None]
-):
+class scale_size_identity(MapTrainMixin, scale_continuous[OptionalLegend]):
     """
     No size scaling
     """
 
     _aesthetics = ["size"]
     _: KW_ONLY
-    guide: Literal["legend"] | None = None
+    guide: OptionalLegend = None
 
 
 @dataclass
-class scale_stroke_identity(MapTrainMixin, scale_discrete):
+class scale_stroke_identity(MapTrainMixin, scale_discrete[OptionalLegend]):
     """
     No stroke scaling
     """
 
     _aesthetics = ["stroke"]
     _: KW_ONLY
-    guide: Literal["legend"] | None = None
+    guide: OptionalLegend = None
 
 
 # American to British spelling

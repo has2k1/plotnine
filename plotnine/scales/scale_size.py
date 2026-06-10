@@ -1,9 +1,10 @@
 from dataclasses import KW_ONLY, InitVar, dataclass
-from typing import Literal
 from warnings import warn
 
 import numpy as np
 from mizani.bounds import rescale_max
+
+from plotnine.scales._runtime_typing import OptionalLegend
 
 from .._utils.registry import alias
 from ..exceptions import PlotnineWarning
@@ -13,7 +14,7 @@ from .scale_discrete import scale_discrete
 
 
 @dataclass
-class scale_size_ordinal(scale_discrete):
+class scale_size_ordinal(scale_discrete[OptionalLegend]):
     """
     Discrete area size scale
     """
@@ -23,6 +24,8 @@ class scale_size_ordinal(scale_discrete):
     """
     Range ([Minimum, Maximum]) of the size.
     """
+    _: KW_ONLY
+    guide: OptionalLegend = "legend"
 
     def __post_init__(self, range):
         super().__post_init__()
@@ -51,7 +54,7 @@ class scale_size_discrete(scale_size_ordinal):
 
 
 @dataclass
-class scale_size_continuous(scale_continuous[Literal["legend"] | None]):
+class scale_size_continuous(scale_continuous[OptionalLegend]):
     """
     Continuous area size scale
     """
@@ -63,7 +66,7 @@ class scale_size_continuous(scale_continuous[Literal["legend"] | None]):
     """
 
     _: KW_ONLY
-    guide: Literal["legend"] | None = "legend"
+    guide: OptionalLegend = "legend"
 
     def __post_init__(self, range):
         from mizani.palettes import area_pal
@@ -78,7 +81,7 @@ class scale_size(scale_size_continuous):
 
 
 @dataclass
-class scale_size_radius(scale_continuous[Literal["legend"] | None]):
+class scale_size_radius(scale_continuous[OptionalLegend]):
     """
     Continuous radius size scale
     """
@@ -90,7 +93,7 @@ class scale_size_radius(scale_continuous[Literal["legend"] | None]):
     """
 
     _: KW_ONLY
-    guide: Literal["legend"] | None = "legend"
+    guide: OptionalLegend = "legend"
 
     def __post_init__(self, range):
         from mizani.palettes import rescale_pal
@@ -100,7 +103,7 @@ class scale_size_radius(scale_continuous[Literal["legend"] | None]):
 
 
 @dataclass
-class scale_size_area(scale_continuous[Literal["legend"] | None]):
+class scale_size_area(scale_continuous[OptionalLegend]):
     """
     Continuous area size scale
     """
@@ -113,7 +116,7 @@ class scale_size_area(scale_continuous[Literal["legend"] | None]):
 
     _: KW_ONLY
     rescaler = rescale_max
-    guide: Literal["legend"] | None = "legend"
+    guide: OptionalLegend = "legend"
 
     def __post_init__(self, max_size):
         from mizani.palettes import abs_area
@@ -135,7 +138,7 @@ class scale_size_datetime(scale_datetime):
     """
 
     _: KW_ONLY
-    guide: Literal["legend"] | None = "legend"
+    guide: OptionalLegend = "legend"
 
     def __post_init__(
         self, range, date_breaks, date_labels, date_minor_breaks

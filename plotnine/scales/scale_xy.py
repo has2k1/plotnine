@@ -32,10 +32,13 @@ if TYPE_CHECKING:
 # are intermediate base classes where the required overriding
 # is done
 @dataclass(kw_only=True)
-class scale_position_discrete(scale_discrete):
+class scale_position_discrete(scale_discrete[None]):
     """
     Base class for discrete position scales
     """
+
+    # All positions have no guide
+    guide: None = None
 
     def __post_init__(self):
         super().__post_init__()
@@ -43,9 +46,6 @@ class scale_position_discrete(scale_discrete):
         self._range_c = RangeContinuous()
         if isinstance(self.limits, tuple):
             self.limits = list(self.limits)
-
-        # All positions have no guide
-        self.guide = None
 
     def reset(self):
         # Can't reset discrete scale because

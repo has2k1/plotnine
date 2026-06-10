@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Any, Literal, Sequence
+from typing import TYPE_CHECKING, Any, Sequence
 
 import numpy as np
 import pandas as pd
@@ -11,7 +11,7 @@ from mizani.palettes import none_pal
 from .._utils import match
 from ..iapi import range_view, scale_view
 from ._expand import expand_range
-from ._runtime_typing import DiscreteBreaksUser, DiscreteLimitsUser
+from ._runtime_typing import DiscreteBreaksUser, DiscreteLimitsUser, GuideTypeT
 from .range import RangeDiscrete
 from .scale import scale
 
@@ -29,7 +29,7 @@ class scale_discrete(
         RangeDiscrete,
         DiscreteBreaksUser,
         DiscreteLimitsUser,
-        Literal["legend"] | None,
+        GuideTypeT,
     ]
 ):
     """
@@ -68,8 +68,6 @@ class scale_discrete(
     missing values. This parameter does not apply to position scales where
     `nan` is always placed on the right.
     """
-
-    guide: Literal["legend"] | None = "legend"
 
     def __post_init__(self):
         super().__post_init__()
