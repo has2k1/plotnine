@@ -8,7 +8,7 @@ from weakref import WeakValueDictionary
 from ..exceptions import PlotnineError
 
 if TYPE_CHECKING:
-    from typing import TypeVar
+    from typing import Any, TypeVar
 
     T = TypeVar("T")
 
@@ -108,3 +108,28 @@ class RegistryHierarchyMeta(type):
             for base in bases:
                 for base2 in base.mro()[:-2]:
                     cls._hierarchy[base2.__name__].append(name)
+
+
+class _MergedDefaultParams:
+    """
+    DEFAULT_PARAMS declarations merged down the class hierarchy
+
+    The merged result is cached per class and the cached dict is
+    shared, so consumers must only read it or combine it into a new
+    dict. Assumes single inheritance, which holds for all geoms &
+    stats (the only mixin is ABC on the root classes and it
+    contributes nothing).
+    """
+
+    def __get__(self, obj: Any, cls: type | None = None) -> dict[str, Any]:
+        if cls is None:
+            cls = type(obj)
+        # cls.__dict__ (not getattr) so a parent's cache is never inherited
+        if "_default_params" not in cls.__dict__:
+            declared = cls.__dict__.get("DEFAULT_PARAMS", {})
+            # The parent's view is fully merged: this getattr recurses
+            # through this same descriptor and caches along the way.
+            # Terminates at the root (ABC has no default_params).
+            inherited = getattr(cls.__mro__[1], "default_params", {})
+            cls._default_params = inherited | declared
+        return cls.__dict__["_default_params"]

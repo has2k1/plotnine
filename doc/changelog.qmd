@@ -66,13 +66,20 @@ title: Changelog
   layer(geom=geom_point())
   ```
 
-- `geom.DEFAULT_PARAMS` now implicitly includes `stat="identity"`, `position="identity`
-  and `na_rm=False`.
-
-- `stat.DEFAULT_PARAMS` now implicitly includes `geom="blank"`, `position="identity`
-  and `na_rm=False`.
+- `DEFAULT_PARAMS` declarations are now inherited down the class hierarchy;
+  a subclass geom or stat only declares the parameters that differ from its
+  parent. The base `geom` class declares `stat="identity"`,
+  `position="identity"` and `na_rm=False`, and the base `stat` class declares
+  `geom="blank"`, `position="identity"` and `na_rm=False`, so all geoms and
+  stats include them automatically.
 
 ### Bug Fixes
+
+- Subclass geoms now inherit their parent geom's default parameters, so
+  parameters that a parent geom supports are no longer rejected.
+  [](:class:`~plotnine.geom_step`) accepts `lineend`, `linejoin` and `arrow`,
+  [](:class:`~plotnine.geom_quantile`) accepts `arrow`, and
+  [](:class:`~plotnine.geom_histogram`) accepts `just` and `width`.
 
 - Fixed [](:class:`~plotnine.geom_smooth`) / [](:class:`~plotnine.stat_smooth`) when using a linear model via "lm" with weights for the model to do a weighted regression. This bug did not affect the formula API of the linear model. ({{< issue 1005 >}})
 

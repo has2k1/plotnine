@@ -28,8 +28,4 @@ class geom_quantile(geom_path):
         "linetype": "solid",
         "size": 0.5,
     }
-    DEFAULT_PARAMS = {
-        "stat": "quantile",
-        "lineend": "butt",
-        "linejoin": "round",
-    }
+    DEFAULT_PARAMS = {"stat": "quantile"}

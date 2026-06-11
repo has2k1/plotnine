@@ -13,9 +13,4 @@ class geom_freqpoly(geom_path):
     of the parameters.
     """
 
-    DEFAULT_PARAMS = {
-        "stat": "bin",
-        "lineend": "butt",
-        "linejoin": "round",
-        "arrow": None,
-    }
+    DEFAULT_PARAMS = {"stat": "bin"}

@@ -51,7 +51,7 @@ class geom_bar(geom_rect):
             else:
                 data["width"] = resolution(data["x"], False) * 0.9
 
-        just = self.params.get("just", 0.5)
+        just = self.params["just"]
 
         bool_idx = data["y"] < 0
 

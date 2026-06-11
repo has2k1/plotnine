@@ -13,7 +13,7 @@ from .._utils import (
     remove_missing,
     uniquecols,
 )
-from .._utils.registry import Register
+from .._utils.registry import Register, _MergedDefaultParams
 from ..layer import layer
 from ..mapping import aes
 
@@ -27,12 +27,6 @@ if typing.TYPE_CHECKING:
     from plotnine.typing import DataLike
 
 from abc import ABC
-
-_BASE_PARAMS = {
-    "geom": "blank",
-    "position": "identity",
-    "na_rm": False,
-}
 
 DROPPED_TPL = """
 The following aesthetics were dropped during processing: {dropped}.
@@ -54,8 +48,17 @@ class stat(ABC, metaclass=Register):
     NON_MISSING_AES: set[str] = set()
     """Required aesthetics for the stat"""
 
-    DEFAULT_PARAMS: dict[str, Any] = {}
-    """Required parameters for the stat"""
+    DEFAULT_PARAMS: dict[str, Any] = {
+        "geom": "blank",
+        "position": "identity",
+        "na_rm": False,
+    }
+    """
+    Default values for the parameters that the stat accepts
+
+    A stat inherits the parameters of its parent stat; declare only
+    those that are new or have a different default value.
+    """
 
     DROPPED_AES: list[str] = []
     """
@@ -81,6 +84,9 @@ class stat(ABC, metaclass=Register):
     their default values.
     """
 
+    # All recognized parameters and their default values
+    default_params = _MergedDefaultParams()
+
     _aesthetics_doc = "{aesthetics_table}"
 
     # Plot namespace, it gets its value when the plot is being
@@ -93,12 +99,12 @@ class stat(ABC, metaclass=Register):
         data: DataLike | None = None,
         **kwargs: Any,
     ):
-        possible_params = _BASE_PARAMS | self.DEFAULT_PARAMS
-        possible_params_set = set(possible_params)
         kwargs = data_mapping_as_kwargs((data, mapping), kwargs)
         self._raw_kwargs = kwargs  # Will be used to create the geom
-        self.params = possible_params | {
-            k: v for k, v in kwargs.items() if k in possible_params_set
+        overridden_params = self.default_params.keys() & kwargs.keys()
+        self.params = {
+            **self.default_params,
+            **{k: kwargs[k] for k in overridden_params},
         }
         self.DEFAULT_AES = aes(**self.DEFAULT_AES)
         self.aes_params = {
