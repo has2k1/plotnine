@@ -11,11 +11,34 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterator
 
+from _testcode import get_test_code
+
 IMAGE_DIR = Path("tests/result_images").resolve()
 EXPECTED_SUFFIX = "-expected"
 FAILED_SUFFIX = "-failed-diff"
 RESULT_PREFIX = "tests/result_images"
 BASELINE_PREFIX = "tests/baseline_images"
+TESTS_DIR = IMAGE_DIR.parent
+
+try:
+    from pygments import highlight
+    from pygments.formatters import HtmlFormatter
+    from pygments.lexers import PythonLexer
+
+    def highlight_python(source: str) -> str:
+        """
+        Python source as HTML spans with pygments token classes
+        """
+        return highlight(source, PythonLexer(), HtmlFormatter(nowrap=True))
+
+except ImportError:
+    from html import escape
+
+    def highlight_python(source: str) -> str:
+        """
+        Python source as plain escaped text (pygments unavailable)
+        """
+        return escape(source)
 
 
 @dataclass(frozen=True)
@@ -98,6 +121,12 @@ CSS = """
   --amber-soft: #fcf3d4;
   --link: #2c7be5;
   --img-bg: #ffffff;
+  --code-kw: #cf222e;
+  --code-str: #0a3069;
+  --code-num: #0550ae;
+  --code-com: #6e7781;
+  --code-fn: #8250df;
+  --code-builtin: #953800;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -119,6 +148,12 @@ CSS = """
     --amber-soft: #3a2c10;
     --link: #6cb6ff;
     --img-bg: #ffffff;
+    --code-kw: #f47067;
+    --code-str: #96d0ff;
+    --code-num: #6cb6ff;
+    --code-com: #768390;
+    --code-fn: #dcbdfb;
+    --code-builtin: #f69d50;
   }
 }
 
@@ -140,6 +175,12 @@ CSS = """
   --amber-soft: #3a2c10;
   --link: #6cb6ff;
   --img-bg: #ffffff;
+  --code-kw: #f47067;
+  --code-str: #96d0ff;
+  --code-num: #6cb6ff;
+  --code-com: #768390;
+  --code-fn: #dcbdfb;
+  --code-builtin: #f69d50;
 }
 
 * { box-sizing: border-box; }
@@ -505,6 +546,55 @@ main {
   border-radius: 4px;
 }
 
+.code-toggle.active {
+  background: var(--chip-active-bg);
+  color: var(--chip-active-fg);
+  border-color: var(--chip-active-bg);
+}
+
+.code-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.code-panel.hidden { display: none; }
+
+.code-path {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco,
+               Consolas, monospace;
+  font-size: 12px;
+  align-self: flex-start;
+}
+
+pre.code {
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--chip-bg);
+  overflow-x: auto;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco,
+               Consolas, monospace;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+pre.code .k, pre.code .kn, pre.code .ow, pre.code .o {
+  color: var(--code-kw);
+}
+pre.code .s, pre.code .s1, pre.code .s2, pre.code .sd,
+pre.code .sa, pre.code .si {
+  color: var(--code-str);
+}
+pre.code .mi, pre.code .mf { color: var(--code-num); }
+pre.code .c1, pre.code .cm {
+  color: var(--code-com);
+  font-style: italic;
+}
+pre.code .nf, pre.code .nc, pre.code .fm { color: var(--code-fn); }
+pre.code .nb, pre.code .bp { color: var(--code-builtin); }
+
 .empty {
   padding: 40px;
   text-align: center;
@@ -711,7 +801,9 @@ JS = """
   for (const row of rows) {
     if (row.dataset.status !== 'failed') continue;
 
-    const buttons = row.querySelectorAll('.view-buttons button');
+    const buttons = row.querySelectorAll(
+      '.view-buttons button[data-view]'
+    );
     for (const btn of buttons) {
       btn.addEventListener('click', () => {
         const view = btn.dataset.view;
@@ -798,6 +890,17 @@ JS = """
     applyTheme();
   });
   applyTheme();
+
+  // Per-row test-code panel toggles.
+  for (const btn of document.querySelectorAll('button.code-toggle')) {
+    btn.addEventListener('click', () => {
+      const row = btn.closest('.test-row');
+      const panel = row && row.querySelector('.code-panel');
+      if (!panel) return;
+      const open = !panel.classList.toggle('hidden');
+      btn.classList.toggle('active', open);
+    });
+  }
 
   // Lightbox: click an anchor-wrapped image to inspect it in-page.
   const lightbox = document.getElementById('lightbox');
@@ -1084,6 +1187,55 @@ def _passed_content(test: TestImage) -> str:
     )
 
 
+def _code_parts(test: TestImage) -> tuple[str, str]:
+    """
+    (toggle button, hidden panel) for a test's code, or empty strings
+    """
+    test_file = TESTS_DIR / f"{test.subdir}.py"
+    snippet = get_test_code(test_file, test.name)
+    if snippet is None:
+        return "", ""
+    button = '<button class="code-toggle" type="button">{ } Code</button>'
+    panel = (
+        '<div class="code-panel hidden">'
+        f'<a class="code-path" href="../{test.subdir}.py">'
+        f"tests/{test.subdir}.py:{snippet.lineno}</a>"
+        f'<pre class="code">{highlight_python(snippet.source)}</pre>'
+        "</div>"
+    )
+    return button, panel
+
+
+def _with_code(content: str, button: str, panel: str) -> str:
+    """
+    Content with the code button in its tab strip and the panel under it
+
+    The panel opens between the strip and the images. Rows without a
+    tab strip (passed/new, and failed without an expected image) get
+    one holding just the code button.
+    """
+    if not button:
+        return content
+    if '<div class="view-buttons">' in content:
+        # The strip's last button (Flip) closes the strip; the code
+        # button goes after it.
+        content = content.replace(
+            "</button></div>",
+            f"</button>{button}</div>",
+            1,
+        )
+    else:
+        content = content.replace(
+            '<div class="content">',
+            f'<div class="content"><div class="view-buttons">{button}</div>',
+            1,
+        )
+    # The strip holds only buttons, so its first </div> closes it.
+    strip_start = content.find('<div class="view-buttons">')
+    strip_end = content.find("</div>", strip_start) + len("</div>")
+    return content[:strip_end] + panel + content[strip_end:]
+
+
 def render_row(test: TestImage) -> str:
     """
     Build the HTML for a single test row
@@ -1105,6 +1257,7 @@ def render_row(test: TestImage) -> str:
         content = _new_content(test)
     else:
         content = _passed_content(test)
+    content = _with_code(content, *_code_parts(test))
 
     classes = ["test-row"]
     if test.status == "failed":
