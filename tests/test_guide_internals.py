@@ -8,8 +8,9 @@ from plotnine import (
     geom_bar,
     geom_point,
     ggplot,
+    stage,
 )
-from plotnine.data import mtcars
+from plotnine.data import mpg, mtcars
 
 
 def test_no_after_scale_warning():
@@ -18,6 +19,18 @@ def test_no_after_scale_warning():
     with warnings.catch_warnings():
         warnings.simplefilter("error")
         p.draw_test()  # type: ignore
+
+
+def test_after_scale_positional_aesthetic_with_legend():
+    # A staged positional aesthetic cannot appear in the legend key
+    # data, so building the legend must not attempt to evaluate it
+    p = ggplot(mpg, aes("drv", "displ", color="drv")) + geom_point(
+        aes(x=stage("drv", after_scale="x"))
+    )
+
+    with warnings.catch_warnings():
+        warnings.simplefilter("error")
+        p.draw_test()  # pyright: ignore[reportAttributeAccessIssue]
 
 
 def test_guide_legend_after_scale():

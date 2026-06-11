@@ -184,10 +184,11 @@ class guide_legend(guide):
             # Modify aesthetics
 
             # When doing after_scale evaluations, we only consider those
-            # for the aesthetics that are valid for this layer/geom.
+            # for aesthetics that can be in the legend key data.
+            legend_aes = l.geom.DEFAULT_AES.keys() | matched_set
             aes_modifiers = {
                 ae: l.mapping._scaled[ae]
-                for ae in l.geom.aesthetics() & l.mapping._scaled.keys()
+                for ae in legend_aes & l.mapping._scaled.keys()
             }
 
             try:
