@@ -139,7 +139,7 @@ def verbose(prev_version, next_version):
     """
     from textwrap import dedent
 
-    from term import T0 as T  # type: ignore
+    from term import T0 as T
 
     s = f"""
     Previous Version: {T(prev_version, "lightblue", effect="strikethrough")}
