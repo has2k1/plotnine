@@ -118,7 +118,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine 999.post1+gf327cd1a9</span>
+    <span class="navbar-title">plotnine 999.post1+gfe1541265</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -163,6 +163,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#plotnine.geoms.geom.geom.REQUIRED_AES" id="toc-plotnine.geoms.geom.geom.REQUIRED_AES" class="nav-link" data-scroll-target="#plotnine.geoms.geom.geom.REQUIRED_AES"><code class="doc-symbol doc-symbol-attribute"></code> <span class="doc-object-name doc-attribute-name">REQUIRED_AES</span></a></li>
   <li><a href="#plotnine.geoms.geom.geom.aes_params" id="toc-plotnine.geoms.geom.geom.aes_params" class="nav-link" data-scroll-target="#plotnine.geoms.geom.geom.aes_params"><code class="doc-symbol doc-symbol-attribute"></code> <span class="doc-object-name doc-attribute-name">aes_params</span></a></li>
   <li><a href="#plotnine.geoms.geom.geom.data" id="toc-plotnine.geoms.geom.geom.data" class="nav-link" data-scroll-target="#plotnine.geoms.geom.geom.data"><code class="doc-symbol doc-symbol-attribute"></code> <span class="doc-object-name doc-attribute-name">data</span></a></li>
+  <li><a href="#plotnine.geoms.geom.geom.default_params" id="toc-plotnine.geoms.geom.geom.default_params" class="nav-link" data-scroll-target="#plotnine.geoms.geom.geom.default_params"><code class="doc-symbol doc-symbol-attribute"></code> <span class="doc-object-name doc-attribute-name">default_params</span></a></li>
   <li><a href="#plotnine.geoms.geom.geom.legend_geom" id="toc-plotnine.geoms.geom.geom.legend_geom" class="nav-link" data-scroll-target="#plotnine.geoms.geom.geom.legend_geom"><code class="doc-symbol doc-symbol-attribute"></code> <span class="doc-object-name doc-attribute-name">legend_geom</span></a></li>
   <li><a href="#plotnine.geoms.geom.geom.mapping" id="toc-plotnine.geoms.geom.geom.mapping" class="nav-link" data-scroll-target="#plotnine.geoms.geom.geom.mapping"><code class="doc-symbol doc-symbol-attribute"></code> <span class="doc-object-name doc-attribute-name">mapping</span></a></li>
   </ul></li>
@@ -236,10 +237,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>Geom/layer specific dataframe</td>
 </tr>
 <tr class="odd">
+<td><a href="#plotnine.geoms.geom.geom.default_params">default_params</a></td>
+<td>dict() -&gt; new empty dictionary</td>
+</tr>
+<tr class="even">
 <td><a href="#plotnine.geoms.geom.geom.legend_geom">legend_geom</a></td>
 <td>str(object=’’) -&gt; str</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><a href="#plotnine.geoms.geom.geom.mapping">mapping</a></td>
 <td>Mappings i.e.&nbsp;<code class="sourceCode python">aes(x<span class="op">=</span><span class="st">"col1"</span>, fill<span class="op">=</span><span class="st">"col2"</span>)</code></td>
 </tr>
@@ -257,7 +262,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="plotnine.geoms.geom.geom.DEFAULT_PARAMS" class="level3 title doc-object doc-attribute">
 <h3 class="title doc-object doc-attribute anchored" data-anchor-id="plotnine.geoms.geom.geom.DEFAULT_PARAMS"><code class="doc-symbol doc-symbol-attribute"></code> <span class="doc-object-name doc-attribute-name">DEFAULT_PARAMS</span></h3>
 <div class="doc-signature doc-attribute">
-<p><code><span class="doc-parameter-name">DEFAULT_PARAMS</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#dict">dict</a>[<a href="https://docs.python.org/3/library/stdtypes.html#str">str</a>, <a href="https://docs.python.org/3/library/typing.html#typing.Any">Any</a>]</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">{}</span></code></p>
+<p><code><span class="doc-parameter-name">DEFAULT_PARAMS</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#dict">dict</a>[<a href="https://docs.python.org/3/library/stdtypes.html#str">str</a>, <a href="https://docs.python.org/3/library/typing.html#typing.Any">Any</a>]</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">{<span class="st">"stat"</span>: <span class="st">"identity"</span>, <span class="st">"position"</span>: <span class="st">"identity"</span>, <span class="st">"na_rm"</span>: False}</span></code></p>
 </div>
 <div class="doc-text">
 <p>dict() -&gt; new empty dictionary dict(mapping) -&gt; new dictionary initialized from a mapping object’s (key, value) pairs dict(iterable) -&gt; new dictionary initialized as if via: d = {} for k, v in iterable: d[k] = v dict(**kwargs) -&gt; new dictionary initialized with the name=value pairs in the keyword argument list. For example: dict(one=1, two=2)</p>
@@ -297,6 +302,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="doc-text">
 <p>Geom/layer specific dataframe</p>
+</div>
+</section>
+<section id="plotnine.geoms.geom.geom.default_params" class="level3 title doc-object doc-attribute">
+<h3 class="title doc-object doc-attribute anchored" data-anchor-id="plotnine.geoms.geom.geom.default_params"><code class="doc-symbol doc-symbol-attribute"></code> <span class="doc-object-name doc-attribute-name">default_params</span></h3>
+<div class="doc-signature doc-attribute">
+<p><code><span class="doc-parameter-name">default_params</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">_MergedDefaultParams()</span></code></p>
+</div>
+<div class="doc-text">
+<p>dict() -&gt; new empty dictionary dict(mapping) -&gt; new dictionary initialized from a mapping object’s (key, value) pairs dict(iterable) -&gt; new dictionary initialized as if via: d = {} for k, v in iterable: d[k] = v dict(**kwargs) -&gt; new dictionary initialized with the name=value pairs in the keyword argument list. For example: dict(one=1, two=2)</p>
 </div>
 </section>
 <section id="plotnine.geoms.geom.geom.legend_geom" class="level3 title doc-object doc-attribute">
