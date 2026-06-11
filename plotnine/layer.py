@@ -94,7 +94,7 @@ class layer:
             if stat is not None:
                 stat_ref = _lookup_stat(stat)
                 if isinstance(stat_ref, type):
-                    geom = stat_ref.DEFAULT_PARAMS["geom"]
+                    geom = stat_ref.default_params["geom"]
                 else:
                     geom = stat_ref.params["geom"]
                     # Forward stat instance's kwargs to the geom
@@ -117,19 +117,19 @@ class layer:
         self._verify_arguments(_geom, _stat)
 
         # Layer params: prefer explicit kwargs, fall back to
-        # geom._raw_kwargs, then geom.DEFAULT_PARAMS
+        # geom._raw_kwargs, then geom.default_params
         raw = _geom._raw_kwargs
         self.inherit_aes = raw.get(
             "inherit_aes",
-            _geom.DEFAULT_PARAMS.get("inherit_aes", inherit_aes),
+            _geom.default_params.get("inherit_aes", inherit_aes),
         )
         self.show_legend = raw.get(
             "show_legend",
-            _geom.DEFAULT_PARAMS.get("show_legend", show_legend),
+            _geom.default_params.get("show_legend", show_legend),
         )
         self.raster = raw.get(
             "raster",
-            _geom.DEFAULT_PARAMS.get("raster", raster),
+            _geom.default_params.get("raster", raster),
         )
 
         self.geom = _geom
@@ -148,9 +148,9 @@ class layer:
         unknown = (
             geom_stat_args
             - geom.aesthetics()
-            - geom.DEFAULT_PARAMS.keys()
+            - geom.default_params.keys()
             - stat.aesthetics()
-            - stat.DEFAULT_PARAMS.keys()
+            - stat.default_params.keys()
             - {
                 "data",
                 "mapping",
@@ -647,7 +647,7 @@ def _resolve_geom(
         for param in set(geom_spec.aesthetics()) & set(kwargs):
             geom_spec.aes_params[param] = kwargs[param]
 
-        for param in set(geom_spec.DEFAULT_PARAMS) & set(kwargs):
+        for param in set(geom_spec.default_params) & set(kwargs):
             geom_spec.params[param] = kwargs[param]
         return geom_spec
 
@@ -728,7 +728,7 @@ def _resolve_stat(
         for param in set(result.aesthetics()) & set(kwargs):
             result.aes_params[param] = kwargs[param]
 
-        for param in set(result.DEFAULT_PARAMS) & set(kwargs):
+        for param in set(result.default_params) & set(kwargs):
             result.params[param] = kwargs[param]
         return result
 
@@ -736,7 +736,7 @@ def _resolve_stat(
     klass = result
     kwargs = geom_obj._raw_kwargs
     valid_kwargs = (
-        klass.aesthetics() | klass.DEFAULT_PARAMS.keys()
+        klass.aesthetics() | klass.default_params.keys()
     ) & kwargs.keys()
     params = {k: kwargs[k] for k in valid_kwargs}
     return klass(**params)

@@ -30,6 +30,17 @@ def test_stat_basics():
         (p + stat_efg()).show()
 
 
+def test_default_params_inheritance():
+    class stat_abc(stat):
+        DEFAULT_PARAMS = {"geom": "point", "param1": 1}
+
+    dp = stat_abc.default_params
+    assert dp["geom"] == "point"  # own declaration wins
+    assert dp["param1"] == 1
+    assert dp["position"] == "identity"  # from the base class
+    assert dp["na_rm"] is False
+
+
 def test_stat_parameter_sharing():
     # When the stat has a parameter with the same name as
     # the geom aesthetic,they both get their value

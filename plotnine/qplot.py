@@ -198,14 +198,14 @@ def qplot(
     for g in geom:
         geom_name = f"geom_{g}"
         geom_klass = Registry[geom_name]
-        s = geom_klass.DEFAULT_PARAMS.get("stat", "identity")
+        s = geom_klass.default_params["stat"]
         stat_name = f"stat_{s}"
         stat_klass = Registry[stat_name]
         # find params
         recognized = kwargs.keys() & (
-            geom_klass.DEFAULT_PARAMS.keys()
+            geom_klass.default_params.keys()
             | geom_klass.aesthetics()
-            | stat_klass.DEFAULT_PARAMS.keys()
+            | stat_klass.default_params.keys()
             | stat_klass.aesthetics()
         )
         recognized = recognized - aesthetics.keys()

@@ -25,4 +25,4 @@ class geom_density(geom_area):
         "weight": 1,
     }
 
-    DEFAULT_PARAMS = {"stat": "density", "outline_type": "upper"}
+    DEFAULT_PARAMS = {"stat": "density", "position": "identity"}

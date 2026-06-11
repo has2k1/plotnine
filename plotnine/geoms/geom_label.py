@@ -61,7 +61,6 @@ class geom_label(geom_text):
 
     DEFAULT_AES = {**geom_text.DEFAULT_AES, "fill": "white"}
     DEFAULT_PARAMS = {
-        **geom_text.DEFAULT_PARAMS,
         # boxstyle is one of
         #   circle, larrow, rarrow, round, round4,
         #   roundtooth, sawtooth, square
