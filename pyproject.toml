@@ -197,7 +197,10 @@ reportUnnecessaryTypeIgnoreComment = true
 # environments are searched from start to finish by comparing the path
 # of a source file with the root path specified in the execution
 # environment.
-executionEnvironments = []
+executionEnvironments = [
+    # The scripts in tools/ import their siblings directly
+    { root = "tools", extraPaths = ["tools"] },
+]
 
 stubPath = ""
 
