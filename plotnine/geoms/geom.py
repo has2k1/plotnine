@@ -12,7 +12,7 @@ from .._utils import (
     data_mapping_as_kwargs,
     remove_missing,
 )
-from .._utils.registry import Register
+from .._utils.registry import Register, _MergedDefaultParams
 from ..exceptions import PlotnineError
 from ..layer import layer
 from ..mapping.aes import rename_aesthetics
@@ -33,13 +33,6 @@ if TYPE_CHECKING:
     from plotnine.typing import DataLike
 
 
-_BASE_PARAMS: dict[str, Any] = {
-    "stat": "identity",
-    "position": "identity",
-    "na_rm": False,
-}
-
-
 class geom(ABC, metaclass=Register):
     """Base class of all Geoms"""
 
@@ -52,14 +45,26 @@ class geom(ABC, metaclass=Register):
     NON_MISSING_AES: set[str] = set()
     """Required aesthetics for the geom"""
 
-    DEFAULT_PARAMS: dict[str, Any] = {}
-    """Required parameters for the geom"""
+    DEFAULT_PARAMS: dict[str, Any] = {
+        "stat": "identity",
+        "position": "identity",
+        "na_rm": False,
+    }
+    """
+    Default values for the parameters that the geom accepts
+
+    A geom inherits the parameters of its parent geom; declare only
+    those that are new or have a different default value.
+    """
 
     data: DataLike
     """Geom/layer specific dataframe"""
 
     mapping: aes
     """Mappings i.e. `aes(x="col1", fill="col2")`{.py}"""
+
+    # All recognized parameters and their default values
+    default_params = _MergedDefaultParams()
 
     aes_params: dict[str, Any] = {}  # setting of aesthetic
     params: dict[str, Any]  # parameter settings
@@ -87,14 +92,15 @@ class geom(ABC, metaclass=Register):
         kwargs = rename_aesthetics(kwargs)
         kwargs = data_mapping_as_kwargs((data, mapping), kwargs)
         self._raw_kwargs = kwargs  # Will be used to create stat & layer
+        overridden_params = self.default_params.keys() & kwargs.keys()
 
         # separate aesthetics and parameters
-        possible_params = _BASE_PARAMS | self.DEFAULT_PARAMS
         self.aes_params = {
             ae: kwargs[ae] for ae in self.aesthetics() & set(kwargs)
         }
-        self.params = possible_params | {
-            k: v for k, v in kwargs.items() if k in possible_params
+        self.params = {
+            **self.default_params,
+            **{k: kwargs[k] for k in overridden_params},
         }
         self.mapping = kwargs["mapping"]
         self.data = kwargs["data"]
