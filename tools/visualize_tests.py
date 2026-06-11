@@ -510,6 +510,74 @@ main {
   text-align: center;
   color: var(--muted);
 }
+
+dialog#lightbox {
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--fg);
+  max-width: 95vw;
+  max-height: 92vh;
+}
+
+dialog#lightbox::backdrop {
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.lb-header,
+.lb-footer {
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+  padding: 8px 12px;
+  font-size: 12px;
+}
+
+.lb-header { border-bottom: 1px solid var(--border); }
+
+.lb-header .status-badge { align-self: baseline; }
+
+.lb-footer {
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  justify-content: center;
+}
+
+.lb-name {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco,
+               Consolas, monospace;
+  font-size: 13px;
+  word-break: break-all;
+}
+
+.lb-sibling {
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+.lb-approved {
+  color: var(--green);
+  visibility: hidden;
+}
+
+.lb-counter {
+  margin-left: auto;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+dialog#lightbox img {
+  display: block;
+  background: var(--img-bg);
+  max-width: calc(95vw - 2px);
+  /* 80px ~= header + footer; a long wrapped name scrolls instead */
+  max-height: calc(92vh - 80px);
+  width: auto;
+  height: auto;
+  margin: 0 auto;
+}
 """
 
 JS = """
@@ -731,6 +799,126 @@ JS = """
   });
   applyTheme();
 
+  // Lightbox: click an anchor-wrapped image to inspect it in-page.
+  const lightbox = document.getElementById('lightbox');
+  const lbImg = lightbox.querySelector('img');
+  const lbName = lightbox.querySelector('.lb-name');
+  const lbBadge = lightbox.querySelector('.lb-badge');
+  const lbSibling = lightbox.querySelector('.lb-sibling');
+  const lbApproved = lightbox.querySelector('.lb-approved');
+  const lbCounter = lightbox.querySelector('.lb-counter');
+
+  let lbRows = [];
+  let lbRowIdx = 0;
+  let lbSiblings = [];
+  let lbSibIdx = 0;
+
+  function lbRowSiblings(row) {
+    const sibs = [];
+    for (const fig of row.querySelectorAll('.images-side figure')) {
+      const img = fig.querySelector('img');
+      const cap = fig.querySelector('figcaption');
+      if (img && cap) {
+        sibs.push({
+          label: cap.textContent.trim(),
+          src: img.getAttribute('src'),
+        });
+      }
+    }
+    return sibs;
+  }
+
+  function lbShow() {
+    const row = lbRows[lbRowIdx];
+    const sib = lbSiblings[lbSibIdx];
+    lbImg.src = sib.src;
+    lbName.textContent = row.dataset.subdir + '/' + row.dataset.file;
+    lbBadge.textContent = row.dataset.status;
+    lbBadge.className = 'lb-badge status-badge ' + row.dataset.status;
+    lbSibling.textContent = sib.label;
+    lbCounter.textContent = (lbRowIdx + 1) + ' / ' + lbRows.length;
+    const cb = row.querySelector('input.approve-cb');
+    lbApproved.style.visibility =
+      cb && cb.checked ? 'visible' : 'hidden';
+  }
+
+  function lbOpen(row, src) {
+    const sibs = lbRowSiblings(row);
+    if (sibs.length === 0) return;
+    lbRows = rows.filter((r) => !r.classList.contains('hidden'));
+    lbRowIdx = Math.max(0, lbRows.indexOf(row));
+    lbSiblings = sibs;
+    lbSibIdx = Math.max(
+      0,
+      lbSiblings.findIndex((s) => s.src === src)
+    );
+    lbShow();
+    lightbox.showModal();
+  }
+
+  function lbCycle(d) {
+    const n = lbSiblings.length;
+    lbSibIdx = (lbSibIdx + d + n) % n;
+    lbShow();
+  }
+
+  function lbMove(d) {
+    const next = lbRowIdx + d;
+    if (next < 0 || next >= lbRows.length) return;
+    const want = lbSiblings[lbSibIdx].label;
+    const sibs = lbRowSiblings(lbRows[next]);
+    if (sibs.length === 0) return;
+    lbRowIdx = next;
+    lbSiblings = sibs;
+    const keep = lbSiblings.findIndex((s) => s.label === want);
+    lbSibIdx = keep >= 0 ? keep : 0;
+    lbShow();
+  }
+
+  function lbToggleApprove() {
+    const cb = lbRows[lbRowIdx].querySelector('input.approve-cb');
+    if (!cb) return;
+    cb.checked = !cb.checked;
+    cb.dispatchEvent(new Event('change'));
+    lbShow();
+  }
+
+  for (const link of document.querySelectorAll('.images figure a')) {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const row = link.closest('.test-row');
+      const img = link.querySelector('img');
+      if (row && img) lbOpen(row, img.getAttribute('src'));
+    });
+  }
+
+  // On document, not the dialog: clicking the (non-focusable) image
+  // can move focus off the dialog, which would kill its key events.
+  document.addEventListener('keydown', (e) => {
+    if (!lightbox.open) return;
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      lbCycle(-1);
+    } else if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      lbCycle(1);
+    } else if (e.key === 'ArrowDown' || e.key === 'j') {
+      e.preventDefault();
+      lbMove(1);
+    } else if (e.key === 'ArrowUp' || e.key === 'k') {
+      e.preventDefault();
+      lbMove(-1);
+    } else if (e.key === 'a') {
+      e.preventDefault();
+      lbToggleApprove();
+    }
+  });
+
+  lightbox.addEventListener('click', (e) => {
+    if (e.target === lightbox) lightbox.close();
+  });
+
   // Set initial chip-zero highlight on load.
   function highlightZeroChips() {
     for (const chip of chips) {
@@ -790,6 +978,22 @@ HTML_TEMPLATE = """\
 <main>
 {rows}
 </main>
+<dialog id="lightbox">
+  <div class="lb-header">
+    <span class="lb-name"></span>
+    <span class="lb-badge status-badge"></span>
+    <span class="lb-sibling"></span>
+    <span class="lb-approved">✓ approved</span>
+    <span class="lb-counter"></span>
+  </div>
+  <img alt="">
+  <div class="lb-footer">
+    <span>←/→ sibling</span>
+    <span>j/k test</span>
+    <span>a approve</span>
+    <span>esc close</span>
+  </div>
+</dialog>
 <script>{js}</script>
 </body>
 </html>
