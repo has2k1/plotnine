@@ -48,7 +48,7 @@ class element_text(element_base):
         the text then align the bounding box of the rotated text.
         If `"anchor"`, first align the unrotated text then rotate the
         text around the point of alignment.
-    linespacing : float
+    linespacing :
         Line spacing
     backgroundcolor :
         Background color
@@ -111,7 +111,7 @@ class element_text(element_base):
             | Sequence[float]
             | None
         ) = None,
-        linespacing: float | None = None,
+        linespacing: float | Literal["normal"] | None = None,
         backgroundcolor: (
             str
             | tuple[float, float, float]
