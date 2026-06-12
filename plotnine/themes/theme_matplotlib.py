@@ -40,13 +40,16 @@ class theme_matplotlib(theme):
             line=element_line(size=linewidth),
             rect=element_rect(size=linewidth),
             text=element_text(
+                ma="center",
                 size=base_size,
                 linespacing="normal",
                 rotation=0,
-                margin={},
+                margin=margin(),
             ),
             aspect_ratio=get_option("aspect_ratio"),
-            axis_text=element_text(margin=margin(t=2.4, r=2.4, unit="pt")),
+            axis_text=element_text(
+                size=base_size * 0.8, margin=margin(t=2.4, r=2.4, unit="pt")
+            ),
             axis_title_x=element_text(
                 va="bottom", ha="center", margin=margin(t=m, unit="fig")
             ),
@@ -65,12 +68,15 @@ class theme_matplotlib(theme):
             legend_key_spacing_x=6,
             legend_key_spacing_y=2,
             legend_frame=element_rect(color="black"),
-            legend_key_size=16,
+            legend_key_size=base_size * 0.8 * 1.8,
             legend_ticks_length=0.2,
             legend_margin=0,
             legend_position="right",
             legend_spacing=10,
-            legend_text=element_text(margin=margin_auto(m / 2, unit="fig")),
+            legend_text=element_text(
+                size=base_size * 0.8,
+                margin=margin_auto(m / 1.5, unit="fig"),
+            ),
             legend_ticks=element_line(color="black"),
             legend_title=element_text(
                 ha="left",
@@ -80,27 +86,29 @@ class theme_matplotlib(theme):
             panel_grid=element_blank(),
             panel_spacing=m,
             plot_caption=element_text(
+                size=base_size * 0.8,
                 ha="right",
                 va="bottom",
                 ma="left",
                 margin=margin(t=m, unit="fig"),
             ),
             plot_footer=element_text(
+                size=base_size * 0.8,
                 ha="left",
                 va="bottom",
                 ma="left",
                 margin=margin(t=1 / 3, b=1 / 3, unit="lines"),
             ),
             plot_margin=m,
+            plot_footer_background=element_blank(),
+            plot_footer_line=element_blank(),
             plot_subtitle=element_text(
-                size=base_size * 0.9,
                 va="top",
                 ma="left",
                 margin=margin(b=m, unit="fig"),
             ),
-            plot_footer_background=element_blank(),
-            plot_footer_line=element_blank(),
             plot_title=element_text(
+                size=base_size * 1.2,
                 va="top",
                 ma="left",
                 margin=margin(b=m, unit="fig"),
@@ -117,10 +125,10 @@ class theme_matplotlib(theme):
             plot_tag_position="topleft",
             strip_align=0,
             strip_background=element_rect(
-                fill="#D9D9D9", color="black", size=linewidth
+                fill="#F2F2F2", color="black", size=linewidth
             ),
             strip_text=element_text(
-                linespacing=1.5,
+                size=base_size * 0.8,
                 margin=margin_auto(half_line * 0.8),
             ),
             strip_text_y=element_text(rotation=-90),
