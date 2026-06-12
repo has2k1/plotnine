@@ -23,7 +23,7 @@ __all__ = (
 
 
 def factor(
-    values: Sequence[Any],
+    values: Sequence[Any] | float | str,
     categories: Sequence[Any] | None = None,
     ordered: bool | None = None,
 ) -> pd.Categorical:
@@ -48,6 +48,9 @@ def factor(
         `categories` attribute (which in turn is the `categories` argument, if
         provided).
     """
+    if isinstance(values, (int, float, str)):
+        values = [values]
+
     return pd.Categorical(values, categories=categories, ordered=None)  # pyright: ignore[reportReturnType]
 
 
