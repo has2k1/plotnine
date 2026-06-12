@@ -91,6 +91,13 @@ title: Changelog
 
 ### Enhancements
 
+- The `factor` function available when evaluating expressions in
+  [](:class:`~plotnine.aes`) now accepts a scalar value.
+
+  ```python
+  ggplot(mtcars, aes("wt", "mpg", color="factor(4)")) + geom_point()
+  ```
+
 - Increased the default linespacing used by themes from `0.9` to `1.2`.
   This gives multiline titles, subtitles and captions a better balance between looking compact and looking crumpled.
 
