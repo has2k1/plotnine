@@ -301,7 +301,6 @@ def test_theme_void():
 
 
 @pytest.mark.skipif(IS_CI, reason="Don't run on CI (Github Actions)")
-@pytest.mark.skipif(LT_MPL310, reason="Fails for older versions of matplotlib")
 def test_theme_xkcd():
     p = (
         g
@@ -314,8 +313,7 @@ def test_theme_xkcd():
     assert p == "theme_xkcd"
 
 
-@pytest.mark.skipif(not IS_CI, reason="Only runs on CI (Github Actions)")
-@pytest.mark.skipif(LT_MPL310, reason="Fails for older versions of matplotlib")
+# Definitely run this one on CI (Github Actions)
 def test_theme_xkcd_ci():
     p = (
         g

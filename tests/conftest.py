@@ -216,7 +216,6 @@ class _test_cleanup:
         mpl.rcdefaults()  # Start with all defaults
         mpl.rcParams["text.hinting"] = "auto"
         mpl.rcParams["text.antialiased"] = True
-        mpl.rcParams["text.hinting_factor"] = 8
         return self
 
     def __exit__(self, exc_type, exc_value, exc_traceback):
