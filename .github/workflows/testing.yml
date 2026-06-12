@@ -24,7 +24,7 @@ jobs:
     strategy:
       matrix:
         include:
-          - python-version: "3.10"
+          - python-version: "3.11"
             resolution: "lowest-direct"
           - python-version: 3.14
             resolution: "highest"
