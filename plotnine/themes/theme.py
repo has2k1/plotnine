@@ -222,13 +222,12 @@ class theme:
         svg_usefonts=None,
         **kwargs,
     ):
+        import matplotlib as mpl
+
         self.themeables = Themeables()
         self.complete = complete
 
-        if complete:
-            self._rcParams = deepcopy(DEFAULT_RCPARAMS)
-        else:
-            self._rcParams = {}
+        self._rcParams = mpl.RcParams(DEFAULT_RCPARAMS if complete else {})
 
         # Themeables
         official_themeables = themeable.registry()
