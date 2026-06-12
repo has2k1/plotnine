@@ -136,7 +136,6 @@ class theme_seaborn(theme):
             strip_background=element_rect(color="none", fill="#D1CDDF"),
             strip_text=element_text(
                 size=base_size * 0.8,
-                linespacing=1.5,
                 margin=margin_auto(half_line * 0.8),
             ),
             strip_text_y=element_text(rotation=-90),

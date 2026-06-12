@@ -41,7 +41,7 @@ class theme_matplotlib(theme):
             rect=element_rect(size=linewidth),
             text=element_text(
                 size=base_size,
-                linespacing=1,
+                linespacing="normal",
                 rotation=0,
                 margin={},
             ),

@@ -47,7 +47,7 @@ class theme_gray(theme):
                 color="black",
                 ma="center",
                 size=base_size,
-                linespacing=1.2,
+                linespacing="normal",
                 rotation=0,
                 margin=margin(),
             ),
@@ -147,7 +147,6 @@ class theme_gray(theme):
             strip_text=element_text(
                 color="#1A1A1A",
                 size=base_size * 0.8,
-                linespacing=1.5,
                 margin=margin_auto(half_line * 0.8),
             ),
             strip_text_y=element_text(rotation=-90),
