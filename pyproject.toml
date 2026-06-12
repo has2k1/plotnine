@@ -15,26 +15,26 @@ classifiers = [
     "Operating System :: Unix",
     "Operating System :: MacOS",
     "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Framework :: Matplotlib",
     "Topic :: Scientific/Engineering :: Visualization"
 ]
 dependencies = [
-    "matplotlib>=3.8.0",
+    "matplotlib>=3.11.0",
     "pandas>=2.2.0",
     "mizani~=0.14.0",
-    "numpy>=1.23.5",
-    "scipy>=1.8.0",
+    "numpy>=1.25.0",
+    "scipy>=1.15.0",
     # pyodide ships with statmodels==0.14.4 which is broken for later versions
     # of numpy and pandas
     # https://github.com/statsmodels/statsmodels/releases/tag/v0.14.6
     "statsmodels<=0.14.4; sys_platform == 'emscripten'",
     "statsmodels>=0.14.6; sys_platform != 'emscripten'",
 ]
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 
 [project.optional-dependencies]
 all = [
