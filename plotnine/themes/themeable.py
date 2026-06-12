@@ -30,6 +30,7 @@ if TYPE_CHECKING:
     from matplotlib.artist import Artist
     from matplotlib.axes import Axes
     from matplotlib.figure import Figure
+    from matplotlib.typing import RcKeyType
 
     from plotnine import theme
     from plotnine.themes.targets import ThemeTargets
@@ -167,7 +168,7 @@ class themeable(metaclass=RegistryHierarchyMeta):
         )
 
     @property
-    def rcParams(self) -> dict[str, Any]:
+    def rcParams(self) -> dict[RcKeyType, Any]:
         """
         Return themeables rcparams to an rcparam dict before plotting.
 
@@ -1065,7 +1066,7 @@ class text(axis_text, legend_text, strip_text, title):
     """
 
     @property
-    def rcParams(self) -> dict[str, Any]:
+    def rcParams(self):
         rcParams = super().rcParams
 
         family = self.properties.get("family")
@@ -1521,7 +1522,7 @@ class line(axis_line, axis_ticks, panel_grid, legend_ticks, plot_footer_line):
     """
 
     @property
-    def rcParams(self) -> dict[str, Any]:
+    def rcParams(self):
         rcParams = super().rcParams
         color = self.properties.get("color")
         linewidth = self.properties.get("linewidth")
@@ -2136,7 +2137,7 @@ class dpi(themeable):
     # https://github.com/matplotlib/matplotlib/issues/24644
 
     @property
-    def rcParams(self) -> dict[str, Any]:
+    def rcParams(self):
         rcParams = super().rcParams
         rcParams["figure.dpi"] = self.properties["value"]
         return rcParams
@@ -2542,7 +2543,7 @@ class svg_usefonts(themeable):
     """
 
     @property
-    def rcParams(self) -> dict[str, Any]:
+    def rcParams(self):
         rcParams = super().rcParams
 
         rcParams["svg.fonttype"] = (

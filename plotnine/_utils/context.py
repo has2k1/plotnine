@@ -126,8 +126,9 @@ class plot_composition_context:
         # https://github.com/matplotlib/matplotlib/issues/24644
         # When drawing the Composition, the dpi themeable is infective
         # because it sets the rcParam after this figure is created.
-        rcParams = {"figure.dpi": self.cmp.theme.getp("dpi")}
-        self._rc_context = mpl.rc_context(rcParams)
+        self._rc_context = mpl.rc_context(
+            {"figure.dpi": self.cmp.theme.getp("dpi")}
+        )
 
     def __enter__(self) -> Self:
         """

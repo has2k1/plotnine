@@ -128,10 +128,7 @@ class theme_matplotlib(theme):
         )
 
         if use_defaults:
-            _copy = mpl.rcParams.copy()
-            if "tk.pythoninspect" in _copy:
-                del _copy["tk.pythoninspect"]
-            self._rcParams.update(_copy)
+            self._rcParams.update(mpl.rcParams.copy())
 
         if fname:
             self._rcParams.update(mpl.rc_params_from_file(fname))
