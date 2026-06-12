@@ -7,3 +7,12 @@ repos:
         args: [--select=I001, --fix]
       # Run the formatter.
       - id: ruff-format
+  - repo: local
+    hooks:
+      # Requires the oxipng binary on PATH:
+      #   brew install oxipng  (or: cargo install oxipng)
+      - id: oxipng
+        name: optimize baseline images
+        entry: oxipng -o 4 --strip safe
+        language: system
+        files: ^tests/baseline_images/.*\.png$

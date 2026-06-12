@@ -138,6 +138,7 @@ Development version
 
 ```console
 $ pip install git+https://github.com/has2k1/plotnine.git
+$ brew install oxipng   # Test image optimiser (OR `cargo install oxipng`)
 ```
 
 ## Contributing
