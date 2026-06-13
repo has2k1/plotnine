@@ -42,6 +42,7 @@ jobs:
           # Install as an editable so that the coverage path
           # is predicable
           uv run uv pip install --resolution=${{ matrix.resolution }} -e ".[extra,test]"
+          uv lock --upgrade-package "matplotlib<3.11.0"
 
       - name: Environment Information
         run: uv pip list

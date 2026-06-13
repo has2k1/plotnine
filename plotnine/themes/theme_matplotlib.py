@@ -30,6 +30,10 @@ class theme_matplotlib(theme):
 
     def __init__(self, rc=None, fname=None, use_defaults=True):
         import matplotlib as mpl
+        from packaging import version
+
+        MPL311 = version.parse(mpl.__version__) >= version.parse("3.11.0")
+        ls1, ls2 = ("normal", None) if MPL311 else (1, 1.5)
 
         m = get_option("base_margin")
         base_size = mpl.rcParams.get("font.size", 11)
@@ -41,7 +45,7 @@ class theme_matplotlib(theme):
             rect=element_rect(size=linewidth),
             text=element_text(
                 size=base_size,
-                linespacing=1,
+                linespacing=ls1,  # pyright: ignore[reportArgumentType]
                 rotation=0,
                 margin={},
             ),
@@ -111,7 +115,7 @@ class theme_matplotlib(theme):
                 fill="#D9D9D9", color="black", size=linewidth
             ),
             strip_text=element_text(
-                linespacing=1.5,
+                linespacing=ls2,
                 margin=margin_auto(half_line * 0.8),
             ),
             strip_text_y=element_text(rotation=-90),

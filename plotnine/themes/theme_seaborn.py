@@ -39,7 +39,13 @@ class theme_seaborn(theme):
         font="sans-serif",
         font_scale=1,
     ):
+        import matplotlib as mpl
+        from packaging import version
+
         from .seaborn_rcmod import set_theme
+
+        MPL311 = version.parse(mpl.__version__) >= version.parse("3.11.0")
+        _, ls2 = ("normal", None) if MPL311 else (1, 1.5)
 
         rcparams = set_theme(
             context=context, style=style, font=font, font_scale=font_scale
@@ -126,7 +132,7 @@ class theme_seaborn(theme):
             strip_background=element_rect(color="none", fill="#D1CDDF"),
             strip_text=element_text(
                 size=base_size * 0.8,
-                linespacing=1.5,
+                linespacing=ls2,
                 margin=margin_auto(half_line * 0.8),
             ),
             strip_text_y=element_text(rotation=-90),

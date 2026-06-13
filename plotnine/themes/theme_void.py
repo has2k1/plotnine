@@ -24,6 +24,12 @@ class theme_void(theme):
     """
 
     def __init__(self, base_size=11, base_family=None):
+        import matplotlib as mpl
+        from packaging import version
+
+        MPL311 = version.parse(mpl.__version__) >= version.parse("3.11.0")
+        ls1, _ = ("normal", None) if MPL311 else (0.9, 1.5)
+
         base_family = base_family or get_option("base_family")
         m = get_option("base_margin")
         # Use only inherited elements and make everything blank
@@ -36,7 +42,7 @@ class theme_void(theme):
                 style="normal",
                 color="black",
                 size=base_size,
-                linespacing=0.9,
+                linespacing=ls1,
                 rotation=0,
                 margin=margin(),
             ),

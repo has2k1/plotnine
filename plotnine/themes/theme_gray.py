@@ -27,6 +27,12 @@ class theme_gray(theme):
     """
 
     def __init__(self, base_size=11, base_family=None):
+        import matplotlib as mpl
+        from packaging import version
+
+        MPL311 = version.parse(mpl.__version__) >= version.parse("3.11.0")
+        ls1, ls2 = ("normal", None) if MPL311 else (0.9, 1.5)
+
         base_family = base_family or get_option("base_family")
         half_line = base_size / 2
         quarter_line = base_size / 4
@@ -47,7 +53,7 @@ class theme_gray(theme):
                 color="black",
                 ma="center",
                 size=base_size,
-                linespacing=0.9,
+                linespacing=ls1,  # pyright: ignore[reportArgumentType]
                 rotation=0,
                 margin=margin(),
             ),
@@ -137,7 +143,7 @@ class theme_gray(theme):
             strip_text=element_text(
                 color="#1A1A1A",
                 size=base_size * 0.8,
-                linespacing=1.5,
+                linespacing=ls2,
                 margin=margin_auto(half_line * 0.8),
             ),
             strip_text_y=element_text(rotation=-90),
