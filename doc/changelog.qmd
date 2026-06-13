@@ -2,6 +2,17 @@
 title: Changelog
 ---
 
+## v0.15.7
+(2026-06-13)
+
+### Bug Fixes
+
+- Fixed the text line spacing in `theme_gray`, `theme_matplotlib`,
+  `theme_seaborn` and `theme_void` so that it renders correctly with
+  matplotlib 3.11. The 3.11 text overhaul changed how the line height is
+  derived from the font, which threw off the previous numeric
+  `linespacing` values.
+
 ## v0.15.6
 (2026-06-08)
 
