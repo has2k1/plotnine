@@ -4,14 +4,21 @@
     "href": "changelog.html",
     "title": "Changelog",
     "section": "",
-    "text": "(2026-06-08)\n\n\n\nFixed last_plot() so that it returns an independent, pristine snapshot of the plot. Previously the plot was stored as a shallow copy and building it mutated shared nested state (e.g. the theme), leaving last_plot() referencing a half-built plot."
+    "text": "(2026-06-13)\n\n\n\nFixed the text line spacing in theme_gray, theme_matplotlib, theme_seaborn and theme_void so that it renders correctly with matplotlib 3.11. The 3.11 text overhaul changed how the line height is derived from the font, which threw off the previous numeric linespacing values."
+  },
+  {
+    "objectID": "changelog.html#v0.15.7",
+    "href": "changelog.html#v0.15.7",
+    "title": "Changelog",
+    "section": "",
+    "text": "(2026-06-13)\n\n\n\nFixed the text line spacing in theme_gray, theme_matplotlib, theme_seaborn and theme_void so that it renders correctly with matplotlib 3.11. The 3.11 text overhaul changed how the line height is derived from the font, which threw off the previous numeric linespacing values."
   },
   {
     "objectID": "changelog.html#v0.15.6",
     "href": "changelog.html#v0.15.6",
     "title": "Changelog",
-    "section": "",
-    "text": "(2026-06-08)\n\n\n\nFixed last_plot() so that it returns an independent, pristine snapshot of the plot. Previously the plot was stored as a shallow copy and building it mutated shared nested state (e.g. the theme), leaving last_plot() referencing a half-built plot."
+    "section": "v0.15.6",
+    "text": "v0.15.6\n(2026-06-08)\n\nBug Fixes\n\nFixed last_plot() so that it returns an independent, pristine snapshot of the plot. Previously the plot was stored as a shallow copy and building it mutated shared nested state (e.g. the theme), leaving last_plot() referencing a half-built plot."
   },
   {
     "objectID": "changelog.html#v0.15.5",
