@@ -27,7 +27,13 @@ if TYPE_CHECKING:
     from matplotlib.figure import Figure
     from matplotlib.offsetbox import OffsetBox, PackerBase
 
-    from plotnine import ggplot, guide_colorbar, guide_legend, theme
+    from plotnine import (
+        ggplot,
+        guide_axis_theta,
+        guide_colorbar,
+        guide_legend,
+        theme,
+    )
     from plotnine._mpl.offsetbox import FlexibleAnchoredOffsetbox
     from plotnine.composition import Compose
     from plotnine.iapi import labels_view
@@ -47,6 +53,7 @@ if TYPE_CHECKING:
         guide_legend | guide_colorbar | Literal["legend", "colorbar"]
     )
     LegendOnly: TypeAlias = guide_legend | Literal["legend"]
+    ThetaGuide: TypeAlias = guide_axis_theta
 
     class LegendOwner(Protocol):
         """
@@ -115,6 +122,9 @@ class guides:
 
     colour: Optional[LegendOnly | NoGuide] = None
     """Guide for colour scale."""
+
+    theta: Optional[ThetaGuide | NoGuide] = None
+    """Guide for theta axis labels in radial coordinates."""
 
     def __post_init__(self):
         self.plot: ggplot

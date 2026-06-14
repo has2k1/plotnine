@@ -535,6 +535,8 @@ quartodoc:
         - coord_equal
         - coord_fixed
         - coord_flip
+        - coord_polar
+        - coord_radial
         - coord_trans
 
     - title: Composing Plots

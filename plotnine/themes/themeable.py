@@ -90,8 +90,11 @@ class themeable(metaclass=RegistryHierarchyMeta):
 
     Notes
     -----
-    A user should never create instances of class
-    [](`~plotnine.themes.themeable.Themeable`) or subclasses of it.
+    Most users should not create instances of class
+    [](`~plotnine.themes.themeable.themeable`) or subclasses of it
+    directly. Extension authors may define subclasses; they are registered
+    by class name when their module is imported and can be used through
+    [](`~plotnine.themes.theme.theme`) keyword arguments.
     """
 
     def __init__(self, theme_element: element_base | str | float):
@@ -979,7 +982,7 @@ class axis_text_x(MixinSequenceOfValues):
         vinstalled = version.parse(mpl.__version__)
         v310 = version.parse("3.10.0")
         name = "labelbottom" if vinstalled >= v310 else "labelleft"
-        if not ax.xaxis.get_tick_params()[name]:
+        if not ax.xaxis.get_tick_params().get(name, True):
             return
 
         # if not ax.xaxis.get_tick_params()["labelbottom"]:
@@ -1109,6 +1112,9 @@ class axis_line_x(themeable):
 
     def apply_ax(self, ax: Axes):
         super().apply_ax(ax)
+        # PolarAxes has no "top"/"bottom" spines — skip silently.
+        if "top" not in ax.spines:
+            return
         properties = self._get_properties(omit=("solid_capstyle",))
         # MPL has a default zorder of 2.5 for spines
         # so layers 3+ would be drawn on top of the spines
@@ -1119,6 +1125,8 @@ class axis_line_x(themeable):
 
     def blank_ax(self, ax: Axes):
         super().blank_ax(ax)
+        if "top" not in ax.spines:
+            return
         ax.spines["top"].set_visible(False)
         ax.spines["bottom"].set_visible(False)
 
@@ -1136,6 +1144,9 @@ class axis_line_y(themeable):
 
     def apply_ax(self, ax: Axes):
         super().apply_ax(ax)
+        # PolarAxes has no "left"/"right" spines — skip silently.
+        if "left" not in ax.spines:
+            return
         properties = self._get_properties(omit=("solid_capstyle",))
         # MPL has a default zorder of 2.5 for spines
         # so layers 3+ would be drawn on top of the spines
@@ -1146,6 +1157,8 @@ class axis_line_y(themeable):
 
     def blank_ax(self, ax: Axes):
         super().blank_ax(ax)
+        if "left" not in ax.spines:
+            return
         ax.spines["left"].set_visible(False)
         ax.spines["right"].set_visible(False)
 
@@ -1701,6 +1714,11 @@ class panel_border(MixinSequenceOfValues):
         super().blank_figure(figure, targets)
         for rect in targets.panel_border:
             rect.set_visible(False)
+
+    def blank_ax(self, ax: Axes):
+        super().blank_ax(ax)
+        if "polar" in ax.spines:
+            ax.spines["polar"].set_visible(False)
 
 
 class plot_background(themeable):

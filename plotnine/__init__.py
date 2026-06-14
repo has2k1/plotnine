@@ -20,6 +20,8 @@ from .coords import (
     coord_equal,
     coord_fixed,
     coord_flip,
+    coord_polar,
+    coord_radial,
     coord_trans,
 )
 from .facets import (
@@ -88,6 +90,7 @@ from .ggplot import (
     save_as_pdf_pages,
 )
 from .guides import (
+    guide_axis_theta,
     guide_colorbar,
     guide_colourbar,
     guide_legend,
@@ -289,6 +292,8 @@ __all__ = (
     "coord_equal",
     "coord_fixed",
     "coord_flip",
+    "coord_polar",
+    "coord_radial",
     "coord_trans",
     "element_blank",
     "element_line",
@@ -345,6 +350,7 @@ __all__ = (
     "ggplot",
     "ggsave",
     "ggtitle",
+    "guide_axis_theta",
     "guide_colorbar",
     "guide_colourbar",
     "guide_legend",

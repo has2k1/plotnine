@@ -2,6 +2,7 @@ import os
 
 import matplotlib as mpl
 import pytest
+from matplotlib import pyplot as plt
 from packaging import version
 
 from plotnine import (
@@ -34,6 +35,8 @@ from plotnine import (
     theme_xkcd,
 )
 from plotnine.data import mtcars
+from plotnine.coords.coord_cartesian import coord_cartesian
+from plotnine.themes.themeable import panel_border, themeable
 
 LT_MPL310 = version.parse(mpl.__version__) < version.parse("3.10")
 IS_CI = bool(os.environ.get("CI"))
@@ -109,6 +112,59 @@ def test_add_element_blank():
     assert theme3 != theme1
     assert theme3 != theme2
     assert theme3 == theme4  # blanking cleans the slate
+
+
+def test_blank_panel_border_hides_polar_spine():
+    th = panel_border(element_blank())
+    fig, ax = plt.subplots(subplot_kw={"projection": "polar"})
+
+    try:
+        th.blank_ax(ax)
+        assert not ax.spines["polar"].get_visible()
+    finally:
+        plt.close(fig)
+
+
+def test_extension_themeable_applies_from_theme_kwargs():
+    class test_extension_panel_facecolor(themeable):
+        def apply_ax(self, ax):
+            super().apply_ax(ax)
+            ax.set_facecolor(self.properties["value"])
+
+    p = (
+        ggplot(mtcars, aes(x="wt", y="mpg"))
+        + geom_point()
+        + theme(test_extension_panel_facecolor="red")
+    )
+
+    fig = p.draw()
+    try:
+        assert fig.axes[0].get_facecolor() == (1.0, 0.0, 0.0, 1.0)
+    finally:
+        plt.close(fig)
+
+
+def test_coord_can_read_extension_themeable():
+    class test_extension_coord_title(themeable):
+        pass
+
+    class coord_reads_themeable(coord_cartesian):
+        def setup_ax(self, ax, panel_params, theme):
+            super().setup_ax(ax, panel_params, theme)
+            ax.set_title(theme.getp("test_extension_coord_title"))
+
+    p = (
+        ggplot(mtcars, aes(x="wt", y="mpg"))
+        + geom_point()
+        + coord_reads_themeable()
+        + theme(test_extension_coord_title="coord themeable")
+    )
+
+    fig = p.draw()
+    try:
+        assert fig.axes[0].get_title() == "coord themeable"
+    finally:
+        plt.close(fig)
 
 
 def test_element_line_dashed_capstyle():
