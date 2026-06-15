@@ -350,11 +350,14 @@ class facet:
         ax.xaxis.set_major_formatter(MyFixedFormatter(panel_params.x.labels))
         ax.yaxis.set_major_formatter(MyFixedFormatter(panel_params.y.labels))
 
-        pad_x = theme.get_margin("axis_text_x").pt.t
-        pad_y = theme.get_margin("axis_text_y").pt.r
-
-        ax.tick_params(axis="x", which="major", pad=pad_x)
-        ax.tick_params(axis="y", which="major", pad=pad_y)
+        # Blank axis text is not drawn, so its margin may be absent
+        # (resolves to None). Skip the tick-label padding in that case.
+        if not theme.T.is_blank("axis_text_x"):
+            pad_x = theme.get_margin("axis_text_x").pt.t
+            ax.tick_params(axis="x", which="major", pad=pad_x)
+        if not theme.T.is_blank("axis_text_y"):
+            pad_y = theme.get_margin("axis_text_y").pt.r
+            ax.tick_params(axis="y", which="major", pad=pad_y)
 
     def __deepcopy__(self, memo: dict[Any, Any]) -> facet:
         """

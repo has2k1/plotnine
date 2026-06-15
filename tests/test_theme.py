@@ -337,3 +337,11 @@ def test_override_axis_text():
     )
 
     assert p == "override_axis_text"
+
+
+def test_blank_all_text_draws():
+    # Blanking the base `text` element removes every specific text
+    # themeable, so axis_text_x/_y margins resolve to None. Drawing must
+    # not crash when computing the tick-label padding. (Regression)
+    p = ggplot() + lims(x=(0, 100), y=(0, 100)) + theme(text=element_blank())
+    p.draw_test()  # pyright: ignore  # must not raise
