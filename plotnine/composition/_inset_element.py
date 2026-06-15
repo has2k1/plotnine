@@ -3,7 +3,9 @@ from __future__ import annotations
 from copy import deepcopy
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any, Literal
+from warnings import warn
 
+from ..exceptions import PlotnineWarning
 from ._inset_image import _InsetImage
 
 if TYPE_CHECKING:
@@ -255,10 +257,14 @@ class Insets(list[inset_element]):
     List of insets attached to a ggplot
     """
 
+    # The host plot these insets are drawn into.
+    _host: ggplot
+
     def _setup(self, parent: ggplot):
         """
         Inherit the host figure and figure-owner-only theme props
         """
+        self._host = parent
         for inset in self:
             inset._setup(parent)
 
@@ -279,6 +285,16 @@ class Insets(list[inset_element]):
             insets = [inset for inset in self if not inset.on_top][::-1]
 
         for inset in insets:
+            if inset.align_to == "footer" and not self._host.labels.get(
+                "footer", ""
+            ):
+                warn(
+                    "An inset with align_to='footer' was placed, but the "
+                    "plot has no footer text. The inset will not be shown. "
+                    "Set a footer with labs(footer=...).",
+                    PlotnineWarning,
+                )
+                continue
             inset._draw_in_host()
 
     def __and__(self, rhs) -> Insets:

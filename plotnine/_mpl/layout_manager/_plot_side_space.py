@@ -14,9 +14,8 @@ from __future__ import annotations
 from dataclasses import replace
 from functools import cached_property
 from typing import TYPE_CHECKING
-from warnings import warn
 
-from plotnine.exceptions import PlotnineError, PlotnineWarning
+from plotnine.exceptions import PlotnineError
 from plotnine.facets import facet_grid, facet_null, facet_wrap
 
 from ._plot_layout_items import PlotLayoutItems
@@ -806,17 +805,10 @@ class PlotSideSpaces:
             elif inset.align_to == "plot":
                 (x1, y1), (x2, y2) = self.plot_area_coordinates
             elif inset.align_to == "footer":
-                (x1, y1), (x2, y2) = self.footer_area_coordinates
-                # footer_height is exactly 0.0 when there is no footer text
-                if (y2 - y1) < 1e-9:
-                    warn(
-                        "An inset with align_to='footer' was placed, but "
-                        "the plot has no footer text so the footer band has "
-                        "no height. The inset will not be shown. Set a "
-                        "footer with labs(footer=...).",
-                        PlotnineWarning,
-                    )
+                if not self.plot.labels.get("footer", ""):
                     continue
+
+                (x1, y1), (x2, y2) = self.footer_area_coordinates
             else:  # "full"
                 # Note that this isn't necessarily the figure's coordinates,
                 # rather the entire ggplot area.
