@@ -1,19 +1,26 @@
 import numpy as np
+import pandas as pd
 import pytest
 from PIL import Image, ImageDraw
 
 from plotnine import (
+    aes,
+    coord_cartesian,
     element_line,
     element_rect,
     element_text,
     facet_wrap,
+    geom_col,
+    ggplot,
     labs,
     theme,
+    theme_void,
 )
 from plotnine._utils.yippie import geom as g
 from plotnine._utils.yippie import plot
 from plotnine.composition import inset_element, plot_annotation
 from plotnine.exceptions import PlotnineWarning
+from plotnine.themes.elements import margin
 
 
 def _smiley() -> np.ndarray:
@@ -382,32 +389,58 @@ class TestFooterInset:
     align_to="footer" maps the inset bbox onto the footer band
     """
 
+    p = (
+        plot.white
+        + labs(footer="Source: Example Corp")
+        + theme(
+            plot_margin=0.01,
+            plot_footer=element_text(
+                margin=margin(t=0.01, b=0.01, unit="fig")
+            ),
+            plot_footer_background=element_rect(fill="#E9E9E9"),
+        )
+    )
+
     def test_footer_logo_right_aligned(self):
         # A logo placed in the right portion of the footer band, inline
         # with left-justified footer text.
-        p = (
-            plot.white
-            + g.points
-            + labs(footer="Source: Example Corp")
-            + inset_element(
-                SMILEY_FACE,
-                left=0.9,
-                bottom=0.0,
-                right=1.0,
-                top=1.0,
-                align_to="footer",
-            )
+        p = self.p + inset_element(
+            SMILEY_FACE,
+            left=0.85,
+            bottom=0.15,
+            right=1 - 0.01,
+            top=0.85,
+            align_to="footer",
+            anchor="right",
         )
         assert p == "footer_logo_right_aligned"
+
+    def test_footer_plot_right_aligned(self):
+        # A plot placed in the right portion of the footer band, inline
+        # with left-justified footer text.
+        data = pd.DataFrame({"x": ["a", "b", "c"], "y": [1, 2, 3]})
+        p_inset = (
+            ggplot(data, aes("x", "y", fill="x"))
+            + geom_col(show_legend=False)
+            + coord_cartesian(expand=False)
+            + theme_void()
+        )
+        p = self.p + inset_element(
+            p_inset,
+            left=0.85,
+            bottom=0.15,
+            right=1 - 0.01,
+            top=0.85,
+            align_to="footer",
+        )
+        assert p == "footer_plot_right_aligned"
 
     def test_footer_inset_without_footer_text(self):
         # No footer text -> degenerate footer band. The inset is skipped
         # and a warning is emitted; the rendered plot is just the host.
         # The == comparison draws the plot, which triggers the warning.
-        p = (
-            plot.white
-            + g.points
-            + inset_element(SMILEY_FACE, 0.9, 0.0, 1.0, 1.0, align_to="footer")
+        p = plot.white + inset_element(
+            SMILEY_FACE, 0.9, 0.0, 1.0, 1.0, align_to="footer"
         )
         with pytest.warns(PlotnineWarning, match="no footer text"):
             assert p == "footer_inset_no_footer_text"
