@@ -11,6 +11,7 @@ from ..themes.theme import theme
 
 if TYPE_CHECKING:
     from matplotlib.figure import Figure
+    from matplotlib.image import BboxImage
     from matplotlib.patches import Rectangle
     from matplotlib.transforms import Bbox
 
@@ -63,6 +64,10 @@ class _InsetImage:
     # ratio doesn't match.
     _anchor: tuple[float, float]
 
+    # BboxImage artist created in draw(); its data is updated by
+    # _arrange_in_box once the layout engine computes the final bbox.
+    _image_artist: BboxImage
+
     def __init__(
         self,
         image: PILImage | np.ndarray,
@@ -107,6 +112,8 @@ class _InsetImage:
             Fractional figure-coordinates of the box assigned to this
             inset by `inset_element.align_to`.
         """
+        from matplotlib.transforms import TransformedBbox
+
         l, b, r, t = _fit_aspect(
             left,
             bottom,
@@ -119,6 +126,26 @@ class _InsetImage:
         self._frac_bbox.bounds = (l, b, r - l, t - b)  # pyright: ignore[reportAttributeAccessIssue]
         self.patch.set_bounds(left, bottom, right - left, top - bottom)
 
+        # The layout engine has finalised the bbox, so its device-pixel
+        # size is now known. _fit_aspect preserves the source aspect, so
+        # both axes scale by the same factor.
+        source_w, source_h = self._image_size
+        tbox = TransformedBbox(self._frac_bbox, self.figure.transFigure)
+        tw = max(1, round(tbox.width))
+        th = max(1, round(tbox.height))
+        downscaling = tw < source_w and th < source_h
+
+        # LANCZOS to shrink: it antialiases the downscale.
+        # Not LANCZOS to enlarge: it looks hazy and rings badly on
+        # hard edges, so NEAREST.
+        if downscaling:
+            resampling = Image.Resampling.LANCZOS
+        else:
+            resampling = Image.Resampling.NEAREST
+
+        resized = self._image.resize((tw, th), resampling)
+        self._image_artist.set_data(np.asarray(resized))
+
     def draw(self):
         from matplotlib.image import BboxImage
         from matplotlib.transforms import TransformedBbox
@@ -128,11 +155,13 @@ class _InsetImage:
         self.theme._setup(self)  # pyright: ignore[reportArgumentType]
         self._draw_plot_background()
 
-        image_artist = BboxImage(
-            TransformedBbox(self._frac_bbox, self.figure.transFigure)
+        tbox = TransformedBbox(self._frac_bbox, self.figure.transFigure)
+        # The image data is set later by _arrange_in_box, once the layout
+        # engine has computed the final device-pixel dimensions.
+        self._image_artist = BboxImage(
+            tbox, interpolation="none", resample=False
         )
-        image_artist.set_data(np.asarray(self._image))
-        self.figure.add_artist(image_artist)
+        self.figure.add_artist(self._image_artist)
 
         self.theme.apply()
 
