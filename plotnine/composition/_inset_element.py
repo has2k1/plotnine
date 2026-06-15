@@ -48,6 +48,12 @@ class inset_element:
         - `"plot"`  — the panel plus axes, labels, titles, captions
            and legends
         - `"full"`  — everything the host plot occupies plus plot margin
+        - `"footer"` — the footer band at the bottom of the plot. Only
+           non-degenerate when the host has footer text (set with
+           `labs(footer=...)`); without it the band has zero height, the
+           inset is skipped, and a warning is issued. The band does not
+           grow to fit a taller inset — the inset overflows beyond it
+           instead.
     on_top :
         When `True` (default) the inset paints above the host plot.
         When `False`, the inset paints between the host's
