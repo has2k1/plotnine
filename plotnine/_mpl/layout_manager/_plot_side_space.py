@@ -14,8 +14,9 @@ from __future__ import annotations
 from dataclasses import replace
 from functools import cached_property
 from typing import TYPE_CHECKING
+from warnings import warn
 
-from plotnine.exceptions import PlotnineError
+from plotnine.exceptions import PlotnineError, PlotnineWarning
 from plotnine.facets import facet_grid, facet_null, facet_wrap
 
 from ._plot_layout_items import PlotLayoutItems
@@ -804,6 +805,18 @@ class PlotSideSpaces:
                 (x1, y1), (x2, y2) = self.panel_area_coordinates
             elif inset.align_to == "plot":
                 (x1, y1), (x2, y2) = self.plot_area_coordinates
+            elif inset.align_to == "footer":
+                (x1, y1), (x2, y2) = self.footer_area_coordinates
+                # footer_height is exactly 0.0 when there is no footer text
+                if (y2 - y1) < 1e-9:
+                    warn(
+                        "An inset with align_to='footer' was placed, but "
+                        "the plot has no footer text so the footer band has "
+                        "no height. The inset will not be shown. Set a "
+                        "footer with labs(footer=...).",
+                        PlotnineWarning,
+                    )
+                    continue
             else:  # "full"
                 # Note that this isn't necessarily the figure's coordinates,
                 # rather the entire ggplot area.
@@ -978,6 +991,24 @@ class PlotSideSpaces:
         """
         x1, x2 = self.l.panel_left, self.r.panel_right
         y1, y2 = self.b.panel_bottom, self.t.panel_top
+        return ((x1, y1), (x2, y2))
+
+    @property
+    def footer_area_coordinates(
+        self,
+    ) -> tuple[tuple[float, float], tuple[float, float]]:
+        """
+        Lower-left and upper-right coordinates of the footer band
+
+        This is the strip reserved at the bottom of the figure for the
+        plot footer text and its margins. It spans the full plot width.
+        It has zero height when there is no footer text.
+        """
+        # Full plot width, matching where the footer background is drawn
+        x1 = self.l.offset
+        x2 = self.l.offset + self.plot_width
+        y1 = self.b.offset
+        y2 = self.b.offset + self.b.footer_height
         return ((x1, y1), (x2, y2))
 
     def _calculate_panel_spacing(self) -> GridSpecParams:

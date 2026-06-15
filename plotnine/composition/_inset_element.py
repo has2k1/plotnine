@@ -98,7 +98,7 @@ class inset_element:
     bottom: float
     right: float
     top: float
-    align_to: Literal["panel", "plot", "full"] = "panel"
+    align_to: Literal["panel", "plot", "full", "footer"] = "panel"
     on_top: bool = True
     anchor: Anchor = "center"
 
