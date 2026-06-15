@@ -4,6 +4,7 @@ from copy import deepcopy
 from typing import TYPE_CHECKING, Literal
 
 import numpy as np
+from PIL import Image
 from PIL.Image import Image as PILImage
 
 from ..themes.theme import theme
@@ -70,8 +71,8 @@ class _InsetImage:
     ):
         from matplotlib.transforms import Bbox
 
-        self._image = image
-        self._image_size = _image_size(image)  # (W, H) px
+        self._image = _to_pil_image(image)
+        self._image_size = self._image.size  # (W, H) px
         self._frac_bbox = Bbox.unit()
         self._anchor = _resolve_anchor(anchor)
         self.theme = theme()
@@ -150,16 +151,22 @@ class _InsetImage:
         self.theme.targets.plot_background = self.patch
 
 
-def _image_size(obj: PILImage | np.ndarray) -> tuple[int, int]:
+def _to_pil_image(obj: PILImage | np.ndarray) -> PILImage:
     """
-    Return the (width, height) of a PIL image or ndarray in pixels
+    Normalise an image input to a PIL Image for resampling
+
+    A `PIL.Image` is returned unchanged. A uint8 ndarray (L / RGB /
+    RGBA) is wrapped directly. A float ndarray follows matplotlib's
+    `[0, 1]` convention and is clipped then scaled to uint8; the final
+    inset output is an 8-bit raster regardless, so nothing visible is
+    lost.
     """
     if isinstance(obj, PILImage):
-        return obj.size  # PIL exposes (W, H)
-
+        return obj
     arr = np.asarray(obj)
-    h, w = arr.shape[:2]  # ndarray is HWC or HW
-    return w, h
+    if arr.dtype != np.uint8:
+        arr = (np.clip(arr, 0, 1) * 255).round().astype(np.uint8)
+    return Image.fromarray(arr)
 
 
 # Named anchors → (h, v) fractions in [0, 1]², where `h = 0`
