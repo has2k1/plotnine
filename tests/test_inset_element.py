@@ -13,6 +13,7 @@ from plotnine import (
 from plotnine._utils.yippie import geom as g
 from plotnine._utils.yippie import plot
 from plotnine.composition import inset_element, plot_annotation
+from plotnine.exceptions import PlotnineWarning
 
 
 def _smiley() -> np.ndarray:
@@ -374,3 +375,39 @@ def test_inset_on_facet_host():
         + inset_element(plot.tomato, 0, 0, 0.25, 0.25)
     )
     assert p == "inset_on_facet_host"
+
+
+class TestFooterInset:
+    """
+    align_to="footer" maps the inset bbox onto the footer band
+    """
+
+    def test_footer_logo_right_aligned(self):
+        # A logo placed in the right portion of the footer band, inline
+        # with left-justified footer text.
+        p = (
+            plot.white
+            + g.points
+            + labs(footer="Source: Example Corp")
+            + inset_element(
+                SMILEY_FACE,
+                left=0.9,
+                bottom=0.0,
+                right=1.0,
+                top=1.0,
+                align_to="footer",
+            )
+        )
+        assert p == "footer_logo_right_aligned"
+
+    def test_footer_inset_without_footer_text(self):
+        # No footer text -> degenerate footer band. The inset is skipped
+        # and a warning is emitted; the rendered plot is just the host.
+        # The == comparison draws the plot, which triggers the warning.
+        p = (
+            plot.white
+            + g.points
+            + inset_element(SMILEY_FACE, 0.9, 0.0, 1.0, 1.0, align_to="footer")
+        )
+        with pytest.warns(PlotnineWarning, match="no footer text"):
+            assert p == "footer_inset_no_footer_text"
