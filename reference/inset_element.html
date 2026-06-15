@@ -118,7 +118,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine 0.16.0a10</span>
+    <span class="navbar-title">plotnine 0.16.0a11</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -222,13 +222,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <dd>
 <p>Bounding box of the inset as fractional coordinates in the range <code>[0, 1]</code>, relative to the host region selected by <code>align_to</code>. The bottom-left corner of that region is <code>(0, 0)</code> and the top-right is <code>(1, 1)</code>.</p>
 </dd>
-<dt><code><span class="doc-parameter-name">align_to</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/typing.html#typing.Literal">Literal</a>[<span class="st">"panel"</span>, <span class="st">"plot"</span>, <span class="st">"full"</span>]</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default"><span class="st">"panel"</span></span></code></dt>
+<dt><code><span class="doc-parameter-name">align_to</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/typing.html#typing.Literal">Literal</a>[<span class="st">"panel"</span>, <span class="st">"plot"</span>, <span class="st">"full"</span>, <span class="st">"footer"</span>]</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default"><span class="st">"panel"</span></span></code></dt>
 <dd>
 <p>Which region of the host plot the bounding box is relative to:</p>
 <ul>
 <li><code>"panel"</code> — the data area only (default).</li>
 <li><code>"plot"</code> — the panel plus axes, labels, titles, captions and legends</li>
 <li><code>"full"</code> — everything the host plot occupies plus plot margin</li>
+<li><code>"footer"</code> — the footer band at the bottom of the plot. Only non-degenerate when the host has footer text (set with <code>labs(footer=...)</code>); without it the band has zero height, the inset is skipped, and a warning is issued. The band does not grow to fit a taller inset — the inset overflows beyond it instead.</li>
 </ul>
 </dd>
 <dt><code><span class="doc-parameter-name">on_top</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#bool">bool</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">True</span></code></dt>
