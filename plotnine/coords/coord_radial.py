@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import replace
-from typing import TYPE_CHECKING, Sequence, cast
+from typing import TYPE_CHECKING, cast
 
 import numpy as np
 
@@ -69,17 +69,14 @@ class coord_radial(coord_polar):
         Data-space limits for the r axis as ``(lo, hi)``.  Only data within
         this range is shown; equivalent to zooming on the radial axis.
         ``None`` (default) uses the full data range.
-    theta_labels :
-        If ``True``, show theta axis tick labels on the outer edge of the
-        circle for full-circle plots, using the breaks and labels from the
-        theta scale.  Default ``False``.  Partial-arc plots always show
-        theta labels (filtered to the visible arc) regardless of this flag.
-    theta_label_pad :
-        Distance in points between the outer circle spine and the theta tick
-        labels.  Default ``8``.  Only applied when theta labels are shown.
 
     Notes
     -----
+    Theta-axis tick labels are shown by default, matching ggplot2. Since a
+    polar axes' x-axis *is* the theta axis, they are styled through the
+    theme: hide them with ``theme(axis_text_x=element_blank())`` and adjust
+    the gap to the outer circle through the ``axis_text_x`` margin.
+
     The Python API uses snake_case names for arguments that are dotted in
     ggplot2: ``inner_radius``, ``r_axis_inside``, and ``rotate_angle``.
 
@@ -137,8 +134,6 @@ class coord_radial(coord_polar):
         rotate_angle: bool = False,
         thetalim: tuple[float, float] | None = None,
         rlim: tuple[float, float] | None = None,
-        theta_labels: bool = False,
-        theta_label_pad: float = 8,
     ) -> None:
         super().__init__(
             theta=theta,
@@ -152,8 +147,6 @@ class coord_radial(coord_polar):
         self.rotate_angle = rotate_angle
         self.thetalim = thetalim
         self.rlim = rlim
-        self.theta_labels = theta_labels
-        self.theta_label_pad = theta_label_pad
 
     # ------------------------------------------------------------------
     # Panel params
@@ -176,25 +169,36 @@ class coord_radial(coord_polar):
         pv = super().setup_panel_params(scale_x, scale_y)
 
         # thetalim: zoom the theta data range — only this slice maps to the
-        # arc.
+        # arc. Recompute nice breaks over the zoomed range so labels are not
+        # reduced to sparse endpoints, matching ggplot2.
         if self.thetalim is not None:
             self.params["theta_range"] = tuple(self.thetalim)
+            theta_scale = scale_x if self.theta == "x" else scale_y
+            theta_breaks = [
+                b
+                for b in theta_scale.get_bounded_breaks(self.thetalim)
+                if np.isfinite(b)
+            ]
+            theta_labels = list(theta_scale.get_labels(theta_breaks))
 
-        # rlim: zoom the r data range — update params, panel view y axis, and
-        # filter breaks/labels to within rlim so set_yticks doesn't force the
-        # PolarAxes r-axis to expand beyond the requested limits.
+        # rlim: zoom the r data range — update params and recompute nice breaks
+        # over the zoomed range (rather than filtering the full-range breaks,
+        # which leaves sparse endpoint-only labels), matching ggplot2.
         if self.rlim is not None:
             self.params["r_range"] = tuple(self.rlim)
-            rlo, rhi = self.rlim
-            breaks = cast("Sequence[float]", pv.y.breaks)
-            labels = pv.y.labels
-            mask = [rlo <= b <= rhi for b in breaks]
+            r_scale = scale_y if self.theta == "x" else scale_x
+            breaks = [
+                b
+                for b in r_scale.get_bounded_breaks(self.rlim)
+                if np.isfinite(b)
+            ]
+            labels = r_scale.get_labels(breaks)
             new_y = replace(
                 pv.y,
                 limits=tuple(self.rlim),
                 range=tuple(self.rlim),
-                breaks=[b for b, m in zip(breaks, mask) if m],
-                labels=[l for l, m in zip(labels, mask) if m],
+                breaks=breaks,
+                labels=labels,
             )
             pv = replace(pv, y=new_y)
 
@@ -206,11 +210,10 @@ class coord_radial(coord_polar):
             arc_hi = max(self.start, self.start + arc)
 
         # Convert data-space theta breaks to radian positions and restore them
-        # as theta axis tick labels on the outer edge.  Always done for partial
-        # arcs; for full circles only when theta_labels=True (opt-in, so that
-        # pac-man / coxcomb charts keep breaks=[] as set by super()).
+        # as theta axis tick labels on the outer edge.  Theta labels show by
+        # default (matching ggplot2); hide them via theme(axis_text_x=...).
         x_updates: dict = {}
-        if theta_breaks and (arc_lo is not None or self.theta_labels):
+        if theta_breaks:
             radian_pos = list(
                 self._to_radians(np.asarray(theta_breaks, dtype=float))
             )
@@ -240,13 +243,16 @@ class coord_radial(coord_polar):
     @property
     def _arc(self) -> float:
         """
-        Total arc in radians.
+        Total angular span of the plotted region, in radians
 
-        A positive value represents clockwise movement when ``direction=1``.
+        For a partial radial plot this is the distance between ``start`` and
+        ``end``; otherwise it is a full turn. The sense of rotation
+        (clockwise vs counter-clockwise) is a PolarAxes property applied at
+        draw time and is not encoded in this magnitude.
         """
         if self.end is not None:
             return self.end - self.start
-        return self.direction * 2.0 * np.pi
+        return 2.0 * np.pi
 
     def _to_radians(self, vals: np.ndarray) -> np.ndarray:
         """Normalize theta values to [start, start + arc]."""
@@ -282,66 +288,65 @@ class coord_radial(coord_polar):
     # Draw decorations on PolarAxes
     # ------------------------------------------------------------------
 
-    def draw(self, axs: list[Axes]) -> None:
-        """Configure PolarAxes: arc limits, inner radius, axis placement."""
-        super().draw(axs)
-
-        r_min, r_max = self.params.get("r_range", (0.0, 1.0))
-        arc = self._arc
-
-        for ax in axs:
-            polar_ax = cast("PolarAxes", ax)
-            # Restrict visible theta range for partial arcs.
-            if self.end is not None:
-                theta_lo = min(self.start, self.start + arc)
-                theta_hi = max(self.start, self.start + arc)
-                polar_ax.set_thetalim(theta_lo, theta_hi)
-
-            # Inner radius: push the data away from the centre by setting a
-            # virtual r-origin below r_min.  Formula: solve
-            #   inner_radius = (r_min - r_origin) / (r_max - r_origin)
-            if (
-                self.inner_radius > 0
-                and np.isfinite(r_min)
-                and np.isfinite(r_max)
-                and r_max > r_min
-                and self.inner_radius < 1.0
-            ):
-                r_origin = (r_min - self.inner_radius * r_max) / (
-                    1.0 - self.inner_radius
-                )
-                polar_ax.set_rorigin(r_origin)
-
-            # Radial axis label placement.
-            if self.r_axis_inside is not None:
-                if isinstance(self.r_axis_inside, bool):
-                    if self.r_axis_inside:
-                        # Just inside the start angle keeps it out of the data.
-                        polar_ax.set_rlabel_position(
-                            np.degrees(self.start) + 10
-                        )
-                else:
-                    polar_ax.set_rlabel_position(
-                        np.degrees(float(self.r_axis_inside))
-                    )
-
     def setup_ax(
         self, ax: Axes, panel_params: panel_view, theme: theme
     ) -> None:
         """
-        Apply theta label pad after setting tick positions and padding.
+        Configure each PolarAxes from this panel's limits
+
+        Sets the arc limits, inner radius, and radial-axis placement using
+        ``panel_params`` so faceted panels with free scales each get their
+        own radial range.
         """
         super().setup_ax(ax, panel_params, theme)
-        if self.theta_labels or self.end is not None:
-            ax.tick_params(axis="x", pad=self.theta_label_pad)
-            if (angle := self._theta_guide_angle(theme)) is not None:
-                # Use Matplotlib's 'auto' mode so labels orient tangentially
-                # to the arc, with `angle` as an offset — matching ggplot2's
-                # guide_axis_theta() semantics where angle=0 means tangential.
-                # ax.tick_params(labelrotation=...) always sets 'default' mode
-                # (absolute degrees), so we patch each tick directly instead.
-                for tick in ax.xaxis.get_major_ticks():
-                    tick._labelrotation = ("auto", angle)
+        polar_ax = cast("PolarAxes", ax)
+        arc = self._arc
+
+        # Restrict visible theta range for partial arcs.
+        if self.end is not None:
+            polar_ax.set_thetalim(
+                min(self.start, self.start + arc),
+                max(self.start, self.start + arc),
+            )
+
+        # Inner radius: push the data away from the centre by setting a
+        # virtual r-origin below r_min.  Formula: solve
+        #   inner_radius = (r_min - r_origin) / (r_max - r_origin)
+        r_min, r_max = panel_params.y.range
+        if (
+            self.inner_radius > 0
+            and np.isfinite(r_min)
+            and np.isfinite(r_max)
+            and r_max > r_min
+            and self.inner_radius < 1.0
+        ):
+            r_origin = (r_min - self.inner_radius * r_max) / (
+                1.0 - self.inner_radius
+            )
+            polar_ax.set_rorigin(r_origin)
+
+        # Radial axis label placement.
+        if self.r_axis_inside is None:
+            # Left spoke, matching ggplot2's default.
+            polar_ax.set_rlabel_position(270)
+        elif isinstance(self.r_axis_inside, bool):
+            if self.r_axis_inside:
+                # Just inside the start angle keeps it out of the data.
+                polar_ax.set_rlabel_position(np.degrees(self.start) + 10)
+            else:
+                polar_ax.set_rlabel_position(270)
+        else:
+            polar_ax.set_rlabel_position(np.degrees(float(self.r_axis_inside)))
+
+        ax.tick_params(axis="x", which="major", direction="out")
+        if (angle := self._theta_guide_angle(theme)) is not None:
+            # Use Matplotlib's 'auto' mode so labels orient tangentially
+            # to the arc, with `angle` as an offset — matching ggplot2's
+            # guide_axis_theta() semantics where angle=0 means tangential.
+            # ax.tick_params(labelrotation=...) always sets 'default' mode
+            # (absolute degrees), so we patch each tick directly instead.
+            for tick in ax.xaxis.get_major_ticks():
+                tick._labelrotation = ("auto", angle)
         # Allow geom_text labels to extend past the polar axes bounding box
         # (e.g. spoke labels placed just beyond the outermost bar tip).
         for text in ax.texts:

@@ -1208,7 +1208,6 @@ class axis_text_y(axis_text_y_left, axis_text_y_right):
     theme_element : element_text
     """
 
-
 class axis_text(axis_text_x, axis_text_y):
     """
     Axis tick labels

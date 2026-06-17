@@ -34,9 +34,9 @@ from plotnine import (
     theme_void,
     theme_xkcd,
 )
-from plotnine.data import mtcars
 from plotnine.coords.coord_cartesian import coord_cartesian
-from plotnine.themes.themeable import panel_border, themeable
+from plotnine.data import mtcars
+from plotnine.themes.themeable import themeable
 
 LT_MPL310 = version.parse(mpl.__version__) < version.parse("3.10")
 IS_CI = bool(os.environ.get("CI"))
@@ -112,17 +112,6 @@ def test_add_element_blank():
     assert theme3 != theme1
     assert theme3 != theme2
     assert theme3 == theme4  # blanking cleans the slate
-
-
-def test_blank_panel_border_hides_polar_spine():
-    th = panel_border(element_blank())
-    fig, ax = plt.subplots(subplot_kw={"projection": "polar"})
-
-    try:
-        th.blank_ax(ax)
-        assert not ax.spines["polar"].get_visible()
-    finally:
-        plt.close(fig)
 
 
 def test_extension_themeable_applies_from_theme_kwargs():

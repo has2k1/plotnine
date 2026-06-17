@@ -148,7 +148,9 @@ class coord_polar(coord):
         if denom == 0:
             return np.zeros_like(vals, dtype=float)
         norm = (np.asarray(vals, dtype=float) - float(t_min)) / denom
-        return self.start + self.direction * norm * 2.0 * np.pi
+        # Rotation direction is a PolarAxes property set in draw via
+        # set_theta_direction; it is not baked into these radian values.
+        return self.start + norm * 2.0 * np.pi
 
     # ------------------------------------------------------------------
     # Data transformation
@@ -236,18 +238,16 @@ class coord_polar(coord):
     # ------------------------------------------------------------------
 
     def draw(self, axs: list[Axes]) -> None:
-        """Configure each PolarAxes: zero location, direction, r limits."""
-        r_min, r_max = self.params.get("r_range", (0.0, 1.0))
+        """Configure each PolarAxes: zero location and rotation direction
 
-        # Matplotlib PolarAxes theta_direction: -1 = clockwise, 1 = counter-CW.
+        R-limits are set per panel by setup_ax.
+        """
+        # PolarAxes theta_direction: -1 = clockwise, +1 = counter-clockwise.
         mpl_direction = -1 if self.direction == 1 else 1
-
         for ax in axs:
             polar_ax = cast("PolarAxes", ax)
-            polar_ax.set_theta_zero_location("N")  # 12 o'clock = 0
+            polar_ax.set_theta_zero_location("N")  # 12 o'clock
             polar_ax.set_theta_direction(mpl_direction)
-            if np.isfinite(r_min) and np.isfinite(r_max) and r_min != r_max:
-                polar_ax.set_rlim(float(r_min), float(r_max))
 
     # ------------------------------------------------------------------
     # Misc
