@@ -74,14 +74,13 @@ class guide_axis_theta:
         (
             ggplot(mtcars, aes("disp", "mpg"))
             + geom_point()
-            + coord_radial(theta_labels=True)
+            + coord_radial()
             + guides(theta=guide_axis_theta(angle=0))
         )
 
     .. note::
-       ``coord_radial`` hides theta labels on full-circle plots by default
-       (``theta_labels=False``).  You must pass ``theta_labels=True`` to
-       ``coord_radial`` for this guide to have any visible effect.
+       ``coord_radial`` shows theta-axis labels by default.  Hide them with
+       ``theme(axis_text_x=element_blank())`` if a plot needs no theta axis.
     """
 
     title: str | None = None

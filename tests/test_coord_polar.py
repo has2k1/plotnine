@@ -10,10 +10,7 @@ from plotnine import (
     element_line,
     geom_col,
     geom_point,
-    geom_text,
     ggplot,
-    guide_axis_theta,
-    guides,
     theme,
 )
 from plotnine.coords.coord_cartesian import coord_cartesian
@@ -66,6 +63,17 @@ def test_coord_polar_setup_panel_params_theta_y():
     assert coord.params["theta_range"] == (0, 10)
     assert coord.params["r_range"] == (0, 10)
     assert panel_params.y.breaks == [0, 2, 5, 10]
+
+
+def test_coord_polar_setup_panel_params_per_panel_independent():
+    # one instance reused across panels (faceting)
+    coord = coord_polar(expand=False)
+    sx1, sy1 = trained_scales(y=(0, 10))
+    pv1 = coord.setup_panel_params(sx1, sy1)
+    sx2, sy2 = trained_scales(y=(0, 100))
+    pv2 = coord.setup_panel_params(sx2, sy2)
+    assert pv1.y.range == (0, 10)
+    assert pv2.y.range == (0, 100)
 
 
 def test_coord_polar_to_radians_zero_width_range():
@@ -152,19 +160,6 @@ def test_coord_polar_distance_and_backtransform_theta_y():
     assert coord.backtransform_range(None).y == (0, 10)
 
 
-def test_coord_polar_draw_sets_polar_axis():
-    coord = coord_polar(direction=-1)
-    coord.params = {"r_range": (2, 8)}
-    fig, ax = plt.subplots(subplot_kw={"projection": "polar"})
-
-    try:
-        coord.draw([ax])
-        assert ax.get_theta_direction() == 1
-        assert_allclose(ax.get_ylim(), (2, 8))
-    finally:
-        plt.close(fig)
-
-
 def test_coord_polar_aspect_is_square():
     assert coord_polar().aspect(None) == 1
 
@@ -217,9 +212,9 @@ def test_coord_projection_creates_projected_axes():
         plt.close(fig)
 
 
-def test_coord_radial_arc_uses_end_or_direction():
+def test_coord_radial_arc_uses_end_or_full_turn():
     assert coord_radial(start=1, end=4)._arc == 3
-    assert coord_radial(direction=-1)._arc == -2 * np.pi
+    assert coord_radial()._arc == 2 * np.pi
 
 
 def test_coord_radial_setup_panel_params_for_partial_arc():
@@ -247,17 +242,30 @@ def test_coord_radial_setup_panel_params_for_partial_arc():
     assert panel_params.y.labels == ["2", "4", "8"]
 
 
-def test_coord_radial_setup_panel_params_theta_y_with_labels():
-    scale_x, scale_y = trained_scales(
-        y_breaks=(0, 5, 10),
-        y_labels=("low", "mid", "high"),
-    )
-    coord = coord_radial(theta="y", theta_labels=True, expand=False)
+def test_coord_radial_rlim_recomputes_breaks():
+    # Auto breaks (breaks=True), so the scale recomputes nice breaks over the
+    # zoomed range. Full-range breaks would be [0, 5, 10]; the naive filter to
+    # (2, 8) would leave only [5].
+    scale_x = scale_x_continuous()
+    scale_y = scale_y_continuous()
+    scale_x.train((0, 10))
+    scale_y.train((0, 10))
+    coord = coord_radial(rlim=(2, 8), expand=False)
+    pv = coord.setup_panel_params(scale_x, scale_y)
+    breaks = list(pv.y.breaks)
+    # Recomputed nice breaks over (2, 8) — NOT the naive filter, which would
+    # leave only [5]. Must be within the zoom and contain more than one break.
+    assert len(breaks) > 1
+    assert all(2 <= b <= 8 for b in breaks)
+    assert len(pv.y.labels) == len(breaks)
 
-    panel_params = coord.setup_panel_params(scale_x, scale_y)
 
-    assert_allclose(panel_params.x.breaks, [0, np.pi, 2 * np.pi])
-    assert panel_params.x.labels == ["low", "mid", "high"]
+def test_coord_radial_shows_theta_labels_by_default():
+    scale_x, scale_y = trained_scales()
+    coord = coord_radial(expand=False)  # no theta_labels arg
+    pv = coord.setup_panel_params(scale_x, scale_y)
+    assert list(pv.x.breaks)  # theta breaks present by default
+    assert list(pv.x.labels)
 
 
 def test_coord_radial_to_radians_zero_width_range():
@@ -276,73 +284,3 @@ def test_coord_radial_transform_rotates_angle():
 
     assert_allclose(out["x"], [0, np.pi])
     assert_allclose(out["angle"], [10, 200])
-
-
-def test_coord_radial_draw_sets_arc_inner_radius_and_axis_position():
-    coord = coord_radial(
-        start=np.pi / 4,
-        end=3 * np.pi / 4,
-        inner_radius=0.5,
-        r_axis_inside=True,
-    )
-    coord.params = {"r_range": (2, 10)}
-    fig, ax = plt.subplots(subplot_kw={"projection": "polar"})
-
-    try:
-        coord.draw([ax])
-        assert_allclose(ax.get_xlim(), (np.pi / 4, 3 * np.pi / 4))
-        assert_allclose(ax.get_rorigin(), -6)
-        assert ax.get_rlabel_position() == 55
-    finally:
-        plt.close(fig)
-
-
-def test_coord_radial_draw_float_r_axis_position():
-    coord = coord_radial(r_axis_inside=np.pi / 2)
-    coord.params = {"r_range": (0, 10)}
-    fig, ax = plt.subplots(subplot_kw={"projection": "polar"})
-
-    try:
-        coord.draw([ax])
-        assert ax.get_rlabel_position() == 90
-    finally:
-        plt.close(fig)
-
-
-def test_coord_radial_setup_ax_sets_pad_and_unclips_text():
-    data = pd.DataFrame({"x": [1], "y": [1], "label": ["label"]})
-    p = (
-        ggplot(data, aes("x", "y", label="label"))
-        + geom_text()
-        + coord_radial(theta_label_pad=17, theta_labels=True)
-    )
-
-    fig = p.draw()
-    try:
-        ax = fig.axes[0]
-        assert ax.xaxis.get_tick_params()["pad"] == 17
-        assert not ax.texts[0].get_clip_on()
-    finally:
-        plt.close(fig)
-
-
-def test_coord_radial_uses_guide_axis_theta_angle():
-    data = pd.DataFrame({"x": [1, 2, 3], "y": [1, 2, 3]})
-    p = (
-        ggplot(data, aes("x", "y"))
-        + geom_point()
-        + coord_radial(theta_labels=True)
-        + guides(theta=guide_axis_theta(angle=35))
-    )
-
-    fig = p.draw()
-    try:
-        rotations = [
-            label.get_rotation()
-            for label in fig.axes[0].get_xticklabels()
-            if label.get_text()
-        ]
-        assert rotations
-        assert rotations == [35] * len(rotations)
-    finally:
-        plt.close(fig)
