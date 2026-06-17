@@ -282,5 +282,23 @@ def test_coord_radial_transform_rotates_angle():
 
     out = coord.transform(data, None)
 
+    # x=0 -> top spoke (rotation 0); x=5 -> bottom spoke (180deg) which
+    # folds back to a horizontal, readable label (rotation 0).
     assert_allclose(out["x"], [0, np.pi])
-    assert_allclose(out["angle"], [10, 200])
+    assert_allclose(out["angle"], [10, 20])
+
+
+def test_coord_radial_rotate_angle_aligns_upright():
+    coord = coord_radial(rotate_angle=True)
+    coord.params = {"theta_range": (0, 3), "r_range": (0, 10)}
+    # theta data 0 -> top, 1 -> 120deg clockwise, 2 -> 240deg clockwise.
+    data = pd.DataFrame(
+        {"x": [0.0, 1.0, 2.0], "y": [1, 1, 1], "angle": [0.0, 0.0, 0.0]}
+    )
+
+    out = coord.transform(data, None)
+
+    # Labels align tangentially to the arc and are folded into (-90, 90]
+    # so they stay upright (a bottom label reads "6", not "9").
+    assert all(-90 <= a <= 90 for a in out["angle"])
+    assert_allclose(out["angle"], [0.0, 60.0, -60.0], atol=1e-6)
