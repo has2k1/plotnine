@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import replace
-from typing import TYPE_CHECKING, cast
+from typing import TYPE_CHECKING, Literal, cast
 
 import numpy as np
 
@@ -78,7 +78,6 @@ class coord_polar(coord):
         self.start = start
         self.direction = direction
         self.expand = expand
-        self.params: dict = {}
 
     # ------------------------------------------------------------------
     # Panel params
@@ -103,8 +102,7 @@ class coord_polar(coord):
             theta_range = pv_no_exp.y.range
             r_sv = pv_exp.x
 
-        self.params["theta_range"] = theta_range
-        self.params["r_range"] = r_sv.range
+        r_range = r_sv.range
 
         empty = np.array([], dtype=float)
 
@@ -125,7 +123,13 @@ class coord_polar(coord):
         # breaks.
         new_y = replace(r_sv)
 
-        return replace(pv_exp, x=new_x, y=new_y)
+        return replace(
+            pv_exp,
+            x=new_x,
+            y=new_y,
+            theta_range=tuple(theta_range),
+            r_range=tuple(r_range),
+        )
 
     def labels(self, cur_labels: labels_view) -> labels_view:
         # When theta="y" the data x/y columns are swapped in transform so that
@@ -141,9 +145,11 @@ class coord_polar(coord):
     # Helpers
     # ------------------------------------------------------------------
 
-    def _to_radians(self, vals: np.ndarray) -> np.ndarray:
+    def _to_radians(
+        self, vals: np.ndarray, theta_range: tuple[float, float]
+    ) -> np.ndarray:
         """Normalise data-space theta values to [start, start + 2π]."""
-        t_min, t_max = self.params["theta_range"]
+        t_min, t_max = theta_range
         denom = float(t_max) - float(t_min)
         if denom == 0:
             return np.zeros_like(vals, dtype=float)
@@ -177,14 +183,19 @@ class coord_polar(coord):
         if theta_col not in data.columns or r_col not in data.columns:
             return data
 
+        theta_range = panel_params.theta_range
+        assert theta_range is not None
+
         data = data.copy()
-        data[theta_col] = self._to_radians(data[theta_col].to_numpy())
+        data[theta_col] = self._to_radians(
+            data[theta_col].to_numpy(), theta_range
+        )
         has_endpoints = (
             theta_end_col in data.columns and r_end_col in data.columns
         )
         if has_endpoints:
             data[theta_end_col] = self._to_radians(
-                data[theta_end_col].to_numpy()
+                data[theta_end_col].to_numpy(), theta_range
             )
 
         # PolarAxes always expects x = theta (radians) and y = r.
@@ -210,8 +221,10 @@ class coord_polar(coord):
         panel_params: panel_view,
     ) -> np.ndarray:
         # Normalise theta and r to [0, 1] then compute Euclidean distance.
-        t_min, t_max = self.params["theta_range"]
-        r_min, r_max = self.params["r_range"]
+        assert panel_params.theta_range is not None
+        assert panel_params.r_range is not None
+        t_min, t_max = panel_params.theta_range
+        r_min, r_max = panel_params.r_range
         t_denom = float(t_max - t_min) or 1.0
         r_denom = float(r_max - r_min) or 1.0
 
@@ -227,8 +240,10 @@ class coord_polar(coord):
         return dist_euclidean(theta_norm, r_norm)
 
     def backtransform_range(self, panel_params: panel_view) -> panel_ranges:
-        t_range = tuple(self.params["theta_range"])
-        r_range = tuple(self.params["r_range"])
+        assert panel_params.theta_range is not None
+        assert panel_params.r_range is not None
+        t_range = panel_params.theta_range
+        r_range = panel_params.r_range
         if self.theta == "x":
             return panel_ranges(x=t_range, y=r_range)
         return panel_ranges(x=r_range, y=t_range)
@@ -237,13 +252,22 @@ class coord_polar(coord):
     # Draw decorations on PolarAxes
     # ------------------------------------------------------------------
 
+    def _mpl_theta_direction(self) -> Literal[-1, 1]:
+        """
+        Matplotlib theta direction for this coordinate system
+
+        ``-1`` draws clockwise and ``+1`` counter-clockwise, the opposite of
+        plotnine's own ``direction`` convention.
+        """
+        return -1 if self.direction == 1 else 1
+
     def draw(self, axs: list[Axes]) -> None:
         """Configure each PolarAxes: zero location and rotation direction
 
         R-limits are set per panel by setup_ax.
         """
         # PolarAxes theta_direction: -1 = clockwise, +1 = counter-clockwise.
-        mpl_direction = -1 if self.direction == 1 else 1
+        mpl_direction = self._mpl_theta_direction()
         for ax in axs:
             polar_ax = cast("PolarAxes", ax)
             polar_ax.set_theta_zero_location("N")  # 12 o'clock

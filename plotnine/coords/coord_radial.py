@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import replace
-from typing import TYPE_CHECKING, cast
+from typing import TYPE_CHECKING, Literal, cast
 
 import numpy as np
 
@@ -37,8 +37,9 @@ class coord_radial(coord_polar):
         Ending angle in radians, measured clockwise from 12 o'clock.
         ``None`` (default) gives a full circle (``start + 2π * direction``).
     direction :
-        ``1`` = clockwise (default), ``-1`` = counter-clockwise.
-        Only used when *end* is ``None``.
+        Angular rotation sense: ``1`` = clockwise (default), ``-1`` =
+        counter-clockwise. Applied regardless of *end*, so it also sets
+        the sweep direction of a partial arc.
     expand :
         Add a small buffer around the data on the radius axis.
         Default ``True``.
@@ -70,6 +71,14 @@ class coord_radial(coord_polar):
         Data-space limits for the r axis as ``(lo, hi)``.  Only data within
         this range is shown; equivalent to zooming on the radial axis.
         ``None`` (default) uses the full data range.
+    reverse :
+        Which axes run in the opposite direction.
+
+        * ``"none"`` (default) — neither axis is reversed.
+        * ``"theta"`` — the angular axis runs the other way around.
+        * ``"r"`` — the radial axis is inverted, so large values sit
+          toward the centre.
+        * ``"thetar"`` — both the angular and radial axes are reversed.
 
     Notes
     -----
@@ -80,10 +89,6 @@ class coord_radial(coord_polar):
 
     The Python API uses snake_case names for arguments that are dotted in
     ggplot2: ``inner_radius``, ``r_axis_inside``, and ``rotate_angle``.
-
-    Unlike ggplot2, plotnine coordinate systems do not currently expose a
-    ``clip`` argument. The ggplot2 ``reverse`` argument is not currently
-    implemented.
 
     Examples
     --------
@@ -135,6 +140,7 @@ class coord_radial(coord_polar):
         rotate_angle: bool = False,
         thetalim: tuple[float, float] | None = None,
         rlim: tuple[float, float] | None = None,
+        reverse: str = "none",
     ) -> None:
         super().__init__(
             theta=theta,
@@ -142,12 +148,18 @@ class coord_radial(coord_polar):
             direction=direction,
             expand=expand,
         )
+        if reverse not in {"none", "theta", "r", "thetar"}:
+            raise ValueError(
+                "reverse must be one of 'none', 'theta', 'r', 'thetar'; "
+                f"got {reverse!r}."
+            )
         self.end = end
         self.inner_radius = inner_radius
         self.r_axis_inside = r_axis_inside
         self.rotate_angle = rotate_angle
         self.thetalim = thetalim
         self.rlim = rlim
+        self.reverse = reverse
 
     # ------------------------------------------------------------------
     # Panel params
@@ -173,7 +185,7 @@ class coord_radial(coord_polar):
         # arc. Recompute nice breaks over the zoomed range so labels are not
         # reduced to sparse endpoints, matching ggplot2.
         if self.thetalim is not None:
-            self.params["theta_range"] = tuple(self.thetalim)
+            pv = replace(pv, theta_range=tuple(self.thetalim))
             theta_scale = scale_x if self.theta == "x" else scale_y
             theta_breaks = [
                 b
@@ -182,11 +194,11 @@ class coord_radial(coord_polar):
             ]
             theta_labels = list(theta_scale.get_labels(theta_breaks))
 
-        # rlim: zoom the r data range — update params and recompute nice breaks
+        # rlim: zoom the r data range — update ranges and recompute nice breaks
         # over the zoomed range (rather than filtering the full-range breaks,
         # which leaves sparse endpoint-only labels), matching ggplot2.
         if self.rlim is not None:
-            self.params["r_range"] = tuple(self.rlim)
+            pv = replace(pv, r_range=tuple(self.rlim))
             r_scale = scale_y if self.theta == "x" else scale_x
             breaks = [
                 b
@@ -215,8 +227,11 @@ class coord_radial(coord_polar):
         # default (matching ggplot2); hide them via theme(axis_text_x=...).
         x_updates: dict = {}
         if theta_breaks:
+            assert pv.theta_range is not None
             radian_pos = list(
-                self._to_radians(np.asarray(theta_breaks, dtype=float))
+                self._to_radians(
+                    np.asarray(theta_breaks, dtype=float), pv.theta_range
+                )
             )
             if arc_lo is not None:
                 keep = [arc_lo <= r <= arc_hi for r in radian_pos]
@@ -234,6 +249,16 @@ class coord_radial(coord_polar):
 
         if x_updates:
             pv = replace(pv, x=replace(pv.x, **x_updates))
+
+        # reverse="r"/"thetar": flip the displayed radial range so large r
+        # values sit toward the centre. set_ylim(hi, lo) inverts the axis.
+        # pv.r_range stays in natural (lo, hi) order, so setup_ax reads it
+        # (not y.range) for the inner_radius origin: reversing only y.range
+        # inverts the display without breaking the hole, and distance() is
+        # likewise unaffected.
+        if self.reverse in ("r", "thetar"):
+            lo, hi = pv.y.range
+            pv = replace(pv, y=replace(pv.y, range=(hi, lo)))
 
         return pv
 
@@ -255,9 +280,24 @@ class coord_radial(coord_polar):
             return self.end - self.start
         return 2.0 * np.pi
 
-    def _to_radians(self, vals: np.ndarray) -> np.ndarray:
+    def _mpl_theta_direction(self) -> Literal[-1, 1]:
+        """
+        Matplotlib theta direction, flipped when reverse acts on theta
+
+        ``reverse="theta"``/``"thetar"`` runs the angular axis the other way
+        by folding into the PolarAxes direction at draw time, rather than into
+        the radian mapping.
+        """
+        mpl_direction = super()._mpl_theta_direction()
+        if self.reverse in ("theta", "thetar"):
+            return 1 if mpl_direction == -1 else -1
+        return mpl_direction
+
+    def _to_radians(
+        self, vals: np.ndarray, theta_range: tuple[float, float]
+    ) -> np.ndarray:
         """Normalize theta values to [start, start + arc]."""
-        t_min, t_max = self.params["theta_range"]
+        t_min, t_max = theta_range
         denom = float(t_max) - float(t_min)
         if denom == 0:
             return np.zeros_like(vals, dtype=float)
@@ -287,7 +327,7 @@ class coord_radial(coord_polar):
             #   screen = 90 + mpl_dir * degrees(t),  mpl_dir = -1 if cw else 1
             # Tangential text rotation is screen - 90; folding into (-90, 90]
             # keeps labels upright (a bottom label reads "6", not "9").
-            mpl_dir = -1 if self.direction == 1 else 1
+            mpl_dir = self._mpl_theta_direction()
             rot = mpl_dir * np.degrees(data["x"].to_numpy())
             rot = (rot + 90.0) % 180.0 - 90.0
             data["angle"] = data["angle"] + rot
@@ -321,7 +361,11 @@ class coord_radial(coord_polar):
         # Inner radius: push the data away from the centre by setting a
         # virtual r-origin below r_min.  Formula: solve
         #   inner_radius = (r_min - r_origin) / (r_max - r_origin)
-        r_min, r_max = panel_params.y.range
+        # Use the natural r range (always (lo, hi), reflects rlim) rather
+        # than y.range, which reverse="r"/"thetar" inverts to (hi, lo) and
+        # would fail the r_max > r_min guard, dropping the donut hole.
+        assert panel_params.r_range is not None
+        r_min, r_max = panel_params.r_range
         if (
             self.inner_radius > 0
             and np.isfinite(r_min)

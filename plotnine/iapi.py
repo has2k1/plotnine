@@ -166,6 +166,13 @@ class panel_view:
     x: scale_position_view
     y: scale_position_view
 
+    # Polar coordinates store the per-panel data-space ranges of the theta
+    # and r variables here so that transform-time methods read the range
+    # belonging to the panel they are given, not shared instance state.
+    # These are None for non-polar coordinate systems.
+    theta_range: Optional[tuple[float, float]] = None
+    r_range: Optional[tuple[float, float]] = None
+
 
 @dataclass
 class panel_ranges:
