@@ -18,6 +18,7 @@ from plotnine import (
 )
 from plotnine.coords.coord_cartesian import coord_cartesian
 from plotnine.coords.coord_polar import coord_polar
+from plotnine.iapi import labels_view
 from plotnine.scales import scale_x_continuous, scale_y_continuous
 
 
@@ -166,6 +167,20 @@ def test_coord_polar_draw_sets_polar_axis():
 
 def test_coord_polar_aspect_is_square():
     assert coord_polar().aspect(None) == 1
+
+
+def test_coord_polar_swaps_labels_when_theta_y():
+    coord = coord_polar(theta="y")
+    out = coord.labels(labels_view(x="xlab", y="ylab"))
+    assert out.x == "ylab"
+    assert out.y == "xlab"
+
+
+def test_coord_polar_keeps_labels_when_theta_x():
+    coord = coord_polar(theta="x")
+    out = coord.labels(labels_view(x="xlab", y="ylab"))
+    assert out.x == "xlab"
+    assert out.y == "ylab"
 
 
 def test_coord_polar_draw_uses_polar_axes_and_hides_blank_border():
