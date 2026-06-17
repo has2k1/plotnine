@@ -58,9 +58,10 @@ class coord_radial(coord_polar):
         Unlike ggplot2's ``r.axis.inside``, a length-2 value for separate
         primary and secondary axis placement is not supported.
     rotate_angle :
-        If ``True``, automatically add the local theta angle (in degrees) to
-        the ``angle`` aesthetic so that text or other rotated marks align with
-        the spoke direction.  Default ``False``.
+        If ``True``, rotate the ``angle`` aesthetic so that text or other
+        rotated marks align tangentially with the arc at their spoke. The
+        rotation is folded so labels stay upright (readable) rather than
+        appearing upside-down in the lower half.  Default ``False``.
     thetalim :
         Data-space limits for the theta axis as ``(lo, hi)``.  Only data
         within this range is mapped to the arc; equivalent to zooming on the
@@ -281,7 +282,15 @@ class coord_radial(coord_polar):
             and "x" in data.columns
         ):
             data = data.copy()
-            data["angle"] = data["angle"] + np.degrees(data["x"])
+            # Align marks tangentially to their spoke. The PolarAxes places
+            # a data theta t at on-screen angle (deg, CCW from East)
+            #   screen = 90 + mpl_dir * degrees(t),  mpl_dir = -1 if cw else 1
+            # Tangential text rotation is screen - 90; folding into (-90, 90]
+            # keeps labels upright (a bottom label reads "6", not "9").
+            mpl_dir = -1 if self.direction == 1 else 1
+            rot = mpl_dir * np.degrees(data["x"].to_numpy())
+            rot = (rot + 90.0) % 180.0 - 90.0
+            data["angle"] = data["angle"] + rot
         return data
 
     # ------------------------------------------------------------------
