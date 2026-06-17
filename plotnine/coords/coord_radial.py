@@ -391,13 +391,6 @@ class coord_radial(coord_polar):
         else:
             polar_ax.set_rlabel_position(np.degrees(float(self.r_axis_inside)))
 
-        # Draw the radial-axis tick labels above the geoms. By default the
-        # r-axis paints at a low zorder, so opaque geoms (e.g. coxcomb bars)
-        # hide the count labels; ggplot2 keeps them on top.
-        ax.yaxis.set_zorder(10000)
-        for label in ax.yaxis.get_ticklabels():
-            label.set_zorder(10000)
-
         ax.tick_params(axis="x", which="major", direction="out")
         if (angle := self._theta_guide_angle(theme)) is not None:
             # Use Matplotlib's 'auto' mode so labels orient tangentially
