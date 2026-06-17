@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING, Literal, cast
 
 import numpy as np
 
+from .._mpl._polar_axes import p9PolarAxes  # noqa: F401 (registers "p9polar")
 from ..iapi import panel_ranges
 from .coord import coord, dist_euclidean
 
@@ -65,7 +66,7 @@ class coord_polar(coord):
     """
 
     is_linear = False
-    _projection = "polar"
+    _projection = "p9polar"
 
     def __init__(
         self,
