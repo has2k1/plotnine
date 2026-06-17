@@ -13,7 +13,7 @@ if TYPE_CHECKING:
     from matplotlib.axes import Axes
     from matplotlib.projections.polar import PolarAxes
 
-    from plotnine.iapi import panel_view
+    from plotnine.iapi import labels_view, panel_view
     from plotnine.scales.scale import scale
 
 
@@ -126,6 +126,16 @@ class coord_polar(coord):
         new_y = replace(r_sv)
 
         return replace(pv_exp, x=new_x, y=new_y)
+
+    def labels(self, cur_labels: labels_view) -> labels_view:
+        # When theta="y" the data x/y columns are swapped in transform so that
+        # PolarAxes sees x=theta, y=r. Swap the axis titles to match, the same
+        # way coord_flip does for its flipped axes.
+        if self.theta == "y":
+            from .coord_flip import flip_labels
+
+            return flip_labels(super().labels(cur_labels))
+        return super().labels(cur_labels)
 
     # ------------------------------------------------------------------
     # Helpers
