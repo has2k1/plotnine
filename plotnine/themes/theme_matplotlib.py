@@ -136,7 +136,7 @@ class theme_matplotlib(theme):
         )
 
         if use_defaults:
-            self._rcParams.update(mpl.rcParams.copy())
+            self._rcParams.update(mpl.rcParams)
 
         if fname:
             self._rcParams.update(mpl.rc_params_from_file(fname))
