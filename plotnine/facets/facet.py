@@ -137,6 +137,15 @@ class facet:
         other.facet.environment = other.environment
         return other
 
+    def axis_positions(self) -> tuple[str, str]:
+        """
+        The sides the x and y axes occupy, as `(x_side, y_side)`
+        """
+        scales = self.plot.scales
+        x_side = getattr(scales.x, "position", "bottom")
+        y_side = getattr(scales.y, "position", "left")
+        return x_side, y_side
+
     def setup(self, plot: ggplot):
         self.plot = plot
         self.layout = plot.layout

@@ -64,6 +64,9 @@ class Layout:
 
         # setup facets
         self.facet = plot.facet
+        # compute_layout (below) needs the scales to resolve axis positions;
+        # facet.setup() runs later in draw(), so make the plot available now
+        self.facet.plot = plot
         self.facet.setup_params(data)
         data = self.facet.setup_data(data)
 

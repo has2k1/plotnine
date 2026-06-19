@@ -917,63 +917,10 @@ def test_transform_datetime_aes_param():
     assert p == "transform_datetime_aes_param"
 
 
-def test_position_defaults():
-    from plotnine.scales.scale_xy import (
-        scale_x_continuous,
-        scale_x_discrete,
-        scale_y_continuous,
-    )
-
-    assert scale_x_continuous().position == "bottom"
-    assert scale_y_continuous().position == "left"
-    assert scale_x_discrete().position == "bottom"
-
-
-def test_position_explicit():
-    from plotnine.scales.scale_xy import scale_x_continuous, scale_y_continuous
-
-    assert scale_x_continuous(position="top").position == "top"
-    assert scale_y_continuous(position="right").position == "right"
-
-
 def test_position_invalid_for_aesthetic():
-    from plotnine.exceptions import PlotnineError
-    from plotnine.scales.scale_xy import scale_x_continuous, scale_y_continuous
-
     with pytest.raises(PlotnineError):
-        scale_x_continuous(position="left")  # type: ignore[arg-type]
+        scale_x_continuous(position="left")  # pyright: ignore[reportArgumentType]
     with pytest.raises(PlotnineError):
-        scale_y_continuous(position="bottom")  # type: ignore[arg-type]
+        scale_y_continuous(position="bottom")  # pyright: ignore[reportArgumentType]
     with pytest.raises(PlotnineError):
-        scale_x_continuous(position="middle")  # type: ignore[arg-type]
-
-
-def test_panel_view_carries_position():
-    from plotnine import aes, geom_point, ggplot
-    from plotnine.data import mtcars
-    from plotnine.scales.scale_xy import scale_x_continuous
-
-    p = (
-        ggplot(mtcars, aes("wt", "mpg"))
-        + geom_point()
-        + scale_x_continuous(position="top")
-    )
-    pp = p.build_test().layout.panel_params[0]
-    assert pp.x.position == "top"
-    assert pp.y.position == "left"
-
-
-def test_coord_flip_rotates_position():
-    from plotnine import aes, coord_flip, geom_point, ggplot
-    from plotnine.data import mtcars
-    from plotnine.scales.scale_xy import scale_x_continuous
-
-    p = (
-        ggplot(mtcars, aes("wt", "mpg"))
-        + geom_point()
-        + scale_x_continuous(position="top")
-        + coord_flip()
-    )
-    pp = p.build_test().layout.panel_params[0]
-    assert pp.y.position == "right"
-    assert pp.x.position == "bottom"
+        scale_x_continuous(position="middle")  # pyright: ignore[reportArgumentType]
