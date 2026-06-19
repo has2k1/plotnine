@@ -28,6 +28,10 @@ class ThemeTargets:
 
     axis_title_x: Optional[Text] = None
     axis_title_y: Optional[Text] = None
+    axis_title_x_top: Optional[Text] = None
+    axis_title_x_bottom: Optional[Text] = None
+    axis_title_y_left: Optional[Text] = None
+    axis_title_y_right: Optional[Text] = None
     legend_frame: Optional[Rectangle] = None
     legend_key: list[ColoredDrawingArea] = field(default_factory=list)
     legends: Optional[legend_artists] = None
