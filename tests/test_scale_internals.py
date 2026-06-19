@@ -961,3 +961,19 @@ def test_panel_view_carries_position():
     pp = p.build_test().layout.panel_params[0]
     assert pp.x.position == "top"
     assert pp.y.position == "left"
+
+
+def test_coord_flip_rotates_position():
+    from plotnine import aes, coord_flip, geom_point, ggplot
+    from plotnine.data import mtcars
+    from plotnine.scales.scale_xy import scale_x_continuous
+
+    p = (
+        ggplot(mtcars, aes("wt", "mpg"))
+        + geom_point()
+        + scale_x_continuous(position="top")
+        + coord_flip()
+    )
+    pp = p.build_test().layout.panel_params[0]
+    assert pp.y.position == "right"
+    assert pp.x.position == "bottom"

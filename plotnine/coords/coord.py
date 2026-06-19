@@ -202,6 +202,13 @@ class coord:
                 labelright=False,
             )
 
+        # Show the spine on each axis's active side (on every panel, edge or
+        # interior); the axis_line themeable styles or blanks it.
+        ax.spines["top"].set_visible(x_pos == "top")
+        ax.spines["bottom"].set_visible(x_pos == "bottom")
+        ax.spines["right"].set_visible(y_pos == "right")
+        ax.spines["left"].set_visible(y_pos == "left")
+
         # Tick pad from the active side's tick-text margin. The inner edge
         # of the margin faces the panel: x-bottom uses the top margin,
         # x-top the bottom; y-left uses the right margin, y-right the left.

@@ -17,7 +17,7 @@ from warnings import warn
 
 import numpy as np
 
-from .._utils import has_alpha_channel, to_rgba
+from .._utils import has_alpha_channel, side_artists, to_rgba
 from .._utils.registry import RegistryHierarchyMeta
 from ..exceptions import PlotnineError, deprecated_themeable_name
 from .elements import element_blank
@@ -524,7 +524,40 @@ def blend_alpha(
 # element_text themeables
 
 
-class axis_title_x(themeable):
+class axis_title_x_bottom(themeable):
+    """
+    x axis label on the bottom
+    """
+
+    def apply_figure(self, figure: Figure, targets: ThemeTargets):
+        super().apply_figure(figure, targets)
+        if text := targets.axis_title_x_bottom:
+            # ha can be a float and is handled by the layout manager
+            text.set(**self._get_properties(omit=("margin", "ha")))
+
+    def blank_figure(self, figure: Figure, targets: ThemeTargets):
+        super().blank_figure(figure, targets)
+        if text := targets.axis_title_x_bottom:
+            text.set_visible(False)
+
+
+class axis_title_x_top(themeable):
+    """
+    x axis label on the top
+    """
+
+    def apply_figure(self, figure: Figure, targets: ThemeTargets):
+        super().apply_figure(figure, targets)
+        if text := targets.axis_title_x_top:
+            text.set(**self._get_properties(omit=("margin", "ha")))
+
+    def blank_figure(self, figure: Figure, targets: ThemeTargets):
+        super().blank_figure(figure, targets)
+        if text := targets.axis_title_x_top:
+            text.set_visible(False)
+
+
+class axis_title_x(axis_title_x_top, axis_title_x_bottom):
     """
     x axis label
 
@@ -533,19 +566,41 @@ class axis_title_x(themeable):
     theme_element : element_text
     """
 
+
+class axis_title_y_left(themeable):
+    """
+    y axis label on the left
+    """
+
     def apply_figure(self, figure: Figure, targets: ThemeTargets):
         super().apply_figure(figure, targets)
-        if text := targets.axis_title_x:
-            # ha can be a float and is handled by the layout manager
-            text.set(**self._get_properties(omit=("margin", "ha")))
+        if text := targets.axis_title_y_left:
+            # va can be a float and is handled by the layout manager
+            text.set(**self._get_properties(omit=("margin", "va")))
 
     def blank_figure(self, figure: Figure, targets: ThemeTargets):
         super().blank_figure(figure, targets)
-        if text := targets.axis_title_x:
+        if text := targets.axis_title_y_left:
             text.set_visible(False)
 
 
-class axis_title_y(themeable):
+class axis_title_y_right(themeable):
+    """
+    y axis label on the right
+    """
+
+    def apply_figure(self, figure: Figure, targets: ThemeTargets):
+        super().apply_figure(figure, targets)
+        if text := targets.axis_title_y_right:
+            text.set(**self._get_properties(omit=("margin", "va")))
+
+    def blank_figure(self, figure: Figure, targets: ThemeTargets):
+        super().blank_figure(figure, targets)
+        if text := targets.axis_title_y_right:
+            text.set_visible(False)
+
+
+class axis_title_y(axis_title_y_left, axis_title_y_right):
     """
     y axis label
 
@@ -553,17 +608,6 @@ class axis_title_y(themeable):
     ----------
     theme_element : element_text
     """
-
-    def apply_figure(self, figure: Figure, targets: ThemeTargets):
-        super().apply_figure(figure, targets)
-        if text := targets.axis_title_y:
-            # va can be a float and is handled by the layout manager
-            text.set(**self._get_properties(omit=("margin", "va")))
-
-    def blank_figure(self, figure: Figure, targets: ThemeTargets):
-        super().blank_figure(figure, targets)
-        if text := targets.axis_title_y:
-            text.set_visible(False)
 
 
 class axis_title(axis_title_x, axis_title_y):
@@ -948,7 +992,53 @@ class title(
     """
 
 
-class axis_text_x(MixinSequenceOfValues):
+class axis_text_x_bottom(MixinSequenceOfValues):
+    """
+    x-axis tick labels on the bottom
+
+    Parameters
+    ----------
+    theme_element : element_text
+    """
+
+    def apply_ax(self, ax: Axes):
+        super().apply_ax(ax)
+        if not ax.xaxis.get_tick_params(which="major").get(
+            "labelbottom", False
+        ):
+            return
+        labels = [t.label1 for t in ax.xaxis.get_major_ticks()]
+        self.set(labels, self._get_properties(omit=("margin", "va")))
+
+    def blank_ax(self, ax: Axes):
+        super().blank_ax(ax)
+        for t in ax.xaxis.get_major_ticks():
+            t.label1.set_visible(False)
+
+
+class axis_text_x_top(MixinSequenceOfValues):
+    """
+    x-axis tick labels on the top
+
+    Parameters
+    ----------
+    theme_element : element_text
+    """
+
+    def apply_ax(self, ax: Axes):
+        super().apply_ax(ax)
+        if not ax.xaxis.get_tick_params(which="major").get("labeltop", False):
+            return
+        labels = [t.label2 for t in ax.xaxis.get_major_ticks()]
+        self.set(labels, self._get_properties(omit=("margin", "va")))
+
+    def blank_ax(self, ax: Axes):
+        super().blank_ax(ax)
+        for t in ax.xaxis.get_major_ticks():
+            t.label2.set_visible(False)
+
+
+class axis_text_x(axis_text_x_top, axis_text_x_bottom):
     """
     x-axis tick labels
 
@@ -968,36 +1058,54 @@ class axis_text_x(MixinSequenceOfValues):
     creates a margin of 5 points.
     """
 
+
+class axis_text_y_left(MixinSequenceOfValues):
+    """
+    y-axis tick labels on the left
+
+    Parameters
+    ----------
+    theme_element : element_text
+    """
+
     def apply_ax(self, ax: Axes):
         super().apply_ax(ax)
-
-        # TODO: Remove this code when the minimum matplotlib >= 3.10.0,
-        # and use the commented one below it
-        import matplotlib as mpl
-        from packaging import version
-
-        vinstalled = version.parse(mpl.__version__)
-        v310 = version.parse("3.10.0")
-        name = "labelbottom" if vinstalled >= v310 else "labelleft"
-        if not ax.xaxis.get_tick_params()[name]:
+        if not ax.yaxis.get_tick_params(which="major").get("labelleft", False):
             return
-
-        # if not ax.xaxis.get_tick_params()["labelbottom"]:
-        #     return
-
-        labels = [t.label1 for t in ax.xaxis.get_major_ticks()]
-        self.set(
-            labels,
-            self._get_properties(omit=("margin", "va")),
-        )
+        labels = [t.label1 for t in ax.yaxis.get_major_ticks()]
+        self.set(labels, self._get_properties(omit=("margin", "ha")))
 
     def blank_ax(self, ax: Axes):
         super().blank_ax(ax)
-        for t in ax.xaxis.get_major_ticks():
+        for t in ax.yaxis.get_major_ticks():
             t.label1.set_visible(False)
 
 
-class axis_text_y(MixinSequenceOfValues):
+class axis_text_y_right(MixinSequenceOfValues):
+    """
+    y-axis tick labels on the right
+
+    Parameters
+    ----------
+    theme_element : element_text
+    """
+
+    def apply_ax(self, ax: Axes):
+        super().apply_ax(ax)
+        if not ax.yaxis.get_tick_params(which="major").get(
+            "labelright", False
+        ):
+            return
+        labels = [t.label2 for t in ax.yaxis.get_major_ticks()]
+        self.set(labels, self._get_properties(omit=("margin", "ha")))
+
+    def blank_ax(self, ax: Axes):
+        super().blank_ax(ax)
+        for t in ax.yaxis.get_major_ticks():
+            t.label2.set_visible(False)
+
+
+class axis_text_y(axis_text_y_left, axis_text_y_right):
     """
     y-axis tick labels
 
@@ -1016,23 +1124,6 @@ class axis_text_y(MixinSequenceOfValues):
 
     creates a margin of 5 points.
     """
-
-    def apply_ax(self, ax: Axes):
-        super().apply_ax(ax)
-
-        if not ax.yaxis.get_tick_params()["labelleft"]:
-            return
-
-        labels = [t.label1 for t in ax.yaxis.get_major_ticks()]
-        self.set(
-            labels,
-            self._get_properties(omit=("margin", "ha")),
-        )
-
-    def blank_ax(self, ax: Axes):
-        super().blank_ax(ax)
-        for t in ax.yaxis.get_major_ticks():
-            t.label1.set_visible(False)
 
 
 class axis_text(axis_text_x, axis_text_y):
@@ -1096,7 +1187,53 @@ class text(axis_text, legend_text, strip_text, title):
 # element_line themeables
 
 
-class axis_line_x(themeable):
+def _style_axis_line(themeable, ax, side):
+    """
+    Style the spine on one side, when that side carries the axis
+
+    `coord.setup_ax` makes only the active side's spine visible, so a hidden
+    spine here is one this axis does not sit on. The spine name equals the
+    side (`bottom`/`top`/`left`/`right`).
+    """
+    if not ax.spines[side].get_visible():
+        return
+    properties = themeable._get_properties(omit=("solid_capstyle",))
+    # MPL has a default zorder of 2.5 for spines, so layers 3+ would be
+    # drawn on top of the spines
+    if "zorder" not in properties:
+        properties["zorder"] = 10000
+    ax.spines[side].set(**properties)
+
+
+class axis_line_x_bottom(themeable):
+    """
+    x-axis line on the bottom
+    """
+
+    def apply_ax(self, ax: Axes):
+        super().apply_ax(ax)
+        _style_axis_line(self, ax, "bottom")
+
+    def blank_ax(self, ax: Axes):
+        super().blank_ax(ax)
+        ax.spines["bottom"].set_visible(False)
+
+
+class axis_line_x_top(themeable):
+    """
+    x-axis line on the top
+    """
+
+    def apply_ax(self, ax: Axes):
+        super().apply_ax(ax)
+        _style_axis_line(self, ax, "top")
+
+    def blank_ax(self, ax: Axes):
+        super().blank_ax(ax)
+        ax.spines["top"].set_visible(False)
+
+
+class axis_line_x(axis_line_x_top, axis_line_x_bottom):
     """
     x-axis line
 
@@ -1105,25 +1242,36 @@ class axis_line_x(themeable):
     theme_element : element_line
     """
 
-    position = "bottom"
+
+class axis_line_y_left(themeable):
+    """
+    y-axis line on the left
+    """
 
     def apply_ax(self, ax: Axes):
         super().apply_ax(ax)
-        properties = self._get_properties(omit=("solid_capstyle",))
-        # MPL has a default zorder of 2.5 for spines
-        # so layers 3+ would be drawn on top of the spines
-        if "zorder" not in properties:
-            properties["zorder"] = 10000
-        ax.spines["top"].set_visible(False)
-        ax.spines["bottom"].set(**properties)
+        _style_axis_line(self, ax, "left")
 
     def blank_ax(self, ax: Axes):
         super().blank_ax(ax)
-        ax.spines["top"].set_visible(False)
-        ax.spines["bottom"].set_visible(False)
+        ax.spines["left"].set_visible(False)
 
 
-class axis_line_y(themeable):
+class axis_line_y_right(themeable):
+    """
+    y-axis line on the right
+    """
+
+    def apply_ax(self, ax: Axes):
+        super().apply_ax(ax)
+        _style_axis_line(self, ax, "right")
+
+    def blank_ax(self, ax: Axes):
+        super().blank_ax(ax)
+        ax.spines["right"].set_visible(False)
+
+
+class axis_line_y(axis_line_y_left, axis_line_y_right):
     """
     y-axis line
 
@@ -1131,23 +1279,6 @@ class axis_line_y(themeable):
     ----------
     theme_element : element_line
     """
-
-    position = "left"
-
-    def apply_ax(self, ax: Axes):
-        super().apply_ax(ax)
-        properties = self._get_properties(omit=("solid_capstyle",))
-        # MPL has a default zorder of 2.5 for spines
-        # so layers 3+ would be drawn on top of the spines
-        if "zorder" not in properties:
-            properties["zorder"] = 10000
-        ax.spines["right"].set_visible(False)
-        ax.spines["left"].set(**properties)
-
-    def blank_ax(self, ax: Axes):
-        super().blank_ax(ax)
-        ax.spines["left"].set_visible(False)
-        ax.spines["right"].set_visible(False)
 
 
 class axis_line(axis_line_x, axis_line_y):
@@ -1160,53 +1291,118 @@ class axis_line(axis_line_x, axis_line_y):
     """
 
 
-class axis_ticks_minor_x(MixinSequenceOfValues):
+def _style_axis_ticks(themeable, ax, axis_name, which, side):
     """
-    x-axis tick lines
+    Style the tick lines on one side of an axis
+    """
+    axis = getattr(ax, axis_name)
+    # coord.setup_ax uses set_tick_params to turn off the ticks that will
+    # not show, setting the side key (e.g. params["bottom"]) to False and
+    # the artist invisible. Theming should not make them visible again.
+    if not axis.get_tick_params(which=which).get(side, False):
+        return
+
+    # We have to use both Axis.set_tick_params() and Tick.tickline.set().
+    # Splitting the properties lets set_tick_params keep a record of the
+    # ones it cares about so it does not undo them. GH703
+    # https://github.com/matplotlib/matplotlib/issues/26008
+    tick_params = {}
+    properties = themeable.properties
+    with suppress(KeyError):
+        tick_params["width"] = properties.pop("linewidth")
+    with suppress(KeyError):
+        tick_params["color"] = properties.pop("color")
+
+    if tick_params:
+        axis.set_tick_params(which=which, **tick_params)
+
+    attr = side_artists(side)[0]
+    ticks = (
+        axis.get_minor_ticks() if which == "minor" else axis.get_major_ticks()
+    )
+    themeable.set([getattr(t, attr) for t in ticks], properties)
+
+
+def _blank_axis_ticks(ax, axis_name, which, side):
+    """
+    Hide the tick lines on one side of an axis
+    """
+    axis = getattr(ax, axis_name)
+    attr = side_artists(side)[0]
+    ticks = (
+        axis.get_minor_ticks() if which == "minor" else axis.get_major_ticks()
+    )
+    for tick in ticks:
+        getattr(tick, attr).set_visible(False)
+
+
+class axis_ticks_minor_x_bottom(MixinSequenceOfValues):
+    """
+    x-axis minor tick lines on the bottom
+    """
+
+    def apply_ax(self, ax: Axes):
+        super().apply_ax(ax)
+        _style_axis_ticks(self, ax, "xaxis", "minor", "bottom")
+
+    def blank_ax(self, ax: Axes):
+        super().blank_ax(ax)
+        _blank_axis_ticks(ax, "xaxis", "minor", "bottom")
+
+
+class axis_ticks_minor_x_top(MixinSequenceOfValues):
+    """
+    x-axis minor tick lines on the top
+    """
+
+    def apply_ax(self, ax: Axes):
+        super().apply_ax(ax)
+        _style_axis_ticks(self, ax, "xaxis", "minor", "top")
+
+    def blank_ax(self, ax: Axes):
+        super().blank_ax(ax)
+        _blank_axis_ticks(ax, "xaxis", "minor", "top")
+
+
+class axis_ticks_minor_x(axis_ticks_minor_x_top, axis_ticks_minor_x_bottom):
+    """
+    x-axis minor tick lines
 
     Parameters
     ----------
     theme_element : element_line
     """
 
+
+class axis_ticks_minor_y_left(MixinSequenceOfValues):
+    """
+    y-axis minor tick lines on the left
+    """
+
     def apply_ax(self, ax: Axes):
         super().apply_ax(ax)
-        # The ggplot._draw_breaks_and_labels uses set_tick_params to
-        # turn off the ticks that will not show. That sets the location
-        # key (e.g. params["bottom"]) to False. It also sets the artist
-        # to invisible. Theming should not change those artists to visible,
-        # so we return early.
-        params = ax.xaxis.get_tick_params(which="minor")
-        if not params.get("bottom", False):
-            return
-
-        # We have to use both
-        #    1. Axis.set_tick_params()
-        #    2. Tick.tick1line.set()
-        # We split the properties so that set_tick_params keeps
-        # record of the properties it cares about so that it does
-        # not undo them. GH703
-        # https://github.com/matplotlib/matplotlib/issues/26008
-        tick_params = {}
-        properties = self.properties
-        with suppress(KeyError):
-            tick_params["width"] = properties.pop("linewidth")
-        with suppress(KeyError):
-            tick_params["color"] = properties.pop("color")
-
-        if tick_params:
-            ax.xaxis.set_tick_params(which="minor", **tick_params)
-
-        lines = [t.tick1line for t in ax.xaxis.get_minor_ticks()]
-        self.set(lines, properties)
+        _style_axis_ticks(self, ax, "yaxis", "minor", "left")
 
     def blank_ax(self, ax: Axes):
         super().blank_ax(ax)
-        for tick in ax.xaxis.get_minor_ticks():
-            tick.tick1line.set_visible(False)
+        _blank_axis_ticks(ax, "yaxis", "minor", "left")
 
 
-class axis_ticks_minor_y(MixinSequenceOfValues):
+class axis_ticks_minor_y_right(MixinSequenceOfValues):
+    """
+    y-axis minor tick lines on the right
+    """
+
+    def apply_ax(self, ax: Axes):
+        super().apply_ax(ax)
+        _style_axis_ticks(self, ax, "yaxis", "minor", "right")
+
+    def blank_ax(self, ax: Axes):
+        super().blank_ax(ax)
+        _blank_axis_ticks(ax, "yaxis", "minor", "right")
+
+
+class axis_ticks_minor_y(axis_ticks_minor_y_left, axis_ticks_minor_y_right):
     """
     y-axis minor tick lines
 
@@ -1215,32 +1411,36 @@ class axis_ticks_minor_y(MixinSequenceOfValues):
     theme_element : element_line
     """
 
+
+class axis_ticks_major_x_bottom(MixinSequenceOfValues):
+    """
+    x-axis major tick lines on the bottom
+    """
+
     def apply_ax(self, ax: Axes):
         super().apply_ax(ax)
-        params = ax.yaxis.get_tick_params(which="minor")
-        if not params.get("left", False):
-            return
-
-        tick_params = {}
-        properties = self.properties
-        with suppress(KeyError):
-            tick_params["width"] = properties.pop("linewidth")
-        with suppress(KeyError):
-            tick_params["color"] = properties.pop("color")
-
-        if tick_params:
-            ax.yaxis.set_tick_params(which="minor", **tick_params)
-
-        lines = [t.tick1line for t in ax.yaxis.get_minor_ticks()]
-        self.set(lines, properties)
+        _style_axis_ticks(self, ax, "xaxis", "major", "bottom")
 
     def blank_ax(self, ax: Axes):
         super().blank_ax(ax)
-        for tick in ax.yaxis.get_minor_ticks():
-            tick.tick1line.set_visible(False)
+        _blank_axis_ticks(ax, "xaxis", "major", "bottom")
 
 
-class axis_ticks_major_x(MixinSequenceOfValues):
+class axis_ticks_major_x_top(MixinSequenceOfValues):
+    """
+    x-axis major tick lines on the top
+    """
+
+    def apply_ax(self, ax: Axes):
+        super().apply_ax(ax)
+        _style_axis_ticks(self, ax, "xaxis", "major", "top")
+
+    def blank_ax(self, ax: Axes):
+        super().blank_ax(ax)
+        _blank_axis_ticks(ax, "xaxis", "major", "top")
+
+
+class axis_ticks_major_x(axis_ticks_major_x_top, axis_ticks_major_x_bottom):
     """
     x-axis major tick lines
 
@@ -1249,44 +1449,36 @@ class axis_ticks_major_x(MixinSequenceOfValues):
     theme_element : element_line
     """
 
+
+class axis_ticks_major_y_left(MixinSequenceOfValues):
+    """
+    y-axis major tick lines on the left
+    """
+
     def apply_ax(self, ax: Axes):
         super().apply_ax(ax)
-        params = ax.xaxis.get_tick_params(which="major")
-
-        # TODO: Remove this code when the minimum matplotlib >= 3.10.0,
-        # and use the commented one below it
-        import matplotlib as mpl
-        from packaging import version
-
-        vinstalled = version.parse(mpl.__version__)
-        v310 = version.parse("3.10.0")
-        name = "bottom" if vinstalled >= v310 else "left"
-        if not params.get(name, False):
-            return
-
-        # if not params.get("bottom", False):
-        #     return
-
-        tick_params = {}
-        properties = self.properties
-        with suppress(KeyError):
-            tick_params["width"] = properties.pop("linewidth")
-        with suppress(KeyError):
-            tick_params["color"] = properties.pop("color")
-
-        if tick_params:
-            ax.xaxis.set_tick_params(which="major", **tick_params)
-
-        lines = [t.tick1line for t in ax.xaxis.get_major_ticks()]
-        self.set(lines, properties)
+        _style_axis_ticks(self, ax, "yaxis", "major", "left")
 
     def blank_ax(self, ax: Axes):
         super().blank_ax(ax)
-        for tick in ax.xaxis.get_major_ticks():
-            tick.tick1line.set_visible(False)
+        _blank_axis_ticks(ax, "yaxis", "major", "left")
 
 
-class axis_ticks_major_y(MixinSequenceOfValues):
+class axis_ticks_major_y_right(MixinSequenceOfValues):
+    """
+    y-axis major tick lines on the right
+    """
+
+    def apply_ax(self, ax: Axes):
+        super().apply_ax(ax)
+        _style_axis_ticks(self, ax, "yaxis", "major", "right")
+
+    def blank_ax(self, ax: Axes):
+        super().blank_ax(ax)
+        _blank_axis_ticks(ax, "yaxis", "major", "right")
+
+
+class axis_ticks_major_y(axis_ticks_major_y_left, axis_ticks_major_y_right):
     """
     y-axis major tick lines
 
@@ -1294,30 +1486,6 @@ class axis_ticks_major_y(MixinSequenceOfValues):
     ----------
     theme_element : element_line
     """
-
-    def apply_ax(self, ax: Axes):
-        super().apply_ax(ax)
-        params = ax.yaxis.get_tick_params(which="major")
-        if not params.get("left", False):
-            return
-
-        tick_params = {}
-        properties = self.properties
-        with suppress(KeyError):
-            tick_params["width"] = properties.pop("linewidth")
-        with suppress(KeyError):
-            tick_params["color"] = properties.pop("color")
-
-        if tick_params:
-            ax.yaxis.set_tick_params(which="major", **tick_params)
-
-        lines = [t.tick1line for t in ax.yaxis.get_major_ticks()]
-        self.set(lines, properties)
-
-    def blank_ax(self, ax: Axes):
-        super().blank_ax(ax)
-        for tick in ax.yaxis.get_major_ticks():
-            tick.tick1line.set_visible(False)
 
 
 class axis_ticks_major(axis_ticks_major_x, axis_ticks_major_y):
@@ -1838,7 +2006,10 @@ class axis_ticks_length_major_x(themeable):
         value: float | complex = self.properties["value"]
 
         try:
-            visible = ax.xaxis.get_major_ticks()[0].tick1line.get_visible()
+            tick = ax.xaxis.get_major_ticks()[0]
+            visible = (
+                tick.tick1line.get_visible() or tick.tick2line.get_visible()
+            )
         except IndexError:
             value = 0
         else:
@@ -1872,7 +2043,10 @@ class axis_ticks_length_major_y(themeable):
         value: float | complex = self.properties["value"]
 
         try:
-            visible = ax.yaxis.get_major_ticks()[0].tick1line.get_visible()
+            tick = ax.yaxis.get_major_ticks()[0]
+            visible = (
+                tick.tick1line.get_visible() or tick.tick2line.get_visible()
+            )
         except IndexError:
             value = 0
         else:
@@ -2674,7 +2848,8 @@ class axis_ticks_pad_major_x(themeable):
         val = self.properties["value"]
 
         for t in ax.xaxis.get_major_ticks():
-            _val = val if t.tick1line.get_visible() else 0
+            visible = t.tick1line.get_visible() or t.tick2line.get_visible()
+            _val = val if visible else 0
             t.set_pad(_val)
 
 
@@ -2701,7 +2876,8 @@ class axis_ticks_pad_major_y(themeable):
         val = self.properties["value"]
 
         for t in ax.yaxis.get_major_ticks():
-            _val = val if t.tick1line.get_visible() else 0
+            visible = t.tick1line.get_visible() or t.tick2line.get_visible()
+            _val = val if visible else 0
             t.set_pad(_val)
 
 
@@ -2744,7 +2920,8 @@ class axis_ticks_pad_minor_x(themeable):
         val = self.properties["value"]
 
         for t in ax.xaxis.get_minor_ticks():
-            _val = val if t.tick1line.get_visible() else 0
+            visible = t.tick1line.get_visible() or t.tick2line.get_visible()
+            _val = val if visible else 0
             t.set_pad(_val)
 
 
@@ -2770,7 +2947,8 @@ class axis_ticks_pad_minor_y(themeable):
         val = self.properties["value"]
 
         for t in ax.yaxis.get_minor_ticks():
-            _val = val if t.tick1line.get_visible() else 0
+            visible = t.tick1line.get_visible() or t.tick2line.get_visible()
+            _val = val if visible else 0
             t.set_pad(_val)
 
 

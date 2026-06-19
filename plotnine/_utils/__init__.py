@@ -61,6 +61,18 @@ BOX_LOCATIONS: dict[str, tuple[float, float]] = {
 to_rgba = color_utils.to_rgba
 
 
+def side_artists(side: str) -> tuple[str, str]:
+    """
+    Return the `(tickline, label)` tick-attribute names for an axis side
+
+    The bottom/left side maps to `tick1line`/`label1` and the top/right side
+    to `tick2line`/`label2`.
+    """
+    if side in ("top", "right"):
+        return ("tick2line", "label2")
+    return ("tick1line", "label1")
+
+
 def is_scalar(val):
     """
     Return whether the given object is a scalar
