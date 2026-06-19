@@ -54,6 +54,15 @@ class scale_view:
 
 
 @dataclass
+class scale_position_view(scale_view):
+    """
+    Trained position scale information, including the axis side
+    """
+
+    position: Side
+
+
+@dataclass
 class range_view:
     """
     Range information after training
@@ -142,8 +151,8 @@ class panel_view:
     Information from the trained position scales in a panel
     """
 
-    x: scale_view
-    y: scale_view
+    x: scale_position_view
+    y: scale_position_view
 
 
 @dataclass

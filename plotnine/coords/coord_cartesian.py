@@ -12,7 +12,7 @@ if typing.TYPE_CHECKING:
 
     import pandas as pd
 
-    from plotnine.iapi import scale_view
+    from plotnine.iapi import scale_position_view
     from plotnine.scales.scale import scale
     from plotnine.typing import (
         FloatArray,
@@ -71,7 +71,7 @@ class coord_cartesian(coord):
 
         def get_scale_view(
             scale: scale, limits: tuple[Any, Any]
-        ) -> scale_view:
+        ) -> scale_position_view:
             coord_limits = (
                 scale.transform(limits)
                 if limits and isinstance(scale, scale_continuous)
@@ -82,7 +82,9 @@ class coord_cartesian(coord):
                 scale.final_limits, expansion, coord_limits, identity_trans()
             )
             sv = scale.view(limits=coord_limits, range=ranges.range)
-            return sv
+            # x/y scales are always position scales, so the view is a
+            # scale_position_view
+            return typing.cast("scale_position_view", sv)
 
         out = panel_view(
             x=get_scale_view(scale_x, self.limits.x),
