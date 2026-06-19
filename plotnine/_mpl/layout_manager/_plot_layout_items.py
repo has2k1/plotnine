@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING
 from matplotlib.text import Text
 
 from plotnine._mpl.patches import StripTextPatch
+from plotnine._utils import side_artists
 from plotnine.composition._compose import Compose
 from plotnine.exceptions import PlotnineError
 
@@ -89,6 +90,10 @@ class PlotLayoutItems:
 
         self.axis_title_x: Text | None = get("axis_title_x")
         self.axis_title_y: Text | None = get("axis_title_y")
+        self.axis_title_x_bottom: Text | None = get("axis_title_x_bottom")
+        self.axis_title_x_top: Text | None = get("axis_title_x_top")
+        self.axis_title_y_left: Text | None = get("axis_title_y_left")
+        self.axis_title_y_right: Text | None = get("axis_title_y_right")
 
         # # The legends references the structure that contains the
         # # AnchoredOffsetboxes (groups of legends)
@@ -126,9 +131,9 @@ class PlotLayoutItems:
             if getattr(spec, pred_method)()
         ]
 
-    def axis_text_x(self, ax: Axes) -> Iterator[Text]:
+    def axis_text_x(self, ax: Axes, side: str) -> Iterator[Text]:
         """
-        Return all x-axis labels for an axes that will be shown
+        Return the visible x-axis labels on one side of an axes
         """
         major, minor = [], []
 
@@ -136,15 +141,16 @@ class PlotLayoutItems:
             major = ax.xaxis.get_major_ticks()
             minor = ax.xaxis.get_minor_ticks()
 
+        label_attr = side_artists(side)[1]
         return (
-            tick.label1
+            getattr(tick, label_attr)
             for tick in chain(major, minor)
-            if _text_is_visible(tick.label1)
+            if _text_is_visible(getattr(tick, label_attr))
         )
 
-    def axis_text_y(self, ax: Axes) -> Iterator[Text]:
+    def axis_text_y(self, ax: Axes, side: str) -> Iterator[Text]:
         """
-        Return all y-axis labels for an axes that will be shown
+        Return the visible y-axis labels on one side of an axes
         """
         major, minor = [], []
 
@@ -152,10 +158,11 @@ class PlotLayoutItems:
             major = ax.yaxis.get_major_ticks()
             minor = ax.yaxis.get_minor_ticks()
 
+        label_attr = side_artists(side)[1]
         return (
-            tick.label1
+            getattr(tick, label_attr)
             for tick in chain(major, minor)
-            if _text_is_visible(tick.label1)
+            if _text_is_visible(getattr(tick, label_attr))
         )
 
     def axis_ticks_x(self, ax: Axes) -> Iterator[Tick]:
@@ -238,65 +245,113 @@ class PlotLayoutItems:
 
         return max(widths)
 
-    def axis_ticks_x_max_height_at(self, location: AxesLocation) -> float:
+    def axis_ticks_x_max_height_at(
+        self, location: AxesLocation, side: str
+    ) -> float:
         """
-        Return maximum height[figure space] of x ticks
+        Return maximum height[figure space] of visible x ticks on a side
         """
+        attr = side_artists(side)[0]
         heights = [
-            self.geometry.tight_height(tick.tick1line)
+            self.geometry.tight_height(getattr(tick, attr))
             for ax in self._filter_axes(location)
             for tick in self.axis_ticks_x(ax)
+            if getattr(tick, attr).get_visible()
         ]
         return max(heights) if len(heights) else 0
 
-    def axis_text_x_max_height(self, ax: Axes) -> float:
+    def axis_text_x_max_height(self, ax: Axes, side: str) -> float:
         """
-        Return maximum height[figure space] of x tick labels
+        Return maximum height[figure space] of x tick labels on a side
         """
         heights = [
-            self.geometry.tight_height(label) for label in self.axis_text_x(ax)
+            self.geometry.tight_height(label)
+            for label in self.axis_text_x(ax, side)
         ]
         return max(heights) if len(heights) else 0
 
-    def axis_text_x_max_height_at(self, location: AxesLocation) -> float:
+    def axis_text_x_max_height_at(
+        self, location: AxesLocation, side: str
+    ) -> float:
         """
-        Return maximum height[figure space] of x tick labels
+        Return maximum height[figure space] of x tick labels on a side
         """
         heights = [
-            self.axis_text_x_max_height(ax)
+            self.axis_text_x_max_height(ax, side)
             for ax in self._filter_axes(location)
         ]
         return max(heights) if len(heights) else 0
 
-    def axis_ticks_y_max_width_at(self, location: AxesLocation) -> float:
+    def axis_ticks_y_max_width_at(
+        self, location: AxesLocation, side: str
+    ) -> float:
         """
-        Return maximum width[figure space] of y ticks
+        Return maximum width[figure space] of visible y ticks on a side
         """
+        attr = side_artists(side)[0]
         widths = [
-            self.geometry.tight_width(tick.tick1line)
+            self.geometry.tight_width(getattr(tick, attr))
             for ax in self._filter_axes(location)
             for tick in self.axis_ticks_y(ax)
+            if getattr(tick, attr).get_visible()
         ]
         return max(widths) if len(widths) else 0
 
-    def axis_text_y_max_width(self, ax: Axes) -> float:
+    def axis_text_y_max_width(self, ax: Axes, side: str) -> float:
         """
-        Return maximum width[figure space] of y tick labels
+        Return maximum width[figure space] of y tick labels on a side
         """
         widths = [
-            self.geometry.tight_width(label) for label in self.axis_text_y(ax)
+            self.geometry.tight_width(label)
+            for label in self.axis_text_y(ax, side)
         ]
         return max(widths) if len(widths) else 0
 
-    def axis_text_y_max_width_at(self, location: AxesLocation) -> float:
+    def axis_text_y_max_width_at(
+        self, location: AxesLocation, side: str
+    ) -> float:
         """
-        Return maximum width[figure space] of y tick labels
+        Return maximum width[figure space] of y tick labels on a side
         """
         widths = [
-            self.axis_text_y_max_width(ax)
+            self.axis_text_y_max_width(ax, side)
             for ax in self._filter_axes(location)
         ]
         return max(widths) if len(widths) else 0
+
+    # Side-scoped extents — each names a concrete edge (side picks the
+    # artist, location picks the panels) and reads 0 when no axis is there.
+    @property
+    def axis_text_x_bottom(self) -> float:
+        return self.axis_text_x_max_height_at("last_row", "bottom")
+
+    @property
+    def axis_text_x_top(self) -> float:
+        return self.axis_text_x_max_height_at("first_row", "top")
+
+    @property
+    def axis_text_y_left(self) -> float:
+        return self.axis_text_y_max_width_at("first_col", "left")
+
+    @property
+    def axis_text_y_right(self) -> float:
+        return self.axis_text_y_max_width_at("last_col", "right")
+
+    @property
+    def axis_ticks_x_bottom(self) -> float:
+        return self.axis_ticks_x_max_height_at("last_row", "bottom")
+
+    @property
+    def axis_ticks_x_top(self) -> float:
+        return self.axis_ticks_x_max_height_at("first_row", "top")
+
+    @property
+    def axis_ticks_y_left(self) -> float:
+        return self.axis_ticks_y_max_width_at("first_col", "left")
+
+    @property
+    def axis_ticks_y_right(self) -> float:
+        return self.axis_ticks_y_max_width_at("last_col", "right")
 
     def axis_text_y_top_protrusion(self, location: AxesLocation) -> float:
         """
@@ -305,9 +360,10 @@ class PlotLayoutItems:
         extras = []
         for ax in self._filter_axes(location):
             ax_top_y = self.geometry.top_y(ax)
-            for label in self.axis_text_y(ax):
-                label_top_y = self.geometry.top_y(label)
-                extras.append(max(0, label_top_y - ax_top_y))
+            for side in ("left", "right"):
+                for label in self.axis_text_y(ax, side):
+                    label_top_y = self.geometry.top_y(label)
+                    extras.append(max(0, label_top_y - ax_top_y))
 
         return max(extras) if len(extras) else 0
 
@@ -318,10 +374,11 @@ class PlotLayoutItems:
         extras = []
         for ax in self._filter_axes(location):
             ax_bottom_y = self.geometry.bottom_y(ax)
-            for label in self.axis_text_y(ax):
-                label_bottom_y = self.geometry.bottom_y(label)
-                protrusion = abs(min(label_bottom_y - ax_bottom_y, 0))
-                extras.append(protrusion)
+            for side in ("left", "right"):
+                for label in self.axis_text_y(ax, side):
+                    label_bottom_y = self.geometry.bottom_y(label)
+                    protrusion = abs(min(label_bottom_y - ax_bottom_y, 0))
+                    extras.append(protrusion)
 
         return max(extras) if len(extras) else 0
 
@@ -332,10 +389,11 @@ class PlotLayoutItems:
         extras = []
         for ax in self._filter_axes(location):
             ax_left_x = self.geometry.left_x(ax)
-            for label in self.axis_text_x(ax):
-                label_left_x = self.geometry.left_x(label)
-                protrusion = abs(min(label_left_x - ax_left_x, 0))
-                extras.append(protrusion)
+            for side in ("bottom", "top"):
+                for label in self.axis_text_x(ax, side):
+                    label_left_x = self.geometry.left_x(label)
+                    protrusion = abs(min(label_left_x - ax_left_x, 0))
+                    extras.append(protrusion)
 
         return max(extras) if len(extras) else 0
 
@@ -346,9 +404,10 @@ class PlotLayoutItems:
         extras = []
         for ax in self._filter_axes(location):
             ax_right_x = self.geometry.right_x(ax)
-            for label in self.axis_text_x(ax):
-                label_right_x = self.geometry.right_x(label)
-                extras.append(max(0, label_right_x - ax_right_x))
+            for side in ("bottom", "top"):
+                for label in self.axis_text_x(ax, side):
+                    label_right_x = self.geometry.right_x(label)
+                    extras.append(max(0, label_right_x - ax_right_x))
 
         return max(extras) if len(extras) else 0
 
@@ -364,15 +423,25 @@ class PlotLayoutItems:
         if self.plot_tag:
             set_plot_tag_position(self.plot_tag, spaces)
 
-        if self.axis_title_x:
-            ha = theme.getp(("axis_title_x", "ha"), "center")
-            self.axis_title_x.set_y(spaces.b.y1("axis_title_x"))
-            justify.horizontally_about(self.axis_title_x, ha, "panel")
+        if self.axis_title_x_bottom:
+            ha = theme.getp(("axis_title_x_bottom", "ha"), "center")
+            self.axis_title_x_bottom.set_y(spaces.b.y1("axis_title_x"))
+            justify.horizontally_about(self.axis_title_x_bottom, ha, "panel")
 
-        if self.axis_title_y:
-            va = theme.getp(("axis_title_y", "va"), "center")
-            self.axis_title_y.set_x(spaces.l.x1("axis_title_y"))
-            justify.vertically_about(self.axis_title_y, va, "panel")
+        if self.axis_title_x_top:
+            ha = theme.getp(("axis_title_x_top", "ha"), "center")
+            self.axis_title_x_top.set_y(spaces.t.y1("axis_title_x"))
+            justify.horizontally_about(self.axis_title_x_top, ha, "panel")
+
+        if self.axis_title_y_left:
+            va = theme.getp(("axis_title_y_left", "va"), "center")
+            self.axis_title_y_left.set_x(spaces.l.x1("axis_title_y"))
+            justify.vertically_about(self.axis_title_y_left, va, "panel")
+
+        if self.axis_title_y_right:
+            va = theme.getp(("axis_title_y_right", "va"), "center")
+            self.axis_title_y_right.set_x(spaces.r.x1("axis_title_y"))
+            justify.vertically_about(self.axis_title_y_right, va, "panel")
 
         if self.legends:
             set_legends_position(self.legends, spaces)
@@ -398,20 +467,30 @@ class PlotLayoutItems:
         if self._is_blank("axis_text_x"):
             return
 
-        va = self.plot.theme.getp(("axis_text_x", "va"), "top")
-
-        for ax in self.plot.axs:
-            texts = list(self.axis_text_x(ax))
-            axis_text_row_height = to_vertical_axis_dimensions(
-                self.axis_text_x_max_height(ax), ax
+        for side in ("bottom", "top"):
+            va_default = "top" if side == "bottom" else "bottom"
+            va = self.plot.theme.getp(
+                (f"axis_text_x_{side}", "va"), va_default
             )
-            for text in texts:
-                height = to_vertical_axis_dimensions(
-                    self.geometry.tight_height(text), ax
+            for ax in self.plot.axs:
+                texts = list(self.axis_text_x(ax, side))
+                if not texts:
+                    continue
+                row_height = to_vertical_axis_dimensions(
+                    self.axis_text_x_max_height(ax, side), ax
                 )
-                justify.vertically(
-                    text, va, -axis_text_row_height, 0, height=height
+                # bottom labels sit below the panel (axes y 0), top labels
+                # above it (axes y 1)
+                low, high = (
+                    (-row_height, 0)
+                    if side == "bottom"
+                    else (1, 1 + row_height)
                 )
+                for text in texts:
+                    height = to_vertical_axis_dimensions(
+                        self.geometry.tight_height(text), ax
+                    )
+                    justify.vertically(text, va, low, high, height=height)
 
     def _adjust_axis_text_y(self, justify: TextJustifier):
         """
@@ -451,20 +530,28 @@ class PlotLayoutItems:
         if self._is_blank("axis_text_y"):
             return
 
-        ha = self.plot.theme.getp(("axis_text_y", "ha"), "right")
-
-        for ax in self.plot.axs:
-            texts = list(self.axis_text_y(ax))
-            axis_text_col_width = to_horizontal_axis_dimensions(
-                self.axis_text_y_max_width(ax), ax
+        for side in ("left", "right"):
+            ha_default = "right" if side == "left" else "left"
+            ha = self.plot.theme.getp(
+                (f"axis_text_y_{side}", "ha"), ha_default
             )
-            for text in texts:
-                width = to_horizontal_axis_dimensions(
-                    self.geometry.tight_width(text), ax
+            for ax in self.plot.axs:
+                texts = list(self.axis_text_y(ax, side))
+                if not texts:
+                    continue
+                col_width = to_horizontal_axis_dimensions(
+                    self.axis_text_y_max_width(ax, side), ax
                 )
-                justify.horizontally(
-                    text, ha, -axis_text_col_width, 0, width=width
+                # left labels sit left of the panel (axes x 0), right labels
+                # to the right of it (axes x 1)
+                low, high = (
+                    (-col_width, 0) if side == "left" else (1, 1 + col_width)
                 )
+                for text in texts:
+                    width = to_horizontal_axis_dimensions(
+                        self.geometry.tight_width(text), ax
+                    )
+                    justify.horizontally(text, ha, low, high, width=width)
 
     def _strip_text_x_background_equal_heights(self):
         """
