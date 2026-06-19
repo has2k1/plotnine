@@ -15,7 +15,7 @@ if typing.TYPE_CHECKING:
     from matplotlib.axes import Axes
 
     from plotnine import ggplot, theme
-    from plotnine.iapi import labels_view, panel_view
+    from plotnine.iapi import labels_view, layout_details, panel_view
     from plotnine.scales.scale import scale
     from plotnine.typing import (
         FloatArray,
@@ -106,10 +106,14 @@ class coord:
         return None
 
     def setup_ax(
-        self, ax: Axes, panel_params: panel_view, theme: theme
+        self,
+        ax: Axes,
+        panel_params: panel_view,
+        layout_info: layout_details,
+        theme: theme,
     ) -> None:
         """
-        Set limits, breaks and labels for one panel axes
+        Set limits, breaks, labels and the active side for one panel axes
 
         Subclasses can override this to customize axes setup, or call
         `super().setup_ax(...)` and add coordinate-specific behavior.
@@ -144,13 +148,72 @@ class coord:
         ax.xaxis.set_major_formatter(MyFixedFormatter(panel_params.x.labels))
         ax.yaxis.set_major_formatter(MyFixedFormatter(panel_params.y.labels))
 
-        # Blank axis text is not drawn, so its margin may be absent
-        # (resolves to None). Skip the tick-label padding in that case.
+        # Activate the side each axis sits on; deactivate the other side.
+        x_pos = panel_params.x.position  # "bottom" | "top"
+        y_pos = panel_params.y.position  # "left" | "right"
+
+        if x_pos == "top":
+            ax.xaxis.set_tick_params(
+                which="both",
+                top=True,
+                labeltop=True,
+                bottom=False,
+                labelbottom=False,
+            )
+        else:
+            ax.xaxis.set_tick_params(
+                which="both",
+                bottom=True,
+                labelbottom=True,
+                top=False,
+                labeltop=False,
+            )
+        if not layout_info.axis_x:
+            ax.xaxis.set_tick_params(
+                which="both",
+                bottom=False,
+                labelbottom=False,
+                top=False,
+                labeltop=False,
+            )
+
+        if y_pos == "right":
+            ax.yaxis.set_tick_params(
+                which="both",
+                right=True,
+                labelright=True,
+                left=False,
+                labelleft=False,
+            )
+        else:
+            ax.yaxis.set_tick_params(
+                which="both",
+                left=True,
+                labelleft=True,
+                right=False,
+                labelright=False,
+            )
+        if not layout_info.axis_y:
+            ax.yaxis.set_tick_params(
+                which="both",
+                left=False,
+                labelleft=False,
+                right=False,
+                labelright=False,
+            )
+
+        # Tick pad from the active side's tick-text margin. The inner edge
+        # of the margin faces the panel: x-bottom uses the top margin,
+        # x-top the bottom; y-left uses the right margin, y-right the left.
+        # Blank axis text is not drawn, so its margin may be absent; skip
+        # the padding in that case.
         if not theme.T.is_blank("axis_text_x"):
-            pad_x = theme.get_margin("axis_text_x").pt.t
+            m = theme.get_margin("axis_text_x").pt
+            pad_x = m.b if x_pos == "top" else m.t
             ax.tick_params(axis="x", which="major", pad=pad_x)
         if not theme.T.is_blank("axis_text_y"):
-            pad_y = theme.get_margin("axis_text_y").pt.r
+            m = theme.get_margin("axis_text_y").pt
+            pad_y = m.l if y_pos == "right" else m.r
             ax.tick_params(axis="y", which="major", pad=pad_y)
 
     def labels(self, cur_labels: labels_view) -> labels_view:

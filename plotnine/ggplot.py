@@ -561,22 +561,9 @@ class ggplot:
             pidx = layout_info.panel_index
             ax = self.axs[pidx]
             panel_params = self.layout.panel_params[pidx]
-            self.coordinates.setup_ax(ax, panel_params, self.theme)
-
-            # Remove unnecessary ticks and labels
-            if not layout_info.axis_x:
-                ax.xaxis.set_tick_params(
-                    which="both", bottom=False, labelbottom=False
-                )
-            if not layout_info.axis_y:
-                ax.yaxis.set_tick_params(
-                    which="both", left=False, labelleft=False
-                )
-
-            if layout_info.axis_x:
-                ax.xaxis.set_tick_params(which="both", bottom=True)
-            if layout_info.axis_y:
-                ax.yaxis.set_tick_params(which="both", left=True)
+            self.coordinates.setup_ax(
+                ax, panel_params, layout_info, self.theme
+            )
 
     def _draw_figure_texts(self):
         """
@@ -608,11 +595,19 @@ class ggplot:
             self.layout.set_xy_labels(self.labels)
         )
 
+        # The axis title is registered under a per-side target named for the
+        # axis position. The legacy axis_title_x/_y references point at the
+        # same artist so existing layout/theme code keeps working.
+        pp = self.layout.panel_params[0]
         if labels.x:
-            targets.axis_title_x = self.figure.add_artist(Text(text=labels.x))
+            t = self.figure.add_artist(Text(text=labels.x))
+            targets.axis_title_x = t
+            setattr(targets, f"axis_title_x_{pp.x.position}", t)
 
         if labels.y:
-            targets.axis_title_y = self.figure.add_artist(Text(text=labels.y))
+            t = self.figure.add_artist(Text(text=labels.y))
+            targets.axis_title_y = t
+            setattr(targets, f"axis_title_y_{pp.y.position}", t)
 
     def _draw_watermarks(self):
         """
