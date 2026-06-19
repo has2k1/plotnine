@@ -133,10 +133,17 @@ class facet_wrap(facet):
         layout["SCALE_Y"] = range(1, n + 1) if self.free["y"] else 1
 
         # Figure out where axes should go.
-        # The bottom-most row of each column and the left most
-        # column of each row
-        x_idx = [df["ROW"].idxmax() for _, df in layout.groupby("COL")]
-        y_idx = [df["COL"].idxmin() for _, df in layout.groupby("ROW")]
+        # The row/column of each panel that shows the axis, on the side the
+        # axis sits (default: bottom-most row, left-most column)
+        x_side, y_side = self.axis_positions()
+        if x_side == "top":
+            x_idx = [df["ROW"].idxmin() for _, df in layout.groupby("COL")]
+        else:
+            x_idx = [df["ROW"].idxmax() for _, df in layout.groupby("COL")]
+        if y_side == "right":
+            y_idx = [df["COL"].idxmax() for _, df in layout.groupby("ROW")]
+        else:
+            y_idx = [df["COL"].idxmin() for _, df in layout.groupby("ROW")]
         layout["AXIS_X"] = False
         layout["AXIS_Y"] = False
         _loc = layout.columns.get_loc

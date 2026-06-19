@@ -215,8 +215,15 @@ class facet_grid(facet):
         # Relax constraints, if necessary
         layout["SCALE_X"] = layout["COL"] if self.free["x"] else 1
         layout["SCALE_Y"] = layout["ROW"] if self.free["y"] else 1
-        layout["AXIS_X"] = layout["ROW"] == layout["ROW"].max()
-        layout["AXIS_Y"] = layout["COL"] == layout["COL"].min()
+        x_side, y_side = self.axis_positions()
+        if x_side == "top":
+            layout["AXIS_X"] = layout["ROW"] == layout["ROW"].min()
+        else:
+            layout["AXIS_X"] = layout["ROW"] == layout["ROW"].max()
+        if y_side == "right":
+            layout["AXIS_Y"] = layout["COL"] == layout["COL"].max()
+        else:
+            layout["AXIS_Y"] = layout["COL"] == layout["COL"].min()
 
         self.nrow = layout["ROW"].max()
         self.ncol = layout["COL"].max()
