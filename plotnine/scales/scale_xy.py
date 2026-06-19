@@ -10,7 +10,7 @@ import pandas as pd
 from .._utils import array_kind, match
 from .._utils.registry import alias
 from ..exceptions import PlotnineError
-from ..iapi import range_view
+from ..iapi import range_view, scale_position_view
 from ._expand import expand_range
 from ._runtime_typing import TransUser  # noqa: TCH001
 from .range import RangeContinuous
@@ -19,9 +19,39 @@ from .scale_datetime import scale_datetime
 from .scale_discrete import scale_discrete
 
 if TYPE_CHECKING:
-    from typing import Sequence
+    from typing import Literal, Sequence
 
     from mizani.transforms import trans
+
+
+# Valid axis sides per position aesthetic
+AXIS_SIDES = {"x": ("bottom", "top"), "y": ("left", "right")}
+
+
+class scale_position:
+    """
+    Mixin for position scales — owns the axis side behavior
+
+    `position`, `_aesthetics` and `__post_init__` come from the concrete
+    position scale this is mixed into.
+    """
+
+    def __post_init__(self):
+        super().__post_init__()  # pyright: ignore[reportAttributeAccessIssue]
+        aesthetic = self._aesthetics[0]  # pyright: ignore[reportAttributeAccessIssue]
+        sides = AXIS_SIDES[aesthetic]
+        if self.position not in sides:  # pyright: ignore[reportAttributeAccessIssue]
+            raise PlotnineError(
+                f"Invalid position {self.position!r} for the "  # pyright: ignore[reportAttributeAccessIssue]
+                f"{aesthetic!r} axis. Expected one of {sides}."
+            )
+
+    def view(self, limits=None, range=None) -> scale_position_view:
+        """
+        Information about the trained scale, including the axis side
+        """
+        sv = super().view(limits=limits, range=range)  # pyright: ignore[reportAttributeAccessIssue]
+        return scale_position_view(**vars(sv), position=self.position)  # pyright: ignore[reportAttributeAccessIssue]
 
 
 # positions scales have a couple of differences (quirks) that
@@ -32,7 +62,7 @@ if TYPE_CHECKING:
 # are intermediate base classes where the required overriding
 # is done
 @dataclass(kw_only=True)
-class scale_position_discrete(scale_discrete[None]):
+class scale_position_discrete(scale_position, scale_discrete[None]):
     """
     Base class for discrete position scales
     """
@@ -41,7 +71,7 @@ class scale_position_discrete(scale_discrete[None]):
     guide: None = None
 
     def __post_init__(self):
-        super().__post_init__()
+        super().__post_init__()  # scale_position validates first
         # Keeps two ranges, range and range_c
         self._range_c = RangeContinuous()
         if isinstance(self.limits, tuple):
@@ -187,7 +217,7 @@ class scale_position_discrete(scale_discrete[None]):
 
 
 @dataclass(kw_only=True)
-class scale_position_continuous(scale_continuous[None]):
+class scale_position_continuous(scale_position, scale_continuous[None]):
     """
     Base class for continuous position scales
     """
@@ -214,6 +244,7 @@ class scale_x_discrete(scale_position_discrete):
     """
 
     _aesthetics = ["x", "xmin", "xmax", "xend", "xintercept"]
+    position: Literal["bottom", "top"] = "bottom"
 
 
 @dataclass(kw_only=True)
@@ -223,6 +254,7 @@ class scale_y_discrete(scale_position_discrete):
     """
 
     _aesthetics = ["y", "ymin", "ymax", "yend", "yintercept"]
+    position: Literal["left", "right"] = "left"
 
 
 # Not part of the user API
@@ -243,6 +275,7 @@ class scale_x_continuous(scale_position_continuous):
     """
 
     _aesthetics = ["x", "xmin", "xmax", "xend", "xintercept"]
+    position: Literal["bottom", "top"] = "bottom"
 
 
 @dataclass(kw_only=True)
@@ -263,6 +296,7 @@ class scale_y_continuous(scale_position_continuous):
         "middle",
         "upper",
     ]
+    position: Literal["left", "right"] = "left"
 
 
 # Transformed scales
