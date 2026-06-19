@@ -552,7 +552,12 @@ class LayoutTree:
         def axis_title_clearance(s):
             return s.axis_title_clearance
 
-        for spaces in [self.bottom_spaces, self.left_spaces]:
+        for spaces in [
+            self.bottom_spaces,
+            self.left_spaces,
+            self.top_spaces,
+            self.right_spaces,
+        ]:
             _align(spaces, axis_title_clearance, "axis_title_alignment")
 
         for tree in self.sub_compositions:
