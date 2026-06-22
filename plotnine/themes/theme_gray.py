@@ -56,21 +56,25 @@ class theme_gray(theme):
             axis_line_x=element_blank(),
             axis_line_y=element_blank(),
             axis_text=element_text(size=base_size * 0.8, color="#4D4D4D"),
-            axis_text_x=element_text(va="top", margin=margin(t=fifth_line)),
-            axis_text_y=element_text(ha="right", margin=margin(r=fifth_line)),
+            axis_text_x=element_text(
+                va="top", margin=margin(t=fifth_line, b=fifth_line)
+            ),
+            axis_text_y=element_text(
+                ha="right", margin=margin(r=fifth_line, l=fifth_line)
+            ),
             axis_ticks=element_line(color="#333333"),
             axis_ticks_length=0,
             axis_ticks_length_major=quarter_line,
             axis_ticks_length_minor=eighth_line,
             axis_ticks_minor=element_blank(),
             axis_title_x=element_text(
-                va="bottom", ha="center", margin=margin(t=m, unit="fig")
+                va="bottom", ha="center", margin=margin(t=m, b=m, unit="fig")
             ),
             axis_title_y=element_text(
                 angle=90,
                 va="center",
                 ha="left",
-                margin=margin(r=m, unit="fig"),
+                margin=margin(r=m, l=m, unit="fig"),
             ),
             dpi=get_option("dpi"),
             figure_size=get_option("figure_size"),

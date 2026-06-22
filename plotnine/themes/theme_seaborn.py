@@ -65,13 +65,13 @@ class theme_seaborn(theme):
                 ),
             ),
             axis_title_x=element_text(
-                va="bottom", ha="center", margin=margin(t=m, unit="fig")
+                va="bottom", ha="center", margin=margin(t=m, b=m, unit="fig")
             ),
             axis_title_y=element_text(
                 angle=90,
                 va="center",
                 ha="left",
-                margin=margin(r=m, unit="fig"),
+                margin=margin(r=m, l=m, unit="fig"),
             ),
             legend_box_margin=0,
             legend_box_spacing=m * 3,  # figure units
