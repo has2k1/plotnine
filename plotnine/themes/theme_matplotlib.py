@@ -48,17 +48,18 @@ class theme_matplotlib(theme):
             ),
             aspect_ratio=get_option("aspect_ratio"),
             axis_text=element_text(
-                size=base_size * 0.8, margin=margin(t=2.4, r=2.4, unit="pt")
+                size=base_size * 0.8,
+                margin=margin(t=2.4, b=2.4, r=2.4, l=2.4, unit="pt"),
             ),
             axis_title_x=element_text(
-                va="bottom", ha="center", margin=margin(t=m, unit="fig")
+                va="bottom", ha="center", margin=margin(t=m, b=m, unit="fig")
             ),
             axis_line=element_blank(),
             axis_title_y=element_text(
                 angle=90,
                 va="center",
                 ha="left",
-                margin=margin(r=m, unit="fig"),
+                margin=margin(r=m, l=m, unit="fig"),
             ),
             dpi=get_option("dpi"),
             figure_size=get_option("figure_size"),
