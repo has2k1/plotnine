@@ -13,7 +13,7 @@ from mizani.bounds import rescale
 
 from plotnine.iapi import guide_text
 
-from .._utils import get_opposite_side
+from .._utils import OPPOSITE_SIDE
 from ..exceptions import PlotnineError, PlotnineWarning
 from ..mapping.aes import rename_aesthetics
 from ..scales.scale_continuous import scale_continuous
@@ -514,7 +514,7 @@ class GuideElementsColorbar(GuideElements):
         centers = ("center",) * n
         has = (ha,) * n if isinstance(ha, str) else ha
         vas = (va,) * n if isinstance(va, str) else va
-        opposite_sides = [get_opposite_side(s) for s in self.text_positions]
+        opposite_sides = [OPPOSITE_SIDE[s] for s in self.text_positions]
         if self.is_vertical:
             has = has or opposite_sides
             vas = vas or centers
