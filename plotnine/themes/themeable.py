@@ -57,6 +57,13 @@ class themeable(metaclass=RegistryHierarchyMeta):
     `y_axis_title`. We are just using multiple inheritance to specify
     this composition.
 
+    A parent's effect is the combined effect of the leaves it composes:
+    theming `axis_text_x` styles both `axis_text_x_top` and
+    `axis_text_x_bottom`, and blanking it hides both. Each leaf adds its own
+    contribution on top of its bases — hence the `super()` call in every
+    `apply_*` / `blank_*` method — so a leaf that skips it applies alone and
+    the rest of the composition is silently lost.
+
     When implementing a new themeable based on the ggplot2 documentation,
     it is important to keep this in mind and reverse the order of the
     "inherits from" in the documentation.
