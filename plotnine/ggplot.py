@@ -561,9 +561,7 @@ class ggplot:
             pidx = layout_info.panel_index
             ax = self.axs[pidx]
             panel_params = self.layout.panel_params[pidx]
-            self.coordinates.setup_ax(
-                ax, panel_params, layout_info, self.theme
-            )
+            self.coordinates.setup_ax(ax, panel_params, layout_info)
 
     def _draw_figure_texts(self):
         """
