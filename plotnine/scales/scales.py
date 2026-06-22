@@ -99,6 +99,17 @@ class Scales(List[scale]):
         """
         return cast("ScaleY| None", self.get_scales("y"))
 
+    @property
+    def axis_positions(self) -> tuple[str, str]:
+        """
+        The sides the x and y axes occupy, as `(x_side, y_side)`
+        """
+        # scales.x / scales.y can be None here if "missing" scales
+        # have not yet been added.
+        x_side = "bottom" if self.x is None else self.x.position
+        y_side = "left" if self.y is None else self.y.position
+        return x_side, y_side
+
     def non_position_scales(self) -> Scales:
         """
         Return a list of any non-position scales
