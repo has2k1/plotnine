@@ -17,7 +17,7 @@ from warnings import warn
 
 import numpy as np
 
-from .._utils import has_alpha_channel, side_artists, to_rgba
+from .._utils import MARGIN_SIDE, has_alpha_channel, side_artists, to_rgba
 from .._utils.registry import RegistryHierarchyMeta
 from ..exceptions import PlotnineError, deprecated_themeable_name
 from .elements import element_blank
@@ -34,6 +34,7 @@ if TYPE_CHECKING:
 
     from plotnine import theme
     from plotnine.themes.targets import ThemeTargets
+    from plotnine.typing import Side
 
 
 class themeable(metaclass=RegistryHierarchyMeta):
@@ -519,6 +520,17 @@ def blend_alpha(
         elif has_alpha_channel(color):
             properties["alpha"] = None
     return properties
+
+
+def _set_axis_text_margin(themeable, ax, axis: str, side: Side):
+    """
+    Set the gap between axis tick and axis text
+    """
+    margin = themeable.properties.get("margin")
+    if margin is None:
+        return
+    pad = getattr(margin.pt, MARGIN_SIDE[side])
+    ax.tick_params(axis=axis, which="major", pad=pad)
 
 
 # element_text themeables
@@ -1072,6 +1084,7 @@ class axis_text_x_bottom(MixinSequenceOfValues):
             return
         labels = [t.label1 for t in ax.xaxis.get_major_ticks()]
         self.set(labels, self._get_properties(omit=("margin", "va")))
+        _set_axis_text_margin(self, ax, "x", "bottom")
 
     def blank_ax(self, ax: Axes):
         super().blank_ax(ax)
@@ -1099,6 +1112,7 @@ class axis_text_x_top(MixinSequenceOfValues):
             return
         labels = [t.label2 for t in ax.xaxis.get_major_ticks()]
         self.set(labels, self._get_properties(omit=("margin", "va")))
+        _set_axis_text_margin(self, ax, "x", "top")
 
     def blank_ax(self, ax: Axes):
         super().blank_ax(ax)
@@ -1149,6 +1163,7 @@ class axis_text_y_left(MixinSequenceOfValues):
             return
         labels = [t.label1 for t in ax.yaxis.get_major_ticks()]
         self.set(labels, self._get_properties(omit=("margin", "ha")))
+        _set_axis_text_margin(self, ax, "y", "left")
 
     def blank_ax(self, ax: Axes):
         super().blank_ax(ax)
@@ -1178,6 +1193,7 @@ class axis_text_y_right(MixinSequenceOfValues):
             return
         labels = [t.label2 for t in ax.yaxis.get_major_ticks()]
         self.set(labels, self._get_properties(omit=("margin", "ha")))
+        _set_axis_text_margin(self, ax, "y", "right")
 
     def blank_ax(self, ax: Axes):
         super().blank_ax(ax)
