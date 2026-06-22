@@ -15,6 +15,7 @@ from dataclasses import replace
 from functools import cached_property
 from typing import TYPE_CHECKING
 
+from plotnine._utils import MARGIN_SIDE
 from plotnine.exceptions import PlotnineError
 from plotnine.facets import facet_grid, facet_null, facet_wrap
 
@@ -231,15 +232,17 @@ class left_space(_plot_side_space):
         # sits on the panel-facing (right) side of the left axis.
         if items.axis_title_y_left:
             self.axis_title_y = geometry.width(items.axis_title_y_left)
-            self.axis_title_y_margin_right = theme.get_margin(
-                "axis_title_y_left"
-            ).fig.r
+            self.axis_title_y_margin_right = getattr(
+                theme.get_margin("axis_title_y_left").fig,
+                MARGIN_SIDE["left"],
+            )
 
         self.axis_text_y = items.axis_text_y_left
         if self.axis_text_y:
-            self.axis_text_y_margin_right = theme.get_margin(
-                "axis_text_y_left"
-            ).fig.r
+            self.axis_text_y_margin_right = getattr(
+                theme.get_margin("axis_text_y_left").fig,
+                MARGIN_SIDE["left"],
+            )
 
         self.axis_ticks_y = items.axis_ticks_y_left
 
@@ -359,15 +362,17 @@ class right_space(_plot_side_space):
         # left).
         if items.axis_title_y_right:
             self.axis_title_y = geometry.width(items.axis_title_y_right)
-            self.axis_title_y_margin_left = theme.get_margin(
-                "axis_title_y_right"
-            ).fig.l
+            self.axis_title_y_margin_left = getattr(
+                theme.get_margin("axis_title_y_right").fig,
+                MARGIN_SIDE["right"],
+            )
 
         self.axis_text_y = items.axis_text_y_right
         if self.axis_text_y:
-            self.axis_text_y_margin_left = theme.get_margin(
-                "axis_text_y_right"
-            ).fig.l
+            self.axis_text_y_margin_left = getattr(
+                theme.get_margin("axis_text_y_right").fig,
+                MARGIN_SIDE["right"],
+            )
         self.axis_ticks_y = items.axis_ticks_y_right
 
         # Adjust plot_margin to make room for ylabels that protude well
@@ -505,15 +510,17 @@ class top_space(_plot_side_space):
         # bottom margin of the x text/title (the edge facing the panel below).
         if items.axis_title_x_top:
             self.axis_title_x = geometry.height(items.axis_title_x_top)
-            self.axis_title_x_margin_bottom = theme.get_margin(
-                "axis_title_x_top"
-            ).fig.b
+            self.axis_title_x_margin_bottom = getattr(
+                theme.get_margin("axis_title_x_top").fig,
+                MARGIN_SIDE["top"],
+            )
 
         self.axis_text_x = items.axis_text_x_top
         if self.axis_text_x:
-            self.axis_text_x_margin_bottom = theme.get_margin(
-                "axis_text_x_top"
-            ).fig.b
+            self.axis_text_x_margin_bottom = getattr(
+                theme.get_margin("axis_text_x_top").fig,
+                MARGIN_SIDE["top"],
+            )
         self.axis_ticks_x = items.axis_ticks_x_top
 
         # Adjust plot_margin to make room for ylabels that protude well
@@ -659,15 +666,17 @@ class bottom_space(_plot_side_space):
         # sits on the panel-facing (top) side of the bottom axis.
         if items.axis_title_x_bottom:
             self.axis_title_x = geometry.height(items.axis_title_x_bottom)
-            self.axis_title_x_margin_top = theme.get_margin(
-                "axis_title_x_bottom"
-            ).fig.t
+            self.axis_title_x_margin_top = getattr(
+                theme.get_margin("axis_title_x_bottom").fig,
+                MARGIN_SIDE["bottom"],
+            )
 
         self.axis_text_x = items.axis_text_x_bottom
         if self.axis_text_x:
-            self.axis_text_x_margin_top = theme.get_margin(
-                "axis_text_x_bottom"
-            ).fig.t
+            self.axis_text_x_margin_top = getattr(
+                theme.get_margin("axis_text_x_bottom").fig,
+                MARGIN_SIDE["bottom"],
+            )
         self.axis_ticks_x = items.axis_ticks_x_bottom
 
         # Adjust plot_margin to make room for ylabels that protude well

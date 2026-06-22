@@ -73,6 +73,26 @@ def side_artists(side: str) -> tuple[str, str]:
     return ("tick1line", "label1")
 
 
+# The side opposite each axis side
+OPPOSITE_SIDE: dict[Side, Side] = {
+    "top": "bottom",
+    "bottom": "top",
+    "left": "right",
+    "right": "left",
+}
+
+# The margin side that faces inward for an element on each side: for an axis
+# the side facing the panel (bottom axis -> top "t", top -> "b", left -> right
+# "r", right -> "l"); for a legend title/text the side facing the keys. It is
+# the initial of the opposite side; cf. OPPOSITE_SIDE.
+MARGIN_SIDE: dict[Side, str] = {
+    "bottom": "t",
+    "top": "b",
+    "left": "r",
+    "right": "l",
+}
+
+
 def is_scalar(val):
     """
     Return whether the given object is a scalar
@@ -1142,19 +1162,6 @@ def default_field(default: T) -> T:
     Set default value of a dataclass field using a factory
     """
     return field(default_factory=lambda: deepcopy(default))
-
-
-def get_opposite_side(s: Side) -> Side:
-    """
-    Return the opposite side
-    """
-    lookup: dict[Side, Side] = {
-        "right": "left",
-        "left": "right",
-        "top": "bottom",
-        "bottom": "top",
-    }
-    return lookup[s]
 
 
 def ensure_xy_location(

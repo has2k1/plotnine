@@ -6,7 +6,7 @@ from functools import cached_property
 from types import SimpleNamespace as NS
 from typing import TYPE_CHECKING, cast
 
-from .._utils import ensure_xy_location, get_opposite_side
+from .._utils import MARGIN_SIDE, ensure_xy_location
 from .._utils.registry import Register
 from ..themes.theme import theme as Theme
 
@@ -243,8 +243,7 @@ class GuideElements:
         ha = self.theme.getp(("legend_title", "ha"))
         va = self.theme.getp(("legend_title", "va"), "center")
         _margin = self.theme.getp(("legend_title", "margin")).pt
-        _loc = get_opposite_side(self.title_position)[0]
-        margin = getattr(_margin, _loc)
+        margin = getattr(_margin, MARGIN_SIDE[self.title_position])
         top_or_bottom = self.title_position in ("top", "bottom")
         is_blank = self.theme.T.is_blank("legend_title")
 
@@ -272,8 +271,7 @@ class GuideElements:
         _margin = self.theme.getp(
             (f"legend_text_{self.guide_kind}", "margin")
         ).pt
-        locs = (get_opposite_side(p)[0] for p in self.text_positions)
-        return [getattr(_margin, loc) for loc in locs]
+        return [getattr(_margin, MARGIN_SIDE[p]) for p in self.text_positions]
 
     @cached_property
     def title_position(self) -> Side:
