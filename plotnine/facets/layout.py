@@ -74,8 +74,7 @@ class Layout:
 
         # Generate panel layout
         data = self.facet.setup_data(data)
-        axis_positions = self.facet.axis_positions(plot.scales)
-        self.layout = self.facet.compute_layout(data, axis_positions)
+        self.layout = self.facet.compute_layout(data, plot.scales)
         self.layout = self.coord.setup_layout(self.layout)
         self.check_layout()
 

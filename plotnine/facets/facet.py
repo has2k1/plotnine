@@ -137,18 +137,6 @@ class facet:
         other.facet.environment = other.environment
         return other
 
-    def axis_positions(self, scales: Scales) -> tuple[str, str]:
-        """
-        The sides the x and y axes occupy, as `(x_side, y_side)`
-        """
-        # `scales.add_missing` adds the default x/y scales *after* the layout
-        # is computed (see ggplot._build), so scales.x / scales.y can still be
-        # None here. A missing scale takes the default side of the position
-        # scale that will replace it: "bottom" for x, "left" for y.
-        x_side = "bottom" if scales.x is None else scales.x.position
-        y_side = "left" if scales.y is None else scales.y.position
-        return x_side, y_side
-
     def setup(self, plot: ggplot):
         self.plot = plot
         self.layout = plot.layout
@@ -238,7 +226,7 @@ class facet:
     def compute_layout(
         self,
         data: list[pd.DataFrame],
-        axis_positions: tuple[str, str],
+        scales: Scales,
     ) -> pd.DataFrame:
         """
         Compute layout
@@ -247,8 +235,8 @@ class facet:
         ----------
         data :
             Dataframe for a each layer
-        axis_positions :
-            The sides the x and y axes occupy, as `(x_side, y_side)`
+        scales :
+            The plot's scales
         """
         msg = "{} should implement this method."
         raise NotImplementedError(msg.format(self.__class__.__name__))

@@ -24,6 +24,8 @@ if typing.TYPE_CHECKING:
     from plotnine.iapi import layout_details
     from plotnine.typing import FacetSpaceRatios
 
+    from ..scales.scales import Scales
+
 
 class facet_grid(facet):
     """
@@ -168,7 +170,7 @@ class facet_grid(facet):
     def compute_layout(
         self,
         data: list[pd.DataFrame],
-        axis_positions: tuple[str, str],
+        scales: Scales,
     ) -> pd.DataFrame:
         if not self.rows and not self.cols:
             self.nrow, self.ncol = 1, 1
@@ -219,7 +221,7 @@ class facet_grid(facet):
         # Relax constraints, if necessary
         layout["SCALE_X"] = layout["COL"] if self.free["x"] else 1
         layout["SCALE_Y"] = layout["ROW"] if self.free["y"] else 1
-        x_side, y_side = axis_positions
+        x_side, y_side = scales.axis_positions
         if x_side == "top":
             layout["AXIS_X"] = layout["ROW"] == layout["ROW"].min()
         else:

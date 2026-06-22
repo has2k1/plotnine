@@ -25,6 +25,8 @@ if typing.TYPE_CHECKING:
 
     from plotnine.iapi import layout_details
 
+    from ..scales.scales import Scales
+
 
 class facet_wrap(facet):
     """
@@ -93,7 +95,7 @@ class facet_wrap(facet):
     def compute_layout(
         self,
         data: list[pd.DataFrame],
-        axis_positions: tuple[str, str],
+        scales: Scales,
     ) -> pd.DataFrame:
         if not self.vars:
             self.nrow, self.ncol = 1, 1
@@ -136,7 +138,7 @@ class facet_wrap(facet):
         # Figure out where axes should go.
         # The row/column of each panel that shows the axis, on the side the
         # axis sits (default: bottom-most row, left-most column)
-        x_side, y_side = axis_positions
+        x_side, y_side = scales.axis_positions
         if x_side == "top":
             x_idx = [df["ROW"].idxmin() for _, df in layout.groupby("COL")]
         else:

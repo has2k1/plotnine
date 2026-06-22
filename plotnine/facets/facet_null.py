@@ -7,6 +7,8 @@ from .facet import facet, layout_null
 if typing.TYPE_CHECKING:
     import pandas as pd
 
+    from ..scales.scales import Scales
+
 
 class facet_null(facet):
     """
@@ -31,6 +33,6 @@ class facet_null(facet):
     def compute_layout(
         self,
         data: list[pd.DataFrame],
-        axis_positions: tuple[str, str],
+        scales: Scales,
     ) -> pd.DataFrame:
         return layout_null()
