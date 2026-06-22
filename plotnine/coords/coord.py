@@ -209,22 +209,6 @@ class coord:
         ax.spines["right"].set_visible(y_pos == "right")
         ax.spines["left"].set_visible(y_pos == "left")
 
-        # Tick pad is the text<->panel gap: the margin edge of the tick text
-        # that faces the panel (x-bottom -> top, x-top -> bottom; y-left ->
-        # right, y-right -> left), read from the side-scoped themeable. Blank
-        # axis text is not drawn, so its margin may be absent; skip the
-        # padding in that case.
-        x_text = f"axis_text_x_{x_pos}"
-        y_text = f"axis_text_y_{y_pos}"
-        if not theme.T.is_blank(x_text):
-            m = theme.get_margin(x_text).pt
-            pad_x = m.t if x_pos == "bottom" else m.b
-            ax.tick_params(axis="x", which="major", pad=pad_x)
-        if not theme.T.is_blank(y_text):
-            m = theme.get_margin(y_text).pt
-            pad_y = m.r if y_pos == "left" else m.l
-            ax.tick_params(axis="y", which="major", pad=pad_y)
-
     def labels(self, cur_labels: labels_view) -> labels_view:
         """
         Modify labels
