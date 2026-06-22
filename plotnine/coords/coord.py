@@ -18,6 +18,7 @@ if typing.TYPE_CHECKING:
     from plotnine import ggplot
     from plotnine.iapi import labels_view, layout_details, panel_view
     from plotnine.scales.scale import scale
+    from plotnine.scales.scale_xy import ScaleX, ScaleY
     from plotnine.typing import (
         FloatArray,
         FloatArrayLike,
@@ -223,7 +224,9 @@ class coord:
         """
         return data
 
-    def setup_panel_params(self, scale_x: scale, scale_y: scale) -> panel_view:
+    def setup_panel_params(
+        self, scale_x: ScaleX, scale_y: ScaleY
+    ) -> panel_view:
         """
         Compute the range and break information for the panel
         """

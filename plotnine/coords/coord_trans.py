@@ -15,8 +15,8 @@ if TYPE_CHECKING:
     import pandas as pd
     from mizani.transforms import trans
 
-    from plotnine.iapi import scale_view
-    from plotnine.scales.scale import scale
+    from plotnine.iapi import scale_position_view
+    from plotnine.scales.scale_xy import ScaleX, ScaleY
     from plotnine.typing import (
         FloatArray,
         FloatSeries,
@@ -98,19 +98,22 @@ class coord_trans(coord):
             y=self.trans_y.inverse(panel_params.y.range),
         )
 
-    def setup_panel_params(self, scale_x: scale, scale_y: scale) -> panel_view:
+    def setup_panel_params(self, scale_x, scale_y) -> panel_view:
         """
         Compute the range and break information for the panel
         """
 
         def get_scale_view(
-            scale: scale, limits: tuple[float, float], trans: trans
-        ) -> scale_view:
+            scale: ScaleX | ScaleY, limits: tuple[float, float], trans: trans
+        ) -> scale_position_view:
             coord_limits = trans.transform(limits) if limits else limits
 
             expansion = scale.default_expansion(expand=self.expand)
             ranges = scale.expand_limits(
-                scale.final_limits, expansion, coord_limits, trans
+                scale.final_limits,  # pyright: ignore[reportArgumentType]
+                expansion,
+                coord_limits,
+                trans,
             )
             sv = scale.view(
                 limits=coord_limits,

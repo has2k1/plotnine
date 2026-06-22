@@ -19,9 +19,12 @@ from .scale_datetime import scale_datetime
 from .scale_discrete import scale_discrete
 
 if TYPE_CHECKING:
-    from typing import Literal, Sequence
+    from typing import Literal, Sequence, TypeAlias
 
     from mizani.transforms import trans
+
+    ScaleX: TypeAlias = "scale_x_continuous | scale_x_discrete"
+    ScaleY: TypeAlias = "scale_y_continuous | scale_y_discrete"
 
 
 # Valid axis sides per position aesthetic
