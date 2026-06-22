@@ -5,6 +5,7 @@ from copy import copy
 
 import numpy as np
 
+from .._utils import OPPOSITE_SIDE
 from ..iapi import panel_ranges
 
 if typing.TYPE_CHECKING:
@@ -14,13 +15,32 @@ if typing.TYPE_CHECKING:
     import pandas as pd
     from matplotlib.axes import Axes
 
-    from plotnine import ggplot, theme
+    from plotnine import ggplot
     from plotnine.iapi import labels_view, layout_details, panel_view
     from plotnine.scales.scale import scale
     from plotnine.typing import (
         FloatArray,
         FloatArrayLike,
         FloatSeries,
+        Side,
+    )
+
+
+def _activate_axis(axis, active_side: Side, present: bool):
+    """
+    Show ticks and labels on the active side only; hide the opposite side
+
+    `present` is False on interior facet panels, which hides both sides.
+    """
+    opposite = OPPOSITE_SIDE[active_side]
+    axis.set_tick_params(
+        which="both",
+        **{
+            active_side: present,
+            f"label{active_side}": present,
+            opposite: False,
+            f"label{opposite}": False,
+        },
     )
 
 
@@ -110,13 +130,20 @@ class coord:
         ax: Axes,
         panel_params: panel_view,
         layout_info: layout_details,
-        theme: theme,
     ) -> None:
         """
-        Set limits, breaks, labels and the active side for one panel axes
+        Axes state for one panel: limits, breaks, labels, and active side
 
-        Subclasses can override this to customize axes setup, or call
-        `super().setup_ax(...)` and add coordinate-specific behavior.
+        Subclasses can override this or call `super().setup_ax(...)` and add
+        coordinate-specific behavior. Configures only mpl axes state; the
+        theme styles the visible artists afterwards.
+        """
+        self._setup_ticks_labels(ax, panel_params)
+        self._setup_axis_sides(ax, panel_params, layout_info)
+
+    def _setup_ticks_labels(self, ax: Axes, panel_params: panel_view) -> None:
+        """
+        Limits, major/minor breaks, tick labels, and fixed formatter on `ax`
         """
         from .._mpl.ticker import MyFixedFormatter
 
@@ -148,61 +175,21 @@ class coord:
         ax.xaxis.set_major_formatter(MyFixedFormatter(panel_params.x.labels))
         ax.yaxis.set_major_formatter(MyFixedFormatter(panel_params.y.labels))
 
-        # Activate the side each axis sits on; deactivate the other side.
+    def _setup_axis_sides(
+        self,
+        ax: Axes,
+        panel_params: panel_view,
+        layout_info: layout_details,
+    ) -> None:
+        """
+        Tick visibility and spine visibility for the side each axis occupies
+        """
         x_pos = panel_params.x.position  # "bottom" | "top"
         y_pos = panel_params.y.position  # "left" | "right"
+        _activate_axis(ax.xaxis, x_pos, layout_info.axis_x)
+        _activate_axis(ax.yaxis, y_pos, layout_info.axis_y)
 
-        if x_pos == "top":
-            ax.xaxis.set_tick_params(
-                which="both",
-                top=True,
-                labeltop=True,
-                bottom=False,
-                labelbottom=False,
-            )
-        else:
-            ax.xaxis.set_tick_params(
-                which="both",
-                bottom=True,
-                labelbottom=True,
-                top=False,
-                labeltop=False,
-            )
-        if not layout_info.axis_x:
-            ax.xaxis.set_tick_params(
-                which="both",
-                bottom=False,
-                labelbottom=False,
-                top=False,
-                labeltop=False,
-            )
-
-        if y_pos == "right":
-            ax.yaxis.set_tick_params(
-                which="both",
-                right=True,
-                labelright=True,
-                left=False,
-                labelleft=False,
-            )
-        else:
-            ax.yaxis.set_tick_params(
-                which="both",
-                left=True,
-                labelleft=True,
-                right=False,
-                labelright=False,
-            )
-        if not layout_info.axis_y:
-            ax.yaxis.set_tick_params(
-                which="both",
-                left=False,
-                labelleft=False,
-                right=False,
-                labelright=False,
-            )
-
-        # Show the spine on each axis's active side (on every panel, edge or
+        # Spine on each axis's active side, on every panel (edge or
         # interior); the axis_line themeable styles or blanks it.
         ax.spines["top"].set_visible(x_pos == "top")
         ax.spines["bottom"].set_visible(x_pos == "bottom")
