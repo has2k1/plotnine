@@ -31,5 +31,6 @@ class facet_null(facet):
     def compute_layout(
         self,
         data: list[pd.DataFrame],
+        axis_positions: tuple[str, str],
     ) -> pd.DataFrame:
         return layout_null()
