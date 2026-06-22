@@ -111,10 +111,16 @@ class theme:
         complete=False,
         # Generate themeables keyword parameters with
         #
-        #     from plotnine.themes.themeable import themeable
-        #     for name in themeable.registry():
-        #         print(f'{name}=None,')
+        #  python -c "
+        #  from plotnine.themes.themeable import themeable
+        #  for name in themeable.registry():
+        #      print(f'{name}=None,')
+        #  "
+        axis_title_x_bottom=None,
+        axis_title_x_top=None,
         axis_title_x=None,
+        axis_title_y_left=None,
+        axis_title_y_right=None,
         axis_title_y=None,
         axis_title=None,
         legend_title=None,
@@ -135,16 +141,32 @@ class theme:
         strip_text_y=None,
         strip_text=None,
         title=None,
+        axis_text_x_bottom=None,
+        axis_text_x_top=None,
         axis_text_x=None,
+        axis_text_y_left=None,
+        axis_text_y_right=None,
         axis_text_y=None,
         axis_text=None,
         text=None,
+        axis_line_x_bottom=None,
+        axis_line_x_top=None,
         axis_line_x=None,
+        axis_line_y_left=None,
+        axis_line_y_right=None,
         axis_line_y=None,
         axis_line=None,
+        axis_ticks_minor_x_bottom=None,
+        axis_ticks_minor_x_top=None,
         axis_ticks_minor_x=None,
+        axis_ticks_minor_y_left=None,
+        axis_ticks_minor_y_right=None,
         axis_ticks_minor_y=None,
+        axis_ticks_major_x_bottom=None,
+        axis_ticks_major_x_top=None,
         axis_ticks_major_x=None,
+        axis_ticks_major_y_left=None,
+        axis_ticks_major_y_right=None,
         axis_ticks_major_y=None,
         axis_ticks_major=None,
         axis_ticks_minor=None,
