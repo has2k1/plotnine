@@ -57,18 +57,13 @@ class strip:
 
         from .._mpl.text import StripText
 
-        theme = self.theme
-        targets = theme.targets
+        targets = self.theme.targets
         position = self.position
 
-        if position == "top":
-            rotation = theme.getp(("strip_text_x", "rotation"))
-        elif position == "right":
-            rotation = theme.getp(("strip_text_y", "rotation"))
-        else:
+        if position not in ("top", "right"):
             raise ValueError(f"Unknown position for strip text: {position!r}")
 
-        text = StripText(self.ax, position, self.label_info.text(), rotation)
+        text = StripText(self.ax, position, self.label_info.text())
         rect = text.patch
 
         figure = self.facet.plot.figure

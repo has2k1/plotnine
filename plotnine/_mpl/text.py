@@ -25,20 +25,18 @@ class StripText(Text):
         ax: Axes,
         position: StripPosition,
         label: str,
-        rotation: float,
     ):
         self.position = position
         is_oneline = len(label.split("\n")) == 1
         kwargs = {
-            "rotation": rotation,
             "transform": ax.transAxes,
             "clip_on": False,
             "zorder": 3.3,
-            # Since the text can be rotated, it is simpler to anchor it at
-            # the center, align it, then do the rotation. Vertically,
-            # center_baseline places the text in the visual center, but
-            # only if it is one line. For multiline text, we are better
-            # off with plain center.
+            # The strip_text themeable rotates the text. We anchor it at
+            # the center so that alignment holds under any rotation it
+            # applies. Vertically, center_baseline places the text in the
+            # visual center, but only if it is one line. For multiline
+            # text, we are better off with plain center.
             "ha": "center",
             "va": "center_baseline" if is_oneline else "center",
             "rotation_mode": "anchor",
