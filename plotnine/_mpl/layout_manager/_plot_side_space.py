@@ -13,7 +13,7 @@ from __future__ import annotations
 
 from dataclasses import replace
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Literal
 
 from plotnine._utils import MARGIN_SIDE
 from plotnine.exceptions import PlotnineError
@@ -141,6 +141,45 @@ class _plot_side_space(_side_space):
         except AttributeError as err:
             # There is probably an error in in the layout manager
             raise PlotnineError("Side has no axis title") from err
+
+    @property
+    def _strip_band_extent(self) -> float:
+        """
+        Outward extent of a facet strip on this side, figure space
+
+        Zero on sides that never carry a strip.
+        """
+        return 0
+
+    @property
+    def _axis_group_extent(self) -> float:
+        """
+        Outward extent of a moved axis on this side, figure space
+
+        The block is the axis ticks, text and title together. Zero on
+        sides whose axis is in its default position.
+        """
+        return 0
+
+    def strip_band_offset(self, member: Literal["strip", "axis"]) -> float:
+        """
+        Outward offset for one member of a shared strip/axis band
+
+        When a moved axis and a facet strip occupy the same side, one of
+        them shifts outward so they do not overlap. `strip_placement`
+        decides which: `"inside"` keeps the strip against the panel and
+        shifts the axis; `"outside"` keeps the axis against the panel and
+        shifts the strip. The offset is zero when the side has no such
+        collision.
+        """
+        strip = self._strip_band_extent
+        axis = self._axis_group_extent
+        if not (strip and axis):
+            return 0
+        placement = self.items.plot.theme.getp("strip_placement")
+        if placement == "inside":
+            return strip if member == "axis" else 0
+        return axis if member == "strip" else 0
 
 
 class left_space(_plot_side_space):
@@ -384,6 +423,14 @@ class right_space(_plot_side_space):
             self.plot_margin += adjustment
 
     @property
+    def _strip_band_extent(self) -> float:
+        return self.strip_text_y_extra_width
+
+    @property
+    def _axis_group_extent(self) -> float:
+        return self.sum_incl("axis_ticks_y") - self.sum_upto("axis_title_y")
+
+    @property
     def offset(self):
         """
         Distance from right of the figure to the right of the plot gridspec
@@ -530,6 +577,14 @@ class top_space(_plot_side_space):
         adjustment = protrusion - (self.total - self.plot_margin)
         if adjustment > 0:
             self.plot_margin += adjustment
+
+    @property
+    def _strip_band_extent(self) -> float:
+        return self.strip_text_x_extra_height
+
+    @property
+    def _axis_group_extent(self) -> float:
+        return self.sum_incl("axis_ticks_x") - self.sum_upto("axis_title_x")
 
     @property
     def offset(self) -> float:
