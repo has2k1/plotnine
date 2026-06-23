@@ -219,13 +219,6 @@ class PlotLayoutItems:
 
         return chain(major, minor)
 
-    @property
-    def _renderer(self):
-        """
-        Renderer for the current figure
-        """
-        return self.plot.figure._get_renderer()  # pyright: ignore[reportAttributeAccessIssue]
-
     def _strip_sizing(self, position: StripPosition) -> StripSizing:
         """
         Theme inputs that fix one strip's background size and offset
@@ -256,7 +249,7 @@ class PlotLayoutItems:
         self, strip_text: StripText, scale: float = 1
     ) -> Bbox:
         """
-        Display-space bounding box of one strip's background patch
+        Figure-space bounding box of one strip's background patch
 
         The breadth (height for top strips, width for right strips) is
         scaled by `scale` so the layout manager can equalise strips in
@@ -266,20 +259,23 @@ class PlotLayoutItems:
 
         sizing = self._strip_sizing(strip_text.position)
         m = sizing.margin
-        text_bbox = strip_text.get_window_extent(self._renderer)
-        ax_bbox = strip_text.ax.bbox.frozen()
-        line_height = strip_text._line_height(self._renderer)
+        text_bbox = self.geometry.bbox(strip_text)
+        ax_bbox = self.geometry.bbox(strip_text.ax)
+        W, H = self.plot.figure.bbox.width, self.plot.figure.bbox.height
+        line_height = strip_text._line_height(self.geometry.renderer)
 
         x0 = rel_position(sizing.bg_x, 0, ax_bbox.x0, ax_bbox.x1)
         y0 = rel_position(sizing.bg_y, 0, ax_bbox.y0, ax_bbox.y1)
 
         if strip_text.position == "top":
+            margins = (m.b + m.t) * line_height / H
             width = ax_bbox.width * sizing.bg_width
-            height = (text_bbox.height + (m.b + m.t) * line_height) * scale
+            height = (text_bbox.height + margins) * scale
             y0 += height * sizing.strip_align
         else:
+            margins = (m.l + m.r) * line_height / W
             height = ax_bbox.height * sizing.bg_height
-            width = (text_bbox.width + (m.l + m.r) * line_height) * scale
+            width = (text_bbox.width + margins) * scale
             x0 += width * sizing.strip_align
         return Bbox.from_bounds(x0, y0, width, height)
 
@@ -290,7 +286,6 @@ class PlotLayoutItems:
         if not self.strip_text_x:
             return 0
 
-        fig_height = self.plot.figure.bbox.height
         heights = []
         for st in self.strip_text_x:
             if st.position != position:
@@ -298,8 +293,8 @@ class PlotLayoutItems:
             strip_align = self._strip_sizing(st.position).strip_align
             if st.patch.get_visible():
                 # The patch bounds are not yet set, so derive its natural
-                # height directly in figure space.
-                h = self.strip_patch_bbox(st).height / fig_height
+                # height from the sizing inputs.
+                h = self.strip_patch_bbox(st).height
             else:
                 h = self.geometry.height(st)
             heights.append(max(h + h * strip_align, 0))
@@ -313,7 +308,6 @@ class PlotLayoutItems:
         if not self.strip_text_y:
             return 0
 
-        fig_width = self.plot.figure.bbox.width
         widths = []
         for st in self.strip_text_y:
             if st.position != position:
@@ -321,8 +315,8 @@ class PlotLayoutItems:
             strip_align = self._strip_sizing(st.position).strip_align
             if st.patch.get_visible():
                 # The patch bounds are not yet set, so derive its natural
-                # width directly in figure space.
-                w = self.strip_patch_bbox(st).width / fig_width
+                # width from the sizing inputs.
+                w = self.strip_patch_bbox(st).width
             else:
                 w = self.geometry.width(st)
             widths.append(max(w + w * strip_align, 0))
@@ -667,7 +661,7 @@ class PlotLayoutItems:
             for st, scale in zip(group, scales):
                 bbox = self.strip_patch_bbox(st, scale)
                 st.patch.set_bounds(bbox.bounds)
-                st.patch.set_transform(None)
+                st.patch.set_transform(self.plot.figure.transFigure)
                 self._place_strip_text(st)
 
     def _place_strip_text(self, st: StripText):
@@ -677,7 +671,7 @@ class PlotLayoutItems:
         theme = self.plot.theme
         position = st.position
         ax = st.ax
-        renderer = self._renderer
+        renderer = self.geometry.renderer
         sizing = self._strip_sizing(position)
         m = sizing.margin
 
