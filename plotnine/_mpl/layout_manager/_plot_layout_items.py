@@ -29,10 +29,11 @@ if TYPE_CHECKING:
     )
 
     from matplotlib.axes import Axes
-    from matplotlib.axis import Tick
+    from matplotlib.axis import Axis, Tick
     from matplotlib.figure import Figure
     from matplotlib.lines import Line2D
     from matplotlib.patches import Rectangle
+    from matplotlib.spines import Spine
     from matplotlib.transforms import Bbox, Transform
 
     from plotnine import ggplot
@@ -508,7 +509,7 @@ class PlotLayoutItems:
 
         if self.axis_title_x_top:
             ha = theme.getp(("axis_title_x_top", "ha"), "center")
-            offset = spaces.t.strip_band_offset("axis")
+            offset = spaces.t.strip_band_offset("title")
             self.axis_title_x_top.set_y(spaces.t.y1("axis_title_x") + offset)
             justify.horizontally_about(self.axis_title_x_top, ha, "panel")
 
@@ -519,7 +520,7 @@ class PlotLayoutItems:
 
         if self.axis_title_y_right:
             va = theme.getp(("axis_title_y_right", "va"), "center")
-            offset = spaces.r.strip_band_offset("axis")
+            offset = spaces.r.strip_band_offset("title")
             self.axis_title_y_right.set_x(spaces.r.x1("axis_title_y") + offset)
             justify.vertically_about(self.axis_title_y_right, va, "panel")
 
@@ -662,9 +663,11 @@ class PlotLayoutItems:
         right = spaces.r.strip_band_offset("axis") * fig.bbox.width * to_points
         for ax in self.plot.axs:
             if top:
-                ax.spines["top"].set_position(("outward", top))
+                _spine_set_position_outward(ax.spines["top"], ax.xaxis, top)
             if right:
-                ax.spines["right"].set_position(("outward", right))
+                _spine_set_position_outward(
+                    ax.spines["right"], ax.yaxis, right
+                )
 
     def _strip_breadth_scales(
         self, group: list[StripText], breadth: Literal["height", "width"]
@@ -786,6 +789,26 @@ class PlotLayoutItems:
             )
 
         st.set_position((x, y))
+
+
+def _spine_set_position_outward(spine: Spine, axis: Axis, distance: float):
+    """
+    Move a spine and its tick marks outward, keeping the theme's tick styling
+
+    This mirrors `Spine.set_position(("outward", distance))` but skips its
+    `axis.reset_ticks()`, which would regenerate the ticks and drop the
+    per-tick styling the theme applied (tick label colour and font, blanked
+    minor tick marks, ...). The reset is avoided by re-pointing the existing
+    tick marks at the moved spine's transform; the tick labels are
+    positioned separately by the layout.
+    """
+    spine._position = ("outward", distance)  # pyright: ignore[reportAttributeAccessIssue]
+    transform = spine.get_spine_transform()
+    spine.set_transform(transform)
+    # The outward-facing marks on a top or right spine are tick2.
+    for tick in (*axis.get_major_ticks(), *axis.get_minor_ticks()):
+        tick.tick2line.set_transform(transform)
+    spine.stale = True
 
 
 def _text_is_visible(text: Text) -> bool:

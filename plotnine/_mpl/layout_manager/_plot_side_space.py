@@ -152,34 +152,43 @@ class _plot_side_space(_side_space):
         return 0
 
     @property
-    def _axis_group_extent(self) -> float:
+    def _axis_primary_extent(self) -> float:
         """
-        Outward extent of a moved axis on this side, figure space
+        Outward extent of a moved axis's ticks and tick labels, figure space
 
-        The block is the axis ticks, text and title together. Zero on
-        sides whose axis is in its default position.
+        This is the part of a moved axis that sits next to the panel; the
+        axis title is excluded. Zero on sides whose axis is in its default
+        position.
         """
         return 0
 
-    def strip_band_offset(self, member: Literal["strip", "axis"]) -> float:
+    def strip_band_offset(
+        self, member: Literal["strip", "axis", "title"]
+    ) -> float:
         """
         Outward offset for one member of a shared strip/axis band
 
-        When a moved axis and a facet strip occupy the same side, one of
-        them shifts outward so they do not overlap. `strip_placement`
-        decides which: `"inside"` keeps the strip against the panel and
-        shifts the axis; `"outside"` keeps the axis against the panel and
-        shifts the strip. The offset is zero when the side has no such
-        collision.
+        When a moved axis and a facet strip occupy the same side, the band
+        is ordered, from the panel outward, as the axis ticks and labels,
+        the strip, and the axis title. `strip_placement` decides whether
+        the strip comes before or after the ticks and labels:
+
+        - `"inside"`: panel, strip, ticks and labels, title.
+        - `"outside"`: panel, ticks and labels, strip, title.
+
+        `member` is `"strip"`, `"axis"` (the ticks and labels) or
+        `"title"`. The offset is zero when the side has no such collision.
         """
         strip = self._strip_band_extent
-        axis = self._axis_group_extent
-        if not (strip and axis):
+        primary = self._axis_primary_extent
+        if not (strip and primary):
             return 0
         placement = self.items.plot.theme.getp("strip_placement")
         if placement == "inside":
-            return strip if member == "axis" else 0
-        return axis if member == "strip" else 0
+            return 0 if member == "strip" else strip
+        if member == "axis":
+            return 0
+        return primary if member == "strip" else strip
 
 
 class left_space(_plot_side_space):
@@ -427,8 +436,8 @@ class right_space(_plot_side_space):
         return self.strip_text_y_extra_width
 
     @property
-    def _axis_group_extent(self) -> float:
-        return self.sum_incl("axis_ticks_y") - self.sum_upto("axis_title_y")
+    def _axis_primary_extent(self) -> float:
+        return self.sum_incl("axis_ticks_y") - self.sum_upto("axis_text_y")
 
     @property
     def offset(self):
@@ -583,8 +592,8 @@ class top_space(_plot_side_space):
         return self.strip_text_x_extra_height
 
     @property
-    def _axis_group_extent(self) -> float:
-        return self.sum_incl("axis_ticks_x") - self.sum_upto("axis_title_x")
+    def _axis_primary_extent(self) -> float:
+        return self.sum_incl("axis_ticks_x") - self.sum_upto("axis_text_x")
 
     @property
     def offset(self) -> float:
