@@ -3,18 +3,13 @@ from __future__ import annotations
 from functools import lru_cache
 from typing import TYPE_CHECKING
 
-from matplotlib import artist
+from matplotlib.patches import FancyBboxPatch
 from matplotlib.text import Text
 
-from plotnine._utils import ha_as_float, va_as_float
-
-from .patches import StripTextPatch
-from .utils import bbox_in_axes_space, rel_position
-
 if TYPE_CHECKING:
-    from matplotlib.backend_bases import RendererBase
+    from matplotlib.axes import Axes
 
-    from plotnine.iapi import strip_draw_info
+    from plotnine.typing import StripPosition
 
 
 class StripText(Text):
@@ -22,13 +17,21 @@ class StripText(Text):
     Strip Text
     """
 
-    draw_info: strip_draw_info
-    patch: StripTextPatch
+    patch: FancyBboxPatch
+    position: StripPosition
 
-    def __init__(self, info: strip_draw_info):
+    def __init__(
+        self,
+        ax: Axes,
+        position: StripPosition,
+        label: str,
+        rotation: float,
+    ):
+        self.position = position
+        is_oneline = len(label.split("\n")) == 1
         kwargs = {
-            "rotation": info.rotation,
-            "transform": info.ax.transAxes,
+            "rotation": rotation,
+            "transform": ax.transAxes,
             "clip_on": False,
             "zorder": 3.3,
             # Since the text can be rotated, it is simpler to anchor it at
@@ -37,13 +40,22 @@ class StripText(Text):
             # only if it is one line. For multiline text, we are better
             # off with plain center.
             "ha": "center",
-            "va": "center_baseline" if info.is_oneline else "center",
+            "va": "center_baseline" if is_oneline else "center",
             "rotation_mode": "anchor",
         }
 
-        super().__init__(0, 0, info.label, **kwargs)
-        self.draw_info = info
-        self.patch = StripTextPatch(self)
+        super().__init__(0, 0, label, **kwargs)
+        self.ax = ax
+        self.patch = FancyBboxPatch(
+            (0, 0),
+            width=1,
+            height=1,
+            boxstyle="square, pad=0",
+            clip_on=False,
+            zorder=2.2,
+        )
+        # The layout manager groups patches by the side they sit on
+        self.patch.position = position  # pyright: ignore[reportAttributeAccessIssue]
 
     # TODO: This should really be part of the unit conversions in the
     # margin class.
@@ -82,113 +94,3 @@ class StripText(Text):
             height = max([p[1][1] for p in parts])
 
         return height
-
-    def _set_position(self, renderer):
-        """
-        Set the postion of the text within the strip_background
-        """
-        # We have to two premises that depend on each other:
-        #
-        #    1. The breadth of the strip_background grows to accomodate
-        #       the strip_text.
-        #    2. The strip_text is justified within the strip_background.
-        #
-        # From these we note that the strip_background does not need the
-        # position of the strip_text, but it needs its size. Therefore
-        # we implement StripTextPatch.get_window_extent can use
-        # StripText.get_window_extent, peeking only at the size.
-        #
-        # And we implement StripText._set_position_* to use
-        # StripTextPatch.get_window_extent and make the calculations in
-        # both methods independent.
-        if self.draw_info.position == "top":
-            self._set_position_top(renderer)
-        else:  # "right"
-            self._set_position_right(renderer)
-
-    def _set_position_top(self, renderer):
-        """
-        Set position of the text within the top strip_background
-        """
-        info = self.draw_info
-        ha, va, ax, m = info.ha, info.va, info.ax, info.margin
-
-        rel_x, rel_y = ha_as_float(ha), va_as_float(va)
-        patch_bbox = bbox_in_axes_space(self.patch, ax, renderer)
-        text_bbox = bbox_in_axes_space(self, ax, renderer)
-
-        # line_height and margins in axes space
-        line_height = self._line_height(renderer) / ax.bbox.height
-
-        x = (
-            # Justify horizontally within the strip_background
-            rel_position(
-                rel_x,
-                text_bbox.width + (line_height * (m.l + m.r)),
-                patch_bbox.x0,
-                patch_bbox.x1,
-            )
-            + (m.l * line_height)
-            + text_bbox.width / 2
-        )
-        # Setting the y position based on the bounding box is wrong
-        y = (
-            rel_position(
-                rel_y,
-                text_bbox.height,
-                patch_bbox.y0 + m.b * line_height,
-                patch_bbox.y1 - m.t * line_height,
-            )
-            + text_bbox.height / 2
-        )
-        self.set_position((x, y))
-
-    def _set_position_right(self, renderer):
-        """
-        Set position of the text within the bottom strip_background
-        """
-        info = self.draw_info
-        ha, va, ax, m = info.ha, info.va, info.ax, info.margin
-
-        # bboxes in axes space
-        patch_bbox = bbox_in_axes_space(self.patch, ax, renderer)
-        text_bbox = bbox_in_axes_space(self, ax, renderer)
-
-        # line_height in axes space
-        line_height = self._line_height(renderer) / ax.bbox.width
-
-        rel_x, rel_y = ha_as_float(ha), va_as_float(va)
-
-        x = (
-            rel_position(
-                rel_x,
-                text_bbox.width,
-                patch_bbox.x0 + m.l * line_height,
-                patch_bbox.x1 - m.r * line_height,
-            )
-            + text_bbox.width / 2
-        )
-        y = (
-            # Justify vertically within the strip_background
-            rel_position(
-                rel_y,
-                text_bbox.height + ((m.b + m.t) * line_height),
-                patch_bbox.y0,
-                patch_bbox.y1,
-            )
-            + (m.b * line_height)
-            + text_bbox.height / 2
-        )
-        self.set_position((x, y))
-
-    @artist.allow_rasterization
-    def draw(self, renderer: RendererBase):
-        """
-        Draw text along with the patch
-        """
-        if not self.get_visible():
-            return
-
-        self._set_position(renderer)
-        self.patch.draw(renderer)
-        return super().draw(renderer)

@@ -10,17 +10,14 @@ from __future__ import annotations
 import itertools
 from copy import copy
 from dataclasses import dataclass, field, fields
-from functools import cached_property
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from typing import Any, Iterator, Literal, Optional, Sequence
 
-    from matplotlib.axes import Axes
     from matplotlib.figure import Figure
 
     from plotnine.scales.scale import scale
-    from plotnine.themes.elements.margin import margin
     from plotnine.typing import (
         CoordRange,
         FloatArrayLike,
@@ -28,7 +25,6 @@ if TYPE_CHECKING:
         ScaledAestheticsName,
         Side,
         StripPosition,
-        VerticalJustification,
         VerticalTextJustification,
     )
 
@@ -237,48 +233,6 @@ class layout_details:
         Return True if Panel is at the bottom
         """
         return self.row == self.nrow
-
-
-@dataclass
-class strip_draw_info:
-    """
-    Information required to draw strips
-    """
-
-    bg_x: float
-    """Left of the strip background in transAxes"""
-
-    bg_y: float
-    """Bottom of the strip background in transAxes"""
-
-    ha: HorizontalJustification | float
-    """Horizontal justification of strip text within the background"""
-
-    va: VerticalJustification | float
-    """Vertical justification of strip text within the background"""
-
-    bg_width: float
-    """Width of the strip background in transAxes"""
-
-    bg_height: float
-    """Height of the strip background in transAxes"""
-
-    margin: margin
-    """Strip text margin with the units in lines"""
-
-    strip_align: float
-    position: StripPosition
-    label: str
-    ax: Axes
-    rotation: float
-    layout: layout_details
-
-    @cached_property
-    def is_oneline(self) -> bool:
-        """
-        Whether the strip text is a single line
-        """
-        return len(self.label.split("\n")) == 1
 
 
 @dataclass
