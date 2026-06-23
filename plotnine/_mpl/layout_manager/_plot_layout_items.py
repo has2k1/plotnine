@@ -487,6 +487,7 @@ class PlotLayoutItems:
         self._adjust_axis_text_y(justify)
         self._strip_text_x_background_equal_heights()
         self._strip_text_y_background_equal_widths()
+        self._place_strip_backgrounds()
 
     def _adjust_axis_text_x(self, justify: TextJustifier):
         """
@@ -621,6 +622,16 @@ class PlotLayoutItems:
         relative_widths = [max_width / w for w in widths]
         for text, scale in zip(self.strip_text_y, relative_widths):
             text.patch.expand = scale
+
+    def _place_strip_backgrounds(self):
+        """
+        Fix each strip background at its final display-space bounds
+        """
+        for group in (self.strip_text_x, self.strip_text_y):
+            for st in group or []:
+                bbox = self.strip_patch_bbox(st)
+                st.patch.set_bounds(bbox.bounds)
+                st.patch.set_transform(None)
 
 
 def _text_is_visible(text: Text) -> bool:

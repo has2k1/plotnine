@@ -98,14 +98,8 @@ class StripTextPatch(FancyBboxPatch):
     @artist.allow_rasterization
     def draw(self, renderer):
         """
-        Draw patch
+        Draw patch using bounds set by the layout manager
         """
-        # The geometry of the patch is determined by its rectangular bounds,
-        # this is also its "window_extent". As the extent value is in
-        # display units, we don't need a transform.
-        bbox = self.get_window_extent(renderer)
-        self.set_bounds(bbox.bounds)
-        self.set_transform(None)
         return super().draw(renderer)
 
 
