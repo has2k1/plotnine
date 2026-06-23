@@ -8,11 +8,10 @@ if TYPE_CHECKING:
 
     from matplotlib.collections import LineCollection
     from matplotlib.lines import Line2D
-    from matplotlib.patches import Rectangle
+    from matplotlib.patches import FancyBboxPatch, Rectangle
     from matplotlib.text import Text
 
     from plotnine._mpl.offsetbox import ColoredDrawingArea
-    from plotnine._mpl.patches import StripTextPatch
     from plotnine._mpl.text import StripText
     from plotnine.iapi import legend_artists
 
@@ -48,7 +47,7 @@ class ThemeTargets:
     plot_background: Optional[Rectangle] = None
     plot_footer_background: Optional[Rectangle] = None
     plot_footer_line: Optional[Line2D] = None
-    strip_background_x: list[StripTextPatch] = field(default_factory=list)
-    strip_background_y: list[StripTextPatch] = field(default_factory=list)
+    strip_background_x: list[FancyBboxPatch] = field(default_factory=list)
+    strip_background_y: list[FancyBboxPatch] = field(default_factory=list)
     strip_text_x: list[StripText] = field(default_factory=list)
     strip_text_y: list[StripText] = field(default_factory=list)
