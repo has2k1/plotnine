@@ -44,6 +44,22 @@ title: Changelog
 - Added [](:class:`~plotnine.composition.inset_element`) with which you can insert plot
   compositions or images into another plot.
 
+- Position scales gained a `position` parameter, so you can move an axis to the
+  opposite side of the panel. Use `position="top"` for the x axis and
+  `position="right"` for the y axis.
+
+  ```python
+  ggplot(df, aes("x", "y")) + geom_point() + scale_x_continuous(position="top")
+  ```
+
+  Each axis side can be styled independently with new per-side themeables, e.g.
+  `axis_text_x_top`, `axis_title_y_right`, `axis_line_x_top` and
+  `axis_ticks_major_y_right`.
+
+  ```python
+  theme(axis_text_x_top=element_text(color="blue"))
+  ```
+
 ### API Changes
 
 - Removed `geom.to_layer()`, `stat.to_layer()`, `annotate.to_layer()`,
