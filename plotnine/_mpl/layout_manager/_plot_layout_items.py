@@ -308,7 +308,7 @@ class PlotLayoutItems:
 
     def strip_text_y_extra_width(self, position: StripPosition) -> float:
         """
-        Width taken up by the top strips that is outside the panels
+        Width taken up by the right strips that is outside the panels
         """
         if not self.strip_text_y:
             return 0
@@ -654,14 +654,16 @@ class PlotLayoutItems:
         """
         Fix each strip background at its final bounds and place its text
         """
-        groups = (
+        groups: tuple[
+            tuple[list[StripText], Literal["height", "width"]], ...
+        ] = (
             (self.strip_text_x or [], "height"),
             (self.strip_text_y or [], "width"),
         )
         for group, breadth in groups:
             if not group:
                 continue
-            scales = self._strip_breadth_scales(group, breadth)  # type: ignore
+            scales = self._strip_breadth_scales(group, breadth)
             for st, scale in zip(group, scales):
                 bbox = self.strip_patch_bbox(st, scale)
                 st.patch.set_bounds(bbox.bounds)
