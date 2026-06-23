@@ -32,7 +32,7 @@ if TYPE_CHECKING:
     from matplotlib.figure import Figure
     from matplotlib.lines import Line2D
     from matplotlib.patches import Rectangle
-    from matplotlib.transforms import Transform
+    from matplotlib.transforms import Bbox, Transform
 
     from plotnine import ggplot
     from plotnine._mpl.offsetbox import FlexibleAnchoredOffsetbox
@@ -192,6 +192,43 @@ class PlotLayoutItems:
             minor = ax.yaxis.get_minor_ticks()
 
         return chain(major, minor)
+
+    @property
+    def _renderer(self):
+        """
+        Renderer for the current figure
+        """
+        return self.plot.figure._get_renderer()  # pyright: ignore[reportAttributeAccessIssue]
+
+    def strip_patch_bbox(self, strip_text: StripText) -> Bbox:
+        """
+        Display-space bounding box of one strip's background patch
+
+        Identical in value to what `StripTextPatch.get_window_extent`
+        returns, computed from the final panel bbox so the layout
+        manager owns the sizing decision.
+        """
+        from matplotlib.transforms import Bbox
+
+        info = strip_text.draw_info
+        m = info.margin
+        text_bbox = strip_text.get_window_extent(self._renderer)
+        ax_bbox = info.ax.bbox.frozen()
+        line_height = strip_text._line_height(self._renderer)
+
+        x0 = rel_position(info.bg_x, 0, ax_bbox.x0, ax_bbox.x1)
+        y0 = rel_position(info.bg_y, 0, ax_bbox.y0, ax_bbox.y1)
+        expand = getattr(strip_text.patch, "expand", 1)
+
+        if info.position == "top":
+            width = ax_bbox.width * info.bg_width
+            height = (text_bbox.height + (m.b + m.t) * line_height) * expand
+            y0 += height * info.strip_align
+        else:
+            height = ax_bbox.height * info.bg_height
+            width = (text_bbox.width + (m.l + m.r) * line_height) * expand
+            x0 += width * info.strip_align
+        return Bbox.from_bounds(x0, y0, width, height)
 
     def strip_text_x_extra_height(self, position: StripPosition) -> float:
         """
