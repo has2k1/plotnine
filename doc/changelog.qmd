@@ -60,6 +60,19 @@ title: Changelog
   theme(axis_text_x_top=element_text(color="blue"))
   ```
 
+- Added the `strip_placement` theme element which controls how a facet strip and
+  a moved axis on the same side are arranged. The default `"inside"` keeps the
+  strip against the panel and places the axis beyond it; `"outside"` places the
+  strip beyond the axis.
+
+  ```python
+  ggplot(df, aes("x", "y"))
+  + geom_point()
+  + facet_grid("a", "b")
+  + scale_x_continuous(position="top")
+  + theme(strip_placement="outside")
+  ```
+
 ### API Changes
 
 - Removed `geom.to_layer()`, `stat.to_layer()`, `annotate.to_layer()`,
