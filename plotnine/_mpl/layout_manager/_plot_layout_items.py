@@ -47,7 +47,7 @@ if TYPE_CHECKING:
 
     from ._composition_layout_items import CompositionLayoutItems
     from ._composition_side_space import CompositionSideSpaces
-    from ._plot_side_space import PlotSideSpaces
+    from ._plot_side_space import PlotSideSpaces, _plot_side_space
 
     AxesLocation: TypeAlias = Literal[
         "all", "first_row", "last_row", "first_col", "last_col"
@@ -526,7 +526,7 @@ class PlotLayoutItems:
 
         self._adjust_axis_text_x(justify)
         self._adjust_axis_text_y(justify)
-        self._place_strip_backgrounds()
+        self._place_strip_backgrounds(spaces)
 
     def _adjust_axis_text_x(self, justify: TextJustifier):
         """
@@ -644,23 +644,36 @@ class PlotLayoutItems:
         largest = max(natural)
         return [largest / b for b in natural]
 
-    def _place_strip_backgrounds(self):
+    def _place_strip_backgrounds(self, spaces: PlotSideSpaces):
         """
         Fix each strip background at its final bounds and place its text
+
+        When `strip_placement="outside"` and a moved axis shares the
+        strip's side, the strip is shifted outward to clear the axis.
         """
         groups: tuple[
-            tuple[list[StripText], Literal["height", "width"]], ...
+            tuple[
+                list[StripText],
+                Literal["height", "width"],
+                _plot_side_space,
+            ],
+            ...,
         ] = (
-            (self.strip_text_x or [], "height"),
-            (self.strip_text_y or [], "width"),
+            (self.strip_text_x or [], "height", spaces.t),
+            (self.strip_text_y or [], "width", spaces.r),
         )
-        for group, breadth in groups:
+        for group, breadth, space in groups:
             if not group:
                 continue
+            offset = space.strip_band_offset("strip")
             scales = self._strip_breadth_scales(group, breadth)
             for st, scale in zip(group, scales):
-                bbox = self.strip_patch_bbox(st, scale)
-                st.patch.set_bounds(bbox.bounds)
+                x0, y0, w, h = self.strip_patch_bbox(st, scale).bounds
+                if st.position == "top":
+                    y0 += offset
+                else:
+                    x0 += offset
+                st.patch.set_bounds((x0, y0, w, h))
                 st.patch.set_transform(self.plot.figure.transFigure)
                 self._place_strip_text(st)
 
