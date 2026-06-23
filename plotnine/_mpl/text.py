@@ -66,20 +66,21 @@ class StripText(Text):
         parts: list[tuple[str, tuple[float, float], float, float]]
 
         try:
-            # matplotlib.Text._get_layout is a private API and we cannot
-            # tell how using it may fail in the future.
+            # matplotlib.Text._get_layout is a private API. If its name or
+            # return shape changes we fall back to an estimate.
             _, parts, _ = self._get_layout(renderer)  # pyright: ignore[reportAttributeAccessIssue]
-        except Exception:
+        except (AttributeError, ValueError, TypeError):
             from warnings import warn
 
             from plotnine.exceptions import PlotnineWarning
 
             # The canvas height is nearly always bigger than the stated
             # fontsize. 1.36 is a good multiplication factor obtained by
-            # some rough exploration
+            # some rough exploration. A non-numeric size (e.g. "large")
+            # falls back to a fixed estimate.
             f = 1.36
             size = self.get_fontsize()
-            height = round(size * f) if isinstance(size, int) else 14
+            height = size * f if isinstance(size, (int, float)) else 14
             warn(
                 f"Could not calculate line height for {self.get_text()}. "
                 "Using an estimate, please let us know about this at "
