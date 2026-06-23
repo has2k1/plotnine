@@ -17,7 +17,6 @@ if typing.TYPE_CHECKING:
 
     from plotnine import ggplot
     from plotnine.iapi import labels_view, layout_details, panel_view
-    from plotnine.scales.scale import scale
     from plotnine.scales.scale_xy import ScaleX, ScaleY
     from plotnine.typing import (
         FloatArray,
