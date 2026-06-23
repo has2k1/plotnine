@@ -2809,6 +2809,20 @@ class strip_align(strip_align_x, strip_align_y):
     """
 
 
+class strip_placement(themeable):
+    """
+    Where a facet strip sits relative to an axis on the same side
+
+    Parameters
+    ----------
+    theme_element : Literal["inside", "outside"]
+        With `"inside"` the strip is next to the panel and the axis
+        is beyond the strip. With `"outside"` the axis is next to the
+        panel and the strip is beyond the axis. Only has a visible
+        effect when a moved axis shares the strip's side.
+    """
+
+
 class svg_usefonts(themeable):
     """
     How to renderer fonts for svg images
