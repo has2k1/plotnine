@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.10.11">
+<meta name="generator" content="quarto-1.10.12">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -75,7 +75,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-5947b73a06bce04bf1d622ae23e1ec5b.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-540b1c759bb52299955bd460b1e29831.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../site_libs/bootstrap/bootstrap-f8738cfd3fc820478fd97ffc9fa58b96.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
@@ -118,7 +118,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine 999.post1+g17eeeb6f9</span>
+    <span class="navbar-title">plotnine 999.post1+gf2acb48e8</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -194,6 +194,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Every subclass of themeable is stored in a dict at <code>register</code> with the name of the subclass as the key.</p>
 <p>It is the base of a class hierarchy that uses inheritance in a non-traditional manner. In the textbook use of class inheritance, superclasses are general and subclasses are specializations. In some since the hierarchy used here is the opposite in that superclasses are more specific than subclasses.</p>
 <p>It is probably better to think if this hierarchy of leveraging Python’s multiple inheritance to implement composition. For example the <code>axis_title</code> themeable is <em>composed of</em> the <code>x_axis_title</code> and the <code>y_axis_title</code>. We are just using multiple inheritance to specify this composition.</p>
+<p>A parent’s effect is the combined effect of the leaves it composes: theming <code>axis_text_x</code> styles both <code>axis_text_x_top</code> and <code>axis_text_x_bottom</code>, and blanking it hides both. Each leaf adds its own contribution on top of its bases — hence the <code>super()</code> call in every <code>apply_*</code> / <code>blank_*</code> method — so a leaf that skips it applies alone and the rest of the composition is silently lost.</p>
 <p>When implementing a new themeable based on the ggplot2 documentation, it is important to keep this in mind and reverse the order of the “inherits from” in the documentation.</p>
 <p>For example, to implement,</p>
 <ul>
