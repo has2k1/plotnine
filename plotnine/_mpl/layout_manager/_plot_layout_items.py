@@ -508,7 +508,8 @@ class PlotLayoutItems:
 
         if self.axis_title_x_top:
             ha = theme.getp(("axis_title_x_top", "ha"), "center")
-            self.axis_title_x_top.set_y(spaces.t.y1("axis_title_x"))
+            offset = spaces.t.strip_band_offset("axis")
+            self.axis_title_x_top.set_y(spaces.t.y1("axis_title_x") + offset)
             justify.horizontally_about(self.axis_title_x_top, ha, "panel")
 
         if self.axis_title_y_left:
@@ -518,17 +519,21 @@ class PlotLayoutItems:
 
         if self.axis_title_y_right:
             va = theme.getp(("axis_title_y_right", "va"), "center")
-            self.axis_title_y_right.set_x(spaces.r.x1("axis_title_y"))
+            offset = spaces.r.strip_band_offset("axis")
+            self.axis_title_y_right.set_x(spaces.r.x1("axis_title_y") + offset)
             justify.vertically_about(self.axis_title_y_right, va, "panel")
 
         if self.legends:
             set_legends_position(self.legends, spaces)
 
-        self._adjust_axis_text_x(justify)
-        self._adjust_axis_text_y(justify)
+        self._adjust_axis_text_x(justify, spaces)
+        self._adjust_axis_text_y(justify, spaces)
+        self._place_moved_axes(spaces)
         self._place_strip_backgrounds(spaces)
 
-    def _adjust_axis_text_x(self, justify: TextJustifier):
+    def _adjust_axis_text_x(
+        self, justify: TextJustifier, spaces: PlotSideSpaces
+    ):
         """
         Adjust x-axis text, justifying vertically as necessary
         """
@@ -544,6 +549,10 @@ class PlotLayoutItems:
         if self._is_blank("axis_text_x"):
             return
 
+        # For strip_placement="inside", a top axis sharing its side with a
+        # strip is pushed past the strip; zero otherwise.
+        top_offset = spaces.t.strip_band_offset("axis")
+
         for side in ("bottom", "top"):
             va_default = "top" if side == "bottom" else "bottom"
             va = self.plot.theme.getp(
@@ -558,18 +567,20 @@ class PlotLayoutItems:
                 )
                 # bottom labels sit below the panel (axes y 0), top labels
                 # above it (axes y 1)
-                low, high = (
-                    (-row_height, 0)
-                    if side == "bottom"
-                    else (1, 1 + row_height)
-                )
+                if side == "bottom":
+                    low, high = (-row_height, 0)
+                else:
+                    offset = to_vertical_axis_dimensions(top_offset, ax)
+                    low, high = (1 + offset, 1 + row_height + offset)
                 for text in texts:
                     height = to_vertical_axis_dimensions(
                         self.geometry.tight_height(text), ax
                     )
                     justify.vertically(text, va, low, high, height=height)
 
-    def _adjust_axis_text_y(self, justify: TextJustifier):
+    def _adjust_axis_text_y(
+        self, justify: TextJustifier, spaces: PlotSideSpaces
+    ):
         """
         Adjust x-axis text, justifying horizontally as necessary
         """
@@ -607,6 +618,10 @@ class PlotLayoutItems:
         if self._is_blank("axis_text_y"):
             return
 
+        # For strip_placement="inside", a right axis sharing its side with a
+        # strip is pushed past the strip; zero otherwise.
+        right_offset = spaces.r.strip_band_offset("axis")
+
         for side in ("left", "right"):
             ha_default = "right" if side == "left" else "left"
             ha = self.plot.theme.getp(
@@ -621,14 +636,35 @@ class PlotLayoutItems:
                 )
                 # left labels sit left of the panel (axes x 0), right labels
                 # to the right of it (axes x 1)
-                low, high = (
-                    (-col_width, 0) if side == "left" else (1, 1 + col_width)
-                )
+                if side == "left":
+                    low, high = (-col_width, 0)
+                else:
+                    offset = to_horizontal_axis_dimensions(right_offset, ax)
+                    low, high = (1 + offset, 1 + col_width + offset)
                 for text in texts:
                     width = to_horizontal_axis_dimensions(
                         self.geometry.tight_width(text), ax
                     )
                     justify.horizontally(text, ha, low, high, width=width)
+
+    def _place_moved_axes(self, spaces: PlotSideSpaces):
+        """
+        Push a moved axis past the strip for strip_placement="inside"
+
+        On a side where a moved axis and a facet strip would otherwise
+        overlap, the spine and its tick marks shift outward by the strip's
+        extent so the axis sits beyond the strip. Has no effect when the
+        side has no shared strip/axis band.
+        """
+        fig = self.plot.figure
+        to_points = 72 / fig.dpi
+        top = spaces.t.strip_band_offset("axis") * fig.bbox.height * to_points
+        right = spaces.r.strip_band_offset("axis") * fig.bbox.width * to_points
+        for ax in self.plot.axs:
+            if top:
+                ax.spines["top"].set_position(("outward", top))
+            if right:
+                ax.spines["right"].set_position(("outward", right))
 
     def _strip_breadth_scales(
         self, group: list[StripText], breadth: Literal["height", "width"]
