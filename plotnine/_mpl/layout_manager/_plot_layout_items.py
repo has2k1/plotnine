@@ -524,7 +524,7 @@ class PlotLayoutItems:
         )
 
         if self.plot_tag:
-            set_plot_tag_position(self.plot_tag, spaces)
+            _position_plot_tag(self.plot_tag, spaces)
 
         if self.axis_title_x_bottom:
             ha = theme.getp(("axis_title_x_bottom", "ha"), "center")
@@ -547,11 +547,11 @@ class PlotLayoutItems:
             justify.vertically_about(self.axis_title_y_right, va, "panel")
 
         if self.legends:
-            set_legends_position(self.legends, spaces)
+            _position_legends(self.legends, spaces)
 
         self._adjust_axis_text_x(justify, spaces)
         self._adjust_axis_text_y(justify, spaces)
-        self._place_moved_axes(spaces)
+        self._position_moved_axes(spaces)
         self._position_strip_backgrounds(spaces)
 
     def _adjust_axis_text_x(
@@ -670,7 +670,7 @@ class PlotLayoutItems:
                     )
                     justify.horizontally(text, ha, low, high, width=width)
 
-    def _place_moved_axes(self, spaces: PlotSideSpaces):
+    def _position_moved_axes(self, spaces: PlotSideSpaces):
         """
         Push a moved axis past the strip for strip_placement="inside"
 
@@ -930,7 +930,7 @@ def _position_plot_labels(
     return justify
 
 
-def set_legends_position(
+def _position_legends(
     legends: legend_artists,
     spaces: PlotSideSpaces | CompositionSideSpaces,
 ):
@@ -1021,7 +1021,7 @@ def set_legends_position(
             set_position(l.box, l.position, l.justification, transPanels)
 
 
-def set_plot_tag_position(tag: Text, spaces: PlotSideSpaces):
+def _position_plot_tag(tag: Text, spaces: PlotSideSpaces):
     """
     Set the postion of the plot_tag
     """
@@ -1032,7 +1032,7 @@ def set_plot_tag_position(tag: Text, spaces: PlotSideSpaces):
     margin = theme.get_margin("plot_tag")
 
     if location == "margin":
-        return set_plot_tag_position_in_margin(tag, spaces)
+        return _position_plot_tag_in_margin(tag, spaces)
 
     lookup: dict[str, tuple[float, float]] = {
         "topleft": (0, 1),
@@ -1082,7 +1082,7 @@ def set_plot_tag_position(tag: Text, spaces: PlotSideSpaces):
     tag.set_position(position)
 
 
-def set_plot_tag_position_in_margin(tag: Text, spaces: PlotSideSpaces):
+def _position_plot_tag_in_margin(tag: Text, spaces: PlotSideSpaces):
     """
     Place the tag in an inner margin around the plot
 
