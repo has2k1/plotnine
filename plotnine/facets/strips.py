@@ -60,9 +60,6 @@ class strip:
         targets = self.theme.targets
         position = self.position
 
-        if position not in ("top", "right"):
-            raise ValueError(f"Unknown position for strip text: {position!r}")
-
         text = StripText(self.ax, position, self.label_info.text())
         rect = text.patch
 
@@ -70,12 +67,11 @@ class strip:
         figure.add_artist(rect)
         figure.add_artist(text)
 
-        if position == "right":
-            targets.strip_background_y.append(rect)
-            targets.strip_text_y.append(text)
-        else:
-            targets.strip_background_x.append(rect)
-            targets.strip_text_x.append(text)
+        # x-axis strips sit on top/bottom, y-axis strips on left/right.
+        # Background is tracked per axis, text per side.
+        g = "y" if position in ("left", "right") else "x"
+        getattr(targets, f"strip_background_{g}").append(rect)
+        getattr(targets, f"strip_text_{g}_{position}").append(text)
 
 
 class Strips(List[strip]):

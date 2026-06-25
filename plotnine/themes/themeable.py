@@ -993,7 +993,49 @@ class plot_tag_position(themeable):
     """
 
 
-class strip_text_x(MixinSequenceOfValues):
+class strip_text_x_top(MixinSequenceOfValues):
+    """
+    Facet labels on the top
+
+    Parameters
+    ----------
+    theme_element : element_text
+    """
+
+    def apply_figure(self, figure: Figure, targets: ThemeTargets):
+        super().apply_figure(figure, targets)
+        if texts := targets.strip_text_x_top:
+            self.set(texts, self._get_properties(omit=("margin", "ha", "va")))
+
+    def blank_figure(self, figure: Figure, targets: ThemeTargets):
+        super().blank_figure(figure, targets)
+        if texts := targets.strip_text_x_top:
+            for text in texts:
+                text.set_visible(False)
+
+
+class strip_text_x_bottom(MixinSequenceOfValues):
+    """
+    Facet labels on the bottom
+
+    Parameters
+    ----------
+    theme_element : element_text
+    """
+
+    def apply_figure(self, figure: Figure, targets: ThemeTargets):
+        super().apply_figure(figure, targets)
+        if texts := targets.strip_text_x_bottom:
+            self.set(texts, self._get_properties(omit=("margin", "ha", "va")))
+
+    def blank_figure(self, figure: Figure, targets: ThemeTargets):
+        super().blank_figure(figure, targets)
+        if texts := targets.strip_text_x_bottom:
+            for text in texts:
+                text.set_visible(False)
+
+
+class strip_text_x(strip_text_x_top, strip_text_x_bottom):
     """
     Facet labels along the horizontal axis
 
@@ -1002,24 +1044,10 @@ class strip_text_x(MixinSequenceOfValues):
     theme_element : element_text
     """
 
-    def apply_figure(self, figure: Figure, targets: ThemeTargets):
-        super().apply_figure(figure, targets)
-        if texts := targets.strip_text_x:
-            self.set(
-                texts,
-                self._get_properties(omit=("margin", "ha", "va")),
-            )
 
-    def blank_figure(self, figure: Figure, targets: ThemeTargets):
-        super().blank_figure(figure, targets)
-        if texts := targets.strip_text_x:
-            for text in texts:
-                text.set_visible(False)
-
-
-class strip_text_y(MixinSequenceOfValues):
+class strip_text_y_left(MixinSequenceOfValues):
     """
-    Facet labels along the vertical axis
+    Facet labels on the left
 
     Parameters
     ----------
@@ -1028,17 +1056,45 @@ class strip_text_y(MixinSequenceOfValues):
 
     def apply_figure(self, figure: Figure, targets: ThemeTargets):
         super().apply_figure(figure, targets)
-        if texts := targets.strip_text_y:
-            self.set(
-                texts,
-                self._get_properties(omit=("margin", "ha", "va")),
-            )
+        if texts := targets.strip_text_y_left:
+            self.set(texts, self._get_properties(omit=("margin", "ha", "va")))
 
     def blank_figure(self, figure: Figure, targets: ThemeTargets):
         super().blank_figure(figure, targets)
-        if texts := targets.strip_text_y:
+        if texts := targets.strip_text_y_left:
             for text in texts:
                 text.set_visible(False)
+
+
+class strip_text_y_right(MixinSequenceOfValues):
+    """
+    Facet labels on the right
+
+    Parameters
+    ----------
+    theme_element : element_text
+    """
+
+    def apply_figure(self, figure: Figure, targets: ThemeTargets):
+        super().apply_figure(figure, targets)
+        if texts := targets.strip_text_y_right:
+            self.set(texts, self._get_properties(omit=("margin", "ha", "va")))
+
+    def blank_figure(self, figure: Figure, targets: ThemeTargets):
+        super().blank_figure(figure, targets)
+        if texts := targets.strip_text_y_right:
+            for text in texts:
+                text.set_visible(False)
+
+
+class strip_text_y(strip_text_y_left, strip_text_y_right):
+    """
+    Facet labels along the vertical axis
+
+    Parameters
+    ----------
+    theme_element : element_text
+    """
 
 
 class strip_text(strip_text_x, strip_text_y):

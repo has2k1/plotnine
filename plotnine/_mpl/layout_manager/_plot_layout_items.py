@@ -130,8 +130,16 @@ class PlotLayoutItems:
         self.plot_subtitle: Text | None = get("plot_subtitle")
         self.plot_title: Text | None = get("plot_title")
         self.plot_tag: Text | None = get("plot_tag")
-        self.strip_text_x: list[StripText] | None = get("strip_text_x")
-        self.strip_text_y: list[StripText] | None = get("strip_text_y")
+        self.strip_text_x_top: list[StripText] | None = get("strip_text_x_top")
+        self.strip_text_x_bottom: list[StripText] | None = get(
+            "strip_text_x_bottom"
+        )
+        self.strip_text_y_left: list[StripText] | None = get(
+            "strip_text_y_left"
+        )
+        self.strip_text_y_right: list[StripText] | None = get(
+            "strip_text_y_right"
+        )
 
         self.plot_footer_background: Rectangle | None = get(
             "plot_footer_background"
@@ -280,17 +288,16 @@ class PlotLayoutItems:
             x0 += width * sizing.strip_align
         return Bbox.from_bounds(x0, y0, width, height)
 
-    def strip_text_x_extra_height(self, position: StripPosition) -> float:
+    def strip_text_x(self, position: StripPosition) -> float:
         """
         Height taken up by the top strips that is outside the panels
         """
-        if not self.strip_text_x:
+        strips = getattr(self, f"strip_text_x_{position}")
+        if not strips:
             return 0
 
         heights = []
-        for st in self.strip_text_x:
-            if st.position != position:
-                continue
+        for st in strips:
             strip_align = self._strip_sizing(st.position).strip_align
             if st.patch.get_visible():
                 # The patch bounds are not yet set, so derive its natural
@@ -302,17 +309,16 @@ class PlotLayoutItems:
 
         return max(heights) if heights else 0
 
-    def strip_text_y_extra_width(self, position: StripPosition) -> float:
+    def strip_text_y(self, position: StripPosition) -> float:
         """
         Width taken up by the right strips that is outside the panels
         """
-        if not self.strip_text_y:
+        strips = getattr(self, f"strip_text_y_{position}")
+        if not strips:
             return 0
 
         widths = []
-        for st in self.strip_text_y:
-            if st.position != position:
-                continue
+        for st in strips:
             strip_align = self._strip_sizing(st.position).strip_align
             if st.patch.get_visible():
                 # The patch bounds are not yet set, so derive its natural
@@ -698,8 +704,8 @@ class PlotLayoutItems:
             ],
             ...,
         ] = (
-            (self.strip_text_x or [], "height", spaces.t),
-            (self.strip_text_y or [], "width", spaces.r),
+            (self.strip_text_x_top or [], "height", spaces.t),
+            (self.strip_text_y_right or [], "width", spaces.r),
         )
         for group, breadth, space in groups:
             if not group:
