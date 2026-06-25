@@ -122,7 +122,7 @@ class facet:
         allowed_scales = ["fixed", "free", "free_x", "free_y"]
         if scales not in allowed_scales:
             raise ValueError(
-                "Argument `scales` must be one of {allowed_scales}."
+                f"Argument `scales` must be one of {allowed_scales}."
             )
         self.free = {
             "x": scales in ("free_x", "free"),
