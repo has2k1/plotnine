@@ -50,7 +50,7 @@ if TYPE_CHECKING:
 
     from ._composition_layout_items import CompositionLayoutItems
     from ._composition_side_space import CompositionSideSpaces
-    from ._plot_side_space import PlotSideSpaces, _plot_side_space
+    from ._plot_side_space import PlotSideSpaces
 
     AxesLocation: TypeAlias = Literal[
         "all", "first_row", "last_row", "first_col", "last_col"
@@ -716,24 +716,21 @@ class PlotLayoutItems:
         When `strip_placement="outside"` and a moved axis shares the
         strip's side, the strip is shifted outward to clear the axis.
         """
-        groups: tuple[
-            tuple[
-                list[StripText],
-                Literal["height", "width"],
-                _plot_side_space,
-            ],
-            ...,
-        ] = (
-            (self.strip_text_x_top or [], "height", spaces.t),
-            (self.strip_text_y_right or [], "width", spaces.r),
+        theme = self.plot.theme
+        groups = (
+            (self.strip_text_x_top or [], spaces.t),
+            (self.strip_text_x_bottom or [], spaces.b),
+            (self.strip_text_y_right or [], spaces.r),
+            (self.strip_text_y_left or [], spaces.l),
         )
-        for group, breadth, space in groups:
+        for group, space in groups:
             if not group:
                 continue
             offset = space.strip_band_offset("strip")
+            breadth = StripSpec.make(group[0], theme).breadth
             scales = self._strip_breadth_scales(group, breadth)
             for st, scale in zip(group, scales):
-                spec = StripSpec.make(st, self.plot.theme)
+                spec = StripSpec.make(st, theme)
                 x0, y0, w, h = self.strip_patch_bbox(st, scale).bounds
                 if spec.axis == "x":
                     y0 += spec.sign * offset
