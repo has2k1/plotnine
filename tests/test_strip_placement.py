@@ -85,3 +85,27 @@ def test_facet_grid_top_right_outside():
         + theme(strip_placement="outside")
     )
     assert p1 == "facet_grid_top_right_outside"
+
+
+def test_spine_set_position_outward():
+    # Pins the private-API contract that _spine_set_position_outward relies
+    # on to move a spine without matplotlib's Spine.set_position(), which
+    # would call axis.reset_ticks() and drop per-tick theme styling.
+    # Verified against matplotlib 3.11; revisit if this test fails after an
+    # mpl upgrade.
+    from plotnine._mpl.layout_manager._plot_layout_items import (
+        _spine_set_position_outward,
+    )
+
+    plot = p + facet_wrap("cyl")
+    plot.draw_test()
+    ax = plot.axs[0]
+    spine = ax.spines["top"]
+
+    _spine_set_position_outward(spine, ax.xaxis, 7.0)
+
+    assert spine.get_position() == ("outward", 7.0)
+    ticks = (*ax.xaxis.get_major_ticks(), *ax.xaxis.get_minor_ticks())
+    assert ticks  # the axis actually has ticks to re-point
+    for tick in ticks:
+        assert tick.tick2line._transform is spine._transform
