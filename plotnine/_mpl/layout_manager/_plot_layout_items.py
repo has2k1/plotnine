@@ -112,7 +112,7 @@ class StripSpec:
     @classmethod
     def make(cls, strip_text: StripText, theme: theme) -> StripSpec:
         """
-        Resolve the layout spec for one strip from the theme
+        The layout spec for one strip, given the plot theme
         """
         position = strip_text.position
         g: Literal["x", "y"] = "y" if position in ("left", "right") else "x"
@@ -698,8 +698,8 @@ class PlotLayoutItems:
         Per-strip factor that equalises the breadth across a group
 
         Each strip's natural breadth is grown to match the largest in
-        the group, so the backgrounds share a common height (top strips)
-        or width (right strips).
+        the group, so the backgrounds share a common height (x-axis strips)
+        or width (y-axis strips).
         """
         natural = [getattr(self.strip_patch_bbox(st), breadth) for st in group]
         largest = max(natural)
@@ -747,7 +747,7 @@ class PlotLayoutItems:
         expand: bool,
     ) -> float:
         """
-        Centre coordinate of strip text justified within one patch axis
+        Axes-space centre of strip text justified within one patch axis
 
         `expand` true means the patch was sized independently of the text
         (the along axis), so the margins widen the justified content; false
