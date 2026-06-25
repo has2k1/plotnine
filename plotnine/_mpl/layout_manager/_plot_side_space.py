@@ -160,16 +160,21 @@ class _plot_side_space(_side_space):
         """
         Outward offset for one member of a shared strip/axis band
 
-        When a moved axis and a facet strip occupy the same side, the band
-        is ordered, from the panel outward, as the axis ticks and labels,
-        the strip, and the axis title. `strip_placement` decides whether
-        the strip comes before or after the ticks and labels:
+        When a moved axis and a facet strip occupy the same side, the band is
+        ordered from the panel outward. `strip_placement` chooses the order:
 
-        - `"inside"`: panel, strip, ticks and labels, title.
-        - `"outside"`: panel, ticks and labels, strip, title.
+            "inside":   panel | strip | ticks+labels | title
+            "outside":  panel | ticks+labels | strip | title
 
-        `member` is `"strip"` or `"axis"` (the ticks and labels).
-        The offset is zero when the side has no such collision.
+        `member` is `"strip"` (the strip background + text) or `"axis"` (the
+        ticks and tick labels). The offset is produced here in figure space and
+        consumed per artist in its own coordinate system: the title in figure
+        space, the tick labels in axes fractions, the spine in points.
+
+        The offset is zero unless the side has both a strip and a moved axis.
+        Bottom/left sides leave `_axis_primary_extent` at zero (a strip there
+        would share the side with the *default* axis, which the facet API does
+        not yet expose), so this returns zero for them.
         """
         strip = self.strip_text
         primary = self._axis_primary_extent
@@ -437,7 +442,7 @@ class right_space(_plot_side_space):
     @property
     def axis_title_clearance(self) -> float:
         """
-        The distance between the axis title and the panel
+        Axis-title-to-panel clearance, excluding any facet strip
         """
         # The strip sits outside the axis title's alignment band, so it
         # does not count toward the title-to-panel clearance used to
@@ -602,7 +607,7 @@ class top_space(_plot_side_space):
     @property
     def axis_title_clearance(self) -> float:
         """
-        The distance between the axis title and the panel
+        Axis-title-to-panel clearance, excluding any facet strip
         """
         # The strip sits outside the axis title's alignment band, so it
         # does not count toward the title-to-panel clearance used to
