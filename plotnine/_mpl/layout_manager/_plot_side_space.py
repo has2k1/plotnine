@@ -380,7 +380,7 @@ class right_space(_plot_side_space):
     margin_alignment: float = 0
     legend: float = 0
     legend_box_spacing: float = 0
-    strip_text_y_extra_width: float = 0
+    strip_text: float = 0
     axis_title: float = 0
     axis_title_margin: float = 0
     """Margin to the left of the y-axis title (panel-facing side)"""
@@ -407,7 +407,7 @@ class right_space(_plot_side_space):
             self.legend = self.legend_width
             self.legend_box_spacing = theme.getp("legend_box_spacing")
 
-        self.strip_text_y_extra_width = items.strip_text_y_extra_width("right")
+        self.strip_text = items.strip_text_y_extra_width("right")
 
         # Space consumed by a y-axis on the right. The text<->panel gap is the
         # left margin of the y text/title (the edge facing the panel to the
@@ -437,7 +437,7 @@ class right_space(_plot_side_space):
 
     @property
     def _strip_band_extent(self) -> float:
-        return self.strip_text_y_extra_width
+        return self.strip_text
 
     @property
     def _axis_primary_extent(self) -> float:
@@ -525,7 +525,7 @@ class top_space(_plot_side_space):
     plot_subtitle_margin_bottom: float = 0
     legend: float = 0
     legend_box_spacing: float = 0
-    strip_text_x_extra_height: float = 0
+    strip_text: float = 0
     axis_title: float = 0
     axis_title_margin: float = 0
     """Margin below the x-axis title (panel-facing side)"""
@@ -566,7 +566,7 @@ class top_space(_plot_side_space):
             self.legend = self.legend_height
             self.legend_box_spacing = theme.getp("legend_box_spacing") * F
 
-        self.strip_text_x_extra_height = items.strip_text_x_extra_height("top")
+        self.strip_text = items.strip_text_x_extra_height("top")
 
         # Space consumed by an x-axis on the top. The text<->panel gap is the
         # bottom margin of the x text/title (the edge facing the panel below).
@@ -595,7 +595,7 @@ class top_space(_plot_side_space):
 
     @property
     def _strip_band_extent(self) -> float:
-        return self.strip_text_x_extra_height
+        return self.strip_text
 
     @property
     def _axis_primary_extent(self) -> float:
@@ -1201,7 +1201,7 @@ class PlotSideSpaces:
         # Only interested in the proportion of the strip that
         # does not overlap with the panel
         if strip_align_x > -1:
-            self.sh += self.t.strip_text_x_extra_height * (1 + strip_align_x)
+            self.sh += self.t.strip_text * (1 + strip_align_x)
 
         if facet.free["x"]:
             for side in ("bottom", "top"):
