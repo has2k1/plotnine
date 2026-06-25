@@ -153,11 +153,10 @@ class _plot_side_space(_side_space):
         """
         return 0
 
+    # Typed default so strip_band_offset type-checks; concrete sides redeclare.
     strip_text: float = 0
 
-    def strip_band_offset(
-        self, member: Literal["strip", "axis", "title"]
-    ) -> float:
+    def strip_band_offset(self, member: Literal["strip", "axis"]) -> float:
         """
         Outward offset for one member of a shared strip/axis band
 
@@ -169,8 +168,8 @@ class _plot_side_space(_side_space):
         - `"inside"`: panel, strip, ticks and labels, title.
         - `"outside"`: panel, ticks and labels, strip, title.
 
-        `member` is `"strip"`, `"axis"` (the ticks and labels) or
-        `"title"`. The offset is zero when the side has no such collision.
+        `member` is `"strip"` or `"axis"` (the ticks and labels).
+        The offset is zero when the side has no such collision.
         """
         strip = self.strip_text
         primary = self._axis_primary_extent
@@ -179,9 +178,8 @@ class _plot_side_space(_side_space):
         placement = self.items.plot.theme.getp("strip_placement")
         if placement == "inside":
             return 0 if member == "strip" else strip
-        if member == "axis":
-            return 0
-        return primary if member == "strip" else strip
+        # "outside"
+        return primary if member == "strip" else 0
 
 
 class left_space(_plot_side_space):
@@ -376,7 +374,6 @@ class right_space(_plot_side_space):
     margin_alignment: float = 0
     legend: float = 0
     legend_box_spacing: float = 0
-    strip_text: float = 0
     axis_title: float = 0
     axis_title_margin: float = 0
     """Margin to the left of the y-axis title (panel-facing side)"""
@@ -385,6 +382,8 @@ class right_space(_plot_side_space):
     axis_text_margin: float = 0
     """Margin to the left of the y-axis text (panel-facing side)"""
     axis_ticks: float = 0
+    strip_text: float = 0
+    """Outward extent of a right facet strip (next to the panel by default)"""
 
     def _calculate(self):
         items = self.items
@@ -434,6 +433,16 @@ class right_space(_plot_side_space):
     @property
     def _axis_primary_extent(self) -> float:
         return self.sum_incl("axis_ticks") - self.sum_upto("axis_text")
+
+    @property
+    def axis_title_clearance(self) -> float:
+        """
+        The distance between the axis title and the panel
+        """
+        # The strip sits outside the axis title's alignment band, so it
+        # does not count toward the title-to-panel clearance used to
+        # align axis titles across a composition.
+        return super().axis_title_clearance - self.strip_text
 
     @property
     def offset(self):
@@ -517,7 +526,6 @@ class top_space(_plot_side_space):
     plot_subtitle_margin_bottom: float = 0
     legend: float = 0
     legend_box_spacing: float = 0
-    strip_text: float = 0
     axis_title: float = 0
     axis_title_margin: float = 0
     """Margin below the x-axis title (panel-facing side)"""
@@ -526,6 +534,8 @@ class top_space(_plot_side_space):
     axis_text_margin: float = 0
     """Margin below the x-axis text (panel-facing side)"""
     axis_ticks: float = 0
+    strip_text: float = 0
+    """Outward extent of a top facet strip (next to the panel by default)"""
 
     def _calculate(self):
         items = self.items
@@ -588,6 +598,16 @@ class top_space(_plot_side_space):
     @property
     def _axis_primary_extent(self) -> float:
         return self.sum_incl("axis_ticks") - self.sum_upto("axis_text")
+
+    @property
+    def axis_title_clearance(self) -> float:
+        """
+        The distance between the axis title and the panel
+        """
+        # The strip sits outside the axis title's alignment band, so it
+        # does not count toward the title-to-panel clearance used to
+        # align axis titles across a composition.
+        return super().axis_title_clearance - self.strip_text
 
     @property
     def offset(self) -> float:
