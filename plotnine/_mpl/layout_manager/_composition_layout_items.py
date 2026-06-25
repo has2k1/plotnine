@@ -58,8 +58,8 @@ class CompositionLayoutItems:
         Move the annotations and legends to their final positions
         """
         from ._plot_layout_items import (
+            _position_legends,
             _position_plot_labels,
-            set_legends_position,
         )
 
         # Only the root composition can have annotations (labels).
@@ -69,4 +69,4 @@ class CompositionLayoutItems:
                 spaces.cmp.figure, self.cmp.theme, spaces, self
             )
         if self.legends:
-            set_legends_position(self.legends, spaces)
+            _position_legends(self.legends, spaces)
