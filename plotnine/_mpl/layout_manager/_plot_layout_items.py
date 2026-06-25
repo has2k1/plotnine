@@ -749,7 +749,6 @@ class PlotLayoutItems:
                 + (m.l * line_height)
                 + text_bbox.width / 2
             )
-            # Setting the y position based on the bounding box is wrong
             y = (
                 rel_position(
                     rel_y,

@@ -52,8 +52,6 @@ class StripText(Text):
             clip_on=False,
             zorder=2.2,
         )
-        # The layout manager groups patches by the side they sit on
-        self.patch.position = position  # pyright: ignore[reportAttributeAccessIssue]
 
     # TODO: This should really be part of the unit conversions in the
     # margin class.
