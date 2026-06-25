@@ -143,15 +143,6 @@ class _plot_side_space(_side_space):
             raise PlotnineError("Side has no axis title") from err
 
     @property
-    def _strip_band_extent(self) -> float:
-        """
-        Outward extent of a facet strip on this side, figure space
-
-        Zero on sides that never carry a strip.
-        """
-        return 0
-
-    @property
     def _axis_primary_extent(self) -> float:
         """
         Outward extent of a moved axis's ticks and tick labels, figure space
@@ -161,6 +152,8 @@ class _plot_side_space(_side_space):
         position.
         """
         return 0
+
+    strip_text: float = 0
 
     def strip_band_offset(
         self, member: Literal["strip", "axis", "title"]
@@ -179,7 +172,7 @@ class _plot_side_space(_side_space):
         `member` is `"strip"`, `"axis"` (the ticks and labels) or
         `"title"`. The offset is zero when the side has no such collision.
         """
-        strip = self._strip_band_extent
+        strip = self.strip_text
         primary = self._axis_primary_extent
         if not (strip and primary):
             return 0
@@ -260,6 +253,8 @@ class left_space(_plot_side_space):
     axis_text_margin: float = 0
     """Margin to the right of the y-axis text (panel-facing side)"""
     axis_ticks: float = 0
+    strip_text: float = 0
+    """Outward extent of a left facet strip"""
 
     def _calculate(self):
         theme = self.items.plot.theme
@@ -295,6 +290,7 @@ class left_space(_plot_side_space):
             )
 
         self.axis_ticks = items.axis_ticks_y_left
+        self.strip_text = items.strip_text_y("left")
 
         # Adjust plot_margin to make room for ylabels that protude well
         # beyond the axes
@@ -434,10 +430,6 @@ class right_space(_plot_side_space):
         adjustment = protrusion - (self.total - self.plot_margin)
         if adjustment > 0:
             self.plot_margin += adjustment
-
-    @property
-    def _strip_band_extent(self) -> float:
-        return self.strip_text
 
     @property
     def _axis_primary_extent(self) -> float:
@@ -594,10 +586,6 @@ class top_space(_plot_side_space):
             self.plot_margin += adjustment
 
     @property
-    def _strip_band_extent(self) -> float:
-        return self.strip_text
-
-    @property
     def _axis_primary_extent(self) -> float:
         return self.sum_incl("axis_ticks") - self.sum_upto("axis_text")
 
@@ -702,6 +690,8 @@ class bottom_space(_plot_side_space):
     axis_text_margin: float = 0
     """Margin above the x-axis text (panel-facing side)"""
     axis_ticks: float = 0
+    strip_text: float = 0
+    """Outward extent of a bottom facet strip"""
 
     def _calculate(self):
         items = self.items
@@ -750,6 +740,7 @@ class bottom_space(_plot_side_space):
                 MARGIN_SIDE["bottom"],
             )
         self.axis_ticks = items.axis_ticks_x_bottom
+        self.strip_text = items.strip_text_x("bottom")
 
         # Adjust plot_margin to make room for ylabels that protude well
         # beyond the axes
