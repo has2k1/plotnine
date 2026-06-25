@@ -25,8 +25,6 @@ class ThemeTargets:
     the figure or the axes.
     """
 
-    axis_title_x: Optional[Text] = None
-    axis_title_y: Optional[Text] = None
     axis_title_x_top: Optional[Text] = None
     axis_title_x_bottom: Optional[Text] = None
     axis_title_y_left: Optional[Text] = None
