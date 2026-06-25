@@ -593,18 +593,15 @@ class ggplot:
             self.layout.set_xy_labels(self.labels)
         )
 
-        # The axis title is registered under a per-side target named for the
-        # axis position. The legacy axis_title_x/_y references point at the
-        # same artist so existing layout/theme code keeps working.
+        # The axis title is registered under a per-side target named for
+        # its axis position.
         pp = self.layout.panel_params[0]
         if labels.x:
             t = self.figure.add_artist(Text(text=labels.x))
-            targets.axis_title_x = t
             setattr(targets, f"axis_title_x_{pp.x.position}", t)
 
         if labels.y:
             t = self.figure.add_artist(Text(text=labels.y))
-            targets.axis_title_y = t
             setattr(targets, f"axis_title_y_{pp.y.position}", t)
 
     def _draw_watermarks(self):

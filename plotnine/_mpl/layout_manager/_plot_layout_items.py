@@ -157,8 +157,6 @@ class PlotLayoutItems:
         self.plot = plot
         self.geometry = ArtistGeometry(self.plot.figure)
 
-        self.axis_title_x: Text | None = get("axis_title_x")
-        self.axis_title_y: Text | None = get("axis_title_y")
         self.axis_title_x_bottom: Text | None = get("axis_title_x_bottom")
         self.axis_title_x_top: Text | None = get("axis_title_x_top")
         self.axis_title_y_left: Text | None = get("axis_title_y_left")
