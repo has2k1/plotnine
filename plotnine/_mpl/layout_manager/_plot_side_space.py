@@ -245,8 +245,9 @@ class left_space(_plot_side_space):
     """
     legend: float = 0
     legend_box_spacing: float = 0
-    axis_title_y: float = 0
-    axis_title_y_margin_right: float = 0
+    axis_title: float = 0
+    axis_title_margin: float = 0
+    """Margin to the right of the y-axis title (panel-facing side)"""
     axis_title_alignment: float = 0
     """
     Space added to align the axis title with others in a composition
@@ -255,9 +256,10 @@ class left_space(_plot_side_space):
     the difference between the largest and smallest axis_title_clearance
     among the items in the composition.
     """
-    axis_text_y: float = 0
-    axis_text_y_margin_right: float = 0
-    axis_ticks_y: float = 0
+    axis_text: float = 0
+    axis_text_margin: float = 0
+    """Margin to the right of the y-axis text (panel-facing side)"""
+    axis_ticks: float = 0
 
     def _calculate(self):
         theme = self.items.plot.theme
@@ -279,20 +281,20 @@ class left_space(_plot_side_space):
         # The text<->panel gap is the right margin of the y text/title; it
         # sits on the panel-facing (right) side of the left axis.
         if items.axis_title_y_left:
-            self.axis_title_y = geometry.width(items.axis_title_y_left)
-            self.axis_title_y_margin_right = getattr(
+            self.axis_title = geometry.width(items.axis_title_y_left)
+            self.axis_title_margin = getattr(
                 theme.get_margin("axis_title_y_left").fig,
                 MARGIN_SIDE["left"],
             )
 
-        self.axis_text_y = items.axis_text_y_left
-        if self.axis_text_y:
-            self.axis_text_y_margin_right = getattr(
+        self.axis_text = items.axis_text_y_left
+        if self.axis_text:
+            self.axis_text_margin = getattr(
                 theme.get_margin("axis_text_y_left").fig,
                 MARGIN_SIDE["left"],
             )
 
-        self.axis_ticks_y = items.axis_ticks_y_left
+        self.axis_ticks = items.axis_ticks_y_left
 
         # Adjust plot_margin to make room for ylabels that protude well
         # beyond the axes
@@ -379,12 +381,14 @@ class right_space(_plot_side_space):
     legend: float = 0
     legend_box_spacing: float = 0
     strip_text_y_extra_width: float = 0
-    axis_title_y: float = 0
-    axis_title_y_margin_left: float = 0
+    axis_title: float = 0
+    axis_title_margin: float = 0
+    """Margin to the left of the y-axis title (panel-facing side)"""
     axis_title_alignment: float = 0
-    axis_text_y: float = 0
-    axis_text_y_margin_left: float = 0
-    axis_ticks_y: float = 0
+    axis_text: float = 0
+    axis_text_margin: float = 0
+    """Margin to the left of the y-axis text (panel-facing side)"""
+    axis_ticks: float = 0
 
     def _calculate(self):
         items = self.items
@@ -409,19 +413,19 @@ class right_space(_plot_side_space):
         # left margin of the y text/title (the edge facing the panel to the
         # left).
         if items.axis_title_y_right:
-            self.axis_title_y = geometry.width(items.axis_title_y_right)
-            self.axis_title_y_margin_left = getattr(
+            self.axis_title = geometry.width(items.axis_title_y_right)
+            self.axis_title_margin = getattr(
                 theme.get_margin("axis_title_y_right").fig,
                 MARGIN_SIDE["right"],
             )
 
-        self.axis_text_y = items.axis_text_y_right
-        if self.axis_text_y:
-            self.axis_text_y_margin_left = getattr(
+        self.axis_text = items.axis_text_y_right
+        if self.axis_text:
+            self.axis_text_margin = getattr(
                 theme.get_margin("axis_text_y_right").fig,
                 MARGIN_SIDE["right"],
             )
-        self.axis_ticks_y = items.axis_ticks_y_right
+        self.axis_ticks = items.axis_ticks_y_right
 
         # Adjust plot_margin to make room for ylabels that protude well
         # beyond the axes
@@ -437,7 +441,7 @@ class right_space(_plot_side_space):
 
     @property
     def _axis_primary_extent(self) -> float:
-        return self.sum_incl("axis_ticks_y") - self.sum_upto("axis_text_y")
+        return self.sum_incl("axis_ticks") - self.sum_upto("axis_text")
 
     @property
     def offset(self):
@@ -522,12 +526,14 @@ class top_space(_plot_side_space):
     legend: float = 0
     legend_box_spacing: float = 0
     strip_text_x_extra_height: float = 0
-    axis_title_x: float = 0
-    axis_title_x_margin_bottom: float = 0
+    axis_title: float = 0
+    axis_title_margin: float = 0
+    """Margin below the x-axis title (panel-facing side)"""
     axis_title_alignment: float = 0
-    axis_text_x: float = 0
-    axis_text_x_margin_bottom: float = 0
-    axis_ticks_x: float = 0
+    axis_text: float = 0
+    axis_text_margin: float = 0
+    """Margin below the x-axis text (panel-facing side)"""
+    axis_ticks: float = 0
 
     def _calculate(self):
         items = self.items
@@ -565,19 +571,19 @@ class top_space(_plot_side_space):
         # Space consumed by an x-axis on the top. The text<->panel gap is the
         # bottom margin of the x text/title (the edge facing the panel below).
         if items.axis_title_x_top:
-            self.axis_title_x = geometry.height(items.axis_title_x_top)
-            self.axis_title_x_margin_bottom = getattr(
+            self.axis_title = geometry.height(items.axis_title_x_top)
+            self.axis_title_margin = getattr(
                 theme.get_margin("axis_title_x_top").fig,
                 MARGIN_SIDE["top"],
             )
 
-        self.axis_text_x = items.axis_text_x_top
-        if self.axis_text_x:
-            self.axis_text_x_margin_bottom = getattr(
+        self.axis_text = items.axis_text_x_top
+        if self.axis_text:
+            self.axis_text_margin = getattr(
                 theme.get_margin("axis_text_x_top").fig,
                 MARGIN_SIDE["top"],
             )
-        self.axis_ticks_x = items.axis_ticks_x_top
+        self.axis_ticks = items.axis_ticks_x_top
 
         # Adjust plot_margin to make room for ylabels that protude well
         # beyond the axes
@@ -593,7 +599,7 @@ class top_space(_plot_side_space):
 
     @property
     def _axis_primary_extent(self) -> float:
-        return self.sum_incl("axis_ticks_x") - self.sum_upto("axis_text_x")
+        return self.sum_incl("axis_ticks") - self.sum_upto("axis_text")
 
     @property
     def offset(self) -> float:
@@ -680,8 +686,9 @@ class bottom_space(_plot_side_space):
     plot_caption_margin_top: float = 0
     legend: float = 0
     legend_box_spacing: float = 0
-    axis_title_x: float = 0
-    axis_title_x_margin_top: float = 0
+    axis_title: float = 0
+    axis_title_margin: float = 0
+    """Margin above the x-axis title (panel-facing side)"""
     axis_title_alignment: float = 0
     """
     Space added to align the axis title with others in a composition
@@ -691,9 +698,10 @@ class bottom_space(_plot_side_space):
     composition. It's amount is the difference in height between this axis
     text (and it's margins) and the tallest axis text (and it's margin).
     """
-    axis_text_x: float = 0
-    axis_text_x_margin_top: float = 0
-    axis_ticks_x: float = 0
+    axis_text: float = 0
+    axis_text_margin: float = 0
+    """Margin above the x-axis text (panel-facing side)"""
+    axis_ticks: float = 0
 
     def _calculate(self):
         items = self.items
@@ -729,19 +737,19 @@ class bottom_space(_plot_side_space):
         # The text<->panel gap is the top margin of the x text/title; it
         # sits on the panel-facing (top) side of the bottom axis.
         if items.axis_title_x_bottom:
-            self.axis_title_x = geometry.height(items.axis_title_x_bottom)
-            self.axis_title_x_margin_top = getattr(
+            self.axis_title = geometry.height(items.axis_title_x_bottom)
+            self.axis_title_margin = getattr(
                 theme.get_margin("axis_title_x_bottom").fig,
                 MARGIN_SIDE["bottom"],
             )
 
-        self.axis_text_x = items.axis_text_x_bottom
-        if self.axis_text_x:
-            self.axis_text_x_margin_top = getattr(
+        self.axis_text = items.axis_text_x_bottom
+        if self.axis_text:
+            self.axis_text_margin = getattr(
                 theme.get_margin("axis_text_x_bottom").fig,
                 MARGIN_SIDE["bottom"],
             )
-        self.axis_ticks_x = items.axis_ticks_x_bottom
+        self.axis_ticks = items.axis_ticks_x_bottom
 
         # Adjust plot_margin to make room for ylabels that protude well
         # beyond the axes

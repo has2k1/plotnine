@@ -504,24 +504,24 @@ class PlotLayoutItems:
 
         if self.axis_title_x_bottom:
             ha = theme.getp(("axis_title_x_bottom", "ha"), "center")
-            self.axis_title_x_bottom.set_y(spaces.b.y1("axis_title_x"))
+            self.axis_title_x_bottom.set_y(spaces.b.y1("axis_title"))
             justify.horizontally_about(self.axis_title_x_bottom, ha, "panel")
 
         if self.axis_title_x_top:
             ha = theme.getp(("axis_title_x_top", "ha"), "center")
             offset = spaces.t.strip_band_offset("title")
-            self.axis_title_x_top.set_y(spaces.t.y1("axis_title_x") + offset)
+            self.axis_title_x_top.set_y(spaces.t.y1("axis_title") + offset)
             justify.horizontally_about(self.axis_title_x_top, ha, "panel")
 
         if self.axis_title_y_left:
             va = theme.getp(("axis_title_y_left", "va"), "center")
-            self.axis_title_y_left.set_x(spaces.l.x1("axis_title_y"))
+            self.axis_title_y_left.set_x(spaces.l.x1("axis_title"))
             justify.vertically_about(self.axis_title_y_left, va, "panel")
 
         if self.axis_title_y_right:
             va = theme.getp(("axis_title_y_right", "va"), "center")
             offset = spaces.r.strip_band_offset("title")
-            self.axis_title_y_right.set_x(spaces.r.x1("axis_title_y") + offset)
+            self.axis_title_y_right.set_x(spaces.r.x1("axis_title") + offset)
             justify.vertically_about(self.axis_title_y_right, va, "panel")
 
         if self.legends:
