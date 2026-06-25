@@ -77,7 +77,7 @@ FigureFormat: TypeAlias = Literal["png", "retina", "jpeg", "jpg", "svg", "pdf"]
 # Facet space
 FacetSpaceRatios: TypeAlias = dict[Literal["x", "y"], Sequence[float]]
 
-StripPosition: TypeAlias = Literal["top", "right"]
+StripPosition: TypeAlias = Literal["top", "right", "bottom", "left"]
 
 # Scales
 

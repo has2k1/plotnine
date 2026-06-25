@@ -407,7 +407,7 @@ class right_space(_plot_side_space):
             self.legend = self.legend_width
             self.legend_box_spacing = theme.getp("legend_box_spacing")
 
-        self.strip_text = items.strip_text_y_extra_width("right")
+        self.strip_text = items.strip_text_y("right")
 
         # Space consumed by a y-axis on the right. The text<->panel gap is the
         # left margin of the y text/title (the edge facing the panel to the
@@ -566,7 +566,7 @@ class top_space(_plot_side_space):
             self.legend = self.legend_height
             self.legend_box_spacing = theme.getp("legend_box_spacing") * F
 
-        self.strip_text = items.strip_text_x_extra_height("top")
+        self.strip_text = items.strip_text_x("top")
 
         # Space consumed by an x-axis on the top. The text<->panel gap is the
         # bottom margin of the x text/title (the edge facing the panel below).

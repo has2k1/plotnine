@@ -49,5 +49,7 @@ class ThemeTargets:
     plot_footer_line: Optional[Line2D] = None
     strip_background_x: list[FancyBboxPatch] = field(default_factory=list)
     strip_background_y: list[FancyBboxPatch] = field(default_factory=list)
-    strip_text_x: list[StripText] = field(default_factory=list)
-    strip_text_y: list[StripText] = field(default_factory=list)
+    strip_text_x_top: list[StripText] = field(default_factory=list)
+    strip_text_x_bottom: list[StripText] = field(default_factory=list)
+    strip_text_y_left: list[StripText] = field(default_factory=list)
+    strip_text_y_right: list[StripText] = field(default_factory=list)
