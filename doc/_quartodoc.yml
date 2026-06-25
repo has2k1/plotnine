@@ -402,10 +402,18 @@ quartodoc:
         - aspect_ratio
         - axis_line
         - axis_line_x
+        - axis_line_x_bottom
+        - axis_line_x_top
         - axis_line_y
+        - axis_line_y_left
+        - axis_line_y_right
         - axis_text
         - axis_text_x
+        - axis_text_x_bottom
+        - axis_text_x_top
         - axis_text_y
+        - axis_text_y_left
+        - axis_text_y_right
         - axis_ticks
         - axis_ticks_length
         - axis_ticks_length_major
@@ -416,15 +424,27 @@ quartodoc:
         - axis_ticks_length_minor_y
         - axis_ticks_major
         - axis_ticks_major_x
+        - axis_ticks_major_x_bottom
+        - axis_ticks_major_x_top
         - axis_ticks_major_y
+        - axis_ticks_major_y_left
+        - axis_ticks_major_y_right
         - axis_ticks_minor
         - axis_ticks_minor_x
+        - axis_ticks_minor_x_bottom
+        - axis_ticks_minor_x_top
         - axis_ticks_minor_y
+        - axis_ticks_minor_y_left
+        - axis_ticks_minor_y_right
         - axis_ticks_x
         - axis_ticks_y
         - axis_title
         - axis_title_x
+        - axis_title_x_bottom
+        - axis_title_x_top
         - axis_title_y
+        - axis_title_y_left
+        - axis_title_y_right
         - dpi
         - figure_size
         - legend_background
@@ -499,9 +519,14 @@ quartodoc:
         - strip_background
         - strip_background_x
         - strip_background_y
+        - strip_placement
         - strip_text
         - strip_text_x
+        - strip_text_x_bottom
+        - strip_text_x_top
         - strip_text_y
+        - strip_text_y_left
+        - strip_text_y_right
         - svg_usefonts
         - text
         - title
