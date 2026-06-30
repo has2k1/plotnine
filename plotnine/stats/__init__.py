@@ -2,6 +2,7 @@
 Statistics
 """
 
+from .stat_beeswarm import stat_beeswarm
 from .stat_bin import stat_bin
 from .stat_bin_2d import stat_bin2d, stat_bin_2d
 from .stat_bindot import stat_bindot
@@ -27,6 +28,7 @@ from .stat_unique import stat_unique
 from .stat_ydensity import stat_ydensity
 
 __all__ = (
+    "stat_beeswarm",
     "stat_count",
     "stat_bin",
     "stat_bin_2d",
