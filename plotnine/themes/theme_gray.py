@@ -145,6 +145,7 @@ class theme_gray(theme):
             plot_tag_location="margin",
             plot_tag_position="topleft",
             strip_align=0,
+            strip_switch_pad=base_size / 4,
             strip_placement="inside",
             strip_background=element_rect(color="none", fill="#D9D9D9"),
             strip_background_x=element_rect(width=1),

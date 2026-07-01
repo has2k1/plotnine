@@ -2865,6 +2865,45 @@ class strip_align(strip_align_x, strip_align_y):
     """
 
 
+class strip_switch_pad_x(themeable):
+    """
+    Space between an x-axis and a strip placed beyond it on the same side
+
+    Parameters
+    ----------
+    theme_element : float
+        Size in points. Only has an effect when
+        `strip_placement="outside"` and an axis shares the strip's
+        side (top or bottom).
+    """
+
+
+class strip_switch_pad_y(themeable):
+    """
+    Space between a y-axis and a strip placed beyond it on the same side
+
+    Parameters
+    ----------
+    theme_element : float
+        Size in points. Only has an effect when
+        `strip_placement="outside"` and an axis shares the strip's
+        side (left or right).
+    """
+
+
+class strip_switch_pad(strip_switch_pad_x, strip_switch_pad_y):
+    """
+    Space between an axis and a strip placed beyond it on the same side
+
+    Parameters
+    ----------
+    theme_element : float
+        Size in points. Only has an effect when
+        `strip_placement="outside"` and an axis shares the strip's
+        side.
+    """
+
+
 class strip_placement(themeable):
     """
     Where a facet strip sits relative to an axis on the same side
