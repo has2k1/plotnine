@@ -152,6 +152,26 @@ class _plot_side_space(_side_space):
         """
         return self.sum_incl("axis_ticks") - self.sum_upto("axis_text")
 
+    def _strip_switch_pad(self, axis: Literal["x", "y"]) -> float:
+        """
+        Reserved gap between a shared axis and a strip placed beyond it
+
+        The gap is non-zero only for `strip_placement="outside"` on a
+        side that carries both a strip and an axis; otherwise zero. The
+        themeable value is in points and is returned as a fraction of
+        the relevant figure dimension (height for x strips, width for y).
+        """
+        theme = self.items.plot.theme
+        if theme.getp("strip_placement") != "outside":
+            return 0
+        strip_breadth: float = self.strip_text  # pyright: ignore[reportAttributeAccessIssue]
+        if not (strip_breadth and self._axis_ticks_and_text):
+            return 0
+        pad_pt = theme.getp(f"strip_switch_pad_{axis}") or 0
+        W, H = theme.getp("figure_size")
+        dim = H if axis == "x" else W
+        return (pad_pt / 72) / dim
+
     def strip_band_offset(self, member: Literal["strip", "axis"]) -> float:
         """
         Outward offset for one member of a shared strip/axis band
@@ -176,8 +196,9 @@ class _plot_side_space(_side_space):
         placement = self.items.plot.theme.getp("strip_placement")
         if placement == "inside":
             return 0 if member == "strip" else strip_breadth
-        # "outside"
-        return axis_breadth if member == "strip" else 0
+        # "outside": the strip clears the axis, plus the switch pad
+        pad: float = self.strip_switch_pad  # pyright: ignore[reportAttributeAccessIssue]
+        return axis_breadth + pad if member == "strip" else 0
 
 
 class left_space(_plot_side_space):
@@ -249,6 +270,8 @@ class left_space(_plot_side_space):
     axis_text_margin: float = 0
     """Margin to the right of the y-axis text (panel-facing side)"""
     axis_ticks: float = 0
+    strip_switch_pad: float = 0
+    """Gap between a shared axis and a strip beyond it (outside placement)"""
     strip_text: float = 0
     """Outward extent of a left facet strip"""
 
@@ -287,6 +310,7 @@ class left_space(_plot_side_space):
 
         self.axis_ticks = items.axis_ticks_y_left
         self.strip_text = items.strip_text_y("left")
+        self.strip_switch_pad = self._strip_switch_pad("y")
 
         # Adjust plot_margin to make room for ylabels that protude well
         # beyond the axes
@@ -380,6 +404,8 @@ class right_space(_plot_side_space):
     axis_text_margin: float = 0
     """Margin to the left of the y-axis text (panel-facing side)"""
     axis_ticks: float = 0
+    strip_switch_pad: float = 0
+    """Gap between a shared axis and a strip beyond it (outside placement)"""
     strip_text: float = 0
     """Outward extent of a right facet strip (next to the panel by default)"""
 
@@ -419,6 +445,7 @@ class right_space(_plot_side_space):
                 MARGIN_SIDE["right"],
             )
         self.axis_ticks = items.axis_ticks_y_right
+        self.strip_switch_pad = self._strip_switch_pad("y")
 
         # Adjust plot_margin to make room for ylabels that protude well
         # beyond the axes
@@ -528,6 +555,8 @@ class top_space(_plot_side_space):
     axis_text_margin: float = 0
     """Margin below the x-axis text (panel-facing side)"""
     axis_ticks: float = 0
+    strip_switch_pad: float = 0
+    """Gap between a shared axis and a strip beyond it (outside placement)"""
     strip_text: float = 0
     """Outward extent of a top facet strip (next to the panel by default)"""
 
@@ -580,6 +609,7 @@ class top_space(_plot_side_space):
                 MARGIN_SIDE["top"],
             )
         self.axis_ticks = items.axis_ticks_x_top
+        self.strip_switch_pad = self._strip_switch_pad("x")
 
         # Adjust plot_margin to make room for ylabels that protude well
         # beyond the axes
@@ -700,6 +730,8 @@ class bottom_space(_plot_side_space):
     axis_text_margin: float = 0
     """Margin above the x-axis text (panel-facing side)"""
     axis_ticks: float = 0
+    strip_switch_pad: float = 0
+    """Gap between a shared axis and a strip beyond it (outside placement)"""
     strip_text: float = 0
     """Outward extent of a bottom facet strip"""
 
@@ -751,6 +783,7 @@ class bottom_space(_plot_side_space):
             )
         self.axis_ticks = items.axis_ticks_x_bottom
         self.strip_text = items.strip_text_x("bottom")
+        self.strip_switch_pad = self._strip_switch_pad("x")
 
         # Adjust plot_margin to make room for ylabels that protude well
         # beyond the axes
