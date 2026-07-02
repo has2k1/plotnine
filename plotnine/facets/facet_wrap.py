@@ -24,6 +24,7 @@ if typing.TYPE_CHECKING:
     from matplotlib.axes import Axes
 
     from plotnine.iapi import layout_details
+    from plotnine.typing import StripPosition
 
     from ..scales.scales import Scales
 
@@ -64,6 +65,9 @@ class facet_wrap(facet):
     dir :
         Direction in which to layout the panels. `h` for
         horizontal and `v` for vertical.
+    strip_position :
+        Side of each panel on which to draw the strip. One of
+        `["top", "bottom", "left", "right"]`{.py}.
     """
 
     def __init__(
@@ -80,6 +84,7 @@ class facet_wrap(facet):
         as_table: bool = True,
         drop: bool = True,
         dir: Literal["h", "v"] = "h",
+        strip_position: Literal["top", "bottom", "left", "right"] = "top",
     ):
         super().__init__(
             scales=scales,
@@ -89,6 +94,12 @@ class facet_wrap(facet):
             drop=drop,
             dir=dir,
         )
+        if strip_position not in ("top", "bottom", "left", "right"):
+            raise PlotnineError(
+                "strip_position should be one of 'top', 'bottom', "
+                f"'left' or 'right'. Got {strip_position!r}."
+            )
+        self.strip_position: StripPosition = strip_position
         self.vars = parse_wrap_facets(facets)
         self._nrow, self._ncol = check_dimensions(nrow, ncol)
 
@@ -195,7 +206,7 @@ class facet_wrap(facet):
         if not self.vars:
             return Strips([])
 
-        s = strip(self.vars, layout_info, self, ax, "top")
+        s = strip(self.vars, layout_info, self, ax, self.strip_position)
         return Strips([s])
 
 
