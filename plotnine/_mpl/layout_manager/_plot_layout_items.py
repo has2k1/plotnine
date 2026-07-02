@@ -551,7 +551,7 @@ class PlotLayoutItems:
 
         self._adjust_axis_text_x(justify, spaces)
         self._adjust_axis_text_y(justify, spaces)
-        self._position_moved_axes(spaces)
+        self._position_strip_band_axes(spaces)
         self._position_strip_backgrounds(spaces)
 
     def _adjust_axis_text_x(
@@ -572,9 +572,12 @@ class PlotLayoutItems:
         if self._is_blank("axis_text_x"):
             return
 
-        # For strip_placement="inside", a top axis sharing its side with a
+        # For strip_placement="inside", an axis sharing its side with a
         # strip is pushed past the strip; zero otherwise.
-        top_offset = spaces.t.strip_band_offset("axis")
+        band_offsets = {
+            "bottom": spaces.b.strip_band_offset("axis"),
+            "top": spaces.t.strip_band_offset("axis"),
+        }
 
         for side in ("bottom", "top"):
             va_default = "top" if side == "bottom" else "bottom"
@@ -590,10 +593,10 @@ class PlotLayoutItems:
                 )
                 # bottom labels sit below the panel (axes y 0), top labels
                 # above it (axes y 1)
+                offset = to_vertical_axis_dimensions(band_offsets[side], ax)
                 if side == "bottom":
-                    low, high = (-row_height, 0)
+                    low, high = (-row_height - offset, -offset)
                 else:
-                    offset = to_vertical_axis_dimensions(top_offset, ax)
                     low, high = (1 + offset, 1 + row_height + offset)
                 for text in texts:
                     height = to_vertical_axis_dimensions(
@@ -641,9 +644,12 @@ class PlotLayoutItems:
         if self._is_blank("axis_text_y"):
             return
 
-        # For strip_placement="inside", a right axis sharing its side with a
+        # For strip_placement="inside", an axis sharing its side with a
         # strip is pushed past the strip; zero otherwise.
-        right_offset = spaces.r.strip_band_offset("axis")
+        band_offsets = {
+            "left": spaces.l.strip_band_offset("axis"),
+            "right": spaces.r.strip_band_offset("axis"),
+        }
 
         for side in ("left", "right"):
             ha_default = "right" if side == "left" else "left"
@@ -659,10 +665,10 @@ class PlotLayoutItems:
                 )
                 # left labels sit left of the panel (axes x 0), right labels
                 # to the right of it (axes x 1)
+                offset = to_horizontal_axis_dimensions(band_offsets[side], ax)
                 if side == "left":
-                    low, high = (-col_width, 0)
+                    low, high = (-col_width - offset, -offset)
                 else:
-                    offset = to_horizontal_axis_dimensions(right_offset, ax)
                     low, high = (1 + offset, 1 + col_width + offset)
                 for text in texts:
                     width = to_horizontal_axis_dimensions(
@@ -670,25 +676,32 @@ class PlotLayoutItems:
                     )
                     justify.horizontally(text, ha, low, high, width=width)
 
-    def _position_moved_axes(self, spaces: PlotSideSpaces):
+    def _position_strip_band_axes(self, spaces: PlotSideSpaces):
         """
-        Push a moved axis past the strip for strip_placement="inside"
+        Push an axis past a strip that shares its side
 
-        On a side where a moved axis and a facet strip would otherwise
-        overlap, the spine and its tick marks shift outward by the strip's
-        extent so the axis sits beyond the strip. Has no effect when the
-        side has no shared strip/axis band.
+        On a side where an axis and a facet strip would otherwise
+        overlap (`strip_placement="inside"`), the spine and its tick
+        marks shift outward by the strip's extent so the axis sits
+        beyond the strip. Has no effect when the side has no shared
+        strip/axis band.
         """
         fig = self.plot.figure
         to_points = 72 / fig.dpi
-        top = spaces.t.strip_band_offset("axis") * fig.bbox.height * to_points
-        right = spaces.r.strip_band_offset("axis") * fig.bbox.width * to_points
+        W, H = fig.bbox.width, fig.bbox.height
+        offsets = {
+            "top": spaces.t.strip_band_offset("axis") * H,
+            "bottom": spaces.b.strip_band_offset("axis") * H,
+            "left": spaces.l.strip_band_offset("axis") * W,
+            "right": spaces.r.strip_band_offset("axis") * W,
+        }
         for ax in self.plot.axs:
-            if top:
-                _spine_set_position_outward(ax.spines["top"], ax.xaxis, top)
-            if right:
+            for side, offset in offsets.items():
+                if not offset:
+                    continue
+                axis = ax.xaxis if side in ("top", "bottom") else ax.yaxis
                 _spine_set_position_outward(
-                    ax.spines["right"], ax.yaxis, right
+                    ax.spines[side], axis, offset * to_points
                 )
 
     def _strip_breadth_scales(
@@ -848,9 +861,13 @@ def _spine_set_position_outward(spine: Spine, axis: Axis, distance: float):
     spine._position = ("outward", distance)  # pyright: ignore[reportAttributeAccessIssue]
     transform = spine.get_spine_transform()
     spine.set_transform(transform)
-    # The outward-facing marks on a top or right spine are tick2.
+    # The outward-facing marks are tick2 on a top/right spine and
+    # tick1 on a bottom/left spine.
+    outer = (
+        "tick2line" if spine.spine_type in ("top", "right") else "tick1line"
+    )
     for tick in (*axis.get_major_ticks(), *axis.get_minor_ticks()):
-        tick.tick2line.set_transform(transform)
+        getattr(tick, outer).set_transform(transform)
     spine.stale = True
 
 
