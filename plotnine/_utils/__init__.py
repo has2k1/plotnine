@@ -372,6 +372,9 @@ def _id_var(x: AnyArrayLike, drop: bool = False) -> list[int]:
         if drop:
             x = x.cat.remove_unused_categories()
             lst = list(x.cat.codes + 1)
+            if 0 in lst:
+                new_nan_code = max(lst) + 1
+                lst = [val if val != 0 else new_nan_code for val in lst]
         else:
             has_nan = any(np.isnan(i) for i in x if isinstance(i, float))
             if has_nan:
