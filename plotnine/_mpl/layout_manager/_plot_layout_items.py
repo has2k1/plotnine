@@ -348,18 +348,62 @@ class PlotLayoutItems:
 
         return max(widths) if widths else 0
 
-    def axis_ticks_x_max_height_at(
-        self, location: AxesLocation, side: str
-    ) -> float:
+    def strip_shift(self, st: StripText) -> float:
+        """
+        Outward shift of one strip past its own panel's axis, figure space
+
+        For `strip_placement="outside"` a strip sits beyond the ticks,
+        tick labels and panel-facing text margin that its own panel draws
+        on the strip's side, separated by the strip_switch_pad. A panel
+        that draws no axis on that side keeps its strip next to the
+        panel, so within one facet the strips of axis-bearing panels
+        shift while the others do not.
+        """
+        theme = self.plot.theme
+        if theme.getp("strip_placement") != "outside":
+            return 0
+        side, ax = st.position, st.ax
+        W, H = theme.getp("figure_size")
+        if side in ("top", "bottom"):
+            g, dim = "x", H
+            text = self.axis_text_x_max_height(ax, side)
+            ticks = self.axis_ticks_x_max_height(ax, side)
+            facing = "b" if side == "top" else "t"
+        else:
+            g, dim = "y", W
+            text = self.axis_text_y_max_width(ax, side)
+            ticks = self.axis_ticks_y_max_width(ax, side)
+            facing = "r" if side == "left" else "l"
+        band = text + ticks
+        if text:
+            m = theme.get_margin(f"axis_text_{g}_{side}").fig
+            band += getattr(m, facing)
+        if not band:
+            return 0
+        pad_pt = theme.getp(f"strip_switch_pad_{g}") or 0
+        return band + (pad_pt / 72) / dim
+
+    def axis_ticks_x_max_height(self, ax: Axes, side: str) -> float:
         """
         Return maximum height[figure space] of visible x ticks on a side
         """
         attr = side_artists(side)[0]
         heights = [
             self.geometry.tight_height(getattr(tick, attr))
-            for ax in self._filter_axes(location)
             for tick in self.axis_ticks_x(ax)
             if getattr(tick, attr).get_visible()
+        ]
+        return max(heights) if len(heights) else 0
+
+    def axis_ticks_x_max_height_at(
+        self, location: AxesLocation, side: str
+    ) -> float:
+        """
+        Return maximum height[figure space] of visible x ticks on a side
+        """
+        heights = [
+            self.axis_ticks_x_max_height(ax, side)
+            for ax in self._filter_axes(location)
         ]
         return max(heights) if len(heights) else 0
 
@@ -385,18 +429,27 @@ class PlotLayoutItems:
         ]
         return max(heights) if len(heights) else 0
 
-    def axis_ticks_y_max_width_at(
-        self, location: AxesLocation, side: str
-    ) -> float:
+    def axis_ticks_y_max_width(self, ax: Axes, side: str) -> float:
         """
         Return maximum width[figure space] of visible y ticks on a side
         """
         attr = side_artists(side)[0]
         widths = [
             self.geometry.tight_width(getattr(tick, attr))
-            for ax in self._filter_axes(location)
             for tick in self.axis_ticks_y(ax)
             if getattr(tick, attr).get_visible()
+        ]
+        return max(widths) if len(widths) else 0
+
+    def axis_ticks_y_max_width_at(
+        self, location: AxesLocation, side: str
+    ) -> float:
+        """
+        Return maximum width[figure space] of visible y ticks on a side
+        """
+        widths = [
+            self.axis_ticks_y_max_width(ax, side)
+            for ax in self._filter_axes(location)
         ]
         return max(widths) if len(widths) else 0
 
@@ -552,7 +605,7 @@ class PlotLayoutItems:
         self._adjust_axis_text_x(justify, spaces)
         self._adjust_axis_text_y(justify, spaces)
         self._position_strip_band_axes(spaces)
-        self._position_strip_backgrounds(spaces)
+        self._position_strip_backgrounds()
 
     def _adjust_axis_text_x(
         self, justify: TextJustifier, spaces: PlotSideSpaces
@@ -575,8 +628,8 @@ class PlotLayoutItems:
         # For strip_placement="inside", an axis sharing its side with a
         # strip is pushed past the strip; zero otherwise.
         band_offsets = {
-            "bottom": spaces.b.strip_band_offset("axis"),
-            "top": spaces.t.strip_band_offset("axis"),
+            "bottom": spaces.b.strip_band_offset(),
+            "top": spaces.t.strip_band_offset(),
         }
 
         for side in ("bottom", "top"):
@@ -647,8 +700,8 @@ class PlotLayoutItems:
         # For strip_placement="inside", an axis sharing its side with a
         # strip is pushed past the strip; zero otherwise.
         band_offsets = {
-            "left": spaces.l.strip_band_offset("axis"),
-            "right": spaces.r.strip_band_offset("axis"),
+            "left": spaces.l.strip_band_offset(),
+            "right": spaces.r.strip_band_offset(),
         }
 
         for side in ("left", "right"):
@@ -690,10 +743,10 @@ class PlotLayoutItems:
         to_points = 72 / fig.dpi
         W, H = fig.bbox.width, fig.bbox.height
         offsets = {
-            "top": spaces.t.strip_band_offset("axis") * H,
-            "bottom": spaces.b.strip_band_offset("axis") * H,
-            "left": spaces.l.strip_band_offset("axis") * W,
-            "right": spaces.r.strip_band_offset("axis") * W,
+            "top": spaces.t.strip_band_offset() * H,
+            "bottom": spaces.b.strip_band_offset() * H,
+            "left": spaces.l.strip_band_offset() * W,
+            "right": spaces.r.strip_band_offset() * W,
         }
         for ax in self.plot.axs:
             for side, offset in offsets.items():
@@ -718,33 +771,33 @@ class PlotLayoutItems:
         largest = max(natural)
         return [largest / b for b in natural]
 
-    def _position_strip_backgrounds(self, spaces: PlotSideSpaces):
+    def _position_strip_backgrounds(self):
         """
         Fix each strip background at its final bounds and place its text
 
-        When `strip_placement="outside"` and a moved axis shares the
-        strip's side, the strip is shifted outward to clear the axis.
+        When `strip_placement="outside"`, each strip is shifted outward
+        to clear the axis its own panel draws on the strip's side.
         """
         theme = self.plot.theme
         groups = (
-            (self.strip_text_x_top or [], spaces.t),
-            (self.strip_text_x_bottom or [], spaces.b),
-            (self.strip_text_y_right or [], spaces.r),
-            (self.strip_text_y_left or [], spaces.l),
+            self.strip_text_x_top or [],
+            self.strip_text_x_bottom or [],
+            self.strip_text_y_right or [],
+            self.strip_text_y_left or [],
         )
-        for group, space in groups:
+        for group in groups:
             if not group:
                 continue
-            offset = space.strip_band_offset("strip")
             breadth = StripSpec.make(group[0], theme).breadth
             scales = self._strip_breadth_scales(group, breadth)
             for st, scale in zip(group, scales):
                 spec = StripSpec.make(st, theme)
                 x0, y0, w, h = self.strip_patch_bbox(st, scale).bounds
+                shift = self.strip_shift(st)
                 if spec.axis == "x":
-                    y0 += spec.sign * offset
+                    y0 += spec.sign * shift
                 else:
-                    x0 += spec.sign * offset
+                    x0 += spec.sign * shift
                 st.patch.set_bounds((x0, y0, w, h))
                 self._position_strip_text(st)
 

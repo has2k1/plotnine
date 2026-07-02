@@ -36,6 +36,18 @@ def test_facet_wrap_top_outside():
     assert p1 == "facet_wrap_top_outside"
 
 
+def test_facet_wrap_top_outside_two_rows():
+    # A panel that draws no axis on the strip's side keeps its strip
+    # next to the panel; only axis-bearing panels shift theirs.
+    p1 = (
+        p
+        + facet_wrap("cyl", nrow=2)
+        + scale_x_continuous(position="top")
+        + theme(strip_placement="outside")
+    )
+    assert p1 == "facet_wrap_top_outside_two_rows"
+
+
 def test_facet_grid_top_inside():
     p1 = p + facet_grid("am", "cyl") + scale_x_continuous(position="top")
     assert p1 == "facet_grid_top_inside"

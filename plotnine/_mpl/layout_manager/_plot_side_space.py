@@ -171,9 +171,9 @@ class _plot_side_space(_side_space):
         dim = H if axis == "x" else W
         return (pad_pt / 72) / dim
 
-    def strip_band_offset(self, member: Literal["strip", "axis"]) -> float:
+    def strip_band_offset(self) -> float:
         """
-        Outward offset for one member of a shared strip/axis band
+        Outward offset of the axis within a shared strip/axis band
 
         When a facet strip and an axis occupy the same side, the band is
         ordered from the panel outward. `strip_placement` chooses the order:
@@ -181,23 +181,20 @@ class _plot_side_space(_side_space):
             "inside":   panel | strip | ticks+labels | title
             "outside":  panel | ticks+labels | strip | title
 
-        `member` is `"strip"` (the strip background + text) or `"axis"` (the
-        ticks and tick labels). The offset is produced here in figure space and
-        consumed per artist in its own coordinate system: the title in figure
-        space, the tick labels in axes fractions, the spine in points.
+        For `"inside"` the axis (ticks and tick labels) clears the strip,
+        so the offset is the strip breadth; for `"outside"` the axis stays
+        at the panel and each strip clears its own panel's axis instead
+        (`PlotLayoutItems.strip_shift`). The offset is produced here in
+        figure space and consumed per artist in its own coordinate system:
+        the tick labels in axes fractions, the spine in points.
 
         The offset is zero unless the side carries both a strip and an axis.
         """
         strip_breadth: float = self.strip_text  # pyright: ignore[reportAttributeAccessIssue]
-        axis_breadth = self._axis_ticks_and_text
-        if not (strip_breadth and axis_breadth):
+        if not (strip_breadth and self._axis_ticks_and_text):
             return 0
         placement = self.items.plot.theme.getp("strip_placement")
-        if placement == "inside":
-            return 0 if member == "strip" else strip_breadth
-        # "outside": the strip clears the axis, plus the switch pad
-        pad: float = self.strip_switch_pad  # pyright: ignore[reportAttributeAccessIssue]
-        return axis_breadth + pad if member == "strip" else 0
+        return strip_breadth if placement == "inside" else 0
 
 
 class left_space(_plot_side_space):
