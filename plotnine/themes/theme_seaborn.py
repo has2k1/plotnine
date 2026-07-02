@@ -56,23 +56,31 @@ class theme_seaborn(theme):
             text=element_text(size=base_size, rotation=0, margin={}),
             axis_text=element_text(size=base_size * 0.8),
             axis_text_x_bottom=element_text(
-                margin=margin(t=line_margin, unit="pt")
+                va="top", margin=margin(t=line_margin, unit="pt")
             ),
             axis_text_x_top=element_text(
-                margin=margin(b=line_margin, unit="pt")
+                va="bottom", margin=margin(b=line_margin, unit="pt")
             ),
             axis_text_y_left=element_text(
-                margin=margin(r=line_margin, unit="pt")
+                ha="right", margin=margin(r=line_margin, unit="pt")
             ),
             axis_text_y_right=element_text(
-                margin=margin(l=line_margin, unit="pt")
+                ha="left", margin=margin(l=line_margin, unit="pt")
             ),
-            axis_title_x=element_text(va="bottom", ha="center"),
-            axis_title_x_bottom=element_text(margin=margin(t=m, unit="fig")),
-            axis_title_x_top=element_text(margin=margin(b=m, unit="fig")),
-            axis_title_y=element_text(angle=90, va="center", ha="left"),
-            axis_title_y_left=element_text(margin=margin(r=m, unit="fig")),
-            axis_title_y_right=element_text(margin=margin(l=m, unit="fig")),
+            axis_title_x=element_text(ha="center"),
+            axis_title_x_bottom=element_text(
+                va="bottom", margin=margin(t=m, unit="fig")
+            ),
+            axis_title_x_top=element_text(
+                va="bottom", margin=margin(b=m, unit="fig")
+            ),
+            axis_title_y=element_text(angle=90, va="center"),
+            axis_title_y_left=element_text(
+                ha="left", margin=margin(r=m, unit="fig")
+            ),
+            axis_title_y_right=element_text(
+                ha="right", margin=margin(l=m, unit="fig")
+            ),
             legend_box_margin=0,
             legend_box_spacing=m * 3,  # figure units
             legend_key_spacing_x=6,

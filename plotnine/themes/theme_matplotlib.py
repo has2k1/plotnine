@@ -48,17 +48,33 @@ class theme_matplotlib(theme):
             ),
             aspect_ratio=get_option("aspect_ratio"),
             axis_text=element_text(size=base_size * 0.8),
-            axis_text_x_bottom=element_text(margin=margin(t=2.4, unit="pt")),
-            axis_text_x_top=element_text(margin=margin(b=2.4, unit="pt")),
-            axis_text_y_left=element_text(margin=margin(r=2.4, unit="pt")),
-            axis_text_y_right=element_text(margin=margin(l=2.4, unit="pt")),
-            axis_title_x=element_text(va="bottom", ha="center"),
-            axis_title_x_bottom=element_text(margin=margin(t=m, unit="fig")),
-            axis_title_x_top=element_text(margin=margin(b=m, unit="fig")),
+            axis_text_x_bottom=element_text(
+                va="top", margin=margin(t=2.4, unit="pt")
+            ),
+            axis_text_x_top=element_text(
+                va="bottom", margin=margin(b=2.4, unit="pt")
+            ),
+            axis_text_y_left=element_text(
+                ha="right", margin=margin(r=2.4, unit="pt")
+            ),
+            axis_text_y_right=element_text(
+                ha="left", margin=margin(l=2.4, unit="pt")
+            ),
+            axis_title_x=element_text(ha="center"),
+            axis_title_x_bottom=element_text(
+                va="bottom", margin=margin(t=m, unit="fig")
+            ),
+            axis_title_x_top=element_text(
+                va="bottom", margin=margin(b=m, unit="fig")
+            ),
             axis_line=element_blank(),
-            axis_title_y=element_text(angle=90, va="center", ha="left"),
-            axis_title_y_left=element_text(margin=margin(r=m, unit="fig")),
-            axis_title_y_right=element_text(margin=margin(l=m, unit="fig")),
+            axis_title_y=element_text(angle=90, va="center"),
+            axis_title_y_left=element_text(
+                ha="left", margin=margin(r=m, unit="fig")
+            ),
+            axis_title_y_right=element_text(
+                ha="right", margin=margin(l=m, unit="fig")
+            ),
             dpi=get_option("dpi"),
             figure_size=get_option("figure_size"),
             legend_background=element_rect(color="none"),
