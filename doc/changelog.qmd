@@ -108,6 +108,10 @@ title: Changelog
 
 ### Bug Fixes
 
+- The space between facet panels now accounts for the margins of the axis
+  text, so with free scales large margins no longer push the tick labels
+  into the neighbouring panel.
+
 - Subclass geoms now inherit their parent geom's default parameters, so
   parameters that a parent geom supports are no longer rejected.
   [](:class:`~plotnine.geom_step`) accepts `lineend`, `linejoin` and `arrow`,

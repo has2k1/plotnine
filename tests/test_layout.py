@@ -115,6 +115,21 @@ class TestLayout:
         p = self.g + facet_wrap("carb", scales="free")
         assert p == "facet_wrap_scales_free"
 
+    def test_facet_wrap_scales_free_text_margin(self):
+        # The gullies fit the axis text margins; with zero panel
+        # spacing the labels touch the neighbouring panel but do not
+        # overlap it.
+        p = (
+            self.g
+            + facet_wrap("carb", scales="free")
+            + theme(
+                panel_spacing=0,
+                axis_text_x=element_text(margin={"t": 5}),
+                axis_text_y=element_text(margin={"r": 5}),
+            )
+        )
+        assert p == "facet_wrap_scales_free_text_margin"
+
     def test_plot_margin_aspect_ratio(self):
         # The margin should be exact in both directions even if
         # the figure has an aspect ratio != 1.
