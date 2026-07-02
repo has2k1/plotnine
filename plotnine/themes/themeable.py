@@ -550,11 +550,6 @@ class axis_title_x_bottom(themeable):
     Parameters
     ----------
     theme_element : element_text
-
-    Notes
-    -----
-    The gap to the panel is set by the top margin (`t`), as for any
-    x-axis title; the other margins are ignored.
     """
 
     def apply_figure(self, figure: Figure, targets: ThemeTargets):
@@ -576,11 +571,6 @@ class axis_title_x_top(themeable):
     Parameters
     ----------
     theme_element : element_text
-
-    Notes
-    -----
-    The gap to the panel is set by the bottom margin (`b`) — the edge
-    that faces the panel below; the other margins are ignored.
     """
 
     def apply_figure(self, figure: Figure, targets: ThemeTargets):
@@ -601,13 +591,6 @@ class axis_title_x(axis_title_x_top, axis_title_x_bottom):
     Parameters
     ----------
     theme_element : element_text
-
-    Notes
-    -----
-    Only the margin on the side that faces the panel has an effect:
-    the top margin (`t`) when the axis is on the bottom, the bottom
-    margin (`b`) when it is on the top. Set both to cover either
-    position.
     """
 
 
@@ -618,11 +601,6 @@ class axis_title_y_left(themeable):
     Parameters
     ----------
     theme_element : element_text
-
-    Notes
-    -----
-    The gap to the panel is set by the right margin (`r`), as for any
-    y-axis title; the other margins are ignored.
     """
 
     def apply_figure(self, figure: Figure, targets: ThemeTargets):
@@ -644,11 +622,6 @@ class axis_title_y_right(themeable):
     Parameters
     ----------
     theme_element : element_text
-
-    Notes
-    -----
-    The gap to the panel is set by the left margin (`l`) — the edge
-    that faces the panel to the left; the other margins are ignored.
     """
 
     def apply_figure(self, figure: Figure, targets: ThemeTargets):
@@ -669,13 +642,6 @@ class axis_title_y(axis_title_y_left, axis_title_y_right):
     Parameters
     ----------
     theme_element : element_text
-
-    Notes
-    -----
-    Only the margin on the side that faces the panel has an effect:
-    the right margin (`r`) when the axis is on the left, the left
-    margin (`l`) when it is on the right. Set both to cover either
-    position.
     """
 
 
@@ -686,14 +652,6 @@ class axis_title(axis_title_x, axis_title_y):
     Parameters
     ----------
     theme_element : element_text
-
-    Notes
-    -----
-    Only the margin on the side that faces the panel has an effect.
-    For the x-axis that is the top margin (`t`) on the bottom or the
-    bottom margin (`b`) on the top; for the y-axis the right margin
-    (`r`) on the left or the left margin (`l`) on the right. Set both
-    margins of each axis to cover either position.
     """
 
 
@@ -1132,11 +1090,6 @@ class axis_text_x_bottom(MixinSequenceOfValues):
     Parameters
     ----------
     theme_element : element_text
-
-    Notes
-    -----
-    The gap to the panel is set by the top margin (`t`), as for any
-    x-axis text; the other margins are ignored.
     """
 
     def apply_ax(self, ax: Axes):
@@ -1162,11 +1115,6 @@ class axis_text_x_top(MixinSequenceOfValues):
     Parameters
     ----------
     theme_element : element_text
-
-    Notes
-    -----
-    The gap to the panel is set by the bottom margin (`b`) — the edge
-    that faces the panel below; the other margins are ignored.
     """
 
     def apply_ax(self, ax: Axes):
@@ -1190,19 +1138,6 @@ class axis_text_x(axis_text_x_top, axis_text_x_bottom):
     Parameters
     ----------
     theme_element : element_text
-
-    Notes
-    -----
-    Only the margin on the side that faces the panel has an effect:
-    the top margin (`t`) when the axis is on the bottom, the bottom
-    margin (`b`) when it is on the top. Set both to cover either
-    position. e.g.
-
-    ```python
-    theme(axis_text_x=element_text(margin={"t": 5, "b": 5, "units": "pt"}))
-    ```
-
-    puts a 5 point gap between the labels and the panel on either side.
     """
 
 
@@ -1213,11 +1148,6 @@ class axis_text_y_left(MixinSequenceOfValues):
     Parameters
     ----------
     theme_element : element_text
-
-    Notes
-    -----
-    The gap to the panel is set by the right margin (`r`), as for any
-    y-axis text; the other margins are ignored.
     """
 
     def apply_ax(self, ax: Axes):
@@ -1241,11 +1171,6 @@ class axis_text_y_right(MixinSequenceOfValues):
     Parameters
     ----------
     theme_element : element_text
-
-    Notes
-    -----
-    The gap to the panel is set by the left margin (`l`) — the edge
-    that faces the panel to the left; the other margins are ignored.
     """
 
     def apply_ax(self, ax: Axes):
@@ -1271,19 +1196,6 @@ class axis_text_y(axis_text_y_left, axis_text_y_right):
     Parameters
     ----------
     theme_element : element_text
-
-    Notes
-    -----
-    Only the margin on the side that faces the panel has an effect:
-    the right margin (`r`) when the axis is on the left, the left
-    margin (`l`) when it is on the right. Set both to cover either
-    position. e.g.
-
-    ```python
-    theme(axis_text_y=element_text(margin={"r": 5, "l": 5, "units": "pt"}))
-    ```
-
-    puts a 5 point gap between the labels and the panel on either side.
     """
 
 
@@ -1294,22 +1206,6 @@ class axis_text(axis_text_x, axis_text_y):
     Parameters
     ----------
     theme_element : element_text
-
-    Notes
-    -----
-    Only the margin on the side that faces the panel has an effect.
-    For the x-axis that is the top margin (`t`) on the bottom or the
-    bottom margin (`b`) on the top; for the y-axis the right margin
-    (`r`) on the left or the left margin (`l`) on the right. Set both
-    margins of each axis to cover either position. e.g.
-
-    ```python
-    theme(axis_text=element_text(
-        margin={"t": 5, "b": 5, "r": 5, "l": 5, "units": "pt"}
-    ))
-    ```
-
-    puts a 5 point gap between the labels and the panel on every side.
     """
 
 
