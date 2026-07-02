@@ -13,7 +13,7 @@ from __future__ import annotations
 
 from dataclasses import replace
 from functools import cached_property
-from typing import TYPE_CHECKING, Literal
+from typing import TYPE_CHECKING, Literal, cast
 
 from plotnine.exceptions import PlotnineError
 from plotnine.facets import facet_grid, facet_null, facet_wrap
@@ -1219,7 +1219,7 @@ class PlotSideSpaces:
         """
         Calculate spacing parts for facet_wrap
         """
-        facet = self.plot.facet
+        facet = cast("facet_wrap", self.plot.facet)
         theme = self.plot.theme
 
         ncol = facet.ncol
@@ -1229,19 +1229,20 @@ class PlotSideSpaces:
         self.sw = theme.getp("panel_spacing_x")
         self.sh = theme.getp("panel_spacing_y") * self.W / self.H
 
-        # A fraction of the strip height
-        # Effectively slides the strip
-        #   +ve: Away from the panel
-        #    0:  Top of the panel
-        #   -ve: Into the panel
-        # Where values <= -1, put the strip completely into
-        # the panel. We do not worry about larger -ves.
-        strip_align_x = theme.getp("strip_align_x")
-
-        # Only interested in the proportion of the strip that
-        # does not overlap with the panel
-        if strip_align_x > -1:
-            self.sh += self.t.strip_text * (1 + strip_align_x)
+        # The strip (plus any switch pad) claims space in the gullies on
+        # the side it is placed. The side space's strip_text folds in
+        # strip_align_{x,y} and is zero when the strip is fully inside
+        # the panel.
+        space = {
+            "top": self.t,
+            "bottom": self.b,
+            "left": self.l,
+            "right": self.r,
+        }[facet.strip_position]
+        if facet.strip_position in ("top", "bottom"):
+            self.sh += space.strip_text + space.strip_switch_pad
+        else:
+            self.sw += space.strip_text + space.strip_switch_pad
 
         if facet.free["x"]:
             for side in ("bottom", "top"):
