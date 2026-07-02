@@ -15,7 +15,6 @@ from dataclasses import replace
 from functools import cached_property
 from typing import TYPE_CHECKING, Literal
 
-from plotnine._utils import MARGIN_SIDE
 from plotnine.exceptions import PlotnineError
 from plotnine.facets import facet_grid, facet_null, facet_wrap
 
@@ -255,9 +254,11 @@ class left_space(_plot_side_space):
     """
     legend: float = 0
     legend_box_spacing: float = 0
+    axis_title_margin_left: float = 0
+    """Outer (edge-facing) margin of the y-axis title"""
     axis_title: float = 0
-    axis_title_margin: float = 0
-    """Margin to the right of the y-axis title (panel-facing side)"""
+    axis_title_margin_right: float = 0
+    """Panel-facing margin of the y-axis title"""
     axis_title_alignment: float = 0
     """
     Space added to align the axis title with others in a composition
@@ -266,9 +267,11 @@ class left_space(_plot_side_space):
     the difference between the largest and smallest axis_title_clearance
     among the items in the composition.
     """
+    axis_text_margin_left: float = 0
+    """Outer (edge-facing) margin of the y-axis text"""
     axis_text: float = 0
-    axis_text_margin: float = 0
-    """Margin to the right of the y-axis text (panel-facing side)"""
+    axis_text_margin_right: float = 0
+    """Panel-facing margin of the y-axis text"""
     axis_ticks: float = 0
     strip_switch_pad: float = 0
     """Gap between a shared axis and a strip beyond it (outside placement)"""
@@ -292,21 +295,19 @@ class left_space(_plot_side_space):
             self.legend = self.legend_width
             self.legend_box_spacing = theme.getp("legend_box_spacing")
 
-        # The text<->panel gap is the right margin of the y text/title; it
-        # sits on the panel-facing (right) side of the left axis.
+        # A left y-axis reads its left (outer) and right (panel-facing)
+        # margins directly.
         if items.axis_title_y_left:
             self.axis_title = geometry.width(items.axis_title_y_left)
-            self.axis_title_margin = getattr(
-                theme.get_margin("axis_title_y_left").fig,
-                MARGIN_SIDE["left"],
-            )
+            m = theme.get_margin("axis_title_y_left").fig
+            self.axis_title_margin_left = m.l
+            self.axis_title_margin_right = m.r
 
         self.axis_text = items.axis_text_y_left
         if self.axis_text:
-            self.axis_text_margin = getattr(
-                theme.get_margin("axis_text_y_left").fig,
-                MARGIN_SIDE["left"],
-            )
+            m = theme.get_margin("axis_text_y_left").fig
+            self.axis_text_margin_left = m.l
+            self.axis_text_margin_right = m.r
 
         self.axis_ticks = items.axis_ticks_y_left
         self.strip_text = items.strip_text_y("left")
@@ -396,13 +397,17 @@ class right_space(_plot_side_space):
     margin_alignment: float = 0
     legend: float = 0
     legend_box_spacing: float = 0
+    axis_title_margin_right: float = 0
+    """Outer (edge-facing) margin of the y-axis title"""
     axis_title: float = 0
-    axis_title_margin: float = 0
-    """Margin to the left of the y-axis title (panel-facing side)"""
+    axis_title_margin_left: float = 0
+    """Panel-facing margin of the y-axis title"""
     axis_title_alignment: float = 0
+    axis_text_margin_right: float = 0
+    """Outer (edge-facing) margin of the y-axis text"""
     axis_text: float = 0
-    axis_text_margin: float = 0
-    """Margin to the left of the y-axis text (panel-facing side)"""
+    axis_text_margin_left: float = 0
+    """Panel-facing margin of the y-axis text"""
     axis_ticks: float = 0
     strip_switch_pad: float = 0
     """Gap between a shared axis and a strip beyond it (outside placement)"""
@@ -428,22 +433,19 @@ class right_space(_plot_side_space):
 
         self.strip_text = items.strip_text_y("right")
 
-        # Space consumed by a y-axis on the right. The text<->panel gap is the
-        # left margin of the y text/title (the edge facing the panel to the
-        # left).
+        # A right y-axis reads its right (outer) and left (panel-facing)
+        # margins directly.
         if items.axis_title_y_right:
             self.axis_title = geometry.width(items.axis_title_y_right)
-            self.axis_title_margin = getattr(
-                theme.get_margin("axis_title_y_right").fig,
-                MARGIN_SIDE["right"],
-            )
+            m = theme.get_margin("axis_title_y_right").fig
+            self.axis_title_margin_right = m.r
+            self.axis_title_margin_left = m.l
 
         self.axis_text = items.axis_text_y_right
         if self.axis_text:
-            self.axis_text_margin = getattr(
-                theme.get_margin("axis_text_y_right").fig,
-                MARGIN_SIDE["right"],
-            )
+            m = theme.get_margin("axis_text_y_right").fig
+            self.axis_text_margin_right = m.r
+            self.axis_text_margin_left = m.l
         self.axis_ticks = items.axis_ticks_y_right
         self.strip_switch_pad = self._strip_switch_pad("y")
 
@@ -547,13 +549,17 @@ class top_space(_plot_side_space):
     plot_subtitle_margin_bottom: float = 0
     legend: float = 0
     legend_box_spacing: float = 0
+    axis_title_margin_top: float = 0
+    """Outer (edge-facing) margin of the x-axis title"""
     axis_title: float = 0
-    axis_title_margin: float = 0
-    """Margin below the x-axis title (panel-facing side)"""
+    axis_title_margin_bottom: float = 0
+    """Panel-facing margin of the x-axis title"""
     axis_title_alignment: float = 0
+    axis_text_margin_top: float = 0
+    """Outer (edge-facing) margin of the x-axis text"""
     axis_text: float = 0
-    axis_text_margin: float = 0
-    """Margin below the x-axis text (panel-facing side)"""
+    axis_text_margin_bottom: float = 0
+    """Panel-facing margin of the x-axis text"""
     axis_ticks: float = 0
     strip_switch_pad: float = 0
     """Gap between a shared axis and a strip beyond it (outside placement)"""
@@ -593,21 +599,19 @@ class top_space(_plot_side_space):
 
         self.strip_text = items.strip_text_x("top")
 
-        # Space consumed by an x-axis on the top. The text<->panel gap is the
-        # bottom margin of the x text/title (the edge facing the panel below).
+        # A top x-axis reads its top (outer) and bottom (panel-facing)
+        # margins directly.
         if items.axis_title_x_top:
             self.axis_title = geometry.height(items.axis_title_x_top)
-            self.axis_title_margin = getattr(
-                theme.get_margin("axis_title_x_top").fig,
-                MARGIN_SIDE["top"],
-            )
+            m = theme.get_margin("axis_title_x_top").fig
+            self.axis_title_margin_top = m.t
+            self.axis_title_margin_bottom = m.b
 
         self.axis_text = items.axis_text_x_top
         if self.axis_text:
-            self.axis_text_margin = getattr(
-                theme.get_margin("axis_text_x_top").fig,
-                MARGIN_SIDE["top"],
-            )
+            m = theme.get_margin("axis_text_x_top").fig
+            self.axis_text_margin_top = m.t
+            self.axis_text_margin_bottom = m.b
         self.axis_ticks = items.axis_ticks_x_top
         self.strip_switch_pad = self._strip_switch_pad("x")
 
@@ -714,9 +718,11 @@ class bottom_space(_plot_side_space):
     plot_caption_margin_top: float = 0
     legend: float = 0
     legend_box_spacing: float = 0
+    axis_title_margin_bottom: float = 0
+    """Outer (edge-facing) margin of the x-axis title"""
     axis_title: float = 0
-    axis_title_margin: float = 0
-    """Margin above the x-axis title (panel-facing side)"""
+    axis_title_margin_top: float = 0
+    """Panel-facing margin of the x-axis title"""
     axis_title_alignment: float = 0
     """
     Space added to align the axis title with others in a composition
@@ -726,9 +732,11 @@ class bottom_space(_plot_side_space):
     composition. It's amount is the difference in height between this axis
     text (and it's margins) and the tallest axis text (and it's margin).
     """
+    axis_text_margin_bottom: float = 0
+    """Outer (edge-facing) margin of the x-axis text"""
     axis_text: float = 0
-    axis_text_margin: float = 0
-    """Margin above the x-axis text (panel-facing side)"""
+    axis_text_margin_top: float = 0
+    """Panel-facing margin of the x-axis text"""
     axis_ticks: float = 0
     strip_switch_pad: float = 0
     """Gap between a shared axis and a strip beyond it (outside placement)"""
@@ -766,21 +774,19 @@ class bottom_space(_plot_side_space):
             self.legend = self.legend_height
             self.legend_box_spacing = theme.getp("legend_box_spacing") * F
 
-        # The text<->panel gap is the top margin of the x text/title; it
-        # sits on the panel-facing (top) side of the bottom axis.
+        # A bottom x-axis reads its bottom (outer) and top (panel-facing)
+        # margins directly.
         if items.axis_title_x_bottom:
             self.axis_title = geometry.height(items.axis_title_x_bottom)
-            self.axis_title_margin = getattr(
-                theme.get_margin("axis_title_x_bottom").fig,
-                MARGIN_SIDE["bottom"],
-            )
+            m = theme.get_margin("axis_title_x_bottom").fig
+            self.axis_title_margin_bottom = m.b
+            self.axis_title_margin_top = m.t
 
         self.axis_text = items.axis_text_x_bottom
         if self.axis_text:
-            self.axis_text_margin = getattr(
-                theme.get_margin("axis_text_x_bottom").fig,
-                MARGIN_SIDE["bottom"],
-            )
+            m = theme.get_margin("axis_text_x_bottom").fig
+            self.axis_text_margin_bottom = m.b
+            self.axis_text_margin_top = m.t
         self.axis_ticks = items.axis_ticks_x_bottom
         self.strip_text = items.strip_text_x("bottom")
         self.strip_switch_pad = self._strip_switch_pad("x")
