@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Changelog – plotnine 999.post1+gb69d1417e</title>
+<title>Changelog – plotnine 999.post1+g800b7623e</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -118,7 +118,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">plotnine 999.post1+gb69d1417e</span>
+    <span class="navbar-title">plotnine 999.post1+g800b7623e</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -380,6 +380,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="op">+</span> facet_grid(<span class="st">"a"</span>, <span class="st">"b"</span>)</span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="op">+</span> scale_x_continuous(position<span class="op">=</span><span class="st">"top"</span>)</span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="op">+</span> theme(strip_placement<span class="op">=</span><span class="st">"outside"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<li><p><a href="./reference/facet_wrap.html#plotnine.facet_wrap"><code>facet_wrap</code></a> gained a <code>strip_position</code> parameter with which you can place the strip on any side of the panel; <code>"top"</code> (default), <code>"bottom"</code>, <code>"left"</code> or <code>"right"</code>.</p></li>
 </ul>
 </section>
 <section id="api-changes" class="level3">
@@ -402,6 +403,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="bug-fixes" class="level3">
 <h3 class="anchored" data-anchor-id="bug-fixes">Bug Fixes</h3>
 <ul>
+<li><p>The space between facet panels now accounts for the margins of the axis text, so with free scales large margins no longer push the tick labels into the neighbouring panel.</p></li>
 <li><p>Subclass geoms now inherit their parent geom’s default parameters, so parameters that a parent geom supports are no longer rejected. <a href="./reference/geom_step.html#plotnine.geom_step"><code>geom_step</code></a> accepts <code>lineend</code>, <code>linejoin</code> and <code>arrow</code>, <a href="./reference/geom_quantile.html#plotnine.geom_quantile"><code>geom_quantile</code></a> accepts <code>arrow</code>, and <a href="./reference/geom_histogram.html#plotnine.geom_histogram"><code>geom_histogram</code></a> accepts <code>just</code> and <code>width</code>.</p></li>
 <li><p>Fixed <a href="./reference/geom_smooth.html#plotnine.geom_smooth"><code>geom_smooth</code></a> / <a href="./reference/stat_smooth.html#plotnine.stat_smooth"><code>stat_smooth</code></a> when using a linear model via “lm” with weights for the model to do a weighted regression. This bug did not affect the formula API of the linear model. (<a href="https://github.com/has2k1/plotnine/issues/1005" title="Issue: #1005">#1005</a>)</p></li>
 <li><p>Fixed rendering of SVGs in jupyter notebooks.</p></li>
