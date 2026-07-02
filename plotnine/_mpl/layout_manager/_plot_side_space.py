@@ -1241,16 +1241,26 @@ class PlotSideSpaces:
         else:
             self.sw += space.strip_text + space.strip_switch_pad
 
+        # Per-panel axes claim their ticks, labels and label margins in
+        # the gullies.
         if facet.free["x"]:
             for side in ("bottom", "top"):
-                self.sh += self.items.axis_text_x_max_height_at(
+                text = self.items.axis_text_x_max_height_at("all", side)
+                if text:
+                    m = theme.get_margin(f"axis_text_x_{side}").fig
+                    text += m.t + m.b
+                self.sh += text + self.items.axis_ticks_x_max_height_at(
                     "all", side
-                ) + self.items.axis_ticks_x_max_height_at("all", side)
+                )
         if facet.free["y"]:
             for side in ("left", "right"):
-                self.sw += self.items.axis_text_y_max_width_at(
+                text = self.items.axis_text_y_max_width_at("all", side)
+                if text:
+                    m = theme.get_margin(f"axis_text_y_{side}").fig
+                    text += m.l + m.r
+                self.sw += text + self.items.axis_ticks_y_max_width_at(
                     "all", side
-                ) + self.items.axis_ticks_y_max_width_at("all", side)
+                )
 
         # width and height of axes as fraction of figure width & height
         self.w = (self.panel_width - self.sw * (ncol - 1)) / ncol
