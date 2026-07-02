@@ -222,6 +222,25 @@ def test_facetting_with_unused_categories():
     p.draw_test()  # pyright: ignore
 
 
+def test_facet_grid_with_missing_categorical_values():
+    data = pd.DataFrame(
+        {
+            "x": [0.0] * 6,
+            "y": [0.0] * 6,
+            "row": ["a", "a", "a", "b", "b", "b"],
+            "col": pd.Categorical(
+                ["x", "y", None, "x", "y", None],
+                categories=["x", "y"],
+            ),
+        }
+    )
+
+    p = ggplot(data, aes("x", "y")) + geom_point() + facet_grid("row ~ col")
+
+    # No exception
+    p.draw_test()  # pyright: ignore
+
+
 def test_invalid_scales_value_raises():
     with pytest.raises(ValueError):
         # note the missing underscore
