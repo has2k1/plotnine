@@ -73,6 +73,10 @@ title: Changelog
   + theme(strip_placement="outside")
   ```
 
+- [](:class:`~plotnine.facet_wrap`) gained a `strip_position` parameter with
+  which you can place the strip on any side of the panel; `"top"` (default),
+  `"bottom"`, `"left"` or `"right"`.
+
 ### API Changes
 
 - Removed `geom.to_layer()`, `stat.to_layer()`, `annotate.to_layer()`,
