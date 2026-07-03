@@ -113,6 +113,24 @@ def test_facets():
     assert p == "facets"
 
 
+def test_facets_title_align():
+    # The titles of a faceted plot (strip above the panel) and a plain
+    # plot should be at the same height.
+    p1 = plot.purple + g.points + facet_wrap("cat")
+    p2 = plot.brown + g.points + legend.bottom
+    p = p1 | p2
+    assert p == "facets_title_align"
+
+
+def test_facets_legend_title_align():
+    # The titles of a faceted plot (strip above the panel) and a plain
+    # plot with a legend at the top should be at the same height.
+    p1 = plot.purple + g.points + facet_wrap("cat")
+    p2 = plot.brown + g.points + legend.top
+    p = p1 | p2
+    assert p == "facets_legend_title_align"
+
+
 def test_complex_composition():
     p1 = plot.red
     p2 = plot.green + g.points + rotate.plot_title + legend.bottom

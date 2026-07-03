@@ -112,6 +112,10 @@ title: Changelog
   text, so with free scales large margins no longer push the tick labels
   into the neighbouring panel.
 
+- Plot titles in a composition now sit at the same height even when the
+  plots differ in what lies between the title and the panel — facet
+  strips, top legends or a top-positioned x axis.
+
 - Subclass geoms now inherit their parent geom's default parameters, so
   parameters that a parent geom supports are no longer rejected.
   [](:class:`~plotnine.geom_step`) accepts `lineend`, `linejoin` and `arrow`,

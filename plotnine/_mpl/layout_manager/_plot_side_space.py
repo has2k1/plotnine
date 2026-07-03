@@ -455,16 +455,6 @@ class right_space(_plot_side_space):
             self.plot_margin += adjustment
 
     @property
-    def axis_title_clearance(self) -> float:
-        """
-        Axis-title-to-panel clearance, excluding any facet strip
-        """
-        # The strip sits outside the axis title's alignment band, so it
-        # does not count toward the title-to-panel clearance used to
-        # align axis titles across a composition.
-        return super().axis_title_clearance - self.strip_text
-
-    @property
     def offset(self):
         """
         Distance from right of the figure to the right of the plot gridspec
@@ -544,6 +534,14 @@ class top_space(_plot_side_space):
     plot_subtitle_margin_top: float = 0
     plot_subtitle: float = 0
     plot_subtitle_margin_bottom: float = 0
+    plot_title_alignment: float = 0
+    """
+    Space added to align the plot title with others in a composition
+
+    This value is calculated during the layout process. The amount is
+    the difference between the largest and smallest plot_title_clearance
+    among the items in the composition.
+    """
     legend: float = 0
     legend_box_spacing: float = 0
     axis_title_margin_top: float = 0
@@ -621,14 +619,16 @@ class top_space(_plot_side_space):
             self.plot_margin += adjustment
 
     @property
-    def axis_title_clearance(self) -> float:
+    def plot_title_clearance(self) -> float:
         """
-        Axis-title-to-panel clearance, excluding any facet strip
+        The distance between the plot title block and the panel
+
+        Everything between the title & subtitle and the panel — legend,
+        axis title, axis text, ticks and facet strip — counts toward
+        this distance. When it is equal across the plots in a row of a
+        composition, their titles sit at the same height.
         """
-        # The strip sits outside the axis title's alignment band, so it
-        # does not count toward the title-to-panel clearance used to
-        # align axis titles across a composition.
-        return super().axis_title_clearance - self.strip_text
+        return self.total - self.sum_upto("plot_title_alignment")
 
     @property
     def offset(self) -> float:
