@@ -7,6 +7,10 @@ title: Changelog
 
 ### New
 
+- You can now add a secondary axis to a plot, either as a one-to-one
+  transformation of the primary axis with [](:class:`~plotnine.sec_axis`), or as a
+  mirror of the primary axis with [](:func:`~plotnine.dup_axis`).
+
 - Added [](:class:`~plotnine.composition.plot_layout`) with which you can customise the
   layout of plots in composition.
 
