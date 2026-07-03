@@ -1,3 +1,5 @@
+import numpy as np
+import numpy.testing as npt
 import pandas as pd
 import pytest
 
@@ -8,6 +10,8 @@ from plotnine import (
     ggplot,
     scale_x_continuous,
     scale_x_datetime,
+    scale_y_continuous,
+    scale_y_log10,
     sec_axis,
 )
 from plotnine.data import mtcars
@@ -67,3 +71,70 @@ def test_facet_null_sec_axis_flags():
     p = p0.build_test()
     details = p.layout.get_details()[0]
     assert details.axis_x_sec and details.axis_y_sec
+
+
+def test_coord_trans_sec_axis():
+    from plotnine import coord_trans
+
+    p = (
+        p0
+        + scale_y_continuous(sec_axis=sec_axis(lambda y: y * 2))
+        + coord_trans(y="log10")
+    ).build_test()
+    sec = p.layout.panel_params[0].y.sec
+    # The coordinate transform moves the secondary positions exactly
+    # like the primary breaks: position = log10(value / 2)
+    values = np.array([float(l) for l in sec.labels])
+    npt.assert_allclose(sec.breaks, np.log10(values / 2), rtol=1e-4)
+
+
+def test_dup_axis_x():
+    p = p0 + scale_x_continuous(sec_axis=dup_axis())
+    assert p == "dup_axis_x"
+
+
+def test_sec_axis_y():
+    p = p0 + scale_y_continuous(
+        name="miles/gallon",
+        sec_axis=sec_axis(lambda y: y * 0.4251, name="km/litre"),
+    )
+    assert p == "sec_axis_y"
+
+
+def test_sec_axis_log10():
+    p = p0 + scale_y_log10(sec_axis=sec_axis(lambda y: y * 100))
+    assert p == "sec_axis_log10"
+
+
+def test_primary_top_sec_bottom():
+    p = p0 + scale_x_continuous(position="top", sec_axis=dup_axis())
+    assert p == "primary_top_sec_bottom"
+
+
+def test_coord_flip_sec_axis():
+    from plotnine import coord_flip
+
+    p = (
+        p0
+        + scale_y_continuous(sec_axis=sec_axis(lambda y: y * 2))
+        + coord_flip()
+    )
+    assert p == "coord_flip_sec_axis"
+
+
+def test_facet_grid_sec_axis():
+    from plotnine import facet_grid
+
+    p = p0 + facet_grid("am", "gear") + scale_x_continuous(sec_axis=dup_axis())
+    assert p == "facet_grid_sec_axis"
+
+
+def test_facet_wrap_sec_axis():
+    from plotnine import facet_wrap
+
+    p = (
+        p0
+        + facet_wrap("gear")
+        + scale_y_continuous(sec_axis=sec_axis(lambda y: y * 2, name="2x"))
+    )
+    assert p == "facet_wrap_sec_axis"

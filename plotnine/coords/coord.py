@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import typing
 from copy import copy
+from typing import cast
 
 import numpy as np
 
@@ -9,14 +10,21 @@ from .._utils import OPPOSITE_SIDE
 from ..iapi import panel_ranges
 
 if typing.TYPE_CHECKING:
-    from typing import Any
+    from typing import Any, Sequence
 
     import numpy.typing as npt
     import pandas as pd
     from matplotlib.axes import Axes
+    from matplotlib.axis import XAxis, YAxis
 
     from plotnine import ggplot
-    from plotnine.iapi import labels_view, layout_details, panel_view
+    from plotnine._mpl.axes import p9Axes
+    from plotnine.iapi import (
+        labels_view,
+        layout_details,
+        panel_view,
+        scale_position_view,
+    )
     from plotnine.scales.scale_xy import ScaleX, ScaleY
     from plotnine.typing import (
         FloatArray,
@@ -42,6 +50,67 @@ def _activate_axis(axis, active_side: Side, present: bool):
             f"label{opposite}": False,
         },
     )
+
+
+def _inf_to_none(
+    t: tuple[float, float],
+) -> tuple[float | None, float | None]:
+    """
+    Replace infinities with None
+    """
+    a = t[0] if np.isfinite(t[0]) else None
+    b = t[1] if np.isfinite(t[1]) else None
+    return (a, b)
+
+
+def _set_fixed_ticks(
+    axis: XAxis | YAxis,
+    breaks: Sequence[float] | Sequence[str],
+    labels: Sequence[str],
+    minor_breaks: FloatArrayLike = (),
+):
+    """
+    Fixed major/minor tick positions and labels for one mpl axis
+
+    Parameters
+    ----------
+    axis :
+        Axis to set up.
+    breaks :
+        Positions of the major ticks.
+    labels :
+        Labels of the major ticks.
+    minor_breaks :
+        Positions of the minor ticks.
+    """
+    from .._mpl.ticker import MyFixedFormatter
+
+    axis.set_ticks(breaks, labels)
+    axis.set_ticks(minor_breaks, minor=True)
+    # When you manually set the tick labels MPL changes the locator
+    # so that it no longer reports the x & y positions
+    # Fixes https://github.com/has2k1/plotnine/issues/187
+    axis.set_major_formatter(MyFixedFormatter(labels))
+
+
+def _side_axis(ax: Axes, side: Side) -> XAxis | YAxis:
+    """
+    Return the axis (x or y) that can occupy `side`
+
+    Parameters
+    ----------
+    ax :
+        Panel axes.
+    side :
+        Side of the panel.
+
+    Returns
+    -------
+    :
+        `ax.xaxis` for `"top"`/`"bottom"`, `ax.yaxis` for
+        `"left"`/`"right"`.
+    """
+    return ax.xaxis if side in ("top", "bottom") else ax.yaxis
 
 
 class coord:
@@ -145,35 +214,11 @@ class coord:
         """
         Limits, major/minor breaks, tick labels, and fixed formatter on `ax`
         """
-        from .._mpl.ticker import MyFixedFormatter
-
-        def _inf_to_none(
-            t: tuple[float, float],
-        ) -> tuple[float | None, float | None]:
-            """
-            Replace infinities with None
-            """
-            a = t[0] if np.isfinite(t[0]) else None
-            b = t[1] if np.isfinite(t[1]) else None
-            return (a, b)
-
-        # limits
-        ax.set_xlim(*_inf_to_none(panel_params.x.range))
-        ax.set_ylim(*_inf_to_none(panel_params.y.range))
-
-        # breaks, labels
-        ax.set_xticks(panel_params.x.breaks, panel_params.x.labels)
-        ax.set_yticks(panel_params.y.breaks, panel_params.y.labels)
-
-        # minor breaks
-        ax.set_xticks(panel_params.x.minor_breaks, minor=True)
-        ax.set_yticks(panel_params.y.minor_breaks, minor=True)
-
-        # When you manually set the tick labels MPL changes the locator
-        # so that it no longer reports the x & y positions
-        # Fixes https://github.com/has2k1/plotnine/issues/187
-        ax.xaxis.set_major_formatter(MyFixedFormatter(panel_params.x.labels))
-        ax.yaxis.set_major_formatter(MyFixedFormatter(panel_params.y.labels))
+        x, y = panel_params.x, panel_params.y
+        ax.set_xlim(*_inf_to_none(x.range))
+        ax.set_ylim(*_inf_to_none(y.range))
+        _set_fixed_ticks(ax.xaxis, x.breaks, x.labels, x.minor_breaks)
+        _set_fixed_ticks(ax.yaxis, y.breaks, y.labels, y.minor_breaks)
 
     def _setup_axis_sides(
         self,
@@ -183,18 +228,72 @@ class coord:
     ) -> None:
         """
         Tick visibility and spine visibility for the side each axis occupies
-        """
-        x_pos = panel_params.x.position  # "bottom" | "top"
-        y_pos = panel_params.y.position  # "left" | "right"
-        _activate_axis(ax.xaxis, x_pos, layout_info.axis_x)
-        _activate_axis(ax.yaxis, y_pos, layout_info.axis_y)
 
-        # Spine on each axis's active side, on every panel (edge or
-        # interior); the axis_line themeable styles or blanks it.
-        ax.spines["top"].set_visible(x_pos == "top")
-        ax.spines["bottom"].set_visible(x_pos == "bottom")
-        ax.spines["right"].set_visible(y_pos == "right")
-        ax.spines["left"].set_visible(y_pos == "left")
+        A secondary axis occupies the opposite side.
+        """
+        x, y = panel_params.x, panel_params.y
+
+        self._setup_primary_axis(ax, x, layout_info.axis_x)
+        self._setup_primary_axis(ax, y, layout_info.axis_y)
+        self._setup_secondary_axis(ax, x, layout_info.axis_x_sec)
+        self._setup_secondary_axis(ax, y, layout_info.axis_y_sec)
+
+    def _setup_primary_axis(
+        self,
+        ax: Axes,
+        sv: scale_position_view,
+        present: bool,
+    ) -> None:
+        """
+        Ticks, labels and spine of one primary axis, on its side
+
+        Parameters
+        ----------
+        ax :
+            Panel axes.
+        sv :
+            View of the axis's position scale.
+        present :
+            Whether the panel shows the axis's ticks and labels; False
+            on interior facet panels. The spine shows on every panel
+            (edge or interior) and the `axis_line` themeable styles or
+            blanks it.
+        """
+        _activate_axis(_side_axis(ax, sv.position), sv.position, present)
+        ax.spines[sv.position].set_visible(True)
+
+    def _setup_secondary_axis(
+        self,
+        ax: Axes,
+        sv: scale_position_view,
+        present: bool,
+    ) -> None:
+        """
+        Ticks, labels and spine of one secondary axis, on its side
+
+        A scale without a `sec_axis` has no secondary axis; this does
+        nothing. Otherwise the secondary axis is an `Axis` artist on
+        the panel itself (see `p9Axes`), with breaks expressed in the
+        panel's data space.
+
+        Parameters
+        ----------
+        ax :
+            Panel axes.
+        sv :
+            View of the axis's position scale; `sv.sec` carries the
+            resolved secondary axis.
+        present :
+            Whether the panel shows the secondary ticks and labels; as
+            with the primary axis, the spine shows on every panel.
+        """
+        if (sec := sv.sec) is None:
+            return
+
+        axis = cast("p9Axes", ax).add_sec_axis(sec.position)
+        _set_fixed_ticks(axis, sec.breaks, sec.labels)
+        _activate_axis(axis, sec.position, present)
+        ax.spines[sec.position].set_visible(True)
 
     def labels(self, cur_labels: labels_view) -> labels_view:
         """

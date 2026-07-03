@@ -123,6 +123,8 @@ class coord_trans(coord):
             breaks = cast("tuple[float, float]", sv.breaks)
             sv.breaks = transform_value(trans, breaks)
             sv.minor_breaks = transform_value(trans, sv.minor_breaks)
+            if sv.sec is not None:
+                sv.sec.breaks = transform_value(trans, sv.sec.breaks)
             return sv
 
         out = panel_view(

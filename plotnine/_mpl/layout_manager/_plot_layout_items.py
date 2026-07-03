@@ -10,6 +10,7 @@ from plotnine._utils import ha_as_float, side_artists, va_as_float
 from plotnine.composition._compose import Compose
 from plotnine.exceptions import PlotnineError
 
+from ..axes import axis_at
 from ..utils import (
     ArtistGeometry,
     TextJustifier,
@@ -44,6 +45,7 @@ if TYPE_CHECKING:
     from plotnine.themes.theme import theme
     from plotnine.typing import (
         HorizontalJustification,
+        Side,
         StripPosition,
         VerticalJustification,
     )
@@ -206,15 +208,15 @@ class PlotLayoutItems:
             if getattr(spec, pred_method)()
         ]
 
-    def axis_text_x(self, ax: Axes, side: str) -> Iterator[Text]:
+    def axis_text_x(self, ax: Axes, side: Side) -> Iterator[Text]:
         """
         Return the visible x-axis labels on one side of an axes
         """
         major, minor = [], []
 
-        if not self._is_blank("axis_text_x"):
-            major = ax.xaxis.get_major_ticks()
-            minor = ax.xaxis.get_minor_ticks()
+        if not self._is_blank("axis_text_x") and (axis := axis_at(ax, side)):
+            major = axis.get_major_ticks()
+            minor = axis.get_minor_ticks()
 
         label_attr = side_artists(side)[1]
         return (
@@ -223,15 +225,15 @@ class PlotLayoutItems:
             if _text_is_visible(getattr(tick, label_attr))
         )
 
-    def axis_text_y(self, ax: Axes, side: str) -> Iterator[Text]:
+    def axis_text_y(self, ax: Axes, side: Side) -> Iterator[Text]:
         """
         Return the visible y-axis labels on one side of an axes
         """
         major, minor = [], []
 
-        if not self._is_blank("axis_text_y"):
-            major = ax.yaxis.get_major_ticks()
-            minor = ax.yaxis.get_minor_ticks()
+        if not self._is_blank("axis_text_y") and (axis := axis_at(ax, side)):
+            major = axis.get_major_ticks()
+            minor = axis.get_minor_ticks()
 
         label_attr = side_artists(side)[1]
         return (
@@ -240,31 +242,33 @@ class PlotLayoutItems:
             if _text_is_visible(getattr(tick, label_attr))
         )
 
-    def axis_ticks_x(self, ax: Axes) -> Iterator[Tick]:
+    def axis_ticks_x(self, ax: Axes, side: Side) -> Iterator[Tick]:
         """
-        Return all XTicks that will be shown
+        Return all XTicks on `side` that will be shown
         """
         major, minor = [], []
 
-        if not self._is_blank("axis_ticks_major_x"):
-            major = ax.xaxis.get_major_ticks()
+        if (axis := axis_at(ax, side)) is not None:
+            if not self._is_blank("axis_ticks_major_x"):
+                major = axis.get_major_ticks()
 
-        if not self._is_blank("axis_ticks_minor_x"):
-            minor = ax.xaxis.get_minor_ticks()
+            if not self._is_blank("axis_ticks_minor_x"):
+                minor = axis.get_minor_ticks()
 
         return chain(major, minor)
 
-    def axis_ticks_y(self, ax: Axes) -> Iterator[Tick]:
+    def axis_ticks_y(self, ax: Axes, side: Side) -> Iterator[Tick]:
         """
-        Return all YTicks that will be shown
+        Return all YTicks on `side` that will be shown
         """
         major, minor = [], []
 
-        if not self._is_blank("axis_ticks_major_y"):
-            major = ax.yaxis.get_major_ticks()
+        if (axis := axis_at(ax, side)) is not None:
+            if not self._is_blank("axis_ticks_major_y"):
+                major = axis.get_major_ticks()
 
-        if not self._is_blank("axis_ticks_minor_y"):
-            minor = ax.yaxis.get_minor_ticks()
+            if not self._is_blank("axis_ticks_minor_y"):
+                minor = axis.get_minor_ticks()
 
         return chain(major, minor)
 
@@ -383,20 +387,20 @@ class PlotLayoutItems:
         pad_pt = theme.getp(f"strip_switch_pad_{g}") or 0
         return band + (pad_pt / 72) / dim
 
-    def axis_ticks_x_max_height(self, ax: Axes, side: str) -> float:
+    def axis_ticks_x_max_height(self, ax: Axes, side: Side) -> float:
         """
         Return maximum height[figure space] of visible x ticks on a side
         """
         attr = side_artists(side)[0]
         heights = [
             self.geometry.tight_height(getattr(tick, attr))
-            for tick in self.axis_ticks_x(ax)
+            for tick in self.axis_ticks_x(ax, side)
             if getattr(tick, attr).get_visible()
         ]
         return max(heights) if len(heights) else 0
 
     def axis_ticks_x_max_height_at(
-        self, location: AxesLocation, side: str
+        self, location: AxesLocation, side: Side
     ) -> float:
         """
         Return maximum height[figure space] of visible x ticks on a side
@@ -407,7 +411,7 @@ class PlotLayoutItems:
         ]
         return max(heights) if len(heights) else 0
 
-    def axis_text_x_max_height(self, ax: Axes, side: str) -> float:
+    def axis_text_x_max_height(self, ax: Axes, side: Side) -> float:
         """
         Return maximum height[figure space] of x tick labels on a side
         """
@@ -418,7 +422,7 @@ class PlotLayoutItems:
         return max(heights) if len(heights) else 0
 
     def axis_text_x_max_height_at(
-        self, location: AxesLocation, side: str
+        self, location: AxesLocation, side: Side
     ) -> float:
         """
         Return maximum height[figure space] of x tick labels on a side
@@ -429,20 +433,20 @@ class PlotLayoutItems:
         ]
         return max(heights) if len(heights) else 0
 
-    def axis_ticks_y_max_width(self, ax: Axes, side: str) -> float:
+    def axis_ticks_y_max_width(self, ax: Axes, side: Side) -> float:
         """
         Return maximum width[figure space] of visible y ticks on a side
         """
         attr = side_artists(side)[0]
         widths = [
             self.geometry.tight_width(getattr(tick, attr))
-            for tick in self.axis_ticks_y(ax)
+            for tick in self.axis_ticks_y(ax, side)
             if getattr(tick, attr).get_visible()
         ]
         return max(widths) if len(widths) else 0
 
     def axis_ticks_y_max_width_at(
-        self, location: AxesLocation, side: str
+        self, location: AxesLocation, side: Side
     ) -> float:
         """
         Return maximum width[figure space] of visible y ticks on a side
@@ -453,7 +457,7 @@ class PlotLayoutItems:
         ]
         return max(widths) if len(widths) else 0
 
-    def axis_text_y_max_width(self, ax: Axes, side: str) -> float:
+    def axis_text_y_max_width(self, ax: Axes, side: Side) -> float:
         """
         Return maximum width[figure space] of y tick labels on a side
         """
@@ -464,7 +468,7 @@ class PlotLayoutItems:
         return max(widths) if len(widths) else 0
 
     def axis_text_y_max_width_at(
-        self, location: AxesLocation, side: str
+        self, location: AxesLocation, side: Side
     ) -> float:
         """
         Return maximum width[figure space] of y tick labels on a side
