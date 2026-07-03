@@ -218,6 +218,9 @@ class layout_details:
     scale_y: int
     axis_x: bool
     axis_y: bool
+    # True when the panel draws the axis opposite axis_x / axis_y
+    axis_x_sec: bool
+    axis_y_sec: bool
     variables: dict[str, Any]
     nrow: int
     ncol: int

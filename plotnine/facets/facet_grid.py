@@ -224,12 +224,16 @@ class facet_grid(facet):
         x_side, y_side = scales.axis_positions
         if x_side == "top":
             layout["AXIS_X"] = layout["ROW"] == layout["ROW"].min()
+            layout["AXIS_X_SEC"] = layout["ROW"] == layout["ROW"].max()
         else:
             layout["AXIS_X"] = layout["ROW"] == layout["ROW"].max()
+            layout["AXIS_X_SEC"] = layout["ROW"] == layout["ROW"].min()
         if y_side == "right":
             layout["AXIS_Y"] = layout["COL"] == layout["COL"].max()
+            layout["AXIS_Y_SEC"] = layout["COL"] == layout["COL"].min()
         else:
             layout["AXIS_Y"] = layout["COL"] == layout["COL"].min()
+            layout["AXIS_Y_SEC"] = layout["COL"] == layout["COL"].max()
 
         self.nrow = layout["ROW"].max()
         self.ncol = layout["COL"].max()

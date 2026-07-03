@@ -483,6 +483,8 @@ def layout_null() -> pd.DataFrame:
             "SCALE_Y": 1,
             "AXIS_X": True,
             "AXIS_Y": True,
+            "AXIS_X_SEC": True,
+            "AXIS_Y_SEC": True,
         }
     )
     return layout
