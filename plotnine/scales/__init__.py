@@ -139,6 +139,9 @@ from .scale_xy import (
     scale_y_timedelta,
 )
 
+# secondary axis
+from .sec_axis import dup_axis, sec_axis
+
 __all__ = (
     # color
     "scale_color_brewer",
@@ -227,6 +230,9 @@ __all__ = (
     "scale_linetype_manual",
     "scale_alpha_manual",
     "scale_size_manual",
+    # secondary axis
+    "dup_axis",
+    "sec_axis",
     # xy position and transforms
     "scale_x_continuous",
     "scale_x_date",

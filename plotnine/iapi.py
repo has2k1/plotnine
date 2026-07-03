@@ -50,12 +50,28 @@ class scale_view:
 
 
 @dataclass
+class sec_axis_view:
+    """
+    Resolved secondary axis of a panel
+    """
+
+    # Tick positions in the primary (transformed) coordinate space
+    breaks: Sequence[float]
+    labels: Sequence[str]
+    # Title of the secondary axis; None means the primary axis title
+    name: Optional[str]
+    # The side opposite the primary axis
+    position: Side
+
+
+@dataclass
 class scale_position_view(scale_view):
     """
     Trained position scale information, including the axis side
     """
 
     position: Side
+    sec: Optional[sec_axis_view] = None
 
 
 @dataclass

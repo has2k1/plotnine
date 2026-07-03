@@ -5,11 +5,22 @@ out so that we can refer to them as plotnine.scales._runtime_typing for
 the documentation.
 """
 
-from typing import Callable, Literal, Sequence, Type, TypeAlias, TypeVar
+from typing import (
+    TYPE_CHECKING,
+    Callable,
+    Literal,
+    Sequence,
+    Type,
+    TypeAlias,
+    TypeVar,
+)
 
 from mizani.transforms import trans
 
 from .range import Range
+
+if TYPE_CHECKING:
+    from .sec_axis import sec_axis
 
 # fmt: off
 
@@ -50,6 +61,8 @@ ScaleLabelsUser: TypeAlias = (
 )
 
 TransUser: TypeAlias = trans | str | Type[trans] | None
+
+SecAxisUser: TypeAlias = "sec_axis | None"
 
 OptionalLegend: TypeAlias = Literal["legend"] | None
 OptionalColorbar: TypeAlias = Literal["colorbar"] | None

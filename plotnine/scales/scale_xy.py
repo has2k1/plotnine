@@ -12,7 +12,7 @@ from .._utils.registry import alias
 from ..exceptions import PlotnineError
 from ..iapi import range_view, scale_position_view
 from ._expand import expand_range
-from ._runtime_typing import TransUser  # noqa: TCH001
+from ._runtime_typing import SecAxisUser, TransUser  # noqa: TCH001
 from .range import RangeContinuous
 from .scale_continuous import scale_continuous
 from .scale_datetime import scale_datetime
@@ -54,7 +54,10 @@ class scale_position:
         Information about the trained scale, including the axis side
         """
         sv = super().view(limits=limits, range=range)  # pyright: ignore[reportAttributeAccessIssue]
-        return scale_position_view(**vars(sv), position=self.position)  # pyright: ignore[reportAttributeAccessIssue]
+        psv = scale_position_view(**vars(sv), position=self.position)  # pyright: ignore[reportAttributeAccessIssue]
+        if (sec := getattr(self, "sec_axis", None)) is not None:
+            psv.sec = sec.view(self, psv)
+        return psv
 
 
 # positions scales have a couple of differences (quirks) that
@@ -279,6 +282,10 @@ class scale_x_continuous(scale_position_continuous):
 
     _aesthetics = ["x", "xmin", "xmax", "xend", "xintercept"]
     position: Literal["bottom", "top"] = "bottom"
+    sec_axis: SecAxisUser = None
+    """
+    A secondary axis, drawn on the side opposite `position`.
+    """
 
 
 @dataclass(kw_only=True)
@@ -300,6 +307,10 @@ class scale_y_continuous(scale_position_continuous):
         "upper",
     ]
     position: Literal["left", "right"] = "left"
+    sec_axis: SecAxisUser = None
+    """
+    A secondary axis, drawn on the side opposite `position`.
+    """
 
 
 # Transformed scales

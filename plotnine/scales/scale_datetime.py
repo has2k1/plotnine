@@ -4,6 +4,7 @@ from dataclasses import KW_ONLY, InitVar, dataclass
 from typing import TYPE_CHECKING
 from warnings import warn
 
+from ..exceptions import PlotnineError
 from ._runtime_typing import TransUser  # noqa: TCH001
 from .scale_continuous import scale_continuous
 
@@ -111,5 +112,12 @@ class scale_datetime(scale_continuous):
                 FutureWarning,
             )
             self.minor_breaks = breaks_date_width(width=self.minor_breaks)  # pyright: ignore[reportAttributeAccessIssue]
+
+        # The x/y datetime scales inherit the field from the continuous
+        # position scales; color/size datetime scales never have it.
+        if getattr(self, "sec_axis", None) is not None:
+            raise PlotnineError(
+                "Secondary axes are not supported on datetime scales."
+            )
 
         scale_continuous.__post_init__(self)

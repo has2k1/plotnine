@@ -119,6 +119,7 @@ from .qplot import (
     qplot,
 )
 from .scales import (
+    dup_axis,
     expand_limits,
     lims,
     scale_alpha,
@@ -217,6 +218,7 @@ from .scales import (
     scale_y_sqrt,
     scale_y_symlog,
     scale_y_timedelta,
+    sec_axis,
     xlim,
     ylim,
 )
@@ -290,6 +292,7 @@ __all__ = (
     "coord_fixed",
     "coord_flip",
     "coord_trans",
+    "dup_axis",
     "element_blank",
     "element_line",
     "element_rect",
@@ -461,6 +464,7 @@ __all__ = (
     "scale_y_sqrt",
     "scale_y_symlog",
     "scale_y_timedelta",
+    "sec_axis",
     "stage",
     "stat_bin",
     "stat_bin2d",
