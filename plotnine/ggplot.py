@@ -604,6 +604,20 @@ class ggplot:
             t = self.figure.add_artist(Text(text=labels.y))
             setattr(targets, f"axis_title_y_{pp.y.position}", t)
 
+        # The secondary axis title sits on the opposite side; a None
+        # name derives the primary title.
+        if (sec := pp.x.sec) is not None:
+            name = labels.x if sec.name is None else sec.name
+            if name:
+                t = self.figure.add_artist(Text(text=name))
+                setattr(targets, f"axis_title_x_{sec.position}", t)
+
+        if (sec := pp.y.sec) is not None:
+            name = labels.y if sec.name is None else sec.name
+            if name:
+                t = self.figure.add_artist(Text(text=name))
+                setattr(targets, f"axis_title_y_{sec.position}", t)
+
     def _draw_watermarks(self):
         """
         Draw watermark onto figure

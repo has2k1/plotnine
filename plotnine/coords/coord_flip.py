@@ -61,6 +61,9 @@ class coord_flip(coord_cartesian):
         # scale_flip_axis): top->right, bottom->left, left->bottom, right->top
         panel_params.x.position = _FLIP_POSITION[panel_params.x.position]
         panel_params.y.position = _FLIP_POSITION[panel_params.y.position]
+        for sv in (panel_params.x, panel_params.y):
+            if sv.sec is not None:
+                sv.sec.position = _FLIP_POSITION[sv.sec.position]
         return panel_params
 
     def setup_layout(self, layout: pd.DataFrame) -> pd.DataFrame:
