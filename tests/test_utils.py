@@ -144,6 +144,19 @@ def test_ninteraction_drops_unused_categorical_levels_with_missing():
     assert ninteraction(data, drop=True) == [1, 2, 3, 1]
 
 
+def test_ninteraction_categorical_missing_values_get_highest_id():
+    data = pd.DataFrame(
+        {
+            "a": pd.Categorical(
+                ["x", "y", None, "x"],
+                categories=["x", "unused", "y"],
+            )
+        }
+    )
+
+    assert ninteraction(data, drop=False) == [1, 3, 4, 1]
+
+
 def test_ninteraction_datetime_series():
     # When a pandas datetime is converted Numpy datetime, the two
     # no longer compare as equal! This test ensures that case is

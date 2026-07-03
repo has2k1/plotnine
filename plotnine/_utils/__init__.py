@@ -355,8 +355,11 @@ def ninteraction(df: pd.DataFrame, drop: bool = False) -> list[int]:
 
 def _id_var(x: AnyArrayLike, drop: bool = False) -> list[int]:
     """
-    Assign ids to items in x. If two items
-    are the same, they get the same id.
+    Assign ids to items in x
+
+    If two items are the same, they get the same id.
+    The ids start at 1 and, for categorical data, NaNs
+    get the highest id.
 
     Parameters
     ----------
@@ -364,28 +367,32 @@ def _id_var(x: AnyArrayLike, drop: bool = False) -> list[int]:
         items to associate ids with
     drop : bool
         Whether to drop unused factor levels
+
+    Returns
+    -------
+    ids:
+        List of ids
     """
     if len(x) == 0:
         return []
 
     if isinstance(x, pd.Series) and array_kind.categorical(x):
+        # The ids are a "re-coding" of the categorical codes/levels
+        # to meet the output requirements.
         if drop:
             x = x.cat.remove_unused_categories()
-            lst = list(x.cat.codes + 1)
-            if 0 in lst:
-                new_nan_code = max(lst) + 1
-                lst = [val if val != 0 else new_nan_code for val in lst]
-        else:
-            has_nan = any(np.isnan(i) for i in x if isinstance(i, float))
-            if has_nan:
-                # NaNs are -1, we give them the highest code
-                nan_code = -1
-                new_nan_code = np.max(x.cat.codes) + 1
-                # TODO: We are assuming that x is of type Sequence[int|nan]
-                # is that accurate.
-                lst = [val if val != nan_code else new_nan_code for val in x]
-            else:
-                lst = list(x.cat.codes + 1)
+
+        codes = x.cat.codes
+
+        # We want our list to start at 1.
+        # But NaNs are -1, and if we have them, we want them to have
+        # the highest code, i.e. to be ordered last.
+        ids = list(codes + 1)
+        has_nan = (codes == -1).any()
+        if has_nan:
+            # The NaNs now have an id of 0
+            highest_id = max(ids) + 1
+            ids = [highest_id if i == 0 else i for i in ids]
     else:
         try:
             levels = sorted(set(x))
@@ -393,10 +400,9 @@ def _id_var(x: AnyArrayLike, drop: bool = False) -> list[int]:
             # x probably has NANs
             levels = multitype_sort(list(set(x)))
 
-        lst = match(x, levels)
-        lst = [item + 1 for item in lst]
+        ids = list(match(x, levels, start=1))
 
-    return lst
+    return ids
 
 
 def join_keys(x, y, by=None):
