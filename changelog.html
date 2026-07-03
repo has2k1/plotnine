@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Changelog – plotnine 999.post1+g800b7623e</title>
+<title>Changelog – plotnine 999.post1+g6dcd7b62c</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -118,7 +118,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">plotnine 999.post1+g800b7623e</span>
+    <span class="navbar-title">plotnine 999.post1+g6dcd7b62c</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -404,6 +404,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="bug-fixes">Bug Fixes</h3>
 <ul>
 <li><p>The space between facet panels now accounts for the margins of the axis text, so with free scales large margins no longer push the tick labels into the neighbouring panel.</p></li>
+<li><p>Plot titles in a composition now sit at the same height even when the plots differ in what lies between the title and the panel — facet strips, top legends or a top-positioned x axis.</p></li>
 <li><p>Subclass geoms now inherit their parent geom’s default parameters, so parameters that a parent geom supports are no longer rejected. <a href="./reference/geom_step.html#plotnine.geom_step"><code>geom_step</code></a> accepts <code>lineend</code>, <code>linejoin</code> and <code>arrow</code>, <a href="./reference/geom_quantile.html#plotnine.geom_quantile"><code>geom_quantile</code></a> accepts <code>arrow</code>, and <a href="./reference/geom_histogram.html#plotnine.geom_histogram"><code>geom_histogram</code></a> accepts <code>just</code> and <code>width</code>.</p></li>
 <li><p>Fixed <a href="./reference/geom_smooth.html#plotnine.geom_smooth"><code>geom_smooth</code></a> / <a href="./reference/stat_smooth.html#plotnine.stat_smooth"><code>stat_smooth</code></a> when using a linear model via “lm” with weights for the model to do a weighted regression. This bug did not affect the formula API of the linear model. (<a href="https://github.com/has2k1/plotnine/issues/1005" title="Issue: #1005">#1005</a>)</p></li>
 <li><p>Fixed rendering of SVGs in jupyter notebooks.</p></li>
