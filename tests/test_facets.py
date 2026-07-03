@@ -235,7 +235,7 @@ def test_facet_grid_with_missing_categorical_values():
         }
     )
 
-    p = ggplot(data, aes("x", "y")) + geom_point() + facet_grid("row ~ col")
+    p = ggplot(data, aes("x", "y")) + geom_point() + facet_grid("row", "col")
 
     # No exception
     p.draw_test()  # pyright: ignore
