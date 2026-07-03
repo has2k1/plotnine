@@ -9,6 +9,7 @@ import numpy as np
 import pandas as pd
 import pandas.api.types as pdtypes
 
+from .._mpl.axes import p9Axes
 from .._utils import cross_join, match
 from ..exceptions import PlotnineError
 from ..scales.scales import Scales
@@ -349,7 +350,9 @@ class facet:
         # Create axes
         it = itertools.product(range(self.nrow), range(self.ncol))
         for i, (row, col) in enumerate(it):
-            axsarr[row, col] = self.figure.add_subplot(gs[i])
+            axsarr[row, col] = self.figure.add_subplot(
+                gs[i], projection=p9Axes.name
+            )
 
         # Rearrange axes
         # They are ordered to match the positions in the layout table
