@@ -204,6 +204,7 @@ class LayoutTree:
         side-effects.
         """
         self.align_axis_titles()
+        self.align_plot_titles()
         self.align()
         self.resize()
 
@@ -562,6 +563,25 @@ class LayoutTree:
 
         for tree in self.sub_compositions:
             tree.align_axis_titles()
+
+    def align_plot_titles(self):
+        """
+        Align the plot titles across each row of the composition
+
+        The titles in a row line up when every plot has the same
+        distance between its title block and its panel. Equalising
+        the plot_title_clearance inserts the compensating space below
+        the title block, so a plot matches its neighbours' top
+        legends, facet strips or top axes without its title moving.
+        """
+
+        def plot_title_clearance(s):
+            return s.plot_title_clearance
+
+        _align(self.top_spaces, plot_title_clearance, "plot_title_alignment")
+
+        for tree in self.sub_compositions:
+            tree.align_plot_titles()
 
     def resize_widths(self):
         """
