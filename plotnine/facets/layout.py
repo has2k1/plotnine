@@ -291,6 +291,8 @@ class Layout:
             "SCALE_Y",
             "AXIS_X",
             "AXIS_Y",
+            "AXIS_X_SEC",
+            "AXIS_Y_SEC",
         ]
         vcols = self.layout.columns.difference(columns)
         lst = []

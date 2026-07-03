@@ -150,25 +150,33 @@ class facet_wrap(facet):
         # The row/column of each panel that shows the axis, on the side the
         # axis sits (default: bottom-most row, left-most column)
         x_side, y_side = scales.axis_positions
+        rows_by_col = layout.groupby("COL")["ROW"]
+        cols_by_row = layout.groupby("ROW")["COL"]
         if x_side == "top":
-            x_idx = [df["ROW"].idxmin() for _, df in layout.groupby("COL")]
+            x_idx, x_sec_idx = rows_by_col.idxmin(), rows_by_col.idxmax()
         else:
-            x_idx = [df["ROW"].idxmax() for _, df in layout.groupby("COL")]
+            x_idx, x_sec_idx = rows_by_col.idxmax(), rows_by_col.idxmin()
         if y_side == "right":
-            y_idx = [df["COL"].idxmax() for _, df in layout.groupby("ROW")]
+            y_idx, y_sec_idx = cols_by_row.idxmax(), cols_by_row.idxmin()
         else:
-            y_idx = [df["COL"].idxmin() for _, df in layout.groupby("ROW")]
+            y_idx, y_sec_idx = cols_by_row.idxmin(), cols_by_row.idxmax()
         layout["AXIS_X"] = False
         layout["AXIS_Y"] = False
+        layout["AXIS_X_SEC"] = False
+        layout["AXIS_Y_SEC"] = False
         _loc = layout.columns.get_loc
         layout.iloc[x_idx, _loc("AXIS_X")] = True  # type: ignore
         layout.iloc[y_idx, _loc("AXIS_Y")] = True  # type: ignore
+        layout.iloc[x_sec_idx, _loc("AXIS_X_SEC")] = True  # type: ignore
+        layout.iloc[y_sec_idx, _loc("AXIS_Y_SEC")] = True  # type: ignore
 
         if self.free["x"]:
             layout.loc[:, "AXIS_X"] = True
+            layout.loc[:, "AXIS_X_SEC"] = True
 
         if self.free["y"]:
             layout.loc[:, "AXIS_Y"] = True
+            layout.loc[:, "AXIS_Y_SEC"] = True
 
         return layout
 
