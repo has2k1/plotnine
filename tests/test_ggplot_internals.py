@@ -12,6 +12,7 @@ from plotnine import (
     coord_trans,
     facet_null,
     geom_bar,
+    geom_col,
     geom_histogram,
     geom_line,
     geom_point,
@@ -21,6 +22,7 @@ from plotnine import (
     labs,
     lims,
     scale_x_continuous,
+    scale_y_continuous,
     stage,
     stat_identity,
     theme,
@@ -363,6 +365,29 @@ def test_to_pandas():
     p2 = data >> ggplot(aes("x", "y")) + geom_point()
     assert p1 == "to_pandas"
     assert p2 == "to_pandas"
+
+
+def test_to_pandas_decimal_columns():
+    # polars' to_pandas() returns a Decimal column as an object column of
+    # decimal.Decimal values, which would otherwise be treated as discrete
+    # and rejected by a continuous scale. See GH #1033.
+    from decimal import Decimal
+
+    class DecimalData:
+        def to_pandas(self):
+            return pd.DataFrame(
+                {
+                    "x": ["a", "b", "c"],
+                    "y": [Decimal(1), Decimal(2), Decimal(3)],
+                }
+            )
+
+    p = (
+        ggplot(DecimalData(), aes("x", "y"))
+        + geom_col()
+        + scale_y_continuous(limits=(0, 5))
+    )
+    p._build()
 
 
 def test_callable_as_data():
