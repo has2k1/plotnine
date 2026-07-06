@@ -1258,19 +1258,22 @@ class text(axis_text, legend_text, strip_text, title):
 
 def _style_axis_line(themeable, ax, side):
     """
-    Style the spine on one side, when that side carries the axis
+    Style the spine on one side, when that side carries an axis
 
-    `coord.setup_ax` makes only the active side's spine visible, so a hidden
-    spine here is one this axis does not sit on. The spine name equals the
-    side (`bottom`/`top`/`left`/`right`).
+    A side that carries no axis is never styled. Styling also shows
+    the spine: a blank ancestor themeable (applied general-to-specific
+    before this one) may have hidden it, and the explicitly set
+    themeable wins. The spine name equals the side
+    (`bottom`/`top`/`left`/`right`).
     """
-    if not ax.spines[side].get_visible():
+    if side not in getattr(ax, "sides_with_an_axis", ()):
         return
     properties = themeable._get_properties(omit=("solid_capstyle",))
     # MPL has a default zorder of 2.5 for spines, so layers 3+ would be
     # drawn on top of the spines
     if "zorder" not in properties:
         properties["zorder"] = 10000
+    properties.setdefault("visible", True)
     ax.spines[side].set(**properties)
 
 
