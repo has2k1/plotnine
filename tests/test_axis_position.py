@@ -1,12 +1,14 @@
 from plotnine import (
     aes,
     coord_flip,
+    element_line,
     facet_wrap,
     geom_point,
     ggplot,
     scale_x_continuous,
     scale_x_discrete,
     scale_y_continuous,
+    theme,
 )
 from plotnine.data import mtcars
 
@@ -47,3 +49,16 @@ def test_x_axis_top_discrete():
         + scale_x_discrete(position="top")
     )
     assert p == "x_axis_top_discrete"
+
+
+def test_axis_line_y_right_overrides_blank():
+    # theme_gray blanks axis_line_y; the explicitly set leaf must
+    # still show and style the right spine
+    p = (
+        p0
+        + scale_y_continuous(position="right")
+        + theme(
+            axis_line_y_right=element_line(color="red", size=3),
+        )
+    )
+    assert p == "axis_line_y_right_overrides_blank"
