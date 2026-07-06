@@ -260,6 +260,7 @@ class coord:
             blanks it.
         """
         _activate_axis(_side_axis(ax, sv.position), sv.position, present)
+        cast("p9Axes", ax).sides_with_an_axis.add(sv.position)
         ax.spines[sv.position].set_visible(True)
 
     def _setup_secondary_axis(
@@ -290,9 +291,11 @@ class coord:
         if (sec := sv.sec) is None:
             return
 
-        axis = cast("p9Axes", ax).add_sec_axis(sec.position)
+        p9ax = cast("p9Axes", ax)
+        axis = p9ax.add_sec_axis(sec.position)
         _set_fixed_ticks(axis, sec.breaks, sec.labels)
         _activate_axis(axis, sec.position, present)
+        p9ax.sides_with_an_axis.add(sec.position)
         ax.spines[sec.position].set_visible(True)
 
     def labels(self, cur_labels: labels_view) -> labels_view:

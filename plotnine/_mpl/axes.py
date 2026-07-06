@@ -44,9 +44,14 @@ class p9Axes(Axes):
     sec_xaxis: XAxis | None
     sec_yaxis: YAxis | None
 
+    # Sides of the panel that carry an axis (primary or secondary);
+    # setup shows their spines.
+    sides_with_an_axis: set[Side]
+
     def __init__(self, *args, **kwargs):
         self.sec_xaxis = None
         self.sec_yaxis = None
+        self.sides_with_an_axis = set()
         super().__init__(*args, **kwargs)
         self._sharesec_x = None
         self._sharesec_y = None
