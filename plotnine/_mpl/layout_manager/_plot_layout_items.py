@@ -746,7 +746,7 @@ class PlotLayoutItems:
         fig = self.plot.figure
         to_points = 72 / fig.dpi
         W, H = fig.bbox.width, fig.bbox.height
-        offsets = {
+        offsets: dict[Side, float] = {
             "top": spaces.t.strip_band_offset() * H,
             "bottom": spaces.b.strip_band_offset() * H,
             "left": spaces.l.strip_band_offset() * W,
@@ -754,9 +754,8 @@ class PlotLayoutItems:
         }
         for ax in self.plot.axs:
             for side, offset in offsets.items():
-                if not offset:
+                if not offset or (axis := axis_at(ax, side)) is None:
                     continue
-                axis = ax.xaxis if side in ("top", "bottom") else ax.yaxis
                 _spine_set_position_outward(
                     ax.spines[side], axis, offset * to_points
                 )
