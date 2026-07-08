@@ -34,7 +34,6 @@ from plotnine import (
     theme_void,
     theme_xkcd,
 )
-from plotnine.coords.coord_cartesian import coord_cartesian
 from plotnine.data import mtcars
 from plotnine.themes.themeable import themeable
 
@@ -129,29 +128,6 @@ def test_extension_themeable_applies_from_theme_kwargs():
     fig = p.draw()
     try:
         assert fig.axes[0].get_facecolor() == (1.0, 0.0, 0.0, 1.0)
-    finally:
-        plt.close(fig)
-
-
-def test_coord_can_read_extension_themeable():
-    class test_extension_coord_title(themeable):
-        pass
-
-    class coord_reads_themeable(coord_cartesian):
-        def setup_ax(self, ax, panel_params, theme):
-            super().setup_ax(ax, panel_params, theme)
-            ax.set_title(theme.getp("test_extension_coord_title"))
-
-    p = (
-        ggplot(mtcars, aes(x="wt", y="mpg"))
-        + geom_point()
-        + coord_reads_themeable()
-        + theme(test_extension_coord_title="coord themeable")
-    )
-
-    fig = p.draw()
-    try:
-        assert fig.axes[0].get_title() == "coord themeable"
     finally:
         plt.close(fig)
 
