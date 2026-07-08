@@ -384,6 +384,7 @@ class ggplot:
             self._build()
 
             # setup
+            self.coordinates._setup(self)
             self.guides._setup(self)
             self.theme._setup(self)
 
