@@ -32,23 +32,6 @@ if typing.TYPE_CHECKING:
     )
 
 
-def _convert_decimal_columns(data: pd.DataFrame) -> pd.DataFrame:
-    """
-    Cast columns of decimal.Decimal values to float
-
-    polars' `to_pandas()` maps a Decimal column onto a pandas object column
-    holding `decimal.Decimal` values. plotnine treats object columns as
-    discrete, so such a column cannot be used with a continuous scale. Casting
-    it to float lets it behave like any other numeric column.
-    """
-    for col in data.columns:
-        if data[col].dtype == object:
-            non_null = data[col].dropna()
-            if len(non_null) and isinstance(non_null.iloc[0], decimal.Decimal):
-                data[col] = data[col].astype("float64")
-    return data
-
-
 class layer:
     """
     Layer
@@ -240,9 +223,7 @@ class layer:
         if plot_data is None:
             data = pd.DataFrame()
         elif hasattr(plot_data, "to_pandas"):
-            data = _convert_decimal_columns(
-                cast("DataFrameConvertible", plot_data).to_pandas()
-            )
+            data = cast("DataFrameConvertible", plot_data).to_pandas()
         else:
             data = cast("pd.DataFrame", plot_data)
 
@@ -269,13 +250,15 @@ class layer:
         else:
             # Recognise polars dataframes
             if hasattr(self._data, "to_pandas"):
-                self.data = _convert_decimal_columns(
-                    cast("DataFrameConvertible", self._data).to_pandas()
-                )
+                self.data = cast(
+                    "DataFrameConvertible", self._data
+                ).to_pandas()
             elif isinstance(self._data, pd.DataFrame):
                 self.data = self._data.copy()
             else:
                 raise TypeError(f"Data has a bad type: {type(self.data)}")
+
+        self.data = _decimal_columns_to_float(self.data)
 
     def _make_layer_mapping(self, plot_mapping: aes):
         """
@@ -798,3 +781,27 @@ def _resolve_position(
         raise PlotnineError(f"Unknown position of type {type(position_spec)}")
 
     return klass()
+
+
+def _decimal_columns_to_float(data: pd.DataFrame) -> pd.DataFrame:
+    """
+    Cast columns of decimal.Decimal values to float
+
+    polars' `to_pandas()` maps a Decimal column onto a pandas object column
+    holding `decimal.Decimal` values. plotnine treats object columns as
+    discrete, so such a column cannot be used with a continuous scale. Casting
+    it to float lets it behave like any other numeric column.
+
+    This runs for every dataframe, so we avoid the expense of `.dropna()`
+    (which builds a filtered copy) and use a mask to peek at the first
+    non-null value instead.
+    """
+    for col in data.columns:
+        series = data[col]
+        if series.dtype == object:
+            mask = series.notna()
+            if mask.any() and isinstance(
+                series[mask.idxmax()], decimal.Decimal
+            ):
+                data[col] = series.astype("float64")
+    return data
