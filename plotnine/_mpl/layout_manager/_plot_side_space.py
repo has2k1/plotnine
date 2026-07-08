@@ -18,7 +18,7 @@ from typing import TYPE_CHECKING, Literal, cast
 from plotnine.exceptions import PlotnineError
 from plotnine.facets import facet_grid, facet_null, facet_wrap
 
-from ._plot_layout_items import PlotLayoutItems
+from ._plot_layout_items import PlotLayoutItems, PolarPlotLayoutItems
 from ._side_space import GridSpecParams, _side_space
 
 if TYPE_CHECKING:
@@ -909,7 +909,12 @@ class PlotSideSpaces:
         self.plot = plot
         self.gridspec = plot._gridspec
         self.sub_gridspec = plot._sub_gridspec
-        self.items = PlotLayoutItems(plot)
+        items_cls = (
+            PlotLayoutItems
+            if plot.coordinates._projection is None
+            else PolarPlotLayoutItems
+        )
+        self.items = items_cls(plot)
 
         self.l = left_space(self.items)
         """All subspaces to the left of the panels"""

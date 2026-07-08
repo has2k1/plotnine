@@ -344,3 +344,15 @@ def test_coord_radial_rotate_angle_aligns_upright():
     # so they stay upright (a bottom label reads "6", not "9").
     assert all(-90 <= a <= 90 for a in out["angle"])
     assert_allclose(out["angle"], [0.0, 60.0, -60.0], atol=1e-6)
+
+
+def test_coord_polar_axis_clearance():
+    data = pd.DataFrame(
+        {"x": ["a", "a", "a"], "y": [2, 3, 5], "group": ["a", "b", "c"]}
+    )
+    p = (
+        ggplot(data, aes("x", "y", fill="group"))
+        + geom_col()
+        + coord_polar("y")
+    )
+    assert p == "coord_polar_axis_clearance"

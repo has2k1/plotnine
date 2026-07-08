@@ -903,6 +903,91 @@ class PlotLayoutItems:
         st.set_position((x, y))
 
 
+class PolarPlotLayoutItems(PlotLayoutItems):
+    """
+    `PlotLayoutItems` for a polar panel
+
+    A theta axis wraps the full circle and an r axis runs along one
+    spoke, so neither has a single side to measure a tick-label
+    bounding box from (`axis_at` never resolves one for either). These
+    four methods return a fixed clearance estimate instead, applied to
+    every side alike.
+    """
+
+    def axis_ticks_x_max_height(self, ax: Axes, side: Side) -> float:
+        return _polar_ticks_clearance_x(self.plot.theme)
+
+    def axis_text_x_max_height(self, ax: Axes, side: Side) -> float:
+        return _polar_text_clearance_x(self.plot.theme, side)
+
+    def axis_ticks_y_max_width(self, ax: Axes, side: Side) -> float:
+        return _polar_ticks_clearance_y(self.plot.theme)
+
+    def axis_text_y_max_width(self, ax: Axes, side: Side) -> float:
+        return _polar_text_clearance_y(self.plot.theme, side)
+
+
+def _polar_text_clearance_x(theme: theme, side: Side) -> float:
+    """
+    Fixed/estimated figure-height clearance for `axis_text_x_<side>`
+    on a polar panel
+
+    Not measured from rendered artists: a theta axis wraps the full
+    circle, so `axis_at` never resolves a side to measure a tick-label
+    bounding box from. Estimated instead from theme metrics — the
+    `axis_text_x_<side>` font size (standing in for label height) plus
+    its margin — the same rough idea `_strip_switch_pad` uses to turn a
+    themed point value into a figure fraction.
+    """
+    name = f"axis_text_x_{side}"
+    if theme.T.is_blank(name):
+        return 0
+    _, H = theme.getp("figure_size")
+    size_pt = theme.getp((name, "size")) or 0
+    margin = theme.getp((name, "margin"))
+    margin.setup(theme, name)
+    return size_pt / 72 / H + margin.fig.t + margin.fig.b
+
+
+def _polar_text_clearance_y(theme: theme, side: Side) -> float:
+    """
+    Fixed/estimated figure-width clearance for `axis_text_y_<side>` on
+    a polar panel
+
+    Mirrors `_polar_text_clearance_x` for the r axis: it runs along one
+    spoke rather than wrapping the circle, but the same "no side to
+    measure" problem applies.
+    """
+    name = f"axis_text_y_{side}"
+    if theme.T.is_blank(name):
+        return 0
+    W, _ = theme.getp("figure_size")
+    size_pt = theme.getp((name, "size")) or 0
+    margin = theme.getp((name, "margin"))
+    margin.setup(theme, name)
+    return size_pt / 72 / W + margin.fig.l + margin.fig.r
+
+
+def _polar_ticks_clearance_x(theme: theme) -> float:
+    """
+    Fixed/estimated figure-height clearance for the major x tick
+    length on a polar panel
+    """
+    _, H = theme.getp("figure_size")
+    tick_pt = abs(theme.getp("axis_ticks_length_major_x") or 0)
+    return tick_pt / 72 / H
+
+
+def _polar_ticks_clearance_y(theme: theme) -> float:
+    """
+    Fixed/estimated figure-width clearance for the major y tick length
+    on a polar panel
+    """
+    W, _ = theme.getp("figure_size")
+    tick_pt = abs(theme.getp("axis_ticks_length_major_y") or 0)
+    return tick_pt / 72 / W
+
+
 def _spine_set_position_outward(spine: Spine, axis: Axis, distance: float):
     """
     Move a spine and its tick marks outward, keeping the theme's tick styling
