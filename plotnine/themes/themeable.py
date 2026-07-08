@@ -1287,16 +1287,18 @@ def _style_polar_axis_line(themeable, ax, spine):
     Mirrors `_style_axis_line`: an explicitly themed (non-blank) spine
     is shown (`visible=True`) even if matplotlib's own geometry-driven
     default would hide it (e.g. a full circle has no `start`/`end`
-    spokes). `p9PolarAxes.draw` is what makes this choice stick across
-    draws.
+    spokes). Visibility goes through `p9PolarAxes.set_spine_visible`
+    rather than the `properties` dict, since that's what makes the
+    choice stick across draws.
     """
     if spine not in ax.spines:
         return
     properties = themeable._get_properties(omit=("solid_capstyle",))
-    properties.setdefault("visible", True)
+    visible = properties.pop("visible", True)
     if "zorder" not in properties:
         properties["zorder"] = 10000
     ax.spines[spine].set(**properties)
+    ax.set_spine_visible(spine, visible)
 
 
 def _blank_polar_axis_line(ax, spine):
@@ -1306,11 +1308,11 @@ def _blank_polar_axis_line(ax, spine):
     A plain `Axes` has no matching spine name, so this is a safe no-op
     for cartesian axes. It's reachable from every `blank_ax` call, polar
     or not, since `axis_line_theta`/`axis_line_r` nest under
-    `axis_line_x`/`axis_line_y`. `p9PolarAxes.draw` is what makes this
-    choice stick across draws.
+    `axis_line_x`/`axis_line_y`. `p9PolarAxes.set_spine_visible` is what
+    makes this choice stick across draws.
     """
     if spine in ax.spines:
-        ax.spines[spine].set_visible(False)
+        ax.set_spine_visible(spine, False)
 
 
 class axis_line_x_bottom(themeable):
