@@ -14,7 +14,7 @@ if TYPE_CHECKING:
     from matplotlib.axes import Axes
     from matplotlib.projections.polar import PolarAxes
 
-    from plotnine.iapi import labels_view, panel_view
+    from plotnine.iapi import labels_view, layout_details, panel_view
     from plotnine.scales.scale import scale
 
 
@@ -141,6 +141,22 @@ class coord_polar(coord):
 
             return flip_labels(super().labels(cur_labels))
         return super().labels(cur_labels)
+
+    def setup_ax(
+        self,
+        ax: Axes,
+        panel_params: panel_view,
+        layout_info: layout_details,
+    ) -> None:
+        """
+        Limits, breaks and tick labels for a polar panel
+
+        Skips `coord`'s per-side spine/axis-line setup: the theta axis
+        wraps the full circle and the r axis runs along one spoke,
+        neither of which maps onto a cartesian left/right/top/bottom
+        side or a `p9Axes`-style spine.
+        """
+        self._setup_ticks_labels(ax, panel_params)
 
     # ------------------------------------------------------------------
     # Helpers
