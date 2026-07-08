@@ -31,9 +31,9 @@ class p9PolarAxes(PolarAxes):
         `PolarAxes.draw` also derives `inner`/`start`/`end` spine
         visibility from pure geometry (donut hole present, arc partial),
         discarding whatever axis_line theming chose. Theming always sets
-        every one of these three spines (blank or not) before the first
-        real draw, so saving their visibility beforehand and restoring
-        it right after `super().draw()` makes that choice stick.
+        every one of these three spines (blank or not) before each real
+        draw, so saving their visibility beforehand and restoring it
+        right after `super().draw()` makes that choice stick.
         """
         spine_names = ("inner", "start", "end")
         visible = {
