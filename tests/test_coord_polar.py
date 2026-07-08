@@ -1,6 +1,5 @@
 import numpy as np
 import pandas as pd
-from matplotlib import pyplot as plt
 from numpy.testing import assert_allclose
 
 from plotnine import (
@@ -9,10 +8,12 @@ from plotnine import (
     element_blank,
     element_line,
     geom_col,
+    geom_point,
     ggplot,
     theme,
 )
 from plotnine.coords.coord_polar import coord_polar
+from plotnine.data import mtcars
 from plotnine.iapi import labels_view, panel_view, scale_view
 from plotnine.scales import scale_x_continuous, scale_y_continuous
 
@@ -219,23 +220,46 @@ def test_coord_polar_keeps_labels_when_theta_x():
     assert out.y == "ylab"
 
 
-def test_coord_polar_draw_uses_polar_axes_and_hides_blank_border():
+def test_coord_radial_default_theme_hides_theta_and_r_boundaries():
+    # theme_gray blanks axis_line_x/axis_line_y; axis_line_theta and
+    # axis_line_r nest under them, so a default plot shows none of the
+    # wedge/donut boundary lines without any explicit theme() call.
+    p = (
+        ggplot(mtcars, aes("disp", "mpg"))
+        + geom_point()
+        + coord_radial(start=-0.4 * np.pi, end=0.4 * np.pi, inner_radius=0.3)
+    )
+    assert p == "coord_radial_default_theme_hides_theta_and_r_boundaries"
+
+
+def test_coord_polar_axis_line_controls_polar_spine():
+    # panel_border no longer owns the outer circle; axis_line does, and
+    # unlike panel_border it can style it, not just hide it.
     data = pd.DataFrame({"x": ["a", "b"], "y": [1, 2]})
     p = (
         ggplot(data, aes("x", "y"))
         + geom_col()
         + coord_polar()
-        + theme(panel_border=element_blank(), axis_line=element_line())
+        + theme(
+            panel_border=element_blank(),
+            axis_line=element_line(color="red", size=2),
+        )
     )
+    assert p == "coord_polar_axis_line_controls_polar_spine"
 
-    fig = p.draw()
 
-    try:
-        ax = fig.axes[0]
-        assert ax.name == "p9polar"
-        assert not ax.spines["polar"].get_visible()
-    finally:
-        plt.close(fig)
+def test_coord_polar_axis_line_r_start_shows_on_full_circle():
+    # coord_polar() is a full circle, so matplotlib's own default hides
+    # the 'start'/'end' spokes. Explicitly theming axis_line_r_start
+    # must show it anyway, and the choice must survive the real draw.
+    data = pd.DataFrame({"x": ["a", "b"], "y": [1, 2]})
+    p = (
+        ggplot(data, aes("x", "y"))
+        + geom_col()
+        + coord_polar()
+        + theme(axis_line_r_start=element_line(color="blue", size=2))
+    )
+    assert p == "coord_polar_axis_line_r_start_shows_on_full_circle"
 
 
 def test_coord_polar_default_theme_does_not_crash():
