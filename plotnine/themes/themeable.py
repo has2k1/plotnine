@@ -1280,6 +1280,39 @@ def _style_axis_line(themeable, ax, side):
     ax.spines[side].set(**properties)
 
 
+def _style_polar_axis_line(themeable, ax, spine):
+    """
+    Style a polar spine and show it
+
+    Mirrors `_style_axis_line`: an explicitly themed (non-blank) spine
+    is shown (`visible=True`) even if matplotlib's own geometry-driven
+    default would hide it (e.g. a full circle has no `start`/`end`
+    spokes). `p9PolarAxes.draw` is what makes this choice stick across
+    draws.
+    """
+    if spine not in ax.spines:
+        return
+    properties = themeable._get_properties(omit=("solid_capstyle",))
+    properties.setdefault("visible", True)
+    if "zorder" not in properties:
+        properties["zorder"] = 10000
+    ax.spines[spine].set(**properties)
+
+
+def _blank_polar_axis_line(ax, spine):
+    """
+    Hide a polar spine
+
+    A plain `Axes` has no matching spine name, so this is a safe no-op
+    for cartesian axes. It's reachable from every `blank_ax` call, polar
+    or not, since `axis_line_theta`/`axis_line_r` nest under
+    `axis_line_x`/`axis_line_y`. `p9PolarAxes.draw` is what makes this
+    choice stick across draws.
+    """
+    if spine in ax.spines:
+        ax.spines[spine].set_visible(False)
+
+
 class axis_line_x_bottom(themeable):
     """
     x-axis line on the bottom
@@ -1310,7 +1343,45 @@ class axis_line_x_top(themeable):
             ax.spines["top"].set_visible(False)
 
 
-class axis_line_x(axis_line_x_top, axis_line_x_bottom):
+class axis_line_theta_inside(themeable):
+    """
+    theta-axis line on the inner boundary
+    """
+
+    def apply_ax(self, ax: Axes):
+        super().apply_ax(ax)
+        _style_polar_axis_line(self, ax, "inner")
+
+    def blank_ax(self, ax: Axes):
+        super().blank_ax(ax)
+        _blank_polar_axis_line(ax, "inner")
+
+
+class axis_line_theta_outside(themeable):
+    """
+    theta-axis line on the outer boundary
+    """
+
+    def apply_ax(self, ax: Axes):
+        super().apply_ax(ax)
+        _style_polar_axis_line(self, ax, "polar")
+
+    def blank_ax(self, ax: Axes):
+        super().blank_ax(ax)
+        _blank_polar_axis_line(ax, "polar")
+
+
+class axis_line_theta(axis_line_theta_inside, axis_line_theta_outside):
+    """
+    theta-axis line
+
+    Parameters
+    ----------
+    theme_element : element_line
+    """
+
+
+class axis_line_x(axis_line_x_top, axis_line_x_bottom, axis_line_theta):
     """
     x-axis line
 
@@ -1350,7 +1421,45 @@ class axis_line_y_right(themeable):
             ax.spines["right"].set_visible(False)
 
 
-class axis_line_y(axis_line_y_left, axis_line_y_right):
+class axis_line_r_start(themeable):
+    """
+    r-axis line at the start angle
+    """
+
+    def apply_ax(self, ax: Axes):
+        super().apply_ax(ax)
+        _style_polar_axis_line(self, ax, "start")
+
+    def blank_ax(self, ax: Axes):
+        super().blank_ax(ax)
+        _blank_polar_axis_line(ax, "start")
+
+
+class axis_line_r_end(themeable):
+    """
+    r-axis line at the end angle
+    """
+
+    def apply_ax(self, ax: Axes):
+        super().apply_ax(ax)
+        _style_polar_axis_line(self, ax, "end")
+
+    def blank_ax(self, ax: Axes):
+        super().blank_ax(ax)
+        _blank_polar_axis_line(ax, "end")
+
+
+class axis_line_r(axis_line_r_start, axis_line_r_end):
+    """
+    r-axis line
+
+    Parameters
+    ----------
+    theme_element : element_line
+    """
+
+
+class axis_line_y(axis_line_y_left, axis_line_y_right, axis_line_r):
     """
     y-axis line
 
@@ -1949,11 +2058,6 @@ class panel_border(MixinSequenceOfValues):
         super().blank_figure(figure, targets)
         for rect in targets.panel_border:
             rect.set_visible(False)
-
-    def blank_ax(self, ax: Axes):
-        super().blank_ax(ax)
-        if "polar" in ax.spines:
-            ax.spines["polar"].set_visible(False)
 
 
 class plot_background(themeable):

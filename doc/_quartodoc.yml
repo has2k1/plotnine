@@ -403,6 +403,12 @@ quartodoc:
       contents:
         - aspect_ratio
         - axis_line
+        - axis_line_r
+        - axis_line_r_end
+        - axis_line_r_start
+        - axis_line_theta
+        - axis_line_theta_inside
+        - axis_line_theta_outside
         - axis_line_x
         - axis_line_x_bottom
         - axis_line_x_top
