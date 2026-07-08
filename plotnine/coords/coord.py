@@ -129,12 +129,37 @@ class coord:
     # if the coordinate system needs them
     params: dict[str, Any]
 
+    # The ggplot this coord belongs to. Bound in `_setup`, not
+    # `__init__`/`__radd__`: a ggplot is copied on every `+`, so any
+    # earlier binding would point at a stale, intermediate copy rather
+    # than the final plot that's actually drawn.
+    _owner: ggplot | None = None
+
     def __radd__(self, other: ggplot) -> ggplot:
         """
         Add coordinates to ggplot object
         """
         other.coordinates = copy(self)
         return other
+
+    def _setup(self, plot: ggplot) -> None:
+        """
+        Bind this coord to the plot that owns it
+
+        Unlike `theme._setup`/`guides._setup`, whose owner can be a
+        `ggplot`, a `Compose`, or (for `theme`) a `guide`, a coord is
+        never collected/shared across a `Compose` — it's always local to
+        exactly one `ggplot` — so the parameter is named for what it
+        concretely always is.
+
+        Parameters
+        ----------
+        plot :
+            The final `ggplot` being drawn. Called once per draw, after
+            all copying from `+` operators is done, mirroring
+            `guides._setup`/`theme._setup`.
+        """
+        self._owner = plot
 
     def setup_data(self, data: list[pd.DataFrame]) -> list[pd.DataFrame]:
         """
