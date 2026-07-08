@@ -367,23 +367,20 @@ def test_to_pandas():
     assert p2 == "to_pandas"
 
 
-def test_to_pandas_decimal_columns():
-    # polars' to_pandas() returns a Decimal column as an object column of
-    # decimal.Decimal values, which would otherwise be treated as discrete
-    # and rejected by a continuous scale. See GH #1033.
+def test_decimal_columns():
+    # A pandas object column of decimal.Decimal values (e.g. from polars'
+    # to_pandas()) would otherwise be treated as discrete and rejected by a
+    # continuous scale. See GH #1033.
     from decimal import Decimal
 
-    class DecimalData:
-        def to_pandas(self):
-            return pd.DataFrame(
-                {
-                    "x": ["a", "b", "c"],
-                    "y": [Decimal(1), Decimal(2), Decimal(3)],
-                }
-            )
-
+    data = pd.DataFrame(
+        {
+            "x": ["a", "b", "c"],
+            "y": [Decimal(1), Decimal(2), Decimal(3)],
+        }
+    )
     p = (
-        ggplot(DecimalData(), aes("x", "y"))
+        ggplot(data, aes("x", "y"))
         + geom_col()
         + scale_y_continuous(limits=(0, 5))
     )
