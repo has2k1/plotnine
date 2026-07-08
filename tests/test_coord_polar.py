@@ -238,6 +238,13 @@ def test_coord_polar_draw_uses_polar_axes_and_hides_blank_border():
         plt.close(fig)
 
 
+def test_coord_polar_default_theme_does_not_crash():
+    data = pd.DataFrame({"x": ["a", "b"], "y": [1, 2]})
+    p = ggplot(data, aes("x", "y")) + geom_col() + coord_polar()
+
+    p.draw_test()
+
+
 def test_coord_radial_arc_uses_end_or_full_turn():
     assert coord_radial(start=1, end=4)._arc == 3
     assert coord_radial()._arc == 2 * np.pi

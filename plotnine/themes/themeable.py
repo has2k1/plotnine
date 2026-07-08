@@ -1208,6 +1208,7 @@ class axis_text_y(axis_text_y_left, axis_text_y_right):
     theme_element : element_text
     """
 
+
 class axis_text(axis_text_x, axis_text_y):
     """
     Axis tick labels
@@ -1290,7 +1291,8 @@ class axis_line_x_bottom(themeable):
 
     def blank_ax(self, ax: Axes):
         super().blank_ax(ax)
-        ax.spines["bottom"].set_visible(False)
+        if "bottom" in ax.spines:
+            ax.spines["bottom"].set_visible(False)
 
 
 class axis_line_x_top(themeable):
@@ -1304,7 +1306,8 @@ class axis_line_x_top(themeable):
 
     def blank_ax(self, ax: Axes):
         super().blank_ax(ax)
-        ax.spines["top"].set_visible(False)
+        if "top" in ax.spines:
+            ax.spines["top"].set_visible(False)
 
 
 class axis_line_x(axis_line_x_top, axis_line_x_bottom):
@@ -1328,7 +1331,8 @@ class axis_line_y_left(themeable):
 
     def blank_ax(self, ax: Axes):
         super().blank_ax(ax)
-        ax.spines["left"].set_visible(False)
+        if "left" in ax.spines:
+            ax.spines["left"].set_visible(False)
 
 
 class axis_line_y_right(themeable):
@@ -1342,7 +1346,8 @@ class axis_line_y_right(themeable):
 
     def blank_ax(self, ax: Axes):
         super().blank_ax(ax)
-        ax.spines["right"].set_visible(False)
+        if "right" in ax.spines:
+            ax.spines["right"].set_visible(False)
 
 
 class axis_line_y(axis_line_y_left, axis_line_y_right):
