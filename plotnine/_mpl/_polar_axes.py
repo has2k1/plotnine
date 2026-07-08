@@ -27,8 +27,23 @@ class p9PolarAxes(PolarAxes):
         visible on top of opaque geoms.
         When `panel_ontop=True` everything is already above the geoms, so
         the re-draw is a visual no-op.
+
+        `PolarAxes.draw` also derives `inner`/`start`/`end` spine
+        visibility from pure geometry (donut hole present, arc partial),
+        discarding whatever axis_line theming chose. Theming always sets
+        every one of these three spines (blank or not) before the first
+        real draw, so saving their visibility beforehand and restoring
+        it right after `super().draw()` makes that choice stick.
         """
+        spine_names = ("inner", "start", "end")
+        visible = {
+            name: self.spines[name].get_visible() for name in spine_names
+        }
+
         super().draw(renderer)
+
+        for name, is_visible in visible.items():
+            self.spines[name].set_visible(is_visible)
 
         for axis in (self.raxis, self.thetaaxis):
             for label in axis.get_ticklabels():
