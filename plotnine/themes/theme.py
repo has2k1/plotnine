@@ -305,7 +305,7 @@ class theme:
 
     def get_margin(self, name: str) -> margin:
         """
-        Return the margin propery of a element_text themeables
+        Return the margin property of a element_text themeables
         """
         return self.themeables.getp((name, "margin"))
 

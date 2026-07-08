@@ -386,7 +386,7 @@ class Themeables(dict[str, themeable]):
 
     def get_ha(self, name: str) -> float:
         """
-        Get the horizontal alignement of themeable as a float
+        Get the horizontal alignment of themeable as a float
 
         The themeable should be and element_text
         """
@@ -398,7 +398,7 @@ class Themeables(dict[str, themeable]):
 
     def get_va(self, name) -> float:
         """
-        Get the vertical alignement of themeable as a float
+        Get the vertical alignment of themeable as a float
 
         The themeable should be and element_text
         """

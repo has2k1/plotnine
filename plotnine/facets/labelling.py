@@ -132,7 +132,7 @@ def as_labeller(
     multi_line: bool = True,
 ) -> labeller:
     """
-    Coerse to labeller
+    Coerce to labeller
 
     Parameters
     ----------

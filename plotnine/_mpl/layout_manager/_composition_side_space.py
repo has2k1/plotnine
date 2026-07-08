@@ -452,7 +452,7 @@ class CompositionSideSpaces:
         Apply the space calculations to the sub_gridspec
 
         After calling this method, the sub_gridspec will be appropriately
-        sized to accomodate the content of the annotations.
+        sized to accommodate the content of the annotations.
         """
         gsparams = self.calculate_gridspec_params()
         self.sub_gridspec.update_params_and_artists(gsparams)

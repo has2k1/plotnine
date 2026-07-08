@@ -405,7 +405,7 @@ class TextJustifier:
         self, text: Text, ha: HorizontalJustification | float
     ):
         """
-        Horizontally Justify text accross the panel(s) width
+        Horizontally Justify text across the panel(s) width
         """
         self.horizontally(
             text, ha, self.boundaries.panel_left, self.boundaries.panel_right
