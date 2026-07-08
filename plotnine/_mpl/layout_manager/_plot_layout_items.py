@@ -1096,7 +1096,7 @@ def _position_legends(
 
 def _position_plot_tag(tag: Text, spaces: PlotSideSpaces):
     """
-    Set the postion of the plot_tag
+    Set the position of the plot_tag
     """
     theme = spaces.plot.theme
     panels_gs = spaces.plot._sub_gridspec

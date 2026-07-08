@@ -1002,7 +1002,7 @@ class PlotSideSpaces:
         Apply the space calculations to the sub_gridspec
 
         After calling this method, the sub_gridspec will be appropriately
-        sized to accomodate the artists around the panels.
+        sized to accommodate the artists around the panels.
         """
         gsparams = self.calculate_gridspec_params()
         self.sub_gridspec.update_params_and_artists(gsparams)

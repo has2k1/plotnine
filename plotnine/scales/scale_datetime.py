@@ -65,7 +65,7 @@ class scale_datetime(scale_continuous):
     - `(0, timedelta(days=1))` - Expand lower and upper limits by 1 day.
     - `(1, 0)` - Expand lower and upper limits by 100%.
     - `(0, 0, 0, timedelta(hours=6))` - Expand upper limit by 6 hours.
-    - `(0, timedelta(minutes=5), 0.1, timdelta(0))` - Expand lower limit
+    - `(0, timedelta(minutes=5), 0.1, timedelta(0))` - Expand lower limit
       by 5 minutes and upper limit by 10%.
     - `(0, 0, 0.1, timedelta(weeks=2))` - Expand upper limit by 10% plus
       2 weeks.

@@ -95,7 +95,7 @@ def theoretical_qq(
     distribution_params: dict[str, Any],
 ) -> FloatArray:
     """
-    Caculate theoretical qq distribution
+    Calculate theoretical qq distribution
     """
     from scipy.stats.mstats import plotting_positions
 
