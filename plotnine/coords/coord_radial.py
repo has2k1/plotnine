@@ -12,8 +12,7 @@ if TYPE_CHECKING:
     from matplotlib.axes import Axes
     from matplotlib.projections.polar import PolarAxes
 
-    from plotnine import theme
-    from plotnine.iapi import panel_view
+    from plotnine.iapi import layout_details, panel_view
     from plotnine.scales.scale import scale
 
 
@@ -338,7 +337,10 @@ class coord_radial(coord_polar):
     # ------------------------------------------------------------------
 
     def setup_ax(
-        self, ax: Axes, panel_params: panel_view, theme: theme
+        self,
+        ax: Axes,
+        panel_params: panel_view,
+        layout_info: layout_details,
     ) -> None:
         """
         Configure each PolarAxes from this panel's limits
@@ -347,7 +349,7 @@ class coord_radial(coord_polar):
         ``panel_params`` so faceted panels with free scales each get their
         own radial range.
         """
-        super().setup_ax(ax, panel_params, theme)
+        super().setup_ax(ax, panel_params, layout_info)
         polar_ax = cast("PolarAxes", ax)
         arc = self._arc
 
@@ -392,7 +394,7 @@ class coord_radial(coord_polar):
             polar_ax.set_rlabel_position(np.degrees(float(self.r_axis_inside)))
 
         ax.tick_params(axis="x", which="major", direction="out")
-        if (angle := self._theta_guide_angle(theme)) is not None:
+        if (angle := self._theta_guide_angle()) is not None:
             # Use Matplotlib's 'auto' mode so labels orient tangentially
             # to the arc, with `angle` as an offset — matching ggplot2's
             # guide_axis_theta() semantics where angle=0 means tangential.
@@ -405,11 +407,11 @@ class coord_radial(coord_polar):
         for text in ax.texts:
             text.set_clip_on(False)
 
-    @staticmethod
-    def _theta_guide_angle(theme: theme) -> float | None:
+    def _theta_guide_angle(self) -> float | None:
         """
-        Return the angle from guides(theta=guide_axis_theta(...)).
+        Return the angle from guides(theta=guide_axis_theta(...))
         """
-        guide = getattr(getattr(theme, "owner", None), "guides", None)
-        guide = getattr(guide, "theta", None)
-        return getattr(guide, "angle", None)
+        try:
+            return self._owner.guides.theta.angle
+        except AttributeError:
+            return None
