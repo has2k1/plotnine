@@ -114,6 +114,16 @@ CoordRange: TypeAlias = tuple[float, float]
 
 # Guide
 Side: TypeAlias = Literal["left", "right", "top", "bottom"]
+PolarSide: TypeAlias = Literal[
+    "theta_inside", "theta_outside", "r_start", "r_end"
+]
+"""
+A side of a polar panel's theta or r axis
+
+`"theta_inside"`/`"theta_outside"` are the donut-hole and rim boundaries
+of the angular axis; `"r_start"`/`"r_end"` are the start-angle and
+end-angle spokes of the radial axis.
+"""
 LegendPosition: TypeAlias = (
     Literal["left", "right", "top", "bottom", "inside"] | tuple[float, float]
 )
