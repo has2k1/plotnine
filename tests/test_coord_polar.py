@@ -486,3 +486,31 @@ def test_coord_radial_ticks_length_themed_zero_stays_invisible():
         + theme(axis_ticks_length=0)
     )
     assert p == "coord_radial_ticks_length_themed_zero_stays_invisible"
+
+
+def test_coord_radial_scale_x_position_top_moves_theta_inside():
+    # scale_x_continuous(position="top") must move the resolved theta
+    # side from theta_outside to theta_inside, not just leave theming
+    # to work on whichever side happens to be primary by default.
+    p = (
+        ggplot(mtcars, aes("disp", "mpg"))
+        + geom_point()
+        + coord_radial(start=-1.0, end=1.0, inner_radius=0.3)
+        + scale_x_continuous(position="top")
+        + theme(axis_text_theta_inside=element_text(color="red"))
+    )
+    assert p == "coord_radial_scale_x_position_top_moves_theta_inside"
+
+
+def test_coord_radial_scale_y_position_right_moves_r_end():
+    # scale_y_continuous(position="right") must move the resolved r
+    # side from r_start to r_end, not just leave theming to work on
+    # whichever side happens to be primary by default.
+    p = (
+        ggplot(mtcars, aes("disp", "mpg"))
+        + geom_point()
+        + coord_radial(start=-1.0, end=1.0, inner_radius=0.3)
+        + scale_y_continuous(position="right")
+        + theme(axis_text_r_end=element_text(color="blue"))
+    )
+    assert p == "coord_radial_scale_y_position_right_moves_r_end"
