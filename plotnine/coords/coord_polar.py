@@ -204,6 +204,10 @@ class coord_polar(coord):
         polar_ax.axis_at_side[theta_side] = polar_ax.thetaaxis
         polar_ax.axis_at_side[r_side] = polar_ax.raxis
 
+        # The theme styles these tick objects later; keep matplotlib's
+        # tick resets from replacing their styling with the default look.
+        polar_ax.lock_raxis_tick_style()
+
     # ------------------------------------------------------------------
     # Helpers
     # ------------------------------------------------------------------

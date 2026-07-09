@@ -84,26 +84,20 @@ class p9PolarAxes(PolarAxes):
 
     def lock_raxis_tick_style(self) -> None:
         """
-        Keep the r-axis ticks looking as the theme styled them across draws
+        Keep the r-axis tick labels styled by the theme across draws
 
-        The theme styles the r-axis ticks and tick labels once, before any
-        real render pass. On the first render `PolarAxes.draw` calls
-        `self.yaxis.reset_ticks()`, which drops the lazily-cached tick lists;
-        the next access rebuilds fresh `Tick` objects with matplotlib's
-        default styling, so the themed colours, sizes and tick lengths are
-        gone by the time those ticks are painted. This makes the r-axis ticks
-        immune to that wipe. Only the r-axis needs it; `PolarAxes.draw` has no
-        matching reset for the theta-axis.
+        The theme styles the tick labels by setting the font on their label
+        artists directly, so matplotlib's tick reset -- which `PolarAxes.draw`
+        runs on the r-axis -- would otherwise repaint them with its defaults.
+        The tick marks are not at risk: their colour, width and length go
+        through `set_tick_params`, which the reset preserves. Only the r-axis
+        is reset; the theta-axis is not.
         """
-        # The reset and the paint that consumes it both happen inside a single
-        # `PolarAxes.draw` call, so restoring styling after `draw` returns is
-        # too late -- the default-styled ticks are already painted. Wrapping
-        # `reset_ticks` instead closes the gap synchronously: the wrapper
-        # re-copies the styling from the pre-reset ticks onto the fresh ones
-        # before control returns to `PolarAxes.draw`, so every tick the axis
-        # then grows and paints inherits the themed look. Capturing the source
-        # styling live on each reset (rather than from a one-off snapshot)
-        # keeps this re-entrant across any number of redraws.
+        # Wrapping `reset_ticks` restores the styling that lives on the tick
+        # artists (rather than in `set_tick_params` state) after every reset.
+        # Reading it live from the pre-reset ticks on each call keeps this
+        # correct however many resets run: a reset before the theme is applied
+        # simply carries the default look forward.
         if self._raxis_tick_style_locked:
             return
         self._raxis_tick_style_locked = True
@@ -112,11 +106,10 @@ class p9PolarAxes(PolarAxes):
         reset_ticks = axis.reset_ticks
 
         def reset_ticks_and_restyle() -> None:
-            # `_copy_tick_props` is matplotlib's own routine for propagating
-            # the look of `majorTicks[0]` onto the sibling ticks it grows, so
-            # reusing it leaves the restored ticks identical to freshly grown
-            # ones -- covering label1/label2, tick1line/tick2line and the tick
-            # length, for both major and minor ticks.
+            # `_copy_tick_props` `update_from`s each label and tick line, so it
+            # carries the full look of the pre-reset `majorTicks[0]` /
+            # `minorTicks[0]` onto the ticks the reset grows -- the label font
+            # included, which is the part `set_tick_params` cannot record.
             major, minor = axis.majorTicks[0], axis.minorTicks[0]
             reset_ticks()
             axis._copy_tick_props(major, axis.majorTicks[0])  # type: ignore
