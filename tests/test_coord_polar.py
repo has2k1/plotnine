@@ -439,3 +439,20 @@ def test_coord_radial_axis_ticks_major_theming():
         + theme(axis_ticks=element_line(color="blue", size=2))
     )
     assert p == "coord_radial_axis_ticks_major_theming"
+
+
+def test_coord_radial_axis_ticks_minor_theming():
+    # theme_gray blanks axis_ticks_minor globally, so minor ticks stay
+    # invisible everywhere until a user overrides axis_ticks_minor
+    # explicitly. axis_ticks_minor_theta_* / axis_ticks_minor_r_* now
+    # nest under axis_ticks_minor_x/y so a plain axis_ticks_minor=
+    # theme reaches both the theta and r minor tick marks.
+    p = (
+        ggplot(mtcars, aes("disp", "mpg"))
+        + geom_point()
+        + coord_radial(start=0.5 * np.pi, end=-0.5 * np.pi, inner_radius=0.3)
+        + theme(
+            axis_ticks_minor=element_line(color="green", size=1),
+        )
+    )
+    assert p == "coord_radial_axis_ticks_minor_theming"
