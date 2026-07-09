@@ -416,6 +416,12 @@ quartodoc:
         - axis_line_y_left
         - axis_line_y_right
         - axis_text
+        - axis_text_r
+        - axis_text_r_end
+        - axis_text_r_start
+        - axis_text_theta
+        - axis_text_theta_inside
+        - axis_text_theta_outside
         - axis_text_x
         - axis_text_x_bottom
         - axis_text_x_top
@@ -425,12 +431,22 @@ quartodoc:
         - axis_ticks
         - axis_ticks_length
         - axis_ticks_length_major
+        - axis_ticks_length_major_r
+        - axis_ticks_length_major_theta
         - axis_ticks_length_major_x
         - axis_ticks_length_major_y
         - axis_ticks_length_minor
+        - axis_ticks_length_minor_r
+        - axis_ticks_length_minor_theta
         - axis_ticks_length_minor_x
         - axis_ticks_length_minor_y
         - axis_ticks_major
+        - axis_ticks_major_r
+        - axis_ticks_major_r_end
+        - axis_ticks_major_r_start
+        - axis_ticks_major_theta
+        - axis_ticks_major_theta_inside
+        - axis_ticks_major_theta_outside
         - axis_ticks_major_x
         - axis_ticks_major_x_bottom
         - axis_ticks_major_x_top
@@ -438,6 +454,12 @@ quartodoc:
         - axis_ticks_major_y_left
         - axis_ticks_major_y_right
         - axis_ticks_minor
+        - axis_ticks_minor_r
+        - axis_ticks_minor_r_end
+        - axis_ticks_minor_r_start
+        - axis_ticks_minor_theta
+        - axis_ticks_minor_theta_inside
+        - axis_ticks_minor_theta_outside
         - axis_ticks_minor_x
         - axis_ticks_minor_x_bottom
         - axis_ticks_minor_x_top
