@@ -8,7 +8,7 @@ from matplotlib.axis import XAxis, YAxis
 from matplotlib.projections import register_projection
 
 if TYPE_CHECKING:
-    from plotnine.typing import Side
+    from plotnine.typing import PolarSide, Side
 
 AxisT = TypeVar("AxisT", XAxis, YAxis)
 
@@ -97,34 +97,43 @@ class p9Axes(Axes):
         return axis
 
 
-def axis_at(ax: Axes, side: Side) -> XAxis | YAxis | None:
+def axis_at(ax: Axes, side: Side | PolarSide) -> XAxis | YAxis | None:
     """
-    Return the axis of `ax` whose ticks occupy `side`, if any
+    Return the axis whose ticks occupy `side`, if any
 
-    Considers the primary axis of the side's dimension and, on a
-    `p9Axes`, the secondary one.
+    For a cartesian `side`, considers the primary axis of the side's
+    dimension and, on a `p9Axes`, the secondary one, via mpl's own
+    tick-flag state — reliable for `XAxis`/`YAxis`. For a polar `side`
+    (a theta/r side), reads `p9PolarAxes.axis_at_side` instead:
+    `ThetaAxis`/`RadialAxis` can't self-report which side they
+    occupy through `get_tick_params()`, so plotnine tracks it
+    explicitly there.
 
     Parameters
     ----------
     ax :
         Panel axes.
     side :
-        Side of the panel.
+        Side of a cartesian panel, or side of a polar one.
 
     Returns
     -------
     :
         The axis with active ticks on `side`, or `None` when that side
-        shows no ticks (e.g. an interior facet panel).
+        shows no ticks (e.g. an interior facet panel, or a polar
+        side nothing occupies).
     """
-    if side in ("top", "bottom"):
-        candidates = (ax.xaxis, getattr(ax, "sec_xaxis", None))
-    else:
-        candidates = (ax.yaxis, getattr(ax, "sec_yaxis", None))
-    for axis in candidates:
-        if axis and axis.get_tick_params(which="major").get(side):
-            return axis
-    return None
+    if side in ("top", "bottom", "left", "right"):
+        candidates = (
+            (ax.xaxis, getattr(ax, "sec_xaxis", None))
+            if side in ("top", "bottom")
+            else (ax.yaxis, getattr(ax, "sec_yaxis", None))
+        )
+        for axis in candidates:
+            if axis and axis.get_tick_params(which="major").get(side):
+                return axis
+        return None
+    return getattr(ax, "axis_at_side", {}).get(side)
 
 
 register_projection(p9Axes)
