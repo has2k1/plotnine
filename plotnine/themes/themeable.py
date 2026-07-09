@@ -35,7 +35,7 @@ if TYPE_CHECKING:
 
     from plotnine import theme
     from plotnine.themes.targets import ThemeTargets
-    from plotnine.typing import Side
+    from plotnine.typing import PolarSide, Side
 
 
 class themeable(metaclass=RegistryHierarchyMeta):
@@ -533,7 +533,7 @@ def blend_alpha(
     return properties
 
 
-def _set_axis_text_margin(themeable, ax, side: Side):
+def _set_axis_text_margin(themeable, ax, side: Side | PolarSide):
     """
     Set the gap between axis tick and axis text
     """
@@ -1139,7 +1139,67 @@ class axis_text_x_top(MixinSequenceOfValues):
             t.label2.set_visible(False)
 
 
-class axis_text_x(axis_text_x_top, axis_text_x_bottom):
+class axis_text_theta_outside(MixinSequenceOfValues):
+    """
+    theta-axis tick labels at the outer (rim) boundary
+
+    Parameters
+    ----------
+    theme_element : element_text
+    """
+
+    def apply_ax(self, ax: Axes):
+        super().apply_ax(ax)
+        if (axis := axis_at(ax, "theta_outside")) is None:
+            return
+        labels = [t.label2 for t in axis.get_major_ticks()]
+        self.set(labels, self._get_properties(omit=("margin", "va")))
+        _set_axis_text_margin(self, ax, "theta_outside")
+
+    def blank_ax(self, ax: Axes):
+        super().blank_ax(ax)
+        if (axis := axis_at(ax, "theta_outside")) is None:
+            return
+        for t in axis.get_major_ticks():
+            t.label2.set_visible(False)
+
+
+class axis_text_theta_inside(MixinSequenceOfValues):
+    """
+    theta-axis tick labels at the inner (donut-hole) boundary
+
+    Parameters
+    ----------
+    theme_element : element_text
+    """
+
+    def apply_ax(self, ax: Axes):
+        super().apply_ax(ax)
+        if (axis := axis_at(ax, "theta_inside")) is None:
+            return
+        labels = [t.label1 for t in axis.get_major_ticks()]
+        self.set(labels, self._get_properties(omit=("margin", "va")))
+        _set_axis_text_margin(self, ax, "theta_inside")
+
+    def blank_ax(self, ax: Axes):
+        super().blank_ax(ax)
+        if (axis := axis_at(ax, "theta_inside")) is None:
+            return
+        for t in axis.get_major_ticks():
+            t.label1.set_visible(False)
+
+
+class axis_text_theta(axis_text_theta_outside, axis_text_theta_inside):
+    """
+    theta-axis tick labels
+
+    Parameters
+    ----------
+    theme_element : element_text
+    """
+
+
+class axis_text_x(axis_text_x_top, axis_text_x_bottom, axis_text_theta):
     """
     x-axis tick labels
 
@@ -1199,7 +1259,67 @@ class axis_text_y_right(MixinSequenceOfValues):
             t.label2.set_visible(False)
 
 
-class axis_text_y(axis_text_y_left, axis_text_y_right):
+class axis_text_r_start(MixinSequenceOfValues):
+    """
+    r-axis tick labels at the start-angle spoke
+
+    Parameters
+    ----------
+    theme_element : element_text
+    """
+
+    def apply_ax(self, ax: Axes):
+        super().apply_ax(ax)
+        if (axis := axis_at(ax, "r_start")) is None:
+            return
+        labels = [t.label1 for t in axis.get_major_ticks()]
+        self.set(labels, self._get_properties(omit=("margin", "ha")))
+        _set_axis_text_margin(self, ax, "r_start")
+
+    def blank_ax(self, ax: Axes):
+        super().blank_ax(ax)
+        if (axis := axis_at(ax, "r_start")) is None:
+            return
+        for t in axis.get_major_ticks():
+            t.label1.set_visible(False)
+
+
+class axis_text_r_end(MixinSequenceOfValues):
+    """
+    r-axis tick labels at the end-angle spoke
+
+    Parameters
+    ----------
+    theme_element : element_text
+    """
+
+    def apply_ax(self, ax: Axes):
+        super().apply_ax(ax)
+        if (axis := axis_at(ax, "r_end")) is None:
+            return
+        labels = [t.label2 for t in axis.get_major_ticks()]
+        self.set(labels, self._get_properties(omit=("margin", "ha")))
+        _set_axis_text_margin(self, ax, "r_end")
+
+    def blank_ax(self, ax: Axes):
+        super().blank_ax(ax)
+        if (axis := axis_at(ax, "r_end")) is None:
+            return
+        for t in axis.get_major_ticks():
+            t.label2.set_visible(False)
+
+
+class axis_text_r(axis_text_r_start, axis_text_r_end):
+    """
+    r-axis tick labels
+
+    Parameters
+    ----------
+    theme_element : element_text
+    """
+
+
+class axis_text_y(axis_text_y_left, axis_text_y_right, axis_text_r):
     """
     y-axis tick labels
 
