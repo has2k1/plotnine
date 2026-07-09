@@ -2,10 +2,12 @@ from __future__ import annotations
 
 from dataclasses import replace
 from typing import TYPE_CHECKING, Literal, cast
+from warnings import warn
 
 import numpy as np
 
-from .coord_polar import coord_polar
+from ..exceptions import PlotnineWarning
+from .coord_polar import _resolve_r_side, coord_polar
 
 if TYPE_CHECKING:
     import pandas as pd
@@ -46,17 +48,6 @@ class coord_radial(coord_polar):
         Size of the inner hole as a fraction of the outer radius, in
         ``[0, 1)``.  ``0`` (default) means no hole; ``0.3`` creates a 30 %
         donut hole, useful for gauge and donut charts.
-    r_axis_inside :
-        Where to place the radial (r) axis tick labels.
-
-        * ``None`` (default) — let Matplotlib decide (usually outside).
-        * ``True`` — force inside, aligned just past the *start* angle.
-        * ``False`` — force outside (Matplotlib default).
-        * *float* — place at this theta angle in radians (clockwise from
-          North).
-
-        Unlike ggplot2's ``r.axis.inside``, a length-2 value for separate
-        primary and secondary axis placement is not supported.
     rotate_angle :
         If ``True``, rotate the ``angle`` aesthetic so that text or other
         rotated marks align tangentially with the arc at their spoke. The
@@ -87,7 +78,7 @@ class coord_radial(coord_polar):
     the gap to the outer circle through the ``axis_text_x`` margin.
 
     The Python API uses snake_case names for arguments that are dotted in
-    ggplot2: ``inner_radius``, ``r_axis_inside``, and ``rotate_angle``.
+    ggplot2: ``inner_radius`` and ``rotate_angle``.
 
     Examples
     --------
@@ -135,7 +126,6 @@ class coord_radial(coord_polar):
         direction: int = 1,
         expand: bool = True,
         inner_radius: float = 0,
-        r_axis_inside: bool | float | None = None,
         rotate_angle: bool = False,
         thetalim: tuple[float, float] | None = None,
         rlim: tuple[float, float] | None = None,
@@ -154,7 +144,6 @@ class coord_radial(coord_polar):
             )
         self.end = end
         self.inner_radius = inner_radius
-        self.r_axis_inside = r_axis_inside
         self.rotate_angle = rotate_angle
         self.thetalim = thetalim
         self.rlim = rlim
@@ -380,18 +369,24 @@ class coord_radial(coord_polar):
             )
             polar_ax.set_rorigin(r_origin)
 
-        # Radial axis label placement.
-        if self.r_axis_inside is None:
-            # Left spoke, matching ggplot2's default.
-            polar_ax.set_rlabel_position(270)
-        elif isinstance(self.r_axis_inside, bool):
-            if self.r_axis_inside:
-                # Just inside the start angle keeps it out of the data.
-                polar_ax.set_rlabel_position(np.degrees(self.start) + 10)
+        # Radial axis label placement. RadialTick.update_position (mpl)
+        # reads rlabel_position only for a full circle; a partial arc
+        # ignores it and always uses thetamin/thetamax directly, so this
+        # only matters here.
+        if self.end is None:
+            r_side = _resolve_r_side(panel_params.y.position)
+            if r_side == "r_end":
+                warn(
+                    "coord_radial(): a full circle has no 'end' "
+                    "boundary distinct from 'start' for the r axis "
+                    "(matplotlib always hides it there); "
+                    "scale_y_*(position='right') has no visible "
+                    "effect here. Set `end` for a partial arc to show "
+                    "the r axis on the opposite spoke.",
+                    PlotnineWarning,
+                )
             else:
                 polar_ax.set_rlabel_position(270)
-        else:
-            polar_ax.set_rlabel_position(np.degrees(float(self.r_axis_inside)))
 
         ax.tick_params(axis="x", which="major", direction="out")
         if (angle := self._theta_guide_angle()) is not None:
