@@ -446,7 +446,9 @@ def test_coord_radial_axis_ticks_minor_theming():
     # invisible everywhere until a user overrides axis_ticks_minor
     # explicitly. axis_ticks_minor_theta_* / axis_ticks_minor_r_* now
     # nest under axis_ticks_minor_x/y so a plain axis_ticks_minor=
-    # theme reaches both the theta and r minor tick marks.
+    # theme reaches minor ticks on both axes. This plot only exercises
+    # the r-axis half: coord_radial doesn't currently populate theta
+    # minor breaks, so there are no theta minor ticks to render here.
     p = (
         ggplot(mtcars, aes("disp", "mpg"))
         + geom_point()
