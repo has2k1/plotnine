@@ -14,7 +14,7 @@ from .coord import _activate_axis, coord, dist_euclidean
 if TYPE_CHECKING:
     import pandas as pd
     from matplotlib.axes import Axes
-    from matplotlib.projections.polar import PolarAxes, RadialAxis, ThetaAxis
+    from matplotlib.projections.polar import PolarAxes
 
     from plotnine.iapi import labels_view, layout_details, panel_view
     from plotnine.scales.scale import scale
@@ -201,8 +201,8 @@ class coord_polar(coord):
             ax.yaxis, "left" if r_side == "r_start" else "right", True
         )
 
-        polar_ax.axis_at_side[theta_side] = cast("ThetaAxis", ax.xaxis)
-        polar_ax.axis_at_side[r_side] = cast("RadialAxis", ax.yaxis)
+        polar_ax.axis_at_side[theta_side] = polar_ax.thetaaxis
+        polar_ax.axis_at_side[r_side] = polar_ax.raxis
 
     # ------------------------------------------------------------------
     # Helpers
