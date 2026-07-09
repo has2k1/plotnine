@@ -2478,6 +2478,8 @@ class axis_ticks_length_major_x(themeable):
 
     def apply_ax(self, ax: Axes):
         super().apply_ax(ax)
+        if getattr(ax, "axis_at_side", None) is not None:
+            return
         for axis in (ax.xaxis, getattr(ax, "sec_xaxis", None)):
             if axis is None:
                 continue
@@ -2519,6 +2521,8 @@ class axis_ticks_length_major_y(themeable):
 
     def apply_ax(self, ax: Axes):
         super().apply_ax(ax)
+        if getattr(ax, "axis_at_side", None) is not None:
+            return
         for axis in (ax.yaxis, getattr(ax, "sec_yaxis", None)):
             if axis is None:
                 continue
@@ -2546,8 +2550,63 @@ class axis_ticks_length_major_y(themeable):
             )
 
 
+class axis_ticks_length_major_theta(themeable):
+    """
+    theta-axis major-tick length
+
+    Parameters
+    ----------
+    theme_element : float | complex
+        Value in points. A negative value creates the ticks
+        inside the plot panel. A complex value (e.g. `3j`)
+        creates ticks that span both in and out of the panel.
+    """
+
+    def apply_ax(self, ax: Axes):
+        super().apply_ax(ax)
+        value: float | complex = self.properties["value"]
+        if isinstance(value, (float, int)):
+            tickdir = "in" if value < 0 else "out"
+        else:
+            tickdir = "inout"
+        for side in ("theta_inside", "theta_outside"):
+            if (axis := axis_at(ax, side)) is not None:
+                axis.set_tick_params(
+                    which="major", length=abs(value), tickdir=tickdir
+                )
+
+
+class axis_ticks_length_major_r(themeable):
+    """
+    r-axis major-tick length
+
+    Parameters
+    ----------
+    theme_element : float | complex
+        Value in points. A negative value creates the ticks
+        inside the plot panel. A complex value (e.g. `3j`)
+        creates ticks that span both in and out of the panel.
+    """
+
+    def apply_ax(self, ax: Axes):
+        super().apply_ax(ax)
+        value: float | complex = self.properties["value"]
+        if isinstance(value, (float, int)):
+            tickdir = "in" if value < 0 else "out"
+        else:
+            tickdir = "inout"
+        for side in ("r_start", "r_end"):
+            if (axis := axis_at(ax, side)) is not None:
+                axis.set_tick_params(
+                    which="major", length=abs(value), tickdir=tickdir
+                )
+
+
 class axis_ticks_length_major(
-    axis_ticks_length_major_x, axis_ticks_length_major_y
+    axis_ticks_length_major_x,
+    axis_ticks_length_major_y,
+    axis_ticks_length_major_theta,
+    axis_ticks_length_major_r,
 ):
     """
     Axis major-tick length
@@ -2575,6 +2634,8 @@ class axis_ticks_length_minor_x(themeable):
 
     def apply_ax(self, ax: Axes):
         super().apply_ax(ax)
+        if getattr(ax, "axis_at_side", None) is not None:
+            return
         value: float | complex = self.properties["value"]
 
         if isinstance(value, (float, int)):
@@ -2604,6 +2665,8 @@ class axis_ticks_length_minor_y(themeable):
 
     def apply_ax(self, ax: Axes):
         super().apply_ax(ax)
+        if getattr(ax, "axis_at_side", None) is not None:
+            return
         value: float | complex = self.properties["value"]
 
         if isinstance(value, (float, int)):
@@ -2619,8 +2682,63 @@ class axis_ticks_length_minor_y(themeable):
             )
 
 
+class axis_ticks_length_minor_theta(themeable):
+    """
+    theta-axis minor-tick length
+
+    Parameters
+    ----------
+    theme_element : float | complex
+        Value in points. A negative value creates the ticks
+        inside the plot panel. A complex value (e.g. `3j`)
+        creates ticks that span both in and out of the panel.
+    """
+
+    def apply_ax(self, ax: Axes):
+        super().apply_ax(ax)
+        value: float | complex = self.properties["value"]
+        if isinstance(value, (float, int)):
+            tickdir = "in" if value < 0 else "out"
+        else:
+            tickdir = "inout"
+        for side in ("theta_inside", "theta_outside"):
+            if (axis := axis_at(ax, side)) is not None:
+                axis.set_tick_params(
+                    which="minor", length=abs(value), tickdir=tickdir
+                )
+
+
+class axis_ticks_length_minor_r(themeable):
+    """
+    r-axis minor-tick length
+
+    Parameters
+    ----------
+    theme_element : float | complex
+        Value in points. A negative value creates the ticks
+        inside the plot panel. A complex value (e.g. `3j`)
+        creates ticks that span both in and out of the panel.
+    """
+
+    def apply_ax(self, ax: Axes):
+        super().apply_ax(ax)
+        value: float | complex = self.properties["value"]
+        if isinstance(value, (float, int)):
+            tickdir = "in" if value < 0 else "out"
+        else:
+            tickdir = "inout"
+        for side in ("r_start", "r_end"):
+            if (axis := axis_at(ax, side)) is not None:
+                axis.set_tick_params(
+                    which="minor", length=abs(value), tickdir=tickdir
+                )
+
+
 class axis_ticks_length_minor(
-    axis_ticks_length_minor_x, axis_ticks_length_minor_y
+    axis_ticks_length_minor_x,
+    axis_ticks_length_minor_y,
+    axis_ticks_length_minor_theta,
+    axis_ticks_length_minor_r,
 ):
     """
     Axis minor-tick length

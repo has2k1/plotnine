@@ -458,3 +458,31 @@ def test_coord_radial_axis_ticks_minor_theming():
         )
     )
     assert p == "coord_radial_axis_ticks_minor_theming"
+
+
+def test_coord_radial_ticks_length_themed_nonzero():
+    # axis_ticks_length_major_x/_y used to zero the tick length on a
+    # polar panel because the first major tick's tick1line/tick2line
+    # visibility check never held before Task 5 activated polar tick
+    # visibility. axis_ticks_length_major_theta/_r are the leaves that
+    # now apply length on a polar panel, so a themed nonzero length
+    # actually renders long tick marks.
+    p = (
+        ggplot(mtcars, aes("disp", "mpg"))
+        + geom_point()
+        + coord_radial(start=0.5 * np.pi, end=-0.5 * np.pi, inner_radius=0.3)
+        + theme(axis_ticks_length=10)
+    )
+    assert p == "coord_radial_ticks_length_themed_nonzero"
+
+
+def test_coord_radial_ticks_length_themed_zero_stays_invisible():
+    # Counterpart to the nonzero case above: a themed length of 0
+    # should still render with no visible tick marks.
+    p = (
+        ggplot(mtcars, aes("disp", "mpg"))
+        + geom_point()
+        + coord_radial(start=0.5 * np.pi, end=-0.5 * np.pi, inner_radius=0.3)
+        + theme(axis_ticks_length=0)
+    )
+    assert p == "coord_radial_ticks_length_themed_zero_stays_invisible"
