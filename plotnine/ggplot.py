@@ -403,15 +403,6 @@ class ggplot:
             # Artist object theming
             self.theme.apply()
 
-            # Now that the themed tick styling is final, shield the polar
-            # r-axis ticks from matplotlib's first-draw tick reset, which
-            # would otherwise rebuild them with default styling.
-            from ._mpl._polar_axes import p9PolarAxes
-
-            for ax in self.axs:
-                if isinstance(ax, p9PolarAxes):
-                    ax.lock_raxis_tick_style()
-
             self._insets.draw(which="above")
 
         return figure
