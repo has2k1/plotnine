@@ -68,6 +68,10 @@ class theme_gray(theme):
             axis_text_y_right=element_text(
                 ha="left", margin=margin(l=fifth_line)
             ),
+            axis_text_theta_outside=element_text(margin=margin(t=fifth_line)),
+            axis_text_theta_inside=element_text(margin=margin(b=fifth_line)),
+            axis_text_r_start=element_text(margin=margin(r=fifth_line)),
+            axis_text_r_end=element_text(margin=margin(l=fifth_line)),
             axis_ticks=element_line(color="#333333"),
             axis_ticks_length=0,
             axis_ticks_length_major=quarter_line,
