@@ -35,6 +35,7 @@ if TYPE_CHECKING:
         FloatArray,
         FloatArrayLike,
         HorizontalJustification,
+        PolarSide,
         Side,
         VerticalJustification,
     )
@@ -61,14 +62,15 @@ BOX_LOCATIONS: dict[str, tuple[float, float]] = {
 to_rgba = color_utils.to_rgba
 
 
-def side_artists(side: str) -> tuple[str, str]:
+def side_artists(side: Side | PolarSide) -> tuple[str, str]:
     """
-    Return the `(tickline, label)` tick-attribute names for an axis side
+    Return the (tickline, label) attribute names for one side of an axis
 
-    The bottom/left side maps to `tick1line`/`label1` and the top/right side
-    to `tick2line`/`label2`.
+    `"top"`/`"right"` (and their polar counterparts `"theta_outside"`/
+    `"r_end"`) use the second tick/label pair; every other side uses the
+    first.
     """
-    if side in ("top", "right"):
+    if side in ("top", "right", "theta_outside", "r_end"):
         return ("tick2line", "label2")
     return ("tick1line", "label1")
 
@@ -84,12 +86,18 @@ OPPOSITE_SIDE: dict[Side, Side] = {
 # The margin side that faces inward for an element on each side: for an axis
 # the side facing the panel (bottom axis -> top "t", top -> "b", left -> right
 # "r", right -> "l"); for a legend title/text the side facing the keys. It is
-# the initial of the opposite side; cf. OPPOSITE_SIDE.
-MARGIN_SIDE: dict[Side, str] = {
+# the initial of the opposite side; cf. OPPOSITE_SIDE. Polar boundaries reuse
+# the cartesian side their tick/label pair matches in side_artists: outside
+# and start behave like bottom/left, inside and end like top/right.
+MARGIN_SIDE: dict[Side | PolarSide, str] = {
     "bottom": "t",
     "top": "b",
     "left": "r",
     "right": "l",
+    "theta_outside": "t",
+    "theta_inside": "b",
+    "r_start": "r",
+    "r_end": "l",
 }
 
 
