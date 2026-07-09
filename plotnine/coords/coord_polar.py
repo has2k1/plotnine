@@ -2,20 +2,45 @@ from __future__ import annotations
 
 from dataclasses import replace
 from typing import TYPE_CHECKING, Literal, cast
+from warnings import warn
 
 import numpy as np
 
-from .._mpl._polar_axes import p9PolarAxes  # noqa: F401 (registers "p9polar")
+from .._mpl._polar_axes import p9PolarAxes  # noqa: TCH001
+from ..exceptions import PlotnineWarning
 from ..iapi import panel_ranges
-from .coord import coord, dist_euclidean
+from .coord import _activate_axis, coord, dist_euclidean
 
 if TYPE_CHECKING:
     import pandas as pd
     from matplotlib.axes import Axes
-    from matplotlib.projections.polar import PolarAxes
+    from matplotlib.projections.polar import PolarAxes, RadialAxis, ThetaAxis
 
     from plotnine.iapi import labels_view, layout_details, panel_view
     from plotnine.scales.scale import scale
+    from plotnine.typing import PolarSide, Side
+
+
+def _resolve_theta_side(position: Side) -> PolarSide:
+    """
+    Return which theta side a scale's x position resolves to
+
+    `"bottom"` (the default `scale_x_*` position) is the outer rim,
+    matching today's only visible placement; `"top"` moves theta to the
+    inner (donut-hole) side.
+    """
+    return "theta_outside" if position == "bottom" else "theta_inside"
+
+
+def _resolve_r_side(position: Side) -> PolarSide:
+    """
+    Return which r side a scale's y position resolves to
+
+    `"left"` (the default `scale_y_*` position) is the start-angle
+    spoke, matching the existing 270-degree default placement on a full
+    circle; `"right"` moves r to the end-angle spoke.
+    """
+    return "r_start" if position == "left" else "r_end"
 
 
 class coord_polar(coord):
@@ -149,14 +174,35 @@ class coord_polar(coord):
         layout_info: layout_details,
     ) -> None:
         """
-        Limits, breaks and tick labels for a polar panel
+        Limits, breaks, tick labels, and active side for a polar panel
 
-        Skips `coord`'s per-side spine/axis-line setup: the theta axis
-        wraps the full circle and the r axis runs along one spoke,
-        neither of which maps onto a cartesian left/right/top/bottom
-        side or a `p9Axes`-style spine.
+        Activates exactly one theta side (from `panel_params.x.position`)
+        and one r side (from `panel_params.y.position`). It records the
+        choice on `p9PolarAxes.axis_at_side` so theming can find it.
         """
+        if panel_params.x.sec is not None:
+            warn(
+                f"{self.__class__.__name__}() does not support a secondary "
+                "theta axis.",
+                PlotnineWarning,
+            )
+
         self._setup_ticks_labels(ax, panel_params)
+        polar_ax = cast("p9PolarAxes", ax)
+        theta_side = _resolve_theta_side(panel_params.x.position)
+        r_side = _resolve_r_side(panel_params.y.position)
+
+        _activate_axis(
+            ax.xaxis,
+            "top" if theta_side == "theta_outside" else "bottom",
+            True,
+        )
+        _activate_axis(
+            ax.yaxis, "left" if r_side == "r_start" else "right", True
+        )
+
+        polar_ax.axis_at_side[theta_side] = cast("ThetaAxis", ax.xaxis)
+        polar_ax.axis_at_side[r_side] = cast("RadialAxis", ax.yaxis)
 
     # ------------------------------------------------------------------
     # Helpers

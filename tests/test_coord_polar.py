@@ -262,6 +262,15 @@ def test_coord_polar_axis_line_r_start_shows_on_full_circle():
     assert p == "coord_polar_axis_line_r_start_shows_on_full_circle"
 
 
+def test_coord_polar_ticks_visible_by_default():
+    # Ticks were previously invisible on every polar panel regardless of
+    # theme, because activation was skipped entirely; this is the
+    # regression test for that fix.
+    data = pd.DataFrame({"x": ["a", "b"], "y": [1, 2]})
+    p = ggplot(data, aes("x", "y")) + geom_col() + coord_polar()
+    assert p == "coord_polar_ticks_visible_by_default"
+
+
 def test_coord_polar_default_theme_does_not_crash():
     data = pd.DataFrame({"x": ["a", "b"], "y": [1, 2]})
     p = ggplot(data, aes("x", "y")) + geom_col() + coord_polar()
