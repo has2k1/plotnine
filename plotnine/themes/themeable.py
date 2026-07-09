@@ -1675,7 +1675,49 @@ class axis_ticks_minor_x_top(MixinSequenceOfValues):
         _blank_axis_ticks(ax, "minor", "top")
 
 
-class axis_ticks_minor_x(axis_ticks_minor_x_top, axis_ticks_minor_x_bottom):
+class axis_ticks_minor_theta_outside(MixinSequenceOfValues):
+    """
+    theta-axis minor tick lines at the outer (rim) boundary
+    """
+
+    def apply_ax(self, ax: Axes):
+        super().apply_ax(ax)
+        _style_axis_ticks(self, ax, "minor", "theta_outside")
+
+    def blank_ax(self, ax: Axes):
+        super().blank_ax(ax)
+        _blank_axis_ticks(ax, "minor", "theta_outside")
+
+
+class axis_ticks_minor_theta_inside(MixinSequenceOfValues):
+    """
+    theta-axis minor tick lines at the inner (donut-hole) boundary
+    """
+
+    def apply_ax(self, ax: Axes):
+        super().apply_ax(ax)
+        _style_axis_ticks(self, ax, "minor", "theta_inside")
+
+    def blank_ax(self, ax: Axes):
+        super().blank_ax(ax)
+        _blank_axis_ticks(ax, "minor", "theta_inside")
+
+
+class axis_ticks_minor_theta(
+    axis_ticks_minor_theta_outside, axis_ticks_minor_theta_inside
+):
+    """
+    theta-axis minor tick lines
+
+    Parameters
+    ----------
+    theme_element : element_line
+    """
+
+
+class axis_ticks_minor_x(
+    axis_ticks_minor_x_top, axis_ticks_minor_x_bottom, axis_ticks_minor_theta
+):
     """
     x-axis minor tick lines
 
@@ -1713,7 +1755,47 @@ class axis_ticks_minor_y_right(MixinSequenceOfValues):
         _blank_axis_ticks(ax, "minor", "right")
 
 
-class axis_ticks_minor_y(axis_ticks_minor_y_left, axis_ticks_minor_y_right):
+class axis_ticks_minor_r_start(MixinSequenceOfValues):
+    """
+    r-axis minor tick lines at the start-angle spoke
+    """
+
+    def apply_ax(self, ax: Axes):
+        super().apply_ax(ax)
+        _style_axis_ticks(self, ax, "minor", "r_start")
+
+    def blank_ax(self, ax: Axes):
+        super().blank_ax(ax)
+        _blank_axis_ticks(ax, "minor", "r_start")
+
+
+class axis_ticks_minor_r_end(MixinSequenceOfValues):
+    """
+    r-axis minor tick lines at the end-angle spoke
+    """
+
+    def apply_ax(self, ax: Axes):
+        super().apply_ax(ax)
+        _style_axis_ticks(self, ax, "minor", "r_end")
+
+    def blank_ax(self, ax: Axes):
+        super().blank_ax(ax)
+        _blank_axis_ticks(ax, "minor", "r_end")
+
+
+class axis_ticks_minor_r(axis_ticks_minor_r_start, axis_ticks_minor_r_end):
+    """
+    r-axis minor tick lines
+
+    Parameters
+    ----------
+    theme_element : element_line
+    """
+
+
+class axis_ticks_minor_y(
+    axis_ticks_minor_y_left, axis_ticks_minor_y_right, axis_ticks_minor_r
+):
     """
     y-axis minor tick lines
 
