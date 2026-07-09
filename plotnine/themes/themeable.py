@@ -1601,7 +1601,7 @@ class axis_line(axis_line_x, axis_line_y):
     """
 
 
-def _style_axis_ticks(themeable, ax, which, side):
+def _style_axis_ticks(themeable, ax, which, side: Side | PolarSide):
     """
     Style the tick lines on one side of an axis
 
@@ -1633,7 +1633,7 @@ def _style_axis_ticks(themeable, ax, which, side):
     themeable.set([getattr(t, attr) for t in ticks], properties)
 
 
-def _blank_axis_ticks(ax, which, side):
+def _blank_axis_ticks(ax, which, side: Side | PolarSide):
     """
     Hide the tick lines on one side of an axis
     """
@@ -1751,7 +1751,49 @@ class axis_ticks_major_x_top(MixinSequenceOfValues):
         _blank_axis_ticks(ax, "major", "top")
 
 
-class axis_ticks_major_x(axis_ticks_major_x_top, axis_ticks_major_x_bottom):
+class axis_ticks_major_theta_outside(MixinSequenceOfValues):
+    """
+    theta-axis major tick lines at the outer (rim) boundary
+    """
+
+    def apply_ax(self, ax: Axes):
+        super().apply_ax(ax)
+        _style_axis_ticks(self, ax, "major", "theta_outside")
+
+    def blank_ax(self, ax: Axes):
+        super().blank_ax(ax)
+        _blank_axis_ticks(ax, "major", "theta_outside")
+
+
+class axis_ticks_major_theta_inside(MixinSequenceOfValues):
+    """
+    theta-axis major tick lines at the inner (donut-hole) boundary
+    """
+
+    def apply_ax(self, ax: Axes):
+        super().apply_ax(ax)
+        _style_axis_ticks(self, ax, "major", "theta_inside")
+
+    def blank_ax(self, ax: Axes):
+        super().blank_ax(ax)
+        _blank_axis_ticks(ax, "major", "theta_inside")
+
+
+class axis_ticks_major_theta(
+    axis_ticks_major_theta_outside, axis_ticks_major_theta_inside
+):
+    """
+    theta-axis major tick lines
+
+    Parameters
+    ----------
+    theme_element : element_line
+    """
+
+
+class axis_ticks_major_x(
+    axis_ticks_major_x_top, axis_ticks_major_x_bottom, axis_ticks_major_theta
+):
     """
     x-axis major tick lines
 
@@ -1789,7 +1831,47 @@ class axis_ticks_major_y_right(MixinSequenceOfValues):
         _blank_axis_ticks(ax, "major", "right")
 
 
-class axis_ticks_major_y(axis_ticks_major_y_left, axis_ticks_major_y_right):
+class axis_ticks_major_r_start(MixinSequenceOfValues):
+    """
+    r-axis major tick lines at the start-angle spoke
+    """
+
+    def apply_ax(self, ax: Axes):
+        super().apply_ax(ax)
+        _style_axis_ticks(self, ax, "major", "r_start")
+
+    def blank_ax(self, ax: Axes):
+        super().blank_ax(ax)
+        _blank_axis_ticks(ax, "major", "r_start")
+
+
+class axis_ticks_major_r_end(MixinSequenceOfValues):
+    """
+    r-axis major tick lines at the end-angle spoke
+    """
+
+    def apply_ax(self, ax: Axes):
+        super().apply_ax(ax)
+        _style_axis_ticks(self, ax, "major", "r_end")
+
+    def blank_ax(self, ax: Axes):
+        super().blank_ax(ax)
+        _blank_axis_ticks(ax, "major", "r_end")
+
+
+class axis_ticks_major_r(axis_ticks_major_r_start, axis_ticks_major_r_end):
+    """
+    r-axis major tick lines
+
+    Parameters
+    ----------
+    theme_element : element_line
+    """
+
+
+class axis_ticks_major_y(
+    axis_ticks_major_y_left, axis_ticks_major_y_right, axis_ticks_major_r
+):
     """
     y-axis major tick lines
 

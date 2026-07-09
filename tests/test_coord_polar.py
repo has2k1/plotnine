@@ -425,3 +425,17 @@ def test_coord_radial_axis_text_theming():
         + theme(axis_text=element_text(color="red", size=5))
     )
     assert p == "coord_radial_axis_text_theming"
+
+
+def test_coord_radial_axis_ticks_major_theming():
+    # axis_ticks used to be a no-op on a polar panel's theta tick
+    # marks; axis_ticks_major_theta_* / axis_ticks_major_r_* now nest
+    # under axis_ticks_major_x/y so a plain axis_ticks= theme reaches
+    # both the theta and r tick marks.
+    p = (
+        ggplot(mtcars, aes("disp", "mpg"))
+        + geom_point()
+        + coord_radial(start=0.5 * np.pi, end=-0.5 * np.pi, inner_radius=0.3)
+        + theme(axis_ticks=element_line(color="blue", size=2))
+    )
+    assert p == "coord_radial_axis_ticks_major_theming"
