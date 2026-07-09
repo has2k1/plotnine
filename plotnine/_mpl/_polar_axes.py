@@ -9,6 +9,8 @@ if TYPE_CHECKING:
     from matplotlib.backend_bases import RendererBase
     from matplotlib.projections.polar import RadialAxis, ThetaAxis
 
+    from plotnine.typing import PolarSide
+
 
 class p9PolarAxes(PolarAxes):
     """
@@ -16,6 +18,17 @@ class p9PolarAxes(PolarAxes):
     """
 
     name = "p9polar"
+
+    _axis_at_side: dict[PolarSide, ThetaAxis | RadialAxis] | None = None
+
+    @property
+    def axis_at_side(self) -> dict[PolarSide, ThetaAxis | RadialAxis]:
+        """
+        The theta/r axis artist occupying each active polar side
+        """
+        if self._axis_at_side is None:
+            self._axis_at_side = {}
+        return self._axis_at_side
 
     def draw(self, renderer: RendererBase) -> None:
         """
