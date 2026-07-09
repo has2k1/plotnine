@@ -2554,6 +2554,10 @@ class axis_ticks_length_major_theta(themeable):
     """
     theta-axis major-tick length
 
+    Applies uniformly to whichever theta boundary is active — unlike
+    `axis_ticks_major_theta_outside`/`_inside`, length was never split
+    by boundary even for the cartesian `axis_ticks_length_major_x`.
+
     Parameters
     ----------
     theme_element : float | complex
@@ -2579,6 +2583,10 @@ class axis_ticks_length_major_theta(themeable):
 class axis_ticks_length_major_r(themeable):
     """
     r-axis major-tick length
+
+    Applies uniformly to whichever r boundary is active — unlike
+    `axis_ticks_major_r_start`/`_end`, length was never split
+    by boundary even for the cartesian `axis_ticks_length_major_y`.
 
     Parameters
     ----------
@@ -2686,6 +2694,10 @@ class axis_ticks_length_minor_theta(themeable):
     """
     theta-axis minor-tick length
 
+    Applies uniformly to whichever theta boundary is active — unlike
+    `axis_ticks_minor_theta_outside`/`_inside`, length was never split
+    by boundary even for the cartesian `axis_ticks_length_minor_x`.
+
     Parameters
     ----------
     theme_element : float | complex
@@ -2711,6 +2723,10 @@ class axis_ticks_length_minor_theta(themeable):
 class axis_ticks_length_minor_r(themeable):
     """
     r-axis minor-tick length
+
+    Applies uniformly to whichever r boundary is active — unlike
+    `axis_ticks_minor_r_start`/`_end`, length was never split
+    by boundary even for the cartesian `axis_ticks_length_minor_y`.
 
     Parameters
     ----------
