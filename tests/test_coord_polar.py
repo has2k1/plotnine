@@ -7,6 +7,7 @@ from plotnine import (
     coord_radial,
     element_blank,
     element_line,
+    element_text,
     geom_col,
     geom_point,
     ggplot,
@@ -411,3 +412,16 @@ def test_coord_polar_axis_clearance():
         + coord_polar("y")
     )
     assert p == "coord_polar_axis_clearance"
+
+
+def test_coord_radial_axis_text_theming():
+    # axis_text used to be a no-op on a polar panel's tick labels;
+    # axis_text_theta_* / axis_text_r_* now nest under axis_text_x/y
+    # so a plain axis_text= theme reaches both the theta and r labels.
+    p = (
+        ggplot(mtcars, aes("disp", "mpg"))
+        + geom_point()
+        + coord_radial(start=0.5 * np.pi, end=-0.5 * np.pi, inner_radius=0.3)
+        + theme(axis_text=element_text(color="red", size=5))
+    )
+    assert p == "coord_radial_axis_text_theming"
