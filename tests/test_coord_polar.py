@@ -283,6 +283,28 @@ def test_coord_radial_arc_uses_end_or_full_turn():
     assert coord_radial()._arc == 2 * np.pi
 
 
+def test_coord_radial_no_longer_has_r_axis_inside():
+    import pytest
+
+    with pytest.raises(TypeError, match="r_axis_inside"):
+        coord_radial(r_axis_inside=True)  # type: ignore[call-arg]
+
+
+def test_coord_radial_full_circle_position_right_warns():
+    import pytest
+
+    from plotnine.exceptions import PlotnineWarning
+
+    p = (
+        ggplot(mtcars, aes("disp", "mpg"))
+        + geom_point()
+        + coord_radial()
+        + scale_y_continuous(position="right")
+    )
+    with pytest.warns(PlotnineWarning, match="end.*boundary"):
+        p.draw_test()
+
+
 def test_coord_radial_setup_panel_params_for_partial_arc():
     scale_x, scale_y = trained_scales(
         y_breaks=(0, 2, 4, 8, 10),
