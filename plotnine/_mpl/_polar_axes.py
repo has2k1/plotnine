@@ -2,14 +2,53 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, cast
 
+import numpy as np
 from matplotlib.projections import register_projection
-from matplotlib.projections.polar import PolarAxes
+from matplotlib.projections.polar import PolarAxes, ThetaAxis, ThetaTick
 
 if TYPE_CHECKING:
     from matplotlib.backend_bases import RendererBase
-    from matplotlib.projections.polar import RadialAxis, ThetaAxis
+    from matplotlib.projections.polar import RadialAxis
+    from matplotlib.transforms import Transform
 
     from plotnine.typing import PolarSide
+
+
+class p9ThetaTick(ThetaTick):
+    """
+    ThetaTick whose labels sit on the same rim as the matching tick marks
+    """
+
+    def _get_text1_transform(self) -> tuple[Transform, str, str]:
+        # matplotlib anchors the theta labels through a flipr-reversed
+        # transform, sending label1 to tick2line's radius and label2 to
+        # tick1line's. Use the unflipped tick transform so label1 shares
+        # tick1line's inner radius instead.
+        return self.axes.get_xaxis_transform("tick1"), "center", "center"
+
+    def _get_text2_transform(self) -> tuple[Transform, str, str]:
+        # Counterpart to _get_text1_transform: label2 shares tick2line's
+        # outer radius.
+        return self.axes.get_xaxis_transform("tick2"), "center", "center"
+
+    def _update_padding(self, pad: float, angle: float) -> None:
+        # With the base radii corrected above, flip matplotlib's pad signs
+        # so the clearance pushes label1 further inward and label2 further
+        # outward -- toward the correct side of each now-repaired label.
+        padx = pad * np.cos(angle) / 72
+        pady = pad * np.sin(angle) / 72
+        self._text1_translate._t = (-padx, -pady)  # type: ignore
+        self._text1_translate.invalidate()  # type: ignore
+        self._text2_translate._t = (padx, pady)  # type: ignore
+        self._text2_translate.invalidate()  # type: ignore
+
+
+class p9ThetaAxis(ThetaAxis):
+    """
+    ThetaAxis that builds ticks whose labels follow the tick marks
+    """
+
+    _tick_class = p9ThetaTick
 
 
 class p9PolarAxes(PolarAxes):
@@ -25,6 +64,16 @@ class p9PolarAxes(PolarAxes):
     # matplotlib's tick resets. Guards `lock_raxis_tick_style` so repeated
     # calls do not stack wrappers on top of each other.
     _raxis_tick_style_locked: bool = False
+
+    def _init_axis(self) -> None:
+        """
+        Build the panel's axes, using the theta axis with corrected labels
+        """
+        # `super()` creates the r-axis and registers it with the polar/inner
+        # spines. The theta axis carries no spine registration, so replacing
+        # it afterwards leaves nothing stale; the stock ThetaAxis is discarded.
+        super()._init_axis()  # type: ignore
+        self.xaxis = p9ThetaAxis(self, clear=False)
 
     @property
     def axis_at_side(self) -> dict[PolarSide, ThetaAxis | RadialAxis]:

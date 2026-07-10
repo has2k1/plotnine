@@ -514,3 +514,12 @@ def test_coord_radial_scale_y_position_right_moves_r_end():
         + theme(axis_text_r_end=element_text(color="blue"))
     )
     assert p == "coord_radial_scale_y_position_right_moves_r_end"
+
+
+def test_p9_theta_axis_builds_swapped_tick():
+    from plotnine._mpl._polar_axes import p9ThetaAxis, p9ThetaTick
+
+    # The theta axis builds ticks whose labels follow the tick marks:
+    # label1 inner with tick1line, label2 outer with tick2line -- unlike
+    # matplotlib's ThetaTick, which pads the labels the opposite way.
+    assert p9ThetaAxis._tick_class is p9ThetaTick
