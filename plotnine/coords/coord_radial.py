@@ -2,12 +2,10 @@ from __future__ import annotations
 
 from dataclasses import replace
 from typing import TYPE_CHECKING, Literal, cast
-from warnings import warn
 
 import numpy as np
 
-from ..exceptions import PlotnineWarning
-from .coord_polar import _resolve_r_side, coord_polar
+from .coord_polar import coord_polar
 
 if TYPE_CHECKING:
     import pandas as pd
@@ -374,19 +372,7 @@ class coord_radial(coord_polar):
         # ignores it and always uses thetamin/thetamax directly, so this
         # only matters here.
         if self.end is None:
-            r_side = _resolve_r_side(panel_params.y.position)
-            if r_side == "r_end":
-                warn(
-                    "coord_radial(): a full circle has no 'end' "
-                    "boundary distinct from 'start' for the r axis "
-                    "(matplotlib always hides it there); "
-                    "scale_y_*(position='right') has no visible "
-                    "effect here. Set `end` for a partial arc to show "
-                    "the r axis on the opposite spoke.",
-                    PlotnineWarning,
-                )
-            else:
-                polar_ax.set_rlabel_position(270)
+            polar_ax.set_rlabel_position(270)
 
         ax.tick_params(axis="x", which="major", direction="out")
         if (angle := self._theta_guide_angle()) is not None:
