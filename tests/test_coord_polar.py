@@ -291,18 +291,21 @@ def test_coord_radial_no_longer_has_r_axis_inside():
         coord_radial(r_axis_inside=True)  # type: ignore[call-arg]
 
 
-def test_coord_radial_full_circle_position_right_warns():
-    import pytest
+def test_coord_radial_full_circle_position_right_no_warning():
+    import warnings
 
     from plotnine.exceptions import PlotnineWarning
 
+    # position="right" now moves only the r title, so a full circle no
+    # longer warns that it has no visible effect.
     p = (
         ggplot(mtcars, aes("disp", "mpg"))
         + geom_point()
         + coord_radial()
         + scale_y_continuous(position="right")
     )
-    with pytest.warns(PlotnineWarning, match="end.*boundary"):
+    with warnings.catch_warnings():
+        warnings.simplefilter("error", PlotnineWarning)
         p.draw_test()
 
 
@@ -488,32 +491,38 @@ def test_coord_radial_ticks_length_themed_zero_stays_invisible():
     assert p == "coord_radial_ticks_length_themed_zero_stays_invisible"
 
 
-def test_coord_radial_scale_x_position_top_moves_theta_inside():
-    # scale_x_continuous(position="top") must move the resolved theta
-    # side from theta_outside to theta_inside, not just leave theming
-    # to work on whichever side happens to be primary by default.
+def test_coord_radial_scale_x_position_top_keeps_theta_outside():
+    # On a polar panel scale.position moves only the axis title; the
+    # primary theta axis stays on the outside regardless of position.
+    from plotnine._mpl.axes import axis_at
+
     p = (
         ggplot(mtcars, aes("disp", "mpg"))
         + geom_point()
         + coord_radial(start=-1.0, end=1.0, inner_radius=0.3)
         + scale_x_continuous(position="top")
-        + theme(axis_text_theta_inside=element_text(color="red"))
     )
-    assert p == "coord_radial_scale_x_position_top_moves_theta_inside"
+    p.draw_test()
+    ax = p.axs[0]
+    assert axis_at(ax, "theta_outside") is ax.xaxis
+    assert axis_at(ax, "theta_inside") is None
 
 
-def test_coord_radial_scale_y_position_right_moves_r_end():
-    # scale_y_continuous(position="right") must move the resolved r
-    # side from r_start to r_end, not just leave theming to work on
-    # whichever side happens to be primary by default.
+def test_coord_radial_scale_y_position_right_keeps_r_start():
+    # On a polar panel scale.position moves only the axis title; the
+    # primary r axis stays on r_start regardless of position.
+    from plotnine._mpl.axes import axis_at
+
     p = (
         ggplot(mtcars, aes("disp", "mpg"))
         + geom_point()
         + coord_radial(start=-1.0, end=1.0, inner_radius=0.3)
         + scale_y_continuous(position="right")
-        + theme(axis_text_r_end=element_text(color="blue"))
     )
-    assert p == "coord_radial_scale_y_position_right_moves_r_end"
+    p.draw_test()
+    ax = p.axs[0]
+    assert axis_at(ax, "r_start") is ax.yaxis
+    assert axis_at(ax, "r_end") is None
 
 
 def test_p9_theta_axis_builds_swapped_tick():
