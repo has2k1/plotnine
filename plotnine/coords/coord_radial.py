@@ -2,28 +2,33 @@ from __future__ import annotations
 
 from dataclasses import replace
 from typing import TYPE_CHECKING, Literal, cast
+from warnings import warn
 
 import numpy as np
 
-from .coord_polar import coord_polar
+from .._mpl._polar_axes import p9PolarAxes  # noqa: TCH001
+from .._utils.registry import alias
+from ..exceptions import PlotnineWarning
+from ..iapi import panel_ranges
+from .coord import _activate_axis, coord, dist_euclidean
 
 if TYPE_CHECKING:
     import pandas as pd
     from matplotlib.axes import Axes
     from matplotlib.projections.polar import PolarAxes
 
-    from plotnine.iapi import layout_details, panel_view
+    from plotnine.iapi import labels_view, layout_details, panel_view
     from plotnine.scales.scale import scale
 
 
-class coord_radial(coord_polar):
+class coord_radial(coord):
     """
     Radial coordinate system
 
     `coord_radial` maps one position aesthetic to the angle and the other
-    to the radius. Compared with ``coord_polar``, it adds support for
-    partial arcs, inner radius holes, theta/radius limits, radial-axis
-    placement, and rotation of the ``angle`` aesthetic.
+    to the radius. It supports full and partial arcs, inner radius holes,
+    theta/radius limits, radial-axis placement, and rotation of the
+    ``angle`` aesthetic. It supersedes `coord_polar`.
 
     Parameters
     ----------
@@ -75,6 +80,9 @@ class coord_radial(coord_polar):
     ``theme(axis_text_x=element_blank())`` and adjust the gap to the outer
     circle through the ``axis_text_x`` margin.
 
+    Unlike ggplot2, plotnine coordinate systems do not currently expose a
+    ``clip`` argument.
+
     Examples
     --------
     A donut chart is a stacked bar chart with an inner radius.
@@ -113,6 +121,9 @@ class coord_radial(coord_polar):
     ```
     """
 
+    is_linear = False
+    _projection = "p9polar"
+
     def __init__(
         self,
         theta: str = "x",
@@ -126,48 +137,69 @@ class coord_radial(coord_polar):
         rlim: tuple[float, float] | None = None,
         reverse: str = "none",
     ) -> None:
-        super().__init__(
-            theta=theta,
-            start=start,
-            direction=direction,
-            expand=expand,
-        )
         if reverse not in {"none", "theta", "r", "thetar"}:
             raise ValueError(
                 "reverse must be one of 'none', 'theta', 'r', 'thetar'; "
                 f"got {reverse!r}."
             )
+        self.theta = theta
+        self.start = start
         self.end = end
+        self.direction = direction
+        self.expand = expand
         self.inner_radius = inner_radius
         self.rotate_angle = rotate_angle
         self.thetalim = thetalim
         self.rlim = rlim
         self.reverse = reverse
 
-    # ------------------------------------------------------------------
-    # Panel params
-    # ------------------------------------------------------------------
-
     def setup_panel_params(self, scale_x: scale, scale_y: scale) -> panel_view:
         from ..scales.scale_continuous import scale_continuous
         from .coord_cartesian import coord_cartesian
 
-        # Capture theta breaks over the expanded range before super() clears
-        # them, the same way coord_cartesian chooses breaks within an expanded
-        # window. They map through the matching expanded theta_range below.
-        pv_data = coord_cartesian(expand=self.expand).setup_panel_params(
+        # One expanded cartesian view supplies both the theta/r ranges and
+        # the theta breaks. Theta follows the expand flag like every other
+        # axis: expand=True buffers the data off the arc ends; expand=False
+        # keeps it flush so a pie closes cleanly.
+        pv_exp = coord_cartesian(expand=self.expand).setup_panel_params(
             scale_x, scale_y
         )
-        if self.theta == "x":
-            theta_breaks = list(pv_data.x.breaks)
-            theta_labels = list(pv_data.x.labels)
-            theta_minor_breaks = list(pv_data.x.minor_breaks)
-        else:
-            theta_breaks = list(pv_data.y.breaks)
-            theta_labels = list(pv_data.y.labels)
-            theta_minor_breaks = list(pv_data.y.minor_breaks)
 
-        pv = super().setup_panel_params(scale_x, scale_y)
+        if self.theta == "x":
+            theta_range, r_sv = pv_exp.x.range, pv_exp.y
+            theta_breaks = list(pv_exp.x.breaks)
+            theta_labels = list(pv_exp.x.labels)
+            theta_minor_breaks = list(pv_exp.x.minor_breaks)
+        else:
+            theta_range, r_sv = pv_exp.y.range, pv_exp.x
+            theta_breaks = list(pv_exp.y.breaks)
+            theta_labels = list(pv_exp.y.labels)
+            theta_minor_breaks = list(pv_exp.y.minor_breaks)
+
+        r_range = r_sv.range
+        empty = np.array([], dtype=float)
+
+        # theta axis: [start, start+2π] display span so bars rotated by a
+        # non-zero start stay within range. Data ticks (original units) are
+        # converted to radian positions and applied at the end of this method.
+        theta_start = float(self.start)
+        new_x = replace(
+            pv_exp.x,
+            limits=(theta_start, theta_start + 2 * np.pi),
+            range=(theta_start, theta_start + 2 * np.pi),
+            breaks=[],
+            minor_breaks=empty,
+            labels=[],
+        )
+        new_y = replace(r_sv)
+
+        pv = replace(
+            pv_exp,
+            x=new_x,
+            y=new_y,
+            theta_range=tuple(theta_range),
+            r_range=tuple(r_range),
+        )
 
         # thetalim: zoom the theta data range — only this slice maps to the
         # arc. Expand on top of the zoom (like coord_cartesian expands on top
@@ -290,9 +322,15 @@ class coord_radial(coord_polar):
 
         return pv
 
-    # ------------------------------------------------------------------
-    # Helpers
-    # ------------------------------------------------------------------
+    def labels(self, cur_labels: labels_view) -> labels_view:
+        # When theta="y" the data x/y columns are swapped in transform so that
+        # PolarAxes sees x=theta, y=r. Swap the axis titles to match, the same
+        # way coord_flip does for its flipped axes.
+        if self.theta == "y":
+            from .coord_flip import flip_labels
+
+            return flip_labels(super().labels(cur_labels))
+        return super().labels(cur_labels)
 
     @property
     def _arc(self) -> float:
@@ -310,13 +348,14 @@ class coord_radial(coord_polar):
 
     def _mpl_theta_direction(self) -> Literal[-1, 1]:
         """
-        Matplotlib theta direction, flipped when reverse acts on theta
+        Matplotlib theta direction for this coordinate system
 
-        ``reverse="theta"``/``"thetar"`` runs the angular axis the other way
-        by folding into the PolarAxes direction at draw time, rather than into
-        the radian mapping.
+        ``-1`` draws clockwise and ``+1`` counter-clockwise, the opposite of
+        plotnine's own ``direction`` convention. ``reverse="theta"``/
+        ``"thetar"`` runs the angular axis the other way by folding into the
+        PolarAxes direction here, rather than into the radian mapping.
         """
-        mpl_direction = super()._mpl_theta_direction()
+        mpl_direction: Literal[-1, 1] = -1 if self.direction == 1 else 1
         if self.reverse in ("theta", "thetar"):
             return 1 if mpl_direction == -1 else -1
         return mpl_direction
@@ -324,17 +363,15 @@ class coord_radial(coord_polar):
     def _to_radians(
         self, vals: np.ndarray, theta_range: tuple[float, float]
     ) -> np.ndarray:
-        """Normalize theta values to [start, start + arc]."""
+        """Normalize theta values to [start, start + arc]"""
         t_min, t_max = theta_range
         denom = float(t_max) - float(t_min)
         if denom == 0:
             return np.zeros_like(vals, dtype=float)
         norm = (np.asarray(vals, dtype=float) - float(t_min)) / denom
+        # Rotation direction is a PolarAxes property set in draw via
+        # set_theta_direction; it is not baked into these radian values.
         return self.start + norm * self._arc
-
-    # ------------------------------------------------------------------
-    # Data transformation
-    # ------------------------------------------------------------------
 
     def transform(
         self,
@@ -342,14 +379,52 @@ class coord_radial(coord_polar):
         panel_params: panel_view,
         munch: bool = False,
     ) -> pd.DataFrame:
-        data = super().transform(data, panel_params, munch=munch)
-        # After super().transform(), data["x"] is always theta in radians.
+        # Munch first (in original data space) so curved edges get enough
+        # interpolation points before we convert theta → radians.
+        if munch:
+            data = self.munch(data, panel_params)
+
+        if self.theta == "x":
+            theta_col, r_col = "x", "y"
+            theta_end_col, r_end_col = "xend", "yend"
+        else:
+            theta_col, r_col = "y", "x"
+            theta_end_col, r_end_col = "yend", "xend"
+
+        if theta_col not in data.columns or r_col not in data.columns:
+            return data
+
+        theta_range = panel_params.theta_range
+        assert theta_range is not None
+
+        data = data.copy()
+        data[theta_col] = self._to_radians(
+            data[theta_col].to_numpy(), theta_range
+        )
+        has_endpoints = (
+            theta_end_col in data.columns and r_end_col in data.columns
+        )
+        if has_endpoints:
+            data[theta_end_col] = self._to_radians(
+                data[theta_end_col].to_numpy(), theta_range
+            )
+
+        # PolarAxes always expects x = theta (radians) and y = r.
+        # When theta = "y" we need to swap the columns.
+        if self.theta == "y":
+            data["x"], data["y"] = data["y"].copy(), data["x"].copy()
+            if has_endpoints:
+                data["xend"], data["yend"] = (
+                    data["yend"].copy(),
+                    data["xend"].copy(),
+                )
+
+        # After the swap, data["x"] is always theta in radians.
         if (
             self.rotate_angle
             and "angle" in data.columns
             and "x" in data.columns
         ):
-            data = data.copy()
             # Align marks tangentially to their spoke. The PolarAxes places
             # a data theta t at on-screen angle (deg, CCW from East)
             #   screen = 90 + mpl_dir * degrees(t),  mpl_dir = -1 if cw else 1
@@ -359,11 +434,42 @@ class coord_radial(coord_polar):
             rot = mpl_dir * np.degrees(data["x"].to_numpy())
             rot = (rot + 90.0) % 180.0 - 90.0
             data["angle"] = data["angle"] + rot
+
         return data
 
-    # ------------------------------------------------------------------
-    # Draw decorations on PolarAxes
-    # ------------------------------------------------------------------
+    def distance(
+        self,
+        x: pd.Series,
+        y: pd.Series,
+        panel_params: panel_view,
+    ) -> np.ndarray:
+        # Normalise theta and r to [0, 1] then compute Euclidean distance.
+        assert panel_params.theta_range is not None
+        assert panel_params.r_range is not None
+        t_min, t_max = panel_params.theta_range
+        r_min, r_max = panel_params.r_range
+        t_denom = float(t_max - t_min) or 1.0
+        r_denom = float(r_max - r_min) or 1.0
+
+        if self.theta == "x":
+            theta_vals = np.asarray(x, dtype=float)
+            r_vals = np.asarray(y, dtype=float)
+        else:
+            theta_vals = np.asarray(y, dtype=float)
+            r_vals = np.asarray(x, dtype=float)
+
+        theta_norm = (theta_vals - float(t_min)) / t_denom
+        r_norm = (r_vals - float(r_min)) / r_denom
+        return dist_euclidean(theta_norm, r_norm)
+
+    def backtransform_range(self, panel_params: panel_view) -> panel_ranges:
+        assert panel_params.theta_range is not None
+        assert panel_params.r_range is not None
+        t_range = panel_params.theta_range
+        r_range = panel_params.r_range
+        if self.theta == "x":
+            return panel_ranges(x=t_range, y=r_range)
+        return panel_ranges(x=r_range, y=t_range)
 
     def setup_ax(
         self,
@@ -374,12 +480,35 @@ class coord_radial(coord_polar):
         """
         Configure each PolarAxes from this panel's limits
 
-        Sets the arc limits, inner radius, and radial-axis placement using
-        ``panel_params`` so faceted panels with free scales each get their
-        own radial range.
+        Sets limits, breaks, tick labels, the fixed active side, arc limits,
+        inner radius, and radial-axis placement using ``panel_params`` so
+        faceted panels with free scales each get their own radial range.
+
+        The primary theta axis always renders on the outside and the primary
+        r axis always on r_start, independent of `scale.position` (which moves
+        only the axis title). The fixed choice is recorded on
+        `p9PolarAxes.axis_at_side` so theming can find it.
         """
-        super().setup_ax(ax, panel_params, layout_info)
-        polar_ax = cast("PolarAxes", ax)
+        if panel_params.x.sec is not None:
+            warn(
+                f"{self.__class__.__name__}() does not support a secondary "
+                "theta axis.",
+                PlotnineWarning,
+            )
+
+        self._setup_ticks_labels(ax, panel_params)
+        polar_ax = cast("p9PolarAxes", ax)
+
+        _activate_axis(ax.xaxis, "top", True)
+        _activate_axis(ax.yaxis, "left", True)
+
+        polar_ax.axis_at_side["theta_outside"] = polar_ax.thetaaxis
+        polar_ax.axis_at_side["r_start"] = polar_ax.raxis
+
+        # The theme styles these tick objects later; keep matplotlib's
+        # tick resets from replacing their styling with the default look.
+        polar_ax.lock_raxis_tick_style()
+
         arc = self._arc
 
         # Restrict visible theta range for partial arcs.
@@ -438,3 +567,23 @@ class coord_radial(coord_polar):
             return self._owner.guides.theta.angle
         except AttributeError:
             return None
+
+    def draw(self, axs: list[Axes]) -> None:
+        """Configure each PolarAxes: zero location and rotation direction
+
+        R-limits are set per panel by setup_ax.
+        """
+        # PolarAxes theta_direction: -1 = clockwise, +1 = counter-clockwise.
+        mpl_direction = self._mpl_theta_direction()
+        for ax in axs:
+            polar_ax = cast("PolarAxes", ax)
+            polar_ax.set_theta_zero_location("N")  # 12 o'clock
+            polar_ax.set_theta_direction(mpl_direction)
+
+    def aspect(self, panel_params: panel_view) -> float:
+        return 1.0
+
+
+@alias
+class coord_polar(coord_radial):
+    pass
