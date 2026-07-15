@@ -233,6 +233,18 @@ def test_coord_radial_default_theme_hides_theta_and_r_boundaries():
     assert p == "coord_radial_default_theme_hides_theta_and_r_boundaries"
 
 
+def test_coord_radial_partial_arc_expands_off_ends():
+    # Regression: outermost bars used to sit flush against the arc ends
+    # (angles 0 and π). With the default expand=True the theta axis is
+    # buffered, so the bars sit inside the arc.
+    p = (
+        ggplot(mtcars, aes("cyl", "mpg"))
+        + geom_col()
+        + coord_radial(start=0, end=np.pi, inner_radius=0.1)
+    )
+    assert p == "coord_radial_partial_arc_expands_off_ends"
+
+
 def test_coord_polar_axis_line_controls_polar_spine():
     # panel_border no longer owns the outer circle; axis_line does, and
     # unlike panel_border it can style it, not just hide it.
