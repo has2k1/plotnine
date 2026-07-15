@@ -370,6 +370,37 @@ def test_coord_radial_shows_theta_labels_by_default():
     assert list(pv.x.labels)
 
 
+def test_coord_radial_restores_theta_minor_breaks():
+    # coord_polar clears theta minor breaks (data-space ticks are meaningless
+    # on the arc); coord_radial must restore them as radian positions, the
+    # same way it restores the major breaks, so the theta minor grid renders.
+    scale_x, scale_y = trained_scales()
+    coord = coord_radial(expand=False)
+    pv = coord.setup_panel_params(scale_x, scale_y)
+    minor = list(pv.x.minor_breaks)
+    assert minor  # not empty
+    assert all(0 <= b <= 2 * np.pi for b in minor)
+
+
+def test_coord_radial_clips_theta_minor_breaks_to_partial_arc():
+    scale_x, scale_y = trained_scales()
+    coord = coord_radial(start=0, end=np.pi, expand=False)
+    pv = coord.setup_panel_params(scale_x, scale_y)
+    minor = list(pv.x.minor_breaks)
+    assert minor
+    assert all(0 <= b <= np.pi for b in minor)
+
+
+def test_coord_radial_discrete_theta_has_no_minor_breaks():
+    # A discrete theta scale has no minor breaks and no get_minor_breaks
+    # method, so setting one up must not crash and leaves the theta minor
+    # grid empty.
+    df = pd.DataFrame({"cat": ["a", "b", "c"], "y": [2, 3, 5]})
+    p = ggplot(df, aes("cat", "y")) + geom_col() + coord_radial(theta="x")
+    pv = p.build_test().layout.panel_params[0]
+    assert list(pv.x.minor_breaks) == []
+
+
 def test_coord_radial_to_radians_zero_width_range():
     coord = coord_radial()
 
