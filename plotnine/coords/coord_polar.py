@@ -89,21 +89,19 @@ class coord_polar(coord):
     def setup_panel_params(self, scale_x: scale, scale_y: scale) -> panel_view:
         from .coord_cartesian import coord_cartesian
 
-        # Theta fills exactly one full revolution — no expansion on that axis.
-        # R uses the caller-controlled expand flag.
-        pv_no_exp = coord_cartesian(expand=False).setup_panel_params(
-            scale_x, scale_y
-        )
+        # Theta follows the caller-controlled expand flag, like every other
+        # axis: expand=True buffers the data off the arc ends (and, for a full
+        # circle, opens a small gap at the 12-o'clock seam); expand=False keeps
+        # it flush so a pie closes cleanly. This theta_range is only the domain
+        # of the data → angle map; new_x.range below is the fixed display span.
         pv_exp = coord_cartesian(expand=self.expand).setup_panel_params(
             scale_x, scale_y
         )
 
         if self.theta == "x":
-            theta_range = pv_no_exp.x.range
-            r_sv = pv_exp.y
+            theta_range, r_sv = pv_exp.x.range, pv_exp.y
         else:
-            theta_range = pv_no_exp.y.range
-            r_sv = pv_exp.x
+            theta_range, r_sv = pv_exp.y.range, pv_exp.x
 
         r_range = r_sv.range
 
