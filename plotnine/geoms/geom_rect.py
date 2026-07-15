@@ -54,6 +54,11 @@ class geom_rect(geom):
         """
         if not coord.is_linear:
             data = _rectangles_to_polygons(data)
+            # Each rectangle is its own closed polygon. Grouping by the
+            # `group` aesthetic would merge a stacked bar's segments into one
+            # open path, and coord.munch would then bend the join between
+            # consecutive rectangles into a spurious spike.
+            data["group"] = np.repeat(np.arange(len(data) // 4), 4)
             for _, gdata in data.groupby("group"):
                 gdata.reset_index(inplace=True, drop=True)
                 geom_polygon.draw_group(

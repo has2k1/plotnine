@@ -12,12 +12,14 @@ from plotnine import (
     coord_flip,
     coord_trans,
     geom_bar,
+    geom_col,
     geom_line,
     geom_point,
     geom_polygon,
     ggplot,
     xlim,
 )
+from plotnine.data import mtcars
 
 n = 10  # Some even number greater than 2
 
@@ -88,6 +90,14 @@ def test_coord_trans_munches_polygon_closing_edge():
         + coord_trans(x="log10", y="log10")
     )
     assert p == "coord_trans_munches_polygon_closing_edge"
+
+
+def test_coord_trans_stacked_bars_have_no_spikes():
+    # Each stacked segment must be its own polygon. If they merge into one
+    # path, the join between consecutive segments becomes a diagonal that
+    # munch subdivides into a triangular spike across the bar.
+    p = ggplot(mtcars, aes("factor(cyl)", "mpg")) + geom_col() + coord_trans()
+    assert p == "coord_trans_stacked_bars_have_no_spikes"
 
 
 def test_datetime_coord_limits():

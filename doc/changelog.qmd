@@ -116,6 +116,11 @@ title: Changelog
   the closing edge of a polygon is now curved along with the rest of its
   boundary instead of being drawn as a straight chord.
 
+- Stacked bars in a non-linear coordinate system (e.g.
+  [](:class:`~plotnine.coord_trans`)) no longer show triangular spikes; each
+  rectangle is now drawn as its own polygon instead of merging a bar's
+  segments into a single path.
+
 - The space between facet panels now accounts for the margins of the axis
   text, so with free scales large margins no longer push the tick labels
   into the neighbouring panel.
