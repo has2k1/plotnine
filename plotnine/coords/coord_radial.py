@@ -152,8 +152,10 @@ class coord_radial(coord_polar):
         from ..scales.scale_continuous import scale_continuous
         from .coord_cartesian import coord_cartesian
 
-        # Capture data-space theta breaks before super() clears them.
-        pv_data = coord_cartesian(expand=False).setup_panel_params(
+        # Capture theta breaks over the expanded range before super() clears
+        # them, the same way coord_cartesian chooses breaks within an expanded
+        # window. They map through the matching expanded theta_range below.
+        pv_data = coord_cartesian(expand=self.expand).setup_panel_params(
             scale_x, scale_y
         )
         if self.theta == "x":
@@ -168,14 +170,29 @@ class coord_radial(coord_polar):
         pv = super().setup_panel_params(scale_x, scale_y)
 
         # thetalim: zoom the theta data range — only this slice maps to the
-        # arc. Recompute nice breaks over the zoomed range so labels are not
-        # reduced to sparse endpoints.
+        # arc. Expand on top of the zoom (like coord_cartesian expands on top
+        # of xlim) and recompute nice breaks over the expanded range so labels
+        # are not reduced to sparse endpoints.
         if self.thetalim is not None:
-            pv = replace(pv, theta_range=tuple(self.thetalim))
+            from mizani.transforms import identity_trans
+
             theta_scale = scale_x if self.theta == "x" else scale_y
+            coord_limits = (
+                theta_scale.transform(self.thetalim)
+                if isinstance(theta_scale, scale_continuous)
+                else self.thetalim
+            )
+            expansion = theta_scale.default_expansion(expand=self.expand)
+            theta_zoom = theta_scale.expand_limits(
+                theta_scale.final_limits,
+                expansion,
+                coord_limits,
+                identity_trans(),
+            ).range
+            pv = replace(pv, theta_range=tuple(theta_zoom))
             theta_breaks = [
                 b
-                for b in theta_scale.get_bounded_breaks(self.thetalim)
+                for b in theta_scale.get_bounded_breaks(theta_zoom)
                 if np.isfinite(b)
             ]
             theta_labels = list(theta_scale.get_labels(theta_breaks))
@@ -185,7 +202,7 @@ class coord_radial(coord_polar):
                 theta_minor_breaks = [
                     b
                     for b in theta_scale.get_minor_breaks(
-                        theta_breaks, self.thetalim
+                        theta_breaks, theta_zoom
                     )
                     if np.isfinite(b)
                 ]
