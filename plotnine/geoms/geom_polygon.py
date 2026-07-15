@@ -73,6 +73,19 @@ class geom_polygon(geom):
     ):
         from matplotlib.collections import PolyCollection
 
+        # A polygon is a closed ring, but the vertices only trace it open.
+        # In a non-linear coord the closing edge must be munched like any
+        # other, or it stays a straight chord across a curved boundary (e.g.
+        # the inner arc of a polar bar). Repeat each group's first vertex so
+        # munch subdivides that edge too; a linear coord closes it straight,
+        # which is already correct, so leave it untouched there.
+        if not coord.is_linear:
+            indices = data.groupby("group", sort=False).indices
+            order = np.concatenate(
+                [np.append(idx, idx[0]) for idx in indices.values()]
+            )
+            data = data.iloc[order].reset_index(drop=True)
+
         data = coord.transform(data, panel_params, munch=True)
         data["linewidth"] = data["size"] * SIZE_FACTOR
 
