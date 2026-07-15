@@ -70,13 +70,10 @@ class coord_radial(coord_polar):
 
     Notes
     -----
-    Theta-axis tick labels are shown by default, matching ggplot2. Since a
-    polar axes' x-axis *is* the theta axis, they are styled through the
-    theme: hide them with ``theme(axis_text_x=element_blank())`` and adjust
-    the gap to the outer circle through the ``axis_text_x`` margin.
-
-    The Python API uses snake_case names for arguments that are dotted in
-    ggplot2: ``inner_radius`` and ``rotate_angle``.
+    Theta-axis tick labels are shown by default. Since a polar axes' x-axis
+    *is* the theta axis, they are styled through the theme: hide them with
+    ``theme(axis_text_x=element_blank())`` and adjust the gap to the outer
+    circle through the ``axis_text_x`` margin.
 
     Examples
     --------
@@ -152,6 +149,7 @@ class coord_radial(coord_polar):
     # ------------------------------------------------------------------
 
     def setup_panel_params(self, scale_x: scale, scale_y: scale) -> panel_view:
+        from ..scales.scale_continuous import scale_continuous
         from .coord_cartesian import coord_cartesian
 
         # Capture data-space theta breaks before super() clears them.
@@ -161,15 +159,17 @@ class coord_radial(coord_polar):
         if self.theta == "x":
             theta_breaks = list(pv_data.x.breaks)
             theta_labels = list(pv_data.x.labels)
+            theta_minor_breaks = list(pv_data.x.minor_breaks)
         else:
             theta_breaks = list(pv_data.y.breaks)
             theta_labels = list(pv_data.y.labels)
+            theta_minor_breaks = list(pv_data.y.minor_breaks)
 
         pv = super().setup_panel_params(scale_x, scale_y)
 
         # thetalim: zoom the theta data range — only this slice maps to the
         # arc. Recompute nice breaks over the zoomed range so labels are not
-        # reduced to sparse endpoints, matching ggplot2.
+        # reduced to sparse endpoints.
         if self.thetalim is not None:
             pv = replace(pv, theta_range=tuple(self.thetalim))
             theta_scale = scale_x if self.theta == "x" else scale_y
@@ -179,10 +179,22 @@ class coord_radial(coord_polar):
                 if np.isfinite(b)
             ]
             theta_labels = list(theta_scale.get_labels(theta_breaks))
+            # Only a continuous theta scale has minor breaks; a discrete one
+            # has none, so leave theta_minor_breaks empty.
+            if isinstance(theta_scale, scale_continuous):
+                theta_minor_breaks = [
+                    b
+                    for b in theta_scale.get_minor_breaks(
+                        theta_breaks, self.thetalim
+                    )
+                    if np.isfinite(b)
+                ]
+            else:
+                theta_minor_breaks = []
 
         # rlim: zoom the r data range — update ranges and recompute nice breaks
         # over the zoomed range (rather than filtering the full-range breaks,
-        # which leaves sparse endpoint-only labels), matching ggplot2.
+        # which leaves sparse endpoint-only labels).
         if self.rlim is not None:
             pv = replace(pv, r_range=tuple(self.rlim))
             r_scale = scale_y if self.theta == "x" else scale_x
@@ -209,8 +221,7 @@ class coord_radial(coord_polar):
             arc_hi = max(self.start, self.start + arc)
 
         # Convert data-space theta breaks to radian positions and restore them
-        # as theta axis tick labels on the outer edge.  Theta labels show by
-        # default (matching ggplot2); hide them via theme(axis_text_x=...).
+        # as theta axis tick labels on the outer edge.
         x_updates: dict = {}
         if theta_breaks:
             assert pv.theta_range is not None
@@ -225,6 +236,20 @@ class coord_radial(coord_polar):
                 theta_labels = [l for l, k in zip(theta_labels, keep) if k]
             x_updates["breaks"] = radian_pos
             x_updates["labels"] = theta_labels
+
+        if theta_minor_breaks:
+            assert pv.theta_range is not None
+            minor_radian_pos = list(
+                self._to_radians(
+                    np.asarray(theta_minor_breaks, dtype=float),
+                    pv.theta_range,
+                )
+            )
+            if arc_lo is not None:
+                minor_radian_pos = [
+                    r for r in minor_radian_pos if arc_lo <= r <= arc_hi
+                ]
+            x_updates["minor_breaks"] = minor_radian_pos
 
         # Partial arc: x panel range must match [arc_lo, arc_hi] so that
         # coord.setup_ax calls ax.set_xlim(arc_lo, arc_hi) rather than
