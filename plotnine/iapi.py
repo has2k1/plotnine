@@ -160,18 +160,11 @@ class labels_view:
 @dataclass
 class panel_view:
     """
-    Information from the trained position scales in a panel
+    Position-scale state for one panel
     """
 
     x: scale_position_view
     y: scale_position_view
-
-    # Polar coordinates store the per-panel data-space ranges of the theta
-    # and r variables here so that transform-time methods read the range
-    # belonging to the panel they are given, not shared instance state.
-    # These are None for non-polar coordinate systems.
-    theta_range: Optional[tuple[float, float]] = None
-    r_range: Optional[tuple[float, float]] = None
 
 
 @dataclass
@@ -182,6 +175,16 @@ class panel_ranges:
 
     x: tuple[float, float]
     y: tuple[float, float]
+
+
+@dataclass
+class radial_panel_view(panel_view):
+    """
+    Data-space and display-space scales for one radial panel
+    """
+
+    theta: scale_position_view
+    r: scale_position_view
 
 
 @dataclass

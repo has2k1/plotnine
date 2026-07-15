@@ -51,12 +51,12 @@ class p9ThetaAxis(ThetaAxis):
     _tick_class = p9ThetaTick
 
 
-class p9PolarAxes(PolarAxes):
+class p9RadialAxes(PolarAxes):
     """
-    PolarAxes that keeps the axis tick labels above the geom layers
+    Polar axes that keeps the axis tick labels above the geom layers
     """
 
-    name = "p9polar"
+    name = "p9radial"
 
     _axis_at_side: dict[PolarSide, ThetaAxis | RadialAxis] | None = None
 
@@ -64,6 +64,11 @@ class p9PolarAxes(PolarAxes):
     # matplotlib's tick resets. Guards `lock_raxis_tick_style` so repeated
     # calls do not stack wrappers on top of each other.
     _raxis_tick_style_locked: bool = False
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.set_theta_zero_location("N")  # 12 o'clock
 
     def _init_axis(self) -> None:
         """
@@ -167,4 +172,4 @@ class p9PolarAxes(PolarAxes):
         axis.reset_ticks = reset_ticks_and_restyle
 
 
-register_projection(p9PolarAxes)
+register_projection(p9RadialAxes)

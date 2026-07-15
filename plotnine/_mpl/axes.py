@@ -104,7 +104,7 @@ def axis_at(ax: Axes, side: Side | PolarSide) -> XAxis | YAxis | None:
     For a cartesian `side`, considers the primary axis of the side's
     dimension and, on a `p9Axes`, the secondary one, via mpl's own
     tick-flag state — reliable for `XAxis`/`YAxis`. For a polar `side`
-    (a theta/r side), reads `p9PolarAxes.axis_at_side` instead:
+    (a theta/r side), reads `p9RadialAxes.axis_at_side` instead:
     `ThetaAxis`/`RadialAxis` can't self-report which side they
     occupy through `get_tick_params()`, so plotnine tracks it
     explicitly there.
