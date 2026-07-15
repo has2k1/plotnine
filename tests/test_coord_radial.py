@@ -1,3 +1,5 @@
+from dataclasses import replace
+
 import numpy as np
 import pandas as pd
 from numpy.testing import assert_allclose
@@ -14,13 +16,17 @@ from plotnine import (
     theme,
 )
 from plotnine.data import mtcars
-from plotnine.iapi import labels_view, panel_view, scale_view
+from plotnine.iapi import (
+    labels_view,
+    radial_panel_view,
+    scale_position_view,
+)
 from plotnine.scales import scale_x_continuous, scale_y_continuous
 
 
-def _dummy_scale_view() -> scale_view:
-    """A minimal scale_view; polar transforms only read theta/r ranges."""
-    return scale_view(
+def _dummy_scale_view() -> scale_position_view:
+    """Minimal position-scale state for radial coordinate unit tests"""
+    return scale_position_view(
         scale=None,  # type: ignore[arg-type]
         aesthetics=[],
         name=None,
@@ -29,16 +35,22 @@ def _dummy_scale_view() -> scale_view:
         breaks=[],
         minor_breaks=np.array([], dtype=float),
         labels=[],
+        position="bottom",
     )
 
 
-def make_panel_view(theta_range, r_range) -> panel_view:
-    """A panel_view carrying just the per-panel theta/r ranges."""
-    return panel_view(
-        x=_dummy_scale_view(),
-        y=_dummy_scale_view(),
-        theta_range=theta_range,
-        r_range=r_range,
+def make_panel_view(
+    theta_range: tuple[float, float],
+    r_range: tuple[float, float],
+) -> radial_panel_view:
+    """Radial panel state with distinct data and display ranges"""
+    theta = replace(_dummy_scale_view(), range=theta_range)
+    r = replace(_dummy_scale_view(), range=r_range)
+    return radial_panel_view(
+        x=replace(theta, range=(0, 2 * np.pi)),
+        y=replace(r),
+        theta=theta,
+        r=r,
     )
 
 
@@ -68,9 +80,12 @@ def test_coord_radial_setup_panel_params_theta_x():
 
     panel_params = coord.setup_panel_params(scale_x, scale_y)
 
-    assert panel_params.theta_range == (0, 10)
-    assert panel_params.r_range == (0, 10)
+    assert panel_params.theta.range == (0, 10)
+    assert panel_params.r.range == (0, 10)
     assert panel_params.x.range == (np.pi / 4, np.pi / 4 + 2 * np.pi)
+    assert panel_params.theta is not panel_params.x
+    assert panel_params.r is not panel_params.y
+    assert panel_params.theta.breaks == [0, 5, 10]
     # Theta breaks are kept as radian positions (0,5,10 over [0,10] ->
     # start + fraction * 2pi), not cleared the way coord_polar used to.
     assert_allclose(
@@ -90,9 +105,32 @@ def test_coord_radial_setup_panel_params_theta_y():
 
     panel_params = coord.setup_panel_params(scale_x, scale_y)
 
-    assert panel_params.theta_range == (0, 10)
-    assert panel_params.r_range == (0, 10)
+    assert panel_params.theta.range == (0, 10)
+    assert panel_params.r.range == (0, 10)
     assert panel_params.y.breaks == [0, 2, 5, 10]
+
+
+def test_coord_radial_discrete_theta_spans_full_circle():
+    p = (
+        ggplot(mtcars, aes("factor(cyl)", "mpg", fill="factor(cyl)"))
+        + geom_col()
+        + coord_radial(start=0, end=2 * np.pi, inner_radius=0)
+    )
+    built = p.build_test()
+    panel_params = built.layout.panel_params[0]
+    transformed = built.coordinates.transform(
+        built.layers[0].data.copy(),
+        panel_params,
+    )
+
+    expected = built.coordinates._to_radians(
+        [1, 2, 3],
+        panel_params.theta.range,
+    )
+    actual = np.sort(transformed["x"].unique())
+
+    assert_allclose(actual, expected)
+    assert np.ptp(actual) > np.pi
 
 
 def test_coord_radial_setup_panel_params_per_panel_independent():
@@ -328,8 +366,8 @@ def test_coord_radial_setup_panel_params_for_partial_arc():
 
     panel_params = coord.setup_panel_params(scale_x, scale_y)
 
-    assert panel_params.theta_range == (0, 10)
-    assert panel_params.r_range == (2, 8)
+    assert panel_params.theta.range == (0, 10)
+    assert panel_params.r.range == (2, 8)
     assert_allclose(panel_params.x.breaks, [0, np.pi / 2, np.pi])
     assert panel_params.x.labels == ["0", "5", "10"]
     assert panel_params.x.range == (0, np.pi)
