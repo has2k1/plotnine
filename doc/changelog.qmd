@@ -112,6 +112,10 @@ title: Changelog
 
 ### Bug Fixes
 
+- In a non-linear coordinate system (e.g. [](:class:`~plotnine.coord_trans`)),
+  the closing edge of a polygon is now curved along with the rest of its
+  boundary instead of being drawn as a straight chord.
+
 - The space between facet panels now accounts for the margins of the axis
   text, so with free scales large margins no longer push the tick labels
   into the neighbouring panel.
