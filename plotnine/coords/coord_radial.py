@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import replace
+from functools import cached_property
 from typing import TYPE_CHECKING, Any, Literal, TypeVar, cast
 from warnings import warn
 
@@ -41,10 +42,11 @@ class coord_radial(coord):
         Default 0.
     end :
         Ending angle in radians, measured clockwise from 12 o'clock.
-        `None` (default) gives a full circle (`start + 2π * direction`).
+        Equivalent angles are interpreted as the same endpoint. `None`
+        (default) gives a full circle.
     direction :
         Angular rotation sense: `1` = clockwise (default), `-1` =
-        counter-clockwise. Applied regardless of *end*, so it also sets
+        counter-clockwise. Applied regardless of `end`, so it also sets
         the sweep direction of a partial arc.
     expand :
         Add a small buffer around the data on the radius axis.
@@ -145,15 +147,14 @@ class coord_radial(coord):
         ).setup_panel_params(scale_x, scale_y)
         theta, r = self._flip(cartesian_view.x, cartesian_view.y)
         theta.breaks = cast("list[float]", theta.breaks)
+        arc_range = self._arc_range
 
-        # theta axis: [start, start+2π] display span so bars rotated by a
-        # non-zero start stay within range. Data ticks (original units) are
-        # converted to radian positions and applied at the end of this method.
-        _start, _end = self.start, self.start + 2 * np.pi
+        # The display range keeps its requested order; a full circle ends
+        # one turn after start. Data ticks are converted to radians below.
         x = replace(
             theta,
-            limits=(_start, _end),
-            range=(_start, _end),
+            limits=arc_range,
+            range=arc_range,
             breaks=self._to_radians(theta.breaks, theta.range),
             minor_breaks=np.asarray(
                 self._to_radians(theta.minor_breaks, theta.range)
@@ -162,23 +163,13 @@ class coord_radial(coord):
         )
         y = replace(r)
 
-        # Compute arc bounds for partial-arc plots (None means full circle).
-        arc_lo = arc_hi = None
+        # Sorted partial-arc bounds are only for clipping breaks.
         if self.end is not None:
-            arc = self._arc
-            arc_lo = min(self.start, self.start + arc)
-            arc_hi = max(self.start, self.start + arc)
-
-        # Partial arc: x panel range must match [arc_lo, arc_hi] so that
-        # coord.setup_ax calls ax.set_xlim(arc_lo, arc_hi) rather than
-        # ax.set_xlim(0, 2π), which would override set_thetalim.
-        if arc_lo is not None and arc_hi is not None:
+            arc_lo, arc_hi = sorted(arc_range)
             x_breaks = cast("list[float]", x.breaks)
             keep = [arc_lo <= value <= arc_hi for value in x_breaks]
             x = replace(
                 x,
-                limits=(arc_lo, arc_hi),
-                range=(arc_lo, arc_hi),
                 breaks=[
                     value for value, include in zip(x_breaks, keep) if include
                 ],
@@ -214,29 +205,37 @@ class coord_radial(coord):
 
         return flip_labels(labels)
 
-    @property
-    def _arc(self) -> float:
+    @cached_property
+    def _arc_range(self) -> tuple[float, float]:
         """
-        Total angular span of the plotted region, in radians
+        Forward angular limits of the displayed arc
 
-        For a partial radial plot this is the distance between `start` and
-        `end`; otherwise it is a full turn. The sense of rotation
-        (clockwise vs counter-clockwise) is a PolarAxes property applied at
-        draw time and is not encoded in this magnitude.
+        Equivalent endpoints select the same clockwise arc. An explicit
+        non-zero whole turn remains a full circle, while equal endpoints
+        remain a zero-width arc.
         """
-        if self.end is not None:
-            return self.end - self.start
-        return 2.0 * np.pi
+        turn = 2 * np.pi
+        if self.end is None:
+            return (self.start, self.start + turn)
+
+        delta = self.end - self.start
+        if delta == 0:
+            return (self.start, self.start)
+
+        span = delta % turn
+        if span == 0:
+            span = turn
+        return (self.start, self.start + span)
 
     @property
     def _mpl_direction(self) -> Literal[-1, 1]:
         """
         Matplotlib theta direction for this coordinate system
 
-        `-1` draws clockwise and `+1` counter-clockwise, the opposite of
-        plotnine's own `direction` convention. `reverse="theta"`/
-        `"thetar"` runs the angular axis the other way by folding into the
-        PolarAxes direction here, rather than into the radian mapping.
+        For matplotlib -1 is clockwise and +1 is counter-clockwise, the
+        opposite of plotnine's own `direction` convention.
+        Also, `reverse="theta"`/ `"thetar"` run the angular axis the other
+        way.
         """
         reverse = -1 if self.reverse in ("theta", "thetar") else 1
         return self.direction * reverse * -1
@@ -247,10 +246,13 @@ class coord_radial(coord):
         """Normalize theta values to [start, start + arc]"""
         lo, hi = theta_range
         span = hi - lo
+
         if span == 0:
             return [0] * len(vals)
+
+        arc_start, arc_end = self._arc_range
         norm = (np.asarray(vals) - lo) / span
-        return list(self.start + norm * self._arc)
+        return list(arc_start + norm * (arc_end - arc_start))
 
     def transform(
         self,
@@ -367,14 +369,9 @@ class coord_radial(coord):
         # tick resets from replacing their styling with the default look.
         radial_ax.lock_raxis_tick_style()
 
-        arc = self._arc
-
         # Restrict visible theta range for partial arcs.
         if self.end is not None:
-            radial_ax.set_thetalim(
-                min(self.start, self.start + arc),
-                max(self.start, self.start + arc),
-            )
+            radial_ax.set_thetalim(*self._arc_range)
 
         # Inner radius: push the data away from the centre by setting a
         # virtual r-origin below r_min.  Formula: solve
