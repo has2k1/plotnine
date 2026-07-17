@@ -389,6 +389,72 @@ def test_coord_radial_arc_range_normalizes_end_forward():
     assert coord_radial(start=1)._arc_range == (1, 1 + 2 * np.pi)
 
 
+def test_coord_radial_classifies_full_circle_from_arc_range():
+    assert coord_radial()._is_full_circle
+    assert coord_radial(start=0, end=2 * np.pi)._is_full_circle
+    assert coord_radial(start=1, end=1 + 2 * np.pi)._is_full_circle
+    assert coord_radial(
+        end=2 * np.pi,
+        direction=-1,
+        reverse="theta",
+    )._is_full_circle
+    assert not coord_radial(start=0, end=np.pi)._is_full_circle
+    assert not coord_radial(start=1, end=1)._is_full_circle
+
+
+@pytest.mark.parametrize("end", [None, 2 * np.pi])
+def test_coord_radial_full_circle_r_axis_uses_start(
+    end: float | None,
+):
+    p = (
+        ggplot(mtcars, aes("cyl", "mpg"))
+        + geom_col()
+        + coord_radial(start=0, end=end, inner_radius=0.1)
+        + theme(axis_line_y=element_line())
+    )
+    p.draw_test()  # pyright: ignore[reportAttributeAccessIssue]
+    ax = p.axs[0]
+    ax.figure.draw_without_rendering()  # pyright: ignore[reportAttributeAccessIssue]
+    tick = next(
+        tick
+        for tick in ax.yaxis.get_major_ticks()
+        if tick.get_loc() > 0 and tick.label1.get_text()
+    )
+    renderer = ax.figure._get_renderer()  # pyright: ignore[reportAttributeAccessIssue]
+    radius = tick.get_loc()
+    tick_point = tick.tick1line.get_transform().transform((0, radius))
+    label_point = np.asarray(
+        tick.label1.get_window_extent(renderer=renderer).get_points()
+    ).mean(axis=0)
+    start_point = ax.transData.transform((0, radius))
+
+    assert_allclose(ax.get_xlim(), (0, 2 * np.pi))
+    assert_allclose((ax.get_thetamin(), ax.get_thetamax()), (0, 360))
+    assert ax.get_rlabel_position() == 0
+    assert_allclose(tick_point, start_point)
+    assert_allclose(label_point[1], start_point[1])
+
+
+def test_coord_radial_full_circle_panel_params_ignore_end_representation():
+    views = []
+    for end in (None, 2 * np.pi):
+        scale_x, scale_y = trained_scales(
+            x_breaks=(0, 5, 10),
+            x_labels=("0", "5", "10"),
+        )
+        views.append(
+            coord_radial(start=0, end=end, expand=False).setup_panel_params(
+                scale_x,
+                scale_y,
+            )
+        )
+
+    assert_allclose(views[0].x.range, views[1].x.range)
+    assert_allclose(views[0].x.breaks, views[1].x.breaks)
+    assert_allclose(views[0].x.minor_breaks, views[1].x.minor_breaks)
+    assert views[0].x.labels == views[1].x.labels
+
+
 @pytest.mark.parametrize("direction", [1, -1])
 def test_coord_radial_equivalent_endpoints_have_same_sweep(
     direction: Literal[-1, 1],
