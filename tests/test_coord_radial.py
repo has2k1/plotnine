@@ -1,9 +1,11 @@
 from dataclasses import replace
-from typing import Literal
+from typing import Any, Literal
 
 import numpy as np
 import pandas as pd
 import pytest
+from matplotlib.axes import Axes
+from matplotlib.backends.backend_agg import FigureCanvasAgg
 from numpy.testing import assert_allclose
 
 from plotnine import (
@@ -15,6 +17,8 @@ from plotnine import (
     geom_col,
     geom_point,
     ggplot,
+    guide_axis_theta,
+    guides,
     theme,
 )
 from plotnine.data import mtcars
@@ -24,6 +28,7 @@ from plotnine.iapi import (
     scale_position_view,
 )
 from plotnine.scales import scale_x_continuous, scale_y_continuous
+from plotnine.themes.elements import margin
 
 
 def _dummy_scale_view() -> scale_position_view:
@@ -117,6 +122,223 @@ def radial_axis_sides(
     ]
     tick_side = spoke[0] * tick_offset[1] - spoke[1] * tick_offset[0]
     return float(tick_side), float(label_side)
+
+
+def _theta_margin_plot(
+    text_margin: (margin | dict[Literal["t", "r", "b", "l", "unit"], Any]),
+    *,
+    inner_radius: float = 0,
+    **text_properties: Any,
+) -> ggplot:
+    data = pd.DataFrame({"x": [0, 120, 330], "y": [1, 2, 3]})
+    return (
+        ggplot(data, aes("x", "y"))
+        + geom_point()
+        + scale_x_continuous(
+            breaks=[0, 120, 330],
+            limits=(0, 360),
+            expand=(0, 0),
+        )
+        + coord_radial(inner_radius=inner_radius)
+        + theme(
+            axis_text_x=element_text(
+                margin=text_margin,
+                **text_properties,
+            ),
+            axis_text_y=element_blank(),
+            axis_ticks_y=element_blank(),
+            axis_title=element_blank(),
+        )
+    )
+
+
+@pytest.mark.parametrize(
+    ("text_margin", "expected"),
+    [
+        ({"t": 2, "r": 4, "b": 1, "l": 3}, 4),
+        ({"t": -2, "r": 0, "b": 0, "l": 0}, 0),
+        ({"t": -5, "r": -2, "b": -8, "l": -4}, -2),
+        (margin(t=1 / 72, r=3 / 72, unit="in"), 3),
+    ],
+)
+def test_coord_radial_theta_margin_uses_largest_side(
+    text_margin: (margin | dict[Literal["t", "r", "b", "l", "unit"], Any]),
+    expected: float,
+):
+    p = _theta_margin_plot(text_margin)
+    p.draw_test()  # pyright: ignore[reportAttributeAccessIssue]
+
+    assert p.axs[0].xaxis.get_major_ticks()[0].get_pad() == expected
+
+
+def _theta_label_clearance(
+    ax: Axes,
+    text: str,
+    side: Literal["inside", "outside"] = "outside",
+) -> float:
+    canvas = FigureCanvasAgg(ax.figure)
+    canvas.draw()
+    renderer = canvas.get_renderer()
+    label_name = "label1" if side == "inside" else "label2"
+    tickline_name = "tick1line" if side == "inside" else "tick2line"
+    tick = next(
+        tick
+        for tick in ax.xaxis.get_major_ticks()
+        if getattr(tick, label_name).get_text() == text
+    )
+    tick.draw(renderer)
+
+    label = getattr(tick, label_name)
+    tickline = getattr(tick, tickline_name)
+    boundary = tickline.get_transform().transform(tickline.get_xydata())[0]
+    centre = ax.transData.transform((tick.get_loc(), ax.get_rorigin()))
+    outward = boundary - centre
+    outward /= np.linalg.norm(outward)
+    if side == "inside":
+        outward *= -1
+
+    tick_length = (
+        tick._size  # pyright: ignore[reportPrivateUsage]
+        * ax.figure.dpi
+        / 72
+        if tickline.get_visible()
+        else 0
+    )
+    reference = boundary + outward * tick_length
+    corners = label.get_window_extent(renderer).corners()
+    return float(np.min((corners - reference) @ outward))
+
+
+def test_coord_radial_theta_label_clearance_is_uniform():
+    p = _theta_margin_plot({})
+    p.draw_test()  # pyright: ignore[reportAttributeAccessIssue]
+    ax = p.axs[0]
+
+    assert_allclose(
+        [
+            _theta_label_clearance(ax, "120"),
+            _theta_label_clearance(ax, "330"),
+        ],
+        0,
+        atol=0.01,
+    )
+
+
+def test_coord_radial_theta_label_ignores_alignment():
+    p = _theta_margin_plot({}, ha="left", va="top")
+    p.draw_test()  # pyright: ignore[reportAttributeAccessIssue]
+    ax = p.axs[0]
+
+    assert_allclose(
+        [
+            _theta_label_clearance(ax, "120"),
+            _theta_label_clearance(ax, "330"),
+        ],
+        0,
+        atol=0.01,
+    )
+
+
+@pytest.mark.parametrize(
+    ("text_margin", "expected"),
+    [
+        ({"t": 2, "r": 4, "b": 1, "l": 3}, 4),
+        ({"t": -2, "r": 0, "b": 0, "l": 0}, 0),
+        ({"t": -5, "r": -2, "b": -8, "l": -4}, -2),
+    ],
+)
+def test_coord_radial_theta_label_clearance_uses_margin(
+    text_margin: dict[Literal["t", "r", "b", "l", "unit"], Any],
+    expected: float,
+):
+    p = _theta_margin_plot(text_margin, size=16)
+    p.draw_test()  # pyright: ignore[reportAttributeAccessIssue]
+    ax = p.axs[0]
+    expected_pixels = expected * ax.figure.dpi / 72
+
+    assert_allclose(
+        [
+            _theta_label_clearance(ax, "120"),
+            _theta_label_clearance(ax, "330"),
+        ],
+        expected_pixels,
+        atol=0.01,
+    )
+
+
+def test_coord_radial_theta_label_clearance_ignores_blank_tick_length():
+    p = _theta_margin_plot({}) + theme(
+        axis_ticks_x=element_blank(),
+        axis_ticks_length_major_x=20,
+    )
+    p.draw_test()  # pyright: ignore[reportAttributeAccessIssue]
+    ax = p.axs[0]
+
+    assert_allclose(
+        [
+            _theta_label_clearance(ax, "120"),
+            _theta_label_clearance(ax, "330"),
+        ],
+        0,
+        atol=0.01,
+    )
+
+
+def test_coord_radial_rotated_theta_label_clearance():
+    p = _theta_margin_plot({}) + guides(theta=guide_axis_theta(angle=35))
+    p.draw_test()  # pyright: ignore[reportAttributeAccessIssue]
+    ax = p.axs[0]
+
+    assert_allclose(
+        [
+            _theta_label_clearance(ax, "120"),
+            _theta_label_clearance(ax, "330"),
+        ],
+        0,
+        atol=0.01,
+    )
+
+
+def test_coord_radial_theta_label_clearance_does_not_accumulate():
+    p = _theta_margin_plot({})
+    p.draw_test()  # pyright: ignore[reportAttributeAccessIssue]
+    ax = p.axs[0]
+    first = _theta_label_clearance(ax, "330")
+
+    ax.figure.draw_without_rendering()  # pyright: ignore[reportAttributeAccessIssue]
+    second = _theta_label_clearance(ax, "330")
+    ax.figure.set_size_inches(8, 5)
+    ax.figure.draw_without_rendering()  # pyright: ignore[reportAttributeAccessIssue]
+    resized = _theta_label_clearance(ax, "330")
+
+    assert_allclose([first, second, resized], 0, atol=0.01)
+
+
+def test_coord_radial_inside_theta_label_clearance():
+    p = _theta_margin_plot({}, inner_radius=0.3)
+    p.draw_test()  # pyright: ignore[reportAttributeAccessIssue]
+    ax = p.axs[0]
+    ax.tick_params(
+        axis="x",
+        bottom=True,
+        labelbottom=True,
+        top=False,
+        labeltop=False,
+    )
+
+    assert_allclose(
+        [
+            _theta_label_clearance(ax, "120", "inside"),
+            _theta_label_clearance(ax, "330", "inside"),
+        ],
+        0,
+        atol=0.01,
+    )
+
+
+def test_coord_radial_theta_label_clearance():
+    p = _theta_margin_plot({})
+    assert p == "coord_radial_theta_label_clearance"
 
 
 def test_coord_radial_setup_panel_params_theta_x():

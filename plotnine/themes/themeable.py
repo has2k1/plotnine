@@ -542,7 +542,10 @@ def _set_axis_text_margin(themeable, ax, side: Side | PolarSide):
         return
     if (axis := axis_at(ax, side)) is None:
         return
-    pad = getattr(margin.pt, MARGIN_SIDE[side])
+    if side in ("theta_outside", "theta_inside"):
+        pad = margin.pt.max
+    else:
+        pad = getattr(margin.pt, MARGIN_SIDE[side])
     axis.set_tick_params(which="major", pad=pad)
 
 
@@ -1153,7 +1156,7 @@ class axis_text_theta_outside(MixinSequenceOfValues):
         if (axis := axis_at(ax, "theta_outside")) is None:
             return
         labels = [t.label2 for t in axis.get_major_ticks()]
-        self.set(labels, self._get_properties(omit=("margin", "va")))
+        self.set(labels, self._get_properties(omit=("margin", "ha", "va")))
         _set_axis_text_margin(self, ax, "theta_outside")
 
     def blank_ax(self, ax: Axes):
@@ -1178,7 +1181,7 @@ class axis_text_theta_inside(MixinSequenceOfValues):
         if (axis := axis_at(ax, "theta_inside")) is None:
             return
         labels = [t.label1 for t in axis.get_major_ticks()]
-        self.set(labels, self._get_properties(omit=("margin", "va")))
+        self.set(labels, self._get_properties(omit=("margin", "ha", "va")))
         _set_axis_text_margin(self, ax, "theta_inside")
 
     def blank_ax(self, ax: Axes):

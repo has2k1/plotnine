@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, cast
 
 import numpy as np
+from matplotlib import artist as martist
 from matplotlib import markers as mmarkers
 from matplotlib.projections.polar import (
     PolarAxes,
@@ -14,6 +15,7 @@ from matplotlib.projections.polar import (
 from matplotlib.transforms import Affine2D, ScaledTranslation
 
 if TYPE_CHECKING:
+    from matplotlib.backend_bases import RendererBase
     from matplotlib.transforms import Transform
 
 
@@ -35,15 +37,68 @@ class p9ThetaTick(ThetaTick):
         return self.axes.get_xaxis_transform("tick2"), "center", "center"
 
     def _update_padding(self, pad: float, angle: float) -> None:
-        # With the base radii corrected above, flip matplotlib's pad signs
-        # so the clearance pushes label1 further inward and label2 further
-        # outward -- toward the correct side of each now-repaired label.
-        padx = pad * np.cos(angle) / 72
-        pady = pad * np.sin(angle) / 72
-        self._text1_translate._t = (-padx, -pady)  # pyright: ignore[reportAttributeAccessIssue]
+        # The rendered label extent replaces matplotlib's fixed allowance.
+        self._radial_angle = angle
+        self._text1_translate._t = (0, 0)  # pyright: ignore[reportAttributeAccessIssue]
         self._text1_translate.invalidate()  # pyright: ignore[reportAttributeAccessIssue]
-        self._text2_translate._t = (padx, pady)  # pyright: ignore[reportAttributeAccessIssue]
+        self._text2_translate._t = (0, 0)  # pyright: ignore[reportAttributeAccessIssue]
         self._text2_translate.invalidate()  # pyright: ignore[reportAttributeAccessIssue]
+
+    def _position_labels(self, renderer: RendererBase) -> None:
+        # Matplotlib pads theta labels from their centres by a fixed amount,
+        # which leaves angle-dependent gaps at the edges. We override to place
+        # each nearest edge at the themed margin beyond its tick or the axis
+        # boundary.
+        axes = cast("PolarAxes", self.axes)
+        radial = np.array(
+            [np.cos(self._radial_angle), np.sin(self._radial_angle)]
+        )
+
+        for label, tickline, translate, direction in (
+            (
+                self.label1,
+                self.tick1line,
+                self._text1_translate,  # pyright: ignore[reportAttributeAccessIssue]
+                -1,
+            ),
+            (
+                self.label2,
+                self.tick2line,
+                self._text2_translate,  # pyright: ignore[reportAttributeAccessIssue]
+                1,
+            ),
+        ):
+            if not label.get_visible() or not label.get_text():
+                continue
+
+            label.set_verticalalignment("center")
+            label.set_verticalalignment("center")
+            tick_length = (
+                self._size  # pyright: ignore[reportAttributeAccessIssue]
+                if tickline.get_visible()
+                else 0
+            )
+            base_pad = (
+                self._base_pad  # pyright: ignore[reportAttributeAccessIssue]
+                + tick_length
+            )
+            unit = radial * direction
+            translate._t = tuple(unit * base_pad / 72)
+            translate.invalidate()
+
+            anchor = label.get_transform().transform(label.get_position())
+            corners = label.get_window_extent(renderer).corners()
+            # Offset the label by its radial extent so the margin starts at
+            # the nearest text edge, not at the label centre.
+            edge_offset = np.min((corners - anchor) @ unit)
+            corrected = base_pad - edge_offset * 72 / axes.figure.dpi
+            translate._t = tuple(unit * corrected / 72)
+            translate.invalidate()
+
+    @martist.allow_rasterization
+    def draw(self, renderer: RendererBase) -> None:
+        self._position_labels(renderer)
+        super().draw(renderer)
 
 
 class p9ThetaAxis(ThetaAxis):
