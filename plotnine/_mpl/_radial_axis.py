@@ -11,7 +11,7 @@ from matplotlib.projections.polar import (
     ThetaAxis,
     ThetaTick,
 )
-from matplotlib.transforms import Affine2D
+from matplotlib.transforms import Affine2D, ScaledTranslation
 
 if TYPE_CHECKING:
     from matplotlib.transforms import Transform
@@ -92,9 +92,29 @@ class p9RadialTick(RadialTick):
             transform = self.tick1line._marker._transform  # pyright: ignore[reportAttributeAccessIssue]
         self.tick1line._marker._transform = transform  # pyright: ignore[reportAttributeAccessIssue]
 
+        # A constant theta offset fans labels farther from the spoke as the
+        # radius grows. Keep every label on the spoke and apply its padding
+        # in display space so their edges remain aligned.
         mode, _ = self._labelrotation  # pyright: ignore[reportAttributeAccessIssue]
         angle = spoke_angle - 90
         ha, va = self._determine_anchor(mode, angle, direction > 0)  # pyright: ignore[reportAttributeAccessIssue]
+        # self._pad includes the tick length and the gap between
+        # the tick and text.
+        shift = self._pad  # pyright: ignore[reportAttributeAccessIssue]
+        text_transform = (
+            # Place the text flush with the spoke. For a full circle,
+            # matplotlib ignores the pad passed to this method.
+            axes.get_yaxis_text1_transform(0)[0]
+            # Move the text by a fixed physical distance independent of the
+            # data radius.
+            + ScaledTranslation(
+                np.cos(marker_angle) * shift / 72,
+                np.sin(marker_angle) * shift / 72,
+                axes.figure.dpi_scale_trans,
+            )
+        )
+        self.label1.set_x(0)
+        self.label1.set_transform(text_transform)
         self.label1.set_horizontalalignment(ha)
         self.label1.set_verticalalignment(va)
 
