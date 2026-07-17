@@ -396,12 +396,10 @@ class coord_radial(coord):
             )
             radial_ax.set_rorigin(r_origin)
 
-        # Radial axis label placement. RadialTick.update_position (mpl)
-        # reads rlabel_position only for a full circle; a partial arc
-        # ignores it and always uses thetamin/thetamax directly, so this
-        # only matters here.
+        # Full-circle r ticks and labels share the start spoke. Partial arcs
+        # use matplotlib's distinct start/end radial axes.
         if self.end is None:
-            radial_ax.set_rlabel_position(270)
+            radial_ax.set_rlabel_position(np.degrees(self.start))
 
         ax.tick_params(axis="x", which="major", direction="out")
         if (angle := self._theta_guide_angle()) is not None:
