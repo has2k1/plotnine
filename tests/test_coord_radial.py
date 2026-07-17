@@ -1,4 +1,5 @@
 from dataclasses import replace
+from typing import Literal
 
 import numpy as np
 import pandas as pd
@@ -67,6 +68,54 @@ def trained_scales(
     scale_x.train(x)
     scale_y.train(y)
     return scale_x, scale_y
+
+
+def radial_axis_sides(
+    start: float,
+    *,
+    direction: Literal[-1, 1] = 1,
+) -> tuple[float, float]:
+    """
+    Signed start-spoke sides occupied by the first r tick and label
+    """
+    p = (
+        ggplot(mtcars, aes("factor(cyl)", "mpg", fill="factor(cyl)"))
+        + geom_col()
+        + coord_radial(
+            start=start,
+            direction=direction,
+            inner_radius=0.1,
+        )
+        + theme(axis_line_y=element_line())
+    )
+    p.draw_test()
+    ax = p.axs[0]
+    ax.figure.draw_without_rendering()
+    tick = next(
+        t
+        for t in ax.yaxis.get_major_ticks()
+        if t.get_loc() > 0 and t.label1.get_text()
+    )
+    radius = tick.get_loc()
+    spoke_point = ax.transData.transform((start, radius))
+    centre = ax.transData.transform((start, 0))
+    label_box = tick.label1.get_window_extent(
+        renderer=ax.figure._get_renderer()  # pyright: ignore
+    )
+    label_point = np.asarray(label_box.get_points()).mean(axis=0)
+    spoke = spoke_point - centre
+    label_offset = label_point - spoke_point
+    label_side = spoke[0] * label_offset[1] - spoke[1] * label_offset[0]
+
+    marker = tick.tick1line._marker  # pyright: ignore[reportPrivateUsage]
+    marker_vertices = (
+        marker.get_path().transformed(marker.get_transform()).vertices
+    )
+    tick_offset = marker_vertices[
+        np.argmax(np.linalg.norm(marker_vertices, axis=1))
+    ]
+    tick_side = spoke[0] * tick_offset[1] - spoke[1] * tick_offset[0]
+    return float(tick_side), float(label_side)
 
 
 def test_coord_radial_setup_panel_params_theta_x():
@@ -598,13 +647,44 @@ def test_coord_radial_scale_y_position_right_keeps_r_start():
     assert axis_at(ax, "r_end") is None
 
 
-def test_p9_theta_axis_builds_swapped_tick():
-    from plotnine._mpl._polar_axes import p9ThetaAxis, p9ThetaTick
+def test_p9_radial_axes_build_plotnine_ticks():
+    from plotnine._mpl._radial_axis import (
+        p9RadialAxis,
+        p9RadialTick,
+        p9ThetaAxis,
+        p9ThetaTick,
+    )
 
-    # The theta axis builds ticks whose labels follow the tick marks:
-    # label1 inner with tick1line, label2 outer with tick2line -- unlike
-    # matplotlib's ThetaTick, which pads the labels the opposite way.
     assert p9ThetaAxis._tick_class is p9ThetaTick
+    assert p9RadialAxis._tick_class is p9RadialTick
+
+    p = ggplot(mtcars, aes("disp", "mpg")) + geom_point() + coord_radial()
+    p.draw_test()
+    assert isinstance(p.axs[0].yaxis, p9RadialAxis)
+
+
+def test_coord_radial_r_axis_uses_pre_sweep_side():
+    tick_side, label_side = radial_axis_sides(0)
+
+    assert tick_side > 0
+    assert label_side > 0
+
+
+def test_coord_radial_r_axis_rotates_with_start():
+    tick_side, label_side = radial_axis_sides(np.pi / 2)
+
+    assert tick_side > 0
+    assert label_side > 0
+
+
+def test_coord_radial_r_axis_flips_with_effective_sweep():
+    clockwise_tick, clockwise_label = radial_axis_sides(0)
+    counter_tick, counter_label = radial_axis_sides(0, direction=-1)
+
+    assert clockwise_tick > 0
+    assert clockwise_label > 0
+    assert counter_tick < 0
+    assert counter_label < 0
 
 
 def test_coord_polar_is_alias_of_coord_radial():

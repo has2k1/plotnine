@@ -2,53 +2,15 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, cast
 
-import numpy as np
 from matplotlib.projections import register_projection
-from matplotlib.projections.polar import PolarAxes, ThetaAxis, ThetaTick
+from matplotlib.projections.polar import PolarAxes, RadialAxis, ThetaAxis
+
+from ._radial_axis import p9RadialAxis, p9ThetaAxis
 
 if TYPE_CHECKING:
     from matplotlib.backend_bases import RendererBase
-    from matplotlib.projections.polar import RadialAxis
-    from matplotlib.transforms import Transform
 
     from plotnine.typing import PolarSide
-
-
-class p9ThetaTick(ThetaTick):
-    """
-    ThetaTick whose labels sit on the same rim as the matching tick marks
-    """
-
-    def _get_text1_transform(self) -> tuple[Transform, str, str]:
-        # matplotlib anchors the theta labels through a flipr-reversed
-        # transform, sending label1 to tick2line's radius and label2 to
-        # tick1line's. Use the unflipped tick transform so label1 shares
-        # tick1line's inner radius instead.
-        return self.axes.get_xaxis_transform("tick1"), "center", "center"
-
-    def _get_text2_transform(self) -> tuple[Transform, str, str]:
-        # Counterpart to _get_text1_transform: label2 shares tick2line's
-        # outer radius.
-        return self.axes.get_xaxis_transform("tick2"), "center", "center"
-
-    def _update_padding(self, pad: float, angle: float) -> None:
-        # With the base radii corrected above, flip matplotlib's pad signs
-        # so the clearance pushes label1 further inward and label2 further
-        # outward -- toward the correct side of each now-repaired label.
-        padx = pad * np.cos(angle) / 72
-        pady = pad * np.sin(angle) / 72
-        self._text1_translate._t = (-padx, -pady)  # type: ignore
-        self._text1_translate.invalidate()  # type: ignore
-        self._text2_translate._t = (padx, pady)  # type: ignore
-        self._text2_translate.invalidate()  # type: ignore
-
-
-class p9ThetaAxis(ThetaAxis):
-    """
-    ThetaAxis that builds ticks whose labels follow the tick marks
-    """
-
-    _tick_class = p9ThetaTick
 
 
 class p9RadialAxes(PolarAxes):
@@ -72,13 +34,13 @@ class p9RadialAxes(PolarAxes):
 
     def _init_axis(self) -> None:
         """
-        Build the panel's axes, using the theta axis with corrected labels
+        Polar panel axes with plotnine's theta and radial tick geometry
         """
-        # `super()` creates the r-axis and registers it with the polar/inner
-        # spines. The theta axis carries no spine registration, so replacing
-        # it afterwards leaves nothing stale; the stock ThetaAxis is discarded.
-        super()._init_axis()  # type: ignore
         self.xaxis = p9ThetaAxis(self, clear=False)
+        self.yaxis = p9RadialAxis(self, clear=False)
+        self.spines["polar"].register_axis(self.yaxis)
+        if (inner_spine := self.spines.get("inner")) is not None:
+            inner_spine.register_axis(self.yaxis)
 
     @property
     def axis_at_side(self) -> dict[PolarSide, ThetaAxis | RadialAxis]:
@@ -100,6 +62,9 @@ class p9RadialAxes(PolarAxes):
         When `panel_ontop=True` everything is already above the geoms, so
         the re-draw is a visual no-op.
         """
+        for tick in (*self.raxis.majorTicks, *self.raxis.minorTicks):
+            tick.update_position(tick.get_loc())
+
         super().draw(renderer)
 
         for axis in (self.raxis, self.thetaaxis):
@@ -112,8 +77,8 @@ class p9RadialAxes(PolarAxes):
         return cast("ThetaAxis", self.xaxis)
 
     @property
-    def raxis(self) -> RadialAxis:
-        return cast("RadialAxis", self.yaxis)
+    def raxis(self) -> p9RadialAxis:
+        return cast("p9RadialAxis", self.yaxis)
 
     def set_spine_visible(self, name: str, visible: bool) -> None:
         """
