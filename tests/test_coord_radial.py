@@ -3,6 +3,7 @@ from typing import Literal
 
 import numpy as np
 import pandas as pd
+import pytest
 from numpy.testing import assert_allclose
 
 from plotnine import (
@@ -370,9 +371,41 @@ def test_coord_radial_default_theme_does_not_crash():
     p.draw_test()
 
 
-def test_coord_radial_arc_uses_end_or_full_turn():
-    assert coord_radial(start=1, end=4)._arc == 3
-    assert coord_radial()._arc == 2 * np.pi
+def test_coord_radial_arc_range_normalizes_end_forward():
+    assert coord_radial(start=1, end=4)._arc_range == (1, 4)
+    assert_allclose(
+        coord_radial(start=np.pi, end=0)._arc_range,
+        (np.pi, 2 * np.pi),
+    )
+    assert_allclose(
+        coord_radial(start=np.pi, end=2 * np.pi)._arc_range,
+        (np.pi, 2 * np.pi),
+    )
+    assert_allclose(
+        coord_radial(start=0, end=2 * np.pi)._arc_range,
+        (0, 2 * np.pi),
+    )
+    assert coord_radial(start=1, end=1)._arc_range == (1, 1)
+    assert coord_radial(start=1)._arc_range == (1, 1 + 2 * np.pi)
+
+
+@pytest.mark.parametrize("direction", [1, -1])
+def test_coord_radial_equivalent_endpoints_have_same_sweep(
+    direction: Literal[-1, 1],
+):
+    pi = 3.14159
+    coords = [
+        coord_radial(start=pi, end=end, direction=direction)
+        for end in (0, 2 * pi)
+    ]
+    angles = [coord._to_radians([1, 2, 3], (0.4, 3.6)) for coord in coords]
+
+    assert_allclose(angles[0], angles[1], rtol=1e-5)
+    assert all(np.all(np.diff(values) > 0) for values in angles)
+    assert [coord._mpl_direction for coord in coords] == [
+        -direction,
+        -direction,
+    ]
 
 
 def test_coord_radial_no_longer_has_r_axis_inside():
@@ -685,6 +718,43 @@ def test_coord_radial_r_axis_flips_with_effective_sweep():
     assert clockwise_label > 0
     assert counter_tick < 0
     assert counter_label < 0
+
+
+@pytest.mark.parametrize(
+    ("start", "end", "expected_end"),
+    [(0, np.pi, np.pi), (np.pi, 0, 2 * np.pi)],
+)
+def test_coord_radial_partial_r_axis_uses_start(
+    start: float,
+    end: float,
+    expected_end: float,
+):
+    p = (
+        ggplot(mtcars, aes("factor(cyl)", "mpg"))
+        + geom_col()
+        + coord_radial(start=start, end=end, inner_radius=0.1)
+        + theme(axis_line_y=element_line())
+    )
+    p.draw_test()  # pyright: ignore[reportAttributeAccessIssue]
+    ax = p.axs[0]
+    ax.figure.draw_without_rendering()  # pyright: ignore[reportAttributeAccessIssue]
+    tick = next(
+        tick
+        for tick in ax.yaxis.get_major_ticks()
+        if tick.get_loc() > 0 and tick.label1.get_text()
+    )
+    radius = tick.get_loc()
+    tick_point = tick.tick1line.get_transform().transform((0, radius))
+    expected = ax.transData.transform((start, radius))
+
+    assert_allclose(ax.get_xlim(), (start, expected_end))
+    assert_allclose(tick_point, expected)
+    assert tick.tick1line.get_visible()
+    assert tick.label1.get_visible()
+    assert not tick.tick2line.get_visible()
+    assert not tick.label2.get_visible()
+    assert ax.spines["start"].get_visible()
+    assert not ax.spines["end"].get_visible()
 
 
 def test_coord_polar_is_alias_of_coord_radial():
