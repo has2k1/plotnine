@@ -31,6 +31,8 @@ class p9RadialAxes(PolarAxes):
         super().__init__(*args, **kwargs)
 
         self.set_theta_zero_location("N")  # 12 o'clock
+        self.set_spine_visible("start", False)
+        self.set_spine_visible("end", False)
 
     def _init_axis(self) -> None:
         """

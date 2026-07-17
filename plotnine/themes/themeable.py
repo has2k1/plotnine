@@ -1550,6 +1550,8 @@ class axis_line_r_start(themeable):
 
     def apply_ax(self, ax: Axes):
         super().apply_ax(ax)
+        if axis_at(ax, "r_start") is None:
+            return
         _style_polar_axis_line(self, ax, "start")
 
     def blank_ax(self, ax: Axes):
@@ -1564,6 +1566,8 @@ class axis_line_r_end(themeable):
 
     def apply_ax(self, ax: Axes):
         super().apply_ax(ax)
+        if axis_at(ax, "r_end") is None:
+            return
         _style_polar_axis_line(self, ax, "end")
 
     def blank_ax(self, ax: Axes):
