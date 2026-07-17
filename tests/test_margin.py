@@ -23,6 +23,18 @@ def test_conversion_before_setup_raises():
         m.to("fig")
 
 
+@pytest.mark.parametrize(
+    ("m", "expected"),
+    [
+        (margin(t=2, r=4, b=1, l=3), 4),
+        (margin(t=-2, r=0, b=0, l=0), 0),
+        (margin(t=-5, r=-2, b=-8, l=-4), -2),
+    ],
+)
+def test_max(m: margin, expected: float):
+    assert m.max == expected
+
+
 def test_conversion_same_unit_after_setup_succeeds():
     m = setup_margin(margin(t=5, r=5, b=5, l=5, unit="pt"))
     result = m.to("pt")

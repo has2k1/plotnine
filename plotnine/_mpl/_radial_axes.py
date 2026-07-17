@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, cast
 from matplotlib.projections import register_projection
 from matplotlib.projections.polar import PolarAxes, RadialAxis, ThetaAxis
 
-from ._radial_axis import p9RadialAxis, p9ThetaAxis
+from ._radial_axis import p9RadialAxis, p9ThetaAxis, p9ThetaTick
 
 if TYPE_CHECKING:
     from matplotlib.backend_bases import RendererBase
@@ -69,8 +69,15 @@ class p9RadialAxes(PolarAxes):
 
         super().draw(renderer)
 
-        for axis in (self.raxis, self.thetaaxis):
-            for label in axis.get_ticklabels():
+        for label in self.raxis.get_ticklabels():
+            if label.get_visible():
+                label.draw(renderer)
+
+        for tick in (*self.thetaaxis.majorTicks, *self.thetaaxis.minorTicks):
+            if not isinstance(tick, p9ThetaTick):
+                continue
+            tick._position_labels(renderer)
+            for label in (tick.label1, tick.label2):
                 if label.get_visible():
                     label.draw(renderer)
 
