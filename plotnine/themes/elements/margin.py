@@ -86,6 +86,11 @@ class margin:
         init=False, default=False, repr=False, compare=False
     )
 
+    @property
+    def max(self) -> float:
+        """Largest edge value in the margin's current unit"""
+        return max(self.t, self.r, self.b, self.l)
+
     def setup(self, theme: theme, themeable_name: str):
         """
         Setup the margin to be used in the layout
