@@ -163,8 +163,8 @@ class coord_radial(coord):
         )
         y = replace(r)
 
-        # Sorted partial-arc bounds are only for clipping breaks.
-        if self.end is not None:
+        # Partial arcs keep only breaks inside their visible bounds.
+        if not self._is_full_circle:
             arc_lo, arc_hi = sorted(arc_range)
             x_breaks = cast("list[float]", x.breaks)
             keep = [arc_lo <= value <= arc_hi for value in x_breaks]
@@ -226,6 +226,12 @@ class coord_radial(coord):
         if span == 0:
             span = turn
         return (self.start, self.start + span)
+
+    @cached_property
+    def _is_full_circle(self) -> bool:
+        """True when the displayed arc covers one complete turn"""
+        start, end = self._arc_range
+        return bool(np.isclose(end - start, 2 * np.pi))
 
     @property
     def _mpl_direction(self) -> Literal[-1, 1]:
@@ -370,7 +376,7 @@ class coord_radial(coord):
         radial_ax.lock_raxis_tick_style()
 
         # Restrict visible theta range for partial arcs.
-        if self.end is not None:
+        if not self._is_full_circle:
             radial_ax.set_thetalim(*self._arc_range)
 
         # Inner radius: push the data away from the centre by setting a
@@ -395,7 +401,7 @@ class coord_radial(coord):
 
         # Full-circle r ticks and labels share the start spoke. Partial arcs
         # use matplotlib's distinct start/end radial axes.
-        if self.end is None:
+        if self._is_full_circle:
             radial_ax.set_rlabel_position(np.degrees(self.start))
 
         ax.tick_params(axis="x", which="major", direction="out")
