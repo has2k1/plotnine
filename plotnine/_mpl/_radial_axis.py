@@ -12,11 +12,15 @@ from matplotlib.projections.polar import (
     ThetaAxis,
     ThetaTick,
 )
-from matplotlib.transforms import Affine2D, ScaledTranslation
+from matplotlib.transforms import Affine2D, Bbox, ScaledTranslation
 
 if TYPE_CHECKING:
     from matplotlib.backend_bases import RendererBase
+    from matplotlib.text import Text
     from matplotlib.transforms import Transform
+
+
+_NON_DESCENDING_NUMERIC_CHARS = frozenset("0123456789.+-\N{MINUS SIGN}eE")
 
 
 class p9ThetaTick(ThetaTick):
@@ -43,6 +47,39 @@ class p9ThetaTick(ThetaTick):
         self._text1_translate.invalidate()  # pyright: ignore[reportAttributeAccessIssue]
         self._text2_translate._t = (0, 0)  # pyright: ignore[reportAttributeAccessIssue]
         self._text2_translate.invalidate()  # pyright: ignore[reportAttributeAccessIssue]
+
+    def _label_bounds(self, label: Text, renderer: RendererBase) -> Bbox:
+        """
+        Return label bounds without unused numeric descent
+
+        Matplotlib reserves the font's full descent even when a numeric label
+        has no descenders. Removing that unused space prevents the visible
+        gap between theta labels and ticks from varying around the circle.
+        """
+        bbox, parts, _ = label._get_layout(renderer)  # pyright: ignore[reportAttributeAccessIssue]
+        descent = parts[-1][1][2]
+        x, y = label.get_unitless_position()
+        x, y = label.get_transform().transform((x, y))
+        bbox = bbox.translated(x, y)
+
+        text = label.get_text()
+        _, ismath = label._preprocess_math(text)  # pyright: ignore[reportAttributeAccessIssue]
+        # Common numeric ticks have no descenders, so exclude Matplotlib's
+        # unused descent without measuring rendered ink.
+        if (
+            text
+            and "\n" not in text
+            and ismath is False
+            and set(text) <= _NON_DESCENDING_NUMERIC_CHARS
+        ):
+            bbox = Bbox.from_extents(
+                bbox.x0,
+                bbox.y0 + descent,
+                bbox.x1,
+                bbox.y1,
+            )
+
+        return bbox
 
     def _position_labels(self, renderer: RendererBase) -> None:
         # Matplotlib pads theta labels from their centres by a fixed amount,
@@ -87,7 +124,7 @@ class p9ThetaTick(ThetaTick):
             translate.invalidate()
 
             anchor = label.get_transform().transform(label.get_position())
-            corners = label.get_window_extent(renderer).corners()
+            corners = self._label_bounds(label, renderer).corners()
             # Offset the label by its radial extent so the margin starts at
             # the nearest text edge, not at the label centre.
             edge_offset = np.min((corners - anchor) @ unit)
