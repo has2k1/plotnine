@@ -21,6 +21,7 @@ from plotnine import (
     guides,
     theme,
 )
+from plotnine._mpl._radial_axis import p9ThetaTick
 from plotnine.data import mtcars
 from plotnine.iapi import (
     labels_view,
@@ -128,6 +129,7 @@ def _theta_margin_plot(
     text_margin: (margin | dict[Literal["t", "r", "b", "l", "unit"], Any]),
     *,
     inner_radius: float = 0,
+    labels: tuple[str, str, str] = ("0", "120", "330"),
     **text_properties: Any,
 ) -> ggplot:
     data = pd.DataFrame({"x": [0, 120, 330], "y": [1, 2, 3]})
@@ -136,6 +138,7 @@ def _theta_margin_plot(
         + geom_point()
         + scale_x_continuous(
             breaks=[0, 120, 330],
+            labels=labels,
             limits=(0, 360),
             expand=(0, 0),
         )
@@ -205,8 +208,52 @@ def _theta_label_clearance(
         else 0
     )
     reference = boundary + outward * tick_length
-    corners = label.get_window_extent(renderer).corners()
+    assert isinstance(tick, p9ThetaTick)
+    corners = tick._label_bounds(label, renderer).corners()
     return float(np.min((corners - reference) @ outward))
+
+
+def _theta_label_bounds(
+    text: str,
+) -> tuple[np.ndarray, np.ndarray, float]:
+    p = _theta_margin_plot({})
+    p.draw_test()  # pyright: ignore[reportAttributeAccessIssue]
+    ax = p.axs[0]
+    canvas = FigureCanvasAgg(ax.figure)
+    canvas.draw()
+    renderer = canvas.get_renderer()
+    tick = ax.xaxis.get_major_ticks()[0]
+    assert isinstance(tick, p9ThetaTick)
+    label = tick.label2
+    label.set_text(text)
+
+    anchor = label.get_transform().transform(label.get_position())
+    logical, parts, _ = label._get_layout(renderer)
+    descent = parts[-1][1][2]
+    logical = logical.translated(*anchor)
+    corrected = tick._label_bounds(label, renderer)
+    return logical.get_points(), corrected.get_points(), descent
+
+
+@pytest.mark.parametrize(
+    "text",
+    ["300", "-3.0", "+3E0", "3e-2", "\N{MINUS SIGN}300"],
+)
+def test_coord_radial_numeric_theta_label_bounds_remove_descent(text: str):
+    logical, corrected, descent = _theta_label_bounds(text)
+
+    assert_allclose(corrected[0], logical[0] + [0, descent])
+    assert_allclose(corrected[1], logical[1])
+
+
+@pytest.mark.parametrize(
+    "text",
+    ["3g0", "angle", "3\n0", "$300$", "", "٣٠٠"],
+)
+def test_coord_radial_other_theta_label_bounds_are_unchanged(text: str):
+    logical, corrected, _ = _theta_label_bounds(text)
+
+    assert_allclose(corrected, logical)
 
 
 def test_coord_radial_theta_label_clearance_is_uniform():
@@ -218,6 +265,21 @@ def test_coord_radial_theta_label_clearance_is_uniform():
         [
             _theta_label_clearance(ax, "120"),
             _theta_label_clearance(ax, "330"),
+        ],
+        0,
+        atol=0.01,
+    )
+
+
+def test_coord_radial_theta_label_descent_correction():
+    p = _theta_margin_plot({}, labels=("0", "300", "3g0"))
+    p.draw_test()  # pyright: ignore[reportAttributeAccessIssue]
+    ax = p.axs[0]
+
+    assert_allclose(
+        [
+            _theta_label_clearance(ax, "300"),
+            _theta_label_clearance(ax, "3g0"),
         ],
         0,
         atol=0.01,
@@ -337,7 +399,7 @@ def test_coord_radial_inside_theta_label_clearance():
 
 
 def test_coord_radial_theta_label_clearance():
-    p = _theta_margin_plot({})
+    p = _theta_margin_plot({}, labels=("0", "300", "3g0"))
     assert p == "coord_radial_theta_label_clearance"
 
 
