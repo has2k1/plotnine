@@ -72,7 +72,8 @@ class coord_radial(coord):
         Which axes run in the opposite direction.
 
         * `"none"` (default) — neither axis is reversed.
-        * `"theta"` — the angular axis runs the other way around.
+        * `"theta"` — the angular axis runs the other way around the
+          same arc, so the data sweeps from `end` back to `start`.
         * `"r"` — the radial axis is inverted, so large values sit
           toward the centre.
         * `"thetar"` — both the angular and radial axes are reversed.
@@ -99,7 +100,7 @@ class coord_radial(coord):
         rotate_angle: bool = False,
         thetalim: tuple[float, float] | None = None,
         rlim: tuple[float, float] | None = None,
-        reverse: str = "none",
+        reverse: Literal["none", "theta", "r", "thetar"] = "none",
     ) -> None:
         if reverse not in {"none", "theta", "r", "thetar"}:
             raise ValueError(
@@ -239,12 +240,25 @@ class coord_radial(coord):
         Matplotlib theta direction for this coordinate system
 
         For matplotlib -1 is clockwise and +1 is counter-clockwise, the
-        opposite of plotnine's own `direction` convention.
-        Also, `reverse="theta"`/ `"thetar"` run the angular axis the other
-        way.
+        opposite of plotnine's own `direction` convention. `reverse="theta"`
+        does not enter here: it reverses the data along the arc (in
+        `_to_radians`), not the physical sweep, so the wedge stays put.
         """
-        reverse = -1 if self.reverse in ("theta", "thetar") else 1
-        return self.direction * reverse * -1
+        return self.direction * -1
+
+    @cached_property
+    def _r_axis_side(self) -> Literal["r_start", "r_end"]:
+        """
+        Polar side the radial axis occupies
+
+        The radial axis sits where the data begins. `reverse="theta"` runs
+        the data from `end` back to `start`, so a partial arc moves the axis
+        to the end spoke. A full circle has a single shared spoke, so it
+        stays at the start.
+        """
+        if self.reverse in ("theta", "thetar") and not self._is_full_circle:
+            return "r_end"
+        return "r_start"
 
     def _to_radians(
         self, vals: FloatArrayLike, theta_range: tuple[float, float]
@@ -258,6 +272,10 @@ class coord_radial(coord):
 
         arc_start, arc_end = self._arc_range
         norm = (np.asarray(vals) - lo) / span
+        # Traverse the same arc the other way, so data runs from
+        # end back to start.
+        if self.reverse in ("theta", "thetar"):
+            norm = 1 - norm
         return list(arc_start + norm * (arc_end - arc_start))
 
     def transform(
@@ -346,9 +364,11 @@ class coord_radial(coord):
         inner radius, and radial-axis placement using `panel_params` so
         faceted panels with free scales each get their own radial range.
 
-        The primary theta axis always renders on the outside and the primary
-        r axis always on r_start, independent of `scale.position` (which moves
-        only the axis title). The fixed choice is recorded on
+        The primary theta axis always renders on the outside. The primary r
+        axis sits on the spoke where the data begins (`_r_axis_side`): the
+        start spoke normally, the end spoke when `reverse="theta"` runs a
+        partial arc the other way. Neither follows `scale.position`, which
+        moves only the axis title. The fixed choice is recorded on
         `p9RadialAxes.axis_at_side` so theming can find it.
         """
         view = cast("radial_panel_view", panel_params)
@@ -365,11 +385,14 @@ class coord_radial(coord):
 
         self._setup_ticks_labels(ax, view)
 
+        # The radial axis is the yaxis; its start spoke is matplotlib's
+        # "left" tick pair and its end spoke the "right" pair.
+        r_side = "right" if self._r_axis_side == "r_end" else "left"
         _activate_axis(ax.xaxis, "top", True)
-        _activate_axis(ax.yaxis, "left", True)
+        _activate_axis(ax.yaxis, r_side, True)
 
         radial_ax.axis_at_side["theta_outside"] = radial_ax.thetaaxis
-        radial_ax.axis_at_side["r_start"] = radial_ax.raxis
+        radial_ax.axis_at_side[self._r_axis_side] = radial_ax.raxis
 
         # The theme styles these tick objects later; keep matplotlib's
         # tick resets from replacing their styling with the default look.
