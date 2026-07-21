@@ -836,6 +836,28 @@ def test_coord_radial_reverse_r_inverts_radial_range():
     assert tuple(pv_rev.y.range) == (10, 0)  # reversed: large r toward centre
 
 
+def test_coord_radial_reverse_theta_keeps_wedge_flips_order():
+    # reverse="theta" runs the data the other way around the SAME arc; it
+    # must not mirror the wedge onto the opposite side. So the mapped theta
+    # breaks reflect about the arc midpoint (start + end - break), while the
+    # arc itself and the physical draw direction are unchanged.
+    scale_x, scale_y = trained_scales()
+    base = coord_radial(start=np.pi, end=np.pi / 2, expand=False)
+    rev = coord_radial(
+        start=np.pi, end=np.pi / 2, expand=False, reverse="theta"
+    )
+    assert base._arc_range == rev._arc_range
+    assert base._mpl_direction == rev._mpl_direction
+
+    pv_base = base.setup_panel_params(scale_x, scale_y)
+    pv_rev = rev.setup_panel_params(scale_x, scale_y)
+    arc_lo, arc_hi = base._arc_range
+    assert_allclose(
+        list(pv_rev.x.breaks),
+        [arc_lo + arc_hi - b for b in pv_base.x.breaks],
+    )
+
+
 def test_coord_radial_shows_theta_labels_by_default():
     scale_x, scale_y = trained_scales()
     coord = coord_radial(expand=False)  # no theta_labels arg
@@ -1028,6 +1050,31 @@ def test_coord_radial_scale_y_position_right_keeps_r_start():
     ax = p.axs[0]
     assert axis_at(ax, "r_start") is ax.yaxis
     assert axis_at(ax, "r_end") is None
+
+
+def test_coord_radial_reverse_theta_moves_r_axis_to_end():
+    # reverse="theta" runs a partial arc from end back to start, so the
+    # radial axis follows the data to the end spoke; a full circle has a
+    # single shared spoke and keeps the axis at the start.
+    from plotnine._mpl.axes import axis_at
+
+    def r_side(**kwargs) -> ggplot:
+        p = (
+            ggplot(mtcars, aes("factor(cyl)", "mpg"))
+            + geom_col()
+            + coord_radial(inner_radius=0.1, **kwargs)
+            + theme(axis_line_y=element_line())
+        )
+        p.draw_test()  # pyright: ignore[reportAttributeAccessIssue]
+        return p.axs[0]
+
+    partial = r_side(start=np.pi, end=np.pi / 2, reverse="theta")
+    assert axis_at(partial, "r_end") is partial.yaxis
+    assert axis_at(partial, "r_start") is None
+
+    full = r_side(reverse="theta")
+    assert axis_at(full, "r_start") is full.yaxis
+    assert axis_at(full, "r_end") is None
 
 
 def test_p9_radial_axes_build_plotnine_ticks():
