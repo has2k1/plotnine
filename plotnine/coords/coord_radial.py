@@ -184,14 +184,20 @@ class coord_radial(coord):
                 ],
             )
 
-        # reverse="r"/"thetar": flip the displayed radial range so large r
-        # values sit toward the centre. set_ylim(hi, lo) inverts the axis.
-        # r.range stays in natural (lo, hi) order, so setup_ax reads it
-        # (not y.range) for the inner_radius origin: reversing only y.range
-        # inverts the display without breaking the hole, and distance() is
-        # likewise unaffected.
+        # Keep r in trained scale space. For radial reversal, make y match
+        # the display space produced by a reversed scale; descending polar
+        # limits alone do not reverse radial geometry.
         if self.reverse in ("r", "thetar"):
-            y = replace(y, range=(y.range[1], y.range[0]))
+            r_limits = cast("tuple[float, float]", r.limits)
+            r_breaks = cast("list[float]", r.breaks)
+            y = replace(
+                y,
+                limits=(-r_limits[1], -r_limits[0]),
+                range=(-r.range[1], -r.range[0]),
+                breaks=[-value for value in r_breaks],
+                minor_breaks=-np.asarray(r.minor_breaks, dtype=float),
+                labels=list(r.labels),
+            )
 
         return radial_panel_view(x=x, y=y, theta=theta, r=r)
 
@@ -308,6 +314,11 @@ class coord_radial(coord):
             if "xend" in data and "yend" in data:
                 data["xend"], data["yend"] = data["yend"], data["xend"]
 
+        if self.reverse in ("r", "thetar"):
+            data["y"] = -data["y"]
+            if "yend" in data:
+                data["yend"] = -data["yend"]
+
         # After the swap, data["x"] is always theta in radians.
         if self.rotate_angle and "angle" in data and "x" in data:
             # Align marks tangentially to their spoke. The PolarAxes places
@@ -405,10 +416,9 @@ class coord_radial(coord):
         # Inner radius: push the data away from the centre by setting a
         # virtual r-origin below r_min.  Formula: solve
         #   inner_radius = (r_lo - r_origin) / (r_hi - r_origin)
-        # Use the natural r range (always (lo, hi), reflects rlim) rather
-        # than y.range, which reverse="r"/"thetar" inverts to (hi, lo) and
-        # would fail the r_lo < r_hi guard, dropping the donut hole.
-        r_lo, r_hi = view.r.range
+        # Use the ordered display range so the origin follows ordinary,
+        # scale-reversed, and coordinate-reversed radial geometry.
+        r_lo, r_hi = view.y.range
 
         if (
             self.inner_radius > 0
