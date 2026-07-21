@@ -19,6 +19,8 @@ from plotnine import (
     ggplot,
     guide_axis_theta,
     guides,
+    scale_x_reverse,
+    scale_y_reverse,
     theme,
 )
 from plotnine._mpl._radial_axis import p9ThetaTick
@@ -826,14 +828,208 @@ def test_coord_radial_rlim_recomputes_breaks():
     assert len(pv.y.labels) == len(breaks)
 
 
-def test_coord_radial_reverse_r_inverts_radial_range():
+def test_coord_radial_reverse_r_builds_reversed_display_view():
+    scale_x, scale_y = trained_scales(
+        y=(0, 10),
+        y_breaks=(0, 5, 10),
+        y_labels=("0", "5", "10"),
+    )
+    panel_params = coord_radial(
+        reverse="r",
+        expand=False,
+    ).setup_panel_params(scale_x, scale_y)
+
+    assert panel_params.r.range == (0, 10)
+    assert panel_params.r.limits == (0, 10)
+    assert panel_params.y.range == (-10, 0)
+    assert panel_params.y.limits == (-10, 0)
+    assert_allclose(panel_params.y.breaks, [0, -5, -10])
+    assert_allclose(
+        panel_params.y.minor_breaks,
+        -np.asarray(panel_params.r.minor_breaks),
+    )
+    assert panel_params.y.labels == ["0", "5", "10"]
+
+
+@pytest.mark.parametrize(
+    ("theta", "data", "expected_y", "expected_yend"),
+    [
+        (
+            "x",
+            pd.DataFrame(
+                {"x": [2.0], "y": [3.0], "xend": [4.0], "yend": [5.0]}
+            ),
+            [-3.0],
+            [-5.0],
+        ),
+        (
+            "y",
+            pd.DataFrame(
+                {"x": [3.0], "y": [2.0], "xend": [5.0], "yend": [4.0]}
+            ),
+            [-3.0],
+            [-5.0],
+        ),
+    ],
+)
+def test_coord_radial_reverse_r_negates_display_coordinates(
+    theta: Literal["x", "y"],
+    data: pd.DataFrame,
+    expected_y: list[float],
+    expected_yend: list[float],
+):
+    panel_params = make_panel_view((0, 10), (0, 10))
+    result = coord_radial(
+        theta=theta,
+        reverse="r",
+        expand=False,
+    ).transform(data, panel_params)
+
+    assert_allclose(result["y"], expected_y)
+    assert_allclose(result["yend"], expected_yend)
+
+
+def test_coord_radial_reverse_r_matches_reversed_scale_geometry():
+    base = ggplot(mtcars, aes("factor(cyl)", "mpg")) + geom_col()
+    plots = [
+        base
+        + coord_radial(
+            start=np.pi,
+            end=np.pi / 2,
+            inner_radius=0.1,
+            reverse="r",
+        ),
+        base
+        + scale_y_reverse()
+        + coord_radial(
+            start=np.pi,
+            end=np.pi / 2,
+            inner_radius=0.1,
+        ),
+    ]
+
+    for plot in plots:
+        plot.draw_test()  # pyright: ignore[reportAttributeAccessIssue]
+
+    actual, expected = (plot.axs[0] for plot in plots)
+    assert_allclose(actual.get_ylim(), expected.get_ylim())
+    assert_allclose(actual.get_rorigin(), expected.get_rorigin())
+    assert len(actual.collections) == len(expected.collections)
+    for actual_collection, expected_collection in zip(
+        actual.collections,
+        expected.collections,
+        strict=True,
+    ):
+        actual_paths = actual_collection.get_paths()
+        expected_paths = expected_collection.get_paths()
+        assert len(actual_paths) == len(expected_paths)
+        for actual_path, expected_path in zip(
+            actual_paths,
+            expected_paths,
+            strict=True,
+        ):
+            distances = np.linalg.norm(
+                actual_path.vertices[:, None, :]
+                - expected_path.vertices[None, :, :],
+                axis=2,
+            )
+            assert_allclose(distances.min(axis=0), 0, atol=1e-12)
+            assert_allclose(distances.min(axis=1), 0, atol=1e-12)
+
+    theta = actual.collections[0].get_paths()[0].vertices[0, 0]
+    origin = np.asarray(
+        actual.transData.transform((theta, actual.get_rorigin()))
+    )
+    baseline = np.asarray(actual.transData.transform((theta, 0)))
+    inward = np.asarray(actual.transData.transform((theta, -22.8)))
+    assert np.linalg.norm(baseline - origin) > np.linalg.norm(inward - origin)
+
+
+@pytest.mark.parametrize(
+    ("theta", "reverse", "inner_radius"),
+    [
+        ("x", "r", 0),
+        ("x", "r", 0.3),
+        ("x", "thetar", 0.1),
+        ("y", "r", 0.1),
+    ],
+)
+def test_coord_radial_reverse_r_matches_reversed_scale_cases(
+    theta: Literal["x", "y"],
+    reverse: Literal["r", "thetar"],
+    inner_radius: float,
+):
+    data = pd.DataFrame({"x": [1, 2, 3], "y": [2, 5, 8]})
+    mapping = aes("x", "y") if theta == "x" else aes("y", "x")
+    scale = scale_y_reverse() if theta == "x" else scale_x_reverse()
+    plots = [
+        ggplot(data, mapping)
+        + geom_point()
+        + coord_radial(
+            theta=theta,
+            start=0,
+            end=np.pi if reverse == "thetar" else None,
+            inner_radius=inner_radius,
+            reverse=reverse,
+        ),
+        ggplot(data, mapping)
+        + geom_point()
+        + scale
+        + coord_radial(
+            theta=theta,
+            start=0,
+            end=np.pi if reverse == "thetar" else None,
+            inner_radius=inner_radius,
+            reverse="theta" if reverse == "thetar" else "none",
+        ),
+    ]
+
+    for plot in plots:
+        plot.draw_test()  # pyright: ignore[reportAttributeAccessIssue]
+
+    actual, expected = (plot.axs[0] for plot in plots)
+    assert_allclose(actual.get_ylim(), expected.get_ylim())
+    assert_allclose(actual.get_rorigin(), expected.get_rorigin())
+    assert_allclose(
+        actual.collections[0].get_offsets(),
+        expected.collections[0].get_offsets(),
+    )
+
+
+def test_coord_radial_reverse_r_respects_rlim():
     scale_x, scale_y = trained_scales(y=(0, 10))
-    base = coord_radial(expand=False)
-    rev = coord_radial(reverse="r", expand=False)
-    pv_base = base.setup_panel_params(scale_x, scale_y)
-    pv_rev = rev.setup_panel_params(scale_x, scale_y)
-    assert tuple(pv_base.y.range) == (0, 10)
-    assert tuple(pv_rev.y.range) == (10, 0)  # reversed: large r toward centre
+    panel_params = coord_radial(
+        reverse="r",
+        rlim=(2, 8),
+        expand=False,
+    ).setup_panel_params(scale_x, scale_y)
+
+    assert panel_params.r.limits == (2, 8)
+    assert panel_params.r.range == (2, 8)
+    assert panel_params.y.limits == (-8, -2)
+    assert panel_params.y.range == (-8, -2)
+
+
+def test_coord_radial_reverse_r_cancels_reversed_scale_geometry():
+    data = pd.DataFrame({"x": [1, 2], "y": [2, 8]})
+    plots = [
+        ggplot(data, aes("x", "y")) + geom_point() + coord_radial(),
+        ggplot(data, aes("x", "y"))
+        + geom_point()
+        + scale_y_reverse()
+        + coord_radial(reverse="r"),
+    ]
+
+    for plot in plots:
+        plot.draw_test()  # pyright: ignore[reportAttributeAccessIssue]
+
+    ordinary, double_reversed = (plot.axs[0] for plot in plots)
+    assert_allclose(ordinary.get_ylim(), double_reversed.get_ylim())
+    assert_allclose(ordinary.get_rorigin(), double_reversed.get_rorigin())
+    assert_allclose(
+        ordinary.collections[0].get_offsets(),
+        double_reversed.collections[0].get_offsets(),
+    )
 
 
 def test_coord_radial_reverse_theta_keeps_wedge_flips_order():
