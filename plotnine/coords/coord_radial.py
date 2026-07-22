@@ -411,7 +411,8 @@ class coord_radial(coord):
             # The secondary axis occupies the spoke opposite the primary.
             sec_side = "left" if r_side == "right" else "right"
             _activate_axis(sec_raxis, sec_side, True)
-            radial_ax.set_spine_visible("end", True)
+            sec_spoke = "end" if sec_side == "right" else "start"
+            radial_ax.set_spine_visible(sec_spoke, True)
 
         # The theme styles these tick objects later; keep matplotlib's
         # tick resets from replacing their styling with the default look.
