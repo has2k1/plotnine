@@ -11,7 +11,7 @@ from .._mpl._radial_axes import p9RadialAxes  # noqa: TCH001
 from .._utils.registry import alias
 from ..exceptions import PlotnineWarning
 from ..iapi import panel_ranges, radial_panel_view
-from .coord import _activate_axis, coord, dist_euclidean
+from .coord import _activate_axis, _set_fixed_ticks, coord, dist_euclidean
 
 if TYPE_CHECKING:
     import numpy.typing as npt
@@ -404,6 +404,14 @@ class coord_radial(coord):
 
         radial_ax.axis_at_side["theta_outside"] = radial_ax.thetaaxis
         radial_ax.axis_at_side[self._r_axis_side] = radial_ax.raxis
+
+        if (sec := view.r.sec) is not None:
+            sec_raxis = radial_ax.add_sec_raxis()
+            _set_fixed_ticks(sec_raxis, sec.breaks, sec.labels)
+            # The secondary axis occupies the spoke opposite the primary.
+            sec_side = "left" if r_side == "right" else "right"
+            _activate_axis(sec_raxis, sec_side, True)
+            radial_ax.set_spine_visible("end", True)
 
         # The theme styles these tick objects later; keep matplotlib's
         # tick resets from replacing their styling with the default look.

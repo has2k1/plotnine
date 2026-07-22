@@ -320,12 +320,13 @@ class coord:
         if (sec := sv.sec) is None:
             return
 
+        position = cast("Side", sec.position)
         p9ax = cast("p9Axes", ax)
-        axis = p9ax.add_sec_axis(sec.position)
+        axis = p9ax.add_sec_axis(position)
         _set_fixed_ticks(axis, sec.breaks, sec.labels)
-        _activate_axis(axis, sec.position, present)
-        p9ax.sides_with_an_axis.add(sec.position)
-        ax.spines[sec.position].set_visible(True)
+        _activate_axis(axis, position, present)
+        p9ax.sides_with_an_axis.add(position)
+        ax.spines[position].set_visible(True)
 
     def draw(self, axs: list) -> None:
         """
