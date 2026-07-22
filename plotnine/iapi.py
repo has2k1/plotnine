@@ -22,6 +22,7 @@ if TYPE_CHECKING:
         CoordRange,
         FloatArrayLike,
         HorizontalJustification,
+        PolarSide,
         ScaledAestheticsName,
         Side,
         StripPosition,
@@ -60,8 +61,9 @@ class sec_axis_view:
     labels: Sequence[str]
     # Title of the secondary axis; None means the primary axis title
     name: Optional[str]
-    # The side opposite the primary axis
-    position: Side
+    # The side opposite the primary axis (cartesian), or the polar spoke
+    # a secondary radial axis occupies
+    position: Side | PolarSide
 
 
 @dataclass
