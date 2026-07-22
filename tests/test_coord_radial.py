@@ -1393,6 +1393,18 @@ def test_secondary_r_axis_themed():
     assert p == "secondary_r_axis_themed"
 
 
+def test_secondary_r_axis_theta_y():
+    p = (
+        ggplot(mtcars, aes("wt", "mpg"))
+        + geom_point()
+        + scale_x_continuous(
+            sec_axis=sec_axis(lambda x: x * 0.354006, name="scaled")
+        )
+        + coord_radial(theta="y", start=-pi / 2, end=pi / 2)
+    )
+    assert p == "secondary_r_axis_theta_y"
+
+
 def test_secondary_r_axis_title_sides():
     p = (
         ggplot(mtcars, aes("wt", "mpg"))
