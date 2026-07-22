@@ -1375,3 +1375,45 @@ def test_secondary_r_axis():
         + theme(axis_line_y=element_line())
     )
     assert p == "secondary_r_axis"
+
+
+def test_secondary_r_axis_themed():
+    p = (
+        ggplot(mtcars, aes("wt", "mpg"))
+        + geom_point()
+        + scale_y_continuous(
+            sec_axis=sec_axis(lambda x: x * 0.354006, name="km/L")
+        )
+        + coord_radial(start=-pi / 2, end=pi / 2, inner_radius=0.1)
+        + theme(
+            axis_line_y=element_line(),
+            axis_text_y=element_text(color="blue"),
+        )
+    )
+    assert p == "secondary_r_axis_themed"
+
+
+def test_secondary_r_axis_title_sides():
+    p = (
+        ggplot(mtcars, aes("wt", "mpg"))
+        + geom_point()
+        + scale_y_continuous(
+            sec_axis=sec_axis(lambda x: x * 0.354006, name="km/L")
+        )
+        + coord_radial(start=-pi / 2, end=pi / 2, inner_radius=0.1)
+    )
+    p.draw_test()  # pyright: ignore[reportAttributeAccessIssue]
+    fig = p.axs[0].figure  # pyright: ignore[reportAttributeAccessIssue]
+    fig.draw_without_rendering()  # pyright: ignore[reportAttributeAccessIssue]
+    targets = p.theme.targets
+    renderer = fig._get_renderer()  # pyright: ignore[reportAttributeAccessIssue]
+    left = targets.axis_title_y_left
+    right = targets.axis_title_y_right
+    assert left is not None, "primary r-axis title not found"
+    assert right is not None, "secondary r-axis title not found"
+    left_box = left.get_window_extent(renderer=renderer)
+    right_box = right.get_window_extent(renderer=renderer)
+    assert right_box.x0 > left_box.x1, (
+        f"secondary title (x0={right_box.x0:.1f}) expected right of "
+        f"primary title (x1={left_box.x1:.1f})"
+    )
