@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, cast
 
+from matplotlib import cbook
 from matplotlib.projections import register_projection
 from matplotlib.projections.polar import PolarAxes, RadialAxis, ThetaAxis
 
@@ -20,7 +21,15 @@ class p9RadialAxes(PolarAxes):
 
     name = "p9radial"
 
+    _shared_axes = {
+        **PolarAxes._shared_axes,  # pyright: ignore[reportAttributeAccessIssue]
+        "sec_r": cbook.Grouper(),
+    }
+
     _axis_at_side: dict[PolarSide, ThetaAxis | RadialAxis] | None = None
+
+    # Secondary r-axis drawn at the end spoke; None until first requested.
+    _sec_raxis: p9RadialAxis | None = None
 
     # Whether the r-axis ticks already keep their themed styling across
     # matplotlib's tick resets. Guards `lock_raxis_tick_style` so repeated
@@ -29,7 +38,7 @@ class p9RadialAxes(PolarAxes):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
+        self._sec_raxis = None
         self.set_theta_zero_location("N")  # 12 o'clock
         self.set_spine_visible("start", False)
         self.set_spine_visible("end", False)
@@ -67,11 +76,23 @@ class p9RadialAxes(PolarAxes):
         for tick in (*self.raxis.majorTicks, *self.raxis.minorTicks):
             tick.update_position(tick.get_loc())
 
+        if self._sec_raxis is not None:
+            for tick in (
+                *self._sec_raxis.majorTicks,
+                *self._sec_raxis.minorTicks,
+            ):
+                tick.update_position(tick.get_loc())
+
         super().draw(renderer)
 
         for label in self.raxis.get_ticklabels():
             if label.get_visible():
                 label.draw(renderer)
+
+        if self._sec_raxis is not None:
+            for label in self._sec_raxis.get_ticklabels():
+                if label.get_visible():
+                    label.draw(renderer)
 
         for tick in (*self.thetaaxis.majorTicks, *self.thetaaxis.minorTicks):
             if not isinstance(tick, p9ThetaTick):
@@ -88,6 +109,34 @@ class p9RadialAxes(PolarAxes):
     @property
     def raxis(self) -> p9RadialAxis:
         return cast("p9RadialAxis", self.yaxis)
+
+    def add_sec_raxis(self) -> p9RadialAxis:
+        """
+        Return the secondary r-axis drawn at the end spoke, creating it once
+
+        The axis starts with no ticks or labels; the caller sets them via
+        `set_ticks` / `set_ticklabels`.  It is registered in
+        `axis_at_side["r_end"]` and its tick labels are redrawn above geoms
+        on every `draw` call, mirroring the primary r-axis behaviour.
+
+        Returns
+        -------
+        :
+            The secondary radial axis anchored to the end spoke.
+        """
+        if self._sec_raxis is not None:
+            return self._sec_raxis
+
+        axis = p9RadialAxis(self, clear=True)
+        # Register so mpl can resolve _get_axis_name(), and add to the
+        # draw tree.  Mirrors the pattern in p9Axes._make_sec_axis.
+        self._axis_map["sec_r"] = axis  # type: ignore[index]
+        self.add_artist(axis)
+        axis.set_clip_on(False)
+        axis.grid(visible=False)
+        self._sec_raxis = axis
+        self.axis_at_side["r_end"] = axis
+        return axis
 
     def set_spine_visible(self, name: str, visible: bool) -> None:
         """
