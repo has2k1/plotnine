@@ -38,7 +38,6 @@ class p9RadialAxes(PolarAxes):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self._sec_raxis = None
         self.set_theta_zero_location("N")  # 12 o'clock
         self.set_spine_visible("start", False)
         self.set_spine_visible("end", False)
@@ -130,7 +129,7 @@ class p9RadialAxes(PolarAxes):
         axis = p9RadialAxis(self, clear=True)
         # Register so mpl can resolve _get_axis_name(), and add to the
         # draw tree.  Mirrors the pattern in p9Axes._make_sec_axis.
-        self._axis_map["sec_r"] = axis  # type: ignore[index]
+        self._axis_map["sec_r"] = axis
         self.add_artist(axis)
         axis.set_clip_on(False)
         axis.grid(visible=False)
