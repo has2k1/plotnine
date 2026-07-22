@@ -1,4 +1,5 @@
 from dataclasses import replace
+from math import pi
 from typing import Any, Literal
 
 import numpy as np
@@ -30,7 +31,7 @@ from plotnine.iapi import (
     radial_panel_view,
     scale_position_view,
 )
-from plotnine.scales import scale_x_continuous, scale_y_continuous
+from plotnine.scales import scale_x_continuous, scale_y_continuous, sec_axis
 from plotnine.themes.elements import margin
 
 
@@ -1361,3 +1362,16 @@ def test_coord_polar_is_alias_of_coord_radial():
     assert coord_polar.__doc__ == (
         "alias of [coord_radial](`plotnine.coords.coord_radial.coord_radial`)"
     )
+
+
+def test_secondary_r_axis():
+    p = (
+        ggplot(mtcars, aes("wt", "mpg"))
+        + geom_point()
+        + scale_y_continuous(
+            sec_axis=sec_axis(lambda x: x * 0.354006, name="km/L")
+        )
+        + coord_radial(start=-pi / 2, end=pi / 2, inner_radius=0.1)
+        + theme(axis_line_y=element_line())
+    )
+    assert p == "secondary_r_axis"
