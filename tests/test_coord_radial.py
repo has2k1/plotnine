@@ -1581,6 +1581,13 @@ def _panel_and_ink(p) -> tuple[Any, np.ndarray]:
     return panel, ink
 
 
+def _r_length(ax, theta: float) -> float:
+    """Display-space length of the radius spoke at angle `theta`"""
+    r_lo, r_hi = ax.get_ylim()
+    pts = ax.transData.transform([(theta, r_lo), (theta, r_hi)])
+    return float(np.hypot(*(pts[1] - pts[0])))
+
+
 def test_coord_radial_half_disc_fills_panel():
     p = (
         ggplot(mtcars, aes("wt", "mpg"))
@@ -1591,3 +1598,52 @@ def test_coord_radial_half_disc_fills_panel():
     frac_w = (ink[:, 0].max() - ink[:, 0].min()) / panel.width
     frac_h = (ink[:, 1].max() - ink[:, 1].min()) / panel.height
     assert_allclose([frac_w, frac_h], 1.0, atol=0.02)
+
+
+@pytest.mark.parametrize(
+    "kwargs",
+    [
+        {},
+        {"start": -pi / 2, "end": 0.0},
+        {"start": -pi / 2, "end": pi / 2},
+        {"start": -pi / 2, "end": -pi / 3},
+        {"start": 0.0, "end": 0.25},
+        {"start": -pi / 2, "end": pi / 2, "inner_radius": 0.3},
+    ],
+)
+def test_coord_radial_sector_fills_panel(kwargs):
+    p = (
+        ggplot(mtcars, aes("wt", "mpg"))
+        + geom_point()
+        + coord_radial(**kwargs)
+    )
+    panel, ink = _panel_and_ink(p)
+    frac_w = (ink[:, 0].max() - ink[:, 0].min()) / panel.width
+    frac_h = (ink[:, 1].max() - ink[:, 1].min()) / panel.height
+    assert_allclose([frac_w, frac_h], 1.0, atol=0.02)
+
+
+@pytest.mark.parametrize(
+    "kwargs",
+    [
+        {"start": -pi / 2, "end": pi / 2},
+        {"start": 0.0, "end": 0.25},
+        {"start": -pi / 2, "end": pi / 2, "inner_radius": 0.3},
+    ],
+)
+def test_coord_radial_sector_is_not_distorted(kwargs):
+    # The radius must map to the same display length on every spoke;
+    # otherwise the sector has been stretched to fill a mismatched panel.
+    p = (
+        ggplot(mtcars, aes("wt", "mpg"))
+        + geom_point()
+        + coord_radial(**kwargs)
+    )
+    p.draw_test()  # pyright: ignore[reportAttributeAccessIssue]
+    ax = p.axs[0]
+    ax.figure.draw_without_rendering()
+    theta_lo, theta_hi = ax.get_xlim()
+    theta_mid = (theta_lo + theta_hi) / 2
+    assert_allclose(
+        _r_length(ax, theta_mid), _r_length(ax, theta_lo), rtol=0.01
+    )
