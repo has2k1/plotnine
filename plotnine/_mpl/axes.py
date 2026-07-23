@@ -91,10 +91,36 @@ class p9Axes(Axes):
         # the draw tree. Panels are never cleared after this point;
         # Axes.clear() would detach the artist.
         self._axis_map[name] = axis
+        register_lim_changed_signal(self, name)
         self.add_artist(axis)
         axis.set_clip_on(False)
         axis.grid(False)
         return axis
+
+
+def register_lim_changed_signal(ax: Axes, axis_name: str) -> None:
+    """
+    Register the `<axis_name>lim_changed` callback signal on a panel
+
+    Setting fixed ticks on an axis makes matplotlib expand its view
+    interval, and when that interval actually changes it fires a
+    `f"{axis._get_axis_name()}lim_changed"` callback. A panel's
+    `CallbackRegistry` only knows the built-in `x`/`y`/`z` signals, so a
+    secondary axis registered under a name like `sec_x` or `sec_r` would
+    raise `ValueError` on that lookup. Adding the matching signal lets the
+    callback resolve to a no-op (nothing is connected to it).
+
+    Parameters
+    ----------
+    ax :
+        Panel axes owning the callback registry.
+    axis_name :
+        Name the axis is registered under in `ax._axis_map`.
+    """
+    signal = f"{axis_name}lim_changed"
+    signals = ax.callbacks._signals  # pyright: ignore[reportAttributeAccessIssue]
+    if signals is not None and signal not in signals:
+        signals.append(signal)
 
 
 def axis_at(ax: Axes, side: Side | PolarSide) -> XAxis | YAxis | None:

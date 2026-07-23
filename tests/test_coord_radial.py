@@ -1393,6 +1393,21 @@ def test_secondary_r_axis_themed():
     assert p == "secondary_r_axis_themed"
 
 
+def test_secondary_r_axis_reverse_r_builds():
+    # reverse="r" negates the r view interval, so setting the secondary
+    # axis breaks changes its view interval and mpl fires a
+    # `sec_rlim_changed` callback -- the panel must register that signal.
+    p = (
+        ggplot(mtcars, aes("wt", "mpg"))
+        + geom_point()
+        + scale_y_continuous(
+            sec_axis=sec_axis(lambda x: x, breaks=[10, 20, 30])
+        )
+        + coord_radial(reverse="r")
+    )
+    p.draw_test()  # pyright: ignore[reportAttributeAccessIssue]
+
+
 def test_secondary_r_axis_theta_y():
     p = (
         ggplot(mtcars, aes("wt", "mpg"))
