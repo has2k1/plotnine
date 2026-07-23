@@ -55,7 +55,7 @@ class p9RadialAxes(PolarAxes):
         self.xaxis = p9ThetaAxis(self, clear=False)
         self.yaxis = p9RadialAxis(self, clear=False)
         self.spines["polar"].register_axis(self.yaxis)
-        if (inner_spine := self.spines.get("inner")) is not None:
+        if inner_spine := self.spines.get("inner"):
             inner_spine.register_axis(self.yaxis)
 
     @property
@@ -69,19 +69,20 @@ class p9RadialAxes(PolarAxes):
 
     def draw(self, renderer: RendererBase) -> None:
         """
-        Draw the axes, then lift the tick labels above the geoms
+        Draw the axes, then lift the r-axis ticks above the geoms
 
         With the default `panel_ontop=False` (`axisbelow=True`) the normal
-        pass paints the gridlines and the tick labels below the geoms.
-        Re-drawing the radial-axis and theta-axis tick labels keeps them
-        visible on top of opaque geoms.
+        pass paints the gridlines, tick marks and tick labels below the
+        geoms. Re-drawing each r-axis's tick marks and labels keeps them
+        visible on top of opaque geoms and above the theta gridlines that
+        cross them on the shared full-circle spoke.
         When `panel_ontop=True` everything is already above the geoms, so
         the re-draw is a visual no-op.
         """
         for tick in (*self.raxis.majorTicks, *self.raxis.minorTicks):
             tick.update_position(tick.get_loc())
 
-        if self._sec_raxis is not None:
+        if self._sec_raxis:
             for tick in (
                 *self._sec_raxis.majorTicks,
                 *self._sec_raxis.minorTicks,
@@ -90,14 +91,9 @@ class p9RadialAxes(PolarAxes):
 
         super().draw(renderer)
 
-        for label in self.raxis.get_ticklabels():
-            if label.get_visible():
-                label.draw(renderer)
-
-        if self._sec_raxis is not None:
-            for label in self._sec_raxis.get_ticklabels():
-                if label.get_visible():
-                    label.draw(renderer)
+        _redraw_raxis(self.raxis, renderer)
+        if self._sec_raxis:
+            _redraw_raxis(self._sec_raxis, renderer)
 
         for tick in (*self.thetaaxis.majorTicks, *self.thetaaxis.minorTicks):
             if not isinstance(tick, p9ThetaTick):
@@ -129,7 +125,7 @@ class p9RadialAxes(PolarAxes):
         :
             The secondary radial axis anchored to the end spoke.
         """
-        if self._sec_raxis is not None:
+        if self._sec_raxis:
             return self._sec_raxis
 
         axis = p9SecondaryRadialAxis(self, clear=True)
@@ -199,6 +195,27 @@ class p9RadialAxes(PolarAxes):
             axis._copy_tick_props(minor, axis.minorTicks[0])  # type: ignore
 
         axis.reset_ticks = reset_ticks_and_restyle
+
+
+def _redraw_raxis(axis: p9RadialAxis, renderer: RendererBase) -> None:
+    """
+    Redraw an r-axis's visible tick marks and labels on top of the geoms
+
+    Each tick's `_tick_side` selects the mark/label pair it occupies: the
+    primary r-axis draws the start pair (`tick1line`/`label1`), the secondary
+    the end pair (`tick2line`/`label2`) on the opposite side of the shared
+    full-circle spoke. Marks draw before labels so a label never sits under
+    its own mark.
+    """
+    for tick in (*axis.majorTicks, *axis.minorTicks):
+        if tick._tick_side > 0:  # pyright: ignore[reportAttributeAccessIssue]
+            mark, label = tick.tick2line, tick.label2
+        else:
+            mark, label = tick.tick1line, tick.label1
+        if mark.get_visible():
+            mark.draw(renderer)
+        if label.get_visible():
+            label.draw(renderer)
 
 
 register_projection(p9RadialAxes)
