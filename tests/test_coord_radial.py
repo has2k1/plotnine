@@ -1431,6 +1431,25 @@ def test_secondary_r_axis_reverse_r_keeps_radial_range():
     assert r_range(True) == r_range(False)
 
 
+def test_secondary_r_axis_full_circle_labels():
+    # A full circle shares one labelling spoke between the primary and
+    # secondary r-axes. Matplotlib forces the second (`label2`) tick pair
+    # invisible for a full circle, so the secondary axis must render on the
+    # same spoke as the primary, offset outward, rather than on its own.
+    p = (
+        ggplot(mtcars, aes("wt", "mpg"))
+        + geom_point()
+        + scale_y_continuous(
+            sec_axis=sec_axis(lambda x: x * 2, breaks=[10, 20, 30])
+        )
+        + coord_radial()
+    )
+    p.draw_test()  # pyright: ignore[reportAttributeAccessIssue]
+    ax = p.axs[0]  # pyright: ignore[reportAttributeAccessIssue]
+    labels = [t.get_text() for t in ax._sec_raxis.get_ticklabels()]
+    assert labels == ["20", "30"]
+
+
 def test_secondary_r_axis_theta_y():
     p = (
         ggplot(mtcars, aes("wt", "mpg"))

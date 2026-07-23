@@ -6,7 +6,12 @@ from matplotlib import cbook
 from matplotlib.projections import register_projection
 from matplotlib.projections.polar import PolarAxes, RadialAxis, ThetaAxis
 
-from ._radial_axis import p9RadialAxis, p9ThetaAxis, p9ThetaTick
+from ._radial_axis import (
+    p9RadialAxis,
+    p9SecondaryRadialAxis,
+    p9ThetaAxis,
+    p9ThetaTick,
+)
 from .axes import register_lim_changed_signal
 
 if TYPE_CHECKING:
@@ -127,7 +132,7 @@ class p9RadialAxes(PolarAxes):
         if self._sec_raxis is not None:
             return self._sec_raxis
 
-        axis = p9RadialAxis(self, clear=True)
+        axis = p9SecondaryRadialAxis(self, clear=True)
         # Register so mpl can resolve _get_axis_name(), and add to the
         # draw tree.  Mirrors the pattern in p9Axes._make_sec_axis.
         self._axis_map["sec_r"] = axis

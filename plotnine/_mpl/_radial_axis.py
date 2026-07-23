@@ -151,12 +151,29 @@ class p9RadialTick(RadialTick):
     Radial tick whose mark and label share the start-spoke sweep side
     """
 
+    # Which side of the shared full-circle spoke this axis's ticks occupy,
+    # as a signed perpendicular (`-1` / `+1`). The primary and secondary
+    # r-axes take opposite sides so their marks and labels never overlap.
+    # The sign also selects the tick/label pair: the positive side draws the
+    # end pair (`label2`/`tick2line`, the `r_end` side theming uses), the
+    # negative side the start pair.
+    _tick_side: int = -1
+
     def update_position(self, loc: float) -> None:
         # Matplotlib already handles the two radial axes at the ends of a
         # partial arc. For a full circle it places the labels at
         # `rlabel_position`, but leaves the tick marker unrotated. Convert
         # that position to its rendered screen angle, then turn the marker
         # perpendicular to the spoke, opposite the effective theta sweep.
+
+        # On a full circle the two tick/label pairs would land on the same
+        # spoke, so the `super().update_position` below hides the second
+        # one. But the secondary r-axis draws that pair, on the opposite
+        # side of the spoke — so save its visibility now and restore it,
+        # after the super call, in the `_tick_side > 0` branch.
+        want_label = self.label2.get_visible()
+        want_tick = self.tick2line.get_visible()
+
         super().update_position(loc)
 
         axes = cast("PolarAxes", self.axes)
@@ -165,15 +182,28 @@ class p9RadialTick(RadialTick):
         if abs(abs(thetamax - thetamin) - 360.0) >= 1e-12:
             return
 
+        if self._tick_side > 0:
+            label, tickline = self.label2, self.tick2line
+            text1_transform = axes.get_yaxis_text2_transform(0)[0]
+            label.set_visible(want_label)
+            tickline.set_visible(want_tick)
+        else:
+            label, tickline = self.label1, self.tick1line
+            text1_transform = axes.get_yaxis_text1_transform(0)[0]
+
         direction = axes.get_theta_direction()
         offset = np.rad2deg(axes.get_theta_offset())
         spoke_angle = (axes.get_rlabel_position() * direction + offset) % 360
-        marker_angle = np.deg2rad(spoke_angle - direction * 90)
+        # `_tick_side` flips the perpendicular so a secondary axis mirrors
+        # the primary across the shared spoke.
+        marker_angle = np.deg2rad(
+            spoke_angle + self._tick_side * direction * 90
+        )
 
         # Replace the marker's base transform so its one-sided tick points
         # along the computed tangent. `MarkerStyle.transformed()` would
         # compose with the existing TICKLEFT/TICKRIGHT transform instead.
-        marker = self.tick1line.get_marker()
+        marker = tickline.get_marker()
         if marker == mmarkers.TICKLEFT:
             transform = Affine2D().rotate(marker_angle)
         elif marker == mmarkers.TICKRIGHT:
@@ -181,22 +211,23 @@ class p9RadialTick(RadialTick):
         elif marker == "_":
             transform = Affine2D().rotate(marker_angle + np.pi / 2)
         else:
-            transform = self.tick1line._marker._transform  # pyright: ignore[reportAttributeAccessIssue]
-        self.tick1line._marker._transform = transform  # pyright: ignore[reportAttributeAccessIssue]
+            transform = tickline._marker._transform  # pyright: ignore[reportAttributeAccessIssue]
+        tickline._marker._transform = transform  # pyright: ignore[reportAttributeAccessIssue]
 
         # A constant theta offset fans labels farther from the spoke as the
         # radius grows. Keep every label on the spoke and apply its padding
         # in display space so their edges remain aligned.
         mode, _ = self._labelrotation  # pyright: ignore[reportAttributeAccessIssue]
         angle = spoke_angle - 90
-        ha, va = self._determine_anchor(mode, angle, direction > 0)  # pyright: ignore[reportAttributeAccessIssue]
+        start = (self._tick_side * direction) < 0
+        ha, va = self._determine_anchor(mode, angle, start)  # pyright: ignore[reportAttributeAccessIssue]
         # self._pad includes the tick length and the gap between
         # the tick and text.
         shift = self._pad  # pyright: ignore[reportAttributeAccessIssue]
         text_transform = (
             # Place the text flush with the spoke. For a full circle,
             # matplotlib ignores the pad passed to this method.
-            axes.get_yaxis_text1_transform(0)[0]
+            text1_transform
             # Move the text by a fixed physical distance independent of the
             # data radius.
             + ScaledTranslation(
@@ -205,10 +236,23 @@ class p9RadialTick(RadialTick):
                 axes.figure.dpi_scale_trans,
             )
         )
-        self.label1.set_x(0)
-        self.label1.set_transform(text_transform)
-        self.label1.set_horizontalalignment(ha)
-        self.label1.set_verticalalignment(va)
+        label.set_x(0)
+        label.set_transform(text_transform)
+        label.set_horizontalalignment(ha)
+        label.set_verticalalignment(va)
+
+
+class p9SecondaryRadialTick(p9RadialTick):
+    """
+    Full-circle secondary r-axis tick mirrored across the shared spoke
+
+    The secondary r-axis shares the primary's single full-circle spoke, so
+    it sits on the opposite side of it. That side draws the end tick/label
+    pair — the same pair theming resolves for the `r_end` side — keeping its
+    mark and label clear of the primary's.
+    """
+
+    _tick_side = 1
 
 
 class p9RadialAxis(RadialAxis):
@@ -221,3 +265,11 @@ class p9RadialAxis(RadialAxis):
     def _copy_tick_props(self, src: p9RadialTick, dest: p9RadialTick) -> None:
         super()._copy_tick_props(src, dest)  # pyright: ignore[reportAttributeAccessIssue]
         dest.update_position(dest.get_loc())
+
+
+class p9SecondaryRadialAxis(p9RadialAxis):
+    """
+    Secondary radial axis mirrored across the primary's full-circle spoke
+    """
+
+    _tick_class = p9SecondaryRadialTick
