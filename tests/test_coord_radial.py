@@ -1647,3 +1647,33 @@ def test_coord_radial_sector_is_not_distorted(kwargs):
     assert_allclose(
         _r_length(ax, theta_mid), _r_length(ax, theta_lo), rtol=0.01
     )
+
+
+_partial_arc_base = ggplot(mtcars, aes("wt", "mpg")) + geom_point()
+
+
+def test_coord_radial_partial_arc_half_disc():
+    p = _partial_arc_base + coord_radial(start=-pi / 2, end=pi / 2)
+    assert p == "coord_radial_partial_arc_half_disc"
+
+
+def test_coord_radial_partial_arc_thin_wedge():
+    p = _partial_arc_base + coord_radial(start=-pi / 2, end=-pi / 3)
+    assert p == "coord_radial_partial_arc_thin_wedge"
+
+
+def test_coord_radial_partial_arc_sliver():
+    p = _partial_arc_base + coord_radial(start=0, end=0.25)
+    assert p == "coord_radial_partial_arc_sliver"
+
+
+def test_coord_radial_partial_arc_quarter():
+    p = _partial_arc_base + coord_radial(start=-pi / 2, end=0)
+    assert p == "coord_radial_partial_arc_quarter"
+
+
+def test_coord_radial_partial_arc_inner_radius_half_disc():
+    p = _partial_arc_base + coord_radial(
+        start=-pi / 2, end=pi / 2, inner_radius=0.3
+    )
+    assert p == "coord_radial_partial_arc_inner_radius_half_disc"
