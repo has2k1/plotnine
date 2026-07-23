@@ -1450,6 +1450,25 @@ def test_secondary_r_axis_full_circle_labels():
     assert labels == ["20", "30"]
 
 
+def test_secondary_r_axis_full_circle_marks():
+    # On a full circle the primary and secondary r-axes share one spoke.
+    # The secondary tick marks must anchor on that spoke (not fan off it as
+    # the radius grows), point to the opposite side of it from the primary,
+    # and stay above the gridlines they cross.
+    p = (
+        ggplot(mtcars, aes("wt", "mpg"))
+        + geom_point()
+        + scale_y_continuous(sec_axis=sec_axis(lambda x: x * 2))
+        + coord_radial()
+        + theme(
+            axis_line_r=element_line(),
+            axis_ticks_y=element_line(color="red", size=2),
+            axis_ticks_length_major=20,
+        )
+    )
+    assert p == "secondary_r_axis_full_circle_marks"
+
+
 def test_secondary_r_axis_theta_y():
     p = (
         ggplot(mtcars, aes("wt", "mpg"))
