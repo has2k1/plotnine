@@ -276,6 +276,16 @@ class coord_radial(coord):
             return "r_end"
         return "r_start"
 
+    @cached_property
+    def _sec_r_axis_side(self) -> Literal["r_start", "r_end"]:
+        """
+        Polar side the secondary radial axis occupies
+
+        The secondary axis sits on the spoke opposite the primary one, so it
+        follows the primary when `reverse="theta"` moves it to the end spoke.
+        """
+        return "r_start" if self._r_axis_side == "r_end" else "r_end"
+
     def _to_radians(
         self, vals: FloatArrayLike, theta_range: tuple[float, float]
     ) -> list[float]:
@@ -418,11 +428,13 @@ class coord_radial(coord):
         if (sec := view.y.sec) is not None:
             sec_raxis = radial_ax.add_sec_raxis()
             _set_fixed_ticks(sec_raxis, sec.breaks, sec.labels)
-            # The secondary axis occupies the spoke opposite the primary.
-            sec_side = "left" if r_side == "right" else "right"
+            # The secondary axis occupies the spoke opposite the primary; that
+            # spoke's tick pair is its "left"/"right" mpl side and its spine.
+            sec_side = "right" if self._sec_r_axis_side == "r_end" else "left"
             _activate_axis(sec_raxis, sec_side, True)
             sec_spoke = "end" if sec_side == "right" else "start"
             radial_ax.set_spine_visible(sec_spoke, True)
+            radial_ax.axis_at_side[self._sec_r_axis_side] = sec_raxis
 
         # The theme styles these tick objects later; keep matplotlib's
         # tick resets from replacing their styling with the default look.

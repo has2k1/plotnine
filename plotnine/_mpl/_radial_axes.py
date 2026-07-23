@@ -113,17 +113,18 @@ class p9RadialAxes(PolarAxes):
 
     def add_sec_raxis(self) -> p9RadialAxis:
         """
-        Return the secondary r-axis drawn at the end spoke, creating it once
+        Return the secondary r-axis, creating it once
 
         The axis starts with no ticks or labels; the caller sets them via
-        `set_ticks` / `set_ticklabels`.  It is registered in
-        `axis_at_side["r_end"]` and its tick labels are redrawn above geoms
-        on every `draw` call, mirroring the primary r-axis behaviour.
+        `set_ticks` / `set_ticklabels` and registers it in `axis_at_side`
+        under the spoke it occupies (opposite the primary). Its tick labels
+        are redrawn above geoms on every `draw` call, mirroring the primary
+        r-axis behaviour.
 
         Returns
         -------
         :
-            The secondary radial axis anchored to the end spoke.
+            The secondary radial axis.
         """
         if self._sec_raxis:
             return self._sec_raxis
@@ -137,7 +138,6 @@ class p9RadialAxes(PolarAxes):
         axis.set_clip_on(False)
         axis.grid(visible=False)
         self._sec_raxis = axis
-        self.axis_at_side["r_end"] = axis
         return axis
 
     def set_spine_visible(self, name: str, visible: bool) -> None:
@@ -201,21 +201,21 @@ def _redraw_raxis(axis: p9RadialAxis, renderer: RendererBase) -> None:
     """
     Redraw an r-axis's visible tick marks and labels on top of the geoms
 
-    Each tick's `_tick_side` selects the mark/label pair it occupies: the
-    primary r-axis draws the start pair (`tick1line`/`label1`), the secondary
-    the end pair (`tick2line`/`label2`) on the opposite side of the shared
-    full-circle spoke. Marks draw before labels so a label never sits under
-    its own mark.
+    Only the pair on the axis's active spoke is visible, so redrawing every
+    visible mark/label lifts the right one whichever spoke it occupies: the
+    primary r-axis moves to the end spoke under `reverse="theta"`, swapping
+    with the secondary. Each mark draws before its label so a label never
+    sits under its own mark.
     """
     for tick in (*axis.majorTicks, *axis.minorTicks):
-        if tick._tick_side > 0:  # pyright: ignore[reportAttributeAccessIssue]
-            mark, label = tick.tick2line, tick.label2
-        else:
-            mark, label = tick.tick1line, tick.label1
-        if mark.get_visible():
-            mark.draw(renderer)
-        if label.get_visible():
-            label.draw(renderer)
+        for mark, label in (
+            (tick.tick1line, tick.label1),
+            (tick.tick2line, tick.label2),
+        ):
+            if mark.get_visible():
+                mark.draw(renderer)
+            if label.get_visible():
+                label.draw(renderer)
 
 
 register_projection(p9RadialAxes)
