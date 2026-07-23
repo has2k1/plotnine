@@ -7,6 +7,7 @@ from matplotlib.projections import register_projection
 from matplotlib.projections.polar import PolarAxes, RadialAxis, ThetaAxis
 
 from ._radial_axis import p9RadialAxis, p9ThetaAxis, p9ThetaTick
+from .axes import register_lim_changed_signal
 
 if TYPE_CHECKING:
     from matplotlib.backend_bases import RendererBase
@@ -130,6 +131,7 @@ class p9RadialAxes(PolarAxes):
         # Register so mpl can resolve _get_axis_name(), and add to the
         # draw tree.  Mirrors the pattern in p9Axes._make_sec_axis.
         self._axis_map["sec_r"] = axis
+        register_lim_changed_signal(self, "sec_r")
         self.add_artist(axis)
         axis.set_clip_on(False)
         axis.grid(visible=False)
