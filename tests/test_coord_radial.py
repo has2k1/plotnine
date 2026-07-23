@@ -25,6 +25,7 @@ from plotnine import (
     theme,
 )
 from plotnine._mpl._radial_axis import p9ThetaTick
+from plotnine.coords.coord_radial import polar_bbox
 from plotnine.data import mtcars
 from plotnine.iapi import (
     labels_view,
@@ -1538,3 +1539,27 @@ def test_secondary_r_axis_title_sides():
         f"secondary title (x0={right_box.x0:.1f}) expected right of "
         f"primary title (x1={left_box.x1:.1f})"
     )
+
+
+def test_polar_bbox_full_circle_is_unit_square():
+    assert polar_bbox((0.0, 2 * pi)) == (0.0, 1.0, 0.0, 1.0)
+
+
+@pytest.mark.parametrize(
+    "start,end,expected",
+    [
+        (-pi / 2, pi / 2, 0.5),  # right half-disc: wide box
+        (0.0, 0.25, pytest.approx(4.041, abs=1e-2)),  # thin sliver: tall box
+        (-pi / 2, 0.0, 1.0),  # quarter: square
+        (0.0, 2 * pi, 1.0),  # full circle: square
+    ],
+)
+def test_coord_radial_aspect_matches_wedge(start, end, expected):
+    c = coord_radial(start=start, end=end)
+    assert c.aspect(None) == expected
+
+
+def test_coord_radial_aspect_uses_zero_margin_for_half_disc():
+    # margin 0 (not ggplot2's 0.05) -> exactly 0.5, so the panel matches the
+    # tight wedge and the sector is not stretched.
+    assert coord_radial(start=-pi / 2, end=pi / 2).aspect(None) == 0.5

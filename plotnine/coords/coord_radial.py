@@ -26,6 +26,42 @@ T1 = TypeVar("T1")
 T2 = TypeVar("T2")
 
 
+def polar_bbox(
+    arc: tuple[float, float], inner_radius: float = 0.0
+) -> tuple[float, float, float, float]:
+    """
+    Tight bounding box of a polar sector in unit-circle coordinates
+
+    The box is expressed as `(left, right, bottom, top)` in the `[0, 1]`
+    space of the full circle, where the centre is `(0.5, 0.5)` and the
+    outer radius is `0.5`. A cardinal direction (top, right, bottom, left)
+    that lies inside the arc extends the box to the circle's full extent
+    there; otherwise the box is clamped to the arc endpoints. `inner_radius`
+    pulls the inner edge toward the centre for donut sectors. No margin is
+    added, so the box matches the wedge the panel is sized to fill.
+    """
+    lo, hi = arc
+    if abs(hi - lo) >= 2 * np.pi:
+        return (0.0, 1.0, 0.0, 1.0)
+
+    lo, hi = sorted((lo, hi))
+    ends = np.array([lo, hi])
+    x_outer = 0.5 * np.sin(ends) + 0.5
+    y_outer = 0.5 * np.cos(ends) + 0.5
+    x_inner = inner_radius * np.sin(ends) + 0.5
+    y_inner = inner_radius * np.cos(ends) + 0.5
+
+    def in_arc(theta: float) -> bool:
+        folded = (theta - lo) % (2 * np.pi) + lo
+        return lo <= folded <= hi
+
+    top = 1.0 if in_arc(0.0) else max(y_outer.max(), y_inner.max())
+    right = 1.0 if in_arc(np.pi / 2) else max(x_outer.max(), x_inner.max())
+    bottom = 0.0 if in_arc(np.pi) else min(y_outer.min(), y_inner.min())
+    left = 0.0 if in_arc(1.5 * np.pi) else min(x_outer.min(), x_inner.min())
+    return (float(left), float(right), float(bottom), float(top))
+
+
 class coord_radial(coord):
     """
     Radial coordinate system
@@ -511,7 +547,10 @@ class coord_radial(coord):
         return getattr(guide, "angle", None)
 
     def aspect(self, panel_params: panel_view) -> float:
-        return 1.0
+        left, right, bottom, top = polar_bbox(
+            self._arc_range, self.inner_radius
+        )
+        return (top - bottom) / (right - left)
 
 
 @alias
