@@ -20,7 +20,7 @@ if TYPE_CHECKING:
 
     from plotnine.iapi import labels_view, layout_details, panel_view
     from plotnine.scales.scale import scale
-    from plotnine.typing import FloatArrayLike, FloatSeries
+    from plotnine.typing import FloatArrayLike, FloatSeries, Side
 
 T1 = TypeVar("T1")
 T2 = TypeVar("T2")
@@ -208,6 +208,22 @@ class coord_radial(coord):
                 labels=list(r.labels),
                 sec=r_sec,
             )
+
+        # theta="y" transposes the x and y views, so their axis position
+        # rotates with them (matching coord_flip): the angular title lands
+        # on x's bottom/top and the radial title on y's left/right, the
+        # sides the layout manager repositions. theta="x" keeps them as is.
+        if not self.is_default_axes:
+            from .coord_flip import _FLIP_POSITION
+
+            x = replace(x, position=_FLIP_POSITION[x.position])
+            y = replace(y, position=_FLIP_POSITION[y.position])
+            for sv in (x, y):
+                if sv.sec:
+                    # A secondary theta axis is rejected in setup_ax, so a
+                    # secondary position here is always cartesian.
+                    pos = cast("Side", sv.sec.position)
+                    sv.sec.position = _FLIP_POSITION[pos]
 
         return radial_panel_view(x=x, y=y, theta=theta, r=r)
 

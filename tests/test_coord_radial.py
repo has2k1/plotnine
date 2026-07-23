@@ -447,6 +447,19 @@ def test_coord_radial_setup_panel_params_theta_y():
     assert panel_params.y.breaks == [0, 2, 5, 10]
 
 
+def test_coord_radial_theta_y_axis_title_positions_stay_valid():
+    # theta="y" transposes the x and y panel views. Their `position`
+    # must stay on the side the layout manager repositions -- x on
+    # bottom/top, y on left/right -- or the axis titles never move
+    # from the figure origin.
+    scale_x, scale_y = trained_scales()
+
+    panel_params = coord_radial(theta="y").setup_panel_params(scale_x, scale_y)
+
+    assert panel_params.x.position in ("bottom", "top")
+    assert panel_params.y.position in ("left", "right")
+
+
 def test_coord_radial_discrete_theta_spans_full_circle():
     p = (
         ggplot(mtcars, aes("factor(cyl)", "mpg", fill="factor(cyl)"))
