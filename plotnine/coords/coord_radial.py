@@ -190,6 +190,15 @@ class coord_radial(coord):
         if self.reverse in ("r", "thetar"):
             r_limits = cast("tuple[float, float]", r.limits)
             r_breaks = cast("list[float]", r.breaks)
+            # The secondary axis lives in the same reversed display frame,
+            # so its breaks are negated alongside the primary ones; leaving
+            # them positive would place its ticks outside the data band and
+            # stretch the radial range.
+            r_sec = r.sec
+            if r_sec is not None:
+                r_sec = replace(
+                    r_sec, breaks=[-value for value in r_sec.breaks]
+                )
             y = replace(
                 y,
                 limits=(-r_limits[1], -r_limits[0]),
@@ -197,6 +206,7 @@ class coord_radial(coord):
                 breaks=[-value for value in r_breaks],
                 minor_breaks=-np.asarray(r.minor_breaks, dtype=float),
                 labels=list(r.labels),
+                sec=r_sec,
             )
 
         return radial_panel_view(x=x, y=y, theta=theta, r=r)
@@ -405,7 +415,7 @@ class coord_radial(coord):
         radial_ax.axis_at_side["theta_outside"] = radial_ax.thetaaxis
         radial_ax.axis_at_side[self._r_axis_side] = radial_ax.raxis
 
-        if (sec := view.r.sec) is not None:
+        if (sec := view.y.sec) is not None:
             sec_raxis = radial_ax.add_sec_raxis()
             _set_fixed_ticks(sec_raxis, sec.breaks, sec.labels)
             # The secondary axis occupies the spoke opposite the primary.
