@@ -1563,3 +1563,31 @@ def test_coord_radial_aspect_uses_zero_margin_for_half_disc():
     # margin 0 (not ggplot2's 0.05) -> exactly 0.5, so the panel matches the
     # tight wedge and the sector is not stretched.
     assert coord_radial(start=-pi / 2, end=pi / 2).aspect(None) == 0.5
+
+
+def _panel_and_ink(p) -> tuple[Any, np.ndarray]:
+    """Rendered panel bbox and the sector-outline points in display space"""
+    p.draw_test()
+    ax = p.axs[0]
+    ax.figure.draw_without_rendering()
+    renderer = ax.figure._get_renderer()
+    panel = ax.get_window_extent(renderer)
+    theta_lo, theta_hi = ax.get_xlim()
+    r_lo, r_hi = ax.get_ylim()
+    thetas = np.linspace(theta_lo, theta_hi, 200)
+    outline = [(t, r_hi) for t in thetas]
+    outline += [(theta_lo, r_lo), (theta_hi, r_lo)]
+    ink = ax.transData.transform(np.array(outline))
+    return panel, ink
+
+
+def test_coord_radial_half_disc_fills_panel():
+    p = (
+        ggplot(mtcars, aes("wt", "mpg"))
+        + geom_point()
+        + coord_radial(start=-pi / 2, end=pi / 2)
+    )
+    panel, ink = _panel_and_ink(p)
+    frac_w = (ink[:, 0].max() - ink[:, 0].min()) / panel.width
+    frac_h = (ink[:, 1].max() - ink[:, 1].min()) / panel.height
+    assert_allclose([frac_w, frac_h], 1.0, atol=0.02)
