@@ -191,6 +191,12 @@ class p9RadialTick(RadialTick):
             label, tickline = self.label1, self.tick1line
             text1_transform = axes.get_yaxis_text1_transform(0)[0]
 
+        # The end pair's tick line anchors at theta = thetamax (x = 1), which
+        # for a full circle fans away from the shared start spoke as the
+        # radius grows. Anchor it on the spoke (x = 0), where the start pair
+        # already sits, so the mirrored marker below stays on the spoke.
+        tickline.set_xdata([0])
+
         direction = axes.get_theta_direction()
         offset = np.rad2deg(axes.get_theta_offset())
         spoke_angle = (axes.get_rlabel_position() * direction + offset) % 360
@@ -201,18 +207,23 @@ class p9RadialTick(RadialTick):
         )
 
         # Replace the marker's base transform so its one-sided tick points
-        # along the computed tangent. `MarkerStyle.transformed()` would
-        # compose with the existing TICKLEFT/TICKRIGHT transform instead.
+        # along `marker_angle`. `MarkerStyle.transformed()` would compose
+        # with the existing TICKLEFT/TICKRIGHT transform instead.
+        #
+        # `marker_angle` already carries the full direction (the primary and
+        # secondary sides differ by 180°), and TICKLEFT/TICKRIGHT share the
+        # same `[[0, 0], [1, 0]]` path, so both rotate by it directly. Adding
+        # TICKRIGHT's own `scale(-1, 1)` here would undo the `_tick_side`
+        # mirror and send the secondary mark back onto the primary's side.
         marker = tickline.get_marker()
-        if marker == mmarkers.TICKLEFT:
+        tick_marker = cast("mmarkers.MarkerStyle", tickline._marker)  # pyright: ignore[reportAttributeAccessIssue]
+        if marker in (mmarkers.TICKLEFT, mmarkers.TICKRIGHT):
             transform = Affine2D().rotate(marker_angle)
-        elif marker == mmarkers.TICKRIGHT:
-            transform = Affine2D().scale(-1, 1).rotate(marker_angle)
         elif marker == "_":
             transform = Affine2D().rotate(marker_angle + np.pi / 2)
         else:
-            transform = tickline._marker._transform  # pyright: ignore[reportAttributeAccessIssue]
-        tickline._marker._transform = transform  # pyright: ignore[reportAttributeAccessIssue]
+            transform = tick_marker._transform  # pyright: ignore[reportAttributeAccessIssue]
+        tick_marker._transform = transform  # pyright: ignore[reportAttributeAccessIssue]
 
         # A constant theta offset fans labels farther from the spoke as the
         # radius grows. Keep every label on the spoke and apply its padding
