@@ -1408,6 +1408,29 @@ def test_secondary_r_axis_reverse_r_builds():
     p.draw_test()  # pyright: ignore[reportAttributeAccessIssue]
 
 
+def test_secondary_r_axis_reverse_r_keeps_radial_range():
+    # The secondary breaks must be negated into the same reversed display
+    # frame as the primary ones; otherwise their positive positions drag
+    # `rmax` outward and squeeze the data into the inner half of the disc.
+    def r_range(with_sec):
+        sec = (
+            {"sec_axis": sec_axis(lambda x: x, breaks=[10, 20, 30])}
+            if with_sec
+            else {}
+        )
+        p = (
+            ggplot(mtcars, aes("wt", "mpg"))
+            + geom_point()
+            + scale_y_continuous(**sec)
+            + coord_radial(reverse="r")
+        )
+        p.draw(show=False)
+        ax = p.axs[0]  # pyright: ignore[reportAttributeAccessIssue]
+        return ax.get_rmin(), ax.get_rmax()
+
+    assert r_range(True) == r_range(False)
+
+
 def test_secondary_r_axis_theta_y():
     p = (
         ggplot(mtcars, aes("wt", "mpg"))
