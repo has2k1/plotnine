@@ -2,9 +2,17 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, cast
 
+import matplotlib.patches as mpatches
+import matplotlib.transforms as mtransforms
+import numpy as np
 from matplotlib import cbook
 from matplotlib.projections import register_projection
-from matplotlib.projections.polar import PolarAxes, RadialAxis, ThetaAxis
+from matplotlib.projections.polar import (
+    PolarAxes,
+    RadialAxis,
+    ThetaAxis,
+    _WedgeBbox,
+)
 
 from ._radial_axis import (
     p9RadialAxis,
@@ -18,6 +26,39 @@ if TYPE_CHECKING:
     from matplotlib.backend_bases import RendererBase
 
     from plotnine.typing import PolarSide
+
+
+class _TightWedgeBbox(_WedgeBbox):
+    """
+    Wedge bounding box that hugs the sector instead of padding to a square
+
+    matplotlib's `_WedgeBbox` pads the sector's bounding box out to a
+    square and centres the wedge in it, which — with a square panel —
+    leaves large empty margins around a partial arc. This subclass
+    reproduces the tight-box computation but omits that final padding, so
+    the sector fills the panel the layout engine has already shaped to the
+    same aspect.
+    """
+
+    def get_points(self) -> np.ndarray:
+        if self._invalid:
+            points = self._viewLim.get_points().copy()  # pyright: ignore[reportAttributeAccessIssue]
+            points[:, 0] *= 180 / np.pi
+            if points[0, 0] > points[1, 0]:
+                points[:, 0] = points[::-1, 0]
+            points[:, 1] -= self._originLim.y0  # pyright: ignore[reportAttributeAccessIssue]
+            points[:, 1] *= 0.5 / points[1, 1]
+            width = min(points[1, 1] - points[0, 1], 0.5)
+            wedge = mpatches.Wedge(
+                self._center,  # pyright: ignore[reportAttributeAccessIssue]
+                points[1, 1],
+                points[0, 0],
+                points[1, 0],
+                width=width,
+            )
+            self.update_from_path(wedge.get_path())
+            self._invalid = 0
+        return self._points  # pyright: ignore[reportAttributeAccessIssue]
 
 
 class p9RadialAxes(PolarAxes):
@@ -57,6 +98,94 @@ class p9RadialAxes(PolarAxes):
         self.spines["polar"].register_axis(self.yaxis)
         if inner_spine := self.spines.get("inner"):
             inner_spine.register_axis(self.yaxis)
+
+    def apply_aspect(self, position=None) -> None:
+        """
+        Shrink the layout cell to match the tight wedge's aspect, not 1.0
+
+        The stock `PolarAxes.apply_aspect` always shrinks the cell to a
+        square (aspect=1.0). That undoes the wedge-shaped cell the layout
+        engine assigns from `coord_radial.aspect` for partial arcs. This
+        override uses the tight wedge bbox to derive the actual aspect and
+        shrinks to that instead, so a full circle still gets a square cell
+        and a half-disc gets a 2:1 wide cell.
+        """
+        if position is None:
+            position = self.get_position(original=True)
+        trans = self.get_figure(root=False).transSubfigure  # pyright: ignore[reportOptionalMemberAccess]
+        bb = mtransforms.Bbox.unit().transformed(trans)
+        fig_aspect = bb.height / bb.width
+        pts = self.axesLim.get_points()
+        w = pts[1, 0] - pts[0, 0]
+        h = pts[1, 1] - pts[0, 1]
+        wedge_aspect = (h / w) if w > 0 else 1.0
+        pb = position.frozen()
+        pb1 = pb.shrunk_to_aspect(wedge_aspect, pb, fig_aspect)
+        anchor = self.get_anchor()
+        self._set_position(  # pyright: ignore[reportAttributeAccessIssue]
+            pb1.anchored(anchor, pb),  # pyright: ignore[reportArgumentType]
+            "active",
+        )
+
+    def _set_lim_and_transforms(self) -> None:
+        """
+        Build the polar transforms, then let the sector fill the panel
+
+        Runs matplotlib's setup, then swaps the square-padding `_WedgeBbox`
+        for `_TightWedgeBbox` and rebuilds the wedge and data transforms so
+        a partial arc hugs the panel edges. Rebuilds the theta/r axis
+        transforms that the base method wired to the old `transData` so they
+        route through the tight bbox instead. Safe to run at
+        axes-construction time: `_TightWedgeBbox` reads only the
+        view/origin limits the base method has already set, not any
+        plotnine coordinate state.
+        """
+        super()._set_lim_and_transforms()  # pyright: ignore[reportAttributeAccessIssue]
+        self.axesLim = _TightWedgeBbox(
+            (0.5, 0.5),
+            self._realViewLim,  # pyright: ignore[reportAttributeAccessIssue]
+            self._originViewLim,  # pyright: ignore[reportAttributeAccessIssue]
+        )
+        self.transWedge = mtransforms.BboxTransformFrom(self.axesLim)
+        self.transData = (
+            self.transScale
+            + self.transShift  # pyright: ignore[reportAttributeAccessIssue]
+            + self.transProjection  # pyright: ignore[reportAttributeAccessIssue]
+            + (
+                self.transProjectionAffine  # pyright: ignore[reportAttributeAccessIssue]
+                + self.transWedge
+                + self.transAxes
+            )
+        )
+        # The base method wired _xaxis_transform, _yaxis_transform and
+        # _yaxis_text_transform against the old transData composite. Rebuild
+        # them so theta-tick and r-tick positioning routes through the tight
+        # bbox rather than the stock square-padding one.
+        self._xaxis_transform = (
+            mtransforms.blended_transform_factory(
+                mtransforms.IdentityTransform(),
+                mtransforms.BboxTransformTo(self.viewLim),
+            )
+            + self.transData
+        )
+        flipr = (
+            mtransforms.Affine2D()
+            .translate(0.0, -0.5)
+            .scale(1.0, -1.0)
+            .translate(0.0, 0.5)
+        )
+        self._xaxis_text_transform = flipr + self._xaxis_transform
+        self._yaxis_transform = (
+            mtransforms.blended_transform_factory(
+                mtransforms.BboxTransformTo(self.viewLim),
+                mtransforms.IdentityTransform(),
+            )
+            + self.transData
+        )
+        self._yaxis_text_transform.set(  # pyright: ignore[reportAttributeAccessIssue]
+            self._r_label_position  # pyright: ignore[reportAttributeAccessIssue]
+            + self.transData
+        )
 
     @property
     def axis_at_side(self) -> dict[PolarSide, ThetaAxis | RadialAxis]:
