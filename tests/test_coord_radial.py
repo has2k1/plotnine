@@ -1393,6 +1393,26 @@ def test_secondary_r_axis_themed():
     assert p == "secondary_r_axis_themed"
 
 
+def test_secondary_r_axis_reverse_theta_swaps_spokes():
+    # reverse="theta" moves the primary r-axis to the end spoke, so the
+    # secondary must follow to the opposite (start) spoke rather than stay
+    # pinned to r_end. Each side must resolve to its own axis so per-side
+    # theming (axis_line_r_start/r_end, ticks, text) routes correctly.
+    from plotnine._mpl.axes import axis_at
+
+    p = (
+        ggplot(mtcars, aes("wt", "mpg"))
+        + geom_point()
+        + scale_y_continuous(sec_axis=sec_axis(lambda x: x * 2))
+        + coord_radial(start=-pi / 2, end=pi / 2, reverse="theta")
+    )
+    p.draw_test()  # pyright: ignore[reportAttributeAccessIssue]
+    ax = p.axs[0]  # pyright: ignore[reportAttributeAccessIssue]
+
+    assert axis_at(ax, "r_end") is ax.raxis
+    assert axis_at(ax, "r_start") is ax._sec_raxis
+
+
 def test_secondary_r_axis_reverse_r_builds():
     # reverse="r" negates the r view interval, so setting the secondary
     # axis breaks changes its view interval and mpl fires a
