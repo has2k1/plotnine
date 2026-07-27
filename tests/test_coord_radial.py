@@ -1683,6 +1683,37 @@ def test_coord_radial_background_patch_traces_sector(kwargs):
     assert_allclose(patch.y1, ink[:, 1].max(), atol=1.0)
 
 
+@pytest.mark.parametrize(
+    "kwargs",
+    [
+        {"start": -pi / 2, "end": pi / 2},
+        {"start": -pi / 2, "end": 0.0},
+        {"start": 0.0, "end": 0.25},
+        {"start": -pi / 2, "end": pi / 2, "inner_radius": 0.3},
+    ],
+)
+def test_coord_radial_geoms_clip_to_full_sector(kwargs):
+    # The geoms clip to the background wedge, snapshotting its transform
+    # when they capture the clip. A single render must clip them to the
+    # true arc, not the square wedge the base draw computes -- otherwise
+    # the geoms vanish behind a half-height clip (regression).
+    p = (
+        ggplot(mtcars, aes("wt", "mpg"))
+        + geom_point()
+        + coord_radial(**kwargs)
+    )
+    p.draw_test()  # pyright: ignore[reportAttributeAccessIssue]
+    ax = p.axs[0]
+    ax.figure.draw_without_rendering()
+    _, ink = _panel_and_ink(p)
+    clip = ax.collections[0].get_clip_path().get_fully_transformed_path()
+    bbox = clip.get_extents()
+    assert_allclose(bbox.x0, ink[:, 0].min(), atol=1.0)
+    assert_allclose(bbox.x1, ink[:, 0].max(), atol=1.0)
+    assert_allclose(bbox.y0, ink[:, 1].min(), atol=1.0)
+    assert_allclose(bbox.y1, ink[:, 1].max(), atol=1.0)
+
+
 _partial_arc_base = ggplot(mtcars, aes("wt", "mpg")) + geom_point()
 
 

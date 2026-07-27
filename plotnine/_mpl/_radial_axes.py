@@ -75,10 +75,16 @@ class _PanelWedge(mpatches.Wedge):
     `transWedge` alone). In a wedge-shaped, non-square panel that renders the
     background — and the clip path the geoms share — as an ellipse mismatched
     with the data and the spine. This subclass ignores those geometry setters
-    and instead holds a fixed unit wedge routed through `transWedge +
-    transAxes`, the transform the `polar` spine already uses, so the
-    background traces the same arc as the data. `reshape` sets the real
-    geometry through the base-class setters, bypassing the no-ops.
+    and its transform setter, holding a fixed unit wedge whose transform the
+    axes sets once to `transWedge + transAxes` — the transform the `polar`
+    spine already uses — so the background traces the same arc as the data.
+
+    Blocking `set_transform` is what keeps the geom clip path correct: the
+    geoms snapshot the patch's transform *object* when they capture their
+    clip, so it must be set once and never replaced. `Axes.clear` would
+    otherwise reset it to `transAxes` (a square wedge, which clips the geoms
+    to a squashed ellipse). `reshape` sets the real width through the
+    base-class setter, bypassing the no-op.
     """
 
     def set_center(self, center) -> None:
@@ -88,6 +94,9 @@ class _PanelWedge(mpatches.Wedge):
         pass
 
     def set_width(self, width) -> None:
+        pass
+
+    def set_transform(self, t) -> None:
         pass
 
     def reshape(self, width: float | None) -> None:
@@ -144,17 +153,26 @@ class p9RadialAxes(PolarAxes):
         Returns a `_PanelWedge` in place of the stock `Wedge` so the axes
         background (and the clip path the geoms share) traces the same arc
         as the data even when the panel is not square. See `_PanelWedge`.
+        Its transform is fixed here to `transWedge + transAxes` (both exist
+        by the time the patch is generated) and cannot be replaced, so the
+        geoms clip to the true arc. See `_PanelWedge`.
         """
-        return _PanelWedge((0.5, 0.5), 0.5, 0.0, 360.0)
+        patch = _PanelWedge((0.5, 0.5), 0.5, 0.0, 360.0)
+        mpatches.Wedge.set_transform(
+            patch,
+            self.transWedge  # pyright: ignore[reportAttributeAccessIssue]
+            + self.transAxes,
+        )
+        return patch
 
     def _reshape_panel_wedge(self) -> None:
         """
-        Route the background wedge through the same transform as the arc
+        Restore the background wedge's unit geometry after the square fit
 
         `_PanelWedge` ignores the square-fit geometry `PolarAxes.draw`
-        computes; this sets its true unit-wedge width (the donut hole) and
-        points it through `transWedge + transAxes`, the transform the
-        `polar` spine uses, so the background fills the wedge panel exactly.
+        computes; this sets its true unit-wedge width (the donut hole) so the
+        background fills the wedge panel exactly. Its transform is fixed at
+        construction and never changes.
         """
         patch = self.patch
         if not isinstance(patch, _PanelWedge):
@@ -166,10 +184,6 @@ class p9RadialAxes(PolarAxes):
         ) * self.get_rsign()
         width = min(0.5 * (rmax - rmin) / rmax, 0.5) if rmax else 0.5
         patch.reshape(None if width == 0.5 else width)
-        patch.set_transform(
-            self.transWedge  # pyright: ignore[reportAttributeAccessIssue]
-            + self.transAxes
-        )
 
     def apply_aspect(self, position=None) -> None:
         """
@@ -248,12 +262,16 @@ class p9RadialAxes(PolarAxes):
             ):
                 tick.update_position(tick.get_loc())
 
-        super().draw(renderer)
-
-        # `PolarAxes.draw` (in the super call) re-mutates the background
-        # wedge each draw assuming a square box; reshape it afterwards so a
-        # non-square wedge panel is not re-squashed on the next draw.
+        # Reshape the background wedge before `super().draw` clips the geoms
+        # to it: `PolarAxes.draw` (inside the super call) recomputes the
+        # patch assuming a square box, then draws the geoms clipped to that
+        # squashed patch in the same call. `_PanelWedge` ignores those
+        # geometry setters, so setting the correct unit-wedge geometry and
+        # transform here survives the super call and clips the geoms to the
+        # true arc.
         self._reshape_panel_wedge()
+
+        super().draw(renderer)
 
         _redraw_raxis(self.raxis, renderer)
         if self._sec_raxis:
