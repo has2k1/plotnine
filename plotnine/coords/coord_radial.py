@@ -48,8 +48,12 @@ def polar_bbox(
     ends = np.array([lo, hi])
     x_outer = 0.5 * np.sin(ends) + 0.5
     y_outer = 0.5 * np.cos(ends) + 0.5
-    x_inner = inner_radius * np.sin(ends) + 0.5
-    y_inner = inner_radius * np.cos(ends) + 0.5
+    # `inner_radius` is a fraction of the outer radius, and the outer
+    # radius is 0.5 in this unit-circle space, so the inner ring sits at
+    # `inner_radius * 0.5` from the centre.
+    r_inner = inner_radius * 0.5
+    x_inner = r_inner * np.sin(ends) + 0.5
+    y_inner = r_inner * np.cos(ends) + 0.5
 
     def in_arc(theta: float) -> bool:
         folded = (theta - lo) % (2 * np.pi) + lo

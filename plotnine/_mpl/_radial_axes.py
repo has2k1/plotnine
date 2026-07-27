@@ -56,9 +56,13 @@ class _TightWedgeBbox(_WedgeBbox):
                 points[1, 0],
                 width=width,
             )
-            self.update_from_path(wedge.get_path())
+            # `get_extents` evaluates the true curve extents; a plain
+            # `update_from_path` would union the wider Bezier control-point
+            # hull, which reaches back to the centre and over-widens the
+            # box for a narrow donut sector.
+            self._points = wedge.get_path().get_extents().get_points().copy()
             self._invalid = 0
-        return self._points  # pyright: ignore[reportAttributeAccessIssue]
+        return self._points
 
 
 class p9RadialAxes(PolarAxes):

@@ -1581,7 +1581,7 @@ def _panel_and_ink(p) -> tuple[Any, np.ndarray]:
     return panel, ink
 
 
-def _r_length(ax, theta: float) -> float:
+def _r_length(ax: Axes, theta: float) -> float:
     """Display-space length of the radius spoke at angle `theta`"""
     r_lo, r_hi = ax.get_ylim()
     pts = ax.transData.transform([(theta, r_lo), (theta, r_hi)])
@@ -1609,6 +1609,10 @@ def test_coord_radial_half_disc_fills_panel():
         {"start": -pi / 2, "end": -pi / 3},
         {"start": 0.0, "end": 0.25},
         {"start": -pi / 2, "end": pi / 2, "inner_radius": 0.3},
+        # Narrow arc combined with a donut hole: the inner ring must sit
+        # at inner_radius * outer_radius, or the panel aspect mismatches
+        # the wedge and the sector under-fills (regression).
+        {"start": pi / 4, "end": 3 * pi / 4, "inner_radius": 0.3},
     ],
 )
 def test_coord_radial_sector_fills_panel(kwargs):
