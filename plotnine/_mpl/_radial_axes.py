@@ -65,6 +65,40 @@ class _TightWedgeBbox(_WedgeBbox):
         return self._points
 
 
+class _PanelWedge(mpatches.Wedge):
+    """
+    Axes-background wedge that fills a wedge-shaped panel undistorted
+
+    `PolarAxes.draw` recomputes the background wedge's centre, radius and
+    width on every draw in axes-fraction space, a computation that assumes
+    the axes box is square (it takes the radius from the x-scaling of
+    `transWedge` alone). In a wedge-shaped, non-square panel that renders the
+    background — and the clip path the geoms share — as an ellipse mismatched
+    with the data and the spine. This subclass ignores those geometry setters
+    and instead holds a fixed unit wedge routed through `transWedge +
+    transAxes`, the transform the `polar` spine already uses, so the
+    background traces the same arc as the data. `reshape` sets the real
+    geometry through the base-class setters, bypassing the no-ops.
+    """
+
+    def set_center(self, center) -> None:
+        pass
+
+    def set_radius(self, radius) -> None:
+        pass
+
+    def set_width(self, width) -> None:
+        pass
+
+    def reshape(self, width: float | None) -> None:
+        """
+        Set the unit-wedge geometry, bypassing the ignored setters
+        """
+        mpatches.Wedge.set_center(self, (0.5, 0.5))
+        mpatches.Wedge.set_radius(self, 0.5)
+        mpatches.Wedge.set_width(self, width)
+
+
 class p9RadialAxes(PolarAxes):
     """
     Polar axes that keeps the axis tick labels above the geom layers
@@ -103,6 +137,40 @@ class p9RadialAxes(PolarAxes):
         if inner_spine := self.spines.get("inner"):
             inner_spine.register_axis(self.yaxis)
 
+    def _gen_axes_patch(self) -> mpatches.Wedge:
+        """
+        Background wedge that fills a wedge-shaped panel undistorted
+
+        Returns a `_PanelWedge` in place of the stock `Wedge` so the axes
+        background (and the clip path the geoms share) traces the same arc
+        as the data even when the panel is not square. See `_PanelWedge`.
+        """
+        return _PanelWedge((0.5, 0.5), 0.5, 0.0, 360.0)
+
+    def _reshape_panel_wedge(self) -> None:
+        """
+        Route the background wedge through the same transform as the arc
+
+        `_PanelWedge` ignores the square-fit geometry `PolarAxes.draw`
+        computes; this sets its true unit-wedge width (the donut hole) and
+        points it through `transWedge + transAxes`, the transform the
+        `polar` spine uses, so the background fills the wedge panel exactly.
+        """
+        patch = self.patch
+        if not isinstance(patch, _PanelWedge):
+            return
+        rscale = self.yaxis.get_transform()
+        rmin, rmax = (
+            rscale.transform(self._realViewLim.intervaly)  # pyright: ignore[reportAttributeAccessIssue]
+            - rscale.transform(self.get_rorigin())
+        ) * self.get_rsign()
+        width = min(0.5 * (rmax - rmin) / rmax, 0.5) if rmax else 0.5
+        patch.reshape(None if width == 0.5 else width)
+        patch.set_transform(
+            self.transWedge  # pyright: ignore[reportAttributeAccessIssue]
+            + self.transAxes
+        )
+
     def apply_aspect(self, position=None) -> None:
         """
         Shrink the layout cell to match the tight wedge's aspect, not 1.0
@@ -119,7 +187,7 @@ class p9RadialAxes(PolarAxes):
         trans = self.get_figure(root=False).transSubfigure  # pyright: ignore[reportOptionalMemberAccess]
         bb = mtransforms.Bbox.unit().transformed(trans)
         fig_aspect = bb.height / bb.width
-        pts = self.axesLim.get_points()
+        pts = self.axesLim.get_points()  # pyright: ignore[reportAttributeAccessIssue]
         w = pts[1, 0] - pts[0, 0]
         h = pts[1, 1] - pts[0, 1]
         wedge_aspect = (h / w) if w > 0 else 1.0
@@ -135,61 +203,19 @@ class p9RadialAxes(PolarAxes):
         """
         Build the polar transforms, then let the sector fill the panel
 
-        Runs matplotlib's setup, then swaps the square-padding `_WedgeBbox`
-        for `_TightWedgeBbox` and rebuilds the wedge and data transforms so
-        a partial arc hugs the panel edges. Rebuilds the theta/r axis
-        transforms that the base method wired to the old `transData` so they
-        route through the tight bbox instead. Safe to run at
-        axes-construction time: `_TightWedgeBbox` reads only the
-        view/origin limits the base method has already set, not any
-        plotnine coordinate state.
+        Runs matplotlib's setup, then retypes the square-padding `axesLim`
+        bbox in place to `_TightWedgeBbox` so a partial arc hugs the panel
+        edges. Retyping the existing object -- rather than rebuilding it and
+        the transform stack -- means every transform the base method already
+        wired to it (`transData`, the theta/r axis transforms, and the tick
+        labels' cached copies of them) recomputes through the tight box
+        without any of them going stale. Safe to run at axes-construction
+        time: `_TightWedgeBbox` reads only the view/origin limits the base
+        method has already set, not any plotnine coordinate state.
         """
         super()._set_lim_and_transforms()  # pyright: ignore[reportAttributeAccessIssue]
-        self.axesLim = _TightWedgeBbox(
-            (0.5, 0.5),
-            self._realViewLim,  # pyright: ignore[reportAttributeAccessIssue]
-            self._originViewLim,  # pyright: ignore[reportAttributeAccessIssue]
-        )
-        self.transWedge = mtransforms.BboxTransformFrom(self.axesLim)
-        self.transData = (
-            self.transScale
-            + self.transShift  # pyright: ignore[reportAttributeAccessIssue]
-            + self.transProjection  # pyright: ignore[reportAttributeAccessIssue]
-            + (
-                self.transProjectionAffine  # pyright: ignore[reportAttributeAccessIssue]
-                + self.transWedge
-                + self.transAxes
-            )
-        )
-        # The base method wired _xaxis_transform, _yaxis_transform and
-        # _yaxis_text_transform against the old transData composite. Rebuild
-        # them so theta-tick and r-tick positioning routes through the tight
-        # bbox rather than the stock square-padding one.
-        self._xaxis_transform = (
-            mtransforms.blended_transform_factory(
-                mtransforms.IdentityTransform(),
-                mtransforms.BboxTransformTo(self.viewLim),
-            )
-            + self.transData
-        )
-        flipr = (
-            mtransforms.Affine2D()
-            .translate(0.0, -0.5)
-            .scale(1.0, -1.0)
-            .translate(0.0, 0.5)
-        )
-        self._xaxis_text_transform = flipr + self._xaxis_transform
-        self._yaxis_transform = (
-            mtransforms.blended_transform_factory(
-                mtransforms.BboxTransformTo(self.viewLim),
-                mtransforms.IdentityTransform(),
-            )
-            + self.transData
-        )
-        self._yaxis_text_transform.set(  # pyright: ignore[reportAttributeAccessIssue]
-            self._r_label_position  # pyright: ignore[reportAttributeAccessIssue]
-            + self.transData
-        )
+        self.axesLim.__class__ = _TightWedgeBbox  # pyright: ignore[reportAttributeAccessIssue]
+        self.axesLim.invalidate()  # pyright: ignore[reportAttributeAccessIssue]
 
     @property
     def axis_at_side(self) -> dict[PolarSide, ThetaAxis | RadialAxis]:
@@ -223,6 +249,11 @@ class p9RadialAxes(PolarAxes):
                 tick.update_position(tick.get_loc())
 
         super().draw(renderer)
+
+        # `PolarAxes.draw` (in the super call) re-mutates the background
+        # wedge each draw assuming a square box; reshape it afterwards so a
+        # non-square wedge panel is not re-squashed on the next draw.
+        self._reshape_panel_wedge()
 
         _redraw_raxis(self.raxis, renderer)
         if self._sec_raxis:

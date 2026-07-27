@@ -1653,6 +1653,36 @@ def test_coord_radial_sector_is_not_distorted(kwargs):
     )
 
 
+@pytest.mark.parametrize(
+    "kwargs",
+    [
+        {"start": -pi / 2, "end": pi / 2},
+        {"start": 0.0, "end": 0.25},
+        {"start": -pi / 2, "end": pi / 2, "inner_radius": 0.3},
+    ],
+)
+def test_coord_radial_background_patch_traces_sector(kwargs):
+    # The axes-background wedge is drawn through its own transform, not
+    # transData, so a squashed patch would pass the transData-based
+    # distortion check while still rendering the panel as an ellipse.
+    # Assert the patch bbox coincides with the data sector's bbox.
+    p = (
+        ggplot(mtcars, aes("wt", "mpg"))
+        + geom_point()
+        + coord_radial(**kwargs)
+    )
+    p.draw_test()  # pyright: ignore[reportAttributeAccessIssue]
+    ax = p.axs[0]
+    ax.figure.draw_without_rendering()
+    renderer = ax.figure._get_renderer()
+    patch = ax.patch.get_window_extent(renderer)
+    _, ink = _panel_and_ink(p)
+    assert_allclose(patch.x0, ink[:, 0].min(), atol=1.0)
+    assert_allclose(patch.x1, ink[:, 0].max(), atol=1.0)
+    assert_allclose(patch.y0, ink[:, 1].min(), atol=1.0)
+    assert_allclose(patch.y1, ink[:, 1].max(), atol=1.0)
+
+
 _partial_arc_base = ggplot(mtcars, aes("wt", "mpg")) + geom_point()
 
 
