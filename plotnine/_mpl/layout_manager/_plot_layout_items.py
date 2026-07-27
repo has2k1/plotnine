@@ -905,13 +905,15 @@ class PlotLayoutItems:
 
 class PolarPlotLayoutItems(PlotLayoutItems):
     """
-    `PlotLayoutItems` for a polar panel
+    The space around a polar panel that its axes need
 
     A theta axis wraps the full circle and an r axis runs along one
-    spoke, so neither has a single side to measure a tick-label
-    bounding box from (`axis_at` never resolves one for either). These
-    four methods return a fixed clearance estimate instead, applied to
-    every side alike.
+    spoke, so neither has a single side to measure a tick-label bounding
+    box from (`axis_at` never resolves one for either). The tick and text
+    clearances are therefore a fixed estimate applied to every side alike,
+    and the tick-label protrusions are zero: the labels fan out along the
+    arc within a panel already sized to the tight sector, so their reach
+    past a Cartesian edge does not call for extra margin.
     """
 
     def axis_ticks_x_max_height(self, ax: Axes, side: Side) -> float:
@@ -925,6 +927,18 @@ class PolarPlotLayoutItems(PlotLayoutItems):
 
     def axis_text_y_max_width(self, ax: Axes, side: Side) -> float:
         return _polar_text_clearance_y(self.plot.theme, side)
+
+    def axis_text_y_top_protrusion(self, location: AxesLocation) -> float:
+        return 0.0
+
+    def axis_text_y_bottom_protrusion(self, location: AxesLocation) -> float:
+        return 0.0
+
+    def axis_text_x_left_protrusion(self, location: AxesLocation) -> float:
+        return 0.0
+
+    def axis_text_x_right_protrusion(self, location: AxesLocation) -> float:
+        return 0.0
 
 
 def _polar_text_clearance_x(theme: theme, side: Side) -> float:

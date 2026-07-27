@@ -1627,6 +1627,28 @@ def test_coord_radial_sector_fills_panel(kwargs):
     assert_allclose([frac_w, frac_h], 1.0, atol=0.02)
 
 
+def test_coord_radial_thin_wedge_uses_available_space():
+    # A thin wedge and a half-disc share aspect 0.5, so the layout should
+    # give them the same panel size. The r-axis labels fan out along the
+    # up-tilted spoke and reach past the sector's top edge; treating that
+    # as a Cartesian y-label protrusion once reserved ~half the figure
+    # height above the panel, shrinking it (regression).
+    thin = (
+        ggplot(mtcars, aes("wt", "mpg"))
+        + geom_point()
+        + coord_radial(start=-pi / 2, end=-pi / 3)
+    )
+    half = (
+        ggplot(mtcars, aes("wt", "mpg"))
+        + geom_point()
+        + coord_radial(start=-pi / 2, end=pi / 2)
+    )
+    thin_panel, _ = _panel_and_ink(thin)
+    half_panel, _ = _panel_and_ink(half)
+    assert_allclose(thin_panel.width, half_panel.width, rtol=0.02)
+    assert_allclose(thin_panel.height, half_panel.height, rtol=0.02)
+
+
 @pytest.mark.parametrize(
     "kwargs",
     [
