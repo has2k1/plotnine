@@ -15,6 +15,8 @@ from plotnine import (
     element_blank,
     element_line,
     element_text,
+    facet_grid,
+    facet_wrap,
     geom_col,
     geom_point,
     ggplot,
@@ -1764,3 +1766,84 @@ def test_coord_radial_partial_arc_inner_radius_half_disc():
         start=-pi / 2, end=pi / 2, inner_radius=0.3
     )
     assert p == "coord_radial_partial_arc_inner_radius_half_disc"
+
+
+@pytest.mark.parametrize(
+    "facet",
+    [
+        facet_wrap("gear", nrow=2),
+        facet_grid("am", "gear"),
+    ],
+)
+def test_coord_radial_faceted_panels_reserve_gulley_for_decorations(facet):
+    # Every polar panel draws its full theta and r decorations regardless of
+    # its grid position, so the gulley between panels must reserve room for
+    # them. Otherwise the tick labels of one panel spill across the gulley
+    # into a neighbour's panel region.
+    p = (
+        ggplot(mtcars, aes("wt", "mpg"))
+        + geom_point()
+        + facet
+        + coord_radial(start=-1, end=1)
+    )
+    p.draw_test()  # pyright: ignore[reportAttributeAccessIssue]
+    fig = p.axs[0].figure
+    fig.draw_without_rendering()  # pyright: ignore[reportAttributeAccessIssue]
+    renderer = fig._get_renderer()  # pyright: ignore[reportAttributeAccessIssue]
+    trans = fig.transFigure.inverted()
+
+    panel_boxes = [ax.get_position() for ax in p.axs]
+    tight_boxes = [
+        ax.get_tightbbox(renderer).transformed(trans) for ax in p.axs
+    ]
+
+    # No panel's decorations may reach into another panel's box.
+    for i, tight in enumerate(tight_boxes):
+        for j, box in enumerate(panel_boxes):
+            if i == j:
+                continue
+            assert not tight.overlaps(box), (
+                f"panel {i} decorations overlap panel {j}'s region"
+            )
+
+
+def test_coord_radial_faceted_strip_clears_theta_decorations():
+    # A polar panel draws its theta axis on the arc perimeter, so its ticks
+    # and labels sit at the apex inside the panel's top edge. The strip band
+    # must be pushed clear of them rather than landing on top, as it would if
+    # it were placed "inside" against the bare panel rectangle.
+    p = (
+        ggplot(mtcars, aes("wt", "mpg"))
+        + geom_point()
+        + facet_wrap("gear", nrow=2)
+        + coord_radial(start=-1, end=1)
+    )
+    p.draw_test()  # pyright: ignore[reportAttributeAccessIssue]
+    fig = p.axs[0].figure
+    fig.draw_without_rendering()  # pyright: ignore[reportAttributeAccessIssue]
+    renderer = fig._get_renderer()  # pyright: ignore[reportAttributeAccessIssue]
+    trans = fig.transFigure.inverted()
+
+    strip_texts = p.theme.targets.strip_text_x_top
+    assert strip_texts, "expected top strips on the faceted polar plot"
+
+    for text in strip_texts:
+        ax = text.ax
+        strip_bottom = (
+            text.patch.get_window_extent(renderer).transformed(trans).y0
+        )
+        # Highest point reached by any visible theta tick mark or label.
+        theta_top = max(
+            artist.get_window_extent(renderer).transformed(trans).y1
+            for tick in ax.thetaaxis.majorTicks
+            for artist in (
+                tick.tick1line,
+                tick.tick2line,
+                tick.label1,
+                tick.label2,
+            )
+            if artist.get_visible()
+        )
+        assert strip_bottom >= theta_top, (
+            "strip band overlaps the panel's theta decorations"
+        )
