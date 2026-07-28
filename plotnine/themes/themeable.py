@@ -3338,7 +3338,9 @@ class strip_switch_pad_x(themeable):
     theme_element : float
         Size in points. Only has an effect when
         `strip_placement="outside"` and an axis shares the strip's
-        side (top or bottom).
+        side (top or bottom). Polar panels (`coord_radial`) always draw
+        their theta axis on the arc, so the pad applies to them at any
+        `strip_placement`.
     """
 
 
@@ -3351,7 +3353,9 @@ class strip_switch_pad_y(themeable):
     theme_element : float
         Size in points. Only has an effect when
         `strip_placement="outside"` and an axis shares the strip's
-        side (left or right).
+        side (left or right). Polar panels (`coord_radial`) always draw
+        their r axis on the arc, so the pad applies to them at any
+        `strip_placement`.
     """
 
 
@@ -3364,7 +3368,8 @@ class strip_switch_pad(strip_switch_pad_x, strip_switch_pad_y):
     theme_element : float
         Size in points. Only has an effect when
         `strip_placement="outside"` and an axis shares the strip's
-        side.
+        side. Polar panels (`coord_radial`) always draw their axes on the
+        arc, so the pad applies to them at any `strip_placement`.
     """
 
 

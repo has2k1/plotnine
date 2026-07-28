@@ -15,6 +15,7 @@ from dataclasses import replace
 from functools import cached_property
 from typing import TYPE_CHECKING, Literal, cast
 
+from plotnine.coords import coord_radial
 from plotnine.exceptions import PlotnineError
 from plotnine.facets import facet_grid, facet_null, facet_wrap
 
@@ -910,9 +911,9 @@ class PlotSideSpaces:
         self.gridspec = plot._gridspec
         self.sub_gridspec = plot._sub_gridspec
         items_cls = (
-            PlotLayoutItems
-            if plot.coordinates._projection is None
-            else PolarPlotLayoutItems
+            PolarPlotLayoutItems
+            if isinstance(plot.coordinates, coord_radial)
+            else PlotLayoutItems
         )
         self.items = items_cls(plot)
 
@@ -1193,6 +1194,36 @@ class PlotSideSpaces:
             hspace,
         )
 
+    def _polar_gulley_clearance(self) -> tuple[float, float]:
+        """
+        Extra gulley space a polar panel's decorations need, `(sw, sh)`
+
+        A polar panel draws its full theta and r axes on every panel,
+        not just the ones on the grid's edge, so their ticks and labels
+        reach into the gulleys on all four sides. Reserve room for both
+        the left and right decorations in the horizontal gulley and the
+        top and bottom decorations in the vertical one. As on the
+        Cartesian free-scale path, the tick-label extent is bare and the
+        tick-label margin is added here.
+        """
+        items = self.items
+        theme = self.plot.theme
+        sw = 0.0
+        for side in ("left", "right"):
+            text = items.axis_text_y_max_width_at("all", side)
+            if text:
+                m = theme.get_margin(f"axis_text_y_{side}").fig
+                text += m.l + m.r
+            sw += text + items.axis_ticks_y_max_width_at("all", side)
+        sh = 0.0
+        for side in ("top", "bottom"):
+            text = items.axis_text_x_max_height_at("all", side)
+            if text:
+                m = theme.get_margin(f"axis_text_x_{side}").fig
+                text += m.t + m.b
+            sh += text + items.axis_ticks_x_max_height_at("all", side)
+        return sw, sh
+
     def _calculate_panel_spacing_facet_grid(self) -> tuple[float, float]:
         """
         Calculate spacing parts for facet_grid
@@ -1207,6 +1238,11 @@ class PlotSideSpaces:
         # directions are equally spaced.
         self.sw = theme.getp("panel_spacing_x")
         self.sh = theme.getp("panel_spacing_y") * self.W / self.H
+
+        if isinstance(self.plot.coordinates, coord_radial):
+            extra_sw, extra_sh = self._polar_gulley_clearance()
+            self.sw += extra_sw
+            self.sh += extra_sh
 
         # width and height of axes as fraction of figure width & height
         self.w = (self.panel_width - self.sw * (ncol - 1)) / ncol
@@ -1246,26 +1282,33 @@ class PlotSideSpaces:
         else:
             self.sw += space.strip_text + space.strip_switch_pad
 
-        # Per-panel axes claim their ticks, labels and label margins in
-        # the gullies.
-        if facet.free["x"]:
-            for side in ("bottom", "top"):
-                text = self.items.axis_text_x_max_height_at("all", side)
-                if text:
-                    m = theme.get_margin(f"axis_text_x_{side}").fig
-                    text += m.t + m.b
-                self.sh += text + self.items.axis_ticks_x_max_height_at(
-                    "all", side
-                )
-        if facet.free["y"]:
-            for side in ("left", "right"):
-                text = self.items.axis_text_y_max_width_at("all", side)
-                if text:
-                    m = theme.get_margin(f"axis_text_y_{side}").fig
-                    text += m.l + m.r
-                self.sw += text + self.items.axis_ticks_y_max_width_at(
-                    "all", side
-                )
+        # A polar panel draws its full theta and r axes on every panel,
+        # so its decorations reach into the gullies regardless of free.
+        # A cartesian panel only shows them on the grid's edge, so per-panel
+        # axes claim gulley space only where the scales are free.
+        if isinstance(self.plot.coordinates, coord_radial):
+            extra_sw, extra_sh = self._polar_gulley_clearance()
+            self.sw += extra_sw
+            self.sh += extra_sh
+        else:
+            if facet.free["x"]:
+                for side in ("bottom", "top"):
+                    text = self.items.axis_text_x_max_height_at("all", side)
+                    if text:
+                        m = theme.get_margin(f"axis_text_x_{side}").fig
+                        text += m.t + m.b
+                    self.sh += text + self.items.axis_ticks_x_max_height_at(
+                        "all", side
+                    )
+            if facet.free["y"]:
+                for side in ("left", "right"):
+                    text = self.items.axis_text_y_max_width_at("all", side)
+                    if text:
+                        m = theme.get_margin(f"axis_text_y_{side}").fig
+                        text += m.l + m.r
+                    self.sw += text + self.items.axis_ticks_y_max_width_at(
+                        "all", side
+                    )
 
         # width and height of axes as fraction of figure width & height
         self.w = (self.panel_width - self.sw * (ncol - 1)) / ncol
