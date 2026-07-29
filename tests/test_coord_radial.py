@@ -83,11 +83,7 @@ def trained_scales(
     return scale_x, scale_y
 
 
-def radial_axis_sides(
-    start: float,
-    *,
-    direction: Literal[-1, 1] = 1,
-) -> tuple[float, float]:
+def radial_axis_sides(start: float) -> tuple[float, float]:
     """
     Signed start-spoke sides occupied by the first r tick and label
     """
@@ -96,7 +92,6 @@ def radial_axis_sides(
         + geom_col()
         + coord_radial(
             start=start,
-            direction=direction,
             inner_radius=0.1,
         )
         + theme(axis_line_y=element_line())
@@ -719,7 +714,6 @@ def test_coord_radial_classifies_full_circle_from_arc_range():
     assert coord_radial(start=1, end=1 + 2 * np.pi)._is_full_circle
     assert coord_radial(
         end=2 * np.pi,
-        direction=-1,
         reverse="theta",
     )._is_full_circle
     assert not coord_radial(start=0, end=np.pi)._is_full_circle
@@ -779,23 +773,13 @@ def test_coord_radial_full_circle_panel_params_ignore_end_representation():
     assert views[0].x.labels == views[1].x.labels
 
 
-@pytest.mark.parametrize("direction", [1, -1])
-def test_coord_radial_equivalent_endpoints_have_same_sweep(
-    direction: Literal[-1, 1],
-):
+def test_coord_radial_equivalent_endpoints_have_same_sweep():
     pi = 3.14159
-    coords = [
-        coord_radial(start=pi, end=end, direction=direction)
-        for end in (0, 2 * pi)
-    ]
+    coords = [coord_radial(start=pi, end=end) for end in (0, 2 * pi)]
     angles = [coord._to_radians([1, 2, 3], (0.4, 3.6)) for coord in coords]
 
     assert_allclose(angles[0], angles[1], rtol=1e-5)
     assert all(np.all(np.diff(values) > 0) for values in angles)
-    assert [coord._mpl_direction for coord in coords] == [
-        -direction,
-        -direction,
-    ]
 
 
 def test_coord_radial_no_longer_has_r_axis_inside():
@@ -1074,14 +1058,13 @@ def test_coord_radial_reverse_theta_keeps_wedge_flips_order():
     # reverse="theta" runs the data the other way around the SAME arc; it
     # must not mirror the wedge onto the opposite side. So the mapped theta
     # breaks reflect about the arc midpoint (start + end - break), while the
-    # arc itself and the physical draw direction are unchanged.
+    # arc itself is unchanged.
     scale_x, scale_y = trained_scales()
     base = coord_radial(start=np.pi, end=np.pi / 2, expand=False)
     rev = coord_radial(
         start=np.pi, end=np.pi / 2, expand=False, reverse="theta"
     )
     assert base._arc_range == rev._arc_range
-    assert base._mpl_direction == rev._mpl_direction
 
     pv_base = base.setup_panel_params(scale_x, scale_y)
     pv_rev = rev.setup_panel_params(scale_x, scale_y)
@@ -1339,16 +1322,6 @@ def test_coord_radial_r_axis_rotates_with_start():
 
     assert tick_side > 0
     assert label_side > 0
-
-
-def test_coord_radial_r_axis_flips_with_effective_sweep():
-    clockwise_tick, clockwise_label = radial_axis_sides(0)
-    counter_tick, counter_label = radial_axis_sides(0, direction=-1)
-
-    assert clockwise_tick > 0
-    assert clockwise_label > 0
-    assert counter_tick < 0
-    assert counter_label < 0
 
 
 @pytest.mark.parametrize(
