@@ -331,12 +331,15 @@ class p9RadialAxes(PolarAxes):
 
         `PolarAxes.draw` derives `inner`/`start`/`end` spine visibility
         from pure geometry (donut hole present, arc partial) and paints
-        the spine in that same call, so a plain `set_visible` on a spine
-        is overwritten and never matters.
+        the spine in that same call, so a plain `set_visible` on one of
+        these spines is overwritten and never matters. `polar` is not
+        subject to that override, but a caller has no way to tell which
+        spine names need the protection, so all four are routed through
+        this same method.
         """
-        # This method makes the spine visible and replaces the spine's
-        # own `set_visible` with a no-op function to block matplotlib's
-        # internal call before it paints.
+        # Set the spine to the requested visibility, then replace its
+        # own `set_visible` with a no-op so matplotlib's internal call
+        # cannot overwrite it before painting.
         spine = self.spines[name]
         spine_cls = type(spine)
         spine_cls.set_visible(spine, visible)
