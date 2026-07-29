@@ -133,6 +133,9 @@ class p9RadialAxes(PolarAxes):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.set_theta_zero_location("N")  # 12 o'clock
+        # All spines are opt-in
+        self.set_spine_visible("polar", False)
+        self.set_spine_visible("inner", False)
         self.set_spine_visible("start", False)
         self.set_spine_visible("end", False)
 
