@@ -658,6 +658,27 @@ def test_coord_radial_axis_line_r_start_shows_on_full_circle():
     assert p == "coord_radial_axis_line_r_start_shows_on_full_circle"
 
 
+@pytest.mark.parametrize(
+    "themeable", ["axis_line", "axis_line_x", "axis_line_theta"]
+)
+def test_coord_radial_axis_line_theta_skips_donut_hole(themeable: str):
+    # No theta axis lives on the inner boundary, so every themeable that
+    # covers the theta line draws the outer circle only and leaves the donut
+    # hole undrawn -- including the general ones, which replace the blank
+    # axis_line_x that would otherwise have hidden it.
+    p = (
+        ggplot(mtcars, aes("factor(cyl)", "mpg"))
+        + geom_col()
+        + coord_radial(start=-np.pi / 2, end=np.pi / 2, inner_radius=0.3)
+        + theme(**{themeable: element_line()})
+    )
+    p.draw_test()  # pyright: ignore[reportAttributeAccessIssue]
+    ax = p.axs[0]
+    ax.figure.draw_without_rendering()  # pyright: ignore[reportAttributeAccessIssue]
+    assert ax.spines["polar"].get_visible()
+    assert not ax.spines["inner"].get_visible()
+
+
 def test_coord_radial_ticks_visible_by_default():
     # Ticks were previously invisible on every polar panel regardless of
     # theme, because activation was skipped entirely; this is the

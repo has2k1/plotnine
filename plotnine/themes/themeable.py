@@ -1475,6 +1475,8 @@ class axis_line_theta_inside(themeable):
 
     def apply_ax(self, ax: Axes):
         super().apply_ax(ax)
+        if axis_at(ax, "theta_inside") is None:
+            return
         _style_polar_axis_line(self, ax, "inner")
 
     def blank_ax(self, ax: Axes):
@@ -1489,6 +1491,8 @@ class axis_line_theta_outside(themeable):
 
     def apply_ax(self, ax: Axes):
         super().apply_ax(ax)
+        if axis_at(ax, "theta_outside") is None:
+            return
         _style_polar_axis_line(self, ax, "polar")
 
     def blank_ax(self, ax: Axes):
