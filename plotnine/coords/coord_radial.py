@@ -84,10 +84,6 @@ class coord_radial(coord):
         Ending angle in radians, measured clockwise from 12 o'clock.
         Equivalent angles are interpreted as the same endpoint. `None`
         (default) gives a full circle.
-    direction :
-        Angular rotation sense: `1` = clockwise (default), `-1` =
-        counter-clockwise. Applied regardless of `end`, so it also sets
-        the sweep direction of a partial arc.
     expand :
         Add a small buffer around the data on the radius axis.
         Default `True`.
@@ -118,6 +114,10 @@ class coord_radial(coord):
           toward the centre.
         * `"thetar"` — both the angular and radial axes are reversed.
 
+        The sweep itself is always clockwise. A full circle runs the other
+        way with `reverse="theta"`; a partial arc mirrors onto the opposite
+        side with `start=-end, end=-start, reverse="theta"`.
+
     Notes
     -----
     Theta-axis tick labels are shown by default. Since a polar axes' x-axis
@@ -134,7 +134,6 @@ class coord_radial(coord):
         theta: str = "x",
         start: float = 0,
         end: float | None = None,
-        direction: Literal[-1, 1] = 1,
         expand: bool = True,
         inner_radius: float = 0,
         rotate_angle: bool = False,
@@ -150,7 +149,6 @@ class coord_radial(coord):
         self.theta = theta
         self.start = start
         self.end = end
-        self.direction: Literal[-1, 1] = direction
         self.expand = expand
         self.inner_radius = inner_radius
         self.rotate_angle = rotate_angle
@@ -306,18 +304,6 @@ class coord_radial(coord):
         start, end = self._arc_range
         return bool(np.isclose(end - start, 2 * np.pi))
 
-    @property
-    def _mpl_direction(self) -> Literal[-1, 1]:
-        """
-        Matplotlib theta direction for this coordinate system
-
-        For matplotlib -1 is clockwise and +1 is counter-clockwise, the
-        opposite of plotnine's own `direction` convention. `reverse="theta"`
-        does not enter here: it reverses the data along the arc (in
-        `_to_radians`), not the physical sweep, so the wedge stays put.
-        """
-        return self.direction * -1
-
     @cached_property
     def _r_axis_side(self) -> Literal["r_start", "r_end"]:
         """
@@ -399,10 +385,10 @@ class coord_radial(coord):
         if self.rotate_angle and "angle" in data and "x" in data:
             # Align marks tangentially to their spoke. The PolarAxes places
             # a data theta t at on-screen angle (deg, CCW from East)
-            #   screen = 90 + mpl_dir * degrees(t),  mpl_dir = -1 if cw else 1
+            #   screen = 90 - degrees(t),  since the sweep is clockwise
             # Tangential text rotation is screen - 90; folding into (-90, 90]
             # keeps labels upright (a bottom label reads "6", not "9").
-            rot = self._mpl_direction * np.degrees(data["x"])
+            rot = -np.degrees(data["x"])
             rot = (rot + 90.0) % 180.0 - 90.0
             data["angle"] = data["angle"] + rot
         return data
@@ -461,7 +447,8 @@ class coord_radial(coord):
         view = cast("radial_panel_view", panel_params)
         radial_ax = cast("p9RadialAxes", ax)
 
-        radial_ax.set_theta_direction(self._mpl_direction)
+        # plotnine sweeps clockwise, which is matplotlib's -1.
+        radial_ax.set_theta_direction(-1)
 
         if view.x.sec is not None:
             warn(
