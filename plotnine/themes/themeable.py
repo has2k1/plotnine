@@ -1414,8 +1414,6 @@ def _style_polar_axis_line(themeable, ax, spine):
     rather than the `properties` dict, since that's what makes the
     choice stick across draws.
     """
-    if spine not in ax.spines:
-        return
     properties = themeable._get_properties(omit=("solid_capstyle",))
     visible = properties.pop("visible", True)
     if "zorder" not in properties:
