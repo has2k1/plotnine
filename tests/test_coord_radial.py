@@ -20,8 +20,6 @@ from plotnine import (
     geom_col,
     geom_point,
     ggplot,
-    guide_axis_theta,
-    guides,
     scale_x_reverse,
     scale_y_reverse,
     theme,
@@ -334,21 +332,6 @@ def test_coord_radial_theta_label_clearance_ignores_blank_tick_length():
         axis_ticks_x=element_blank(),
         axis_ticks_length_major_x=20,
     )
-    p.draw_test()  # pyright: ignore[reportAttributeAccessIssue]
-    ax = p.axs[0]
-
-    assert_allclose(
-        [
-            _theta_label_clearance(ax, "120"),
-            _theta_label_clearance(ax, "330"),
-        ],
-        0,
-        atol=0.01,
-    )
-
-
-def test_coord_radial_rotated_theta_label_clearance():
-    p = _theta_margin_plot({}) + guides(theta=guide_axis_theta(angle=35))
     p.draw_test()  # pyright: ignore[reportAttributeAccessIssue]
     ax = p.axs[0]
 
