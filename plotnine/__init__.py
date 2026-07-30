@@ -90,7 +90,6 @@ from .ggplot import (
     save_as_pdf_pages,
 )
 from .guides import (
-    guide_axis_theta,
     guide_colorbar,
     guide_colourbar,
     guide_legend,
@@ -353,7 +352,6 @@ __all__ = (
     "ggplot",
     "ggsave",
     "ggtitle",
-    "guide_axis_theta",
     "guide_colorbar",
     "guide_colourbar",
     "guide_legend",

@@ -512,30 +512,10 @@ class coord_radial(coord):
             radial_ax.set_rlabel_position(np.degrees(self.start))
 
         ax.tick_params(axis="x", which="major", direction="out")
-        if (angle := self._theta_guide_angle()) is not None:
-            # Use Matplotlib's 'auto' mode so labels orient tangentially
-            # to the arc, with `angle` as an offset — matching ggplot2's
-            # guide_axis_theta() semantics where angle=0 means tangential.
-            # ax.tick_params(labelrotation=...) always sets 'default' mode
-            # (absolute degrees), so we patch each tick directly instead.
-            for tick in ax.xaxis.get_major_ticks():
-                tick._labelrotation = (  # pyright: ignore[reportAttributeAccessIssue]
-                    "auto",
-                    angle,
-                )
         # Allow geom_text labels to extend past the polar axes bounding box
         # (e.g. spoke labels placed just beyond the outermost bar tip).
         for text in ax.texts:
             text.set_clip_on(False)
-
-    def _theta_guide_angle(self) -> float | None:
-        """
-        Return the angle from guides(theta=guide_axis_theta(...))
-        """
-        if self._owner is None:
-            return None
-        guide = cast("Any", self._owner.guides.theta)
-        return getattr(guide, "angle", None)
 
     def aspect(self, panel_params: panel_view) -> float:
         left, right, bottom, top = polar_bbox(
