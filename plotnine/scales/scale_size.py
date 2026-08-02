@@ -141,7 +141,7 @@ class scale_size_datetime(scale_datetime):
     guide: OptionalLegend = "legend"
 
     def __post_init__(
-        self, range, date_breaks, date_labels, date_minor_breaks
+        self, date_breaks, date_labels, date_minor_breaks, range
     ):
         from mizani.palettes import area_pal
 
