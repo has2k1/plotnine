@@ -112,6 +112,10 @@ title: Changelog
 
 ### Bug Fixes
 
+- [](:class:`~plotnine.scale_size_datetime`) no longer raises an error (or
+  silently ignores `date_breaks`); its `__post_init__` parameters were
+  declared in the wrong order, misrouting the `range` argument.
+
 - In a non-linear coordinate system (e.g. [](:class:`~plotnine.coord_trans`)),
   the closing edge of a polygon is now curved along with the rest of its
   boundary instead of being drawn as a straight chord.

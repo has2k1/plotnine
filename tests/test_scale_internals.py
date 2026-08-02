@@ -45,6 +45,7 @@ from plotnine.scales.scale_shape import (
 from plotnine.scales.scale_size import (
     scale_size_area,
     scale_size_continuous,
+    scale_size_datetime,
     scale_size_discrete,
     scale_size_radius,
 )
@@ -248,6 +249,17 @@ def test_size_palette():
 
     s = scale_size_radius(range=(1, 6))
     s.palette(frac**2)
+
+
+def test_size_datetime_palette():
+    # The `range` argument must reach the area palette. Regression: the
+    # __post_init__ InitVars were declared in the wrong order, so `range`
+    # was misrouted and the palette crashed / ignored it.
+    s = scale_size_datetime(range=(2, 10))
+    npt.assert_allclose(s.palette([0.0, 1.0]), [2.0, 10.0])
+
+    s = scale_size_datetime()
+    npt.assert_allclose(s.palette([0.0, 1.0]), [1.0, 6.0])
 
 
 def test_scale_identity():
