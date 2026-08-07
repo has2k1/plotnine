@@ -103,6 +103,7 @@ ScaledAestheticsName: TypeAlias = Literal[
     "color",
     "colour",
     "fill",
+    "hatch",
     "linetype",
     "shape",
     "size",

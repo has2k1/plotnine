@@ -81,6 +81,16 @@ class scale_linetype_identity(MapTrainMixin, scale_discrete[OptionalLegend]):
 
 
 @dataclass
+class scale_hatch_identity(MapTrainMixin, scale_discrete[OptionalLegend]):
+    """
+    Use hatch value as-is
+    """
+
+    _aesthetics = ["hatch"]
+    guide: OptionalLegend = "legend"
+
+
+@dataclass
 class scale_alpha_identity(MapTrainMixin, scale_continuous[OptionalLegend]):
     """
     No alpha scaling

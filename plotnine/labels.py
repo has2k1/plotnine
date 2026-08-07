@@ -54,6 +54,11 @@ class labs:
     Name of the fill legend/colourbar.
     """
 
+    hatch: str | None = None
+    """
+    Name of the hatch legend.
+    """
+
     linetype: str | None = None
     """
     Name of the linetype legend.
