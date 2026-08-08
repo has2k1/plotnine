@@ -29,7 +29,7 @@ class stat_bin_2d(stat):
         a list of two array_likes to provide distinct breaks for
         the `x` and `y` axes.
     binwidth : float, default=None
-        The width of the bins. The default is to use bins bins that
+        The width of the bins. The default is to use bins that
         cover the range of the data. You should always override this
         value, exploring multiple widths to find the best to illustrate
         the stories in your data.
