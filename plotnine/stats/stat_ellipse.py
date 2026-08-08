@@ -149,9 +149,9 @@ def cov_trob(
     Returns
     -------
     out : dict
-        A dictionary with with the following key-value
+        A dictionary with the following key-value
 
-        - `cov` : the fitted covarince matrix.
+        - `cov` : the fitted covariance matrix.
         - `center` : the estimated or specified location vector.
         - `wt` : the specified weights: only returned if the
            wt argument was given.

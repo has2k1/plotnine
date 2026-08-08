@@ -403,7 +403,7 @@ class theme:
 
         Notes
         -----
-        Subclasses should not need to override this method method as long as
+        Subclasses should not need to override this method as long as
         self._rcParams is constructed properly.
 
         rcParams are used during plotting. Sometimes the same theme can be
