@@ -16,9 +16,11 @@ from plotnine import (
     geom_line,
     geom_point,
     geom_polygon,
+    geom_ribbon,
     ggplot,
     xlim,
 )
+from plotnine.coords.coord import munch_data
 from plotnine.data import mtcars
 
 n = 10  # Some even number greater than 2
@@ -90,6 +92,39 @@ def test_coord_trans_munches_polygon_closing_edge():
         + coord_trans(x="log10", y="log10")
     )
     assert p == "coord_trans_munches_polygon_closing_edge"
+
+
+def test_munch_interpolates_every_position_aesthetic():
+    # Ribbon edges use `ymin` and `ymax` as path coordinates, so both must
+    # vary within each munched segment.
+    data = pd.DataFrame(
+        {
+            "x": [0.0, 1.0],
+            "y": [3.0, 8.0],
+            "ymin": [1.0, 6.0],
+            "ymax": [5.0, 10.0],
+            "group": [1, 1],
+        }
+    )
+
+    munched = munch_data(data, np.array([1.0]))
+
+    assert len(munched) > len(data)
+    for column in ("x", "y", "ymin", "ymax"):
+        values = munched[column].to_numpy()
+        assert np.all(np.diff(values) > 0), f"{column} was not interpolated"
+
+
+def test_coord_trans_ribbon_edges_curve():
+    # A smooth transformed ribbon exposes piecewise-constant `ymin` and
+    # `ymax` values as stepped edges.
+    data = pd.DataFrame({"x": range(6), "y": [3.0, 8, 5, 9, 4, 7]})
+    p = (
+        ggplot(data, aes("x", ymin="y - 2", ymax="y + 2"))
+        + geom_ribbon(alpha=0.5)
+        + coord_trans(y="sqrt")
+    )
+    assert p == "coord_trans_ribbon_edges_curve"
 
 
 def test_coord_trans_stacked_bars_have_no_spikes():
