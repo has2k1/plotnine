@@ -212,3 +212,35 @@ def test_rlim():
 def test_thetalim():
     p = p_point + coord_radial(thetalim=(2, 4))
     assert p == "thetalim"
+
+
+def test_reverse_theta_full_circle():
+    # The sweep is still clockwise; the data runs the other way along it.
+    p = p_col + coord_radial(reverse="theta")
+    assert p == "reverse_theta_full_circle"
+
+
+def test_reverse_theta_partial_arc():
+    # On a partial arc the data runs from end back to start, so the
+    # labelling r spoke follows it to the end spoke.
+    p = p_col + coord_radial(
+        start=pi, end=pi / 2, inner_radius=0.1, reverse="theta"
+    )
+    assert p == "reverse_theta_partial_arc"
+
+
+def test_reverse_r():
+    p = p_point + coord_radial(reverse="r")
+    assert p == "reverse_r"
+
+
+def test_reverse_r_donut():
+    p = p_point + coord_radial(reverse="r", inner_radius=0.3)
+    assert p == "reverse_r_donut"
+
+
+def test_reverse_thetar():
+    p = p_col + coord_radial(
+        start=pi, end=pi / 2, inner_radius=0.1, reverse="thetar"
+    )
+    assert p == "reverse_thetar"
