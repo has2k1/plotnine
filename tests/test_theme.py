@@ -2,7 +2,6 @@ import os
 
 import matplotlib as mpl
 import pytest
-from matplotlib import pyplot as plt
 from packaging import version
 
 from plotnine import (
@@ -114,6 +113,9 @@ def test_add_element_blank():
 
 
 def test_extension_themeable_applies_from_theme_kwargs():
+    # A themeable defined outside plotnine is reachable by its own name as a
+    # theme() keyword, and its apply_ax runs during the draw. The red panel
+    # is the evidence that it ran.
     class test_extension_panel_facecolor(themeable):
         def apply_ax(self, ax):
             super().apply_ax(ax)
@@ -124,12 +126,7 @@ def test_extension_themeable_applies_from_theme_kwargs():
         + geom_point()
         + theme(test_extension_panel_facecolor="red")
     )
-
-    fig = p.draw()
-    try:
-        assert fig.axes[0].get_facecolor() == (1.0, 0.0, 0.0, 1.0)
-    finally:
-        plt.close(fig)
+    assert p == "extension_themeable_applies_from_theme_kwargs"
 
 
 def test_element_line_dashed_capstyle():
