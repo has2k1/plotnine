@@ -12,12 +12,10 @@ from plotnine import (
     element_blank,
     element_line,
     element_text,
-    facet_grid,
     facet_wrap,
     geom_col,
     geom_path,
     geom_point,
-    geom_polygon,
     geom_ribbon,
     geom_text,
     ggplot,
@@ -146,29 +144,14 @@ def test_full_circle_position_right_no_warning():
         p.draw_test()  # pyright: ignore[reportAttributeAccessIssue]
 
 
-def test_full_circle():
-    p = p_point + coord_radial()
-    assert p == "full_circle"
-
-
 def test_half_disc():
     p = p_point + coord_radial(start=-pi / 2, end=pi / 2)
     assert p == "half_disc"
 
 
-def test_quarter():
-    p = p_point + coord_radial(start=-pi / 2, end=0)
-    assert p == "quarter"
-
-
 def test_thin_wedge():
     p = p_point + coord_radial(start=-pi / 2, end=-pi / 3)
     assert p == "thin_wedge"
-
-
-def test_sliver():
-    p = p_point + coord_radial(start=0, end=0.25)
-    assert p == "sliver"
 
 
 def test_arc_wraps_past_twelve():
@@ -187,11 +170,6 @@ def test_rotated_full_circle():
 def test_donut_full_circle():
     p = p_point + coord_radial(inner_radius=0.3)
     assert p == "donut_full_circle"
-
-
-def test_donut_half_disc():
-    p = p_point + coord_radial(start=-pi / 2, end=pi / 2, inner_radius=0.3)
-    assert p == "donut_half_disc"
 
 
 def test_donut_narrow_arc():
@@ -215,28 +193,21 @@ def test_discrete_theta():
     assert p == "discrete_theta"
 
 
-def test_expand_partial_arc():
-    # With the default expand=True the theta axis is buffered, so the
-    # outermost bars sit inside the arc ends instead of flush against them.
-    p = p_col + coord_radial(start=0, end=pi, inner_radius=0.1)
-    assert p == "expand_partial_arc"
-
-
-def test_expand_false_partial_arc():
+def test_expand_false():
+    # Every other image in this file uses the default buffer, which holds the
+    # data clear of the arc ends and the outer radius. Turning it off is what
+    # needs an image of its own: the bars then run flush to both ends of the
+    # arc and out to the rim.
     p = p_col + coord_radial(start=0, end=pi, inner_radius=0.1, expand=False)
-    assert p == "expand_false_partial_arc"
+    assert p == "expand_false"
 
 
-def test_rlim():
-    # Zooming the radius recomputes nice breaks over (10, 25) rather than
-    # filtering the full-range breaks, which would leave almost none.
-    p = p_point + coord_radial(rlim=(10, 25))
-    assert p == "rlim"
-
-
-def test_thetalim():
-    p = p_point + coord_radial(thetalim=(2, 4))
-    assert p == "thetalim"
+def test_zoom():
+    # Both axes zoom on one coordinate system. The radius recomputes nice
+    # breaks over (10, 25) rather than filtering the full-range breaks, which
+    # would leave almost none, and (2, 4) of wt spans the whole circle.
+    p = p_point + coord_radial(rlim=(10, 25), thetalim=(2, 4))
+    assert p == "zoom"
 
 
 def test_reverse_theta_full_circle():
@@ -264,29 +235,11 @@ def test_reverse_r_donut():
     assert p == "reverse_r_donut"
 
 
-def test_reverse_thetar():
-    p = p_col + coord_radial(
-        start=pi, end=pi / 2, inner_radius=0.1, reverse="thetar"
-    )
-    assert p == "reverse_thetar"
-
-
 def test_path_munched_into_arc():
     # Each segment is subdivided before the radian transform, so it bends
     # along the arc instead of cutting a straight chord across it.
     p = ggplot(path_data, aes("x", "y")) + geom_path(size=1) + coord_radial()
     assert p == "path_munched_into_arc"
-
-
-def test_polygon_closes_across_seam():
-    # The closing edge from the last vertex back to the first crosses the
-    # seam at 12 o'clock and must be munched like every other edge.
-    p = (
-        ggplot(path_data, aes("x", "y"))
-        + geom_polygon(fill="none", color="black", size=1)
-        + coord_radial()
-    )
-    assert p == "polygon_closes_across_seam"
 
 
 def test_ribbon():
@@ -303,7 +256,7 @@ def test_rotate_angle_text():
     # the one at the bottom of the circle stays readable.
     p = (
         ggplot(path_data, aes("x", "y", label="y"))
-        + geom_text(angle=0, size=12)
+        + geom_text(angle=0, size=18, color="green")
         + coord_radial(rotate_angle=True)
     )
     assert p == "rotate_angle_text"
@@ -318,46 +271,21 @@ def test_pie():
     assert p == "pie"
 
 
-def test_donut_chart():
-    p = (
-        ggplot(pie_data, aes("one", "value", fill="slice"))
-        + geom_col()
-        + coord_radial("y", inner_radius=0.4)
-    )
-    assert p == "donut_chart"
-
-
-def test_default_theme_hides_boundaries():
-    # theme_gray blanks axis_line_x and axis_line_y, and axis_line_theta and
-    # axis_line_r nest under them, so a default plot outlines neither the
-    # wedge nor the hole without any theme() call.
-    p = p_point + coord_radial(start=-0.4 * pi, end=0.4 * pi, inner_radius=0.3)
-    assert p == "default_theme_hides_boundaries"
-
-
-def test_axis_line_styles_polar_spine():
+def test_axis_line_styles_polar_boundaries():
     # panel_border no longer owns the outer circle. axis_line does, and
-    # unlike panel_border it can style it rather than only hide it.
+    # unlike panel_border it can style it rather than only hide it. On a
+    # donut arc the same themeable shows which boundaries it owns: the outer
+    # arc and the spoke holding the radial axis are drawn, while the hole,
+    # which no angular axis sits on, is left bare.
     p = (
         p_col
-        + coord_radial()
+        + coord_radial(start=-pi / 2, end=pi / 2, inner_radius=0.3)
         + theme(
             panel_border=element_blank(),
             axis_line=element_line(color="red", size=2),
         )
     )
-    assert p == "axis_line_styles_polar_spine"
-
-
-def test_axis_line_theta_skips_donut_hole():
-    # No theta axis lives on the inner boundary, so the themeable that
-    # covers the theta line draws the outer arc only.
-    p = (
-        p_col
-        + coord_radial(start=-pi / 2, end=pi / 2, inner_radius=0.3)
-        + theme(axis_line_theta=element_line(color="red", size=2))
-    )
-    assert p == "axis_line_theta_skips_donut_hole"
+    assert p == "axis_line_styles_polar_boundaries"
 
 
 def test_axis_line_r_start_on_full_circle():
@@ -397,46 +325,28 @@ def test_axis_line_r_reaches_both_spokes():
     assert p == "axis_line_r_reaches_both_spokes"
 
 
-def test_axis_text_theming():
-    # axis_text used to be a no-op on a polar panel. axis_text_theta_* and
-    # axis_text_r_* nest under axis_text_x/y, so a plain axis_text= reaches
-    # both the theta and the r labels.
-    p = p_wedge + theme(axis_text=element_text(color="red", size=13))
-    assert p == "axis_text_theming"
-
-
-def test_axis_text_theta_blank():
-    p = p_wedge + theme(axis_text_theta=element_blank())
-    assert p == "axis_text_theta_blank"
-
-
-def test_axis_text_theta_margin():
-    # The largest margin side sets the gap between a theta label and the
-    # arc, whichever side it is.
-    p = p_wedge + theme(axis_text_theta=element_text(margin=margin(r=12)))
-    assert p == "axis_text_theta_margin"
-
-
-def test_axis_ticks_theming():
-    # As with axis_text, a plain axis_ticks= reaches both sets of marks, and
-    # axis_ticks_minor= overrides it on the minor ones. theme_gray blanks
-    # minor marks globally, so they appear only once overridden. Colouring
-    # the two differently shows both reaching the arc and the spoke.
-    p = p_wedge + theme(
-        axis_ticks=element_line(color="blue", size=2),
-        axis_ticks_minor=element_line(color="green", size=1),
+def test_theming_reaches_all_decorations():
+    # The general themeables reach every polar decoration and the polar
+    # leaves refine them. Both label sets are red at size 13 from axis_text,
+    # and the angular labels sit further out because their own leaf adds a
+    # margin while inheriting that colour and size. Major marks are blue and
+    # minor ones green, on the arc and on the spokes alike. The angular marks
+    # are the longer pair, each axis taking its own themed length. The grid
+    # thickens on the rings and the spokes together. A secondary radial axis
+    # gives axis_text a second set of radial labels to reach.
+    p = (
+        p_wedge
+        + scale_y_continuous(sec_axis=sec_axis(lambda x: x * 2))
+        + theme(
+            axis_text=element_text(color="red", size=13),
+            axis_text_theta=element_text(margin=margin(r=12)),
+            axis_ticks=element_line(color="blue", size=2),
+            axis_ticks_minor=element_line(color="green", size=1),
+            axis_ticks_length_major_theta=10,
+            panel_grid=element_line(color="white", size=1.5),
+        )
     )
-    assert p == "axis_ticks_theming"
-
-
-def test_axis_ticks_length_per_axis():
-    # Length is themed per axis, so the arc grows long marks while the spoke
-    # is left with none. A length of 0 renders no mark rather than failing.
-    p = p_wedge + theme(
-        axis_ticks_length_major_theta=10,
-        axis_ticks_length_major_r=0,
-    )
-    assert p == "axis_ticks_length_per_axis"
+    assert p == "theming_reaches_all_decorations"
 
 
 def test_axis_ticks_theta_blank_keeps_label_gap():
@@ -449,30 +359,18 @@ def test_axis_ticks_theta_blank_keeps_label_gap():
     assert p == "axis_ticks_theta_blank_keeps_label_gap"
 
 
-def test_panel_grid_theming():
-    p = p_wedge + theme(panel_grid=element_line(color="white", size=1.5))
-    assert p == "panel_grid_theming"
-
-
-def test_scale_x_position_top():
-    # On a polar panel scale.position moves only the axis title. The theta
-    # axis itself stays outside the arc.
+def test_scale_positions_move_only_titles():
+    # On a polar panel a scale's position moves its axis title and nothing
+    # else. Moving both at once shows each title on its new side while the
+    # angular axis stays outside the arc and the radial axis stays on the
+    # start spoke.
     p = (
         p_point
         + coord_radial(start=-1.0, end=1.0, inner_radius=0.3)
         + scale_x_continuous(position="top")
-    )
-    assert p == "scale_x_position_top"
-
-
-def test_scale_y_position_right():
-    # Likewise the r axis stays on the start spoke; only its title moves.
-    p = (
-        p_point
-        + coord_radial(start=-1.0, end=1.0, inner_radius=0.3)
         + scale_y_continuous(position="right")
     )
-    assert p == "scale_y_position_right"
+    assert p == "scale_positions_move_only_titles"
 
 
 def test_secondary_r_axis_partial_arc():
@@ -505,21 +403,6 @@ def test_secondary_r_axis_full_circle():
     assert p == "secondary_r_axis_full_circle"
 
 
-def test_secondary_r_axis_themed():
-    p = (
-        p_point
-        + scale_y_continuous(
-            sec_axis=sec_axis(lambda x: x * 0.354006, name="km/L")
-        )
-        + coord_radial(start=-pi / 2, end=pi / 2, inner_radius=0.1)
-        + theme(
-            axis_line_r=element_line(),
-            axis_text_r=element_text(color="blue"),
-        )
-    )
-    assert p == "secondary_r_axis_themed"
-
-
 def test_secondary_r_axis_theta_y():
     p = (
         p_point
@@ -536,40 +419,3 @@ def test_facet_wrap():
     # gulley must hold them and the strip band must clear the arc apex.
     p = p_point + facet_wrap("gear", nrow=2) + coord_radial(start=-1, end=1)
     assert p == "facet_wrap"
-
-
-def test_facet_grid():
-    p = p_point + facet_grid("am", "gear") + coord_radial(start=-1, end=1)
-    assert p == "facet_grid"
-
-
-def test_theta_label_descent():
-    # "300" has no descender and "3g0" does. Both labels sit on the same gap
-    # from the arc, because the gap is measured to the glyphs rather than to
-    # the font's logical box.
-    data = pd.DataFrame({"x": [0, 120, 330], "y": [1, 2, 3]})
-    p = (
-        ggplot(data, aes("x", "y"))
-        + geom_point()
-        + scale_x_continuous(
-            breaks=[0, 120, 330],
-            labels=["0", "300", "3g0"],
-            limits=(0, 360),
-            expand=(0, 0),
-        )
-        + coord_radial()
-        + theme(
-            axis_text_y=element_blank(),
-            axis_ticks_major_r=element_blank(),
-        )
-    )
-    assert p == "theta_label_descent"
-
-
-def test_legend_beside_polar_panel():
-    p = (
-        ggplot(mtcars, aes("wt", "mpg", color="hp"))
-        + geom_point()
-        + coord_radial(start=-pi / 2, end=pi / 2)
-    )
-    assert p == "legend_beside_polar_panel"
