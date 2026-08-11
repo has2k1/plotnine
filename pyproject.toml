@@ -207,6 +207,14 @@ stubPath = ""
 ########## Tool - Ruff ##########
 [tool.ruff]
 line-length = 79
+# Exclude a variety of commonly ignored directories.
+exclude = [
+    "plotnine/themes/seaborn_rcmod.py",
+    "**/__pycache__",
+    "node_modules",
+    "README.md",
+]
+
 
 [tool.ruff.lint]
 select = [
@@ -240,14 +248,6 @@ ignore = [
 # Allow autofix for all enabled rules (when `--fix`) is provided.
 fixable = ["ALL"]
 unfixable = []
-
-# Exclude a variety of commonly ignored directories.
-exclude = [
-    "plotnine/themes/seaborn_rcmod.py",
-    "**/__pycache__",
-    "node_modules"
-]
-
 
 # Allow unused variables when underscore-prefixed.
 dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
