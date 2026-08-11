@@ -26,7 +26,7 @@ from plotnine.coords.coord_radial import polar_bbox
 from plotnine.data import mtcars
 from plotnine.exceptions import PlotnineWarning
 from plotnine.iapi import labels_view
-from plotnine.scales import sec_axis
+from plotnine.scales import scale_x_continuous, sec_axis
 from plotnine.themes.elements import margin
 
 p_point = ggplot(mtcars, aes("wt", "mpg")) + geom_point()
@@ -450,3 +450,80 @@ def test_axis_ticks_theta_blank_keeps_label_gap():
 def test_panel_grid_theming():
     p = p_wedge + theme(panel_grid=element_line(color="white", size=1.5))
     assert p == "panel_grid_theming"
+
+
+def test_scale_x_position_top():
+    # On a polar panel scale.position moves only the axis title. The theta
+    # axis itself stays outside the arc.
+    p = (
+        p_point
+        + coord_radial(start=-1.0, end=1.0, inner_radius=0.3)
+        + scale_x_continuous(position="top")
+    )
+    assert p == "scale_x_position_top"
+
+
+def test_scale_y_position_right():
+    # Likewise the r axis stays on the start spoke; only its title moves.
+    p = (
+        p_point
+        + coord_radial(start=-1.0, end=1.0, inner_radius=0.3)
+        + scale_y_continuous(position="right")
+    )
+    assert p == "scale_y_position_right"
+
+
+def test_secondary_r_axis_partial_arc():
+    p = (
+        p_point
+        + scale_y_continuous(
+            sec_axis=sec_axis(lambda x: x * 0.354006, name="km/L")
+        )
+        + coord_radial(start=-pi / 2, end=pi / 2, inner_radius=0.1)
+        + theme(axis_line_r=element_line())
+    )
+    assert p == "secondary_r_axis_partial_arc"
+
+
+def test_secondary_r_axis_full_circle():
+    # A full circle's start and end spokes coincide, so the secondary axis
+    # shares the primary's spoke. Its labels and marks go to the other side
+    # of that spoke rather than onto a spoke of their own.
+    p = (
+        p_point
+        + scale_y_continuous(
+            sec_axis=sec_axis(lambda x: x * 2, breaks=[20, 40, 60])
+        )
+        + coord_radial()
+        + theme(
+            axis_line_r=element_line(),
+            axis_ticks_length_major=20,
+        )
+    )
+    assert p == "secondary_r_axis_full_circle"
+
+
+def test_secondary_r_axis_themed():
+    p = (
+        p_point
+        + scale_y_continuous(
+            sec_axis=sec_axis(lambda x: x * 0.354006, name="km/L")
+        )
+        + coord_radial(start=-pi / 2, end=pi / 2, inner_radius=0.1)
+        + theme(
+            axis_line_r=element_line(),
+            axis_text_r=element_text(color="blue"),
+        )
+    )
+    assert p == "secondary_r_axis_themed"
+
+
+def test_secondary_r_axis_theta_y():
+    p = (
+        p_point
+        + scale_x_continuous(
+            sec_axis=sec_axis(lambda x: x * 0.354006, name="scaled")
+        )
+        + coord_radial("y", start=-pi / 2, end=pi / 2)
+    )
+    assert p == "secondary_r_axis_theta_y"
