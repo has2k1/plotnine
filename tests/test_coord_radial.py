@@ -2,6 +2,7 @@ import warnings
 from math import pi
 
 import numpy as np
+import pandas as pd
 import pytest
 from numpy.testing import assert_allclose
 
@@ -9,7 +10,11 @@ from plotnine import (
     aes,
     coord_radial,
     geom_col,
+    geom_path,
     geom_point,
+    geom_polygon,
+    geom_ribbon,
+    geom_text,
     ggplot,
     scale_y_continuous,
 )
@@ -21,6 +26,13 @@ from plotnine.iapi import labels_view
 p_point = ggplot(mtcars, aes("wt", "mpg")) + geom_point()
 p_col = (
     ggplot(mtcars, aes("factor(cyl)", "mpg", fill="factor(cyl)")) + geom_col()
+)
+
+# Points spread evenly around theta, so a chord and an arc differ visibly
+path_data = pd.DataFrame({"x": range(6), "y": [3, 8, 5, 9, 4, 7]})
+
+pie_data = pd.DataFrame(
+    {"one": ["a"] * 4, "value": [3, 5, 2, 6], "slice": list("wxyz")}
 )
 
 
@@ -244,3 +256,59 @@ def test_reverse_thetar():
         start=pi, end=pi / 2, inner_radius=0.1, reverse="thetar"
     )
     assert p == "reverse_thetar"
+
+
+def test_path_munched_into_arc():
+    # Each segment is subdivided before the radian transform, so it bends
+    # along the arc instead of cutting a straight chord across it.
+    p = ggplot(path_data, aes("x", "y")) + geom_path(size=1) + coord_radial()
+    assert p == "path_munched_into_arc"
+
+
+def test_polygon_closes_across_seam():
+    # The closing edge from the last vertex back to the first crosses the
+    # seam at 12 o'clock and must be munched like every other edge.
+    p = (
+        ggplot(path_data, aes("x", "y"))
+        + geom_polygon(fill="none", color="black", size=1)
+        + coord_radial()
+    )
+    assert p == "polygon_closes_across_seam"
+
+
+def test_ribbon():
+    p = (
+        ggplot(path_data, aes("x", ymin="y - 2", ymax="y + 2"))
+        + geom_ribbon(alpha=0.5)
+        + coord_radial()
+    )
+    assert p == "ribbon"
+
+
+def test_rotate_angle_text():
+    # The labels align tangentially to the arc and fold into (-90, 90], so
+    # the one at the bottom of the circle stays readable.
+    p = (
+        ggplot(path_data, aes("x", "y", label="y"))
+        + geom_text(angle=0, size=12)
+        + coord_radial(rotate_angle=True)
+    )
+    assert p == "rotate_angle_text"
+
+
+def test_pie():
+    p = (
+        ggplot(pie_data, aes("one", "value", fill="slice"))
+        + geom_col()
+        + coord_radial("y")
+    )
+    assert p == "pie"
+
+
+def test_donut_chart():
+    p = (
+        ggplot(pie_data, aes("one", "value", fill="slice"))
+        + geom_col()
+        + coord_radial("y", inner_radius=0.4)
+    )
+    assert p == "donut_chart"
