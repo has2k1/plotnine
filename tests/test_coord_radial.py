@@ -8,6 +8,7 @@ from numpy.testing import assert_allclose
 from plotnine import (
     aes,
     coord_radial,
+    geom_col,
     geom_point,
     ggplot,
     scale_y_continuous,
@@ -18,6 +19,9 @@ from plotnine.exceptions import PlotnineWarning
 from plotnine.iapi import labels_view
 
 p_point = ggplot(mtcars, aes("wt", "mpg")) + geom_point()
+p_col = (
+    ggplot(mtcars, aes("factor(cyl)", "mpg", fill="factor(cyl)")) + geom_col()
+)
 
 
 def test_arc_range_normalizes_end_forward():
@@ -170,3 +174,41 @@ def test_donut_narrow_arc():
     # not, the panel aspect mismatched the wedge and the sector under-filled.
     p = p_point + coord_radial(start=pi / 4, end=3 * pi / 4, inner_radius=0.3)
     assert p == "donut_narrow_arc"
+
+
+def test_theta_y():
+    # theta="y" puts mpg on the arc and wt on the radius, and swaps which
+    # axis title the layout treats as the theta title.
+    p = p_point + coord_radial("y")
+    assert p == "theta_y"
+
+
+def test_discrete_theta():
+    # A discrete theta scale spans the whole circle rather than leaving the
+    # last category short of the first.
+    p = p_col + coord_radial()
+    assert p == "discrete_theta"
+
+
+def test_expand_partial_arc():
+    # With the default expand=True the theta axis is buffered, so the
+    # outermost bars sit inside the arc ends instead of flush against them.
+    p = p_col + coord_radial(start=0, end=pi, inner_radius=0.1)
+    assert p == "expand_partial_arc"
+
+
+def test_expand_false_partial_arc():
+    p = p_col + coord_radial(start=0, end=pi, inner_radius=0.1, expand=False)
+    assert p == "expand_false_partial_arc"
+
+
+def test_rlim():
+    # Zooming the radius recomputes nice breaks over (10, 25) rather than
+    # filtering the full-range breaks, which would leave almost none.
+    p = p_point + coord_radial(rlim=(10, 25))
+    assert p == "rlim"
+
+
+def test_thetalim():
+    p = p_point + coord_radial(thetalim=(2, 4))
+    assert p == "thetalim"
