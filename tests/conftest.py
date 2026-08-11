@@ -18,6 +18,7 @@ from plotnine.composition import (
     inset_element,
     plot_annotation,
 )
+from plotnine.options import set_option
 from plotnine.themes.theme import DEFAULT_RCPARAMS
 
 TOLERANCE = 2  # Default tolerance for the tests
@@ -28,11 +29,14 @@ DEFAULT_RCPARAMS["font.monospace"] = ["Dejavu Sans Mono"]
 DEFAULT_RCPARAMS["font.sans-serif"] = ["Dejavu Sans"]
 DEFAULT_RCPARAMS["font.serif"] = ["Dejavu Serif"]
 
-# This partial theme modifies all themes that are used in
-# the test. It is limited to setting the size of the test
-# images Should a test require a larger or smaller figure
-# size, the dpi or aspect_ratio should be modified.
-test_theme = theme(figure_size=(640 / DPI, 480 / DPI), dpi=DPI)
+# Set figure size and DPI through package options so plot themes can override
+# them. Tests that omit either setting retain a 640-by-480-pixel image at
+# 72 DPI. Configure the options before test modules construct their themes.
+set_option("dpi", DPI)
+set_option("figure_size", (640 / DPI, 480 / DPI))
+
+# Give compositions and standalone insets more room than a single plot.
+default_composition_theme = theme(figure_size=(8, 6), dpi=DPI)
 
 tests_dir = Path(__file__).parent
 baseline_images_dir = tests_dir / "baseline_images"
@@ -70,7 +74,6 @@ def ggplot_equals(plot: ggplot, name: str) -> bool:
     # Save the figure before testing whether the original image
     # actually exists. This makes creating new tests much easier,
     # as the result image can afterwards just be copied.
-    plot += test_theme
     with _test_cleanup():
         plot.save(filenames.result, verbose=False)
 
@@ -240,7 +243,22 @@ def composition_equals(cmp: Compose, name: str) -> bool:
     test_file = inspect.stack()[1][1]
     filenames = make_test_image_filenames(name, test_file)
 
-    _cmp = cmp + plot_annotation(theme=theme(figure_size=(8, 6), dpi=DPI))
+    # Apply the test default after any complete theme broadcast with `&`. Its
+    # default figure size is indistinguishable from an explicit choice.
+    # Preserve a size set on a partial annotation theme because it explicitly
+    # sizes the composition.
+    annotation_theme = cmp.annotation.theme
+    declares_own_size = (
+        not annotation_theme.complete
+        and annotation_theme.getp("figure_size") is not None
+    )
+    composition_theme = (
+        default_composition_theme + annotation_theme
+        if declares_own_size
+        else default_composition_theme
+    )
+
+    _cmp = cmp + plot_annotation(theme=composition_theme)
 
     with _test_cleanup():
         _cmp.save(filenames.result)
@@ -286,7 +304,7 @@ def inset_element_equals(inset: inset_element, name: str) -> bool:
     test_file = inspect.stack()[1][1]
     filenames = make_test_image_filenames(name, test_file)
 
-    host = inset._blank_host + theme(figure_size=(8, 6), dpi=DPI)
+    host = inset._blank_host + default_composition_theme
     with _test_cleanup():
         (host + inset).save(filenames.result, verbose=False)
 
