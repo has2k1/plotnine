@@ -251,15 +251,26 @@ def test_size_palette():
     s.palette(frac**2)
 
 
-def test_size_datetime_palette():
-    # The `range` argument must reach the area palette. Regression: the
-    # __post_init__ InitVars were declared in the wrong order, so `range`
-    # was misrouted and the palette crashed / ignored it.
-    s = scale_size_datetime(range=(2, 10))
+def test_size_datetime_arguments():
+    # Every initialisation-only argument is checked, not just `range`. They
+    # reach the scale by position, so one of them landing in the wrong
+    # parameter leaves the others correct and the mistake invisible.
+    s = scale_size_datetime(
+        date_breaks="1 year",
+        date_labels="%Y",
+        date_minor_breaks="1 month",
+        range=(2, 10),
+    )
     npt.assert_allclose(s.palette([0.0, 1.0]), [2.0, 10.0])
+    assert callable(s.breaks)
+    assert callable(s.labels)
+    assert callable(s.minor_breaks)
 
     s = scale_size_datetime()
     npt.assert_allclose(s.palette([0.0, 1.0]), [1.0, 6.0])
+    assert s.breaks is True
+    assert s.labels is True
+    assert s.minor_breaks is True
 
 
 def test_scale_identity():
