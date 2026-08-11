@@ -12,6 +12,8 @@ from plotnine import (
     element_blank,
     element_line,
     element_text,
+    facet_grid,
+    facet_wrap,
     geom_col,
     geom_path,
     geom_point,
@@ -527,3 +529,47 @@ def test_secondary_r_axis_theta_y():
         + coord_radial("y", start=-pi / 2, end=pi / 2)
     )
     assert p == "secondary_r_axis_theta_y"
+
+
+def test_facet_wrap():
+    # Every polar panel draws its full theta and radial decorations, so the
+    # gulley must hold them and the strip band must clear the arc apex.
+    p = p_point + facet_wrap("gear", nrow=2) + coord_radial(start=-1, end=1)
+    assert p == "facet_wrap"
+
+
+def test_facet_grid():
+    p = p_point + facet_grid("am", "gear") + coord_radial(start=-1, end=1)
+    assert p == "facet_grid"
+
+
+def test_theta_label_descent():
+    # "300" has no descender and "3g0" does. Both labels sit on the same gap
+    # from the arc, because the gap is measured to the glyphs rather than to
+    # the font's logical box.
+    data = pd.DataFrame({"x": [0, 120, 330], "y": [1, 2, 3]})
+    p = (
+        ggplot(data, aes("x", "y"))
+        + geom_point()
+        + scale_x_continuous(
+            breaks=[0, 120, 330],
+            labels=["0", "300", "3g0"],
+            limits=(0, 360),
+            expand=(0, 0),
+        )
+        + coord_radial()
+        + theme(
+            axis_text_y=element_blank(),
+            axis_ticks_major_r=element_blank(),
+        )
+    )
+    assert p == "theta_label_descent"
+
+
+def test_legend_beside_polar_panel():
+    p = (
+        ggplot(mtcars, aes("wt", "mpg", color="hp"))
+        + geom_point()
+        + coord_radial(start=-pi / 2, end=pi / 2)
+    )
+    assert p == "legend_beside_polar_panel"
