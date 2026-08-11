@@ -7,6 +7,7 @@
 #
 
 import argparse
+import struct
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterator
@@ -41,6 +42,20 @@ except ImportError:
         return escape(source)
 
 
+def png_size(path: Path) -> tuple[int, int] | None:
+    """
+    Read the pixel width and height of a PNG file
+
+    Returns `None` if the file is not a PNG or is truncated.
+    """
+    with path.open("rb") as f:
+        header = f.read(24)
+    if len(header) < 24 or header[:8] != b"\x89PNG\r\n\x1a\n":
+        return None
+    width, height = struct.unpack(">II", header[16:24])
+    return width, height
+
+
 @dataclass(frozen=True)
 class TestImage:
     """A single image-comparison test result"""
@@ -50,10 +65,23 @@ class TestImage:
     actual_rel: str
     expected_rel: str | None
     failed_rel: str | None
+    actual_size: tuple[int, int] | None
+    expected_size: tuple[int, int] | None
+
+    @property
+    def size_mismatch(self) -> bool:
+        """Whether the two images have different pixel dimensions"""
+        return (
+            self.actual_size is not None
+            and self.expected_size is not None
+            and self.actual_size != self.expected_size
+        )
 
     @property
     def status(self) -> str:
-        if self.failed_rel:
+        # The test framework compares pixels, so differently sized images
+        # fail without producing a diff image.
+        if self.failed_rel or self.size_mismatch:
             return "failed"
         if self.expected_rel is None:
             return "new"
@@ -97,6 +125,10 @@ def get_test_images() -> Iterator[TestImage]:
                 ),
                 failed_rel=(
                     f"{subdir.name}/{failed.name}" if failed.exists() else None
+                ),
+                actual_size=png_size(png),
+                expected_size=(
+                    png_size(expected) if expected.exists() else None
                 ),
             )
 
@@ -457,6 +489,35 @@ main {
   background: var(--img-bg);
   border: 1px solid var(--border);
   border-radius: 4px;
+}
+
+.images figcaption .dims {
+  text-transform: none;
+  letter-spacing: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Scaling both images to the column width would hide the very
+   difference this view exists to show. */
+.images-natural figure {
+  flex: 0 0 auto;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.images-natural img {
+  width: auto;
+  max-width: 100%;
+}
+
+.note {
+  margin: 0;
+  padding: 6px 10px;
+  border: 1px solid var(--red);
+  border-radius: 6px;
+  background: var(--red-soft);
+  color: var(--red);
+  font-size: 12px;
 }
 
 .test-row.view-side .images-slider,
@@ -923,7 +984,7 @@ JS = """
       const cap = fig.querySelector('figcaption');
       if (img && cap) {
         sibs.push({
-          label: cap.textContent.trim(),
+          label: fig.dataset.label || cap.textContent.trim(),
           src: img.getAttribute('src'),
         });
       }
@@ -1103,11 +1164,40 @@ HTML_TEMPLATE = """\
 """
 
 
-def _img_cell(caption: str, src: str) -> str:
+def _img_cell(
+    caption: str, src: str, size: tuple[int, int] | None = None
+) -> str:
+    dims = f' <span class="dims">{size[0]}×{size[1]}</span>' if size else ""
     return (
-        f"<figure><figcaption>{caption}</figcaption>"
+        f'<figure data-label="{caption}">'
+        f"<figcaption>{caption}{dims}</figcaption>"
         f'<a href="{src}"><img src="{src}" loading="lazy" alt=""></a>'
         f"</figure>"
+    )
+
+
+def _size_mismatch_content(test: TestImage) -> str:
+    """
+    Content for a test whose images cannot be compared pixel-by-pixel
+
+    Both images are shown at their natural size, so the difference in
+    dimensions is visible rather than scaled away.
+    """
+    assert test.actual_size is not None
+    assert test.expected_size is not None
+    aw, ah = test.actual_size
+    ew, eh = test.expected_size
+    note = (
+        f'<p class="note">Image sizes differ: actual {aw}×{ah}, '
+        f"expected {ew}×{eh}. There is no pixel diff.</p>"
+    )
+    return (
+        '<div class="content">'
+        + note
+        + '<div class="images images-side images-natural">'
+        + _img_cell("actual", test.actual_rel, test.actual_size)
+        + _img_cell("expected", test.expected_rel or "", test.expected_size)
+        + "</div></div>"
     )
 
 
@@ -1251,7 +1341,9 @@ def render_row(test: TestImage) -> str:
         )
     meta = '<div class="meta">' + "".join(parts) + "</div>"
 
-    if test.status == "failed":
+    if test.size_mismatch:
+        content = _size_mismatch_content(test)
+    elif test.status == "failed":
         content = _failed_content(test)
     elif test.status == "new":
         content = _new_content(test)
