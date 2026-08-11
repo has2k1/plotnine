@@ -142,7 +142,7 @@ class geom_ribbon(geom):
             _x,
             _min,
             _max,
-            where=where,  # type: ignore
+            where=where,
             interpolate=interpolate,
             facecolor=fill,
             edgecolor=color,
