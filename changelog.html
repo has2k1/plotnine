@@ -2,20 +2,23 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.10.15">
+<meta name="generator" content="quarto-1.11.1">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Changelog – plotnine 999.post1+g4f4b309d4</title>
+<title>Changelog – plotnine 999.post1+g20914fa01</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
 */
-code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -75,10 +78,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-11336406cf8fb0fbd1564e93963cbc50.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-d5b4e69c7e37b49c6591bcc5116dd748.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-501c63a0c90542e33c2c31d5527d310e.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-42630549ac47c4831003026c9a9c072d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -118,7 +121,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">plotnine 999.post1+g4f4b309d4</span>
+    <span class="navbar-title">plotnine 999.post1+g20914fa01</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -831,7 +834,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>Fixed theming of axis_ticks with the size parameter. (<a href="https://github.com/has2k1/plotnine/issues/703" title="Issue: #703">#703</a>)</p></li>
 <li><p>Fixed space handling around <code>axis_label</code>, <code>axis_text</code> and <code>axis_ticks</code> when the ticks are turned off.</p></li>
 <li><p>Fixed bug in <a href="./reference/geom_path.html#plotnine.geom_path"><code>geom_path</code></a> where the lineend parameter was ignored. (<a href="https://github.com/has2k1/plotnine/issues/727" title="Issue: #727">#727</a>)</p></li>
-<li><p>Fixed bug where <code class="sourceCode python">theme(legend_background<span class="op">=</span>element_blank())</code> messed up the position of the legend, instead of only removing the background.</p></li>
+<li><p>Fixed bug where <code class="sourceCode python py">theme(legend_background<span class="op">=</span>element_blank())</code> messed up the position of the legend, instead of only removing the background.</p></li>
 <li><p>Fixed using <code>facet_grid</code> with a column named <code>key</code>. (<a href="https://github.com/has2k1/plotnine/issues/734" title="Issue: #734">#734</a>)</p></li>
 <li><p>Fixed using legend when using an identity scale and reordering the breaks. (<a href="https://github.com/has2k1/plotnine/issues/735" title="Issue: #735">#735</a>)</p></li>
 <li><p>Fixed drawing the upper outline of <code>geom_ribbon</code>. (<a href="https://github.com/has2k1/plotnine/issues/728" title="Issue: #728">#728</a>)</p></li>
@@ -897,7 +900,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Set the legend position to “top”, “left” or “bottom”</li>
 <li>Use a large or multiline plot title</li>
 <li>Use a large or multiline plot caption</li>
-<li>Use <a href="./reference/facet_wrap.html#plotnine.facet_wrap"><code>facet_wrap</code></a> with <code class="sourceCode python">scales<span class="op">=</span><span class="st">"free"</span></code> <code class="sourceCode python">scales<span class="op">=</span><span class="st">"free_x"</span></code> or <code class="sourceCode python">scales<span class="op">=</span><span class="st">"free_y"</span></code></li>
+<li>Use <a href="./reference/facet_wrap.html#plotnine.facet_wrap"><code>facet_wrap</code></a> with <code class="sourceCode python py">scales<span class="op">=</span><span class="st">"free"</span></code> <code class="sourceCode python py">scales<span class="op">=</span><span class="st">"free_x"</span></code> or <code class="sourceCode python py">scales<span class="op">=</span><span class="st">"free_y"</span></code></li>
 </ol>
 <p>You can now also align the <code>plot_title</code>, <code>axis_title_x</code>, <code>axis_title_y</code> and <code>plot_caption</code> with respect to the panels. Set these to “left”, “right” &amp; “center” for the horizontal flowing text. And “top”, “right” &amp; “center” for the vertical flowing text.</p>
 <p>Also, the size of the figure is exactly determined by the theme setting. For example, this:</p>
@@ -923,7 +926,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p><a href="./reference/ggplot.html#plotnine.ggplot.__add__"><code>__add__</code></a> and <a href="./reference/ggplot.html#plotnine.ggplot.__iadd__"><code>__iadd__</code></a> now accept the same types of objects. In this change <a href="./reference/ggplot.html#plotnine.ggplot.__iadd__"><code>__iadd__</code></a> has gained the ability to accept a list of objects.</p></li>
 <li><p><a href="./reference/ggplot.html#plotnine.ggplot.draw"><code>draw</code></a> no longer accepts the argument <code>return_ggplot</code> and the return value is always a matplolib figure.</p></li>
 <li><p>Themeables <code>strip_margin</code>, <code>strip_margin_x</code> and <code>strip_margin_y</code>) have been renamed to <a href="./reference/strip_align.html#plotnine.themes.themeable.strip_align"><code>strip_align</code></a>, <a href="./reference/strip_align_x.html#plotnine.themes.themeable.strip_align_x"><code>strip_align_x</code></a> <a href="./reference/strip_align_y.html#plotnine.themes.themeable.strip_align_y"><code>strip_align_y</code></a> respectively.</p></li>
-<li><p><code>subplots_adjust</code> has been deprecated. You no longer need to use <code class="sourceCode python">theme(subplots_adjust<span class="op">=</span>{<span class="st">"right"</span>: <span class="fl">0.85</span>})</code> and the like to make space for the legend or text around the panels. In the future, this will through an error.</p></li>
+<li><p><code>subplots_adjust</code> has been deprecated. You no longer need to use <code class="sourceCode python py">theme(subplots_adjust<span class="op">=</span>{<span class="st">"right"</span>: <span class="fl">0.85</span>})</code> and the like to make space for the legend or text around the panels. In the future, this will through an error.</p></li>
 <li><p>Changed default font-family (san-serif) from DejaVu Sans to Helvetica.</p></li>
 </ul>
 </section>
@@ -1193,7 +1196,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>The <code>width</code> of the boxplot can now be set irrespective of the stat.</p></li>
 <li><p>The mid-point color of <a href="./reference/scale_color_distiller.html#plotnine.scale_color_distiller"><code>scale_color_distiller</code></a> now matches that of the trained data.</p></li>
 <li><p>The way in which layers are created has been refactored to give packages that that extend plotnine more flexibility in manipulating the layers.</p></li>
-<li><p>You can now specify one sided limits for coordinates. e.g. <code class="sourceCode python">coord_cartesian(limits<span class="op">=</span>(<span class="va">None</span>, <span class="dv">10</span>))</code>.</p></li>
+<li><p>You can now specify one sided limits for coordinates. e.g. <code class="sourceCode python py">coord_cartesian(limits<span class="op">=</span>(<span class="va">None</span>, <span class="dv">10</span>))</code>.</p></li>
 <li><p>All the themeables have been lifted into the definition of <a href="./reference/theme.html#plotnine.theme"><code>theme</code></a> so they can be suggested autocomplete.</p></li>
 </ul>
 </section>
@@ -1341,7 +1344,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>Fixed bug where facetting led to a reordering of the data. This would manifest as a bug for <code>geoms</code> where order was important. (<a href="https://github.com/has2k1/plotnine/issues/26" title="Issue: #26">#26</a>)</p></li>
 <li><p>Fix bug where facetting by a column whose name (eg. <code>class</code>) is a python keyword resulted in an exception. (<a href="https://github.com/has2k1/plotnine/issues/28" title="Issue: #28">#28</a>)</p></li>
 <li><p>Fix bug where y-axis scaling was calculated from the <code>xlim</code> argument.</p></li>
-<li><p>Fix bug where initialising geoms from stats, and positions from geoms, when passed as classes (e.g.&nbsp;<code class="sourceCode python">stat_smooth(geom<span class="op">=</span>geom_point)</code>, would fail.</p></li>
+<li><p>Fix bug where initialising geoms from stats, and positions from geoms, when passed as classes (e.g.&nbsp;<code class="sourceCode python py">stat_smooth(geom<span class="op">=</span>geom_point)</code>, would fail.</p></li>
 <li><p>Fixed bug in <a href="./reference/ggplot.html#plotnine.ggplot.save"><code>save</code></a> where specifying the <code>width</code> and <code>height</code> would mess up the <code>strip_text</code> and <code>spacing</code> for the facetted plots. (<a href="https://github.com/has2k1/plotnine/issues/44" title="Issue: #44">#44</a>).</p></li>
 <li><p>Fixed bug in <a href="./reference/geom_abline.html#plotnine.geom_abline"><code>geom_abline</code></a>, <a href="./reference/geom_hline.html#plotnine.geom_hline"><code>geom_hline</code></a> and <a href="./reference/geom_vline.html#plotnine.geom_vline"><code>geom_vline</code></a> where facetting on a column that is not mapped to an aesthetic fails. (<a href="https://github.com/has2k1/plotnine/issues/48" title="Issue: #48">#48</a>)</p></li>
 <li><p>Fixed bug in <a href="./reference/geom_text.html#plotnine.geom_text"><code>geom_text</code></a>, the <code>fontstyle</code> parameter was being ignored.</p></li>
@@ -1358,7 +1361,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>Fixed bug where manually setting the aesthetic <code>fill=None</code> or <code>fill="None"</code> could lead to a black fill instead of an empty fill.</p></li>
 <li><p>Fixed bug where computed aesthetics could not be used in larger statements. (<a href="https://github.com/has2k1/plotnine/issues/7" title="Issue: #7">#7</a>)</p></li>
 <li><p>Fixed bug in <a href="./reference/stat_summary.html#plotnine.stat_summary"><code>stat_summary</code></a> where the you got an exception for some types of the <code>x</code> aesthetic values.</p></li>
-<li><p>Fixed bug where <code class="sourceCode python">ggplot(data<span class="op">=</span>df)</code> resulted in an exception.</p></li>
+<li><p>Fixed bug where <code class="sourceCode python py">ggplot(data<span class="op">=</span>df)</code> resulted in an exception.</p></li>
 <li><p>Fixed missing axis ticks and labels for <a href="./reference/facet_wrap.html#plotnine.facet_wrap"><code>facet_wrap</code></a> when the scales are allowed to vary (e.g <code>scales="free"</code>) between the panels.</p></li>
 <li><p>Fixed bug in <a href="./reference/stat_density.html#plotnine.stat_density"><code>stat_density</code></a> where changing the x limits lead to an exception. (<a href="https://github.com/has2k1/plotnine/issues/22" title="Issue: #22">#22</a>)</p></li>
 </ul>
