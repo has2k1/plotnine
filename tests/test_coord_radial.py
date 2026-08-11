@@ -9,6 +9,8 @@ from numpy.testing import assert_allclose
 from plotnine import (
     aes,
     coord_radial,
+    element_blank,
+    element_line,
     geom_col,
     geom_path,
     geom_point,
@@ -17,11 +19,13 @@ from plotnine import (
     geom_text,
     ggplot,
     scale_y_continuous,
+    theme,
 )
 from plotnine.coords.coord_radial import polar_bbox
 from plotnine.data import mtcars
 from plotnine.exceptions import PlotnineWarning
 from plotnine.iapi import labels_view
+from plotnine.scales import sec_axis
 
 p_point = ggplot(mtcars, aes("wt", "mpg")) + geom_point()
 p_col = (
@@ -312,3 +316,73 @@ def test_donut_chart():
         + coord_radial("y", inner_radius=0.4)
     )
     assert p == "donut_chart"
+
+
+def test_default_theme_hides_boundaries():
+    # theme_gray blanks axis_line_x and axis_line_y, and axis_line_theta and
+    # axis_line_r nest under them, so a default plot outlines neither the
+    # wedge nor the hole without any theme() call.
+    p = p_point + coord_radial(start=-0.4 * pi, end=0.4 * pi, inner_radius=0.3)
+    assert p == "default_theme_hides_boundaries"
+
+
+def test_axis_line_styles_polar_spine():
+    # panel_border no longer owns the outer circle. axis_line does, and
+    # unlike panel_border it can style it rather than only hide it.
+    p = (
+        p_col
+        + coord_radial()
+        + theme(
+            panel_border=element_blank(),
+            axis_line=element_line(color="red", size=2),
+        )
+    )
+    assert p == "axis_line_styles_polar_spine"
+
+
+def test_axis_line_theta_skips_donut_hole():
+    # No theta axis lives on the inner boundary, so the themeable that
+    # covers the theta line draws the outer arc only.
+    p = (
+        p_col
+        + coord_radial(start=-pi / 2, end=pi / 2, inner_radius=0.3)
+        + theme(axis_line_theta=element_line(color="red", size=2))
+    )
+    assert p == "axis_line_theta_skips_donut_hole"
+
+
+def test_axis_line_r_start_on_full_circle():
+    # A full circle's start and end spokes coincide, so matplotlib hides
+    # them by default. Theming axis_line_r_start must show it anyway.
+    p = (
+        p_col
+        + coord_radial()
+        + theme(axis_line_r_start=element_line(color="blue", size=2))
+    )
+    assert p == "axis_line_r_start_on_full_circle"
+
+
+def test_axis_line_r_end_on_reversed_arc():
+    # A spoke is themeable only where a radial axis lives, and reverse=
+    # "theta" moves the only one to the end spoke. So axis_line_r_end
+    # styles that spoke and the start spoke stays bare.
+    p = (
+        p_col
+        + coord_radial(
+            start=-pi / 2, end=pi / 2, inner_radius=0.1, reverse="theta"
+        )
+        + theme(axis_line_r_end=element_line(color="blue", size=2))
+    )
+    assert p == "axis_line_r_end_on_reversed_arc"
+
+
+def test_axis_line_r_reaches_both_spokes():
+    # A secondary axis puts a radial axis on each spoke, so the parent
+    # themeable styles both leaves at once.
+    p = (
+        p_col
+        + scale_y_continuous(sec_axis=sec_axis(lambda x: x * 2))
+        + coord_radial(start=-pi / 2, end=pi / 2, inner_radius=0.1)
+        + theme(axis_line_r=element_line(color="blue", size=2))
+    )
+    assert p == "axis_line_r_reaches_both_spokes"
