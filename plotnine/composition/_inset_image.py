@@ -123,7 +123,7 @@ class _InsetImage:
             self.figure,
             anchor=self._anchor,
         )
-        self._frac_bbox.bounds = (l, b, r - l, t - b)  # pyright: ignore[reportAttributeAccessIssue]
+        self._frac_bbox.bounds = (l, b, r - l, t - b)
         self.patch.set_bounds(left, bottom, right - left, top - bottom)
 
         # The layout engine has finalised the bbox, so its device-pixel
