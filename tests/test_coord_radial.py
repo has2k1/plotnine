@@ -11,6 +11,7 @@ from plotnine import (
     coord_radial,
     element_blank,
     element_line,
+    element_text,
     geom_col,
     geom_path,
     geom_point,
@@ -26,6 +27,7 @@ from plotnine.data import mtcars
 from plotnine.exceptions import PlotnineWarning
 from plotnine.iapi import labels_view
 from plotnine.scales import sec_axis
+from plotnine.themes.elements import margin
 
 p_point = ggplot(mtcars, aes("wt", "mpg")) + geom_point()
 p_col = (
@@ -37,6 +39,11 @@ path_data = pd.DataFrame({"x": range(6), "y": [3, 8, 5, 9, 4, 7]})
 
 pie_data = pd.DataFrame(
     {"one": ["a"] * 4, "value": [3, 5, 2, 6], "slice": list("wxyz")}
+)
+
+# A wedge with a hole shows both sets of tick marks and labels clearly
+p_wedge = p_point + coord_radial(
+    start=0.5 * pi, end=-0.5 * pi, inner_radius=0.3
 )
 
 
@@ -386,3 +393,60 @@ def test_axis_line_r_reaches_both_spokes():
         + theme(axis_line_r=element_line(color="blue", size=2))
     )
     assert p == "axis_line_r_reaches_both_spokes"
+
+
+def test_axis_text_theming():
+    # axis_text used to be a no-op on a polar panel. axis_text_theta_* and
+    # axis_text_r_* nest under axis_text_x/y, so a plain axis_text= reaches
+    # both the theta and the r labels.
+    p = p_wedge + theme(axis_text=element_text(color="red", size=13))
+    assert p == "axis_text_theming"
+
+
+def test_axis_text_theta_blank():
+    p = p_wedge + theme(axis_text_theta=element_blank())
+    assert p == "axis_text_theta_blank"
+
+
+def test_axis_text_theta_margin():
+    # The largest margin side sets the gap between a theta label and the
+    # arc, whichever side it is.
+    p = p_wedge + theme(axis_text_theta=element_text(margin=margin(r=12)))
+    assert p == "axis_text_theta_margin"
+
+
+def test_axis_ticks_theming():
+    # As with axis_text, a plain axis_ticks= reaches both sets of marks, and
+    # axis_ticks_minor= overrides it on the minor ones. theme_gray blanks
+    # minor marks globally, so they appear only once overridden. Colouring
+    # the two differently shows both reaching the arc and the spoke.
+    p = p_wedge + theme(
+        axis_ticks=element_line(color="blue", size=2),
+        axis_ticks_minor=element_line(color="green", size=1),
+    )
+    assert p == "axis_ticks_theming"
+
+
+def test_axis_ticks_length_per_axis():
+    # Length is themed per axis, so the arc grows long marks while the spoke
+    # is left with none. A length of 0 renders no mark rather than failing.
+    p = p_wedge + theme(
+        axis_ticks_length_major_theta=10,
+        axis_ticks_length_major_r=0,
+    )
+    assert p == "axis_ticks_length_per_axis"
+
+
+def test_axis_ticks_theta_blank_keeps_label_gap():
+    # A blank tick contributes no length, so the label keeps its plain gap
+    # to the arc rather than being pushed out by the themed length.
+    p = p_wedge + theme(
+        axis_ticks_major_theta=element_blank(),
+        axis_ticks_length_major_theta=20,
+    )
+    assert p == "axis_ticks_theta_blank_keeps_label_gap"
+
+
+def test_panel_grid_theming():
+    p = p_wedge + theme(panel_grid=element_line(color="white", size=1.5))
+    assert p == "panel_grid_theming"
