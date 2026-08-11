@@ -17,6 +17,8 @@ from plotnine.data import mtcars
 from plotnine.exceptions import PlotnineWarning
 from plotnine.iapi import labels_view
 
+p_point = ggplot(mtcars, aes("wt", "mpg")) + geom_point()
+
 
 def test_arc_range_normalizes_end_forward():
     assert coord_radial(start=1, end=4)._arc_range == (1, 4)
@@ -113,3 +115,58 @@ def test_full_circle_position_right_no_warning():
     with warnings.catch_warnings():
         warnings.simplefilter("error", PlotnineWarning)
         p.draw_test()  # pyright: ignore[reportAttributeAccessIssue]
+
+
+def test_full_circle():
+    p = p_point + coord_radial()
+    assert p == "full_circle"
+
+
+def test_half_disc():
+    p = p_point + coord_radial(start=-pi / 2, end=pi / 2)
+    assert p == "half_disc"
+
+
+def test_quarter():
+    p = p_point + coord_radial(start=-pi / 2, end=0)
+    assert p == "quarter"
+
+
+def test_thin_wedge():
+    p = p_point + coord_radial(start=-pi / 2, end=-pi / 3)
+    assert p == "thin_wedge"
+
+
+def test_sliver():
+    p = p_point + coord_radial(start=0, end=0.25)
+    assert p == "sliver"
+
+
+def test_arc_wraps_past_twelve():
+    # end < start, so the end normalises forward and the arc sweeps through
+    # 12 o'clock rather than backwards to meet the start.
+    p = p_point + coord_radial(start=pi, end=pi / 2)
+    assert p == "arc_wraps_past_twelve"
+
+
+def test_rotated_full_circle():
+    # The theta labels and the labelling r spoke both follow `start`.
+    p = p_point + coord_radial(start=pi / 4)
+    assert p == "rotated_full_circle"
+
+
+def test_donut_full_circle():
+    p = p_point + coord_radial(inner_radius=0.3)
+    assert p == "donut_full_circle"
+
+
+def test_donut_half_disc():
+    p = p_point + coord_radial(start=-pi / 2, end=pi / 2, inner_radius=0.3)
+    assert p == "donut_half_disc"
+
+
+def test_donut_narrow_arc():
+    # The inner ring must sit at inner_radius * outer_radius. When it did
+    # not, the panel aspect mismatched the wedge and the sector under-filled.
+    p = p_point + coord_radial(start=pi / 4, end=3 * pi / 4, inner_radius=0.3)
+    assert p == "donut_narrow_arc"
