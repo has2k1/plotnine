@@ -136,7 +136,7 @@ class TestLayout:
         p = (
             ggplot()
             + geom_blank()
-            + theme(plot_margin=0.025, figure_size=(4, 3))
+            + theme(plot_margin=0.025, figure_size=(8, 4))
         )
         assert p == "plot_margin_aspect_ratio"
 
