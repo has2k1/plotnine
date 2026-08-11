@@ -8,6 +8,7 @@ import numpy as np
 
 from .._utils import OPPOSITE_SIDE
 from ..iapi import panel_ranges
+from ..mapping.aes import POSITION_AESTHETICS
 
 if typing.TYPE_CHECKING:
     from typing import Any, Sequence
@@ -408,39 +409,42 @@ def interp(start: int, end: int, n: int) -> FloatArray:
 
 def munch_data(data: pd.DataFrame, dist: FloatArray) -> pd.DataFrame:
     """
-    Breakup path into small segments
+    Subdivide path segments and interpolate their position aesthetics
     """
-    x, y = data["x"], data["y"]
     segment_length = 0.01
 
-    # How many endpoints for each old segment,
-    # not counting the last one
+    # Count new points per segment, excluding the final endpoint.
     dist[np.isnan(dist)] = 1
     extra = np.maximum(np.floor(dist / segment_length), 1)
     extra = extra.astype(int)
 
-    # Generate extra pieces for x and y values
-    # The final point must be manually inserted at the end
-    x = [interp(start, end, n) for start, end, n in zip(x[:-1], x[1:], extra)]
-    y = [interp(start, end, n) for start, end, n in zip(y[:-1], y[1:], extra)]
-    x.append(data["x"].iloc[-1])
-    y.append(data["y"].iloc[-1])
-    x = np.hstack(x)
-    y = np.hstack(y)
+    # Every position aesthetic defines path geometry. Replicating `ymin` and
+    # `ymax`, for example, would turn curved ribbon edges into steps.
+    position_columns = [c for c in data.columns if c in POSITION_AESTHETICS]
 
-    # Replicate other aesthetics: defined by start point
-    # but also must include final point
+    # Append the final endpoint after interpolating each segment.
+    interpolated = {}
+    for col in position_columns:
+        values = data[col].to_numpy()
+        pieces = [
+            interp(start, end, n)
+            for start, end, n in zip(values[:-1], values[1:], extra)
+        ]
+        pieces.append(values[-1:])
+        interpolated[col] = np.hstack(pieces)
+
+    # Hold non-position aesthetics at each segment's starting value, then
+    # append the final observation.
     idx = np.hstack(
         [
             np.repeat(data.index[:-1], extra),
             len(data) - 1,
-            # data.index[-1] # TODO: Maybe not
         ]
     )
 
-    munched = data.loc[idx, list(data.columns.difference(["x", "y"]))]
-    munched["x"] = x
-    munched["y"] = y
+    munched = data.loc[idx, list(data.columns.difference(position_columns))]
+    for col, values in interpolated.items():
+        munched[col] = values
     munched.reset_index(drop=True, inplace=True)
 
     return munched
