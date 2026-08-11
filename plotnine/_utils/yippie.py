@@ -40,7 +40,6 @@ class _Plot:
                 title=color.title(),
             )
             + theme(
-                figure_size=(8, 6),
                 text=element_text(color="black", size=11),
                 panel_background=element_rect(fill=color, size=1),
                 plot_background=element_rect(fill=color, alpha=0.2),
