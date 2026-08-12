@@ -359,6 +359,18 @@ def test_axis_ticks_theta_blank_keeps_label_gap():
     assert p == "axis_ticks_theta_blank_keeps_label_gap"
 
 
+def test_axis_text_r_blank_hides_radial_labels():
+    # `axis_text_r` hides both radial axes without hiding the theta axis. On a
+    # full circle, the primary and secondary radial labels share one spoke.
+    p = (
+        p_point
+        + scale_y_continuous(sec_axis=sec_axis(lambda x: x * 2))
+        + coord_radial()
+        + theme(axis_text_r=element_blank())
+    )
+    assert p == "axis_text_r_blank_hides_radial_labels"
+
+
 def test_scale_positions_move_only_titles():
     # On a polar panel a scale's position moves its axis title and nothing
     # else. Moving both at once shows each title on its new side while the

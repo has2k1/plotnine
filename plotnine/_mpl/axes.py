@@ -6,6 +6,7 @@ from matplotlib import cbook
 from matplotlib.axes import Axes
 from matplotlib.axis import XAxis, YAxis
 from matplotlib.projections import register_projection
+from matplotlib.projections.polar import PolarAxes
 
 if TYPE_CHECKING:
     from plotnine.typing import PolarSide, Side
@@ -154,6 +155,11 @@ def axis_at(ax: Axes, side: Side | PolarSide) -> XAxis | YAxis | None:
     occupy through `get_tick_params()`, so plotnine tracks it
     explicitly there.
 
+    Cartesian sides never resolve on polar axes. Polar tick flags describe
+    theta and r placement rather than box edges. For example, a full-circle
+    r axis reports `left=True` even though it does not occupy the left edge
+    of a Cartesian panel.
+
     Parameters
     ----------
     ax :
@@ -169,6 +175,8 @@ def axis_at(ax: Axes, side: Side | PolarSide) -> XAxis | YAxis | None:
         side nothing occupies).
     """
     if side in ("top", "bottom", "left", "right"):
+        if isinstance(ax, PolarAxes):
+            return None
         candidates = (
             (ax.xaxis, getattr(ax, "sec_xaxis", None))
             if side in ("top", "bottom")
