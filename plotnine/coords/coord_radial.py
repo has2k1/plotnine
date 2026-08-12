@@ -133,6 +133,10 @@ class coord_radial(coord):
     *is* the theta axis, they are styled through the theme: hide them with
     `theme(axis_text_x=element_blank())` and adjust the gap to the outer
     circle through the `axis_text_x` margin.
+
+    A secondary axis on the theta scale is drawn around the inner rim, with
+    its labels inside the hole. It requires `inner_radius > 0`; otherwise,
+    `coord_radial` warns and ignores it.
     """
 
     is_linear = False
@@ -493,25 +497,17 @@ class coord_radial(coord):
         inner radius, and radial-axis placement using `panel_params` so
         faceted panels with free scales each get their own radial range.
 
-        The primary theta axis always renders on the outside. The primary r
-        axis sits on the spoke where the data begins (`_r_axis_side`): the
-        start spoke normally, the end spoke when `reverse="theta"` runs a
-        partial arc the other way. Neither follows `scale.position`, which
-        moves only the axis title. The fixed choice is recorded on
-        `p9RadialAxes.axis_at_side` so theming can find it.
+        The primary theta axis uses the outer rim and its secondary axis uses
+        the inner rim. The primary r axis sits on the spoke where the data
+        begins: normally the start spoke, or the end spoke when
+        `reverse="theta"` reverses a partial arc. `scale.position` moves only
+        an axis title, not the axis itself.
         """
         view = cast("radial_panel_view", panel_params)
         radial_ax = cast("p9RadialAxes", ax)
 
         # plotnine sweeps clockwise, which is matplotlib's -1.
         radial_ax.set_theta_direction(-1)
-
-        if view.x.sec is not None:
-            warn(
-                f"{self.__class__.__name__}() does not support a secondary "
-                "theta axis.",
-                PlotnineWarning,
-            )
 
         self._setup_ticks_labels(ax, view)
 
@@ -523,6 +519,15 @@ class coord_radial(coord):
 
         radial_ax.axis_at_side["theta_outside"] = radial_ax.thetaaxis
         radial_ax.axis_at_side[self._r_axis_side] = radial_ax.raxis
+
+        if (sec := view.x.sec) is not None:
+            sec_thetaaxis = radial_ax.add_sec_thetaaxis()
+            _set_fixed_ticks(sec_thetaaxis, sec.breaks, sec.labels)
+            # Matplotlib places the `bottom` tick and label pair inside the
+            # circle.
+            _activate_axis(sec_thetaaxis, "bottom", True)
+            radial_ax.set_spine_visible("inner", True)
+            radial_ax.axis_at_side["theta_inside"] = sec_thetaaxis
 
         if (sec := view.y.sec) is not None:
             sec_raxis = radial_ax.add_sec_raxis()

@@ -11,6 +11,10 @@ title: Changelog
   transformation of the primary axis with [](:class:`~plotnine.sec_axis`), or as a
   mirror of the primary axis with [](:func:`~plotnine.dup_axis`).
 
+- [](:class:`~plotnine.coord_radial`) can now draw an angular scale's secondary
+  axis around the inner rim. Add a [](:class:`~plotnine.sec_axis`) to the scale
+  and set `inner_radius > 0`.
+
 - Added [](:class:`~plotnine.composition.plot_layout`) with which you can customise the
   layout of plots in composition.
 
