@@ -1,13 +1,13 @@
 from __future__ import annotations
 
-import typing
+from typing import TYPE_CHECKING, cast
 
 import pandas as pd
 
 from ..iapi import labels_view, panel_ranges, panel_view
 from .coord_cartesian import coord_cartesian
 
-if typing.TYPE_CHECKING:
+if TYPE_CHECKING:
     from typing import Sequence, TypeVar
 
     from plotnine.scales.scale import scale
@@ -63,7 +63,7 @@ class coord_flip(coord_cartesian):
         panel_params.y.position = _FLIP_POSITION[panel_params.y.position]
         for sv in (panel_params.x, panel_params.y):
             if sv.sec is not None:
-                sv.sec.position = _FLIP_POSITION[sv.sec.position]
+                sv.sec.position = _FLIP_POSITION[cast("Side", sv.sec.position)]
         return panel_params
 
     def setup_layout(self, layout: pd.DataFrame) -> pd.DataFrame:
