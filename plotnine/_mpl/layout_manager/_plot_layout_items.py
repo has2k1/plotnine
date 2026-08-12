@@ -917,13 +917,11 @@ class PolarPlotLayoutItems(PlotLayoutItems):
     """
     The space around a polar panel that its axes need
 
-    A theta axis wraps the full circle and an r axis runs along one
-    spoke, so neither has a single side to measure a tick-label bounding
-    box from (`axis_at` never resolves one for either). The text
-    clearance is therefore a fixed estimate applied to every side alike,
-    and the tick-label protrusions are zero: the labels fan out along the
-    arc within a panel already sized to the tight sector, so their reach
-    past a Cartesian edge does not call for extra margin.
+    A theta axis follows an arc and an r axis follows a spoke, so neither
+    occupies a Cartesian side with a measurable tick-label bounding box.
+    Tick-label protrusions are therefore zero, and every side receives the
+    same fixed text clearance. The panel already fits the tight sector. Its
+    labels fan around the arc instead of extending from one box edge.
 
     The tick-mark clearance is zero: polar ticks point inward from the
     arc, so a mark never reaches past the panel edge whatever its length.
@@ -970,14 +968,12 @@ class PolarPlotLayoutItems(PlotLayoutItems):
 
 def _polar_text_height_x(theme: theme, side: Side) -> float:
     """
-    Estimated figure-height of an `axis_text_x_<side>` label on a polar panel
+    Estimate an `axis_text_x_<side>` label's height in figure space
 
-    Not measured from rendered artists: a theta axis wraps the full
-    circle, so `axis_at` never resolves a side to measure a tick-label
-    bounding box from. The font size stands in for the label height, the
-    same rough idea `_strip_switch_pad` uses to turn a themed point value
-    into a figure fraction. Bare like its Cartesian counterpart
-    `axis_text_x_max_height`: the caller adds the tick-label margin.
+    A theta axis does not occupy a Cartesian side, so it has no side-specific
+    tick-label bounding box to measure. Use the font size as the label height,
+    following the estimate used for strip padding. As with
+    `axis_text_x_max_height`, the caller adds the tick-label margin.
     """
     name = f"axis_text_x_{side}"
     if theme.T.is_blank(name):

@@ -16,6 +16,7 @@ from typing import TYPE_CHECKING
 from warnings import warn
 
 import numpy as np
+from matplotlib.projections.polar import PolarAxes
 
 from .._mpl.axes import axis_at
 from .._utils import MARGIN_SIDE, has_alpha_channel, side_artists, to_rgba
@@ -2487,7 +2488,7 @@ class axis_ticks_length_major_x(themeable):
 
     def apply_ax(self, ax: Axes):
         super().apply_ax(ax)
-        if getattr(ax, "axis_at_side", None) is not None:
+        if isinstance(ax, PolarAxes):
             return
         for axis in (ax.xaxis, getattr(ax, "sec_xaxis", None)):
             if axis is None:
@@ -2530,7 +2531,7 @@ class axis_ticks_length_major_y(themeable):
 
     def apply_ax(self, ax: Axes):
         super().apply_ax(ax)
-        if getattr(ax, "axis_at_side", None) is not None:
+        if isinstance(ax, PolarAxes):
             return
         for axis in (ax.yaxis, getattr(ax, "sec_yaxis", None)):
             if axis is None:
@@ -2651,7 +2652,7 @@ class axis_ticks_length_minor_x(themeable):
 
     def apply_ax(self, ax: Axes):
         super().apply_ax(ax)
-        if getattr(ax, "axis_at_side", None) is not None:
+        if isinstance(ax, PolarAxes):
             return
         value: float | complex = self.properties["value"]
 
@@ -2682,7 +2683,7 @@ class axis_ticks_length_minor_y(themeable):
 
     def apply_ax(self, ax: Axes):
         super().apply_ax(ax)
-        if getattr(ax, "axis_at_side", None) is not None:
+        if isinstance(ax, PolarAxes):
             return
         value: float | complex = self.properties["value"]
 
