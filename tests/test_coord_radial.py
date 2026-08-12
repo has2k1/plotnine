@@ -26,7 +26,7 @@ from plotnine.coords.coord_radial import polar_bbox
 from plotnine.data import mtcars
 from plotnine.exceptions import PlotnineWarning
 from plotnine.iapi import labels_view
-from plotnine.scales import scale_x_continuous, sec_axis
+from plotnine.scales import dup_axis, scale_x_continuous, sec_axis
 from plotnine.themes.elements import margin
 
 p_point = ggplot(mtcars, aes("wt", "mpg")) + geom_point()
@@ -425,6 +425,58 @@ def test_secondary_theta_axis_donut():
         + coord_radial(inner_radius=0.45)
     )
     assert p == "secondary_theta_axis_donut"
+
+
+def test_secondary_theta_axis_partial_arc():
+    # Both theta axes omit breaks outside the visible arc.
+    p = (
+        p_point
+        + scale_x_continuous(sec_axis=sec_axis(lambda x: x * 2))
+        + coord_radial(start=-pi / 2, end=pi / 2, inner_radius=0.4)
+    )
+    assert p == "secondary_theta_axis_partial_arc"
+
+
+def test_secondary_theta_axis_theta_y():
+    # With `theta="y"`, the y scale supplies both angular axes.
+    p = (
+        p_point
+        + scale_y_continuous(
+            sec_axis=sec_axis(lambda x: x * 0.354006, name="km/L")
+        )
+        + coord_radial("y", start=-pi / 2, end=pi / 2, inner_radius=0.4)
+    )
+    assert p == "secondary_theta_axis_theta_y"
+
+
+def test_secondary_theta_axis_reverse_theta():
+    # Reversing theta maps both angular axes in the opposite direction.
+    p = (
+        p_point
+        + scale_x_continuous(sec_axis=dup_axis())
+        + coord_radial(inner_radius=0.4, reverse="theta")
+    )
+    assert p == "secondary_theta_axis_reverse_theta"
+
+
+def test_theming_reaches_the_inside_theta_axis():
+    # General axis themeables style every axis, while inside variants override
+    # the secondary theta axis. The shared theta tick length makes both sets
+    # cross their spines.
+    p = (
+        p_point
+        + scale_x_continuous(sec_axis=dup_axis())
+        + coord_radial(inner_radius=0.45)
+        + theme(
+            axis_text=element_text(color="red", size=10),
+            axis_text_theta_inside=element_text(size=14, margin=margin(b=10)),
+            axis_ticks=element_line(color="blue", size=2),
+            axis_ticks_major_theta_inside=element_line(color="green"),
+            axis_ticks_length_major_theta=12,
+            axis_line_theta_inside=element_line(color="purple", size=2),
+        )
+    )
+    assert p == "theming_reaches_the_inside_theta_axis"
 
 
 def test_facet_wrap():
