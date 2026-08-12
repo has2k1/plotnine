@@ -14,11 +14,19 @@ from ..iapi import panel_ranges, radial_panel_view
 from .coord import _activate_axis, _set_fixed_ticks, coord, dist_euclidean
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
+
     import numpy.typing as npt
     import pandas as pd
     from matplotlib.axes import Axes
 
-    from plotnine.iapi import labels_view, layout_details, panel_view
+    from plotnine.iapi import (
+        labels_view,
+        layout_details,
+        panel_view,
+        scale_position_view,
+        sec_axis_view,
+    )
     from plotnine.scales.scale import scale
     from plotnine.typing import FloatArrayLike, FloatSeries, Side
 
@@ -200,14 +208,35 @@ class coord_radial(coord):
                 self._to_radians(theta.minor_breaks, theta.range)
             ),
             labels=list(theta.labels),
+            sec=self._theta_sec_view(theta),
         )
         y = replace(r)
 
         # Partial arcs keep only breaks inside their visible bounds.
         if not self._is_full_circle:
             arc_lo, arc_hi = sorted(arc_range)
+
+            def on_arc(values: Sequence[float]) -> list[bool]:
+                return [arc_lo <= value <= arc_hi for value in values]
+
             x_breaks = cast("list[float]", x.breaks)
-            keep = [arc_lo <= value <= arc_hi for value in x_breaks]
+            keep = on_arc(x_breaks)
+            sec = x.sec
+            if sec is not None:
+                sec_keep = on_arc(sec.breaks)
+                sec = replace(
+                    sec,
+                    breaks=[
+                        value
+                        for value, include in zip(sec.breaks, sec_keep)
+                        if include
+                    ],
+                    labels=[
+                        label
+                        for label, include in zip(sec.labels, sec_keep)
+                        if include
+                    ],
+                )
             x = replace(
                 x,
                 breaks=[
@@ -221,6 +250,7 @@ class coord_radial(coord):
                 labels=[
                     label for label, include in zip(x.labels, keep) if include
                 ],
+                sec=sec,
             )
 
         # Keep r in trained scale space. For radial reversal, make y match
@@ -259,8 +289,9 @@ class coord_radial(coord):
             y = replace(y, position=_FLIP_POSITION[y.position])
             for sv in (x, y):
                 if sv.sec:
-                    # A secondary theta axis is rejected in setup_ax, so a
-                    # secondary position here is always cartesian.
+                    # A secondary axis takes the side opposite its primary,
+                    # which is always a cartesian side: on a polar panel the
+                    # position moves only the title.
                     pos = cast("Side", sv.sec.position)
                     sv.sec.position = _FLIP_POSITION[pos]
 
@@ -346,6 +377,30 @@ class coord_radial(coord):
         if self.reverse in ("theta", "thetar"):
             norm = 1 - norm
         return list(arc_start + norm * (arc_end - arc_start))
+
+    def _theta_sec_view(
+        self, theta: scale_position_view
+    ) -> sec_axis_view | None:
+        """
+        Secondary theta axis of a panel, with its breaks in radians
+
+        The axis is drawn on the rim of the inner hole, so a panel without a
+        hole has nowhere to put it and drops it. Dropping it here also drops
+        its title, which is built from this view.
+        """
+        if (sec := theta.sec) is None:
+            return None
+
+        if not self.inner_radius:
+            warn(
+                f"{self.__class__.__name__}() draws a secondary theta axis "
+                "on the rim of the inner hole, so it needs inner_radius > 0. "
+                "Ignoring it.",
+                PlotnineWarning,
+            )
+            return None
+
+        return replace(sec, breaks=self._to_radians(sec.breaks, theta.range))
 
     def transform(
         self,
