@@ -118,12 +118,16 @@ class p9RadialAxes(PolarAxes):
     _shared_axes = {
         **PolarAxes._shared_axes,  # pyright: ignore[reportAttributeAccessIssue]
         "sec_r": cbook.Grouper(),
+        "sec_theta": cbook.Grouper(),
     }
 
     _axis_at_side: dict[PolarSide, ThetaAxis | RadialAxis] | None = None
 
     # Secondary r-axis drawn at the end spoke; None until first requested.
     _sec_raxis: p9RadialAxis | None = None
+
+    # Secondary theta axis around the inner rim, or `None` before creation.
+    _sec_thetaaxis: p9ThetaAxis | None = None
 
     # Whether the r-axis ticks already keep their themed styling across
     # matplotlib's tick resets. Guards `lock_raxis_tick_style` so repeated
@@ -323,6 +327,31 @@ class p9RadialAxes(PolarAxes):
         axis.set_clip_on(False)
         axis.grid(visible=False)
         self._sec_raxis = axis
+        return axis
+
+    def add_sec_thetaaxis(self) -> p9ThetaAxis:
+        """
+        Return the secondary theta axis, creating it when needed
+
+        A new axis has no ticks, labels, or grid lines.
+
+        Returns
+        -------
+        :
+            The secondary theta axis.
+        """
+        if self._sec_thetaaxis:
+            return self._sec_thetaaxis
+
+        axis = p9ThetaAxis(self, clear=True)
+        # Matplotlib resolves the axis name through `_axis_map`; the signal
+        # keeps its view limits synchronised with the polar axes.
+        self._axis_map["sec_theta"] = axis
+        register_lim_changed_signal(self, "sec_theta")
+        self.add_artist(axis)
+        axis.set_clip_on(False)
+        axis.grid(visible=False)
+        self._sec_thetaaxis = axis
         return axis
 
     def set_spine_visible(self, name: str, visible: bool) -> None:

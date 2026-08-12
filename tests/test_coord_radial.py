@@ -414,6 +414,19 @@ def test_secondary_r_axis_theta_y():
     assert p == "secondary_r_axis_theta_y"
 
 
+def test_secondary_theta_axis_donut():
+    # The ticks and labels move to the inner rim, while the title retains the
+    # secondary scale's position above the panel.
+    p = (
+        p_point
+        + scale_x_continuous(
+            sec_axis=sec_axis(lambda x: x * 1000, name="grams")
+        )
+        + coord_radial(inner_radius=0.45)
+    )
+    assert p == "secondary_theta_axis_donut"
+
+
 def test_facet_wrap():
     # Every polar panel draws its full theta and radial decorations, so the
     # gulley must hold them and the strip band must clear the arc apex.
