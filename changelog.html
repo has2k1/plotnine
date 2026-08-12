@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Changelog – plotnine 999.post1+geae2e41b7</title>
+<title>Changelog – plotnine 999.post1+gebf5cb3ee</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -121,7 +121,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">plotnine 999.post1+geae2e41b7</span>
+    <span class="navbar-title">plotnine 999.post1+gebf5cb3ee</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -411,6 +411,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p><a href="./reference/scale_size_datetime.html#plotnine.scale_size_datetime"><code>scale_size_datetime</code></a> now honours its <code>date_breaks</code>, <code>date_labels</code> and <code>date_minor_breaks</code> arguments, which it previously ignored.</p></li>
 <li><p>In a non-linear coordinate system (e.g.&nbsp;<a href="./reference/coord_trans.html#plotnine.coord_trans"><code>coord_trans</code></a>), the closing edge of a polygon is now curved along with the rest of its boundary instead of being drawn as a straight chord.</p></li>
 <li><p>Stacked bars in a non-linear coordinate system (e.g. <a href="./reference/coord_trans.html#plotnine.coord_trans"><code>coord_trans</code></a>) no longer show triangular spikes; each rectangle is now drawn as its own polygon instead of merging a bar’s segments into a single path.</p></li>
+<li><p>In a non-linear coordinate system (e.g.&nbsp;<a href="./reference/coord_trans.html#plotnine.coord_trans"><code>coord_trans</code></a>), both edges of a <a href="./reference/geom_ribbon.html#plotnine.geom_ribbon"><code>geom_ribbon</code></a> or <a href="./reference/geom_area.html#plotnine.geom_area"><code>geom_area</code></a> now curve. Previously each edge held the value of the point its segment started from, so the band was drawn as a staircase.</p></li>
 <li><p>The space between facet panels now accounts for the margins of the axis text, so with free scales large margins no longer push the tick labels into the neighbouring panel.</p></li>
 <li><p>Plot titles in a composition now sit at the same height even when the plots differ in what lies between the title and the panel — facet strips, top legends or a top-positioned x axis.</p></li>
 <li><p>Subclass geoms now inherit their parent geom’s default parameters, so parameters that a parent geom supports are no longer rejected. <a href="./reference/geom_step.html#plotnine.geom_step"><code>geom_step</code></a> accepts <code>lineend</code>, <code>linejoin</code> and <code>arrow</code>, <a href="./reference/geom_quantile.html#plotnine.geom_quantile"><code>geom_quantile</code></a> accepts <code>arrow</code>, and <a href="./reference/geom_histogram.html#plotnine.geom_histogram"><code>geom_histogram</code></a> accepts <code>just</code> and <code>width</code>.</p></li>
