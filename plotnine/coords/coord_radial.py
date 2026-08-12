@@ -85,8 +85,9 @@ class coord_radial(coord):
         Equivalent angles are interpreted as the same endpoint. `None`
         (default) gives a full circle.
     expand :
-        Add a small buffer around the data on the radius axis.
-        Default `True`.
+        If `True` (the default), add a small buffer around the data on both
+        axes, so the data stops short of the arc ends and of the outer
+        radius. If `False`, use the limits from the data.
     inner_radius :
         Size of the inner hole as a fraction of the outer radius, in
         `[0, 1)`.  `0` (default) means no hole; `0.3` creates a 30 %
