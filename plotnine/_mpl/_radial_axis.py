@@ -80,6 +80,21 @@ def _is_full_circle(ax: PolarAxes) -> bool:
     return abs(span - 360.0) < 1e-12
 
 
+def spoke_angle(ax: PolarAxes, side: PolarSide) -> float:
+    """
+    Return an r boundary's spoke angle in data coordinates
+
+    For a full circle, both r boundaries use the configured label spoke. For
+    an arc, `r_start` uses `thetamin` and `r_end` uses `thetamax`.
+    """
+    if _is_full_circle(ax):
+        return np.deg2rad(ax.get_rlabel_position())
+    elif side == "r_start":
+        return np.deg2rad(ax.get_thetamin())
+    else:
+        return np.deg2rad(ax.get_thetamax())
+
+
 def outward_unit(
     ax: PolarAxes, side: PolarSide, loc: float
 ) -> NDArray[np.float64]:
@@ -106,18 +121,11 @@ def outward_unit(
 
     if side in ("theta_outside", "theta_inside"):
         angle = loc * direction + offset
-    else:
-        if _is_full_circle(ax):
-            spoke_deg = ax.get_rlabel_position()
-        elif side == "r_start":
-            spoke_deg = ax.get_thetamin()
-        else:
-            spoke_deg = ax.get_thetamax()
-        spoke = np.deg2rad((spoke_deg * direction + np.rad2deg(offset)) % 360)
-        angle = spoke + sign * direction * np.pi / 2
-        return np.array([np.cos(angle), np.sin(angle)])
+        return sign * np.array([np.cos(angle), np.sin(angle)])
 
-    return sign * np.array([np.cos(angle), np.sin(angle)])
+    spoke = spoke_angle(ax, side) * direction + offset
+    angle = spoke + sign * direction * np.pi / 2
+    return np.array([np.cos(angle), np.sin(angle)])
 
 
 class p9ThetaTick(ThetaTick):
