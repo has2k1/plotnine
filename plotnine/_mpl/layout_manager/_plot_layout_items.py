@@ -10,7 +10,6 @@ from plotnine._utils import ha_as_float, side_artists, va_as_float
 from plotnine.composition._compose import Compose
 from plotnine.exceptions import PlotnineError
 
-from .._radial_axis import outward_unit, spoke_angle
 from ..axes import axis_at
 from ..utils import (
     ArtistGeometry,
@@ -36,11 +35,11 @@ if TYPE_CHECKING:
     from matplotlib.figure import Figure
     from matplotlib.lines import Line2D
     from matplotlib.patches import Rectangle
-    from matplotlib.projections.polar import PolarAxes
     from matplotlib.spines import Spine
     from matplotlib.transforms import Bbox, Transform
 
     from plotnine import ggplot
+    from plotnine._mpl._radial_axes import p9RadialAxes
     from plotnine._mpl.offsetbox import FlexibleAnchoredOffsetbox
     from plotnine._mpl.text import StripText
     from plotnine.iapi import legend_artists
@@ -113,7 +112,7 @@ class PolarLabel:
     @classmethod
     def make(
         cls,
-        ax: PolarAxes,
+        ax: p9RadialAxes,
         side: PolarSide,
         loc: float,
         tick: Tick,
@@ -134,13 +133,13 @@ class PolarLabel:
         elif side == "theta_inside":
             point = (loc, r_inner)
         else:
-            point = (spoke_angle(ax, side), loc)
+            point = (ax.spoke_angle(side), loc)
 
         box = label.get_window_extent(renderer)
         anchor = ax.transAxes.inverted().transform(
             ax.transData.transform(point)
         )
-        unit = outward_unit(ax, side, loc)
+        unit = ax.outward_unit(side, loc)
         gap_pt = (tick.get_pad() or 0) + tick.get_tick_padding()
         return cls(
             anchor=(anchor[0], anchor[1]),
@@ -1049,7 +1048,7 @@ class PolarPlotLayoutItems(PlotLayoutItems):
         Each boundary contributes only the label pair assigned to that side.
         """
         renderer = self.geometry.renderer
-        panel = cast("PolarAxes", ax)
+        panel = cast("p9RadialAxes", ax)
         for polar_side in POLAR_SIDES:
             axis = axis_at(ax, polar_side)
             if axis is None:

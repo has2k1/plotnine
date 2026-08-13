@@ -25,6 +25,7 @@ from .axes import register_lim_changed_signal
 
 if TYPE_CHECKING:
     from matplotlib.backend_bases import RendererBase
+    from numpy.typing import NDArray
 
     from plotnine.typing import PolarSide
 
@@ -247,6 +248,61 @@ class p9RadialAxes(PolarAxes):
         if self._axis_at_side is None:
             self._axis_at_side = {}
         return self._axis_at_side
+
+    @property
+    def is_full_circle(self) -> bool:
+        """
+        Whether the panel spans a full circle
+        """
+        span = abs(self.get_thetamax() - self.get_thetamin())
+        return abs(span - 360.0) < 1e-12
+
+    def spoke_angle(self, side: PolarSide) -> float:
+        """
+        Return an r boundary's spoke angle in data coordinates
+
+        For a full circle, both r boundaries use the configured label spoke.
+        For an arc, `r_start` uses `thetamin` and `r_end` uses `thetamax`.
+
+        Parameters
+        ----------
+        side :
+            One of the panel's two r boundaries.
+        """
+        if self.is_full_circle:
+            return np.deg2rad(self.get_rlabel_position())
+        elif side == "r_start":
+            return np.deg2rad(self.get_thetamin())
+        else:
+            return np.deg2rad(self.get_thetamax())
+
+    def outward_unit(self, side: PolarSide, loc: float) -> NDArray[np.float64]:
+        """
+        Return the outward unit vector at a polar tick
+
+        For a theta boundary, `loc` is the break angle and the vector follows
+        its radius. For an r boundary, the vector is perpendicular to the
+        boundary's spoke, so `loc` does not affect the result. Start and end
+        boundaries point in opposite directions.
+
+        Parameters
+        ----------
+        side :
+            Polar boundary containing the tick.
+        loc :
+            Break location in the axis's data coordinates.
+        """
+        direction = self.get_theta_direction()
+        offset = self.get_theta_offset()
+        sign = 1 if side in ("theta_outside", "r_end") else -1
+
+        if side in ("theta_outside", "theta_inside"):
+            angle = loc * direction + offset
+            return sign * np.array([np.cos(angle), np.sin(angle)])
+
+        spoke = self.spoke_angle(side) * direction + offset
+        angle = spoke + sign * direction * np.pi / 2
+        return np.array([np.cos(angle), np.sin(angle)])
 
     def draw(self, renderer: RendererBase) -> None:
         """
