@@ -7,7 +7,7 @@ from ..coords import coord_flip
 from ..doctools import document
 from ..exceptions import PlotnineError
 from .geom import geom
-from .geom_path import geom_path
+from .geom_path import stroke_paths
 from .geom_polygon import geom_polygon
 
 if typing.TYPE_CHECKING:
@@ -154,12 +154,11 @@ class geom_ribbon(geom):
 
         # Alpha does not affect the outlines
         data["alpha"] = 1
-        geom_ribbon._draw_outline(data, panel_params, coord, ax, params)
+        geom_ribbon._draw_outline(data, coord, ax, params)
 
     @staticmethod
     def _draw_outline(
         data: pd.DataFrame,
-        panel_params: panel_view,
         coord: coord,
         ax: Axes,
         params: dict[str, Any],
@@ -169,25 +168,15 @@ class geom_ribbon(geom):
         if outline_type == "full":
             return
 
-        x, y = "x", "y"
-        if isinstance(coord, coord_flip):
-            x, y = y, x
-            data[x], data[y] = data[y], data[x]
+        # The data is already in panel coordinates. After `coord_flip`,
+        # the ribbon bounds are `xmin` and `xmax`.
+        bounds = "x" if isinstance(coord, coord_flip) else "y"
 
+        # The outline uses one colour, size, and linetype throughout.
         if outline_type in ("lower", "both"):
-            geom_path.draw_group(
-                data.assign(y=data[f"{y}min"]),
-                panel_params,
-                coord,
-                ax,
-                params,
-            )
+            lower = data.assign(**{bounds: data[f"{bounds}min"]})
+            stroke_paths(lower, ax, params, constant=True)
 
         if outline_type in ("upper", "both"):
-            geom_path.draw_group(
-                data.assign(y=data[f"{y}max"]),
-                panel_params,
-                coord,
-                ax,
-                params,
-            )
+            upper = data.assign(**{bounds: data[f"{bounds}max"]})
+            stroke_paths(upper, ax, params, constant=True)
