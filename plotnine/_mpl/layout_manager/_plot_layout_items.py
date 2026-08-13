@@ -2,8 +2,9 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from itertools import chain
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 
+import numpy as np
 from matplotlib.text import Text
 
 from plotnine._utils import ha_as_float, side_artists, va_as_float
@@ -31,9 +32,11 @@ if TYPE_CHECKING:
 
     from matplotlib.axes import Axes
     from matplotlib.axis import Axis, Tick
+    from matplotlib.backend_bases import RendererBase
     from matplotlib.figure import Figure
     from matplotlib.lines import Line2D
     from matplotlib.patches import Rectangle
+    from matplotlib.projections.polar import PolarAxes
     from matplotlib.spines import Spine
     from matplotlib.transforms import Bbox, Transform
 
@@ -82,22 +85,80 @@ POLAR_SIDES: tuple[PolarSide, ...] = (
     "r_end",
 )
 
-# Tick-label themeables for every polar boundary.
-POLAR_TEXT_THEMEABLES = (
-    "axis_text_theta_outside",
-    "axis_text_theta_inside",
-    "axis_text_r_start",
-    "axis_text_r_end",
-)
 
-# Map each polar tick-length themeable to the marks it sizes. Blank marks
-# contribute no clearance.
-POLAR_TICK_LENGTHS = {
-    "axis_ticks_length_major_theta": "axis_ticks_major_theta",
-    "axis_ticks_length_major_r": "axis_ticks_major_r",
-    "axis_ticks_length_minor_theta": "axis_ticks_minor_theta",
-    "axis_ticks_length_minor_r": "axis_ticks_minor_r",
-}
+@dataclass
+class PolarLabel:
+    """
+    A tick label of a polar panel, and where it attaches to the panel
+
+    Sizes are in display space. `anchor` is in panel fractions, which hold
+    whatever size the panel settles at.
+    """
+
+    anchor: tuple[float, float]
+    """Point on the panel the label is placed against"""
+
+    width: float
+    """Width of the label"""
+
+    height: float
+    """Height of the label"""
+
+    gap: float
+    """Distance the label is held off its anchor"""
+
+    @classmethod
+    def make(
+        cls,
+        ax: PolarAxes,
+        side: PolarSide,
+        loc: float,
+        tick: Tick,
+        label: Text,
+        renderer: RendererBase,
+    ) -> PolarLabel:
+        """
+        The label at one tick of a polar axis
+
+        A theta tick anchors on its own boundary at the angle of its break;
+        an r tick anchors along its spoke at the radius of its break. The
+        gap covers the tick mark the label clears and the pad beyond it.
+        """
+        r_inner, r_outer = ax.get_ylim()
+        if side == "theta_outside":
+            point = (loc, r_outer)
+        elif side == "theta_inside":
+            point = (loc, r_inner)
+        elif side == "r_start":
+            point = (np.deg2rad(ax.get_thetamin()), loc)
+        else:
+            point = (np.deg2rad(ax.get_thetamax()), loc)
+
+        box = label.get_window_extent(renderer)
+        anchor = ax.transAxes.inverted().transform(
+            ax.transData.transform(point)
+        )
+        gap_pt = (tick.get_pad() or 0) + tick.get_tick_padding()
+        return cls(
+            anchor=(anchor[0], anchor[1]),
+            width=box.width,
+            height=box.height,
+            gap=gap_pt * ax.figure.dpi / 72,
+        )
+
+    def reach_past(self, side: Side, panel: Bbox) -> float:
+        """
+        How far the label reaches past one edge of the panel, display space
+
+        Negative when the label stops short of the edge, which is what a
+        label facing away from the side does.
+        """
+        if side in ("left", "right"):
+            along, extent, span = self.anchor[0], self.width, panel.width
+        else:
+            along, extent, span = self.anchor[1], self.height, panel.height
+        inset = along if side in ("left", "bottom") else 1 - along
+        return extent + self.gap - inset * span
 
 
 @dataclass
@@ -944,64 +1005,55 @@ class PolarPlotLayoutItems(PlotLayoutItems):
     """
     Space around a polar panel for its axis decorations
 
-    Theta axes follow arcs and r axes follow spokes, so neither belongs to
-    one Cartesian edge. Every panel edge therefore reserves the same band:
-    the largest visible label extent in that dimension, plus the greater of
-    the configured label margins and tick lengths whose marks are not blank.
+    A theta axis follows an arc and an r axis follows a spoke, so a tick
+    label attaches to the panel wherever its break falls rather than along
+    one Cartesian side. Each side reserves the labels that reach past it:
+    a label's size and the gap that holds it off its boundary, less however
+    much of that reach falls inside the panel.
 
-    Label size is stable before final positioning, so it can be measured from
-    the artists. Margins and tick lengths come from the theme because their
-    final offsets are applied during drawing.
+    The size and the gap are physical, so they hold wherever the panel ends
+    up. The inset is a fraction of the panel, and the panel is what the
+    layout is solving for, so it comes from the previous render. A first
+    render therefore over-reserves, which costs a little space and clips
+    nothing.
 
-    The complete band is reported as text clearance. Tick clearance and
-    per-edge label protrusions remain zero to avoid counting it twice.
+    The band is reported as text clearance, so tick clearance stays zero
+    rather than counting the marks twice. Per-side label protrusions stay
+    zero too: a label reaching past a second edge is counted on that edge.
     """
 
     def _axis_clearance(self, ax: Axes, side: Side) -> float:
         """
-        Return polar-axis clearance beyond one panel edge in figure space
+        Space the panel's axes need past one edge, figure space
         """
-        dim: Literal["width", "height"] = (
-            "width" if side in ("left", "right") else "height"
-        )
-        W, H = self.plot.theme.getp("figure_size")
-        dpi = self.plot.figure.dpi
-        band = self._label_extent(ax, dim) + self._label_offset() * dpi / 72
-        return band / ((W if dim == "width" else H) * dpi)
+        panel = ax.get_window_extent(self.geometry.renderer)
+        reaches = [
+            label.reach_past(side, panel) for label in self._outward_labels(ax)
+        ]
+        figure = self.plot.figure.bbox
+        span = figure.width if side in ("left", "right") else figure.height
+        return max([*reaches, 0]) / span
 
-    def _label_extent(
-        self, ax: Axes, dim: Literal["width", "height"]
-    ) -> float:
+    def _outward_labels(self, ax: Axes) -> Iterator[PolarLabel]:
         """
-        Return the largest visible polar tick-label extent in display space
+        Every tick label the panel will show, with where it attaches
         """
-        extents = [
-            getattr(label.get_window_extent(self.geometry.renderer), dim)
-            for polar_side in POLAR_SIDES
-            if (axis := axis_at(ax, polar_side)) is not None
-            for tick in chain(axis.get_major_ticks(), axis.get_minor_ticks())
-            for label in (tick.label1, tick.label2)
-            if _text_is_visible(label)
-        ]
-        return max([*extents, 0])
-
-    def _label_offset(self) -> float:
-        """
-        Return the largest configured margin or non-blank tick length in points
-        """
-        theme = self.plot.theme
-        margins = [
-            max(m.t, m.b, m.l, m.r)
-            for name in POLAR_TEXT_THEMEABLES
-            if not theme.T.is_blank(name)
-            for m in [theme.get_margin(name).pt]
-        ]
-        lengths = [
-            theme.getp(name) or 0
-            for name, marks in POLAR_TICK_LENGTHS.items()
-            if not theme.T.is_blank(marks)
-        ]
-        return max([*margins, *lengths, 0])
+        renderer = self.geometry.renderer
+        panel = cast("PolarAxes", ax)
+        for polar_side in POLAR_SIDES:
+            axis = axis_at(ax, polar_side)
+            if axis is None:
+                continue
+            for locs, ticks in (
+                (axis.get_majorticklocs(), axis.get_major_ticks()),
+                (axis.get_minorticklocs(), axis.get_minor_ticks()),
+            ):
+                for loc, tick in zip(locs, ticks):
+                    for label in (tick.label1, tick.label2):
+                        if _text_is_visible(label):
+                            yield PolarLabel.make(
+                                panel, polar_side, loc, tick, label, renderer
+                            )
 
     def axis_ticks_x_max_height(self, ax: Axes, side: Side) -> float:
         return 0
