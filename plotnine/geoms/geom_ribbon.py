@@ -171,7 +171,8 @@ class geom_ribbon(geom):
         # the ribbon bounds are `xmin` and `xmax`.
         bounds = "x" if isinstance(coord, coord_flip) else "y"
 
-        # The outline uses one colour, size, and linetype throughout.
+        # Each call receives one ribbon group, so an outline forms one path
+        # with constant aesthetics.
         if outline_type in ("lower", "both"):
             lower = data.assign(**{bounds: data[f"{bounds}min"]})
             stroke_paths(lower, ax, params, constant=True)

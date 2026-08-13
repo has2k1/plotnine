@@ -454,6 +454,8 @@ def stroke_paths(
     ----------
     data :
         Path data in panel coordinates. Must include a `size` column.
+        The function adds a `linewidth` column in place so subsequent
+        arrowheads use the same width.
     ax :
         Axes on which to draw the paths.
     params :
