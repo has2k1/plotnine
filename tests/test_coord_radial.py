@@ -254,6 +254,28 @@ def test_ribbon():
     assert p == "ribbon"
 
 
+def test_ribbon_reverse_r():
+    # Radial reversal must negate the ribbon bounds with its centreline;
+    # otherwise, the band falls outside the visible range.
+    p = (
+        ggplot(path_data, aes("x", ymin="y - 2", ymax="y + 2"))
+        + geom_ribbon(alpha=0.5)
+        + coord_radial(reverse="r")
+    )
+    assert p == "ribbon_reverse_r"
+
+
+def test_ribbon_theta_y():
+    # With `theta="y"`, `ymin` and `ymax` become angular bounds at each `x`
+    # radius.
+    p = (
+        ggplot(path_data, aes("x", ymin="y - 2", ymax="y + 2"))
+        + geom_ribbon(alpha=0.5)
+        + coord_radial(theta="y")
+    )
+    assert p == "ribbon_theta_y"
+
+
 def test_rotate_angle_text():
     # The labels align tangentially to the arc and fold into (-90, 90], so
     # the one at the bottom of the circle stays readable.

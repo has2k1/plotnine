@@ -45,6 +45,10 @@ class coord_flip(coord_cartesian):
         use the limits from the data.
     """
 
+    @property
+    def preserves_dimensions(self) -> bool:
+        return False
+
     def labels(self, cur_labels: labels_view) -> labels_view:
         return flip_labels(super().labels(cur_labels))
 

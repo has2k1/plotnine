@@ -11,6 +11,11 @@ from .._mpl._radial_axes import p9RadialAxes  # noqa: TCH001
 from .._utils.registry import alias
 from ..exceptions import PlotnineError, PlotnineWarning
 from ..iapi import panel_ranges, radial_panel_view
+from ..mapping.aes import (
+    TRANSPOSED_POSITION_AESTHETICS,
+    X_AESTHETICS,
+    Y_AESTHETICS,
+)
 from .coord import _activate_axis, _set_fixed_ticks, coord, dist_euclidean
 
 if TYPE_CHECKING:
@@ -177,11 +182,11 @@ class coord_radial(coord):
         self.reverse = reverse
 
     @property
-    def is_default_axes(self) -> bool:
+    def preserves_dimensions(self) -> bool:
         return self.theta == "x"
 
     def _flip(self, p1: T1, p2: T2) -> tuple[T1, T2] | tuple[T2, T1]:
-        return (p1, p2) if self.is_default_axes else (p2, p1)
+        return (p1, p2) if self.preserves_dimensions else (p2, p1)
 
     def setup_panel_params(
         self, scale_x: scale, scale_y: scale
@@ -293,7 +298,7 @@ class coord_radial(coord):
         # rotates with them (matching coord_flip): the angular title lands
         # on x's bottom/top and the radial title on y's left/right, the
         # sides the layout manager repositions. theta="x" keeps them as is.
-        if not self.is_default_axes:
+        if not self.preserves_dimensions:
             from .coord_flip import _FLIP_POSITION
 
             x = replace(x, position=_FLIP_POSITION[x.position])
@@ -422,26 +427,22 @@ class coord_radial(coord):
         if "x" not in data or "y" not in data:
             return data
 
-        t = self._flip("x", "y")[0]
-        tend = self._flip("xend", "yend")[0]
         view = cast("radial_panel_view", panel_params)
+        theta_aesthetics = self._flip(X_AESTHETICS, Y_AESTHETICS)[0]
 
         data = data.copy()
-        data[t] = self._to_radians(data[t], view.theta.range)
-        if tend in data.columns:
-            data[tend] = self._to_radians(data[tend], view.theta.range)
+        for aes in theta_aesthetics & set(data.columns):
+            data[aes] = self._to_radians(data[aes], view.theta.range)
 
-        # PolarAxes always expects x = theta (radians) and y = r.
-        # When theta = "y" we need to swap the columns.
-        if not self.is_default_axes:
-            data["x"], data["y"] = data["y"], data["x"]
-            if "xend" in data and "yend" in data:
-                data["xend"], data["yend"] = data["yend"], data["xend"]
+        # Matplotlib requires theta in `x` and radius in `y`. Transpose every
+        # position aesthetic so bounds, endpoints, and intercepts stay with
+        # their dimension when `theta="y"`.
+        if not self.preserves_dimensions:
+            data = data.rename(columns=TRANSPOSED_POSITION_AESTHETICS)
 
         if self.reverse in ("r", "thetar"):
-            data["y"] = -data["y"]
-            if "yend" in data:
-                data["yend"] = -data["yend"]
+            for aes in Y_AESTHETICS & set(data.columns):
+                data[aes] = -data[aes]
 
         # After the swap, data["x"] is always theta in radians.
         if self.rotate_angle and "angle" in data and "x" in data:
