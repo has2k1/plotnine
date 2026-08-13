@@ -16,6 +16,7 @@ from matplotlib.transforms import Affine2D, Bbox, ScaledTranslation
 
 if TYPE_CHECKING:
     from matplotlib.backend_bases import RendererBase
+    from matplotlib.lines import Line2D
     from matplotlib.text import Text
     from matplotlib.transforms import Transform
     from numpy.typing import NDArray
@@ -145,33 +146,34 @@ class p9ThetaTick(ThetaTick):
         self._text2_translate.invalidate()  # pyright: ignore[reportAttributeAccessIssue]
 
     def _position_labels(self, renderer: RendererBase) -> None:
-        # Matplotlib pads theta labels from their centres by a fixed amount,
-        # which leaves angle-dependent gaps at the edges. We override to place
-        # each nearest edge at the themed margin beyond its tick or the axis
-        # boundary.
+        # Matplotlib pads theta labels from their centres, so the visible gap
+        # varies with the label's angle. Place the point facing the panel at
+        # the themed distance beyond its own tick.
         axes = cast("PolarAxes", self.axes)
-        radial = np.array(
-            [np.cos(self._radial_angle), np.sin(self._radial_angle)]
-        )
+        loc = self.get_loc()
 
-        for label, tickline, translate, direction in (
+        pairs: tuple[
+            tuple[Text, Line2D, ScaledTranslation, PolarSide], ...
+        ] = (
             (
                 self.label1,
                 self.tick1line,
                 self._text1_translate,  # pyright: ignore[reportAttributeAccessIssue]
-                -1,
+                "theta_inside",
             ),
             (
                 self.label2,
                 self.tick2line,
                 self._text2_translate,  # pyright: ignore[reportAttributeAccessIssue]
-                1,
+                "theta_outside",
             ),
-        ):
+        )
+
+        for label, tickline, translate, side in pairs:
             if not label.get_visible() or not label.get_text():
                 continue
 
-            label.set_verticalalignment("center")
+            label.set_horizontalalignment("center")
             label.set_verticalalignment("center")
             tick_length = (
                 self._size  # pyright: ignore[reportAttributeAccessIssue]
@@ -182,17 +184,17 @@ class p9ThetaTick(ThetaTick):
                 self._base_pad  # pyright: ignore[reportAttributeAccessIssue]
                 + tick_length
             )
-            unit = radial * direction
-            translate._t = tuple(unit * base_pad / 72)
+            unit = outward_unit(axes, side, loc)
+
+            # Apply the padding at the label's centre, then correct the offset
+            # so the point facing the panel reaches the same target.
+            padded = unit * base_pad / 72
+            translate._t = tuple(padded)
             translate.invalidate()
 
-            anchor = label.get_transform().transform(label.get_position())
-            corners = label_bounds(label, renderer).corners()
-            # Offset the label by its radial extent so the margin starts at
-            # the nearest text edge, not at the label centre.
-            edge_offset = np.min((corners - anchor) @ unit)
-            corrected = base_pad - edge_offset * 72 / axes.figure.dpi
-            translate._t = tuple(unit * corrected / 72)
+            target = label.get_transform().transform(label.get_position())
+            point = facing_point(label_bounds(label, renderer), unit)
+            translate._t = tuple(padded + (target - point) / axes.figure.dpi)
             translate.invalidate()
 
     @martist.allow_rasterization
