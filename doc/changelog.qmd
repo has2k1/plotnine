@@ -134,6 +134,11 @@ title: Changelog
   value of the point its segment started from, so the band was drawn as a
   staircase.
 
+- [](:class:`~plotnine.geom_ribbon`) and [](:class:`~plotnine.geom_area`) now
+  draw every outline type correctly in non-linear coordinate systems. The
+  `upper`, `lower` and `both` outlines follow the transformed band edges, and
+  `full` outlines no longer raise an error.
+
 - The space between facet panels now accounts for the margins of the axis
   text, so with free scales large margins no longer push the tick labels
   into the neighbouring panel.
