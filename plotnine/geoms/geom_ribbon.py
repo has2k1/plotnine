@@ -75,12 +75,11 @@ class geom_ribbon(geom):
         return data
 
     def setup_data(self, data: pd.DataFrame) -> pd.DataFrame:
-        # The outlines need x and y coordinates
-        if self.params["outline_type"] in ("upper", "lower", "both"):
-            if "xmax" in data and "x" not in data:
-                data["x"] = data["xmax"]
-            if "ymax" in data and "y" not in data:
-                data["y"] = data["ymax"]
+        # Coordinate munching requires `x` and `y` for every outline type.
+        if "xmax" in data and "x" not in data:
+            data["x"] = data["xmax"]
+        if "ymax" in data and "y" not in data:
+            data["y"] = data["ymax"]
         return data
 
     @staticmethod
