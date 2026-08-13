@@ -398,6 +398,20 @@ def test_long_theta_ticks_fit_in_the_figure():
     assert p == "long_theta_ticks_fit_in_the_figure"
 
 
+def test_one_long_theta_label():
+    # A label reserves space only on the sides it reaches, so one long
+    # label costs the panel nothing on the other three.
+    p = (
+        p_point
+        + scale_x_continuous(
+            breaks=[2, 3, 4, 5],
+            labels=["2", "3", "Compact and subcompact", "5"],
+        )
+        + coord_radial()
+    )
+    assert p == "one_long_theta_label"
+
+
 def test_axis_text_r_blank_hides_radial_labels():
     # `axis_text_r` hides both radial axes without hiding the theta axis. On a
     # full circle, the primary and secondary radial labels share one spoke.
