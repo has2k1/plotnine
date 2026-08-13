@@ -154,17 +154,7 @@ class geom_path(geom):
         params: dict[str, Any],
     ):
         data = coord.transform(data, panel_params, munch=True)
-        data["linewidth"] = data["size"] * SIZE_FACTOR
-
-        if "constant" in params:
-            constant: bool = params.pop("constant")
-        else:
-            constant = len(np.unique(data["group"].to_numpy())) == 1
-
-        if not constant:
-            _draw_segments(data, ax, params)
-        else:
-            _draw_lines(data, ax, params)
+        constant = stroke_paths(data, ax, params, params.get("constant"))
 
         if "arrow" in params and params["arrow"]:
             params["arrow"].draw(
@@ -449,6 +439,47 @@ class arrow:
             paths.append(Path(verts, codes))
 
         return paths
+
+
+def stroke_paths(
+    data: pd.DataFrame,
+    ax: Axes,
+    params: dict[str, Any],
+    constant: bool | None = None,
+) -> bool:
+    """
+    Draw paths from panel-coordinate data
+
+    Parameters
+    ----------
+    data :
+        Path data in panel coordinates. Must include a `size` column.
+    ax :
+        Axes on which to draw the paths.
+    params :
+        Geom and stat parameters used to style the paths.
+    constant :
+        Whether aesthetics remain constant along each path. If `False`,
+        draw each pair of adjacent points as a separate segment. If
+        `None`, infer `True` when the data contains one group.
+
+    Returns
+    -------
+    :
+        Whether the paths were drawn with constant aesthetics. Callers
+        use this value to draw matching arrowheads.
+    """
+    data["linewidth"] = data["size"] * SIZE_FACTOR
+
+    if constant is None:
+        constant = len(np.unique(data["group"].to_numpy())) == 1
+
+    if constant:
+        _draw_lines(data, ax, params)
+    else:
+        _draw_segments(data, ax, params)
+
+    return constant
 
 
 def _draw_segments(data: pd.DataFrame, ax: Axes, params: dict[str, Any]):
