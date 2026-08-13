@@ -5,6 +5,7 @@ from plotnine import (
     aes,
     after_stat,
     coord_flip,
+    coord_trans,
     facet_wrap,
     geom_area,
     geom_line,
@@ -159,3 +160,8 @@ class TestOutlineType:
 
     def test_ribbon_outline_type_coord_flip(self):
         assert self.p + coord_flip() == "ribbon_outline_type_coord_flip"
+
+    def test_ribbon_outline_type_coord_trans(self):
+        assert (
+            self.p + coord_trans(y="sqrt") == "ribbon_outline_type_coord_trans"
+        )
