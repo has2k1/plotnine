@@ -18,9 +18,105 @@ if TYPE_CHECKING:
     from matplotlib.backend_bases import RendererBase
     from matplotlib.text import Text
     from matplotlib.transforms import Transform
+    from numpy.typing import NDArray
+
+    from plotnine.typing import PolarSide
 
 
 _NON_DESCENDING_NUMERIC_CHARS = frozenset("0123456789.+-\N{MINUS SIGN}eE")
+
+
+def label_bounds(label: Text, renderer: RendererBase) -> Bbox:
+    """
+    Return label bounds with unused numeric descent removed
+
+    Matplotlib reserves the font's full descent even when a numeric label
+    has no descenders. Excluding that space keeps the visible gap between
+    labels and ticks consistent around the panel.
+    """
+    bbox, parts, _ = label._get_layout(renderer)  # pyright: ignore[reportAttributeAccessIssue]
+    descent = parts[-1][1][2]
+    x, y = label.get_unitless_position()
+    x, y = label.get_transform().transform((x, y))
+    bbox = bbox.translated(x, y)
+
+    text = label.get_text()
+    _, ismath = label._preprocess_math(text)  # pyright: ignore[reportAttributeAccessIssue]
+    # Exclude the unused font descent from simple numeric labels without
+    # measuring rendered glyphs.
+    if (
+        text
+        and "\n" not in text
+        and ismath is False
+        and set(text) <= _NON_DESCENDING_NUMERIC_CHARS
+    ):
+        bbox = Bbox.from_extents(bbox.x0, bbox.y0 + descent, bbox.x1, bbox.y1)
+
+    return bbox
+
+
+def facing_point(box: Bbox, unit: NDArray[np.float64]) -> NDArray[np.float64]:
+    """
+    Return the point on a label's bounds that faces the panel
+
+    `unit` points away from the panel. The opposite point is an edge midpoint
+    for an axis-aligned vector and moves towards a corner between axes.
+    """
+    ux, uy = unit
+    return np.array(
+        [
+            box.x0 + (0.5 - ux / 2) * box.width,
+            box.y0 + (0.5 - uy / 2) * box.height,
+        ]
+    )
+
+
+def _is_full_circle(ax: PolarAxes) -> bool:
+    """
+    Whether the panel spans a full circle
+    """
+    span = abs(ax.get_thetamax() - ax.get_thetamin())
+    return abs(span - 360.0) < 1e-12
+
+
+def outward_unit(
+    ax: PolarAxes, side: PolarSide, loc: float
+) -> NDArray[np.float64]:
+    """
+    Return the outward unit vector at a polar tick
+
+    For a theta boundary, `loc` is the break angle and the vector follows its
+    radius. For an r boundary, the vector is perpendicular to the boundary's
+    spoke, so `loc` does not affect the result. Start and end boundaries point
+    in opposite directions.
+
+    Parameters
+    ----------
+    ax :
+        Polar panel axes.
+    side :
+        Polar boundary containing the tick.
+    loc :
+        Break location in the axis's data coordinates.
+    """
+    direction = ax.get_theta_direction()
+    offset = ax.get_theta_offset()
+    sign = 1 if side in ("theta_outside", "r_end") else -1
+
+    if side in ("theta_outside", "theta_inside"):
+        angle = loc * direction + offset
+    else:
+        if _is_full_circle(ax):
+            spoke_deg = ax.get_rlabel_position()
+        elif side == "r_start":
+            spoke_deg = ax.get_thetamin()
+        else:
+            spoke_deg = ax.get_thetamax()
+        spoke = np.deg2rad((spoke_deg * direction + np.rad2deg(offset)) % 360)
+        angle = spoke + sign * direction * np.pi / 2
+        return np.array([np.cos(angle), np.sin(angle)])
+
+    return sign * np.array([np.cos(angle), np.sin(angle)])
 
 
 class p9ThetaTick(ThetaTick):
@@ -47,39 +143,6 @@ class p9ThetaTick(ThetaTick):
         self._text1_translate.invalidate()  # pyright: ignore[reportAttributeAccessIssue]
         self._text2_translate._t = (0, 0)  # pyright: ignore[reportAttributeAccessIssue]
         self._text2_translate.invalidate()  # pyright: ignore[reportAttributeAccessIssue]
-
-    def _label_bounds(self, label: Text, renderer: RendererBase) -> Bbox:
-        """
-        Return label bounds without unused numeric descent
-
-        Matplotlib reserves the font's full descent even when a numeric label
-        has no descenders. Removing that unused space prevents the visible
-        gap between theta labels and ticks from varying around the circle.
-        """
-        bbox, parts, _ = label._get_layout(renderer)  # pyright: ignore[reportAttributeAccessIssue]
-        descent = parts[-1][1][2]
-        x, y = label.get_unitless_position()
-        x, y = label.get_transform().transform((x, y))
-        bbox = bbox.translated(x, y)
-
-        text = label.get_text()
-        _, ismath = label._preprocess_math(text)  # pyright: ignore[reportAttributeAccessIssue]
-        # Common numeric ticks have no descenders, so exclude Matplotlib's
-        # unused descent without measuring rendered ink.
-        if (
-            text
-            and "\n" not in text
-            and ismath is False
-            and set(text) <= _NON_DESCENDING_NUMERIC_CHARS
-        ):
-            bbox = Bbox.from_extents(
-                bbox.x0,
-                bbox.y0 + descent,
-                bbox.x1,
-                bbox.y1,
-            )
-
-        return bbox
 
     def _position_labels(self, renderer: RendererBase) -> None:
         # Matplotlib pads theta labels from their centres by a fixed amount,
@@ -124,7 +187,7 @@ class p9ThetaTick(ThetaTick):
             translate.invalidate()
 
             anchor = label.get_transform().transform(label.get_position())
-            corners = self._label_bounds(label, renderer).corners()
+            corners = label_bounds(label, renderer).corners()
             # Offset the label by its radial extent so the margin starts at
             # the nearest text edge, not at the label centre.
             edge_offset = np.min((corners - anchor) @ unit)
