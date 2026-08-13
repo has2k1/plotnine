@@ -6,7 +6,6 @@ import numpy as np
 from matplotlib import artist as martist
 from matplotlib import markers as mmarkers
 from matplotlib.projections.polar import (
-    PolarAxes,
     RadialAxis,
     RadialTick,
     ThetaAxis,
@@ -22,6 +21,8 @@ if TYPE_CHECKING:
     from numpy.typing import NDArray
 
     from plotnine.typing import PolarSide
+
+    from ._radial_axes import p9RadialAxes
 
 
 _NON_DESCENDING_NUMERIC_CHARS = frozenset("0123456789.+-\N{MINUS SIGN}eE")
@@ -72,62 +73,6 @@ def facing_point(box: Bbox, unit: NDArray[np.float64]) -> NDArray[np.float64]:
     )
 
 
-def _is_full_circle(ax: PolarAxes) -> bool:
-    """
-    Whether the panel spans a full circle
-    """
-    span = abs(ax.get_thetamax() - ax.get_thetamin())
-    return abs(span - 360.0) < 1e-12
-
-
-def spoke_angle(ax: PolarAxes, side: PolarSide) -> float:
-    """
-    Return an r boundary's spoke angle in data coordinates
-
-    For a full circle, both r boundaries use the configured label spoke. For
-    an arc, `r_start` uses `thetamin` and `r_end` uses `thetamax`.
-    """
-    if _is_full_circle(ax):
-        return np.deg2rad(ax.get_rlabel_position())
-    elif side == "r_start":
-        return np.deg2rad(ax.get_thetamin())
-    else:
-        return np.deg2rad(ax.get_thetamax())
-
-
-def outward_unit(
-    ax: PolarAxes, side: PolarSide, loc: float
-) -> NDArray[np.float64]:
-    """
-    Return the outward unit vector at a polar tick
-
-    For a theta boundary, `loc` is the break angle and the vector follows its
-    radius. For an r boundary, the vector is perpendicular to the boundary's
-    spoke, so `loc` does not affect the result. Start and end boundaries point
-    in opposite directions.
-
-    Parameters
-    ----------
-    ax :
-        Polar panel axes.
-    side :
-        Polar boundary containing the tick.
-    loc :
-        Break location in the axis's data coordinates.
-    """
-    direction = ax.get_theta_direction()
-    offset = ax.get_theta_offset()
-    sign = 1 if side in ("theta_outside", "r_end") else -1
-
-    if side in ("theta_outside", "theta_inside"):
-        angle = loc * direction + offset
-        return sign * np.array([np.cos(angle), np.sin(angle)])
-
-    spoke = spoke_angle(ax, side) * direction + offset
-    angle = spoke + sign * direction * np.pi / 2
-    return np.array([np.cos(angle), np.sin(angle)])
-
-
 class p9ThetaTick(ThetaTick):
     """
     Theta tick whose labels sit on the rim of their matching tick marks
@@ -157,7 +102,7 @@ class p9ThetaTick(ThetaTick):
         # Matplotlib pads theta labels from their centres, so the visible gap
         # varies with the label's angle. Place the point facing the panel at
         # the themed distance beyond its own tick.
-        axes = cast("PolarAxes", self.axes)
+        axes = cast("p9RadialAxes", self.axes)
         loc = self.get_loc()
 
         pairs: tuple[
@@ -192,7 +137,7 @@ class p9ThetaTick(ThetaTick):
                 self._base_pad  # pyright: ignore[reportAttributeAccessIssue]
                 + tick_length
             )
-            unit = outward_unit(axes, side, loc)
+            unit = axes.outward_unit(side, loc)
 
             # Apply the padding at the label's centre, then correct the offset
             # so the point facing the panel reaches the same target.
@@ -262,7 +207,7 @@ class p9RadialTick(RadialTick):
             self.tick2line,
             self._text2_translate,
         )
-        if not _is_full_circle(cast("PolarAxes", self.axes)):
+        if not cast("p9RadialAxes", self.axes).is_full_circle:
             return [start, end]
         return [end] if self._tick_side > 0 else [start]
 
@@ -287,13 +232,12 @@ class p9RadialTick(RadialTick):
 
         super().update_position(loc)
 
-        axes = cast("PolarAxes", self.axes)
-        full_circle = _is_full_circle(axes)
+        axes = cast("p9RadialAxes", self.axes)
 
         for side, label, tickline, translate in self._placements():
-            unit = outward_unit(axes, side, loc)
+            unit = axes.outward_unit(side, loc)
 
-            if full_circle:
+            if axes.is_full_circle:
                 if side == "r_end":
                     label.set_visible(want_label)
                     tickline.set_visible(want_tick)
@@ -347,14 +291,14 @@ class p9RadialTick(RadialTick):
     def _position_labels(self, renderer: RendererBase) -> None:
         # Recompute from the initial pad offset on every draw so translations
         # do not accumulate across repeated draws.
-        axes = cast("PolarAxes", self.axes)
+        axes = cast("p9RadialAxes", self.axes)
         loc = self.get_loc()
 
         for side, label, _, translate in self._placements():
             if not label.get_visible() or not label.get_text():
                 continue
 
-            unit = outward_unit(axes, side, loc)
+            unit = axes.outward_unit(side, loc)
             padded = self._pad_offset(unit)
             translate._t = tuple(padded)  # pyright: ignore[reportAttributeAccessIssue]
             translate.invalidate()
