@@ -412,6 +412,33 @@ def test_one_long_theta_label():
     assert p == "one_long_theta_label"
 
 
+def test_long_theta_labels_all_quadrants():
+    # Each long label must meet the rim beside its own tick in every quadrant.
+    p = (
+        p_point
+        + scale_x_continuous(
+            breaks=[1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5],
+            labels=[f"long label {i}" for i in range(1, 9)],
+        )
+        + coord_radial()
+    )
+    assert p == "long_theta_labels_all_quadrants"
+
+
+def test_long_r_labels_on_both_spokes():
+    # Labels on both collinear spokes must face away from the filled half.
+    p = p_wedge + scale_y_continuous(
+        breaks=[10, 20, 30],
+        labels=["ten mpg", "twenty mpg", "thirty mpg"],
+        sec_axis=sec_axis(
+            lambda x: x * 2,
+            breaks=[20, 40, 60],
+            labels=["twenty kph", "forty kph", "sixty kph"],
+        ),
+    )
+    assert p == "long_r_labels_on_both_spokes"
+
+
 def test_axis_text_r_blank_hides_radial_labels():
     # `axis_text_r` hides both radial axes without hiding the theta axis. On a
     # full circle, the primary and secondary radial labels share one spoke.

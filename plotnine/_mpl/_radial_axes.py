@@ -16,6 +16,7 @@ from matplotlib.projections.polar import (
 
 from ._radial_axis import (
     p9RadialAxis,
+    p9RadialTick,
     p9SecondaryRadialAxis,
     p9ThetaAxis,
     p9ThetaTick,
@@ -423,8 +424,14 @@ def _redraw_raxis(axis: p9RadialAxis, renderer: RendererBase) -> None:
     primary r-axis moves to the end spoke under `reverse="theta"`, swapping
     with the secondary. Each mark draws before its label so a label never
     sits under its own mark.
+
+    Reposition each label before redrawing it because placement depends on
+    its rendered bounds. This preserves the measured position when the redraw
+    lifts the label above the geoms.
     """
     for tick in (*axis.majorTicks, *axis.minorTicks):
+        if isinstance(tick, p9RadialTick):
+            tick._position_labels(renderer)
         for mark, label in (
             (tick.tick1line, tick.label1),
             (tick.tick2line, tick.label2),
