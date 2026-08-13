@@ -9,7 +9,7 @@ import numpy as np
 
 from .._mpl._radial_axes import p9RadialAxes  # noqa: TCH001
 from .._utils.registry import alias
-from ..exceptions import PlotnineWarning
+from ..exceptions import PlotnineError, PlotnineWarning
 from ..iapi import panel_ranges, radial_panel_view
 from .coord import _activate_axis, _set_fixed_ticks, coord, dist_euclidean
 
@@ -90,8 +90,10 @@ class coord_radial(coord):
         Default 0.
     end :
         Ending angle in radians, measured clockwise from 12 o'clock.
-        Equivalent angles are interpreted as the same endpoint. `None`
-        (default) gives a full circle.
+        `None` (default) draws a full circle. Angles separated by whole turns
+        are equivalent, except that `end == start` raises a
+        [](:class:`~plotnine.exceptions.PlotnineError`) because it defines a
+        zero-width arc.
     expand :
         If `True` (the default), add a small buffer around the data on both
         axes, so the data stops short of the arc ends and of the outer
@@ -158,6 +160,11 @@ class coord_radial(coord):
             raise ValueError(
                 "reverse must be one of 'none', 'theta', 'r', 'thetar'; "
                 f"got {reverse!r}."
+            )
+        if end is not None and end == start:
+            raise PlotnineError(
+                f"start={start!r} and end={end!r} define a zero-width arc. "
+                "Set end=None for a full circle or choose a different angle."
             )
         self.theta = theta
         self.start = start
@@ -317,19 +324,14 @@ class coord_radial(coord):
         """
         Forward angular limits of the displayed arc
 
-        Equivalent endpoints select the same clockwise arc. An explicit
-        non-zero whole turn remains a full circle, while equal endpoints
-        remain a zero-width arc.
+        Equivalent end angles select the same clockwise arc. A non-zero
+        whole turn selects a full circle.
         """
         turn = 2 * np.pi
         if self.end is None:
             return (self.start, self.start + turn)
 
-        delta = self.end - self.start
-        if delta == 0:
-            return (self.start, self.start)
-
-        span = delta % turn
+        span = (self.end - self.start) % turn
         if span == 0:
             span = turn
         return (self.start, self.start + span)

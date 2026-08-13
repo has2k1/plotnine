@@ -24,7 +24,7 @@ from plotnine import (
 )
 from plotnine.coords.coord_radial import polar_bbox
 from plotnine.data import mtcars
-from plotnine.exceptions import PlotnineWarning
+from plotnine.exceptions import PlotnineError, PlotnineWarning
 from plotnine.iapi import labels_view
 from plotnine.scales import dup_axis, scale_x_continuous, sec_axis
 from plotnine.themes.elements import margin
@@ -54,8 +54,12 @@ def test_arc_range_normalizes_end_forward():
         coord_radial(start=pi, end=2 * pi)._arc_range, (pi, 2 * pi)
     )
     assert_allclose(coord_radial(start=0, end=2 * pi)._arc_range, (0, 2 * pi))
-    assert coord_radial(start=1, end=1)._arc_range == (1, 1)
     assert coord_radial(start=1)._arc_range == (1, 1 + 2 * pi)
+
+
+def test_rejects_zero_width_arc():
+    with pytest.raises(PlotnineError, match="zero-width arc"):
+        coord_radial(start=1, end=1)
 
 
 def test_classifies_full_circle_from_arc_range():
@@ -64,7 +68,6 @@ def test_classifies_full_circle_from_arc_range():
     assert coord_radial(start=1, end=1 + 2 * pi)._is_full_circle
     assert coord_radial(end=2 * pi, reverse="theta")._is_full_circle
     assert not coord_radial(start=0, end=pi)._is_full_circle
-    assert not coord_radial(start=1, end=1)._is_full_circle
 
 
 def test_polar_bbox_full_circle_is_unit_square():
