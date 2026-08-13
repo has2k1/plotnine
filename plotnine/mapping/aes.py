@@ -32,6 +32,13 @@ __all__ = ("aes",)
 X_AESTHETICS = {"x", "xmin", "xmax", "xend", "xintercept"}
 Y_AESTHETICS = {"y", "ymin", "ymax", "yend", "yintercept"}
 
+# Counterparts for transposing every position aesthetic between dimensions.
+# Bounds, endpoints, and intercepts must move with `x` and `y`.
+TRANSPOSED_POSITION_AESTHETICS = {
+    **{aes: f"y{aes[1:]}" for aes in X_AESTHETICS},
+    **{aes: f"x{aes[1:]}" for aes in Y_AESTHETICS},
+}
+
 ALL_AESTHETICS = {
     "alpha",
     "angle",

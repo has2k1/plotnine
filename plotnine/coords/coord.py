@@ -135,6 +135,16 @@ class coord:
     # than the final plot that's actually drawn.
     _owner: ggplot | None = None
 
+    @property
+    def preserves_dimensions(self) -> bool:
+        """
+        Whether transformed position aesthetics retain their dimensions
+
+        When this is `False`, geoms must read each position and its bounds
+        from the opposite dimension.
+        """
+        return True
+
     def __radd__(self, other: ggplot) -> ggplot:
         """
         Add coordinates to ggplot object

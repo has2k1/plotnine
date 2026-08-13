@@ -3,7 +3,6 @@ from __future__ import annotations
 import typing
 
 from .._utils import SIZE_FACTOR, to_rgba
-from ..coords import coord_flip
 from ..doctools import document
 from ..exceptions import PlotnineError
 from .geom import geom
@@ -90,7 +89,7 @@ class geom_ribbon(geom):
         ax: Axes,
         params: dict[str, Any],
     ):
-        _x = "y" if isinstance(coord, coord_flip) else "x"
+        _x = "x" if coord.preserves_dimensions else "y"
         data = coord.transform(data, panel_params, munch=True)
         data = data.sort_values(by=["group", _x], kind="mergesort")
         units = ["alpha", "color", "fill", "linetype", "size"]
@@ -122,12 +121,12 @@ class geom_ribbon(geom):
         if fill is None:
             fill = "none"
 
-        if isinstance(coord, coord_flip):
-            fill_between = ax.fill_betweenx
-            _x, _min, _max = data["y"], data["xmin"], data["xmax"]
-        else:
+        if coord.preserves_dimensions:
             fill_between = ax.fill_between
             _x, _min, _max = data["x"], data["ymin"], data["ymax"]
+        else:
+            fill_between = ax.fill_betweenx
+            _x, _min, _max = data["y"], data["xmin"], data["xmax"]
 
         # We only change this defaults for fill_between when necessary
         where = data.get("where", None)
@@ -167,9 +166,9 @@ class geom_ribbon(geom):
         if outline_type == "full":
             return
 
-        # The data is already in panel coordinates. After `coord_flip`,
-        # the ribbon bounds are `xmin` and `xmax`.
-        bounds = "x" if isinstance(coord, coord_flip) else "y"
+        # The data is already in panel coordinates. Where the coord swaps
+        # the dimensions, the ribbon bounds are `xmin` and `xmax`.
+        bounds = "y" if coord.preserves_dimensions else "x"
 
         # Each call receives one ribbon group, so an outline forms one path
         # with constant aesthetics.
