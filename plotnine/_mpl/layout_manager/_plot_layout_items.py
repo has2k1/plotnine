@@ -4,13 +4,13 @@ from dataclasses import dataclass
 from itertools import chain
 from typing import TYPE_CHECKING, cast
 
-import numpy as np
 from matplotlib.text import Text
 
 from plotnine._utils import ha_as_float, side_artists, va_as_float
 from plotnine.composition._compose import Compose
 from plotnine.exceptions import PlotnineError
 
+from .._radial_axis import outward_unit, spoke_angle
 from ..axes import axis_at
 from ..utils import (
     ArtistGeometry,
@@ -98,6 +98,9 @@ class PolarLabel:
     anchor: tuple[float, float]
     """Point on the panel the label is placed against"""
 
+    unit: tuple[float, float]
+    """Outward unit vector at the label's anchor"""
+
     width: float
     """Width of the label"""
 
@@ -122,25 +125,26 @@ class PolarLabel:
 
         A theta tick anchors on its own boundary at the angle of its break;
         an r tick anchors along its spoke at the radius of its break. The
-        gap covers the tick mark the label clears and the pad beyond it.
+        gap covers the tick mark the label clears and the pad beyond it. The
+        unit vector points from the panel towards the label.
         """
         r_inner, r_outer = ax.get_ylim()
         if side == "theta_outside":
             point = (loc, r_outer)
         elif side == "theta_inside":
             point = (loc, r_inner)
-        elif side == "r_start":
-            point = (np.deg2rad(ax.get_thetamin()), loc)
         else:
-            point = (np.deg2rad(ax.get_thetamax()), loc)
+            point = (spoke_angle(ax, side), loc)
 
         box = label.get_window_extent(renderer)
         anchor = ax.transAxes.inverted().transform(
             ax.transData.transform(point)
         )
+        unit = outward_unit(ax, side, loc)
         gap_pt = (tick.get_pad() or 0) + tick.get_tick_padding()
         return cls(
             anchor=(anchor[0], anchor[1]),
+            unit=(unit[0], unit[1]),
             width=box.width,
             height=box.height,
             gap=gap_pt * ax.figure.dpi / 72,
@@ -150,15 +154,19 @@ class PolarLabel:
         """
         How far the label reaches past one edge of the panel, display space
 
-        Negative when the label stops short of the edge, which is what a
-        label facing away from the side does.
+        The direction component towards the edge determines how much of the
+        label and gap extend past it. A label parallel to the edge contributes
+        half its extent and none of its gap. A negative result means the label
+        stops inside the edge.
         """
         if side in ("left", "right"):
             along, extent, span = self.anchor[0], self.width, panel.width
+            facing = self.unit[0] if side == "right" else -self.unit[0]
         else:
             along, extent, span = self.anchor[1], self.height, panel.height
+            facing = self.unit[1] if side == "top" else -self.unit[1]
         inset = along if side in ("left", "bottom") else 1 - along
-        return extent + self.gap - inset * span
+        return extent * (1 + facing) / 2 + self.gap * facing - inset * span
 
 
 @dataclass
@@ -1037,6 +1045,8 @@ class PolarPlotLayoutItems(PlotLayoutItems):
     def _outward_labels(self, ax: Axes) -> Iterator[PolarLabel]:
         """
         Every tick label the panel will show, with where it attaches
+
+        Each boundary contributes only the label pair assigned to that side.
         """
         renderer = self.geometry.renderer
         panel = cast("PolarAxes", ax)
@@ -1044,16 +1054,17 @@ class PolarPlotLayoutItems(PlotLayoutItems):
             axis = axis_at(ax, polar_side)
             if axis is None:
                 continue
+            _, label_attr = side_artists(polar_side)
             for locs, ticks in (
                 (axis.get_majorticklocs(), axis.get_major_ticks()),
                 (axis.get_minorticklocs(), axis.get_minor_ticks()),
             ):
                 for loc, tick in zip(locs, ticks):
-                    for label in (tick.label1, tick.label2):
-                        if _text_is_visible(label):
-                            yield PolarLabel.make(
-                                panel, polar_side, loc, tick, label, renderer
-                            )
+                    label = getattr(tick, label_attr)
+                    if _text_is_visible(label):
+                        yield PolarLabel.make(
+                            panel, polar_side, loc, tick, label, renderer
+                        )
 
     def axis_ticks_x_max_height(self, ax: Axes, side: Side) -> float:
         return 0
