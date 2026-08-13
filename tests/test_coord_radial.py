@@ -384,6 +384,20 @@ def test_axis_ticks_theta_blank_keeps_label_gap():
     assert p == "axis_ticks_theta_blank_keeps_label_gap"
 
 
+def test_large_theta_text_fits_in_the_figure():
+    # Larger theta labels must shrink the panel enough to remain inside the
+    # figure.
+    p = p_point + coord_radial() + theme(axis_text_theta=element_text(size=28))
+    assert p == "large_theta_text_fits_in_the_figure"
+
+
+def test_long_theta_ticks_fit_in_the_figure():
+    # Longer visible theta ticks move their labels outward, so the panel must
+    # shrink by the themed tick length.
+    p = p_point + coord_radial() + theme(axis_ticks_length_major_theta=60)
+    assert p == "long_theta_ticks_fit_in_the_figure"
+
+
 def test_axis_text_r_blank_hides_radial_labels():
     # `axis_text_r` hides both radial axes without hiding the theta axis. On a
     # full circle, the primary and secondary radial labels share one spoke.

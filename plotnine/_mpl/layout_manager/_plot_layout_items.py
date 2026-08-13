@@ -45,6 +45,7 @@ if TYPE_CHECKING:
     from plotnine.themes.theme import theme
     from plotnine.typing import (
         HorizontalJustification,
+        PolarSide,
         Side,
         StripPosition,
         VerticalJustification,
@@ -71,6 +72,32 @@ if TYPE_CHECKING:
         ]
         | tuple[float, float]
     )
+
+
+# Polar boundaries that may carry a theta or r axis.
+POLAR_SIDES: tuple[PolarSide, ...] = (
+    "theta_outside",
+    "theta_inside",
+    "r_start",
+    "r_end",
+)
+
+# Tick-label themeables for every polar boundary.
+POLAR_TEXT_THEMEABLES = (
+    "axis_text_theta_outside",
+    "axis_text_theta_inside",
+    "axis_text_r_start",
+    "axis_text_r_end",
+)
+
+# Map each polar tick-length themeable to the marks it sizes. Blank marks
+# contribute no clearance.
+POLAR_TICK_LENGTHS = {
+    "axis_ticks_length_major_theta": "axis_ticks_major_theta",
+    "axis_ticks_length_major_r": "axis_ticks_major_r",
+    "axis_ticks_length_minor_theta": "axis_ticks_minor_theta",
+    "axis_ticks_length_minor_r": "axis_ticks_minor_r",
+}
 
 
 @dataclass
@@ -915,31 +942,78 @@ class PlotLayoutItems:
 
 class PolarPlotLayoutItems(PlotLayoutItems):
     """
-    The space around a polar panel that its axes need
+    Space around a polar panel for its axis decorations
 
-    A theta axis follows an arc and an r axis follows a spoke, so neither
-    occupies a Cartesian side with a measurable tick-label bounding box.
-    Tick-label protrusions are therefore zero, and every side receives the
-    same fixed text clearance. The panel already fits the tight sector. Its
-    labels fan around the arc instead of extending from one box edge.
+    Theta axes follow arcs and r axes follow spokes, so neither belongs to
+    one Cartesian edge. Every panel edge therefore reserves the same band:
+    the largest visible label extent in that dimension, plus the greater of
+    the configured label margins and tick lengths whose marks are not blank.
 
-    The tick-mark clearance is zero: polar ticks point inward from the
-    arc, so a mark never reaches past the panel edge whatever its length.
-    A longer tick only pushes its label farther out, and the text
-    clearance already covers the label.
+    Label size is stable before final positioning, so it can be measured from
+    the artists. Margins and tick lengths come from the theme because their
+    final offsets are applied during drawing.
+
+    The complete band is reported as text clearance. Tick clearance and
+    per-edge label protrusions remain zero to avoid counting it twice.
     """
+
+    def _axis_clearance(self, ax: Axes, side: Side) -> float:
+        """
+        Return polar-axis clearance beyond one panel edge in figure space
+        """
+        dim: Literal["width", "height"] = (
+            "width" if side in ("left", "right") else "height"
+        )
+        W, H = self.plot.theme.getp("figure_size")
+        dpi = self.plot.figure.dpi
+        band = self._label_extent(ax, dim) + self._label_offset() * dpi / 72
+        return band / ((W if dim == "width" else H) * dpi)
+
+    def _label_extent(
+        self, ax: Axes, dim: Literal["width", "height"]
+    ) -> float:
+        """
+        Return the largest visible polar tick-label extent in display space
+        """
+        extents = [
+            getattr(label.get_window_extent(self.geometry.renderer), dim)
+            for polar_side in POLAR_SIDES
+            if (axis := axis_at(ax, polar_side)) is not None
+            for tick in chain(axis.get_major_ticks(), axis.get_minor_ticks())
+            for label in (tick.label1, tick.label2)
+            if _text_is_visible(label)
+        ]
+        return max([*extents, 0])
+
+    def _label_offset(self) -> float:
+        """
+        Return the largest configured margin or non-blank tick length in points
+        """
+        theme = self.plot.theme
+        margins = [
+            max(m.t, m.b, m.l, m.r)
+            for name in POLAR_TEXT_THEMEABLES
+            if not theme.T.is_blank(name)
+            for m in [theme.get_margin(name).pt]
+        ]
+        lengths = [
+            theme.getp(name) or 0
+            for name, marks in POLAR_TICK_LENGTHS.items()
+            if not theme.T.is_blank(marks)
+        ]
+        return max([*margins, *lengths, 0])
 
     def axis_ticks_x_max_height(self, ax: Axes, side: Side) -> float:
         return 0
 
     def axis_text_x_max_height(self, ax: Axes, side: Side) -> float:
-        return _polar_text_height_x(self.plot.theme, side)
+        return self._axis_clearance(ax, side)
 
     def axis_ticks_y_max_width(self, ax: Axes, side: Side) -> float:
         return 0
 
     def axis_text_y_max_width(self, ax: Axes, side: Side) -> float:
-        return _polar_text_width_y(self.plot.theme, side)
+        return self._axis_clearance(ax, side)
 
     def axis_text_y_top_protrusion(self, location: AxesLocation) -> float:
         return 0.0
@@ -964,39 +1038,6 @@ class PolarPlotLayoutItems(PlotLayoutItems):
         regardless of the theme's `strip_placement`.
         """
         return self._strip_axis_clearance(st)
-
-
-def _polar_text_height_x(theme: theme, side: Side) -> float:
-    """
-    Estimate an `axis_text_x_<side>` label's height in figure space
-
-    A theta axis does not occupy a Cartesian side, so it has no side-specific
-    tick-label bounding box to measure. Use the font size as the label height,
-    following the estimate used for strip padding. As with
-    `axis_text_x_max_height`, the caller adds the tick-label margin.
-    """
-    name = f"axis_text_x_{side}"
-    if theme.T.is_blank(name):
-        return 0
-    _, H = theme.getp("figure_size")
-    size_pt = theme.getp((name, "size")) or 0
-    return size_pt / 72 / H
-
-
-def _polar_text_width_y(theme: theme, side: Side) -> float:
-    """
-    Estimated figure-width of an `axis_text_y_<side>` label on a polar panel
-
-    Mirrors `_polar_text_height_x` for the r axis: it runs along one
-    spoke rather than wrapping the circle, but the same "no side to
-    measure" problem applies.
-    """
-    name = f"axis_text_y_{side}"
-    if theme.T.is_blank(name):
-        return 0
-    W, _ = theme.getp("figure_size")
-    size_pt = theme.getp((name, "size")) or 0
-    return size_pt / 72 / W
 
 
 def _spine_set_position_outward(spine: Spine, axis: Axis, distance: float):
