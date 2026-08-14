@@ -345,3 +345,18 @@ def test_blank_all_text_draws():
     # not crash when computing the tick-label padding. (Regression)
     p = ggplot() + lims(x=(0, 100), y=(0, 100)) + theme(text=element_blank())
     p.draw_test()  # pyright: ignore  # must not raise
+
+
+def test_element_text_linespacing_normal():
+    # Matplotlib 3.10 uses `1.2` for the `normal` line spacing that
+    # Matplotlib 3.11 accepts by name.
+    from plotnine._mpl import MPL_LT_311
+
+    expected = 1.2 if MPL_LT_311 else "normal"
+    assert (
+        element_text(linespacing="normal").properties["linespacing"]
+        == expected
+    )
+    assert (
+        element_text(lineheight="normal").properties["linespacing"] == expected
+    )
