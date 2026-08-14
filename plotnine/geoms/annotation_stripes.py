@@ -11,7 +11,7 @@ from ..scales.scale_discrete import scale_discrete
 from .annotate import annotate
 from .geom import geom
 from .geom_polygon import geom_polygon
-from .geom_rect import geom_rect
+from .geom_rect import fill_rects
 
 if typing.TYPE_CHECKING:
     from typing import Any, Literal, Sequence
@@ -173,7 +173,7 @@ class _geom_stripes(geom):
             fill[0] = fill[1]
             fill[-1] = fill[-2]
 
-        if direction != "vertical":
+        if axis != "x":
             xmin, xmax, ymin, ymax = ymin, ymax, xmin, xmax
 
         data = pd.DataFrame(
@@ -190,4 +190,4 @@ class _geom_stripes(geom):
             }
         )
 
-        return geom_rect.draw_group(data, panel_params, coord, ax, params)
+        fill_rects(data, ax, params)
