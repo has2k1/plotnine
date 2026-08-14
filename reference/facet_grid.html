@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.10.11">
+<meta name="generator" content="quarto-1.11.1">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -12,10 +12,13 @@
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
 */
-code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -75,10 +78,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-5947b73a06bce04bf1d622ae23e1ec5b.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-d5b4e69c7e37b49c6591bcc5116dd748.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-f8738cfd3fc820478fd97ffc9fa58b96.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-0e98b6cd893899cdbeb447ff6df6c6a6.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -118,7 +121,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine 0.15.7</span>
+    <span class="navbar-title">plotnine 0.15.8</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -206,7 +209,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <dt><code><span class="doc-parameter-name">space</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/typing.html#typing.Literal">Literal</a>[<span class="st">"fixed"</span>, <span class="st">"free"</span>, <span class="st">"free_x"</span>, <span class="st">"free_y"</span>] | <a href="../reference/typing.html#plotnine.typing.FacetSpaceRatios">FacetSpaceRatios</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default"><span class="st">"fixed"</span></span></code></dt>
 <dd>
 <p>Control the size of the <code>x</code> or <code>y</code> sides of the panels. The size also depends to the <code>scales</code> parameter.</p>
-<p>If a string, it should be one of <code class="sourceCode python">[<span class="st">'fixed'</span>, <span class="st">'free'</span>, <span class="st">'free_x'</span>, <span class="st">'free_y'</span>]</code>.</p>
+<p>If a string, it should be one of <code class="sourceCode python py">[<span class="st">'fixed'</span>, <span class="st">'free'</span>, <span class="st">'free_x'</span>, <span class="st">'free_y'</span>]</code>.</p>
 <p>If a <code>dict</code>, it indicates the relative facet size ratios such as:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>{<span class="st">"x"</span>: [<span class="dv">1</span>, <span class="dv">2</span>], <span class="st">"y"</span>: [<span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">1</span>]}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This means that in the horizontal direction, the second panel will be twice the length of the first. In the vertical direction the top facet will be the 3 times longer then the second and third facets.</p>
@@ -218,7 +221,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </dd>
 <dt><code><span class="doc-parameter-name">labeller</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/typing.html#typing.Literal">Literal</a>[<span class="st">"label_value"</span>, <span class="st">"label_both"</span>, <span class="st">"label_context"</span>]</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default"><span class="st">"label_value"</span></span></code></dt>
 <dd>
-<p>How to label the facets. A string value if it should be one of <code class="sourceCode python">[<span class="st">"label_value"</span>, <span class="st">"label_both"</span>, <span class="st">"label_context"</span>]</code>.</p>
+<p>How to label the facets. A string value if it should be one of <code class="sourceCode python py">[<span class="st">"label_value"</span>, <span class="st">"label_both"</span>, <span class="st">"label_context"</span>]</code>.</p>
 </dd>
 <dt><code><span class="doc-parameter-name">as_table</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#bool">bool</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">True</span></code></dt>
 <dd>
