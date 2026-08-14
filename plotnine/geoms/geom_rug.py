@@ -65,7 +65,7 @@ class geom_rug(geom):
         if isinstance(coord, coord_flip):
             sides = sides.translate(str.maketrans("tblr", "rlbt"))
 
-        stroke_rugs(data, panel_params, ax, params, sides)
+        stroke_rugs(data, panel_params, ax, params, sides, params["length"])
 
 
 def stroke_rugs(
@@ -74,6 +74,7 @@ def stroke_rugs(
     ax: Axes,
     params: dict[str, Any],
     sides: str,
+    length: float,
 ) -> None:
     """
     Draw rug marks in panel coordinates
@@ -92,6 +93,8 @@ def stroke_rugs(
     sides :
         Panel sides to mark, using any combination of `b`, `t`, `l`, and
         `r`. Resolve any axis flip before calling.
+    length :
+        Length of each mark as a fraction of the panel width or height.
     """
     from matplotlib.collections import LineCollection
 
@@ -107,8 +110,8 @@ def stroke_rugs(
     rugs = []
     xmin, xmax = panel_params.x.range
     ymin, ymax = panel_params.y.range
-    xheight = (xmax - xmin) * params["length"]
-    yheight = (ymax - ymin) * params["length"]
+    xheight = (xmax - xmin) * length
+    yheight = (ymax - ymin) * length
 
     if has_x:
         x = cast("FloatArray", np.repeat(data["x"].to_numpy(), 2))
