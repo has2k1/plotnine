@@ -7,6 +7,8 @@ from __future__ import annotations
 from contextlib import suppress
 from typing import TYPE_CHECKING
 
+from plotnine._mpl import MPL_LT_311
+
 from .element_base import element_base
 from .margin import margin as Margin
 
@@ -151,6 +153,9 @@ class element_text(element_base):
             va = self._translate_vjust(kwargs.pop("vjust"))
         with suppress(KeyError):
             rotation = kwargs.pop("angle")
+
+        if MPL_LT_311 and linespacing == "normal":
+            linespacing = 1.2
 
         super().__init__()
         self.properties.update(**kwargs)
