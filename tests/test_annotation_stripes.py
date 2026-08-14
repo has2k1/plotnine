@@ -6,6 +6,7 @@ from plotnine import (
     aes,
     annotation_stripes,
     coord_flip,
+    coord_trans,
     facet_wrap,
     geom_point,
     geom_vline,
@@ -122,3 +123,15 @@ def test_annotation_stripes_single_stripe():
     )
 
     assert p == "annotation_stripes_single_stripe"
+
+
+def test_annotation_stripes_coord_trans():
+    data2 = data.assign(y=10.0 ** (data["y"] % 3))
+    p = (
+        ggplot(data2)
+        + annotation_stripes(fill_range="no")
+        + geom_point(aes("factor(x)", "y"))
+        + coord_trans(y="log10")
+    )
+
+    assert p == "annotation_stripes_coord_trans"

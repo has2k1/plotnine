@@ -7,6 +7,7 @@ from plotnine import (
     aes,
     annotation_logticks,
     coord_flip,
+    coord_trans,
     element_line,
     facet_wrap,
     geom_point,
@@ -35,6 +36,20 @@ def test_annotation_logticks():
         )
     )
     assert p == "annotation_logticks"
+
+
+def test_annotation_logticks_coord_trans():
+    # Major grid lines and long log ticks must coincide.
+    p = (
+        ggplot(data, aes("x", "x"))
+        + annotation_logticks(sides="b", size=0.75)
+        + geom_point()
+        + scale_x_continuous(breaks=[1, 10, 100, 1000])
+        + coord_trans(x="log10")
+        + theme(panel_grid_major=element_line(color="red"))
+    )
+    with pytest.warns(PlotnineWarning):
+        assert p == "annotation_logticks_coord_trans"
 
 
 def test_annotation_logticks_faceting():
