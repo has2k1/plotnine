@@ -2,6 +2,19 @@
 title: Changelog
 ---
 
+## v0.15.8
+(2026-08-14)
+
+### Bug Fixes
+
+- plotnine can be installed under Pyodide 314 again. Pyodide 314 vendors
+  statsmodels 0.14.6 and builds it itself, so the requirement that held
+  statsmodels at 0.14.4 under Pyodide left micropip with no wheel to install
+  and it failed with `Can't find a pure Python 3 wheel for
+  'statsmodels<=0.14.4; sys_platform == "emscripten"'`. The requirement now
+  admits 0.14.6 there, and still holds at 0.14.4 for the older Pyodide that
+  vendors that version. ({{< issue 1106 >}})
+
 ## v0.15.7
 (2026-06-13)
 
