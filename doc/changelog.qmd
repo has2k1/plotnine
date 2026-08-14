@@ -110,6 +110,14 @@ title: Changelog
   `geom="blank"`, `position="identity"` and `na_rm=False`, so all geoms and
   stats include them automatically.
 
+- plotnine now supports Matplotlib 3.10. This allows installation under
+  Pyodide. Matplotlib 3.10 and 3.11 use different text metrics, so text
+  extents, line spacing, and plot margins may differ. Use Matplotlib 3.11 or
+  later to reproduce the documentation output.
+
+- `statsmodels>=0.14.6` is now required on every platform. This replaces the
+  separate `statsmodels<=0.14.4` requirement for Pyodide.
+
 ### Bug Fixes
 
 - [](:class:`~plotnine.scale_size_datetime`) now honours its `range`

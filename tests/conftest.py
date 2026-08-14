@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 from matplotlib.testing.compare import compare_images
 
 from plotnine import ggplot, theme
+from plotnine._mpl import MPL_LT_311
 from plotnine.composition import (
     Beside,
     Compose,
@@ -48,6 +49,14 @@ if not baseline_images_dir.exists():
         "This is most likely because the test data is not installed. "
         "You may need to install plotnine from source to get the "
         "test data."
+    )
+
+if MPL_LT_311:
+    raise OSError(
+        "Install Matplotlib>=3.11 to run the tests. The baseline images use "
+        "Matplotlib 3.11 text metrics, which differ from those in installed "
+        f"Matplotlib {mpl.__version__}. plotnine itself supports "
+        "Matplotlib>=3.10."
     )
 
 

@@ -23,16 +23,12 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Visualization"
 ]
 dependencies = [
-    "matplotlib>=3.11.0",
+    "matplotlib>=3.10.0",
     "pandas>=2.2.0",
     "mizani~=0.14.0",
     "numpy>=1.25.0",
     "scipy>=1.15.0",
-    # pyodide ships with statmodels==0.14.4 which is broken for later versions
-    # of numpy and pandas
-    # https://github.com/statsmodels/statsmodels/releases/tag/v0.14.6
-    "statsmodels<=0.14.4; sys_platform == 'emscripten'",
-    "statsmodels>=0.14.6; sys_platform != 'emscripten'",
+    "statsmodels>=0.14.6",
 ]
 requires-python = ">=3.11"
 
@@ -71,6 +67,8 @@ lint = [
 ]
 
 test = [
+    # The baseline images use text metrics from Matplotlib 3.11.
+    "matplotlib>=3.11.0",
     "pytest-cov>=4.0.0",
     "pytest-xdist>=3.8.0",
     "pytest-sugar>=1.1.1",
