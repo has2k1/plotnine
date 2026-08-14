@@ -57,62 +57,88 @@ class geom_rug(geom):
         ax: Axes,
         params: dict[str, Any],
     ):
-        from matplotlib.collections import LineCollection
-
         data = coord.transform(data, panel_params)
         sides = params["sides"]
 
         # coord_flip does not flip the side(s) on which the rugs
         # are plotted. We do the flipping here
         if isinstance(coord, coord_flip):
-            t = str.maketrans("tblr", "rlbt")
-            sides = sides.translate(t)
+            sides = sides.translate(str.maketrans("tblr", "rlbt"))
 
-        linewidth = data["size"] * SIZE_FACTOR
+        stroke_rugs(data, panel_params, ax, params, sides)
 
-        has_x = "x" in data.columns
-        has_y = "y" in data.columns
 
-        if has_x or has_y:
-            n = len(data)
-        else:
-            return
+def stroke_rugs(
+    data: pd.DataFrame,
+    panel_params: panel_view,
+    ax: Axes,
+    params: dict[str, Any],
+    sides: str,
+) -> None:
+    """
+    Draw rug marks in panel coordinates
 
-        rugs = []
-        xmin, xmax = panel_params.x.range
-        ymin, ymax = panel_params.y.range
-        xheight = (xmax - xmin) * params["length"]
-        yheight = (ymax - ymin) * params["length"]
+    Parameters
+    ----------
+    data :
+        Rug-mark aesthetics. Include `x`, `y`, or both; position values
+        must use panel coordinates.
+    panel_params :
+        Panel ranges used to determine the mark endpoints.
+    ax :
+        Axes to draw on.
+    params :
+        Geom and stat parameters that control line appearance.
+    sides :
+        Panel sides to mark, using any combination of `b`, `t`, `l`, and
+        `r`. Resolve any axis flip before calling.
+    """
+    from matplotlib.collections import LineCollection
 
-        if has_x:
-            x = cast("FloatArray", np.repeat(data["x"].to_numpy(), 2))
+    linewidth = data["size"] * SIZE_FACTOR
 
-            if "b" in sides:
-                y = np.tile([ymin, ymin + yheight], n)
-                rugs.extend(make_line_segments(x, y, ispath=False))
+    has_x = "x" in data.columns
+    has_y = "y" in data.columns
 
-            if "t" in sides:
-                y = np.tile([ymax - yheight, ymax], n)
-                rugs.extend(make_line_segments(x, y, ispath=False))
+    if not (has_x or has_y):
+        return
 
-        if has_y:
-            y = cast("FloatArray", np.repeat(data["y"].to_numpy(), 2))
+    n = len(data)
+    rugs = []
+    xmin, xmax = panel_params.x.range
+    ymin, ymax = panel_params.y.range
+    xheight = (xmax - xmin) * params["length"]
+    yheight = (ymax - ymin) * params["length"]
 
-            if "l" in sides:
-                x = np.tile([xmin, xmin + xheight], n)
-                rugs.extend(make_line_segments(x, y, ispath=False))
+    if has_x:
+        x = cast("FloatArray", np.repeat(data["x"].to_numpy(), 2))
 
-            if "r" in sides:
-                x = np.tile([xmax - xheight, xmax], n)
-                rugs.extend(make_line_segments(x, y, ispath=False))
+        if "b" in sides:
+            y = np.tile([ymin, ymin + yheight], n)
+            rugs.extend(make_line_segments(x, y, ispath=False))
 
-        color = to_rgba(data["color"], data["alpha"])
-        coll = LineCollection(
-            rugs,
-            edgecolor=color,
-            linewidth=linewidth,
-            linestyle=data["linetype"],
-            zorder=params["zorder"],
-            rasterized=params["raster"],
-        )
-        ax.add_collection(coll)
+        if "t" in sides:
+            y = np.tile([ymax - yheight, ymax], n)
+            rugs.extend(make_line_segments(x, y, ispath=False))
+
+    if has_y:
+        y = cast("FloatArray", np.repeat(data["y"].to_numpy(), 2))
+
+        if "l" in sides:
+            x = np.tile([xmin, xmin + xheight], n)
+            rugs.extend(make_line_segments(x, y, ispath=False))
+
+        if "r" in sides:
+            x = np.tile([xmax - xheight, xmax], n)
+            rugs.extend(make_line_segments(x, y, ispath=False))
+
+    color = to_rgba(data["color"], data["alpha"])
+    coll = LineCollection(
+        rugs,
+        edgecolor=color,
+        linewidth=linewidth,
+        linestyle=data["linetype"],
+        zorder=params["zorder"],
+        rasterized=params["raster"],
+    )
+    ax.add_collection(coll)
