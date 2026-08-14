@@ -12,7 +12,7 @@ from ..exceptions import PlotnineWarning
 from ..scales.scale_continuous import scale_continuous as ScaleContinuous
 from .annotate import annotate
 from .geom_path import geom_path
-from .geom_rug import geom_rug
+from .geom_rug import geom_rug, stroke_rugs
 
 if typing.TYPE_CHECKING:
     from typing import Any, Literal, Optional, Sequence
@@ -21,7 +21,6 @@ if typing.TYPE_CHECKING:
 
     from plotnine.coords.coord import coord
     from plotnine.facets.layout import Layout
-    from plotnine.geoms.geom import geom
     from plotnine.iapi import panel_view
     from plotnine.typing import AnyArray
 
@@ -58,7 +57,6 @@ class _geom_logticks(geom_rug):
         base: Optional[float],
         sides: str,
         panel_params: panel_view,
-        coord: coord,
     ) -> tuple[float, float]:
         """
         Check the log transforms
@@ -70,14 +68,10 @@ class _geom_logticks(geom_rug):
             calculated. If `None`, the base of the log transform
             the scale will be used.
         sides : str, default="bl"
-            Sides onto which to draw the marks. Any combination
-            chosen from the characters `btlr`, for *bottom*, *top*,
-            *left* or *right* side marks. If `coord_flip()` is used,
-            these are the sides *before* the flip.
+            Panel sides to mark, using any combination of `b`, `t`, `l`,
+            and `r`. Resolve any axis flip before calling.
         panel_params : panel_view
             `x` and `y` view scale values.
-        coord : coord
-            Coordinate (e.g. coord_cartesian) system of the geom.
 
         Returns
         -------
@@ -110,10 +104,6 @@ class _geom_logticks(geom_rug):
         base_x, base_y = 10, 10
         x_scale = panel_params.x.scale
         y_scale = panel_params.y.scale
-
-        if isinstance(coord, coord_flip):
-            x_scale, y_scale = y_scale, x_scale
-            base_x, base_y = base_y, base_x
 
         if "t" in sides or "b" in sides:
             base_x = get_base(x_scale, base)
@@ -191,35 +181,31 @@ class _geom_logticks(geom_rug):
             "linetype": params["linetype"],
         }
 
+        # `sides` names edges before `coord_flip`. Convert it to the
+        # displayed panel edges used below.
+        if isinstance(coord, coord_flip):
+            sides = sides.translate(str.maketrans("tblr", "rlbt"))
+
         def _draw(
-            geom: geom,
             axis: Literal["x", "y"],
             tick_positions: tuple[AnyArray, AnyArray, AnyArray],
         ):
             for position, length in zip(tick_positions, lengths):
                 data = pd.DataFrame({axis: position, **_aesthetics})
                 params["length"] = length
-                geom.draw_group(data, panel_params, coord, ax, params)
+                stroke_rugs(data, panel_params, ax, params, sides)
 
-        if isinstance(coord, coord_flip):
-            tick_range_x = panel_params.y.range
-            tick_range_y = panel_params.x.range
-        else:
-            tick_range_x = panel_params.x.range
-            tick_range_y = panel_params.y.range
-
-        # these are already flipped iff coord_flip
         base_x, base_y = self._check_log_scale(
-            params["base"], sides, panel_params, coord
+            params["base"], sides, panel_params
         )
 
         if "b" in sides or "t" in sides:
-            tick_positions = self._calc_ticks(tick_range_x, base_x)
-            _draw(self, "x", tick_positions)
+            tick_positions = self._calc_ticks(panel_params.x.range, base_x)
+            _draw("x", tick_positions)
 
         if "l" in sides or "r" in sides:
-            tick_positions = self._calc_ticks(tick_range_y, base_y)
-            _draw(self, "y", tick_positions)
+            tick_positions = self._calc_ticks(panel_params.y.range, base_y)
+            _draw("y", tick_positions)
 
 
 class annotation_logticks(annotate):
