@@ -32,8 +32,8 @@ class p9Axes(Axes):
 
     name = "plotnine"
 
-    # mpl resolves every Axis operation through the per-name axis
-    # registries; the secondary axes register under their own names.
+    # Matplotlib looks up shared axes in the registry for each axis name.
+    # Secondary axes use distinct names.
     _shared_axes = {
         **Axes._shared_axes,  # pyright: ignore[reportAttributeAccessIssue]
         "sec_x": cbook.Grouper(),
@@ -59,6 +59,27 @@ class p9Axes(Axes):
         # the spine of the side it occupies.
         self.spines[:].set_visible(False)
 
+    @property
+    def _axis_map(self) -> dict[str, XAxis | YAxis]:
+        """
+        Mapping from Matplotlib axis names to panel axes
+
+        Matplotlib uses this mapping to resolve tick and limit operations.
+        """
+        m: dict[str, XAxis | YAxis] = {"x": self.xaxis, "y": self.yaxis}
+        if self.sec_xaxis is not None:
+            m["sec_x"] = self.sec_xaxis
+        if self.sec_yaxis is not None:
+            m["sec_y"] = self.sec_yaxis
+        return m
+
+    @_axis_map.setter
+    def _axis_map(self, value: dict[str, XAxis | YAxis]):  # pyright: ignore[reportIncompatibleVariableOverride]
+        # Matplotlib 3.11 and later assign the primary axes here during panel
+        # initialisation. The getter derives that mapping from the panel, so
+        # ignore the assigned value.
+        ...
+
     def add_sec_axis(self, side: Side) -> XAxis | YAxis:
         """
         Return the secondary axis for `side`, creating it if needed
@@ -78,19 +99,17 @@ class p9Axes(Axes):
         """
         if side in ("top", "bottom"):
             if self.sec_xaxis is None:
-                self.sec_xaxis = self._make_sec_axis(XAxis, "sec_x")
+                self.sec_xaxis = self._make_sec_axis(XAxis)
             return self.sec_xaxis
         else:
             if self.sec_yaxis is None:
-                self.sec_yaxis = self._make_sec_axis(YAxis, "sec_y")
+                self.sec_yaxis = self._make_sec_axis(YAxis)
             return self.sec_yaxis
 
-    def _make_sec_axis(self, cls: type[AxisT], name: str) -> AxisT:
+    def _make_sec_axis(self, cls: type[AxisT]) -> AxisT:
         axis = cls(self)
-        # Register the axis so mpl can resolve its name, and add it to
-        # the draw tree. Panels are never cleared after this point;
-        # Axes.clear() would detach the artist.
-        self._axis_map[name] = axis
+        # Add the axis to the draw tree. Plotnine does not clear the panel
+        # after this point because clearing it would detach the secondary axis.
         self.add_artist(axis)
         axis.set_clip_on(False)
         axis.grid(False)
