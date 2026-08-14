@@ -139,6 +139,12 @@ title: Changelog
   `upper`, `lower` and `both` outlines follow the transformed band edges, and
   `full` outlines no longer raise an error.
 
+- [](:class:`~plotnine.annotation_logticks`) and
+  [](:class:`~plotnine.annotation_stripes`) now render correctly in non-linear
+  coordinate systems such as [](:class:`~plotnine.coord_trans`). Previously,
+  log tick positions were transformed twice, which misplaced or removed ticks,
+  and stripes raised an error.
+
 - The space between facet panels now accounts for the margins of the axis
   text, so with free scales large margins no longer push the tick labels
   into the neighbouring panel.

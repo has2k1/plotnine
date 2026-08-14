@@ -63,14 +63,14 @@ class _geom_logticks(geom_rug):
 
         Parameters
         ----------
-        base : float | None
+        base :
             Base of the logarithm in which the ticks will be
             calculated. If `None`, the base of the log transform
             the scale will be used.
-        sides : str, default="bl"
+        sides :
             Panel sides to mark, using any combination of `b`, `t`, `l`,
             and `r`. Resolve any axis flip before calling.
-        panel_params : panel_view
+        panel_params :
             `x` and `y` view scale values.
 
         Returns
@@ -192,8 +192,7 @@ class _geom_logticks(geom_rug):
         ):
             for position, length in zip(tick_positions, lengths):
                 data = pd.DataFrame({axis: position, **_aesthetics})
-                params["length"] = length
-                stroke_rugs(data, panel_params, ax, params, sides)
+                stroke_rugs(data, panel_params, ax, params, sides, length)
 
         base_x, base_y = self._check_log_scale(
             params["base"], sides, panel_params
@@ -220,8 +219,8 @@ class annotation_logticks(annotate):
     sides :
         Sides onto which to draw the marks. Any combination
         chosen from the characters `btlr`, for *bottom*, *top*,
-        *left* or *right* side marks. If `coord_flip()` is used,
-        these are the sides *after* the flip.
+        *left* or *right* side marks. With `coord_flip()`, specify
+        sides before the flip.
     alpha :
         Transparency of the ticks
     color :
