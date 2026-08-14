@@ -138,3 +138,15 @@ def test_facet_wrap_sec_axis():
         + scale_y_continuous(sec_axis=sec_axis(lambda y: y * 2, name="2x"))
     )
     assert p == "facet_wrap_sec_axis"
+
+
+def test_secondary_axis_resolves_its_name():
+    # Matplotlib resolves tick and limit operations through the panel's named
+    # axes. Preserve distinct names for the primary and secondary axes.
+    plot = p0 + scale_y_continuous(sec_axis=dup_axis())
+    plot.draw_test()
+    ax = plot.axs[0]
+
+    assert ax._axis_map["sec_y"] is ax.sec_yaxis
+    assert ax.sec_yaxis._get_axis_name() == "sec_y"
+    assert ax._axis_map["y"] is ax.yaxis
