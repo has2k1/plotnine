@@ -75,32 +75,53 @@ class geom_rect(geom):
         ax: Axes,
         params: dict[str, Any],
     ):
-        from matplotlib.collections import PolyCollection
-
         data = coord.transform(data, panel_params, munch=True)
-        linewidth = data["size"] * SIZE_FACTOR
+        fill_rects(data, ax, params)
 
-        limits = zip(data["xmin"], data["xmax"], data["ymin"], data["ymax"])
 
-        verts = [[(l, b), (l, t), (r, t), (r, b)] for (l, r, b, t) in limits]
+def fill_rects(
+    data: pd.DataFrame,
+    ax: Axes,
+    params: dict[str, Any],
+) -> None:
+    """
+    Draw rectangles whose bounds use panel coordinates
 
-        fill = to_rgba(data["fill"], data["alpha"])
-        color = data["color"]
+    Parameters
+    ----------
+    data :
+        Rectangle aesthetics with panel-coordinate `xmin`, `xmax`,
+        `ymin`, and `ymax` bounds.
+    ax :
+        Axes to draw on.
+    params :
+        Geom and stat parameters that control rectangle appearance.
+    """
+    from matplotlib.collections import PolyCollection
 
-        # prevent unnecessary borders
-        if all(color.isna()):
-            color = "none"
+    linewidth = data["size"] * SIZE_FACTOR
 
-        col = PolyCollection(
-            verts,
-            facecolors=fill,
-            edgecolors=color,
-            linestyles=data["linetype"],
-            linewidths=linewidth,
-            zorder=params["zorder"],
-            rasterized=params["raster"],
-        )
-        ax.add_collection(col)
+    limits = zip(data["xmin"], data["xmax"], data["ymin"], data["ymax"])
+
+    verts = [[(l, b), (l, t), (r, t), (r, b)] for (l, r, b, t) in limits]
+
+    fill = to_rgba(data["fill"], data["alpha"])
+    color = data["color"]
+
+    # prevent unnecessary borders
+    if all(color.isna()):
+        color = "none"
+
+    col = PolyCollection(
+        verts,
+        facecolors=fill,
+        edgecolors=color,
+        linestyles=data["linetype"],
+        linewidths=linewidth,
+        zorder=params["zorder"],
+        rasterized=params["raster"],
+    )
+    ax.add_collection(col)
 
 
 def _rectangles_to_polygons(df: pd.DataFrame) -> pd.DataFrame:
