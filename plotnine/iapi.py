@@ -22,6 +22,7 @@ if TYPE_CHECKING:
         CoordRange,
         FloatArrayLike,
         HorizontalJustification,
+        PolarSide,
         ScaledAestheticsName,
         Side,
         StripPosition,
@@ -60,8 +61,9 @@ class sec_axis_view:
     labels: Sequence[str]
     # Title of the secondary axis; None means the primary axis title
     name: Optional[str]
-    # The side opposite the primary axis
-    position: Side
+    # The side opposite the primary axis (cartesian), or the polar spoke
+    # a secondary radial axis occupies
+    position: Side | PolarSide
 
 
 @dataclass
@@ -160,7 +162,7 @@ class labels_view:
 @dataclass
 class panel_view:
     """
-    Information from the trained position scales in a panel
+    Position-scale state for one panel
     """
 
     x: scale_position_view
@@ -175,6 +177,16 @@ class panel_ranges:
 
     x: tuple[float, float]
     y: tuple[float, float]
+
+
+@dataclass
+class radial_panel_view(panel_view):
+    """
+    Data-space and display-space scales for one radial panel
+    """
+
+    theta: scale_position_view
+    r: scale_position_view
 
 
 @dataclass

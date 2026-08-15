@@ -34,6 +34,7 @@ from plotnine import (
     theme_xkcd,
 )
 from plotnine.data import mtcars
+from plotnine.themes.themeable import themeable
 
 LT_MPL310 = version.parse(mpl.__version__) < version.parse("3.10")
 IS_CI = bool(os.environ.get("CI"))
@@ -109,6 +110,23 @@ def test_add_element_blank():
     assert theme3 != theme1
     assert theme3 != theme2
     assert theme3 == theme4  # blanking cleans the slate
+
+
+def test_extension_themeable_applies_from_theme_kwargs():
+    # A themeable defined outside plotnine is reachable by its own name as a
+    # theme() keyword, and its apply_ax runs during the draw. The red panel
+    # is the evidence that it ran.
+    class test_extension_panel_facecolor(themeable):
+        def apply_ax(self, ax):
+            super().apply_ax(ax)
+            ax.set_facecolor(self.properties["value"])
+
+    p = (
+        ggplot(mtcars, aes(x="wt", y="mpg"))
+        + geom_point()
+        + theme(test_extension_panel_facecolor="red")
+    )
+    assert p == "extension_themeable_applies_from_theme_kwargs"
 
 
 def test_element_line_dashed_capstyle():

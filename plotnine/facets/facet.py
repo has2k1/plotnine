@@ -342,16 +342,20 @@ class facet:
         """
         Create and return subplot axes
         """
-
         num_panels = len(self.layout.layout)
         axsarr = np.empty((self.nrow, self.ncol), dtype=object)
         gs = self._make_gridspec()
 
         # Create axes
+        projection = (
+            p9Axes.name
+            if self.plot.coordinates._projection is None
+            else self.plot.coordinates._projection
+        )
         it = itertools.product(range(self.nrow), range(self.ncol))
         for i, (row, col) in enumerate(it):
             axsarr[row, col] = self.figure.add_subplot(
-                gs[i], projection=p9Axes.name
+                gs[i], projection=projection
             )
 
         # Rearrange axes

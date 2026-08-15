@@ -384,6 +384,7 @@ class ggplot:
             self._build()
 
             # setup
+            self.coordinates._setup(self)
             self.guides._setup(self)
             self.theme._setup(self)
 
@@ -546,6 +547,7 @@ class ggplot:
         """
         # Draw the geoms
         self.layers.draw(self.layout, self.coordinates)
+        self.coordinates.draw(self.axs)
 
     def _draw_breaks_and_labels(self):
         """
