@@ -119,6 +119,9 @@ class coord:
     Base class for all coordinate systems
     """
 
+    # Matplotlib projection name to use when creating panel axes.
+    _projection: str | None = None
+
     # If the coordinate system is linear
     is_linear = False
 
@@ -126,12 +129,47 @@ class coord:
     # if the coordinate system needs them
     params: dict[str, Any]
 
+    # The ggplot this coord belongs to. Bound in `_setup`, not
+    # `__init__`/`__radd__`: a ggplot is copied on every `+`, so any
+    # earlier binding would point at a stale, intermediate copy rather
+    # than the final plot that's actually drawn.
+    _owner: ggplot | None = None
+
+    @property
+    def preserves_dimensions(self) -> bool:
+        """
+        Whether transformed position aesthetics retain their dimensions
+
+        When this is `False`, geoms must read each position and its bounds
+        from the opposite dimension.
+        """
+        return True
+
     def __radd__(self, other: ggplot) -> ggplot:
         """
         Add coordinates to ggplot object
         """
         other.coordinates = copy(self)
         return other
+
+    def _setup(self, plot: ggplot) -> None:
+        """
+        Bind this coord to the plot that owns it
+
+        Unlike `theme._setup`/`guides._setup`, whose owner can be a
+        `ggplot`, a `Compose`, or (for `theme`) a `guide`, a coord is
+        never collected/shared across a `Compose` — it's always local to
+        exactly one `ggplot` — so the parameter is named for what it
+        concretely always is.
+
+        Parameters
+        ----------
+        plot :
+            The final `ggplot` being drawn. Called once per draw, after
+            all copying from `+` operators is done, mirroring
+            `guides._setup`/`theme._setup`.
+        """
+        self._owner = plot
 
     def setup_data(self, data: list[pd.DataFrame]) -> list[pd.DataFrame]:
         """
@@ -292,12 +330,21 @@ class coord:
         if (sec := sv.sec) is None:
             return
 
+        position = cast("Side", sec.position)
         p9ax = cast("p9Axes", ax)
-        axis = p9ax.add_sec_axis(sec.position)
+        axis = p9ax.add_sec_axis(position)
         _set_fixed_ticks(axis, sec.breaks, sec.labels)
-        _activate_axis(axis, sec.position, present)
-        p9ax.sides_with_an_axis.add(sec.position)
-        ax.spines[sec.position].set_visible(True)
+        _activate_axis(axis, position, present)
+        p9ax.sides_with_an_axis.add(position)
+        ax.spines[position].set_visible(True)
+
+    def draw(self, axs: list) -> None:
+        """
+        Draw coordinate-system decorations onto each panel axes.
+
+        Called after all layers are drawn. Subclasses override this to
+        add elements such as polar grid lines.
+        """
 
     def labels(self, cur_labels: labels_view) -> labels_view:
         """

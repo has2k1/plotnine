@@ -16,6 +16,7 @@ from typing import TYPE_CHECKING
 from warnings import warn
 
 import numpy as np
+from matplotlib.projections.polar import PolarAxes
 
 from .._mpl.axes import axis_at
 from .._utils import MARGIN_SIDE, has_alpha_channel, side_artists, to_rgba
@@ -35,7 +36,7 @@ if TYPE_CHECKING:
 
     from plotnine import theme
     from plotnine.themes.targets import ThemeTargets
-    from plotnine.typing import Side
+    from plotnine.typing import PolarSide, Side
 
 
 class themeable(metaclass=RegistryHierarchyMeta):
@@ -99,8 +100,11 @@ class themeable(metaclass=RegistryHierarchyMeta):
 
     Notes
     -----
-    A user should never create instances of class
-    [](`~plotnine.themes.themeable.Themeable`) or subclasses of it.
+    Most users should not create instances of class
+    [](`~plotnine.themes.themeable.themeable`) or subclasses of it
+    directly. Extension authors may define subclasses; they are registered
+    by class name when their module is imported and can be used through
+    [](`~plotnine.themes.theme.theme`) keyword arguments.
     """
 
     def __init__(self, theme_element: element_base | str | float):
@@ -530,7 +534,7 @@ def blend_alpha(
     return properties
 
 
-def _set_axis_text_margin(themeable, ax, side: Side):
+def _set_axis_text_margin(themeable, ax, side: Side | PolarSide):
     """
     Set the gap between axis tick and axis text
     """
@@ -539,7 +543,10 @@ def _set_axis_text_margin(themeable, ax, side: Side):
         return
     if (axis := axis_at(ax, side)) is None:
         return
-    pad = getattr(margin.pt, MARGIN_SIDE[side])
+    if side in ("theta_outside", "theta_inside"):
+        pad = margin.pt.max
+    else:
+        pad = getattr(margin.pt, MARGIN_SIDE[side])
     axis.set_tick_params(which="major", pad=pad)
 
 
@@ -1136,7 +1143,67 @@ class axis_text_x_top(MixinSequenceOfValues):
             t.label2.set_visible(False)
 
 
-class axis_text_x(axis_text_x_top, axis_text_x_bottom):
+class axis_text_theta_outside(MixinSequenceOfValues):
+    """
+    theta-axis tick labels at the outer (rim) boundary
+
+    Parameters
+    ----------
+    theme_element : element_text
+    """
+
+    def apply_ax(self, ax: Axes):
+        super().apply_ax(ax)
+        if (axis := axis_at(ax, "theta_outside")) is None:
+            return
+        labels = [t.label2 for t in axis.get_major_ticks()]
+        self.set(labels, self._get_properties(omit=("margin", "ha", "va")))
+        _set_axis_text_margin(self, ax, "theta_outside")
+
+    def blank_ax(self, ax: Axes):
+        super().blank_ax(ax)
+        if (axis := axis_at(ax, "theta_outside")) is None:
+            return
+        for t in axis.get_major_ticks():
+            t.label2.set_visible(False)
+
+
+class axis_text_theta_inside(MixinSequenceOfValues):
+    """
+    theta-axis tick labels at the inner (donut-hole) boundary
+
+    Parameters
+    ----------
+    theme_element : element_text
+    """
+
+    def apply_ax(self, ax: Axes):
+        super().apply_ax(ax)
+        if (axis := axis_at(ax, "theta_inside")) is None:
+            return
+        labels = [t.label1 for t in axis.get_major_ticks()]
+        self.set(labels, self._get_properties(omit=("margin", "ha", "va")))
+        _set_axis_text_margin(self, ax, "theta_inside")
+
+    def blank_ax(self, ax: Axes):
+        super().blank_ax(ax)
+        if (axis := axis_at(ax, "theta_inside")) is None:
+            return
+        for t in axis.get_major_ticks():
+            t.label1.set_visible(False)
+
+
+class axis_text_theta(axis_text_theta_outside, axis_text_theta_inside):
+    """
+    theta-axis tick labels
+
+    Parameters
+    ----------
+    theme_element : element_text
+    """
+
+
+class axis_text_x(axis_text_x_top, axis_text_x_bottom, axis_text_theta):
     """
     x-axis tick labels
 
@@ -1196,7 +1263,67 @@ class axis_text_y_right(MixinSequenceOfValues):
             t.label2.set_visible(False)
 
 
-class axis_text_y(axis_text_y_left, axis_text_y_right):
+class axis_text_r_start(MixinSequenceOfValues):
+    """
+    r-axis tick labels at the start-angle spoke
+
+    Parameters
+    ----------
+    theme_element : element_text
+    """
+
+    def apply_ax(self, ax: Axes):
+        super().apply_ax(ax)
+        if (axis := axis_at(ax, "r_start")) is None:
+            return
+        labels = [t.label1 for t in axis.get_major_ticks()]
+        self.set(labels, self._get_properties(omit=("margin", "ha")))
+        _set_axis_text_margin(self, ax, "r_start")
+
+    def blank_ax(self, ax: Axes):
+        super().blank_ax(ax)
+        if (axis := axis_at(ax, "r_start")) is None:
+            return
+        for t in axis.get_major_ticks():
+            t.label1.set_visible(False)
+
+
+class axis_text_r_end(MixinSequenceOfValues):
+    """
+    r-axis tick labels at the end-angle spoke
+
+    Parameters
+    ----------
+    theme_element : element_text
+    """
+
+    def apply_ax(self, ax: Axes):
+        super().apply_ax(ax)
+        if (axis := axis_at(ax, "r_end")) is None:
+            return
+        labels = [t.label2 for t in axis.get_major_ticks()]
+        self.set(labels, self._get_properties(omit=("margin", "ha")))
+        _set_axis_text_margin(self, ax, "r_end")
+
+    def blank_ax(self, ax: Axes):
+        super().blank_ax(ax)
+        if (axis := axis_at(ax, "r_end")) is None:
+            return
+        for t in axis.get_major_ticks():
+            t.label2.set_visible(False)
+
+
+class axis_text_r(axis_text_r_start, axis_text_r_end):
+    """
+    r-axis tick labels
+
+    Parameters
+    ----------
+    theme_element : element_text
+    """
+
+
+class axis_text_y(axis_text_y_left, axis_text_y_right, axis_text_r):
     """
     y-axis tick labels
 
@@ -1277,6 +1404,39 @@ def _style_axis_line(themeable, ax, side):
     ax.spines[side].set(**properties)
 
 
+def _style_polar_axis_line(themeable, ax, spine):
+    """
+    Style a polar spine and show it
+
+    Mirrors `_style_axis_line`: an explicitly themed (non-blank) spine
+    is shown (`visible=True`) even if matplotlib's own geometry-driven
+    default would hide it (e.g. a full circle has no `start`/`end`
+    spokes). Visibility goes through `p9RadialAxes.set_spine_visible`
+    rather than the `properties` dict, since that's what makes the
+    choice stick across draws.
+    """
+    properties = themeable._get_properties(omit=("solid_capstyle",))
+    visible = properties.pop("visible", True)
+    if "zorder" not in properties:
+        properties["zorder"] = 10000
+    ax.spines[spine].set(**properties)
+    ax.set_spine_visible(spine, visible)
+
+
+def _blank_polar_axis_line(ax, spine):
+    """
+    Hide a polar spine
+
+    A plain `Axes` has no matching spine name, so this is a safe no-op
+    for cartesian axes. It's reachable from every `blank_ax` call, polar
+    or not, since `axis_line_theta`/`axis_line_r` nest under
+    `axis_line_x`/`axis_line_y`. `p9RadialAxes.set_spine_visible` is what
+    makes this choice stick across draws.
+    """
+    if spine in ax.spines:
+        ax.set_spine_visible(spine, False)
+
+
 class axis_line_x_bottom(themeable):
     """
     x-axis line on the bottom
@@ -1288,7 +1448,8 @@ class axis_line_x_bottom(themeable):
 
     def blank_ax(self, ax: Axes):
         super().blank_ax(ax)
-        ax.spines["bottom"].set_visible(False)
+        if "bottom" in ax.spines:
+            ax.spines["bottom"].set_visible(False)
 
 
 class axis_line_x_top(themeable):
@@ -1302,10 +1463,53 @@ class axis_line_x_top(themeable):
 
     def blank_ax(self, ax: Axes):
         super().blank_ax(ax)
-        ax.spines["top"].set_visible(False)
+        if "top" in ax.spines:
+            ax.spines["top"].set_visible(False)
 
 
-class axis_line_x(axis_line_x_top, axis_line_x_bottom):
+class axis_line_theta_inside(themeable):
+    """
+    theta-axis line on the inner boundary
+    """
+
+    def apply_ax(self, ax: Axes):
+        super().apply_ax(ax)
+        if axis_at(ax, "theta_inside") is None:
+            return
+        _style_polar_axis_line(self, ax, "inner")
+
+    def blank_ax(self, ax: Axes):
+        super().blank_ax(ax)
+        _blank_polar_axis_line(ax, "inner")
+
+
+class axis_line_theta_outside(themeable):
+    """
+    theta-axis line on the outer boundary
+    """
+
+    def apply_ax(self, ax: Axes):
+        super().apply_ax(ax)
+        if axis_at(ax, "theta_outside") is None:
+            return
+        _style_polar_axis_line(self, ax, "polar")
+
+    def blank_ax(self, ax: Axes):
+        super().blank_ax(ax)
+        _blank_polar_axis_line(ax, "polar")
+
+
+class axis_line_theta(axis_line_theta_inside, axis_line_theta_outside):
+    """
+    theta-axis line
+
+    Parameters
+    ----------
+    theme_element : element_line
+    """
+
+
+class axis_line_x(axis_line_x_top, axis_line_x_bottom, axis_line_theta):
     """
     x-axis line
 
@@ -1326,7 +1530,8 @@ class axis_line_y_left(themeable):
 
     def blank_ax(self, ax: Axes):
         super().blank_ax(ax)
-        ax.spines["left"].set_visible(False)
+        if "left" in ax.spines:
+            ax.spines["left"].set_visible(False)
 
 
 class axis_line_y_right(themeable):
@@ -1340,10 +1545,53 @@ class axis_line_y_right(themeable):
 
     def blank_ax(self, ax: Axes):
         super().blank_ax(ax)
-        ax.spines["right"].set_visible(False)
+        if "right" in ax.spines:
+            ax.spines["right"].set_visible(False)
 
 
-class axis_line_y(axis_line_y_left, axis_line_y_right):
+class axis_line_r_start(themeable):
+    """
+    r-axis line at the start angle
+    """
+
+    def apply_ax(self, ax: Axes):
+        super().apply_ax(ax)
+        if axis_at(ax, "r_start") is None:
+            return
+        _style_polar_axis_line(self, ax, "start")
+
+    def blank_ax(self, ax: Axes):
+        super().blank_ax(ax)
+        _blank_polar_axis_line(ax, "start")
+
+
+class axis_line_r_end(themeable):
+    """
+    r-axis line at the end angle
+    """
+
+    def apply_ax(self, ax: Axes):
+        super().apply_ax(ax)
+        if axis_at(ax, "r_end") is None:
+            return
+        _style_polar_axis_line(self, ax, "end")
+
+    def blank_ax(self, ax: Axes):
+        super().blank_ax(ax)
+        _blank_polar_axis_line(ax, "end")
+
+
+class axis_line_r(axis_line_r_start, axis_line_r_end):
+    """
+    r-axis line
+
+    Parameters
+    ----------
+    theme_element : element_line
+    """
+
+
+class axis_line_y(axis_line_y_left, axis_line_y_right, axis_line_r):
     """
     y-axis line
 
@@ -1363,7 +1611,7 @@ class axis_line(axis_line_x, axis_line_y):
     """
 
 
-def _style_axis_ticks(themeable, ax, which, side):
+def _style_axis_ticks(themeable, ax, which, side: Side | PolarSide):
     """
     Style the tick lines on one side of an axis
 
@@ -1395,7 +1643,7 @@ def _style_axis_ticks(themeable, ax, which, side):
     themeable.set([getattr(t, attr) for t in ticks], properties)
 
 
-def _blank_axis_ticks(ax, which, side):
+def _blank_axis_ticks(ax, which, side: Side | PolarSide):
     """
     Hide the tick lines on one side of an axis
     """
@@ -1437,7 +1685,49 @@ class axis_ticks_minor_x_top(MixinSequenceOfValues):
         _blank_axis_ticks(ax, "minor", "top")
 
 
-class axis_ticks_minor_x(axis_ticks_minor_x_top, axis_ticks_minor_x_bottom):
+class axis_ticks_minor_theta_outside(MixinSequenceOfValues):
+    """
+    theta-axis minor tick lines at the outer (rim) boundary
+    """
+
+    def apply_ax(self, ax: Axes):
+        super().apply_ax(ax)
+        _style_axis_ticks(self, ax, "minor", "theta_outside")
+
+    def blank_ax(self, ax: Axes):
+        super().blank_ax(ax)
+        _blank_axis_ticks(ax, "minor", "theta_outside")
+
+
+class axis_ticks_minor_theta_inside(MixinSequenceOfValues):
+    """
+    theta-axis minor tick lines at the inner (donut-hole) boundary
+    """
+
+    def apply_ax(self, ax: Axes):
+        super().apply_ax(ax)
+        _style_axis_ticks(self, ax, "minor", "theta_inside")
+
+    def blank_ax(self, ax: Axes):
+        super().blank_ax(ax)
+        _blank_axis_ticks(ax, "minor", "theta_inside")
+
+
+class axis_ticks_minor_theta(
+    axis_ticks_minor_theta_outside, axis_ticks_minor_theta_inside
+):
+    """
+    theta-axis minor tick lines
+
+    Parameters
+    ----------
+    theme_element : element_line
+    """
+
+
+class axis_ticks_minor_x(
+    axis_ticks_minor_x_top, axis_ticks_minor_x_bottom, axis_ticks_minor_theta
+):
     """
     x-axis minor tick lines
 
@@ -1475,7 +1765,47 @@ class axis_ticks_minor_y_right(MixinSequenceOfValues):
         _blank_axis_ticks(ax, "minor", "right")
 
 
-class axis_ticks_minor_y(axis_ticks_minor_y_left, axis_ticks_minor_y_right):
+class axis_ticks_minor_r_start(MixinSequenceOfValues):
+    """
+    r-axis minor tick lines at the start-angle spoke
+    """
+
+    def apply_ax(self, ax: Axes):
+        super().apply_ax(ax)
+        _style_axis_ticks(self, ax, "minor", "r_start")
+
+    def blank_ax(self, ax: Axes):
+        super().blank_ax(ax)
+        _blank_axis_ticks(ax, "minor", "r_start")
+
+
+class axis_ticks_minor_r_end(MixinSequenceOfValues):
+    """
+    r-axis minor tick lines at the end-angle spoke
+    """
+
+    def apply_ax(self, ax: Axes):
+        super().apply_ax(ax)
+        _style_axis_ticks(self, ax, "minor", "r_end")
+
+    def blank_ax(self, ax: Axes):
+        super().blank_ax(ax)
+        _blank_axis_ticks(ax, "minor", "r_end")
+
+
+class axis_ticks_minor_r(axis_ticks_minor_r_start, axis_ticks_minor_r_end):
+    """
+    r-axis minor tick lines
+
+    Parameters
+    ----------
+    theme_element : element_line
+    """
+
+
+class axis_ticks_minor_y(
+    axis_ticks_minor_y_left, axis_ticks_minor_y_right, axis_ticks_minor_r
+):
     """
     y-axis minor tick lines
 
@@ -1513,7 +1843,49 @@ class axis_ticks_major_x_top(MixinSequenceOfValues):
         _blank_axis_ticks(ax, "major", "top")
 
 
-class axis_ticks_major_x(axis_ticks_major_x_top, axis_ticks_major_x_bottom):
+class axis_ticks_major_theta_outside(MixinSequenceOfValues):
+    """
+    theta-axis major tick lines at the outer (rim) boundary
+    """
+
+    def apply_ax(self, ax: Axes):
+        super().apply_ax(ax)
+        _style_axis_ticks(self, ax, "major", "theta_outside")
+
+    def blank_ax(self, ax: Axes):
+        super().blank_ax(ax)
+        _blank_axis_ticks(ax, "major", "theta_outside")
+
+
+class axis_ticks_major_theta_inside(MixinSequenceOfValues):
+    """
+    theta-axis major tick lines at the inner (donut-hole) boundary
+    """
+
+    def apply_ax(self, ax: Axes):
+        super().apply_ax(ax)
+        _style_axis_ticks(self, ax, "major", "theta_inside")
+
+    def blank_ax(self, ax: Axes):
+        super().blank_ax(ax)
+        _blank_axis_ticks(ax, "major", "theta_inside")
+
+
+class axis_ticks_major_theta(
+    axis_ticks_major_theta_outside, axis_ticks_major_theta_inside
+):
+    """
+    theta-axis major tick lines
+
+    Parameters
+    ----------
+    theme_element : element_line
+    """
+
+
+class axis_ticks_major_x(
+    axis_ticks_major_x_top, axis_ticks_major_x_bottom, axis_ticks_major_theta
+):
     """
     x-axis major tick lines
 
@@ -1551,7 +1923,47 @@ class axis_ticks_major_y_right(MixinSequenceOfValues):
         _blank_axis_ticks(ax, "major", "right")
 
 
-class axis_ticks_major_y(axis_ticks_major_y_left, axis_ticks_major_y_right):
+class axis_ticks_major_r_start(MixinSequenceOfValues):
+    """
+    r-axis major tick lines at the start-angle spoke
+    """
+
+    def apply_ax(self, ax: Axes):
+        super().apply_ax(ax)
+        _style_axis_ticks(self, ax, "major", "r_start")
+
+    def blank_ax(self, ax: Axes):
+        super().blank_ax(ax)
+        _blank_axis_ticks(ax, "major", "r_start")
+
+
+class axis_ticks_major_r_end(MixinSequenceOfValues):
+    """
+    r-axis major tick lines at the end-angle spoke
+    """
+
+    def apply_ax(self, ax: Axes):
+        super().apply_ax(ax)
+        _style_axis_ticks(self, ax, "major", "r_end")
+
+    def blank_ax(self, ax: Axes):
+        super().blank_ax(ax)
+        _blank_axis_ticks(ax, "major", "r_end")
+
+
+class axis_ticks_major_r(axis_ticks_major_r_start, axis_ticks_major_r_end):
+    """
+    r-axis major tick lines
+
+    Parameters
+    ----------
+    theme_element : element_line
+    """
+
+
+class axis_ticks_major_y(
+    axis_ticks_major_y_left, axis_ticks_major_y_right, axis_ticks_major_r
+):
     """
     y-axis major tick lines
 
@@ -2076,6 +2488,8 @@ class axis_ticks_length_major_x(themeable):
 
     def apply_ax(self, ax: Axes):
         super().apply_ax(ax)
+        if isinstance(ax, PolarAxes):
+            return
         for axis in (ax.xaxis, getattr(ax, "sec_xaxis", None)):
             if axis is None:
                 continue
@@ -2117,6 +2531,8 @@ class axis_ticks_length_major_y(themeable):
 
     def apply_ax(self, ax: Axes):
         super().apply_ax(ax)
+        if isinstance(ax, PolarAxes):
+            return
         for axis in (ax.yaxis, getattr(ax, "sec_yaxis", None)):
             if axis is None:
                 continue
@@ -2144,8 +2560,71 @@ class axis_ticks_length_major_y(themeable):
             )
 
 
+class axis_ticks_length_major_theta(themeable):
+    """
+    theta-axis major-tick length
+
+    Applies uniformly to whichever theta boundary is active — unlike
+    `axis_ticks_major_theta_outside`/`_inside`, length was never split
+    by boundary even for the cartesian `axis_ticks_length_major_x`.
+
+    Parameters
+    ----------
+    theme_element : float | complex
+        Value in points. A negative value creates the ticks
+        inside the plot panel. A complex value (e.g. `3j`)
+        creates ticks that span both in and out of the panel.
+    """
+
+    def apply_ax(self, ax: Axes):
+        super().apply_ax(ax)
+        value: float | complex = self.properties["value"]
+        if isinstance(value, (float, int)):
+            tickdir = "in" if value < 0 else "out"
+        else:
+            tickdir = "inout"
+        for side in ("theta_inside", "theta_outside"):
+            if (axis := axis_at(ax, side)) is not None:
+                axis.set_tick_params(
+                    which="major", length=abs(value), tickdir=tickdir
+                )
+
+
+class axis_ticks_length_major_r(themeable):
+    """
+    r-axis major-tick length
+
+    Applies uniformly to whichever r boundary is active — unlike
+    `axis_ticks_major_r_start`/`_end`, length was never split
+    by boundary even for the cartesian `axis_ticks_length_major_y`.
+
+    Parameters
+    ----------
+    theme_element : float | complex
+        Value in points. A negative value creates the ticks
+        inside the plot panel. A complex value (e.g. `3j`)
+        creates ticks that span both in and out of the panel.
+    """
+
+    def apply_ax(self, ax: Axes):
+        super().apply_ax(ax)
+        value: float | complex = self.properties["value"]
+        if isinstance(value, (float, int)):
+            tickdir = "in" if value < 0 else "out"
+        else:
+            tickdir = "inout"
+        for side in ("r_start", "r_end"):
+            if (axis := axis_at(ax, side)) is not None:
+                axis.set_tick_params(
+                    which="major", length=abs(value), tickdir=tickdir
+                )
+
+
 class axis_ticks_length_major(
-    axis_ticks_length_major_x, axis_ticks_length_major_y
+    axis_ticks_length_major_x,
+    axis_ticks_length_major_y,
+    axis_ticks_length_major_theta,
+    axis_ticks_length_major_r,
 ):
     """
     Axis major-tick length
@@ -2173,6 +2652,8 @@ class axis_ticks_length_minor_x(themeable):
 
     def apply_ax(self, ax: Axes):
         super().apply_ax(ax)
+        if isinstance(ax, PolarAxes):
+            return
         value: float | complex = self.properties["value"]
 
         if isinstance(value, (float, int)):
@@ -2202,6 +2683,8 @@ class axis_ticks_length_minor_y(themeable):
 
     def apply_ax(self, ax: Axes):
         super().apply_ax(ax)
+        if isinstance(ax, PolarAxes):
+            return
         value: float | complex = self.properties["value"]
 
         if isinstance(value, (float, int)):
@@ -2217,8 +2700,71 @@ class axis_ticks_length_minor_y(themeable):
             )
 
 
+class axis_ticks_length_minor_theta(themeable):
+    """
+    theta-axis minor-tick length
+
+    Applies uniformly to whichever theta boundary is active — unlike
+    `axis_ticks_minor_theta_outside`/`_inside`, length was never split
+    by boundary even for the cartesian `axis_ticks_length_minor_x`.
+
+    Parameters
+    ----------
+    theme_element : float | complex
+        Value in points. A negative value creates the ticks
+        inside the plot panel. A complex value (e.g. `3j`)
+        creates ticks that span both in and out of the panel.
+    """
+
+    def apply_ax(self, ax: Axes):
+        super().apply_ax(ax)
+        value: float | complex = self.properties["value"]
+        if isinstance(value, (float, int)):
+            tickdir = "in" if value < 0 else "out"
+        else:
+            tickdir = "inout"
+        for side in ("theta_inside", "theta_outside"):
+            if (axis := axis_at(ax, side)) is not None:
+                axis.set_tick_params(
+                    which="minor", length=abs(value), tickdir=tickdir
+                )
+
+
+class axis_ticks_length_minor_r(themeable):
+    """
+    r-axis minor-tick length
+
+    Applies uniformly to whichever r boundary is active — unlike
+    `axis_ticks_minor_r_start`/`_end`, length was never split
+    by boundary even for the cartesian `axis_ticks_length_minor_y`.
+
+    Parameters
+    ----------
+    theme_element : float | complex
+        Value in points. A negative value creates the ticks
+        inside the plot panel. A complex value (e.g. `3j`)
+        creates ticks that span both in and out of the panel.
+    """
+
+    def apply_ax(self, ax: Axes):
+        super().apply_ax(ax)
+        value: float | complex = self.properties["value"]
+        if isinstance(value, (float, int)):
+            tickdir = "in" if value < 0 else "out"
+        else:
+            tickdir = "inout"
+        for side in ("r_start", "r_end"):
+            if (axis := axis_at(ax, side)) is not None:
+                axis.set_tick_params(
+                    which="minor", length=abs(value), tickdir=tickdir
+                )
+
+
 class axis_ticks_length_minor(
-    axis_ticks_length_minor_x, axis_ticks_length_minor_y
+    axis_ticks_length_minor_x,
+    axis_ticks_length_minor_y,
+    axis_ticks_length_minor_theta,
+    axis_ticks_length_minor_r,
 ):
     """
     Axis minor-tick length
@@ -2795,7 +3341,9 @@ class strip_switch_pad_x(themeable):
     theme_element : float
         Size in points. Only has an effect when
         `strip_placement="outside"` and an axis shares the strip's
-        side (top or bottom).
+        side (top or bottom). Polar panels (`coord_radial`) always draw
+        their theta axis on the arc, so the pad applies to them at any
+        `strip_placement`.
     """
 
 
@@ -2808,7 +3356,9 @@ class strip_switch_pad_y(themeable):
     theme_element : float
         Size in points. Only has an effect when
         `strip_placement="outside"` and an axis shares the strip's
-        side (left or right).
+        side (left or right). Polar panels (`coord_radial`) always draw
+        their r axis on the arc, so the pad applies to them at any
+        `strip_placement`.
     """
 
 
@@ -2821,7 +3371,8 @@ class strip_switch_pad(strip_switch_pad_x, strip_switch_pad_y):
     theme_element : float
         Size in points. Only has an effect when
         `strip_placement="outside"` and an axis shares the strip's
-        side.
+        side. Polar panels (`coord_radial`) always draw their axes on the
+        arc, so the pad applies to them at any `strip_placement`.
     """
 
 

@@ -85,6 +85,9 @@ class theme:
 
         These simply bind together all the aspects of a themeable
         that can be themed. See [](`~plotnine.themes.themeable.themeable`).
+        Extension packages may provide additional themeables by defining
+        and importing subclasses of `themeable`, then passing values for
+        them as keyword arguments to `theme`.
 
     Notes
     -----
@@ -114,7 +117,7 @@ class theme:
         #  python -c "
         #  from plotnine.themes.themeable import themeable
         #  for name in themeable.registry():
-        #      print(f'{name}=None,')
+        #      print(f'        {name}=None,')
         #  "
         axis_title_x_bottom=None,
         axis_title_x_top=None,
@@ -147,30 +150,54 @@ class theme:
         title=None,
         axis_text_x_bottom=None,
         axis_text_x_top=None,
+        axis_text_theta_outside=None,
+        axis_text_theta_inside=None,
+        axis_text_theta=None,
         axis_text_x=None,
         axis_text_y_left=None,
         axis_text_y_right=None,
+        axis_text_r_start=None,
+        axis_text_r_end=None,
+        axis_text_r=None,
         axis_text_y=None,
         axis_text=None,
         text=None,
         axis_line_x_bottom=None,
         axis_line_x_top=None,
+        axis_line_theta_inside=None,
+        axis_line_theta_outside=None,
+        axis_line_theta=None,
         axis_line_x=None,
         axis_line_y_left=None,
         axis_line_y_right=None,
+        axis_line_r_start=None,
+        axis_line_r_end=None,
+        axis_line_r=None,
         axis_line_y=None,
         axis_line=None,
         axis_ticks_minor_x_bottom=None,
         axis_ticks_minor_x_top=None,
+        axis_ticks_minor_theta_outside=None,
+        axis_ticks_minor_theta_inside=None,
+        axis_ticks_minor_theta=None,
         axis_ticks_minor_x=None,
         axis_ticks_minor_y_left=None,
         axis_ticks_minor_y_right=None,
+        axis_ticks_minor_r_start=None,
+        axis_ticks_minor_r_end=None,
+        axis_ticks_minor_r=None,
         axis_ticks_minor_y=None,
         axis_ticks_major_x_bottom=None,
         axis_ticks_major_x_top=None,
+        axis_ticks_major_theta_outside=None,
+        axis_ticks_major_theta_inside=None,
+        axis_ticks_major_theta=None,
         axis_ticks_major_x=None,
         axis_ticks_major_y_left=None,
         axis_ticks_major_y_right=None,
+        axis_ticks_major_r_start=None,
+        axis_ticks_major_r_end=None,
+        axis_ticks_major_r=None,
         axis_ticks_major_y=None,
         axis_ticks_major=None,
         axis_ticks_minor=None,
@@ -201,9 +228,13 @@ class theme:
         rect=None,
         axis_ticks_length_major_x=None,
         axis_ticks_length_major_y=None,
+        axis_ticks_length_major_theta=None,
+        axis_ticks_length_major_r=None,
         axis_ticks_length_major=None,
         axis_ticks_length_minor_x=None,
         axis_ticks_length_minor_y=None,
+        axis_ticks_length_minor_theta=None,
+        axis_ticks_length_minor_r=None,
         axis_ticks_length_minor=None,
         axis_ticks_length=None,
         panel_spacing_x=None,

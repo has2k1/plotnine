@@ -27,7 +27,12 @@ if TYPE_CHECKING:
     from matplotlib.figure import Figure
     from matplotlib.offsetbox import OffsetBox, PackerBase
 
-    from plotnine import ggplot, guide_colorbar, guide_legend, theme
+    from plotnine import (
+        ggplot,
+        guide_colorbar,
+        guide_legend,
+        theme,
+    )
     from plotnine._mpl.offsetbox import FlexibleAnchoredOffsetbox
     from plotnine.composition import Compose
     from plotnine.iapi import labels_view
