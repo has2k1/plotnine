@@ -8,6 +8,7 @@ from .annotation_stripes import annotation_stripes
 from .geom_abline import geom_abline
 from .geom_area import geom_area
 from .geom_bar import geom_bar
+from .geom_beeswarm import geom_beeswarm
 from .geom_bin_2d import geom_bin2d, geom_bin_2d
 from .geom_blank import geom_blank
 from .geom_boxplot import geom_boxplot
@@ -56,6 +57,7 @@ __all__ = (
     "geom_abline",
     "geom_area",
     "geom_bar",
+    "geom_beeswarm",
     "geom_bin_2d",
     "geom_bin2d",
     "geom_blank",
