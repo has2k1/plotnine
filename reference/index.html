@@ -86,7 +86,7 @@ ul.task-list li input[type="checkbox"] {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine 0.15.8rc1</span>
+    <span class="navbar-title">plotnine 0.16.0a12</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -639,7 +639,7 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 <tr class="odd">
 <td><a href="../reference/as_labeller.html#plotnine.as_labeller">as_labeller</a></td>
-<td>Coerse to labeller</td>
+<td>Coerce to labeller</td>
 </tr>
 <tr class="even">
 <td><a href="../reference/label_value.html#plotnine.label_value">label_value</a></td>
@@ -1015,6 +1015,14 @@ ul.task-list li input[type="checkbox"] {
 <td><a href="../reference/scale_y_timedelta.html#plotnine.scale_y_timedelta">scale_y_timedelta</a></td>
 <td>Continuous y position for timedelta data points</td>
 </tr>
+<tr class="odd">
+<td><a href="../reference/sec_axis.html#plotnine.sec_axis">sec_axis</a></td>
+<td>Specification of a secondary axis</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/dup_axis.html#plotnine.dup_axis">dup_axis</a></td>
+<td>Specification of a secondary axis that mirrors the primary axis</td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -1300,24 +1308,104 @@ ul.task-list li input[type="checkbox"] {
 <td>x &amp; y axis lines</td>
 </tr>
 <tr class="odd">
+<td><a href="../reference/axis_line_r.html#plotnine.themes.themeable.axis_line_r">axis_line_r</a></td>
+<td>r-axis line</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/axis_line_r_end.html#plotnine.themes.themeable.axis_line_r_end">axis_line_r_end</a></td>
+<td>r-axis line at the end angle</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/axis_line_r_start.html#plotnine.themes.themeable.axis_line_r_start">axis_line_r_start</a></td>
+<td>r-axis line at the start angle</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/axis_line_theta.html#plotnine.themes.themeable.axis_line_theta">axis_line_theta</a></td>
+<td>theta-axis line</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/axis_line_theta_inside.html#plotnine.themes.themeable.axis_line_theta_inside">axis_line_theta_inside</a></td>
+<td>theta-axis line on the inner boundary</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/axis_line_theta_outside.html#plotnine.themes.themeable.axis_line_theta_outside">axis_line_theta_outside</a></td>
+<td>theta-axis line on the outer boundary</td>
+</tr>
+<tr class="odd">
 <td><a href="../reference/axis_line_x.html#plotnine.themes.themeable.axis_line_x">axis_line_x</a></td>
 <td>x-axis line</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/axis_line_x_bottom.html#plotnine.themes.themeable.axis_line_x_bottom">axis_line_x_bottom</a></td>
+<td>x-axis line on the bottom</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/axis_line_x_top.html#plotnine.themes.themeable.axis_line_x_top">axis_line_x_top</a></td>
+<td>x-axis line on the top</td>
 </tr>
 <tr class="even">
 <td><a href="../reference/axis_line_y.html#plotnine.themes.themeable.axis_line_y">axis_line_y</a></td>
 <td>y-axis line</td>
 </tr>
 <tr class="odd">
+<td><a href="../reference/axis_line_y_left.html#plotnine.themes.themeable.axis_line_y_left">axis_line_y_left</a></td>
+<td>y-axis line on the left</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/axis_line_y_right.html#plotnine.themes.themeable.axis_line_y_right">axis_line_y_right</a></td>
+<td>y-axis line on the right</td>
+</tr>
+<tr class="odd">
 <td><a href="../reference/axis_text.html#plotnine.themes.themeable.axis_text">axis_text</a></td>
 <td>Axis tick labels</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/axis_text_r.html#plotnine.themes.themeable.axis_text_r">axis_text_r</a></td>
+<td>r-axis tick labels</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/axis_text_r_end.html#plotnine.themes.themeable.axis_text_r_end">axis_text_r_end</a></td>
+<td>r-axis tick labels at the end-angle spoke</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/axis_text_r_start.html#plotnine.themes.themeable.axis_text_r_start">axis_text_r_start</a></td>
+<td>r-axis tick labels at the start-angle spoke</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/axis_text_theta.html#plotnine.themes.themeable.axis_text_theta">axis_text_theta</a></td>
+<td>theta-axis tick labels</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/axis_text_theta_inside.html#plotnine.themes.themeable.axis_text_theta_inside">axis_text_theta_inside</a></td>
+<td>theta-axis tick labels at the inner (donut-hole) boundary</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/axis_text_theta_outside.html#plotnine.themes.themeable.axis_text_theta_outside">axis_text_theta_outside</a></td>
+<td>theta-axis tick labels at the outer (rim) boundary</td>
 </tr>
 <tr class="even">
 <td><a href="../reference/axis_text_x.html#plotnine.themes.themeable.axis_text_x">axis_text_x</a></td>
 <td>x-axis tick labels</td>
 </tr>
 <tr class="odd">
+<td><a href="../reference/axis_text_x_bottom.html#plotnine.themes.themeable.axis_text_x_bottom">axis_text_x_bottom</a></td>
+<td>x-axis tick labels on the bottom</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/axis_text_x_top.html#plotnine.themes.themeable.axis_text_x_top">axis_text_x_top</a></td>
+<td>x-axis tick labels on the top</td>
+</tr>
+<tr class="odd">
 <td><a href="../reference/axis_text_y.html#plotnine.themes.themeable.axis_text_y">axis_text_y</a></td>
 <td>y-axis tick labels</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/axis_text_y_left.html#plotnine.themes.themeable.axis_text_y_left">axis_text_y_left</a></td>
+<td>y-axis tick labels on the left</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/axis_text_y_right.html#plotnine.themes.themeable.axis_text_y_right">axis_text_y_right</a></td>
+<td>y-axis tick labels on the right</td>
 </tr>
 <tr class="even">
 <td><a href="../reference/axis_ticks.html#plotnine.themes.themeable.axis_ticks">axis_ticks</a></td>
@@ -1332,6 +1420,14 @@ ul.task-list li input[type="checkbox"] {
 <td>Axis major-tick length</td>
 </tr>
 <tr class="odd">
+<td><a href="../reference/axis_ticks_length_major_r.html#plotnine.themes.themeable.axis_ticks_length_major_r">axis_ticks_length_major_r</a></td>
+<td>r-axis major-tick length</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/axis_ticks_length_major_theta.html#plotnine.themes.themeable.axis_ticks_length_major_theta">axis_ticks_length_major_theta</a></td>
+<td>theta-axis major-tick length</td>
+</tr>
+<tr class="odd">
 <td><a href="../reference/axis_ticks_length_major_x.html#plotnine.themes.themeable.axis_ticks_length_major_x">axis_ticks_length_major_x</a></td>
 <td>x-axis major-tick length</td>
 </tr>
@@ -1342,6 +1438,14 @@ ul.task-list li input[type="checkbox"] {
 <tr class="odd">
 <td><a href="../reference/axis_ticks_length_minor.html#plotnine.themes.themeable.axis_ticks_length_minor">axis_ticks_length_minor</a></td>
 <td>Axis minor-tick length</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/axis_ticks_length_minor_r.html#plotnine.themes.themeable.axis_ticks_length_minor_r">axis_ticks_length_minor_r</a></td>
+<td>r-axis minor-tick length</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/axis_ticks_length_minor_theta.html#plotnine.themes.themeable.axis_ticks_length_minor_theta">axis_ticks_length_minor_theta</a></td>
+<td>theta-axis minor-tick length</td>
 </tr>
 <tr class="even">
 <td><a href="../reference/axis_ticks_length_minor_x.html#plotnine.themes.themeable.axis_ticks_length_minor_x">axis_ticks_length_minor_x</a></td>
@@ -1356,24 +1460,104 @@ ul.task-list li input[type="checkbox"] {
 <td>x &amp; y axis major tick lines</td>
 </tr>
 <tr class="odd">
+<td><a href="../reference/axis_ticks_major_r.html#plotnine.themes.themeable.axis_ticks_major_r">axis_ticks_major_r</a></td>
+<td>r-axis major tick lines</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/axis_ticks_major_r_end.html#plotnine.themes.themeable.axis_ticks_major_r_end">axis_ticks_major_r_end</a></td>
+<td>r-axis major tick lines at the end-angle spoke</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/axis_ticks_major_r_start.html#plotnine.themes.themeable.axis_ticks_major_r_start">axis_ticks_major_r_start</a></td>
+<td>r-axis major tick lines at the start-angle spoke</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/axis_ticks_major_theta.html#plotnine.themes.themeable.axis_ticks_major_theta">axis_ticks_major_theta</a></td>
+<td>theta-axis major tick lines</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/axis_ticks_major_theta_inside.html#plotnine.themes.themeable.axis_ticks_major_theta_inside">axis_ticks_major_theta_inside</a></td>
+<td>theta-axis major tick lines at the inner (donut-hole) boundary</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/axis_ticks_major_theta_outside.html#plotnine.themes.themeable.axis_ticks_major_theta_outside">axis_ticks_major_theta_outside</a></td>
+<td>theta-axis major tick lines at the outer (rim) boundary</td>
+</tr>
+<tr class="odd">
 <td><a href="../reference/axis_ticks_major_x.html#plotnine.themes.themeable.axis_ticks_major_x">axis_ticks_major_x</a></td>
 <td>x-axis major tick lines</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/axis_ticks_major_x_bottom.html#plotnine.themes.themeable.axis_ticks_major_x_bottom">axis_ticks_major_x_bottom</a></td>
+<td>x-axis major tick lines on the bottom</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/axis_ticks_major_x_top.html#plotnine.themes.themeable.axis_ticks_major_x_top">axis_ticks_major_x_top</a></td>
+<td>x-axis major tick lines on the top</td>
 </tr>
 <tr class="even">
 <td><a href="../reference/axis_ticks_major_y.html#plotnine.themes.themeable.axis_ticks_major_y">axis_ticks_major_y</a></td>
 <td>y-axis major tick lines</td>
 </tr>
 <tr class="odd">
+<td><a href="../reference/axis_ticks_major_y_left.html#plotnine.themes.themeable.axis_ticks_major_y_left">axis_ticks_major_y_left</a></td>
+<td>y-axis major tick lines on the left</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/axis_ticks_major_y_right.html#plotnine.themes.themeable.axis_ticks_major_y_right">axis_ticks_major_y_right</a></td>
+<td>y-axis major tick lines on the right</td>
+</tr>
+<tr class="odd">
 <td><a href="../reference/axis_ticks_minor.html#plotnine.themes.themeable.axis_ticks_minor">axis_ticks_minor</a></td>
 <td>x &amp; y axis minor tick lines</td>
 </tr>
 <tr class="even">
+<td><a href="../reference/axis_ticks_minor_r.html#plotnine.themes.themeable.axis_ticks_minor_r">axis_ticks_minor_r</a></td>
+<td>r-axis minor tick lines</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/axis_ticks_minor_r_end.html#plotnine.themes.themeable.axis_ticks_minor_r_end">axis_ticks_minor_r_end</a></td>
+<td>r-axis minor tick lines at the end-angle spoke</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/axis_ticks_minor_r_start.html#plotnine.themes.themeable.axis_ticks_minor_r_start">axis_ticks_minor_r_start</a></td>
+<td>r-axis minor tick lines at the start-angle spoke</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/axis_ticks_minor_theta.html#plotnine.themes.themeable.axis_ticks_minor_theta">axis_ticks_minor_theta</a></td>
+<td>theta-axis minor tick lines</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/axis_ticks_minor_theta_inside.html#plotnine.themes.themeable.axis_ticks_minor_theta_inside">axis_ticks_minor_theta_inside</a></td>
+<td>theta-axis minor tick lines at the inner (donut-hole) boundary</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/axis_ticks_minor_theta_outside.html#plotnine.themes.themeable.axis_ticks_minor_theta_outside">axis_ticks_minor_theta_outside</a></td>
+<td>theta-axis minor tick lines at the outer (rim) boundary</td>
+</tr>
+<tr class="even">
 <td><a href="../reference/axis_ticks_minor_x.html#plotnine.themes.themeable.axis_ticks_minor_x">axis_ticks_minor_x</a></td>
-<td>x-axis tick lines</td>
+<td>x-axis minor tick lines</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/axis_ticks_minor_x_bottom.html#plotnine.themes.themeable.axis_ticks_minor_x_bottom">axis_ticks_minor_x_bottom</a></td>
+<td>x-axis minor tick lines on the bottom</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/axis_ticks_minor_x_top.html#plotnine.themes.themeable.axis_ticks_minor_x_top">axis_ticks_minor_x_top</a></td>
+<td>x-axis minor tick lines on the top</td>
 </tr>
 <tr class="odd">
 <td><a href="../reference/axis_ticks_minor_y.html#plotnine.themes.themeable.axis_ticks_minor_y">axis_ticks_minor_y</a></td>
 <td>y-axis minor tick lines</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/axis_ticks_minor_y_left.html#plotnine.themes.themeable.axis_ticks_minor_y_left">axis_ticks_minor_y_left</a></td>
+<td>y-axis minor tick lines on the left</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/axis_ticks_minor_y_right.html#plotnine.themes.themeable.axis_ticks_minor_y_right">axis_ticks_minor_y_right</a></td>
+<td>y-axis minor tick lines on the right</td>
 </tr>
 <tr class="even">
 <td><a href="../reference/axis_ticks_x.html#plotnine.themes.themeable.axis_ticks_x">axis_ticks_x</a></td>
@@ -1392,8 +1576,24 @@ ul.task-list li input[type="checkbox"] {
 <td>x axis label</td>
 </tr>
 <tr class="even">
+<td><a href="../reference/axis_title_x_bottom.html#plotnine.themes.themeable.axis_title_x_bottom">axis_title_x_bottom</a></td>
+<td>x axis label on the bottom</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/axis_title_x_top.html#plotnine.themes.themeable.axis_title_x_top">axis_title_x_top</a></td>
+<td>x axis label on the top</td>
+</tr>
+<tr class="even">
 <td><a href="../reference/axis_title_y.html#plotnine.themes.themeable.axis_title_y">axis_title_y</a></td>
 <td>y axis label</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/axis_title_y_left.html#plotnine.themes.themeable.axis_title_y_left">axis_title_y_left</a></td>
+<td>y axis label on the left</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/axis_title_y_right.html#plotnine.themes.themeable.axis_title_y_right">axis_title_y_right</a></td>
+<td>y axis label on the right</td>
 </tr>
 <tr class="odd">
 <td><a href="../reference/dpi.html#plotnine.themes.themeable.dpi">dpi</a></td>
@@ -1604,6 +1804,22 @@ ul.task-list li input[type="checkbox"] {
 <td>How to align the plot caption</td>
 </tr>
 <tr class="odd">
+<td><a href="../reference/plot_footer.html#plotnine.themes.themeable.plot_footer">plot_footer</a></td>
+<td>Plot footer</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/plot_footer_background.html#plotnine.themes.themeable.plot_footer_background">plot_footer_background</a></td>
+<td>Footer background</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/plot_footer_line.html#plotnine.themes.themeable.plot_footer_line">plot_footer_line</a></td>
+<td>Line above the footer</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/plot_footer_position.html#plotnine.themes.themeable.plot_footer_position">plot_footer_position</a></td>
+<td>How to align the plot footer</td>
+</tr>
+<tr class="odd">
 <td><a href="../reference/plot_margin.html#plotnine.themes.themeable.plot_margin">plot_margin</a></td>
 <td>Plot Margin</td>
 </tr>
@@ -1676,6 +1892,22 @@ ul.task-list li input[type="checkbox"] {
 <td>Vertical facet label background</td>
 </tr>
 <tr class="odd">
+<td><a href="../reference/strip_placement.html#plotnine.themes.themeable.strip_placement">strip_placement</a></td>
+<td>Where a facet strip sits relative to an axis on the same side</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/strip_switch_pad.html#plotnine.themes.themeable.strip_switch_pad">strip_switch_pad</a></td>
+<td>Space between an axis and a strip placed beyond it on the same side</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/strip_switch_pad_x.html#plotnine.themes.themeable.strip_switch_pad_x">strip_switch_pad_x</a></td>
+<td>Space between an x-axis and a strip placed beyond it on the same side</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/strip_switch_pad_y.html#plotnine.themes.themeable.strip_switch_pad_y">strip_switch_pad_y</a></td>
+<td>Space between a y-axis and a strip placed beyond it on the same side</td>
+</tr>
+<tr class="odd">
 <td><a href="../reference/strip_text.html#plotnine.themes.themeable.strip_text">strip_text</a></td>
 <td>Facet labels along both axes</td>
 </tr>
@@ -1684,8 +1916,24 @@ ul.task-list li input[type="checkbox"] {
 <td>Facet labels along the horizontal axis</td>
 </tr>
 <tr class="odd">
+<td><a href="../reference/strip_text_x_bottom.html#plotnine.themes.themeable.strip_text_x_bottom">strip_text_x_bottom</a></td>
+<td>Facet labels on the bottom</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/strip_text_x_top.html#plotnine.themes.themeable.strip_text_x_top">strip_text_x_top</a></td>
+<td>Facet labels on the top</td>
+</tr>
+<tr class="odd">
 <td><a href="../reference/strip_text_y.html#plotnine.themes.themeable.strip_text_y">strip_text_y</a></td>
 <td>Facet labels along the vertical axis</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/strip_text_y_left.html#plotnine.themes.themeable.strip_text_y_left">strip_text_y_left</a></td>
+<td>Facet labels on the left</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/strip_text_y_right.html#plotnine.themes.themeable.strip_text_y_right">strip_text_y_right</a></td>
+<td>Facet labels on the right</td>
 </tr>
 <tr class="even">
 <td><a href="../reference/svg_usefonts.html#plotnine.themes.themeable.svg_usefonts">svg_usefonts</a></td>
@@ -1780,6 +2028,14 @@ ul.task-list li input[type="checkbox"] {
 <td>Flipped cartesian coordinates</td>
 </tr>
 <tr class="odd">
+<td><a href="../reference/coord_polar.html#plotnine.coord_polar">coord_polar</a></td>
+<td>alias of <a href="../reference/coord_radial.html#plotnine.coord_radial">coord_radial</a></td>
+</tr>
+<tr class="even">
+<td><a href="../reference/coord_radial.html#plotnine.coord_radial">coord_radial</a></td>
+<td>Radial coordinate system</td>
+</tr>
+<tr class="odd">
 <td><a href="../reference/coord_trans.html#plotnine.coord_trans">coord_trans</a></td>
 <td>Transformed cartesian coordinate system</td>
 </tr>
@@ -1805,8 +2061,28 @@ ul.task-list li input[type="checkbox"] {
 <td>Place plots or compositions side by side</td>
 </tr>
 <tr class="even">
+<td><a href="../reference/Wrap.html#plotnine.composition.Wrap">Wrap</a></td>
+<td>Wrap plots or compositions into a grid</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/plot_annotation.html#plotnine.composition.plot_annotation">plot_annotation</a></td>
+<td>Annotate a composition</td>
+</tr>
+<tr class="even">
 <td><a href="../reference/plot_spacer.html#plotnine.composition.plot_spacer">plot_spacer</a></td>
 <td>Blank area as wide or as tall as a plot</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/plot_layout.html#plotnine.composition.plot_layout">plot_layout</a></td>
+<td>Customise the layout of plots in a composition</td>
+</tr>
+<tr class="even">
+<td><a href="../reference/inset_element.html#plotnine.composition.inset_element">inset_element</a></td>
+<td>Place a plot as an inset within another plot</td>
+</tr>
+<tr class="odd">
+<td><a href="../reference/guide_area.html#plotnine.composition.guide_area">guide_area</a></td>
+<td>A grid cell that hosts collected guides</td>
 </tr>
 </tbody>
 </table>
@@ -1881,6 +2157,16 @@ ul.task-list li input[type="checkbox"] {
 <tr class="odd">
 <td><a href="../reference/get_aesthetic_limits.html#plotnine.helpers.get_aesthetic_limits">get_aesthetic_limits</a></td>
 <td>Get the limits of an aesthetic</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="doc-summary-table">
+<table class="caption-top table">
+<tbody>
+<tr class="odd">
+<td><a href="../reference/last_plot.html#plotnine.session.last_plot">last_plot</a></td>
+<td>Retrieve the last plot rendered in this session</td>
 </tr>
 </tbody>
 </table>

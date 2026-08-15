@@ -121,7 +121,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine 0.15.8rc1</span>
+    <span class="navbar-title">plotnine 0.16.0a12</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -197,6 +197,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Every subclass of themeable is stored in a dict at <code>register</code> with the name of the subclass as the key.</p>
 <p>It is the base of a class hierarchy that uses inheritance in a non-traditional manner. In the textbook use of class inheritance, superclasses are general and subclasses are specializations. In some since the hierarchy used here is the opposite in that superclasses are more specific than subclasses.</p>
 <p>It is probably better to think if this hierarchy of leveraging Python’s multiple inheritance to implement composition. For example the <code>axis_title</code> themeable is <em>composed of</em> the <code>x_axis_title</code> and the <code>y_axis_title</code>. We are just using multiple inheritance to specify this composition.</p>
+<p>A parent’s effect is the combined effect of the leaves it composes: theming <code>axis_text_x</code> styles both <code>axis_text_x_top</code> and <code>axis_text_x_bottom</code>, and blanking it hides both. Each leaf adds its own contribution on top of its bases — hence the <code>super()</code> call in every <code>apply_*</code> / <code>blank_*</code> method — so a leaf that skips it applies alone and the rest of the composition is silently lost.</p>
 <p>When implementing a new themeable based on the ggplot2 documentation, it is important to keep this in mind and reverse the order of the “inherits from” in the documentation.</p>
 <p>For example, to implement,</p>
 <ul>
@@ -217,7 +218,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <section id="notes" class="level2 doc-notes">
 <h2 class="doc-notes anchored" data-anchor-id="notes">Notes</h2>
-<p>A user should never create instances of class <code>Themeable</code> or subclasses of it.</p>
+<p>Most users should not create instances of class <a href="../reference/themeable.html#plotnine.themes.themeable.themeable"><code>themeable</code></a> or subclasses of it directly. Extension authors may define subclasses; they are registered by class name when their module is imported and can be used through <a href="../reference/theme.html#plotnine.theme"><code>theme</code></a> keyword arguments.</p>
 </section>
 <section id="attributes" class="level2 doc-attributes">
 <h2 class="doc-attributes anchored" data-anchor-id="attributes">Attributes</h2>
@@ -231,7 +232,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tbody>
 <tr class="odd">
 <td><a href="#plotnine.themes.themeable.themeable.properties">properties</a></td>
-<td>Return only the properties that can be applied</td>
+<td>Return the properties of the themeable</td>
 </tr>
 <tr class="even">
 <td><a href="#plotnine.themes.themeable.themeable.rcParams">rcParams</a></td>
@@ -245,13 +246,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><code><span class="doc-parameter-name">properties</span></code></p>
 </div>
 <div class="doc-text">
-<p>Return only the properties that can be applied</p>
+<p>Return the properties of the themeable</p>
 </div>
 </section>
 <section id="plotnine.themes.themeable.themeable.rcParams" class="level3 title doc-object doc-attribute">
 <h3 class="title doc-object doc-attribute anchored" data-anchor-id="plotnine.themes.themeable.themeable.rcParams"><code class="doc-symbol doc-symbol-attribute"></code> <span class="doc-object-name doc-attribute-name">rcParams</span> <span class="doc-labels"><code class="doc-label doc-label-property"></code></span></h3>
 <div class="doc-signature doc-attribute">
-<p><code><span class="doc-parameter-name">rcParams</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#dict">dict</a>[<a href="https://docs.python.org/3/library/stdtypes.html#str">str</a>, <a href="https://docs.python.org/3/library/typing.html#typing.Any">Any</a>]</span></code></p>
+<p><code><span class="doc-parameter-name">rcParams</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#dict">dict</a>[<a href="https://matplotlib.org/stable/api/typing_api.html#matplotlib.typing.RcKeyType">RcKeyType</a>, <a href="https://docs.python.org/3/library/typing.html#typing.Any">Any</a>]</span></code></p>
 </div>
 <div class="doc-text">
 <p>Return themeables rcparams to an rcparam dict before plotting.</p>
