@@ -179,6 +179,13 @@ title: Changelog
   [](:class:`~plotnine.geom_point`) when the shape is mapped to variable with missing
   values.
 
+- Specific theme elements now override blank general elements. For example,
+  adding `theme(axis_text_x_bottom=element_text(size=14))` to
+  [](:class:`~plotnine.theme_void`) displays the bottom x-axis tick labels and
+  reserves space for them. Previously, the blank `axis_text_x` element
+  prevented layout from reserving their space, so the labels could render
+  outside the figure.
+
 ### Enhancements
 
 - The `factor` function available when evaluating expressions in
