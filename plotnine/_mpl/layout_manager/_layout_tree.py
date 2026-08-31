@@ -6,7 +6,6 @@ from typing import TYPE_CHECKING, Iterator, cast
 
 import numpy as np
 
-from ._grid import Grid
 from ._plot_side_space import PlotSideSpaces
 
 if TYPE_CHECKING:
@@ -20,6 +19,8 @@ if TYPE_CHECKING:
         top_space,
     )
     from plotnine.composition import Compose
+
+    from ._grid import Grid
 
     Node: TypeAlias = "PlotSideSpaces | LayoutTree"
 
@@ -172,18 +173,7 @@ class LayoutTree:
             else:
                 nodes.append(LayoutTree.create(item))
 
-        if (spec := getattr(cmp, "_design_spec", None)) is not None:
-            grid = spec.make_grid(nodes)
-        else:
-            order = "row_major" if cmp.layout.byrow else "col_major"
-            grid = Grid["Node"](
-                cast("int", cmp.layout.nrow),
-                cast("int", cmp.layout.ncol),
-                nodes,
-                order=order,
-            )
-
-        return LayoutTree(cmp, nodes, grid)
+        return LayoutTree(cmp, nodes, cmp._make_grid(nodes))
 
     @cached_property
     def sub_compositions(self) -> list[LayoutTree]:

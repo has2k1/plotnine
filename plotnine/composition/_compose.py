@@ -4,7 +4,7 @@ import abc
 from copy import copy, deepcopy
 from functools import cached_property
 from io import BytesIO
-from typing import TYPE_CHECKING, cast, overload
+from typing import TYPE_CHECKING, TypeVar, cast, overload
 
 from plotnine.themes.theme import theme, theme_get
 
@@ -23,7 +23,7 @@ from ..options import get_option
 
 if TYPE_CHECKING:
     from pathlib import Path
-    from typing import Iterator
+    from typing import Iterator, Sequence
 
     from matplotlib.figure import Figure
     from typing_extensions import Self
@@ -33,10 +33,13 @@ if TYPE_CHECKING:
     from plotnine._mpl.layout_manager._composition_side_space import (
         CompositionSideSpaces,
     )
+    from plotnine._mpl.layout_manager._grid import Grid
     from plotnine.composition._design import DesignSpec
     from plotnine.composition._guide_area import guide_area
     from plotnine.ggplot import PlotAddable, ggplot
     from plotnine.typing import FigureFormat, MimeBundle
+
+T = TypeVar("T")
 
 
 class Compose:
@@ -609,6 +612,34 @@ class Compose:
                 item._gridspec = _container_gs
             else:
                 item._generate_gridspecs(figure, _container_gs)
+
+    def _make_grid(self, payload: Sequence[T]) -> Grid[T]:
+        """
+        Build a grid that maps payload values to composition items
+
+        Parameters
+        ----------
+        payload :
+            One value for each composition item, in item order.
+
+        Returns
+        -------
+        :
+            Grid with the composition's dimensions and placement order.
+            A design layout can place one value across several cells.
+        """
+        from plotnine._mpl.layout_manager._grid import Grid
+
+        if (spec := self._design_spec) is not None:
+            return spec.make_grid(payload)
+
+        order = "row_major" if self.layout.byrow else "col_major"
+        return Grid(
+            cast("int", self.layout.nrow),
+            cast("int", self.layout.ncol),
+            payload,
+            order=order,
+        )
 
     def show(self):
         """
