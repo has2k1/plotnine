@@ -454,6 +454,43 @@ class Compose:
             else:
                 item._resolve_guide_owners(owner=new_owner)
 
+    def _resolve_collected_axes(self):
+        """
+        Apply this composition's axis and title collection
+
+        Only direct plots participate. A nested composition occupies one
+        grid item and applies its own `plot_layout`.
+
+        On each selected axis side, retain axes only where no grid item
+        lies beyond the plot. On each selected title side, remove titles
+        with relinquished axes and collapse matching retained titles.
+        """
+        from ._axis_collection import AxisRemover, collect_title
+        from ._plot_layout import collected_sides
+
+        axes_sides = collected_sides(self.layout.axes)
+        title_sides = collected_sides(
+            self.layout.axes
+            if self.layout.axis_title is None
+            else self.layout.axis_title
+        )
+        if not (axes_sides or title_sides):
+            return
+
+        # Include nested compositions because they occupy grid cells and can
+        # block a direct plot from an outer edge.
+        grid = self._make_grid(self.items)
+        removers = [
+            AxisRemover.make(plot, grid, axes_sides)
+            for plot in self.iter_plots()
+        ]
+
+        for side in title_sides:
+            collect_title(side, removers, grid)
+
+        for remover in removers:
+            remover.apply()
+
     def _walk_guide_owners(self):
         """
         Yield every composition in this tree that collects guides
@@ -682,6 +719,7 @@ class Compose:
             # sub-compositions.
             for item in cmp:
                 item.theme._inherit_figure_props(cmp.theme)
+            cmp._resolve_collected_axes()
             cmp._draw_plots()
             for sub_cmp in cmp.iter_sub_compositions():
                 sub_cmp._setup()
