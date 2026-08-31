@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Changelog – plotnine 999.post1+g6836b99d3</title>
+<title>Changelog – plotnine 999.post1+g47de79b03</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -121,7 +121,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">plotnine 999.post1+g6836b99d3</span>
+    <span class="navbar-title">plotnine 999.post1+g47de79b03</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -423,6 +423,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>Fixed <a href="./reference/geom_smooth.html#plotnine.geom_smooth"><code>geom_smooth</code></a> / <a href="./reference/stat_smooth.html#plotnine.stat_smooth"><code>stat_smooth</code></a> when using a linear model via “lm” with weights for the model to do a weighted regression. This bug did not affect the formula API of the linear model. (<a href="https://github.com/has2k1/plotnine/issues/1005" title="Issue: #1005">#1005</a>)</p></li>
 <li><p>Fixed rendering of SVGs in jupyter notebooks.</p></li>
 <li><p>Fixed <code>geom_legend</code> to show an empty key for <a href="./reference/geom_point.html#plotnine.geom_point"><code>geom_point</code></a> when the shape is mapped to variable with missing values.</p></li>
+<li><p>Specific theme elements now override blank general elements. For example, adding <code>theme(axis_text_x_bottom=element_text(size=14))</code> to <a href="./reference/theme_void.html#plotnine.theme_void"><code>theme_void</code></a> displays the bottom x-axis tick labels and reserves space for them. Previously, the blank <code>axis_text_x</code> element prevented layout from reserving their space, so the labels could render outside the figure.</p></li>
 </ul>
 </section>
 <section id="enhancements" class="level3">
