@@ -7,9 +7,12 @@ from typing import TYPE_CHECKING, Literal, Sequence
 from ..composition._types import ComposeAddable
 
 if TYPE_CHECKING:
+    from plotnine.typing import Side
+
     from ._compose import Compose
 
     GuidesMode = Literal["collect", "keep"]
+    AxisMode = Literal["collect", "collect_x", "collect_y", "keep"]
 
 
 @dataclass(kw_only=True)
@@ -78,6 +81,33 @@ class plot_layout(ComposeAddable):
       subtree.
     - `None` (default): neither collect nor block — propagate any
       ancestor's setting through unchanged.
+    """
+
+    axes: AxisMode | None = None
+    """
+    Axis collection mode for this composition
+
+    Show only the outermost axis on each selected side. Hide the other
+    axes with their ticks and tick labels. Plotnine does not verify that
+    the plots share a scale.
+
+    - `"collect"`: Collect axes on all four sides.
+    - `"collect_x"`: Collect axes on the top and bottom.
+    - `"collect_y"`: Collect axes on the left and right.
+    - `"keep"` or `None` (default): Keep every plot's axes.
+    """
+
+    axis_title: AxisMode | None = None
+    """
+    Axis title collection mode for this composition
+
+    Collect matching titles from plots that retain an axis on a selected
+    side. Keep the title nearest that side and centre it across the panels
+    it labels. A hidden axis loses its title; differing titles remain.
+
+    Accepts the same modes as `axes`. `None` inherits the `axes` mode.
+    Set a collection mode to collect titles when axes differ, or set
+    `"keep"` to collect axes while retaining every title.
     """
 
     _cmp: Compose = field(init=False, repr=False)
@@ -194,6 +224,10 @@ class plot_layout(ComposeAddable):
             self.byrow = other.byrow
         if other.guides is not None:
             self.guides = other.guides
+        if other.axes is not None:
+            self.axes = other.axes
+        if other.axis_title is not None:
+            self.axis_title = other.axis_title
 
 
 def repeat(seq: Sequence[float], n: int) -> list[float]:
@@ -211,3 +245,27 @@ def normalise(seq: Sequence[float]) -> list[float]:
     if mean == 0:
         raise ValueError("Cannot rescale: mean is zero")
     return [x / mean for x in seq]
+
+
+def collected_sides(mode: AxisMode | None) -> frozenset[Side]:
+    """
+    Return the sides selected by an axis collection mode
+
+    Parameters
+    ----------
+    mode :
+        Value of `plot_layout(axes=...)` or `plot_layout(axis_title=...)`.
+
+    Returns
+    -------
+    :
+        Sides to collect. Empty for `"keep"` and `None`.
+    """
+    if mode is None or mode == "keep":
+        return frozenset()
+    elif mode == "collect_x":
+        return frozenset({"top", "bottom"})
+    elif mode == "collect_y":
+        return frozenset({"left", "right"})
+    else:
+        return frozenset({"top", "bottom", "left", "right"})
