@@ -1,10 +1,11 @@
 """
-Resolve axis titles without building plots
+Axis and axis title collection for plot compositions
 """
 
 from __future__ import annotations
 
 from copy import copy
+from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, cast
 
 from .._utils import OPPOSITE_SIDE
@@ -13,6 +14,7 @@ if TYPE_CHECKING:
     from typing import Iterable
 
     from plotnine import ggplot, theme
+    from plotnine._mpl.layout_manager._grid import Grid
     from plotnine.scales.scale_xy import ScaleX, ScaleY
     from plotnine.typing import Side
 
@@ -119,3 +121,136 @@ def blank_theme(names: Iterable[str]) -> theme:
     from plotnine import element_blank, theme
 
     return theme(**{name: element_blank() for name in names})  # pyright: ignore[reportArgumentType]
+
+
+# Keep remover equality independent of plot equality; visual tests replace
+# plot equality with baseline-image comparison.
+@dataclass(eq=False)
+class AxisRemover:
+    """
+    Axis elements relinquished by one plot during collection
+    """
+
+    plot: ggplot
+    """
+    Plot being considered for axis collection
+    """
+
+    titles: dict[Side, str]
+    """
+    Axis titles indexed by side
+    """
+
+    dropped: set[Side]
+    """
+    Sides whose axes this plot relinquishes
+    """
+
+    blanks: list[str] = field(default_factory=list)
+    """
+    Themeables to blank after all sides are resolved
+    """
+
+    @classmethod
+    def make(
+        cls, plot: ggplot, grid: Grid, sides: frozenset[Side]
+    ) -> AxisRemover:
+        """
+        Build axis removal state for a plot
+
+        Relinquish each selected side when another grid item lies beyond
+        the plot on that side.
+
+        Parameters
+        ----------
+        plot :
+            Direct plot to inspect.
+        grid :
+            Composition grid containing the plot and neighbouring items.
+        sides :
+            Sides that collect axes.
+
+        Returns
+        -------
+        :
+            Axis removal state with resolved titles, relinquished sides,
+            and themeables to blank.
+        """
+        dropped: set[Side] = {
+            s for s in sides if not grid.is_outermost(plot, s)
+        }
+        blanks = [n for s in dropped for n in AXIS_TEXT_AND_TICKS[s]]
+        return cls(plot, axis_titles(plot), dropped, blanks)
+
+    def shows_axis(self, side: Side) -> bool:
+        """
+        Return whether the plot retains its axis on `side`
+
+        Parameters
+        ----------
+        side :
+            Side of the plot to ask about.
+
+        Returns
+        -------
+        :
+            Whether the axis on that side survived collection.
+        """
+        return side not in self.dropped
+
+    def remove_title(self, side: Side):
+        """
+        Mark the axis title on `side` for removal
+
+        Parameters
+        ----------
+        side :
+            Side whose title the plot gives up.
+        """
+        self.blanks.append(AXIS_TITLE[side])
+
+    def apply(self):
+        """
+        Blank the axis elements this plot relinquished
+        """
+        if self.blanks:
+            self.plot.theme += blank_theme(self.blanks)
+
+
+def collect_title(side: Side, removers: list[AxisRemover], grid: Grid):
+    """
+    Collect matching axis titles on one side
+
+    Remove a title when its axis was relinquished. If two or more retained
+    axes share a title, keep the title nearest the requested grid side and
+    record the panels it spans. Leave differing titles unchanged.
+
+    Parameters
+    ----------
+    side :
+        Side to collect the title on.
+    removers :
+        Collection state for each direct plot, in composition item order.
+    grid :
+        Composition grid containing those plots.
+    """
+    for r in removers:
+        if side in r.titles and not r.shows_axis(side):
+            r.remove_title(side)
+
+    participants = [
+        r for r in removers if side in r.titles and r.shows_axis(side)
+    ]
+    texts = {r.titles[side] for r in participants}
+    if len(participants) < 2 or len(texts) != 1:
+        return
+
+    # Both extrema preserve the first participant in a tie, so composition
+    # order selects the title keeper.
+    nearest = min if side in ("top", "left") else max
+    keeper = nearest(participants, key=lambda r: grid.edge_index(r.plot, side))
+    for r in participants:
+        if r is not keeper:
+            r.remove_title(side)
+
+    keeper.plot._axis_title_span[side] = tuple(r.plot for r in participants)
