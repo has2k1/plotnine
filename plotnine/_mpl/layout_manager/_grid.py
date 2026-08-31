@@ -1,6 +1,8 @@
-from collections.abc import Iterator
+from __future__ import annotations
+
 from dataclasses import InitVar, dataclass
 from typing import (
+    TYPE_CHECKING,
     Callable,
     Generic,
     Literal,
@@ -11,6 +13,11 @@ from typing import (
 
 import numpy as np
 
+if TYPE_CHECKING:
+    from collections.abc import Iterator
+
+    from plotnine.typing import Side
+
 T = TypeVar("T")
 
 Rect = tuple[int, int, int, int]
@@ -19,14 +26,24 @@ Rect = tuple[int, int, int, int]
 
 @dataclass
 class Grid(Generic[T]):
+    """
+    Rectangular grid of items that occupy individual cells
+
+    Items fill the grid in row-major or column-major order. Unfilled cells
+    contain `None`.
+    """
+
     nrow: InitVar[int]
+    """Number of rows in the grid"""
+
     ncol: InitVar[int]
+    """Number of columns in the grid"""
+
     items: InitVar[Sequence[T]]
+    """Items to place in the grid"""
+
     order: InitVar[Literal["row_major", "col_major"]] = "row_major"
-    """
-    Put items into the grid left->right, top->bottom starting at `start`.
-    Unfilled cells remain None. Returns the number of items written.
-    """
+    """Order in which to fill the cells"""
 
     def __post_init__(
         self,
@@ -151,7 +168,7 @@ class Grid(Generic[T]):
 
     def items_on_edge(
         self,
-        side: Literal["top", "bottom", "left", "right"],
+        side: Side,
         idx: int,
     ) -> list[T]:
         """
@@ -178,6 +195,91 @@ class Grid(Generic[T]):
         """
         cells = self[idx, :] if side in ("top", "bottom") else self[:, idx]
         return [n for n in cells if n is not None]
+
+    def _rect_of(self, item: T) -> Rect:
+        """
+        Return the inclusive cell bounds occupied by an item
+
+        Return the first matching cell when the same object occupies
+        more than one cell.
+
+        Parameters
+        ----------
+        item
+            Item to find. Identity matching supports objects with custom
+            equality.
+
+        Returns
+        -------
+        out
+            Inclusive `(r0, r1, c0, c1)` cell bounds.
+
+        Raises
+        ------
+        ValueError
+            If the item is not in the grid.
+        """
+        nrow, ncol = self._grid.shape
+        for r in range(nrow):
+            for c in range(ncol):
+                if self._grid[r, c] is item:
+                    return (r, r, c, c)
+        raise ValueError(f"{item!r} is not in the grid")
+
+    def is_outermost(self, item: T, side: Side) -> bool:
+        """
+        Return whether no item lies beyond `item` on `side`
+
+        An item is outermost on its bottom when every cell below the
+        columns it covers is empty, and correspondingly for the other
+        three sides. In a full grid this is the last row or column; in a
+        ragged one an item can be outermost from an interior cell.
+
+        Parameters
+        ----------
+        item
+            Item to inspect, matched by identity.
+        side
+            Side of the grid to look beyond.
+
+        Returns
+        -------
+        out
+            Whether every cell beyond the item on that side is empty.
+        """
+        r0, r1, c0, c1 = self._rect_of(item)
+        if side == "top":
+            beyond = self._grid[:r0, c0 : c1 + 1]
+        elif side == "bottom":
+            beyond = self._grid[r1 + 1 :, c0 : c1 + 1]
+        elif side == "left":
+            beyond = self._grid[r0 : r1 + 1, :c0]
+        else:
+            beyond = self._grid[r0 : r1 + 1, c1 + 1 :]
+        return all(n is None for n in beyond.flat)
+
+    def edge_index(self, item: T, side: Side) -> int:
+        """
+        Return the row or column of `item`'s `side` edge
+
+        The inverse of `items_on_edge`: the index it returns is the one
+        that would list `item` for that side.
+
+        Parameters
+        ----------
+        item
+            Item in the grid, matched by identity.
+        side
+            Side of the item to locate.
+
+        Returns
+        -------
+        out
+            Row index for `"top"` and `"bottom"`, column index for
+            `"left"` and `"right"`.
+        """
+        r0, r1, c0, c1 = self._rect_of(item)
+        return {"top": r0, "bottom": r1, "left": c0, "right": c1}[side]
 
 
 class DesignGrid(Grid[T]):
@@ -264,7 +366,7 @@ class DesignGrid(Grid[T]):
 
     def items_on_edge(
         self,
-        side: Literal["top", "bottom", "left", "right"],
+        side: Side,
         idx: int,
     ) -> list[T]:
         # An item's top/bottom edge is its r0/r1; left/right is c0/c1.
@@ -276,3 +378,11 @@ class DesignGrid(Grid[T]):
             if edge == idx:
                 out.append(item)
         return out
+
+    def _rect_of(self, item: T) -> Rect:
+        # Use the recorded span instead of treating its first cell as the
+        # whole item.
+        for it, rect in zip(self._items, self._rects):
+            if it is item:
+                return rect
+        raise ValueError(f"{item!r} is not in the grid")
