@@ -390,6 +390,19 @@ def test_override_axis_text():
     assert p == "override_axis_text"
 
 
+def test_specific_axis_text_side_overrides_blank_parent():
+    # `theme_void` blanks both x-axis text sides. Setting the bottom side must
+    # draw its labels and reserve their space while the top side remains blank.
+    p = (
+        ggplot()
+        + lims(x=(0, 100), y=(0, 100))
+        + theme_void()
+        + theme(axis_text_x_bottom=element_text(color="purple", size=14))
+    )
+
+    assert p == "specific_axis_text_side_overrides_blank_parent"
+
+
 def test_blank_all_text_draws():
     # Blanking the base `text` element removes every specific text
     # themeable, so axis_text_x/_y margins resolve to None. Drawing must
