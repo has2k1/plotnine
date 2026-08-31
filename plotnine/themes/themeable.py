@@ -298,12 +298,43 @@ class Themeables(dict[str, themeable]):
                 except ValueError:
                     # Blank child is will be overridden
                     del self[child_key]
+
+            # Replace a blank ancestor with blank sibling branches so a
+            # specific element can override only its branch.
+            if not new.is_blank():
+                for parent_key in themeable._hierarchy[new_key][1:]:
+                    parent = self.get(parent_key)
+                    if parent is not None and parent.is_blank():
+                        self._blank_children_except(type(parent), new_key)
+                        del self[parent_key]
+
             try:
                 self[new_key].merge(new)
             except (KeyError, ValueError):
                 # Themeable type is new or
                 # could not merge blank element.
                 self[new_key] = new
+
+    def _blank_children_except(self, general: type[themeable], keep_key: str):
+        """
+        Blank sibling branches along the path to `keep_key`
+
+        Starting at `general`, store a blank themeable for each branch
+        that does not contain `keep_key`. Descend through the branch
+        that contains `keep_key` and repeat until reaching `keep_key`.
+        Leave `keep_key` unchanged so the caller can retain its specific
+        theme element.
+        """
+        for child in general.__bases__:
+            child_key = child.__name__
+            if child_key == keep_key:
+                continue
+            elif child_key in themeable._hierarchy[keep_key]:
+                self._blank_children_except(child, keep_key)
+            else:
+                self[child_key] = themeable.from_class_name(
+                    child_key, element_blank()
+                )
 
     @property
     def _dict(self):

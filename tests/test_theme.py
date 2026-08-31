@@ -112,6 +112,39 @@ def test_add_element_blank():
     assert theme3 == theme4  # blanking cleans the slate
 
 
+def test_specific_element_overrides_blank_parent():
+    # `theme_void` blanks `axis_text_x`. Setting its bottom side must replace
+    # that general blank while preserving the blank top side.
+    theme1 = theme_void() + theme(axis_text_x_bottom=element_text(size=14))
+
+    assert "axis_text_x" not in theme1.themeables
+    assert not theme1.themeables.is_blank("axis_text_x_bottom")
+    assert theme1.themeables.is_blank("axis_text_x_top")
+    assert not theme1.themeables.is_blank("axis_text_x")
+
+
+def test_specific_element_overrides_blank_grandparent():
+    # Replacing a blank grandparent must preserve blanks on every branch
+    # outside the path to the specific element.
+    theme1 = theme_gray() + theme(text=blank)
+    theme2 = theme1 + theme(axis_text_x_bottom=element_text(size=14))
+
+    assert "text" not in theme2.themeables
+    assert not theme2.themeables.is_blank("axis_text_x_bottom")
+    assert theme2.themeables.is_blank("axis_text_x_top")
+    assert theme2.themeables.is_blank("axis_text_y_left")
+    assert theme2.themeables.is_blank("plot_title")
+
+
+def test_later_blank_parent_overrides_specific_element():
+    # A later blank parent must remove its previously set descendant.
+    theme1 = theme_gray() + theme(axis_text_x_bottom=element_text(size=14))
+    theme2 = theme1 + theme(axis_text_x=blank)
+
+    assert "axis_text_x_bottom" not in theme2.themeables
+    assert theme2.themeables.is_blank("axis_text_x_bottom")
+
+
 def test_extension_themeable_applies_from_theme_kwargs():
     # A themeable defined outside plotnine is reachable by its own name as a
     # theme() keyword, and its apply_ax runs during the draw. The red panel
