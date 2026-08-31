@@ -691,22 +691,30 @@ class PlotLayoutItems:
         if self.axis_title_x_bottom:
             ha = theme.getp(("axis_title_x_bottom", "ha"), "center")
             self.axis_title_x_bottom.set_y(spaces.b.y1("axis_title"))
-            justify.horizontally_about(self.axis_title_x_bottom, ha, "panel")
+            _justify_axis_title(
+                justify, self.plot, self.axis_title_x_bottom, ha, "bottom"
+            )
 
         if self.axis_title_x_top:
             ha = theme.getp(("axis_title_x_top", "ha"), "center")
             self.axis_title_x_top.set_y(spaces.t.y1("axis_title"))
-            justify.horizontally_about(self.axis_title_x_top, ha, "panel")
+            _justify_axis_title(
+                justify, self.plot, self.axis_title_x_top, ha, "top"
+            )
 
         if self.axis_title_y_left:
             va = theme.getp(("axis_title_y_left", "va"), "center")
             self.axis_title_y_left.set_x(spaces.l.x1("axis_title"))
-            justify.vertically_about(self.axis_title_y_left, va, "panel")
+            _justify_axis_title(
+                justify, self.plot, self.axis_title_y_left, va, "left"
+            )
 
         if self.axis_title_y_right:
             va = theme.getp(("axis_title_y_right", "va"), "center")
             self.axis_title_y_right.set_x(spaces.r.x1("axis_title"))
-            justify.vertically_about(self.axis_title_y_right, va, "panel")
+            _justify_axis_title(
+                justify, self.plot, self.axis_title_y_right, va, "right"
+            )
 
         if self.legends:
             _position_legends(self.legends, spaces)
@@ -1131,6 +1139,60 @@ def _text_is_visible(text: Text) -> bool:
     Return True if text is visible and is not empty
     """
     return text.get_visible() and text._text  # type: ignore
+
+
+def _justify_axis_title(
+    justify: TextJustifier,
+    plot: ggplot,
+    text: Text,
+    ratio: float,
+    side: Side,
+):
+    """
+    Position an axis title across the panels it labels
+
+    Use the retaining plot's panel bounds for an ordinary title. For a
+    collected title, use the combined bounds of every participating plot
+    on that side.
+
+    Parameters
+    ----------
+    justify :
+        Positioning bounds for the retaining plot.
+    plot :
+        Plot that retains the title.
+    text :
+        Title artist.
+    ratio :
+        Alignment value from the theme.
+    side :
+        Side the title sits on.
+    """
+    span = plot._axis_title_span.get(side)
+    horizontal = side in ("bottom", "top")
+
+    if span is None:
+        if horizontal:
+            justify.horizontally_across_panel(text, ratio)
+        else:
+            justify.vertically_along_panel(text, ratio)
+        return
+
+    spaces = [p._sidespaces for p in span]
+    if horizontal:
+        justify.horizontally(
+            text,
+            ratio,
+            min(s.panel_left for s in spaces),
+            max(s.panel_right for s in spaces),
+        )
+    else:
+        justify.vertically(
+            text,
+            ratio,
+            min(s.panel_bottom for s in spaces),
+            max(s.panel_top for s in spaces),
+        )
 
 
 def _position_plot_labels(
