@@ -20,6 +20,7 @@ if typing.TYPE_CHECKING:
     from plotnine.coords.coord import coord
     from plotnine.facets.layout import Layout
     from plotnine.geoms.geom import geom
+    from plotnine.iapi import labels_view
     from plotnine.layer import layer
     from plotnine.mapping import Environment
     from plotnine.positions.position import position
@@ -459,12 +460,17 @@ class layer:
         """
         self.stat.finish_layer(self.data)
 
-    def update_labels(self, plot: ggplot):
+    def update_labels(self, labels: labels_view):
         """
-        Update label data for the ggplot from the mappings in this layer
+        Fill unset labels from this layer's mapping and statistic
+
+        Parameters
+        ----------
+        labels :
+            Labels to update.
         """
-        plot.labels.add_defaults(self.mapping.labels)
-        plot.labels.add_defaults(make_labels(self.stat.DEFAULT_AES))
+        labels.add_defaults(self.mapping.labels)
+        labels.add_defaults(make_labels(self.stat.DEFAULT_AES))
 
 
 class Layers(List[layer]):
@@ -564,9 +570,17 @@ class Layers(List[layer]):
         for l in self:
             l.finish_statistics()
 
-    def update_labels(self, plot: ggplot):
+    def update_labels(self, labels: labels_view):
+        """
+        Fill unset labels from every layer's mapping and statistic
+
+        Parameters
+        ----------
+        labels :
+            Labels to update.
+        """
         for l in self:
-            l.update_labels(plot)
+            l.update_labels(labels)
 
 
 def add_group(data: pd.DataFrame) -> pd.DataFrame:
