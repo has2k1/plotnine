@@ -452,7 +452,7 @@ class ggplot:
         layout = self._build_objs.layout = self.layout
 
         # Update the label information for the plot
-        layers.update_labels(self)
+        layers.update_labels(self.labels)
 
         # Give each layer a copy of the data, the mappings and
         # the execution environment
