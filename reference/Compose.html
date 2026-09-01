@@ -121,7 +121,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine 0.16.0a12</span>
+    <span class="navbar-title">plotnine 0.16.0a13</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -163,6 +163,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods">Methods</a>
   <ul class="collapse">
   <li><a href="#plotnine.composition.Compose.draw" id="toc-plotnine.composition.Compose.draw" class="nav-link" data-scroll-target="#plotnine.composition.Compose.draw"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">draw</span></a></li>
+  <li><a href="#plotnine.composition.Compose.iter_compositions_all" id="toc-plotnine.composition.Compose.iter_compositions_all" class="nav-link" data-scroll-target="#plotnine.composition.Compose.iter_compositions_all"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">iter_compositions_all</span></a></li>
   <li><a href="#plotnine.composition.Compose.iter_plots_all" id="toc-plotnine.composition.Compose.iter_plots_all" class="nav-link" data-scroll-target="#plotnine.composition.Compose.iter_plots_all"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">iter_plots_all</span></a></li>
   <li><a href="#plotnine.composition.Compose.save" id="toc-plotnine.composition.Compose.save" class="nav-link" data-scroll-target="#plotnine.composition.Compose.save"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">save</span></a></li>
   <li><a href="#plotnine.composition.Compose.show" id="toc-plotnine.composition.Compose.show" class="nav-link" data-scroll-target="#plotnine.composition.Compose.show"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">show</span></a></li>
@@ -275,14 +276,18 @@ The objects to be arranged (composed)
 <td>Render the arranged plots</td>
 </tr>
 <tr class="even">
+<td><a href="#plotnine.composition.Compose.iter_compositions_all">iter_compositions_all</a></td>
+<td>Yield this composition and every nested composition</td>
+</tr>
+<tr class="odd">
 <td><a href="#plotnine.composition.Compose.iter_plots_all">iter_plots_all</a></td>
 <td>Recursively generate all plots under this composition</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><a href="#plotnine.composition.Compose.save">save</a></td>
 <td>Save a composition as an image file</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><a href="#plotnine.composition.Compose.show">show</a></td>
 <td>Display plot in the cells output</td>
 </tr>
@@ -319,10 +324,19 @@ Matplotlib figure
 </div>
 </section>
 </section>
+<section id="plotnine.composition.Compose.iter_compositions_all" class="level3 title doc-object doc-method">
+<h3 class="title doc-object doc-method anchored" data-anchor-id="plotnine.composition.Compose.iter_compositions_all"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">iter_compositions_all</span></h3>
+<div class="doc-signature doc-method">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>iter_compositions_all()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="doc-text">
+<p>Yield this composition and every nested composition</p>
+</div>
+</section>
 <section id="plotnine.composition.Compose.iter_plots_all" class="level3 title doc-object doc-method">
 <h3 class="title doc-object doc-method anchored" data-anchor-id="plotnine.composition.Compose.iter_plots_all"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">iter_plots_all</span></h3>
 <div class="doc-signature doc-method">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>iter_plots_all()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>iter_plots_all()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="doc-text">
 <p>Recursively generate all plots under this composition</p>
@@ -331,7 +345,7 @@ Matplotlib figure
 <section id="plotnine.composition.Compose.save" class="level3 title doc-object doc-method">
 <h3 class="title doc-object doc-method anchored" data-anchor-id="plotnine.composition.Compose.save"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">save</span></h3>
 <div class="doc-signature doc-method">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>save(filename, <span class="bu">format</span><span class="op">=</span><span class="va">None</span>, dpi<span class="op">=</span><span class="va">None</span>, <span class="op">**</span>kwargs)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>save(filename, <span class="bu">format</span><span class="op">=</span><span class="va">None</span>, dpi<span class="op">=</span><span class="va">None</span>, <span class="op">**</span>kwargs)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="doc-text">
 <p>Save a composition as an image file</p>
@@ -363,7 +377,7 @@ These are ignored. Here to “softly” match the API of <code>ggplot.save()</co
 <section id="plotnine.composition.Compose.show" class="level3 title doc-object doc-method">
 <h3 class="title doc-object doc-method anchored" data-anchor-id="plotnine.composition.Compose.show"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">show</span></h3>
 <div class="doc-signature doc-method">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="doc-text">
 <p>Display plot in the cells output</p>
