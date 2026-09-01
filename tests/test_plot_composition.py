@@ -1,4 +1,7 @@
+from io import BytesIO
+
 import pytest
+from PIL import Image
 
 from plotnine import (
     element_line,
@@ -469,3 +472,16 @@ def test_spacer_first_plus_plot():
     # Putting the spacer on the LHS exercises plot_spacer.__add__.
     p = plot_spacer() + plot.red
     assert p == "spacer_first_plus_plot"
+
+
+def test_save_honours_requested_dpi():
+    # The composition owns the figure, so setting the DPI only on an inner
+    # plot cannot change the saved image dimensions.
+    cmp = plot.red | plot.green
+    width, height = cmp.theme.getp("figure_size")
+
+    for dpi in (100, 200):
+        buf = BytesIO()
+        cmp.save(buf, format="png", dpi=dpi)
+        expected = (int(width * dpi), int(height * dpi))
+        assert Image.open(buf).size == expected

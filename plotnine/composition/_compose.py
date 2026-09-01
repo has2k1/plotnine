@@ -842,19 +842,26 @@ class Compose:
             Image format to use, automatically extract from
             file name extension.
         dpi :
-            DPI to use for raster graphics. If None, defaults to using
-            the `dpi` of theme to the first plot.
+            DPI for raster graphics. If `None`, use the composition theme's
+            `dpi`.
         **kwargs :
             These are ignored. Here to "softly" match the API of
             `ggplot.save()`.
         """
         from plotnine import theme
 
-        # To set the dpi, we only need to change the dpi of
-        # the last plot and theme gets added to the last plot
-        plot = (self + theme(dpi=dpi)) if dpi else self
-        figure = plot.draw()
-        figure.savefig(filename, format=format)
+        # Set the composition theme's DPI because the composition owns the
+        # figure. Inner plots inherit this value.
+        cmp = self
+        if dpi:
+            cmp = deepcopy(self)
+            cmp.theme = cmp.theme + theme(dpi=dpi)
+
+        figure = cmp.draw()
+
+        # Pass the DPI explicitly so `savefig.dpi` cannot override the
+        # requested resolution.
+        figure.savefig(filename, format=format, dpi=figure.get_dpi())
 
 
 def _renders_legend_inside(t: theme) -> bool:

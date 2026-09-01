@@ -190,6 +190,10 @@ title: Changelog
   prevented layout from reserving their space, so the labels could render
   outside the figure.
 
+- Saving a composition now honours the `dpi` argument. For example,
+  `(p1 | p2).save("composition.png", dpi=200)` saves the image at 200 DPI
+  instead of the default resolution.
+
 ### Enhancements
 
 - The `factor` function available when evaluating expressions in
