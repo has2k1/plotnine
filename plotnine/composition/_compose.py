@@ -413,6 +413,15 @@ class Compose:
         for cmp in self.iter_sub_compositions():
             yield from cmp.iter_plots_all()
 
+    def iter_compositions_all(self):
+        """
+        Yield this composition and every nested composition
+        """
+        yield self
+
+        for cmp in self.iter_sub_compositions():
+            yield from cmp.iter_compositions_all()
+
     def _resolve_guide_owners(self, owner: Compose | None = None):
         """
         Decide which `Compose` (if any) owns each leaf's guides
