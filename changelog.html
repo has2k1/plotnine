@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Changelog – plotnine 999.post1+g1a5294906</title>
+<title>Changelog – plotnine 999.post1+g15f4d75b3</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -121,7 +121,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">plotnine 999.post1+g1a5294906</span>
+    <span class="navbar-title">plotnine 999.post1+g15f4d75b3</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -425,6 +425,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>Fixed rendering of SVGs in jupyter notebooks.</p></li>
 <li><p>Fixed <code>geom_legend</code> to show an empty key for <a href="./reference/geom_point.html#plotnine.geom_point"><code>geom_point</code></a> when the shape is mapped to variable with missing values.</p></li>
 <li><p>Specific theme elements now override blank general elements. For example, adding <code>theme(axis_text_x_bottom=element_text(size=14))</code> to <a href="./reference/theme_void.html#plotnine.theme_void"><code>theme_void</code></a> displays the bottom x-axis tick labels and reserves space for them. Previously, the blank <code>axis_text_x</code> element prevented layout from reserving their space, so the labels could render outside the figure.</p></li>
+<li><p>Saving a composition now honours the <code>dpi</code> argument. For example, <code>(p1 | p2).save("composition.png", dpi=200)</code> saves the image at 200 DPI instead of the default resolution.</p></li>
 </ul>
 </section>
 <section id="enhancements" class="level3">
