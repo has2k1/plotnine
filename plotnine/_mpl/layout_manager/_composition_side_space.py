@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 
 from plotnine._mpl.layout_manager._layout_tree import LayoutTree
 from plotnine._mpl.layout_manager._plot_side_space import PlotSideSpaces
@@ -10,6 +10,7 @@ from ._composition_layout_items import CompositionLayoutItems
 from ._side_space import GridSpecParams, _side_space
 
 if TYPE_CHECKING:
+    from plotnine import ggplot
     from plotnine.composition._compose import Compose
     from plotnine.iapi import outside_legend
 
@@ -442,10 +443,28 @@ class CompositionSideSpaces:
 
     def _create_plot_sidespaces(self):
         """
-        Create sidespaces for all the plots in the composition
+        Create plot side spaces and collected axis title spans
+
+        Each span retains its plots' side spaces, so its bounds reflect later
+        panel resizing.
         """
+        from plotnine.composition._axis_collection import PanelSpan
+
         for plot in self.cmp.iter_plots_all():
             plot._sidespaces = PlotSideSpaces(plot)
+
+        for cmp in self.cmp.iter_compositions_all():
+            for position, sides in cmp._collected_spans.items():
+                keeper = cast("ggplot", cmp.items[position])
+                keeper._sidespaces.axis_title_span = {
+                    side: PanelSpan(
+                        tuple(
+                            cast("ggplot", cmp.items[i])._sidespaces
+                            for i in positions
+                        )
+                    )
+                    for side, positions in sides.items()
+                }
 
     def resize_gridspec(self):
         """

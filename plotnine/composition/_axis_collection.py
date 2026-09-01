@@ -16,6 +16,7 @@ if TYPE_CHECKING:
     from plotnine import ggplot, theme
     from plotnine._mpl.layout_manager._grid import Grid
     from plotnine._mpl.layout_manager._plot_side_space import PlotSideSpaces
+    from plotnine.composition._compose import Compose
     from plotnine.scales.scale_xy import ScaleX, ScaleY
     from plotnine.typing import Side
 
@@ -172,6 +173,11 @@ class AxisRemover:
     Axis elements relinquished by one plot during collection
     """
 
+    position: int
+    """
+    Index of the plot in the composition's item sequence
+    """
+
     plot: ggplot
     """
     Plot being considered for axis collection
@@ -194,7 +200,7 @@ class AxisRemover:
 
     @classmethod
     def make(
-        cls, plot: ggplot, grid: Grid, sides: frozenset[Side]
+        cls, position: int, plot: ggplot, grid: Grid, sides: frozenset[Side]
     ) -> AxisRemover:
         """
         Build axis removal state for a plot
@@ -204,6 +210,8 @@ class AxisRemover:
 
         Parameters
         ----------
+        position :
+            Index of the plot in the composition's item sequence.
         plot :
             Direct plot to inspect.
         grid :
@@ -221,7 +229,7 @@ class AxisRemover:
             s for s in sides if not grid.is_outermost(plot, s)
         }
         blanks = [n for s in dropped for n in AXIS_TEXT_AND_TICKS[s]]
-        return cls(plot, axis_titles(plot), dropped, blanks)
+        return cls(position, plot, axis_titles(plot), dropped, blanks)
 
     def shows_axis(self, side: Side) -> bool:
         """
@@ -258,7 +266,9 @@ class AxisRemover:
             self.plot.theme += blank_theme(self.blanks)
 
 
-def collect_title(side: Side, removers: list[AxisRemover], grid: Grid):
+def collect_title(
+    side: Side, removers: list[AxisRemover], grid: Grid, cmp: Compose
+):
     """
     Collect matching axis titles on one side
 
@@ -274,6 +284,8 @@ def collect_title(side: Side, removers: list[AxisRemover], grid: Grid):
         Collection state for each direct plot, in composition item order.
     grid :
         Composition grid containing those plots.
+    cmp :
+        Composition containing the plots.
     """
     for r in removers:
         if side in r.titles and not r.shows_axis(side):
@@ -294,4 +306,5 @@ def collect_title(side: Side, removers: list[AxisRemover], grid: Grid):
         if r is not keeper:
             r.remove_title(side)
 
-    keeper.plot._axis_title_span[side] = tuple(r.plot for r in participants)
+    spans = cmp._collected_spans.setdefault(keeper.position, {})
+    spans[side] = tuple(r.position for r in participants)

@@ -37,7 +37,7 @@ if TYPE_CHECKING:
     from plotnine.composition._design import DesignSpec
     from plotnine.composition._guide_area import guide_area
     from plotnine.ggplot import PlotAddable, ggplot
-    from plotnine.typing import FigureFormat, MimeBundle
+    from plotnine.typing import FigureFormat, MimeBundle, Side
 
 T = TypeVar("T")
 
@@ -166,6 +166,15 @@ class Compose:
         # Composition-level guides populated if "collect"ing
         self.guides = guides()
         self.guides._owner = self
+
+        self._collected_spans: dict[int, dict[Side, tuple[int, ...]]] = {}
+        """
+        Item indexes for each collected axis title
+
+        Outer keys identify the plot that retains a title. Inner keys identify
+        the title side. Each value identifies every plot labelled by that
+        title.
+        """
 
     def __repr__(self):
         """
@@ -474,6 +483,8 @@ class Compose:
         lies beyond the plot. On each selected title side, remove titles
         with relinquished axes and collapse matching retained titles.
         """
+        from plotnine import ggplot
+
         from ._axis_collection import AxisRemover, collect_title
         from ._plot_layout import collected_sides
 
@@ -490,12 +501,13 @@ class Compose:
         # block a direct plot from an outer edge.
         grid = self._make_grid(self.items)
         removers = [
-            AxisRemover.make(plot, grid, axes_sides)
-            for plot in self.iter_plots()
+            AxisRemover.make(i, item, grid, axes_sides)
+            for i, item in enumerate(self.items)
+            if isinstance(item, ggplot)
         ]
 
         for side in title_sides:
-            collect_title(side, removers, grid)
+            collect_title(side, removers, grid, self)
 
         for remover in removers:
             remover.apply()

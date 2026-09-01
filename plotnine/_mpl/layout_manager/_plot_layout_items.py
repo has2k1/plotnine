@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING, cast
 from matplotlib.text import Text
 
 from plotnine._utils import ha_as_float, side_artists, va_as_float
+from plotnine.composition._axis_collection import PanelSpan
 from plotnine.composition._compose import Compose
 from plotnine.exceptions import PlotnineError
 
@@ -692,28 +693,28 @@ class PlotLayoutItems:
             ha = theme.getp(("axis_title_x_bottom", "ha"), "center")
             self.axis_title_x_bottom.set_y(spaces.b.y1("axis_title"))
             _justify_axis_title(
-                justify, self.plot, self.axis_title_x_bottom, ha, "bottom"
+                justify, spaces, self.axis_title_x_bottom, ha, "bottom"
             )
 
         if self.axis_title_x_top:
             ha = theme.getp(("axis_title_x_top", "ha"), "center")
             self.axis_title_x_top.set_y(spaces.t.y1("axis_title"))
             _justify_axis_title(
-                justify, self.plot, self.axis_title_x_top, ha, "top"
+                justify, spaces, self.axis_title_x_top, ha, "top"
             )
 
         if self.axis_title_y_left:
             va = theme.getp(("axis_title_y_left", "va"), "center")
             self.axis_title_y_left.set_x(spaces.l.x1("axis_title"))
             _justify_axis_title(
-                justify, self.plot, self.axis_title_y_left, va, "left"
+                justify, spaces, self.axis_title_y_left, va, "left"
             )
 
         if self.axis_title_y_right:
             va = theme.getp(("axis_title_y_right", "va"), "center")
             self.axis_title_y_right.set_x(spaces.r.x1("axis_title"))
             _justify_axis_title(
-                justify, self.plot, self.axis_title_y_right, va, "right"
+                justify, spaces, self.axis_title_y_right, va, "right"
             )
 
         if self.legends:
@@ -1143,7 +1144,7 @@ def _text_is_visible(text: Text) -> bool:
 
 def _justify_axis_title(
     justify: TextJustifier,
-    plot: ggplot,
+    spaces: PlotSideSpaces,
     text: Text,
     ratio: float,
     side: Side,
@@ -1151,48 +1152,28 @@ def _justify_axis_title(
     """
     Position an axis title across the panels it labels
 
-    Use the retaining plot's panel bounds for an ordinary title. For a
-    collected title, use the combined bounds of every participating plot
-    on that side.
+    A collected title spans every panel it labels. An uncollected title uses
+    the plot's own panel bounds, so its span contains only that plot's
+    panels.
 
     Parameters
     ----------
     justify :
-        Positioning bounds for the retaining plot.
-    plot :
-        Plot that retains the title.
+        Text positioner for figure-space bounds.
+    spaces :
+        Side spaces for the plot that draws the title.
     text :
-        Title artist.
+        Axis title to position.
     ratio :
-        Alignment value from the theme.
+        Horizontal or vertical alignment within the span.
     side :
-        Side the title sits on.
+        Side containing the title.
     """
-    span = plot._axis_title_span.get(side)
-    horizontal = side in ("bottom", "top")
-
-    if span is None:
-        if horizontal:
-            justify.horizontally_across_panel(text, ratio)
-        else:
-            justify.vertically_along_panel(text, ratio)
-        return
-
-    spaces = [p._sidespaces for p in span]
-    if horizontal:
-        justify.horizontally(
-            text,
-            ratio,
-            min(s.panel_left for s in spaces),
-            max(s.panel_right for s in spaces),
-        )
+    span = spaces.axis_title_span.get(side) or PanelSpan((spaces,))
+    if side in ("bottom", "top"):
+        justify.horizontally(text, ratio, span.left, span.right)
     else:
-        justify.vertically(
-            text,
-            ratio,
-            min(s.panel_bottom for s in spaces),
-            max(s.panel_top for s in spaces),
-        )
+        justify.vertically(text, ratio, span.bottom, span.top)
 
 
 def _position_plot_labels(
