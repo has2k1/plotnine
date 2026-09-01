@@ -59,7 +59,7 @@ if TYPE_CHECKING:
     from plotnine.composition import Compose
     from plotnine.coords.coord import coord
     from plotnine.facets.facet import facet
-    from plotnine.typing import DataLike, FigureFormat, MimeBundle, Side
+    from plotnine.typing import DataLike, FigureFormat, MimeBundle
 
     class PlotAddable(Protocol):
         """
@@ -160,10 +160,6 @@ class ggplot:
         self.layout = Layout()
         self.watermarks: list[watermark] = []
         self._insets: Insets = Insets()
-
-        # Plots labelled by each collected axis title, keyed by side. The title
-        # is centred across their combined panel bounds.
-        self._axis_title_span: dict[Side, tuple[ggplot, ...]] = {}
 
         # build artefacts
         self._build_objs = NS(meta={})

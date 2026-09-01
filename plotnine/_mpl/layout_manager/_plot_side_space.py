@@ -25,7 +25,9 @@ from ._side_space import GridSpecParams, _side_space
 if TYPE_CHECKING:
     from plotnine import ggplot
     from plotnine._mpl.gridspec import p9GridSpec
+    from plotnine.composition._axis_collection import PanelSpan
     from plotnine.iapi import outside_legend
+    from plotnine.typing import Side
 
 
 class _plot_side_space(_side_space):
@@ -930,6 +932,13 @@ class PlotSideSpaces:
         """All subspaces below the bottom of the panels"""
 
         self.W, self.H = plot.theme.getp("figure_size")
+
+        self.axis_title_span: dict[Side, PanelSpan] = {}
+        """
+        Combined panel bounds for each collected axis title, keyed by side
+
+        The mapping is empty when the plot retains no collected title.
+        """
 
     @property
     def owner(self) -> ggplot:
