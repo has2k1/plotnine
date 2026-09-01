@@ -15,6 +15,7 @@ if TYPE_CHECKING:
 
     from plotnine import ggplot, theme
     from plotnine._mpl.layout_manager._grid import Grid
+    from plotnine._mpl.layout_manager._plot_side_space import PlotSideSpaces
     from plotnine.scales.scale_xy import ScaleX, ScaleY
     from plotnine.typing import Side
 
@@ -121,6 +122,46 @@ def blank_theme(names: Iterable[str]) -> theme:
     from plotnine import element_blank, theme
 
     return theme(**{name: element_blank() for name in names})  # pyright: ignore[reportArgumentType]
+
+
+@dataclass(frozen=True)
+class PanelSpan:
+    """
+    Combined bounds of one or more plot panels in figure space
+    """
+
+    spaces: tuple[PlotSideSpaces, ...]
+    """
+    Plot side spaces that define the combined bounds
+    """
+
+    @property
+    def left(self) -> float:
+        """
+        Leftmost panel edge in figure space
+        """
+        return min(s.panel_left for s in self.spaces)
+
+    @property
+    def right(self) -> float:
+        """
+        Rightmost panel edge in figure space
+        """
+        return max(s.panel_right for s in self.spaces)
+
+    @property
+    def bottom(self) -> float:
+        """
+        Lowest panel edge in figure space
+        """
+        return min(s.panel_bottom for s in self.spaces)
+
+    @property
+    def top(self) -> float:
+        """
+        Highest panel edge in figure space
+        """
+        return max(s.panel_top for s in self.spaces)
 
 
 # Keep remover equality independent of plot equality; visual tests replace
