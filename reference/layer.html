@@ -121,7 +121,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine 999.post1+g47de79b03</span>
+    <span class="navbar-title">plotnine 999.post1+g1a5294906</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -291,7 +291,7 @@ Keyword arguments passed to the geom constructor when <em>geom</em> is a class o
 </tr>
 <tr class="odd">
 <td><a href="#plotnine.layer.layer.update_labels">update_labels</a></td>
-<td>Update label data for the ggplot from the mappings in this layer</td>
+<td>Fill unset labels from this layer’s mapping and statistic</td>
 </tr>
 <tr class="even">
 <td><a href="#plotnine.layer.layer.use_defaults">use_defaults</a></td>
@@ -392,11 +392,22 @@ Type of coordinate axes
 <section id="plotnine.layer.layer.update_labels" class="level3 title doc-object doc-method">
 <h3 class="title doc-object doc-method anchored" data-anchor-id="plotnine.layer.layer.update_labels"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">update_labels</span></h3>
 <div class="doc-signature doc-method">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>update_labels(plot)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>update_labels(labels)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="doc-text">
-<p>Update label data for the ggplot from the mappings in this layer</p>
+<p>Fill unset labels from this layer’s mapping and statistic</p>
 </div>
+<section id="parameters-2" class="level4 doc-parameters">
+<h4 class="doc-parameters anchored" data-anchor-id="parameters-2">Parameters</h4>
+<div class="doc-definition-items">
+<dl>
+<dt><code><span class="doc-parameter-name">labels</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">labels_view</span></code></dt>
+<dd>
+Labels to update.
+</dd>
+</dl>
+</div>
+</section>
 </section>
 <section id="plotnine.layer.layer.use_defaults" class="level3 title doc-object doc-method">
 <h3 class="title doc-object doc-method anchored" data-anchor-id="plotnine.layer.layer.use_defaults"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">use_defaults</span></h3>
@@ -406,8 +417,8 @@ Type of coordinate axes
 <div class="doc-text">
 <p>Prepare/modify data for plotting</p>
 </div>
-<section id="parameters-2" class="level4 doc-parameters">
-<h4 class="doc-parameters anchored" data-anchor-id="parameters-2">Parameters</h4>
+<section id="parameters-3" class="level4 doc-parameters">
+<h4 class="doc-parameters anchored" data-anchor-id="parameters-3">Parameters</h4>
 <div class="doc-definition-items">
 <dl>
 <dt><code><span class="doc-parameter-name">data</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://pandas.pydata.org/pandas-docs/stable/index.html#module-pandas">pd</a>.<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span></code></dt>
