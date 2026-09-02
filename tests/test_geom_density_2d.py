@@ -70,6 +70,12 @@ def test_uncontoured_density_exposes_grid_variables():
     assert data["ndensity"].max() == 1
 
 
+def test_contoured_density_excludes_grid_variables():
+    p = p0 + geom_density_2d()
+    data = p.build_test().layers[0].data
+    assert not {"z", "density", "ndensity", "count", "n"} & set(data.columns)
+
+
 def test_default_uses_more_than_three_contour_levels():
     data = (p0 + geom_density_2d()).build_test().layers[0].data
     # The former five-band default produced only three contour levels for

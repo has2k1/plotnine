@@ -17,6 +17,11 @@ from .stat import stat
 if TYPE_CHECKING:
     from plotnine.typing import FloatArray, FloatArrayLike
 
+# Do not restore columns created during density estimation after
+# contouring. Most vary within a group and are excluded automatically,
+# but `n` is constant and would otherwise leak into contour output.
+_DENSITY_PHASE_COLUMNS = frozenset({"z", "density", "ndensity", "count", "n"})
+
 
 @document
 class stat_density_2d(stat):
@@ -199,9 +204,9 @@ class stat_density_2d(stat):
         if not len(res):
             return res
 
-        # Contouring follows panel computation. Restore the original columns
-        # that remain constant throughout this group.
-        unique = uniquecols(data)
+        # Contouring follows panel computation. Restore original constant
+        # columns, but exclude columns created during density estimation.
+        unique = uniquecols(data.drop(columns=list(_DENSITY_PHASE_COLUMNS)))
         missing = unique.columns.difference(res.columns)
         u = unique.loc[[0] * len(res), missing].reset_index(drop=True)
         return pd.concat([res, u], axis=1)
