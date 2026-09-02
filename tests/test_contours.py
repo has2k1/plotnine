@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
+from plotnine.data import faithfuld
 from plotnine.exceptions import PlotnineError, PlotnineWarning
 from plotnine.stats.contours import (
     band_labels,
@@ -216,3 +217,23 @@ def test_rotation_preserves_empty_coordinates():
     rx, ry = rotate_xy(x, y, 0.3)
     assert rx.size == 0
     assert ry.size == 0
+
+
+def test_rotated_grid_realigns_at_data_scale():
+    """
+    Verify grid realignment at realistic coordinate scales
+
+    Small integer grids hide precision loss because their spacing exceeds
+    the combined angle-estimation and rotation errors. An angle can satisfy
+    approximate equality while still moving points off shared rows or
+    columns, so compare coordinate counts after a round trip.
+    """
+    x = faithfuld["waiting"].to_numpy()
+    y = faithfuld["eruptions"].to_numpy()
+    rx, ry = rotate_xy_exact(x, y, np.pi / 6)
+
+    angle = estimate_grid_angle(rx, ry)
+    ux, uy = rotate_xy(rx, ry, -angle)
+
+    assert len(np.unique(ux)) == len(np.unique(x))
+    assert len(np.unique(uy)) == len(np.unique(y))

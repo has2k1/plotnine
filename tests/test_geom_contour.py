@@ -84,9 +84,11 @@ def test_facet_panels_share_breaks():
         + geom_contour()
         + facet_wrap("panel")
     )
+    built = p.build_test().layers[0].data
+    assert built["PANEL"].nunique() == 2
     # Shared breaks produce one evenly spaced sequence of contour values.
     # Per-panel breaks would interleave different sequences.
-    levels = np.sort(p.build_test().layers[0].data["level"].unique())
+    levels = np.sort(built["level"].unique())
     steps = np.diff(levels)
     assert np.allclose(steps, steps[0])
 
@@ -95,7 +97,8 @@ def test_missing_surface_values_leave_holes():
     data = faithfuld.copy()
     data.loc[data.index[:20], "density"] = np.nan
     p = ggplot(data, aes("waiting", "eruptions", z="density")) + geom_contour()
-    assert p == "missing_z"
+    with pytest.warns(PlotnineWarning):
+        assert p == "missing_z"
 
 
 def test_rotated_grid_draws_complete_contours():

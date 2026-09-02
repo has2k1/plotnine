@@ -321,12 +321,17 @@ def rotate_xy(
         return x, y
 
     cos, sin = np.cos(angle), np.sin(angle)
-    # Round away the rounding error, so that points on one grid line still
-    # share a value once rotated. The budget leaves more headroom than a
-    # single rotation's own float64 noise needs, because `angle` is often
-    # `estimate_grid_angle`'s output: a value that is itself off by a few
-    # units in the last place, and whose effect on a point grows with that
-    # point's distance from the origin the same way rotation noise does.
+    # Round away the rounding error, so that points on one grid line
+    # still share a value once rotated. `angle` is often
+    # `estimate_grid_angle`'s output rather than an exact value: it is
+    # off by several dozen of its own representable steps, growing
+    # larger still, roughly by float64 epsilon times the grid's
+    # distance from the origin over its own spacing, for a grid that
+    # sits far from the origin relative to that spacing. The budget
+    # below has to absorb that angle error times the grid's extent,
+    # the distance between its farthest-apart points, not how far any
+    # single point sits from the origin, which is why it is wider than
+    # a single rotation's own noise needs.
     return (
         _zapsmall(cos * x - sin * y),
         _zapsmall(sin * x + cos * y),
@@ -390,6 +395,11 @@ def _longest_hull_edge_angle(x: FloatArray, y: FloatArray) -> float:
     return float(np.arctan2(dy[i], dx[i]))
 
 
+# 11 is tight, not cautious. At 12, `rotate_xy`'s own re-alignment
+# error already exceeds the rounding step on over half of a sample of
+# 300 `faithfuld` grids rotated to random angles. At 10, every one of
+# those rotations still re-grids cleanly, but only by discarding
+# precision that 11 does not need to give up.
 def _zapsmall(value: FloatArray, digits: int = 11) -> FloatArray:
     """
     Round values relative to their largest magnitude
