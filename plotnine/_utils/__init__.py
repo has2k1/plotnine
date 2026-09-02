@@ -583,7 +583,7 @@ def groupby_apply(
     df: pd.DataFrame,
     cols: str | list[str],
     func: Callable[..., pd.DataFrame],
-    *args: tuple[Any],
+    *args: Any,
     **kwargs: Any,
 ) -> pd.DataFrame:
     """
