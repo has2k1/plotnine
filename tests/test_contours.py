@@ -1,6 +1,8 @@
 import numpy as np
 import pandas as pd
+import pytest
 
+from plotnine.exceptions import PlotnineError
 from plotnine.stats.contours import contour_breaks, xyz_to_grid
 
 
@@ -38,6 +40,19 @@ def test_one_bin_has_two_boundary_breaks():
     breaks = contour_breaks((0.5, 9.5), bins=1)
     assert len(breaks) == 2
     assert breaks[0] <= 0.5 and breaks[1] >= 9.5
+
+
+def test_non_positive_bin_count_raises():
+    with pytest.raises(PlotnineError):
+        contour_breaks((0, 10), bins=0)
+
+
+def test_non_positive_binwidth_raises():
+    with pytest.raises(PlotnineError):
+        contour_breaks((0, 10), binwidth=0)
+
+    with pytest.raises(PlotnineError):
+        contour_breaks((0, 10), binwidth=-1)
 
 
 def test_xyz_values_are_arranged_on_a_grid():

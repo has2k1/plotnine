@@ -54,6 +54,9 @@ def contour_breaks(
         return np.asarray(breaks_extended(n=10)(z_range), dtype=float)
 
     if bins is not None:
+        if bins < 1:
+            raise PlotnineError("`bins` must be at least 1.")
+
         # Expand the limits to coarse multiples so every band spans the
         # surface range without clipping it.
         accuracy = _signif(z_range[1] - z_range[0]) / 10
@@ -70,9 +73,11 @@ def contour_breaks(
         return np.asarray(_breaks, dtype=float)
 
     # Reached only when binwidth is set and bins is not
-    return np.asarray(
-        breaks_width(cast("float", binwidth))(z_range), dtype=float
-    )
+    binwidth = cast("float", binwidth)
+    if binwidth <= 0:
+        raise PlotnineError("`binwidth` must be greater than 0.")
+
+    return np.asarray(breaks_width(binwidth)(z_range), dtype=float)
 
 
 def xyz_to_grid(
