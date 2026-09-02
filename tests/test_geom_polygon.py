@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 
 from plotnine import aes, coord_radial, geom_polygon, ggplot
@@ -42,35 +43,62 @@ def test_no_fill():
     assert p == "no_fill"
 
 
-def test_numbered_subgroups_draw_polygon_holes():
-    # Draw a holed square beside a solid square.
+def holed_and_solid(solid_subgroup=0):
+    """
+    Create a holed square beside a solid square
+
+    `solid_subgroup` identifies the solid square's only ring. A missing
+    value represents the same ring as an explicit number.
+    """
     outer = {"x": [0, 4, 4, 0], "y": [0, 0, 4, 4], "sub": 0, "g": "holed"}
     # Opposite winding makes this inner ring a hole.
     hole = {"x": [1, 1, 3, 3], "y": [1, 3, 3, 1], "sub": 1, "g": "holed"}
-    solid = {"x": [5, 9, 9, 5], "y": [0, 0, 4, 4], "sub": 0, "g": "solid"}
-
-    data = pd.concat(
+    solid = {
+        "x": [5, 9, 9, 5],
+        "y": [0, 0, 4, 4],
+        "sub": solid_subgroup,
+        "g": "solid",
+    }
+    return pd.concat(
         [pd.DataFrame(d) for d in (outer, hole, solid)], ignore_index=True
     )
-    p = ggplot(data, aes("x", "y", group="g", subgroup="sub")) + geom_polygon(
-        fill="steelblue", color="black", size=1
-    )
+
+
+def test_numbered_subgroups_draw_polygon_holes():
+    p = ggplot(
+        holed_and_solid(), aes("x", "y", group="g", subgroup="sub")
+    ) + geom_polygon(fill="steelblue", color="black", size=1)
     assert p == "holes"
 
 
 def test_numbered_subgroups_preserve_polar_polygon_holes():
-    # Non-linear coordinates interpolate every edge. Ring boundaries
-    # must prevent interpolation from connecting the exterior to a hole.
-    outer = {"x": [0, 4, 4, 0], "y": [0, 0, 4, 4], "sub": 0, "g": "holed"}
-    hole = {"x": [1, 1, 3, 3], "y": [1, 3, 3, 1], "sub": 1, "g": "holed"}
-    solid = {"x": [5, 9, 9, 5], "y": [0, 0, 4, 4], "sub": 0, "g": "solid"}
-
-    data = pd.concat(
-        [pd.DataFrame(d) for d in (outer, hole, solid)], ignore_index=True
+    # A non-linear coord munches every edge, and could bridge a ring
+    # boundary if it were not subgroup-aware.
+    p = (
+        ggplot(holed_and_solid(), aes("x", "y", group="g", subgroup="sub"))
+        + geom_polygon(fill="steelblue", color="black", size=1)
+        + coord_radial()
     )
+    assert p == "holes_polar"
+
+
+def test_missing_subgroup_draws_solid_polygon():
+    # A missing subgroup identifies the solid polygon's only ring.
+    data = holed_and_solid(solid_subgroup=np.nan)
+    p = ggplot(data, aes("x", "y", group="g", subgroup="sub")) + geom_polygon(
+        fill="steelblue", color="black", size=1
+    )
+    p.draw_test()
+
+
+def test_missing_subgroup_remains_one_polar_ring():
+    # Consecutive missing subgroup values form one continuous ring, so
+    # non-linear coordinates interpolate its edges instead of splitting it
+    # at every vertex.
+    data = holed_and_solid(solid_subgroup=np.nan)
     p = (
         ggplot(data, aes("x", "y", group="g", subgroup="sub"))
         + geom_polygon(fill="steelblue", color="black", size=1)
         + coord_radial()
     )
-    assert p == "holes_polar"
+    assert p == "holes_missing_subgroup_polar"

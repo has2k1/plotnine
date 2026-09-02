@@ -432,8 +432,13 @@ class coord:
             # Each `subgroup` identifies a ring within one polygon group.
             # Ring boundaries are also segment boundaries; interpolating
             # between rings would draw a spurious edge.
+            # Consecutive missing subgroup values belong to the same ring.
+            # Compare them as equal despite `nan != nan`.
             subgroup = data["subgroup"].to_numpy()
-            bool_idx |= subgroup[1:] != subgroup[:-1]
+            missing = data["subgroup"].isna().to_numpy()
+            bool_idx |= (subgroup[1:] != subgroup[:-1]) & ~(
+                missing[1:] & missing[:-1]
+            )
         dist[bool_idx] = np.nan
 
         # Munch
