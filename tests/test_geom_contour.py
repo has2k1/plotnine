@@ -2,7 +2,14 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from plotnine import aes, after_stat, geom_contour, geom_contour_filled, ggplot
+from plotnine import (
+    aes,
+    after_stat,
+    facet_wrap,
+    geom_contour,
+    geom_contour_filled,
+    ggplot,
+)
 from plotnine.data import faithfuld
 from plotnine.exceptions import PlotnineWarning
 
@@ -65,3 +72,38 @@ def test_filled_contour_levels_are_ordered():
     data = p.build_test().layers[0].data
     assert data["level"].cat.ordered
     assert "subgroup" in data
+
+
+def test_facet_panels_share_breaks():
+    low = faithfuld.assign(panel="low")
+    high = faithfuld.assign(density=faithfuld["density"] * 3, panel="high")
+    data = pd.concat([low, high], ignore_index=True)
+
+    p = (
+        ggplot(data, aes("waiting", "eruptions", z="density"))
+        + geom_contour()
+        + facet_wrap("panel")
+    )
+    # Shared breaks produce one evenly spaced sequence of contour values.
+    # Per-panel breaks would interleave different sequences.
+    levels = np.sort(p.build_test().layers[0].data["level"].unique())
+    steps = np.diff(levels)
+    assert np.allclose(steps, steps[0])
+
+
+def test_missing_surface_values_leave_holes():
+    data = faithfuld.copy()
+    data.loc[data.index[:20], "density"] = np.nan
+    p = ggplot(data, aes("waiting", "eruptions", z="density")) + geom_contour()
+    assert p == "missing_z"
+
+
+def test_rotated_grid_draws_complete_contours():
+    angle = np.pi / 6
+    x, y = faithfuld["waiting"], faithfuld["eruptions"]
+    data = faithfuld.assign(
+        rx=np.cos(angle) * x - np.sin(angle) * y,
+        ry=np.sin(angle) * x + np.cos(angle) * y,
+    )
+    p = ggplot(data, aes("rx", "ry", z="density")) + geom_contour()
+    assert p == "rotated_grid"
