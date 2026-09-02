@@ -208,3 +208,11 @@ def test_zero_angle_preserves_coordinates():
     rx, ry = rotate_xy(x, y, 0)
     assert rx.tolist() == [0.0, 1.0]
     assert ry.tolist() == [2.0, 3.0]
+
+
+def test_rotation_preserves_empty_coordinates():
+    x = np.array([])
+    y = np.array([])
+    rx, ry = rotate_xy(x, y, 0.3)
+    assert rx.size == 0
+    assert ry.size == 0

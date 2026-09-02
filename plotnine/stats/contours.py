@@ -388,7 +388,12 @@ def _longest_hull_edge_angle(x: FloatArray, y: FloatArray) -> float:
 def _zapsmall(value: FloatArray, digits: int = 13) -> FloatArray:
     """
     Round values relative to their largest magnitude
+
+    Return an empty array unchanged because the magnitude reduction has no
+    identity for empty input.
     """
+    if value.size == 0:
+        return value
     largest = np.max(np.abs(value))
     if largest == 0 or not np.isfinite(largest):
         return np.round(value, digits)
