@@ -16,9 +16,8 @@ if TYPE_CHECKING:
     from typing import Any, Callable
 
     from contourpy import ContourGenerator
-    from contourpy._contourpy import FillReturn_OuterOffset
 
-    from plotnine.typing import FloatArray, FloatArrayLike
+    from plotnine.typing import FloatArray, FloatArrayLike, IntArray
 
 
 def contour_breaks(
@@ -104,12 +103,21 @@ def band_labels(breaks: FloatArray, precision: int = 3) -> list[str]:
     Label each contour band with its interval
 
     Use right-closed interval notation and increase precision until every
-    break has a distinct label.
+    break has a distinct label. Raise when equal floating-point values
+    remain indistinguishable at the maximum round-trip precision.
     """
+    # Seventeen significant digits round-trip any float64. Values that
+    # still share a label are equal at the available precision.
+    max_precision = 17
     while True:
         edges = [f"{b:.{precision}g}" for b in breaks]
         if len(set(edges)) == len(edges):
             break
+        if precision >= max_precision:
+            raise PlotnineError(
+                "Duplicate contour breaks cannot be labelled as distinct "
+                "bands."
+            )
         precision += 1
 
     return [f"({low}, {high}]" for low, high in zip(edges[:-1], edges[1:])]
@@ -141,7 +149,16 @@ def contour_lines(
 
     if not vertices:
         warn("No contours were generated.", PlotnineWarning)
-        return pd.DataFrame()
+        return pd.DataFrame(
+            {
+                "x": pd.Series(dtype=float),
+                "y": pd.Series(dtype=float),
+                "level": pd.Series(dtype=float),
+                "nlevel": pd.Series(dtype=float),
+                "piece": pd.Series(dtype=int),
+                "group": pd.Series(dtype=object),
+            }
+        )
 
     xy = np.concatenate(vertices)
     level = np.repeat(levels, counts)
@@ -172,12 +189,14 @@ def contour_bands(
     """
     from mizani.bounds import rescale_max
 
+    labels = band_labels(breaks)
     cgen = _contour_generator(x, y, Z)
 
-    # `FillType.OuterOffset` returns each band as point and offset arrays
-    # instead of one of the other supported fill representations.
+    # `FillType.OuterOffset` returns parallel lists containing one point
+    # array and one offset array per piece.
     filled = cast(
-        "list[FillReturn_OuterOffset]", cgen.multi_filled(list(breaks))
+        "list[tuple[list[FloatArray], list[IntArray]]]",
+        cgen.multi_filled(list(breaks)),
     )
 
     vertices, bands, subgroups, pieces, counts = [], [], [], [], []
@@ -196,11 +215,23 @@ def contour_bands(
 
     if not vertices:
         warn("No contour bands were generated.", PlotnineWarning)
-        return pd.DataFrame()
+        return pd.DataFrame(
+            {
+                "x": pd.Series(dtype=float),
+                "y": pd.Series(dtype=float),
+                "level": pd.Categorical([], categories=labels, ordered=True),
+                "level_low": pd.Series(dtype=float),
+                "level_high": pd.Series(dtype=float),
+                "level_mid": pd.Series(dtype=float),
+                "nlevel": pd.Series(dtype=float),
+                "piece": pd.Series(dtype=int),
+                "subgroup": pd.Series(dtype=int),
+                "group": pd.Series(dtype=object),
+            }
+        )
 
     xy = np.concatenate(vertices)
     band = np.repeat(bands, counts)
-    labels = band_labels(breaks)
     level_low = breaks[:-1][band]
     level_high = breaks[1:][band]
     ids = _group_ids(group, npieces)

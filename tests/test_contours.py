@@ -103,6 +103,11 @@ def test_band_labels_increase_precision_until_distinct():
     assert labels[0] != labels[1]
 
 
+def test_equal_breaks_cannot_have_distinct_labels():
+    with pytest.raises(PlotnineError):
+        band_labels(np.array([1.0, 1.0, 2.0]))
+
+
 def test_contour_lines_record_levels_and_groups():
     x, y, Z = peak_grid()
     df = contour_lines(x, y, Z, np.array([0.2, 0.6]), 1)
@@ -117,6 +122,7 @@ def test_empty_contour_lines_preserve_schema():
     with pytest.warns(PlotnineWarning):
         df = contour_lines(x, y, Z, np.array([5.0]), 1)
     assert len(df) == 0
+    assert list(df.columns) == ["x", "y", "level", "nlevel", "piece", "group"]
 
 
 def test_contour_band_records_hole_rings():
