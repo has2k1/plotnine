@@ -46,8 +46,45 @@ class stat_density_2d_filled(stat_density_2d):
     plotnine.geom_density_2d_filled : The default `geom` for this `stat`.
     """
 
+    _aesthetics_doc = """
+    {aesthetics_table}
+
+    **Options for computed aesthetics**
+
+    ```python
+    "density"     # Computed density at a point
+    "ndensity"    # Density, scaled to a maximum of 1
+    "count"       # Density scaled by the number of observations
+    "n"           # Number of observations at a point
+    "level"       # band, an ordered interval such as "(0.005, 0.01]"
+    "level_low"   # lower bound of the band
+    "level_high"  # upper bound of the band
+    "level_mid"   # midpoint between the bounds
+    "nlevel"      # upper bound, scaled to a maximum of 1
+    "piece"       # numeric id of a band in a given group
+    "subgroup"    # ring index within a piece; 0 is outer, rest are holes
+    ```
+
+    Without contouring, the output contains `density`, `ndensity`, `count`
+    and `n`. With contouring, it contains the band level and bounds,
+    `nlevel`, `piece` and `subgroup`.
+    """
     DEFAULT_AES = {"fill": after_stat("level")}
     DEFAULT_PARAMS = {"geom": "density_2d_filled"}
+    CREATES = {
+        "y",
+        "density",
+        "ndensity",
+        "count",
+        "n",
+        "level",
+        "level_low",
+        "level_high",
+        "level_mid",
+        "nlevel",
+        "piece",
+        "subgroup",
+    }
 
     def compute_contours(self, x, y, Z, breaks, group):
         """
