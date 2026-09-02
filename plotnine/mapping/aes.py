@@ -58,6 +58,7 @@ ALL_AESTHETICS = {
     "size",
     "slope",
     "stroke",
+    "subgroup",
     "upper",
     "weight",
     *X_AESTHETICS,

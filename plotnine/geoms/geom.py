@@ -113,7 +113,7 @@ class geom(ABC, metaclass=Register):
         geoms should not override this method.
         """
         main = cls.DEFAULT_AES.keys() | cls.REQUIRED_AES
-        other = {"group"}
+        other = {"group", "subgroup"}
         # Need to recognize both spellings
         if "color" in main:
             other.add("colour")

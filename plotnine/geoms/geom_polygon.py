@@ -12,9 +12,11 @@ from .geom_path import geom_path
 if typing.TYPE_CHECKING:
     from typing import Any
 
+    import numpy.typing as npt
     import pandas as pd
     from matplotlib.axes import Axes
     from matplotlib.offsetbox import DrawingArea
+    from matplotlib.path import Path
 
     from plotnine.coords.coord import coord
     from plotnine.iapi import panel_view
@@ -35,6 +37,18 @@ class geom_polygon(geom):
     Notes
     -----
     All paths in the same `group` aesthetic value make up a polygon.
+    """
+
+    _aesthetics_doc = """
+    {aesthetics_table}
+
+    **Aesthetics Descriptions**
+
+    `subgroup`
+
+    :   Identify the rings within one `group`. The first ring forms the
+        exterior; each later ring with the opposite winding direction
+        forms a hole.
     """
 
     DEFAULT_AES = {
@@ -71,16 +85,16 @@ class geom_polygon(geom):
         ax: Axes,
         params: dict[str, Any],
     ):
-        from matplotlib.collections import PolyCollection
+        from matplotlib.collections import PathCollection, PolyCollection
 
-        # A polygon is a closed ring, but the vertices only trace it open.
-        # In a non-linear coord the closing edge must be munched like any
-        # other, or it stays a straight chord across a curved boundary (e.g.
-        # the inner arc of a polar bar). Repeat each group's first vertex so
-        # munch subdivides that edge too; a linear coord closes it straight,
-        # which is already correct, so leave it untouched there.
+        # Polygon vertices omit the closing edge. Non-linear coordinates
+        # must interpolate that edge with the others; otherwise a curved
+        # boundary closes with a straight chord. Append each ring's first
+        # vertex before transformation. Linear coordinates already close
+        # the ring correctly.
         if not coord.is_linear:
-            indices = data.groupby("group", sort=False).indices
+            by = ["group", "subgroup"] if "subgroup" in data else "group"
+            indices = data.groupby(by, sort=False).indices
             order = np.concatenate(
                 [np.append(idx, idx[0]) for idx in indices.values()]
             )
@@ -100,16 +114,28 @@ class geom_polygon(geom):
         # Some stats may order the data in ways that prevent
         # objects from occluding other objects. We do not want
         # to undo that order.
+        has_holes = "subgroup" in data
         grouper = data.groupby("group", sort=False)
         for group, df in grouper:
             fill = to_rgba(df["fill"].iloc[0], df["alpha"].iloc[0])
-            verts.append(tuple(zip(df["x"], df["y"])))
+            if has_holes:
+                verts.append(
+                    compound_path(
+                        [
+                            ring[["x", "y"]].to_numpy()
+                            for _, ring in df.groupby("subgroup", sort=False)
+                        ]
+                    )
+                )
+            else:
+                verts.append(tuple(zip(df["x"], df["y"])))
             facecolor.append("none" if fill is None else fill)
             edgecolor.append(df["color"].iloc[0] or "none")
             linestyle.append(df["linetype"].iloc[0])
             linewidth.append(df["linewidth"].iloc[0])
 
-        col = PolyCollection(
+        cls = PathCollection if has_holes else PolyCollection
+        col = cls(
             verts,
             facecolors=facecolor,
             edgecolors=edgecolor,
@@ -167,3 +193,22 @@ class geom_polygon(geom):
         )
         da.add_artist(rect)
         return da
+
+
+def compound_path(rings: list[npt.NDArray[Any]]) -> Path:
+    """
+    Combine polygon rings into one path
+
+    Under the non-zero winding rule, a ring whose direction opposes its
+    enclosing ring forms a hole.
+    """
+    from matplotlib.path import Path
+
+    vertices = np.concatenate([np.vstack([r, r[:1]]) for r in rings])
+    codes = np.concatenate(
+        [
+            [Path.MOVETO, *[Path.LINETO] * (len(r) - 1), Path.CLOSEPOLY]
+            for r in rings
+        ]
+    )
+    return Path(vertices, codes)
