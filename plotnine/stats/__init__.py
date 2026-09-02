@@ -11,6 +11,7 @@ from .stat_contour_filled import stat_contour_filled
 from .stat_count import stat_count
 from .stat_density import stat_density
 from .stat_density_2d import stat_density_2d
+from .stat_density_2d_filled import stat_density_2d_filled
 from .stat_ecdf import stat_ecdf
 from .stat_ellipse import stat_ellipse
 from .stat_function import stat_function
@@ -41,6 +42,7 @@ __all__ = (
     "stat_ecdf",
     "stat_ellipse",
     "stat_density_2d",
+    "stat_density_2d_filled",
     "stat_function",
     "stat_hull",
     "stat_identity",

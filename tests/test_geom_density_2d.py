@@ -5,6 +5,7 @@ from plotnine import (
     aes,
     after_stat,
     geom_density_2d,
+    geom_density_2d_filled,
     geom_point,
     ggplot,
     lims,
@@ -81,3 +82,8 @@ def test_default_uses_more_than_three_contour_levels():
     # The former five-band default produced only three contour levels for
     # this fixture. The new ten-band default must produce more.
     assert len(data["level"].unique()) > 3
+
+
+def test_default_filled_density_contours():
+    p = p0 + geom_density_2d_filled()
+    assert p == "filled"
