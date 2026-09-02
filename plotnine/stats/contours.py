@@ -290,10 +290,11 @@ def estimate_grid_angle(x: FloatArrayLike, y: FloatArrayLike) -> float:
         return 0.0
 
     # The most common angle between neighbouring points follows a grid
-    # row. Round only while finding that mode so representation noise does
-    # not split one direction into several values.
-    angles = np.round(np.arctan2(np.diff(y[:20]), np.diff(x[:20])), 9)
-    values, counts = np.unique(angles, return_counts=True)
+    # row. Round only while finding that mode. Return the full-precision
+    # mean so the inverse rotation keeps distant points aligned.
+    raw_angles = np.arctan2(np.diff(y[:20]), np.diff(x[:20]))
+    rounded = np.round(raw_angles, 9)
+    values, counts = np.unique(rounded, return_counts=True)
     i = counts.argmax()
 
     if counts[i] / counts.sum() < 0.5:
@@ -301,7 +302,7 @@ def estimate_grid_angle(x: FloatArrayLike, y: FloatArrayLike) -> float:
         # back to the longest edge of the convex hull.
         angle = _longest_hull_edge_angle(x, y)
     else:
-        angle = float(values[i])
+        angle = float(np.mean(raw_angles[rounded == values[i]]))
 
     quarter_turns = np.array([-1, -0.5, 0, 0.5, 1]) * np.pi
     if (np.abs(angle - quarter_turns) < np.sqrt(np.finfo(float).eps)).any():
@@ -320,8 +321,12 @@ def rotate_xy(
         return x, y
 
     cos, sin = np.cos(angle), np.sin(angle)
-    # Round after rotation so points on one grid line still share a
-    # coordinate.
+    # Round away the rounding error, so that points on one grid line still
+    # share a value once rotated. The budget leaves more headroom than a
+    # single rotation's own float64 noise needs, because `angle` is often
+    # `estimate_grid_angle`'s output: a value that is itself off by a few
+    # units in the last place, and whose effect on a point grows with that
+    # point's distance from the origin the same way rotation noise does.
     return (
         _zapsmall(cos * x - sin * y),
         _zapsmall(sin * x + cos * y),
@@ -385,7 +390,7 @@ def _longest_hull_edge_angle(x: FloatArray, y: FloatArray) -> float:
     return float(np.arctan2(dy[i], dx[i]))
 
 
-def _zapsmall(value: FloatArray, digits: int = 13) -> FloatArray:
+def _zapsmall(value: FloatArray, digits: int = 11) -> FloatArray:
     """
     Round values relative to their largest magnitude
 
