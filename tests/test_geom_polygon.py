@@ -65,40 +65,26 @@ def holed_and_solid(solid_subgroup=0):
 
 
 def test_numbered_subgroups_draw_polygon_holes():
-    p = ggplot(
-        holed_and_solid(), aes("x", "y", group="g", subgroup="sub")
-    ) + geom_polygon(fill="steelblue", color="black", size=1)
-    assert p == "holes"
+    # An explicit number and a missing value both identify the solid
+    # polygon's only ring, so both inputs must render identically.
+    numbered, missing = (
+        ggplot(holed_and_solid(sub), aes("x", "y", group="g", subgroup="sub"))
+        + geom_polygon(fill="steelblue", color="black", size=1)
+        for sub in (0, np.nan)
+    )
+    assert numbered == "holes"
+    assert missing == "holes"
 
 
 def test_numbered_subgroups_preserve_polar_polygon_holes():
-    # A non-linear coord munches every edge, and could bridge a ring
-    # boundary if it were not subgroup-aware.
-    p = (
-        ggplot(holed_and_solid(), aes("x", "y", group="g", subgroup="sub"))
+    # Non-linear coordinates interpolate every edge. Preserve ring
+    # boundaries while treating consecutive missing subgroup values as
+    # one continuous ring.
+    numbered, missing = (
+        ggplot(holed_and_solid(sub), aes("x", "y", group="g", subgroup="sub"))
         + geom_polygon(fill="steelblue", color="black", size=1)
         + coord_radial()
+        for sub in (0, np.nan)
     )
-    assert p == "holes_polar"
-
-
-def test_missing_subgroup_draws_solid_polygon():
-    # A missing subgroup identifies the solid polygon's only ring.
-    data = holed_and_solid(solid_subgroup=np.nan)
-    p = ggplot(data, aes("x", "y", group="g", subgroup="sub")) + geom_polygon(
-        fill="steelblue", color="black", size=1
-    )
-    p.draw_test()
-
-
-def test_missing_subgroup_remains_one_polar_ring():
-    # Consecutive missing subgroup values form one continuous ring, so
-    # non-linear coordinates interpolate its edges instead of splitting it
-    # at every vertex.
-    data = holed_and_solid(solid_subgroup=np.nan)
-    p = (
-        ggplot(data, aes("x", "y", group="g", subgroup="sub"))
-        + geom_polygon(fill="steelblue", color="black", size=1)
-        + coord_radial()
-    )
-    assert p == "holes_missing_subgroup_polar"
+    assert numbered == "holes_polar"
+    assert missing == "holes_polar"
