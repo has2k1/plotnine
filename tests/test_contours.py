@@ -166,9 +166,30 @@ def test_axis_aligned_grid_has_zero_angle():
     assert estimate_grid_angle(x.ravel(), y.ravel()) == 0
 
 
+def rotate_xy_exact(
+    x: np.ndarray, y: np.ndarray, angle: float
+) -> tuple[np.ndarray, np.ndarray]:
+    """
+    Rotate coordinates about the origin without rounding
+
+    Grid-angle estimation receives raw layer coordinates. Use direct
+    rotation arithmetic to create a fixture with the same precision.
+    """
+    cos, sin = np.cos(angle), np.sin(angle)
+    return cos * x - sin * y, sin * x + cos * y
+
+
 def test_rotated_grid_angle_is_recovered():
     x, y = np.meshgrid(np.arange(5.0), np.arange(5.0))
-    rx, ry = rotate_xy(x.ravel(), y.ravel(), np.pi / 6)
+    rx, ry = rotate_xy_exact(x.ravel(), y.ravel(), np.pi / 6)
+    assert estimate_grid_angle(rx, ry) == pytest.approx(np.pi / 6)
+
+
+def test_rotated_grid_angle_survives_large_offset():
+    # Exercise a coordinate magnitude typical of projected map data.
+    x, y = np.meshgrid(np.arange(5.0), np.arange(5.0))
+    x, y = x.ravel() + 1e5, y.ravel() + 1e5
+    rx, ry = rotate_xy_exact(x, y, np.pi / 6)
     assert estimate_grid_angle(rx, ry) == pytest.approx(np.pi / 6)
 
 
