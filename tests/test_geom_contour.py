@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from plotnine import aes, after_stat, geom_contour, ggplot
+from plotnine import aes, after_stat, geom_contour, geom_contour_filled, ggplot
 from plotnine.data import faithfuld
 from plotnine.exceptions import PlotnineWarning
 
@@ -48,3 +48,20 @@ def test_contour_lines_expose_computed_variables():
     assert data["nlevel"].max() == 1
     levels = np.sort(data["level"].unique())
     assert np.allclose(np.diff(levels), 0.005)
+
+
+def test_default_filled_contours():
+    p = p0 + geom_contour_filled()
+    assert p == "contour_filled"
+
+
+def test_filled_contours_with_bin_count():
+    p = p0 + geom_contour_filled(bins=4)
+    assert p == "contour_filled_bins"
+
+
+def test_filled_contour_levels_are_ordered():
+    p = p0 + geom_contour_filled()
+    data = p.build_test().layers[0].data
+    assert data["level"].cat.ordered
+    assert "subgroup" in data

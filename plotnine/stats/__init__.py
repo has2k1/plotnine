@@ -7,6 +7,7 @@ from .stat_bin_2d import stat_bin2d, stat_bin_2d
 from .stat_bindot import stat_bindot
 from .stat_boxplot import stat_boxplot
 from .stat_contour import stat_contour
+from .stat_contour_filled import stat_contour_filled
 from .stat_count import stat_count
 from .stat_density import stat_density
 from .stat_density_2d import stat_density_2d
@@ -35,6 +36,7 @@ __all__ = (
     "stat_bindot",
     "stat_boxplot",
     "stat_contour",
+    "stat_contour_filled",
     "stat_density",
     "stat_ecdf",
     "stat_ellipse",
