@@ -60,8 +60,26 @@ def test_density_contours_use_count():
 
 def test_levels_parameter_is_deprecated():
     p = p0 + geom_density_2d(levels=3)
-    with pytest.warns(PlotnineWarning):
+    with pytest.warns(FutureWarning, match="`levels` is deprecated"):
         p.draw_test()
+
+
+def test_levels_yields_to_breaks():
+    # The deprecated value lies above the density range and would produce
+    # no contours. The explicit breaks must therefore determine the result.
+    p = p0 + geom_density_2d(levels=[0.5], breaks=[0.001, 0.002])
+    with pytest.warns(FutureWarning, match="in favour of `breaks`"):
+        data = p.build_test().layers[0].data
+    assert set(data["level"]) == {0.001, 0.002}
+
+
+def test_levels_yields_to_bins():
+    p = p0 + geom_density_2d(levels=3, bins=5)
+    with pytest.warns(FutureWarning, match="in favour of `bins`"):
+        data = p.build_test().layers[0].data
+    # Match an equivalent call that omits deprecated `levels`.
+    expected = (p0 + geom_density_2d(bins=5)).build_test().layers[0].data
+    assert sorted(set(data["level"])) == sorted(set(expected["level"]))
 
 
 def test_no_contours_keeps_the_panel():

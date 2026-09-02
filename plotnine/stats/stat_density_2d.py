@@ -9,7 +9,7 @@ from mizani.utils import min_max
 
 from .._utils import groupby_apply, is_scalar
 from ..doctools import document
-from ..exceptions import PlotnineError, PlotnineWarning
+from ..exceptions import PlotnineError
 from .contours import contour_breaks, contour_lines, xyz_to_grid
 from .density import get_var_type, kde
 from .stat import restore_constant_columns, stat
@@ -53,8 +53,9 @@ class stat_density_2d(stat):
         distance selected by `bins` or `binwidth`, or one tenth of the range
         when neither is set. By default, values are selected for ten bands.
     levels :
-        Deprecated. Use `bins` to set the number of bands or `breaks` to
-        set contour values directly.
+        Deprecated and scheduled for removal in a future version. Use `bins`
+        to set the number of bands or `breaks` to set contour values
+        directly. Explicit `bins` or `breaks` takes precedence.
     package :
         Package whose kernel density estimation to use.
     kde_params :
@@ -106,16 +107,26 @@ class stat_density_2d(stat):
         params = self.params
 
         if params["levels"] is not None:
-            warn(
-                "stat_density_2d: `levels` is deprecated. Use `bins` for a "
-                "number of contour bands, or `breaks` for the contour "
-                "values themselves.",
-                PlotnineWarning,
+            msg = (
+                "stat_density_2d: `levels` is deprecated and will be "
+                "removed in a future version. Use `bins` for a number of "
+                "contour bands, or `breaks` for the contour values "
+                "themselves."
             )
-            if is_scalar(params["levels"]):
+            # `bins` and `breaks` are explicit replacements for `levels`.
+            # Preserve them and report which parameter took precedence.
+            explicit = [
+                name for name in ("bins", "breaks") if params[name] is not None
+            ]
+            if explicit:
+                named = " and ".join(f"`{name}`" for name in explicit)
+                msg += f" `levels` is ignored here, in favour of {named}."
+            elif is_scalar(params["levels"]):
                 params["bins"] = params["levels"]
             else:
                 params["breaks"] = params["levels"]
+
+            warn(msg, FutureWarning)
 
         if params["contour_var"] not in ("density", "ndensity", "count"):
             raise PlotnineError(
