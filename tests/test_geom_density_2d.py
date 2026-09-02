@@ -64,6 +64,21 @@ def test_levels_parameter_is_deprecated():
         p.draw_test()
 
 
+def test_no_contours_keeps_the_panel():
+    # An empty contour layer must retain its panel column and schema.
+    p = p0 + geom_density_2d(breaks=[100.0])
+    with pytest.warns(PlotnineWarning):
+        data = p.build_test().layers[0].data
+    assert len(data) == 0
+    assert {"x", "y", "group", "PANEL"} <= set(data.columns)
+
+
+def test_no_contours_draws():
+    p = p0 + geom_density_2d(breaks=[100.0])
+    with pytest.warns(PlotnineWarning):
+        p.draw_test()
+
+
 def test_uncontoured_density_exposes_grid_variables():
     p = p0 + geom_density_2d(contour=False)
     data = p.build_test().layers[0].data

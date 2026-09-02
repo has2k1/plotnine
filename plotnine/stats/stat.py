@@ -36,6 +36,35 @@ variable into a categorial?
 """
 
 
+def restore_constant_columns(
+    computed: pd.DataFrame, original: pd.DataFrame
+) -> pd.DataFrame:
+    """
+    Restore columns that are constant within the original group
+
+    Carry over only original columns that have one value throughout the
+    group. Preserve columns produced by the statistic. An empty result
+    keeps its full schema and remains empty.
+
+    Parameters
+    ----------
+    computed :
+        Statistics computed for one group.
+    original :
+        Data of that group.
+    """
+    unique = uniquecols(original)
+    missing = unique.columns.difference(computed.columns)
+    idx = [0] * len(computed)
+    u = unique.loc[idx, missing].reset_index(drop=True)
+    # Replace a row-indexed frame with no columns before concatenation;
+    # otherwise pandas can alter the empty result.
+    if u.empty and len(u):
+        u = type(computed)()
+
+    return pd.concat([computed, u], axis=1)
+
+
 class stat(ABC, metaclass=Register):
     """Base class of all stats"""
 
@@ -319,17 +348,7 @@ class stat(ABC, metaclass=Register):
         for _, old in data.groupby("group"):
             new = self.compute_group(old, scales)
             new.reset_index(drop=True, inplace=True)
-            unique = uniquecols(old)
-            missing = unique.columns.difference(new.columns)
-            idx = [0] * len(new)
-            u = unique.loc[idx, missing].reset_index(drop=True)
-            # concat can have problems with empty dataframes that
-            # have an index
-            if u.empty and len(u):
-                u = type(data)()
-
-            group_result = pd.concat([new, u], axis=1)
-            stats.append(group_result)
+            stats.append(restore_constant_columns(new, old))
 
         stats = pd.concat(stats, axis=0, ignore_index=True)
         dropped = data.columns.difference(
