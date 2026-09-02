@@ -426,9 +426,14 @@ class coord:
             data.loc[y_posinf, "y"] = ranges.y[1]
 
         dist = self.distance(data["x"], data["y"], panel_params)
-        bool_idx = (
-            data["group"].to_numpy()[1:] != data["group"].to_numpy()[:-1]
-        )
+        group = data["group"].to_numpy()
+        bool_idx = group[1:] != group[:-1]
+        if "subgroup" in data:
+            # Each `subgroup` identifies a ring within one polygon group.
+            # Ring boundaries are also segment boundaries; interpolating
+            # between rings would draw a spurious edge.
+            subgroup = data["subgroup"].to_numpy()
+            bool_idx |= subgroup[1:] != subgroup[:-1]
         dist[bool_idx] = np.nan
 
         # Munch
