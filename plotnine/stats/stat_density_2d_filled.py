@@ -52,16 +52,16 @@ class stat_density_2d_filled(stat_density_2d):
     **Options for computed aesthetics**
 
     ```python
-    "density"     # Computed density at a point
-    "ndensity"    # Density, scaled to a maximum of 1
-    "count"       # Density scaled by the number of observations
-    "n"           # Number of observations at a point
+    "density"     # computed density at a point
+    "ndensity"    # density, scaled to a maximum of 1
+    "count"       # density scaled by the number of observations
+    "n"           # number of observations at a point
     "level"       # band, an ordered interval such as "(0.005, 0.01]"
     "level_low"   # lower bound of the band
     "level_high"  # upper bound of the band
     "level_mid"   # midpoint between the bounds
     "nlevel"      # upper bound, scaled to a maximum of 1
-    "piece"       # numeric id of a band in a given group
+    "piece"       # one of possibly several polygons making up a band
     "subgroup"    # ring index within a piece; 0 is outer, rest are holes
     ```
 

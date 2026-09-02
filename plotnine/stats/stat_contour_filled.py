@@ -45,7 +45,7 @@ class stat_contour_filled(stat_contour):
     "level_high"  # upper bound of the band
     "level_mid"   # midpoint between the bounds
     "nlevel"      # upper bound, scaled to a maximum of 1
-    "piece"       # numeric id of a band in a given group
+    "piece"       # one of possibly several polygons making up a band
     "subgroup"    # ring index within a piece; 0 is outer, rest are holes
     ```
     """
