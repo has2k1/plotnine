@@ -2,8 +2,14 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from plotnine.exceptions import PlotnineError
-from plotnine.stats.contours import contour_breaks, xyz_to_grid
+from plotnine.exceptions import PlotnineError, PlotnineWarning
+from plotnine.stats.contours import (
+    band_labels,
+    contour_bands,
+    contour_breaks,
+    contour_lines,
+    xyz_to_grid,
+)
 
 
 def test_default_breaks_span_surface_range():
@@ -79,3 +85,54 @@ def test_missing_grid_cell_becomes_nan():
     )
     _, _, Z = xyz_to_grid(data)
     assert np.isnan(Z[1, 1])
+
+
+def peak_grid():
+    x = np.linspace(-3, 3, 40)
+    y = np.linspace(-3, 3, 40)
+    X, Y = np.meshgrid(x, y)
+    return x, y, np.exp(-(X**2 + Y**2))
+
+
+def test_band_labels_use_right_closed_intervals():
+    assert band_labels(np.array([0.0, 0.5, 1.0])) == ["(0, 0.5]", "(0.5, 1]"]
+
+
+def test_band_labels_increase_precision_until_distinct():
+    labels = band_labels(np.array([1.0001, 1.0002, 1.0003]))
+    assert labels[0] != labels[1]
+
+
+def test_contour_lines_record_levels_and_groups():
+    x, y, Z = peak_grid()
+    df = contour_lines(x, y, Z, np.array([0.2, 0.6]), 1)
+    assert set(df["level"]) == {0.2, 0.6}
+    assert df["nlevel"].max() == 1
+    # Draw each closed contour as a separate group.
+    assert df.groupby("group").ngroups == 2
+
+
+def test_empty_contour_lines_preserve_schema():
+    x, y, Z = peak_grid()
+    with pytest.warns(PlotnineWarning):
+        df = contour_lines(x, y, Z, np.array([5.0]), 1)
+    assert len(df) == 0
+
+
+def test_contour_band_records_hole_rings():
+    x, y, Z = peak_grid()
+    df = contour_bands(x, y, Z, np.array([0.0, 0.2, 1.0]), 1)
+    # The lower band contains an exterior ring and a hole around the peak.
+    lower = df[df["level"] == df["level"].cat.categories[0]]
+    assert set(lower["subgroup"]) == {0, 1}
+
+
+def test_contour_bands_record_ordered_levels_and_bounds():
+    x, y, Z = peak_grid()
+    breaks = np.array([0.0, 0.2, 1.0])
+    df = contour_bands(x, y, Z, breaks, 1)
+    assert df["level"].cat.ordered
+    assert list(df["level"].cat.categories) == band_labels(breaks)
+    assert set(df["level_low"]) <= {0.0, 0.2}
+    assert set(df["level_high"]) <= {0.2, 1.0}
+    assert (df["level_mid"] == (df["level_low"] + df["level_high"]) / 2).all()
