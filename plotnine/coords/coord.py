@@ -460,9 +460,13 @@ def munch_data(data: pd.DataFrame, dist: FloatArray) -> pd.DataFrame:
     """
     segment_length = 0.01
 
-    # Count new points per segment, excluding the final endpoint.
-    dist[np.isnan(dist)] = 1
-    extra = np.maximum(np.floor(dist / segment_length), 1)
+    # Count new points per segment, excluding the final endpoint. `dist` is
+    # `NaN` at a path break. Give a break only its starting point;
+    # interpolation would connect the paths on either side.
+    is_break = np.isnan(dist)
+    extra = np.maximum(
+        np.floor(np.where(is_break, 0, dist) / segment_length), 1
+    )
     extra = extra.astype(int)
 
     # Every position aesthetic defines path geometry. Replicating `ymin` and
