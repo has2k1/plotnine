@@ -23,6 +23,7 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Visualization"
 ]
 dependencies = [
+    "contourpy>=1.2.0",
     "matplotlib>=3.10.0",
     "pandas>=2.2.0",
     "mizani~=0.14.0",

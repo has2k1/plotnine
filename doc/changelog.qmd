@@ -137,9 +137,14 @@ title: Changelog
 - `statsmodels>=0.14.6` is now required on every platform. This replaces the
   separate `statsmodels<=0.14.4` requirement for Pyodide.
 
+- `contourpy>=1.2.0` is now required. It computes the contours of a surface.
+
 - [](:class:`~plotnine.stat_density_2d`) gained `contour_var`, `bins`,
   `binwidth` and `breaks`. Every panel now uses the same contour heights.
-  The `levels` parameter is deprecated; use `bins` or `breaks` instead.
+  The stat divides density into ten bands by default instead of five, so
+  [](:class:`~plotnine.geom_density_2d`) draws more contour lines for the
+  same data. The `levels` parameter is deprecated; use `bins` or `breaks`
+  instead.
 
 ### Bug Fixes
 
