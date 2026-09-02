@@ -144,6 +144,17 @@ title: Changelog
   rectangle is now drawn as its own polygon instead of merging a bar's
   segments into a single path.
 
+- Under a non-linear coordinate system such as
+  [](:class:`~plotnine.coord_trans`), a [](:class:`~plotnine.geom_polygon`)
+  with several groups no longer draws an edge from one polygon to the next.
+
+- Under a non-linear coordinate system, separate
+  [](:class:`~plotnine.geom_path`) groups no longer connect when an aesthetic
+  such as `color` varies along the path. The fix also applies to
+  [](:class:`~plotnine.geom_line`), [](:class:`~plotnine.geom_step`),
+  [](:class:`~plotnine.geom_density`) and the line drawn by
+  [](:class:`~plotnine.geom_smooth`).
+
 - In a non-linear coordinate system (e.g. [](:class:`~plotnine.coord_trans`)),
   both edges of a [](:class:`~plotnine.geom_ribbon`) or
   [](:class:`~plotnine.geom_area`) now curve. Previously each edge held the

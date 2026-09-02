@@ -115,6 +115,21 @@ def test_munch_interpolates_every_position_aesthetic():
         assert np.all(np.diff(values) > 0), f"{column} was not interpolated"
 
 
+def test_munch_data_preserves_a_flagged_break():
+    # A `NaN` distance marks a break between paths. The marked segment
+    # keeps only its starting point because interpolation would connect
+    # the paths on either side.
+    data = pd.DataFrame(
+        {"x": [0.0, 1.0, 2.0], "y": [0.0, 1.0, 2.0], "group": [1, 1, 1]}
+    )
+
+    munched = munch_data(data, np.array([np.nan, 1.0]))
+
+    flagged_segment = munched[munched["x"] < 1.0]
+    assert len(flagged_segment) == 1
+    assert flagged_segment["x"].iloc[0] == 0.0
+
+
 def test_coord_trans_ribbon_edges_curve():
     # A smooth transformed ribbon exposes piecewise-constant `ymin` and
     # `ymax` values as stepped edges.
