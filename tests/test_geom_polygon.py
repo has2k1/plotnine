@@ -40,3 +40,19 @@ def test_no_fill():
         + geom_polygon(aes(y="y+4"), fill="none", color="blue", size=2)
     )
     assert p == "no_fill"
+
+
+def test_numbered_subgroups_draw_polygon_holes():
+    # Draw a holed square beside a solid square.
+    outer = {"x": [0, 4, 4, 0], "y": [0, 0, 4, 4], "sub": 0, "g": "holed"}
+    # Opposite winding makes this inner ring a hole.
+    hole = {"x": [1, 1, 3, 3], "y": [1, 3, 3, 1], "sub": 1, "g": "holed"}
+    solid = {"x": [5, 9, 9, 5], "y": [0, 0, 4, 4], "sub": 0, "g": "solid"}
+
+    data = pd.concat(
+        [pd.DataFrame(d) for d in (outer, hole, solid)], ignore_index=True
+    )
+    p = ggplot(data, aes("x", "y", group="g", subgroup="sub")) + geom_polygon(
+        fill="steelblue", color="black", size=1
+    )
+    assert p == "holes"

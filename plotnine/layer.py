@@ -599,7 +599,9 @@ def add_group(data: pd.DataFrame) -> pd.DataFrame:
         # label - geom_text, geom_label
         # geometry - geom_map
         # where - geom_ribbon
-        ignore = ["PANEL", "label", "geometry", "where"]
+        # A subgroup divides one polygon group into rings.
+        # subgroup - geom_polygon
+        ignore = ["PANEL", "label", "geometry", "where", "subgroup"]
         disc = discrete_columns(data, ignore=ignore)
         if disc:
             data["group"] = ninteraction(data[disc], drop=True)
