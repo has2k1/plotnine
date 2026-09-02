@@ -89,12 +89,13 @@ class stat_contour(stat):
         res = self.compute_contours(
             *xyz_to_grid(data), breaks, data["group"].iloc[0]
         )
-        if len(res):
-            res["x"], res["y"] = rotate_xy(res["x"], res["y"], angle)
+        res["x"], res["y"] = rotate_xy(res["x"], res["y"], angle)
         return res
 
     def compute_contours(self, x, y, Z, breaks, group):
         """
         Trace one contour line at every break on an axis-aligned grid
+
+        The input grid must be aligned with the coordinate axes.
         """
         return contour_lines(x, y, Z, breaks, group)
