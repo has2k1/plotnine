@@ -7,12 +7,12 @@ import numpy as np
 import pandas as pd
 from mizani.utils import min_max
 
-from .._utils import groupby_apply, is_scalar, uniquecols
+from .._utils import groupby_apply, is_scalar
 from ..doctools import document
 from ..exceptions import PlotnineError, PlotnineWarning
 from .contours import contour_breaks, contour_lines, xyz_to_grid
 from .density import get_var_type, kde
-from .stat import stat
+from .stat import restore_constant_columns, stat
 
 if TYPE_CHECKING:
     from plotnine.typing import FloatArray, FloatArrayLike
@@ -159,7 +159,7 @@ class stat_density_2d(stat):
                 "x": X.flatten(),
                 "y": Y.flatten(),
                 "density": density,
-                "ndensity": density / density.max(),
+                "ndensity": density / np.nanmax(density),
                 "count": n_obs * density,
                 "n": n_obs,
                 "group": group,
@@ -171,45 +171,37 @@ class stat_density_2d(stat):
     def compute_layer(self, data, layout):
         # Estimate every density before selecting breaks so the complete
         # layer, including all facet panels, shares contour heights.
+        params = self.params
         data = super().compute_layer(data, layout)
-        if not self.params["contour"] or not len(data):
+        if not params["contour"] or not len(data):
             return data
 
-        data["z"] = data[self.params["contour_var"]]
-        self.params["z_range"] = min_max(data["z"], na_rm=True, finite=True)
-        return groupby_apply(data, "PANEL", self._contour_panel)
-
-    def _contour_panel(self, data: pd.DataFrame) -> pd.DataFrame:
-        """
-        Contour every group in a panel using shared breaks
-        """
-        params = self.params
+        data["z"] = data[params["contour_var"]]
         breaks = contour_breaks(
-            params["z_range"],
+            min_max(data["z"], na_rm=True, finite=True),
             params["bins"],
             params["binwidth"],
             params["breaks"],
         )
-        return groupby_apply(data, "group", self._contour_group, breaks)
+        return groupby_apply(
+            data, ["PANEL", "group"], self._contour_group, breaks
+        )
 
     def _contour_group(
         self, data: pd.DataFrame, breaks: FloatArray
     ) -> pd.DataFrame:
         """
-        Contour one group and restore its original constant columns
+        Contour one panel group and restore its original constant columns
         """
         res = self.compute_contours(
             *xyz_to_grid(data), breaks, data["group"].iloc[0]
         )
-        if not len(res):
-            return res
 
         # Contouring follows panel computation. Restore original constant
         # columns, but exclude columns created during density estimation.
-        unique = uniquecols(data.drop(columns=list(_DENSITY_PHASE_COLUMNS)))
-        missing = unique.columns.difference(res.columns)
-        u = unique.loc[[0] * len(res), missing].reset_index(drop=True)
-        return pd.concat([res, u], axis=1)
+        return restore_constant_columns(
+            res, data.drop(columns=list(_DENSITY_PHASE_COLUMNS))
+        )
 
     def compute_contours(self, x, y, Z, breaks, group):
         """
