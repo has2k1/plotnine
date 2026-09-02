@@ -71,6 +71,7 @@ quartodoc:
         - geom_boxplot
         - geom_col
         - geom_contour
+        - geom_contour_filled
         - geom_count
         - geom_crossbar
         - geom_density
@@ -144,6 +145,7 @@ quartodoc:
         - stat_bindot
         - stat_boxplot
         - stat_contour
+        - stat_contour_filled
         - stat_count
         - stat_density
         - stat_density_2d

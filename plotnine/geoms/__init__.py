@@ -13,6 +13,7 @@ from .geom_blank import geom_blank
 from .geom_boxplot import geom_boxplot
 from .geom_col import geom_col
 from .geom_contour import geom_contour
+from .geom_contour_filled import geom_contour_filled
 from .geom_count import geom_count
 from .geom_crossbar import geom_crossbar
 from .geom_density import geom_density
@@ -63,6 +64,7 @@ __all__ = (
     "geom_boxplot",
     "geom_col",
     "geom_contour",
+    "geom_contour_filled",
     "geom_count",
     "geom_crossbar",
     "geom_density",
