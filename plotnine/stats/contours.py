@@ -281,18 +281,17 @@ def estimate_grid_angle(x: FloatArrayLike, y: FloatArrayLike) -> float:
     """
     Estimate a grid's rotation from the coordinate axes
 
-    Return zero for an axis-aligned grid. A rotated grid must be aligned
-    before its values can be arranged into rows and columns.
+    Use raw, unrounded coordinates. Prior rounding can split one neighbour
+    angle into several floating-point values and hide the dominant grid
+    direction. Return zero for an axis-aligned grid.
     """
     x, y = np.asarray(x), np.asarray(y)
     if len(x) < 3:
         return 0.0
 
-    # The commonest angle between neighbouring points follows a grid row.
-    # Round to nine decimal places rather than the twelve `rotate_xy` uses:
-    # recomputing the angle from its already-rounded coordinates reintroduces
-    # noise near `1e-12`, which at twelve decimal places can split one
-    # shared angle into two, neither reaching the majority checked below.
+    # The most common angle between neighbouring points follows a grid
+    # row. Round only while finding that mode so representation noise does
+    # not split one direction into several values.
     angles = np.round(np.arctan2(np.diff(y[:20]), np.diff(x[:20])), 9)
     values, counts = np.unique(angles, return_counts=True)
     i = counts.argmax()
