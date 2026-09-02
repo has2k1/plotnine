@@ -8,6 +8,9 @@ from plotnine.stats.contours import (
     contour_bands,
     contour_breaks,
     contour_lines,
+    drop_duplicate_xy,
+    estimate_grid_angle,
+    rotate_xy,
     xyz_to_grid,
 )
 
@@ -142,3 +145,45 @@ def test_contour_bands_record_ordered_levels_and_bounds():
     assert set(df["level_low"]) <= {0.0, 0.2}
     assert set(df["level_high"]) <= {0.2, 1.0}
     assert (df["level_mid"] == (df["level_low"] + df["level_high"]) / 2).all()
+
+
+def test_duplicate_coordinates_keep_last_value():
+    data = pd.DataFrame({"x": [1, 1, 2], "y": [1, 1, 2], "z": [1.0, 2.0, 3.0]})
+    with pytest.warns(PlotnineWarning):
+        result = drop_duplicate_xy(data)
+    assert len(result) == 2
+    # Grid population order makes the last duplicate win.
+    assert result["z"].tolist() == [2.0, 3.0]
+
+
+def test_unique_coordinates_remain_unchanged():
+    data = pd.DataFrame({"x": [1, 2], "y": [1, 2], "z": [1.0, 2.0]})
+    assert len(drop_duplicate_xy(data)) == 2
+
+
+def test_axis_aligned_grid_has_zero_angle():
+    x, y = np.meshgrid(np.arange(5), np.arange(5))
+    assert estimate_grid_angle(x.ravel(), y.ravel()) == 0
+
+
+def test_rotated_grid_angle_is_recovered():
+    x, y = np.meshgrid(np.arange(5.0), np.arange(5.0))
+    rx, ry = rotate_xy(x.ravel(), y.ravel(), np.pi / 6)
+    assert estimate_grid_angle(rx, ry) == pytest.approx(np.pi / 6)
+
+
+def test_rotation_round_trip_restores_coordinates():
+    x = np.array([0.0, 1.0, 2.0])
+    y = np.array([0.0, 1.0, 2.0])
+    rx, ry = rotate_xy(x, y, 0.4)
+    ux, uy = rotate_xy(rx, ry, -0.4)
+    assert ux == pytest.approx(x)
+    assert uy == pytest.approx(y)
+
+
+def test_zero_angle_preserves_coordinates():
+    x = np.array([0.0, 1.0])
+    y = np.array([2.0, 3.0])
+    rx, ry = rotate_xy(x, y, 0)
+    assert rx.tolist() == [0.0, 1.0]
+    assert ry.tolist() == [2.0, 3.0]

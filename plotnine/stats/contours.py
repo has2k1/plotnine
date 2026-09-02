@@ -254,6 +254,81 @@ def contour_bands(
     )
 
 
+def drop_duplicate_xy(data: pd.DataFrame) -> pd.DataFrame:
+    """
+    Remove duplicate coordinates and report how many were dropped
+
+    A grid contains one `z` value per coordinate. Keep the last duplicate,
+    matching the order in which the grid cells are populated.
+    """
+    columns = [c for c in ("x", "y", "group", "PANEL") if c in data]
+    if not columns:
+        return data
+
+    duplicated = data.duplicated(subset=columns, keep="last")
+    if not duplicated.any():
+        return data
+
+    warn(
+        "Contour data contains duplicate x and y coordinates. "
+        f"Duplicate coordinates were removed from {duplicated.sum()} rows.",
+        PlotnineWarning,
+    )
+    return data.loc[~duplicated]
+
+
+def estimate_grid_angle(x: FloatArrayLike, y: FloatArrayLike) -> float:
+    """
+    Estimate a grid's rotation from the coordinate axes
+
+    Return zero for an axis-aligned grid. A rotated grid must be aligned
+    before its values can be arranged into rows and columns.
+    """
+    x, y = np.asarray(x), np.asarray(y)
+    if len(x) < 3:
+        return 0.0
+
+    # The commonest angle between neighbouring points follows a grid row.
+    # Round to nine decimal places rather than the twelve `rotate_xy` uses:
+    # recomputing the angle from its already-rounded coordinates reintroduces
+    # noise near `1e-12`, which at twelve decimal places can split one
+    # shared angle into two, neither reaching the majority checked below.
+    angles = np.round(np.arctan2(np.diff(y[:20]), np.diff(x[:20])), 9)
+    values, counts = np.unique(angles, return_counts=True)
+    i = counts.argmax()
+
+    if counts[i] / counts.sum() < 0.5:
+        # No angle dominates, so the points are not in grid order. Fall
+        # back to the longest edge of the convex hull.
+        angle = _longest_hull_edge_angle(x, y)
+    else:
+        angle = float(values[i])
+
+    quarter_turns = np.array([-1, -0.5, 0, 0.5, 1]) * np.pi
+    if (np.abs(angle - quarter_turns) < np.sqrt(np.finfo(float).eps)).any():
+        return 0.0
+    return angle
+
+
+def rotate_xy(
+    x: FloatArrayLike, y: FloatArrayLike, angle: float
+) -> tuple[FloatArray, FloatArray]:
+    """
+    Rotate coordinates about the origin
+    """
+    x, y = np.asarray(x), np.asarray(y)
+    if angle == 0:
+        return x, y
+
+    cos, sin = np.cos(angle), np.sin(angle)
+    # Round after rotation so points on one grid line still share a
+    # coordinate.
+    return (
+        _zapsmall(cos * x - sin * y),
+        _zapsmall(sin * x + cos * y),
+    )
+
+
 def _contour_generator(
     x: FloatArray, y: FloatArray, Z: FloatArray
 ) -> ContourGenerator:
@@ -290,3 +365,32 @@ def _signif(value: float) -> float:
     if value == 0:
         return 1.0
     return round(value, -int(np.floor(np.log10(abs(value)))))
+
+
+def _longest_hull_edge_angle(x: FloatArray, y: FloatArray) -> float:
+    """
+    Measure the angle of the longest convex-hull edge
+    """
+    from scipy.spatial import ConvexHull, QhullError
+
+    try:
+        hull = ConvexHull(np.column_stack([x, y]))
+    except QhullError:
+        # The points are collinear or degenerate; there is nothing to rotate
+        return 0.0
+
+    vertices = np.append(hull.vertices, hull.vertices[0])
+    dx = np.diff(x[vertices])
+    dy = np.diff(y[vertices])
+    i = np.argmax(np.hypot(dx, dy))
+    return float(np.arctan2(dy[i], dx[i]))
+
+
+def _zapsmall(value: FloatArray, digits: int = 13) -> FloatArray:
+    """
+    Round values relative to their largest magnitude
+    """
+    largest = np.max(np.abs(value))
+    if largest == 0 or not np.isfinite(largest):
+        return np.round(value, digits)
+    return np.round(value, max(0, int(digits - np.ceil(np.log10(largest)))))
