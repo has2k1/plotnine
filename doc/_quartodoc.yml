@@ -76,6 +76,7 @@ quartodoc:
         - geom_crossbar
         - geom_density
         - geom_density_2d
+        - geom_density_2d_filled
         - geom_dotplot
         - geom_errorbar
         - geom_errorbarh
@@ -149,6 +150,7 @@ quartodoc:
         - stat_count
         - stat_density
         - stat_density_2d
+        - stat_density_2d_filled
         - stat_ecdf
         - stat_ellipse
         - stat_function

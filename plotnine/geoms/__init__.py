@@ -18,6 +18,7 @@ from .geom_count import geom_count
 from .geom_crossbar import geom_crossbar
 from .geom_density import geom_density
 from .geom_density_2d import geom_density_2d
+from .geom_density_2d_filled import geom_density_2d_filled
 from .geom_dotplot import geom_dotplot
 from .geom_errorbar import geom_errorbar
 from .geom_errorbarh import geom_errorbarh
@@ -69,6 +70,7 @@ __all__ = (
     "geom_crossbar",
     "geom_density",
     "geom_density_2d",
+    "geom_density_2d_filled",
     "geom_dotplot",
     "geom_errorbar",
     "geom_errorbarh",
