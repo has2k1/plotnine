@@ -30,11 +30,11 @@ class stat_density_2d_filled(stat_density_2d):
     binwidth :
         Distance between adjacent contour values.
     breaks :
-        Explicit contour values, or a function that receives the range of
-        `contour_var` and distance between contours. Explicit values
-        override `bins` and `binwidth`. A function uses the distance
-        selected by `bins` or `binwidth`. By default, values are selected
-        for ten bands.
+        Explicit contour values, sorted and deduplicated, or a function that
+        receives the range of `contour_var` and distance between contours.
+        Explicit values override `bins` and `binwidth`. A function uses the
+        distance selected by `bins` or `binwidth`, or one tenth of the range
+        when neither is set. By default, values are selected for ten bands.
     package :
         Package whose kernel density estimation to use.
     kde_params :

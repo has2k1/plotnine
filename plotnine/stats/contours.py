@@ -38,21 +38,23 @@ def contour_breaks(
     binwidth :
         Distance between adjacent contour values.
     breaks :
-        Explicit contour values, or a function that receives the range and
-        distance between contours. Explicit values override `bins` and
-        `binwidth`. A function uses the distance selected by `bins` or
-        `binwidth`.
+        Explicit contour values, sorted and deduplicated, or a function
+        that receives the range and distance between contours. Explicit
+        values override `bins` and `binwidth`. A function uses the distance
+        selected by `bins` or `binwidth`, or one tenth of the range when
+        neither is set.
     """
-    from mizani.breaks import breaks_extended, breaks_width
+    from mizani.breaks import breaks_extended
 
     if callable(breaks):
-        return np.asarray(breaks(z_range, binwidth), dtype=float)
-
-    if breaks is not None:
-        return np.asarray(breaks, dtype=float)
-
-    if bins is None and binwidth is None:
+        breaks_fun = breaks
+    elif breaks is not None:
+        # Contour values must increase, and repeated values bound no band.
+        return np.unique(np.asarray(breaks, dtype=float))
+    elif bins is None and binwidth is None:
         return np.asarray(breaks_extended(n=10)(z_range), dtype=float)
+    else:
+        breaks_fun = _breaks_of_width
 
     if bins is not None:
         if bins < 1:
@@ -64,21 +66,32 @@ def contour_breaks(
         low = np.floor(z_range[0] / accuracy) * accuracy
         high = np.ceil(z_range[1] / accuracy) * accuracy
 
+        if high == low:
+            # A flat surface has no height to divide. Its only value is
+            # also its only possible contour.
+            return np.array([low])
+
         if bins == 1:
             return np.array([low, high])
 
-        _breaks = breaks_width((high - low) / (bins - 1))((low, high))
+        _breaks = np.asarray(
+            breaks_fun((low, high), (high - low) / (bins - 1)), dtype=float
+        )
         # Retry with `bins` intervals if the first spacing yields too few.
         if len(_breaks) < bins + 1:
-            _breaks = breaks_width((high - low) / bins)((low, high))
-        return np.asarray(_breaks, dtype=float)
+            _breaks = np.asarray(
+                breaks_fun((low, high), (high - low) / bins), dtype=float
+            )
+        return _breaks
 
-    # Reached only when binwidth is set and bins is not
-    binwidth = cast("float", binwidth)
-    if binwidth <= 0:
+    if binwidth is None:
+        # A break function always receives a contour distance. Use one
+        # tenth of the range when no count or width supplies it.
+        binwidth = (z_range[1] - z_range[0]) / 10
+    elif binwidth <= 0:
         raise PlotnineError("`binwidth` must be greater than 0.")
 
-    return np.asarray(breaks_width(binwidth)(z_range), dtype=float)
+    return np.asarray(breaks_fun(z_range, binwidth), dtype=float)
 
 
 def xyz_to_grid(
@@ -134,9 +147,18 @@ def contour_lines(
     Trace the contour line at each break
 
     Assign each disconnected line its own `piece` and `group`, so geoms
-    draw separate paths.
+    draw separate paths. A grid needs at least two rows and two columns to
+    contain a cell; smaller grids return no contours.
     """
     from mizani.bounds import rescale_max
+
+    if min(Z.shape) < 2:
+        warn(
+            "No contours were generated. A contour crosses grid cells, "
+            "but the grid has fewer than two rows or columns.",
+            PlotnineWarning,
+        )
+        return _empty_contour_lines()
 
     cgen = _contour_generator(x, y, Z)
 
@@ -149,16 +171,7 @@ def contour_lines(
 
     if not vertices:
         warn("No contours were generated.", PlotnineWarning)
-        return pd.DataFrame(
-            {
-                "x": pd.Series(dtype=float),
-                "y": pd.Series(dtype=float),
-                "level": pd.Series(dtype=float),
-                "nlevel": pd.Series(dtype=float),
-                "piece": pd.Series(dtype=int),
-                "group": pd.Series(dtype=object),
-            }
-        )
+        return _empty_contour_lines()
 
     xy = np.concatenate(vertices)
     level = np.repeat(levels, counts)
@@ -186,10 +199,29 @@ def contour_bands(
 
     Assign each disconnected region its own `piece` and `group`. Number
     its rings with `subgroup`, starting with the exterior boundary.
+    A band needs at least two breaks, and a grid needs at least two rows
+    and two columns. Invalid inputs return no bands.
     """
     from mizani.bounds import rescale_max
 
     labels = band_labels(breaks)
+
+    if len(breaks) < 2:
+        warn(
+            "No contour bands were generated. At least two breaks are "
+            "required to bound a band.",
+            PlotnineWarning,
+        )
+        return _empty_contour_bands(labels)
+
+    if min(Z.shape) < 2:
+        warn(
+            "No contour bands were generated. A band fills grid cells, "
+            "but the grid has fewer than two rows or columns.",
+            PlotnineWarning,
+        )
+        return _empty_contour_bands(labels)
+
     cgen = _contour_generator(x, y, Z)
 
     # `FillType.OuterOffset` returns parallel lists containing one point
@@ -215,20 +247,7 @@ def contour_bands(
 
     if not vertices:
         warn("No contour bands were generated.", PlotnineWarning)
-        return pd.DataFrame(
-            {
-                "x": pd.Series(dtype=float),
-                "y": pd.Series(dtype=float),
-                "level": pd.Categorical([], categories=labels, ordered=True),
-                "level_low": pd.Series(dtype=float),
-                "level_high": pd.Series(dtype=float),
-                "level_mid": pd.Series(dtype=float),
-                "nlevel": pd.Series(dtype=float),
-                "piece": pd.Series(dtype=int),
-                "subgroup": pd.Series(dtype=int),
-                "group": pd.Series(dtype=object),
-            }
-        )
+        return _empty_contour_bands(labels)
 
     xy = np.concatenate(vertices)
     band = np.repeat(bands, counts)
@@ -321,20 +340,70 @@ def rotate_xy(
         return x, y
 
     cos, sin = np.cos(angle), np.sin(angle)
-    # Round away the rounding error, so that points on one grid line
-    # still share a value once rotated. `angle` is often
-    # `estimate_grid_angle`'s output rather than an exact value: it is
-    # off by several dozen of its own representable steps, growing
-    # larger still, roughly by float64 epsilon times the grid's
-    # distance from the origin over its own spacing, for a grid that
-    # sits far from the origin relative to that spacing. The budget
-    # below has to absorb that angle error times the grid's extent,
-    # the distance between its farthest-apart points, not how far any
-    # single point sits from the origin, which is why it is wider than
-    # a single rotation's own noise needs.
+    # Round after rotation so points on one grid line still share a
+    # coordinate. An estimated angle can differ from the true angle by
+    # dozens of representable steps. Across a grid, that error grows with
+    # the grid's extent, so the rounding budget must exceed the arithmetic
+    # noise from one exact rotation.
     return (
         _zapsmall(cos * x - sin * y),
         _zapsmall(sin * x + cos * y),
+    )
+
+
+def _breaks_of_width(
+    z_range: tuple[float, float], binwidth: float
+) -> FloatArray:
+    """
+    Generate breaks at a fixed interval
+
+    Return multiples of `binwidth` that span the range. The first and last
+    values may lie just outside it.
+    """
+    from mizani.breaks import breaks_width
+
+    return np.asarray(breaks_width(binwidth)(z_range), dtype=float)
+
+
+def _empty_contour_lines() -> pd.DataFrame:
+    """
+    Return an empty contour-line result
+
+    Preserve every column of a populated result so an empty layer retains
+    the same schema.
+    """
+    return pd.DataFrame(
+        {
+            "x": pd.Series(dtype=float),
+            "y": pd.Series(dtype=float),
+            "level": pd.Series(dtype=float),
+            "nlevel": pd.Series(dtype=float),
+            "piece": pd.Series(dtype=int),
+            "group": pd.Series(dtype=object),
+        }
+    )
+
+
+def _empty_contour_bands(labels: list[str]) -> pd.DataFrame:
+    """
+    Return an empty contour-band result
+
+    Preserve every column of a populated result. Keep `labels` as the
+    categories of the empty `level` column.
+    """
+    return pd.DataFrame(
+        {
+            "x": pd.Series(dtype=float),
+            "y": pd.Series(dtype=float),
+            "level": pd.Categorical([], categories=labels, ordered=True),
+            "level_low": pd.Series(dtype=float),
+            "level_high": pd.Series(dtype=float),
+            "level_mid": pd.Series(dtype=float),
+            "nlevel": pd.Series(dtype=float),
+            "piece": pd.Series(dtype=int),
+            "subgroup": pd.Series(dtype=int),
+            "group": pd.Series(dtype=object),
+        }
     )
 
 
@@ -395,17 +464,21 @@ def _longest_hull_edge_angle(x: FloatArray, y: FloatArray) -> float:
     return float(np.arctan2(dy[i], dx[i]))
 
 
-# 11 is tight, not cautious. At 12, `rotate_xy`'s own re-alignment
-# error already exceeds the rounding step on over half of a sample of
-# 300 `faithfuld` grids rotated to random angles. At 10, every one of
-# those rotations still re-grids cleanly, but only by discarding
-# precision that 11 does not need to give up.
 def _zapsmall(value: FloatArray, digits: int = 11) -> FloatArray:
     """
     Round values relative to their largest magnitude
 
     Return an empty array unchanged because the magnitude reduction has no
     identity for empty input.
+
+    Parameters
+    ----------
+    value :
+        Values to round.
+    digits :
+        Digits to keep, counted from the largest magnitude in `value`.
+        The default retains the most precision that still realigns grids
+        across the supported coordinate scales.
     """
     if value.size == 0:
         return value
