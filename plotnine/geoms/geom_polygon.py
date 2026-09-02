@@ -94,7 +94,9 @@ class geom_polygon(geom):
         # the ring correctly.
         if not coord.is_linear:
             by = ["group", "subgroup"] if "subgroup" in data else "group"
-            indices = data.groupby(by, sort=False).indices
+            # A missing `subgroup` still identifies one ring. Preserve it
+            # during grouping or its vertices disappear.
+            indices = data.groupby(by, sort=False, dropna=False).indices
             order = np.concatenate(
                 [np.append(idx, idx[0]) for idx in indices.values()]
             )
@@ -105,7 +107,7 @@ class geom_polygon(geom):
 
         # Each group is a polygon with a single facecolor
         # with potentially an edgecolor for every edge.
-        verts = []
+        polygons = []
         facecolor = []
         edgecolor = []
         linestyle = []
@@ -114,29 +116,29 @@ class geom_polygon(geom):
         # Some stats may order the data in ways that prevent
         # objects from occluding other objects. We do not want
         # to undo that order.
-        has_holes = "subgroup" in data
+        has_subgroups = "subgroup" in data
         grouper = data.groupby("group", sort=False)
         for group, df in grouper:
             fill = to_rgba(df["fill"].iloc[0], df["alpha"].iloc[0])
-            if has_holes:
-                verts.append(
+            if has_subgroups:
+                # A missing `subgroup` still identifies one ring. A group
+                # containing only that ring is a polygon without holes.
+                rings = df.groupby("subgroup", sort=False, dropna=False)
+                polygons.append(
                     compound_path(
-                        [
-                            ring[["x", "y"]].to_numpy()
-                            for _, ring in df.groupby("subgroup", sort=False)
-                        ]
+                        [ring[["x", "y"]].to_numpy() for _, ring in rings]
                     )
                 )
             else:
-                verts.append(tuple(zip(df["x"], df["y"])))
+                polygons.append(tuple(zip(df["x"], df["y"])))
             facecolor.append("none" if fill is None else fill)
             edgecolor.append(df["color"].iloc[0] or "none")
             linestyle.append(df["linetype"].iloc[0])
             linewidth.append(df["linewidth"].iloc[0])
 
-        cls = PathCollection if has_holes else PolyCollection
+        cls = PathCollection if has_subgroups else PolyCollection
         col = cls(
-            verts,
+            polygons,
             facecolors=facecolor,
             edgecolors=edgecolor,
             linestyles=linestyle,
