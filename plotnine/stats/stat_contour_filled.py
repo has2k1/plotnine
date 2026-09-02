@@ -24,10 +24,11 @@ class stat_contour_filled(stat_contour):
     binwidth :
         Distance between adjacent contour values.
     breaks :
-        Explicit contour values, or a function that receives the `z` range
-        and distance between contours. Explicit values override `bins` and
-        `binwidth`. A function uses the distance selected by `bins` or
-        `binwidth`. By default, values are selected for ten bands.
+        Explicit contour values, sorted and deduplicated, or a function that
+        receives the `z` range and distance between contours. Explicit
+        values override `bins` and `binwidth`. A function uses the distance
+        selected by `bins` or `binwidth`, or one tenth of the range when
+        neither is set. By default, values are selected for ten bands.
 
     See Also
     --------

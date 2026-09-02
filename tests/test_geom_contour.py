@@ -48,6 +48,24 @@ def test_duplicate_coordinates_emit_warning():
         p.draw_test()
 
 
+def test_single_point_grid():
+    # One point forms no grid cell for a contour to cross.
+    data = pd.DataFrame({"x": [1.0], "y": [1.0], "z": [1.0]})
+    p = ggplot(data, aes("x", "y", z="z")) + geom_contour()
+    with pytest.warns(PlotnineWarning):
+        p.draw_test()
+
+
+def test_unsorted_breaks():
+    p = p0 + geom_contour_filled(breaks=[0.02, 0.005, 0.01])
+    data = p.build_test().layers[0].data
+    # Sorting the breaks also orders the band categories.
+    assert list(data["level"].cat.categories) == [
+        "(0.005, 0.01]",
+        "(0.01, 0.02]",
+    ]
+
+
 def test_contour_lines_expose_computed_variables():
     data = (p0 + geom_contour()).build_test().layers[0].data
     assert {"level", "nlevel", "piece"} <= set(data.columns)

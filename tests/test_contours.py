@@ -33,6 +33,37 @@ def test_break_function_receives_range_and_width():
     assert list(breaks) == [0, 2]
 
 
+def test_break_function_receives_default_width():
+    # A break function always receives a distance. Without a requested
+    # count or width, use one tenth of the range.
+    breaks = contour_breaks((0, 10), breaks=lambda r, w: [r[0], w])
+    assert list(breaks) == [0, 1]
+
+
+def test_break_function_uses_bin_count_for_width():
+    widths = []
+
+    def breaks_fun(z_range, binwidth):
+        widths.append(binwidth)
+        return [z_range[0], z_range[1]]
+
+    contour_breaks((0, 10), bins=5, breaks=breaks_fun)
+    # The first spacing treats `bins` as the number of breaks. If that
+    # produces too few bands, retry with `bins` intervals.
+    assert widths == [2.5, 2.0]
+
+
+def test_contour_breaks_sorted_and_deduplicated():
+    breaks = contour_breaks((0, 1), breaks=[0.02, 0.005, 0.01, 0.01])
+    assert list(breaks) == [0.005, 0.01, 0.02]
+
+
+def test_contour_breaks_flat_surface():
+    # A flat surface has one possible contour value and no band to fill.
+    breaks = contour_breaks((1.0, 1.0), bins=5)
+    assert list(breaks) == [1.0]
+
+
 def test_binwidth_generates_even_breaks():
     breaks = contour_breaks((0.5, 9.5), binwidth=2)
     assert list(breaks) == [0, 2, 4, 6, 8, 10]
@@ -121,6 +152,38 @@ def test_contour_lines_record_levels_and_groups():
     assert df.groupby("group").ngroups == 2
 
 
+def two_peak_grid():
+    """
+    Create a surface with equal peaks on opposite sides of `x = 0`
+
+    A contour below both peaks forms two disconnected pieces.
+    """
+    x = np.linspace(-4, 4, 60)
+    y = np.linspace(-2, 2, 30)
+    X, Y = np.meshgrid(x, y)
+    left = np.exp(-((X + 2) ** 2 + Y**2))
+    right = np.exp(-((X - 2) ** 2 + Y**2))
+    return x, y, left + right
+
+
+def test_contour_lines_disjoint_pieces():
+    x, y, Z = two_peak_grid()
+    df = contour_lines(x, y, Z, np.array([0.5]), 3)
+    # Give each peak its own piece and group so the paths remain separate.
+    assert sorted(df["piece"].unique()) == [1, 2]
+    assert sorted(df["group"].unique()) == ["3-1", "3-2"]
+
+
+def test_contour_lines_grid_too_small():
+    Z = np.array([[1.0]])
+    with pytest.warns(PlotnineWarning):
+        df = contour_lines(
+            np.array([0.0]), np.array([0.0]), Z, np.array([0.5]), 1
+        )
+    assert len(df) == 0
+    assert list(df.columns) == ["x", "y", "level", "nlevel", "piece", "group"]
+
+
 def test_empty_contour_lines_preserve_schema():
     x, y, Z = peak_grid()
     with pytest.warns(PlotnineWarning):
@@ -146,6 +209,36 @@ def test_contour_bands_record_ordered_levels_and_bounds():
     assert set(df["level_low"]) <= {0.0, 0.2}
     assert set(df["level_high"]) <= {0.2, 1.0}
     assert (df["level_mid"] == (df["level_low"] + df["level_high"]) / 2).all()
+
+
+def test_contour_pieces_are_numbered_across_bands():
+    x, y, Z = two_peak_grid()
+    df = contour_bands(x, y, Z, np.array([0.2, 0.5, 1.1]), 3)
+    # Number disconnected pieces across all bands, not within each band.
+    pieces = df.groupby("level", observed=True)["piece"].unique()
+    assert [sorted(p) for p in pieces] == [[1, 2], [3, 4]]
+    assert sorted(df["group"].unique()) == ["3-1", "3-2", "3-3", "3-4"]
+    # Scale each upper bound by the largest upper bound.
+    assert df["nlevel"].max() == 1
+    assert (df["nlevel"] == df["level_high"] / 1.1).all()
+
+
+def test_contour_bands_one_break():
+    x, y, Z = peak_grid()
+    with pytest.warns(PlotnineWarning):
+        df = contour_bands(x, y, Z, np.array([0.2]), 1)
+    assert len(df) == 0
+    assert "level_low" in df.columns
+
+
+def test_contour_bands_grid_too_small():
+    Z = np.array([[1.0]])
+    with pytest.warns(PlotnineWarning):
+        df = contour_bands(
+            np.array([0.0]), np.array([0.0]), Z, np.array([0.0, 2.0]), 1
+        )
+    assert len(df) == 0
+    assert list(df["level"].cat.categories) == ["(0, 2]"]
 
 
 def test_duplicate_coordinates_keep_last_value():
