@@ -69,6 +69,12 @@ ColorsLike: TypeAlias = (
     ColorLike | list[ColorLike] | pd.Series[ColorLike] | StrArray
 )
 
+# NumPy random-number generators accepted by plotnine
+RandomGenerator: TypeAlias = np.random.RandomState | np.random.Generator
+
+# Integer seed or generator accepted by random-state parameters
+RandomStateLike: TypeAlias = int | RandomGenerator
+
 # Plotting
 FigureFormat: TypeAlias = Literal["png", "retina", "jpeg", "jpg", "svg", "pdf"]
 

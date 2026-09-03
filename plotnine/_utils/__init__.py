@@ -36,6 +36,8 @@ if TYPE_CHECKING:
         FloatArrayLike,
         HorizontalJustification,
         PolarSide,
+        RandomGenerator,
+        RandomStateLike,
         Side,
         VerticalJustification,
     )
@@ -467,6 +469,30 @@ def uniquecols(data):
     return data
 
 
+def normalise_random_state(
+    random_state: RandomStateLike | None,
+) -> RandomGenerator | None:
+    """
+    Convert an integer seed into a random number generator
+
+    Parameters
+    ----------
+    random_state :
+        Integer seed or random number generator. `None` remains unchanged
+        so the caller can select NumPy's global random state.
+
+    Notes
+    -----
+    Convert a seed once when several draws must advance the same stream.
+    Preserving `None` lets callers defer access to NumPy's global random
+    state without storing the unpicklable [](`numpy.random`) module in
+    plot parameters.
+    """
+    if isinstance(random_state, int):
+        return np.random.RandomState(random_state)
+    return random_state
+
+
 def jitter(x, factor=1, amount=None, random_state=None):
     """
     Add a small amount of noise to values in an array_like
@@ -498,10 +524,9 @@ def jitter(x, factor=1, amount=None, random_state=None):
     if len(x) == 0:
         return x
 
+    random_state = normalise_random_state(random_state)
     if random_state is None:
         random_state = np.random
-    elif isinstance(random_state, int):
-        random_state = np.random.RandomState(random_state)
 
     x = np.asarray(x)
 
