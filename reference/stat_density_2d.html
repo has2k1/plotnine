@@ -81,7 +81,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-3154a52da2b13509d7b4f2c9febd40cf.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-4dc9fad167bb48581f1637bf6d811f68.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-7bbe61d008ee373fce4623d4cd0db0a9.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -121,7 +121,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine 999.post1+gadda64d86</span>
+    <span class="navbar-title">plotnine 999.post1+ga8400fa23</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -175,7 +175,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 </header>
 <div class="doc-text">
-<p>Compute 2D kernel density estimation</p>
+<p>A two-dimensional kernel density estimate</p>
 <div class="doc-signature doc-class doc-usage">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>stat_density_2d(</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    mapping<span class="op">=</span><span class="va">None</span>,</span>
@@ -185,12 +185,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    position<span class="op">=</span><span class="st">"identity"</span>,</span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    na_rm<span class="op">=</span><span class="va">False</span>,</span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    contour<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    package<span class="op">=</span><span class="st">"statsmodels"</span>,</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    kde_params<span class="op">=</span><span class="va">None</span>,</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    n<span class="op">=</span><span class="dv">64</span>,</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    levels<span class="op">=</span><span class="dv">5</span>,</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="op">**</span>kwargs</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    contour_var<span class="op">=</span><span class="st">"density"</span>,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    bins<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    binwidth<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    breaks<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    package<span class="op">=</span><span class="st">"statsmodels"</span>,</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    kde_params<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    n<span class="op">=</span><span class="dv">64</span>,</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    levels<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    <span class="op">**</span>kwargs</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <section id="parameters" class="level2 doc-parameters">
@@ -220,10 +224,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </table>
 <p>The <strong>bold</strong> aesthetics are required.</p>
 <p><strong>Options for computed aesthetics</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">"level"</span>     <span class="co"># density level of a contour</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">"density"</span>   <span class="co"># Computed density at a point</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">"piece"</span>     <span class="co"># Numeric id of a contour in a given group</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><code>level</code> is only relevant when contours are computed. <code>density</code> is available only when no contours are computed. <code>piece</code> is largely irrelevant.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">"density"</span>   <span class="co"># computed density at a point</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">"ndensity"</span>  <span class="co"># density, scaled to a maximum of 1</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">"count"</span>     <span class="co"># density scaled by the number of observations</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">"n"</span>         <span class="co"># number of observations in the group</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">"level"</span>     <span class="co"># height of the contour</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co">"nlevel"</span>    <span class="co"># height of the contour, scaled to a maximum of 1</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">"piece"</span>     <span class="co"># identifier for one disconnected contour</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Without contouring, the output contains <code>density</code>, <code>ndensity</code>, <code>count</code> and <code>n</code>. With contouring, it contains <code>level</code>, <code>nlevel</code> and <code>piece</code>.</p>
 </dd>
 <dt><code><span class="doc-parameter-name">data</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
 <dd>
@@ -241,23 +249,39 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <dd>
 <p>If <code class="sourceCode python py"><span class="va">False</span></code>, removes missing values with a warning. If <code class="sourceCode python py"><span class="va">True</span></code> silently removes missing values.</p>
 </dd>
-<dt><code><span class="doc-parameter-name">contour</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#bool">bool</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">True</span></code></dt>
+<dt><code><span class="doc-parameter-name">contour</span></code></dt>
 <dd>
-<p>Whether to create contours of the 2d density estimate.</p>
+<p>Whether to contour the two-dimensional density estimate.</p>
 </dd>
-<dt><code><span class="doc-parameter-name">n</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#int">int</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">64</span></code></dt>
+<dt><code><span class="doc-parameter-name">contour_var</span></code></dt>
+<dd>
+<p>Computed variable that sets contour heights. Use <code>density</code>, <code>ndensity</code> or <code>count</code>.</p>
+</dd>
+<dt><code><span class="doc-parameter-name">n</span></code></dt>
 <dd>
 <p>Number of equally spaced points at which the density is to be estimated. For efficient computation, it should be a power of two.</p>
 </dd>
-<dt><code><span class="doc-parameter-name">levels</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#int">int</a> | <a href="https://numpy.org/doc/stable/glossary.html#term-array_like">array_like</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">5</span></code></dt>
+<dt><code><span class="doc-parameter-name">bins</span></code></dt>
 <dd>
-<p>Contour levels. If an integer, it specifies the maximum number of levels, if array_like it is the levels themselves.</p>
+<p>Number of contour bands. Takes precedence over <code>binwidth</code>.</p>
 </dd>
-<dt><code><span class="doc-parameter-name">package</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">Literal[<span class="st">"statsmodels"</span>, <span class="st">"scipy"</span>, <span class="st">"sklearn"</span>]</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default"><span class="st">"statsmodels"</span></span></code></dt>
+<dt><code><span class="doc-parameter-name">binwidth</span></code></dt>
+<dd>
+<p>Distance between adjacent contour values.</p>
+</dd>
+<dt><code><span class="doc-parameter-name">breaks</span></code></dt>
+<dd>
+<p>Explicit contour values, sorted and deduplicated, or a function that receives the range of <code>contour_var</code> and distance between contours. Explicit values override <code>bins</code> and <code>binwidth</code>. A function uses the distance selected by <code>bins</code> or <code>binwidth</code>, or one tenth of the range when neither is set. By default, values are selected for ten bands.</p>
+</dd>
+<dt><code><span class="doc-parameter-name">levels</span></code></dt>
+<dd>
+<p>Deprecated and scheduled for removal in a future version. Use <code>bins</code> to set the number of bands or <code>breaks</code> to set contour values directly. Explicit <code>bins</code> or <code>breaks</code> takes precedence.</p>
+</dd>
+<dt><code><span class="doc-parameter-name">package</span></code></dt>
 <dd>
 <p>Package whose kernel density estimation to use.</p>
 </dd>
-<dt><code><span class="doc-parameter-name">kde_params</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#dict">dict</a></span></code></dt>
+<dt><code><span class="doc-parameter-name">kde_params</span></code></dt>
 <dd>
 <p>Keyword arguments to pass on to the kde class.</p>
 </dd>
