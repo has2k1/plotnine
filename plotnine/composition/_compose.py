@@ -330,7 +330,7 @@ class Compose:
             ):
                 self[i] = item & rhs
             else:
-                item += copy(rhs)
+                item += deepcopy(rhs)
 
         return self
 
@@ -349,7 +349,7 @@ class Compose:
 
         for item in self:
             if isinstance(item, ggplot):
-                item += copy(rhs)
+                item += deepcopy(rhs)
 
         return self
 
