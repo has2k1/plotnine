@@ -59,9 +59,10 @@ class stat_sina(stat):
         If the samples within the same y-axis bin are more
         than `bin_limit`, the samples's X coordinates will be adjusted.
         This parameter is effective only when `method="counts"`{.py}
-    random_state : int | ~numpy.random.RandomState, default=None
-        Seed or Random number generator to use. If `None`, then
-        numpy global generator [](`numpy.random`) is used.
+    random_state :
+        Integer seed, [](`~numpy.random.RandomState`), or
+        [](`numpy.random.Generator`). If `None`, draw from NumPy's global
+        random state.
     scale : Literal["area", "count", "width"], default="area"
         How to scale the sina groups.
 

@@ -511,9 +511,10 @@ def jitter(x, factor=1, amount=None, random_state=None):
         If `None` then `amount = factor * d/5`, where d is about
         the smallest difference between `x` values and `z` is the
         range of the `x` values.
-    random_state : int | ~numpy.random.RandomState, default=None
-        Seed or Random number generator to use. If `None`, then
-        numpy global generator [](`numpy.random`) is used.
+    random_state :
+        Integer seed, [](`~numpy.random.RandomState`), or
+        [](`numpy.random.Generator`). If `None`, draw from NumPy's global
+        random state.
 
     References:
 

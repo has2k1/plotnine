@@ -25,7 +25,10 @@ def bootstrap_statistics(
 
     alpha = 1 - confidence_interval
     size = (n_samples, len(series))
-    inds = random_state.randint(0, len(series), size=size)
+    if isinstance(random_state, np.random.Generator):
+        inds = random_state.integers(0, len(series), size=size)
+    else:
+        inds = random_state.randint(0, len(series), size=size)
     samples = series.to_numpy()[inds]
     means = np.sort(statistic(samples, axis=1))
     return pd.DataFrame(
@@ -51,9 +54,10 @@ def mean_cl_boot(
         Number of sample to draw.
     confidence_interval : float
         Confidence interval in the range (0, 1).
-    random_state : int | ~numpy.random.RandomState, default=None
-        Seed or Random number generator to use. If `None`, then
-        numpy global generator [](`numpy.random`) is used.
+    random_state :
+        Integer seed, [](`~numpy.random.RandomState`), or
+        [](`numpy.random.Generator`). If `None`, draw from NumPy's global
+        random state.
     """
     return bootstrap_statistics(
         series,
@@ -238,9 +242,10 @@ class stat_summary(stat):
         arguments will be assigned to the right functions. If there is
         a conflict, create a wrapper function that resolves the
         ambiguity in the argument names.
-    random_state : int | ~numpy.random.RandomState, default=None
-        Seed or Random number generator to use. If `None`, then
-        numpy global generator [](`numpy.random`) is used.
+    random_state :
+        Integer seed, [](`~numpy.random.RandomState`), or
+        [](`numpy.random.Generator`). If `None`, draw from NumPy's global
+        random state.
 
     Notes
     -----
