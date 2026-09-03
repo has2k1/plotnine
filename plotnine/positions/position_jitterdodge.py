@@ -4,7 +4,7 @@ import typing
 from contextlib import suppress
 from copy import copy
 
-from .._utils import jitter, resolution
+from .._utils import jitter, normalise_random_state, resolution
 from ..exceptions import PlotnineError
 from ..mapping.aes import SCALED_AESTHETICS
 from .position import position
@@ -13,7 +13,7 @@ from .position_dodge import position_dodge
 if typing.TYPE_CHECKING:
     from typing import Optional
 
-    import numpy as np
+    from plotnine.typing import RandomStateLike
 
 
 # Adjust position by simultaneously dodging and jittering
@@ -47,7 +47,7 @@ class position_jitterdodge(position):
         jitter_width: Optional[float] = None,
         jitter_height: float = 0,
         dodge_width: float = 0.75,
-        random_state: Optional[int | np.random.RandomState] = None,
+        random_state: Optional[RandomStateLike] = None,
     ):
         self.params = {
             "jitter_width": jitter_width,
@@ -58,6 +58,7 @@ class position_jitterdodge(position):
 
     def setup_params(self, data):
         params = copy(self.params)
+        params["random_state"] = normalise_random_state(params["random_state"])
         width = params["jitter_width"]
         if width is None:
             width = resolution(data["x"]) * 0.4

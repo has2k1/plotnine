@@ -3,15 +3,17 @@ from __future__ import annotations
 import typing
 from copy import deepcopy
 
-import numpy as np
-
-from .._utils import jitter, resolution
+from .._utils import jitter, normalise_random_state, resolution
 from .position import position
 
 if typing.TYPE_CHECKING:
     from typing import Optional
 
-    from plotnine.typing import FloatArray, FloatArrayLike
+    from plotnine.typing import (
+        FloatArray,
+        FloatArrayLike,
+        RandomStateLike,
+    )
 
 
 class position_jitter(position):
@@ -37,7 +39,7 @@ class position_jitter(position):
         self,
         width: Optional[float] = None,
         height: Optional[float] = None,
-        random_state: Optional[int | np.random.RandomState] = None,
+        random_state: Optional[RandomStateLike] = None,
     ):
         self.params = {
             "width": width,
@@ -51,8 +53,7 @@ class position_jitter(position):
             params["width"] = resolution(data["x"]) * 0.4
         if params["height"] is None:
             params["height"] = resolution(data["y"]) * 0.4
-        if not params["random_state"]:
-            params["random_state"] = np.random
+        params["random_state"] = normalise_random_state(params["random_state"])
         return params
 
     @classmethod
