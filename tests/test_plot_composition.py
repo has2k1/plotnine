@@ -1,14 +1,17 @@
 from io import BytesIO
 
+import pandas as pd
 import pytest
 from PIL import Image
 
 from plotnine import (
+    aes,
     element_line,
     element_rect,
     element_text,
     facet_grid,
     facet_wrap,
+    geom_sina,
     labs,
     theme,
     theme_gray,
@@ -485,3 +488,11 @@ def test_save_honours_requested_dpi():
         cmp.save(buf, format="png", dpi=dpi)
         expected = (int(width * dpi), int(height * dpi))
         assert Image.open(buf).size == expected
+
+
+def test_broadcast_unseeded_geom_sina():
+    # Drawing a composition deep-copies each plot. An unseeded `geom_sina`
+    # must defer access to NumPy's global random state.
+    data = pd.DataFrame({"cat": ["a", "b"] * 10, "value": range(20)})
+    cmp = (plot.red | plot.green) & geom_sina(aes("cat", "value"), data)
+    cmp.save(BytesIO(), format="png")

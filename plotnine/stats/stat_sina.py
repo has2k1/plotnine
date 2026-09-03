@@ -3,7 +3,13 @@ from typing import TYPE_CHECKING, cast
 import numpy as np
 import pandas as pd
 
-from .._utils import array_kind, jitter, nextafter_range, resolution
+from .._utils import (
+    array_kind,
+    jitter,
+    nextafter_range,
+    normalise_random_state,
+    resolution,
+)
 from ..doctools import document
 from ..exceptions import PlotnineError
 from ..mapping.aes import has_groups
@@ -129,10 +135,7 @@ class stat_sina(stat):
         if params["binwidth"] is None and self.params["bins"] is None:
             params["bins"] = 50
 
-        if random_state is None:
-            params["random_state"] = np.random
-        elif isinstance(random_state, int):
-            params["random_state"] = np.random.RandomState(random_state)
+        params["random_state"] = normalise_random_state(random_state)
 
         # Required by compute_density
         params["kernel"] = "gau"  # It has to be a gaussian kernel
@@ -146,6 +149,8 @@ class stat_sina(stat):
         params = self.params
         maxwidth = params["maxwidth"]
         random_state = params["random_state"]
+        if random_state is None:
+            random_state = np.random
         data = super().compute_panel(data, scales)
 
         if not len(data):
