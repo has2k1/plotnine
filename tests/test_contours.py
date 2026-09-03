@@ -16,11 +16,16 @@ from plotnine.stats.contours import (
 )
 
 
-def test_default_breaks_span_surface_range():
-    breaks = contour_breaks((0, 0.037))
+@pytest.mark.parametrize(
+    "z_range", [(0, 0.037), (0, 1.9), (0, 103), (-1.05, 1.05)]
+)
+def test_default_breaks_span_surface_range(z_range):
+    # Every surface value must lie between the outermost breaks. Values
+    # beyond either break fall outside all contour bands.
+    breaks = contour_breaks(z_range)
     assert len(breaks) > 2
-    assert breaks.min() <= 0
-    assert breaks.max() >= 0.037
+    assert breaks.min() <= z_range[0]
+    assert breaks.max() >= z_range[1]
 
 
 def test_explicit_breaks_are_preserved():

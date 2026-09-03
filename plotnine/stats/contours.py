@@ -52,7 +52,13 @@ def contour_breaks(
         # Contour values must increase, and repeated values bound no band.
         return np.unique(np.asarray(breaks, dtype=float))
     elif bins is None and binwidth is None:
-        return np.asarray(breaks_extended(n=10)(z_range), dtype=float)
+        # Nice contour values can stop inside the surface range. When at
+        # least two are available, preserve their spacing and extend the
+        # break sequence through both endpoints.
+        nice = np.asarray(breaks_extended(n=10)(z_range), dtype=float)
+        if len(nice) < 2:
+            return nice
+        return _breaks_of_width(z_range, nice[1] - nice[0])
     else:
         breaks_fun = _breaks_of_width
 
