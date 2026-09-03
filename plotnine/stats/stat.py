@@ -248,7 +248,9 @@ class stat(ABC, metaclass=Register):
         knows how to verify the data, partition it call the
         next computation method and merge results.
 
-        stats should not override this method.
+        Override this method only when a statistic must compute across the
+        full layer. Preserve standard validation and grouping by calling
+        the base implementation before or after the layer-wide work.
 
         Parameters
         ----------
