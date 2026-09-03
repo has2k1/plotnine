@@ -3,7 +3,7 @@ from typing import cast
 import numpy as np
 import pandas as pd
 
-from .._utils import get_valid_kwargs, uniquecols
+from .._utils import get_valid_kwargs, normalise_random_state, uniquecols
 from ..doctools import document
 from ..exceptions import PlotnineError
 from .stat import stat
@@ -289,15 +289,11 @@ class stat_summary(stat):
 
         if (
             "random_state" not in self.params["fun_args"]
-            and self.params["random_state"]
+            and self.params["random_state"] is not None
         ):
-            random_state = self.params["random_state"]
-            if random_state is None:
-                random_state = np.random
-            elif isinstance(random_state, int):
-                random_state = np.random.RandomState(random_state)
-
-            self.params["fun_args"]["random_state"] = random_state
+            self.params["fun_args"]["random_state"] = normalise_random_state(
+                self.params["random_state"]
+            )
 
     def compute_panel(self, data, scales):
         func = make_summary_fun(
