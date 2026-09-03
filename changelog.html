@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.11.1">
+<meta name="generator" content="quarto-1.11.3">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Changelog – plotnine 999.post1+g15f4d75b3</title>
+<title>Changelog – plotnine 999.post1+gadda64d86</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -78,10 +78,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-d5b4e69c7e37b49c6591bcc5116dd748.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-3154a52da2b13509d7b4f2c9febd40cf.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-0e98b6cd893899cdbeb447ff6df6c6a6.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-4dc9fad167bb48581f1637bf6d811f68.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -113,7 +113,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </head>
 
-<body class="nav-fixed quarto-light">
+<body class="nav-fixed quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -121,11 +121,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">plotnine 999.post1+g15f4d75b3</span>
+    <span class="navbar-title">plotnine 999.post1+gadda64d86</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -332,7 +332,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content" id="quarto-document-content" tabindex="-1">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
@@ -415,6 +415,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p><a href="./reference/scale_size_datetime.html#plotnine.scale_size_datetime"><code>scale_size_datetime</code></a> now honours its <code>date_breaks</code>, <code>date_labels</code> and <code>date_minor_breaks</code> arguments, which it previously ignored.</p></li>
 <li><p>In a non-linear coordinate system (e.g.&nbsp;<a href="./reference/coord_trans.html#plotnine.coord_trans"><code>coord_trans</code></a>), the closing edge of a polygon is now curved along with the rest of its boundary instead of being drawn as a straight chord.</p></li>
 <li><p>Stacked bars in a non-linear coordinate system (e.g. <a href="./reference/coord_trans.html#plotnine.coord_trans"><code>coord_trans</code></a>) no longer show triangular spikes; each rectangle is now drawn as its own polygon instead of merging a bar’s segments into a single path.</p></li>
+<li><p>Under a non-linear coordinate system such as <a href="./reference/coord_trans.html#plotnine.coord_trans"><code>coord_trans</code></a>, a <a href="./reference/geom_polygon.html#plotnine.geom_polygon"><code>geom_polygon</code></a> with several groups no longer draws an edge from one polygon to the next.</p></li>
+<li><p>Under a non-linear coordinate system, separate <a href="./reference/geom_path.html#plotnine.geom_path"><code>geom_path</code></a> groups no longer connect when an aesthetic such as <code>color</code> varies along the path. The fix also applies to <a href="./reference/geom_line.html#plotnine.geom_line"><code>geom_line</code></a>, <a href="./reference/geom_step.html#plotnine.geom_step"><code>geom_step</code></a>, <a href="./reference/geom_density.html#plotnine.geom_density"><code>geom_density</code></a> and the line drawn by <a href="./reference/geom_smooth.html#plotnine.geom_smooth"><code>geom_smooth</code></a>.</p></li>
 <li><p>In a non-linear coordinate system (e.g.&nbsp;<a href="./reference/coord_trans.html#plotnine.coord_trans"><code>coord_trans</code></a>), both edges of a <a href="./reference/geom_ribbon.html#plotnine.geom_ribbon"><code>geom_ribbon</code></a> or <a href="./reference/geom_area.html#plotnine.geom_area"><code>geom_area</code></a> now curve. Previously each edge held the value of the point its segment started from, so the band was drawn as a staircase.</p></li>
 <li><p><a href="./reference/geom_ribbon.html#plotnine.geom_ribbon"><code>geom_ribbon</code></a> and <a href="./reference/geom_area.html#plotnine.geom_area"><code>geom_area</code></a> now draw every outline type correctly in non-linear coordinate systems. The <code>upper</code>, <code>lower</code> and <code>both</code> outlines follow the transformed band edges, and <code>full</code> outlines no longer raise an error.</p></li>
 <li><p><a href="./reference/annotation_logticks.html#plotnine.annotation_logticks"><code>annotation_logticks</code></a> and <a href="./reference/annotation_stripes.html#plotnine.annotation_stripes"><code>annotation_stripes</code></a> now render correctly in non-linear coordinate systems such as <a href="./reference/coord_trans.html#plotnine.coord_trans"><code>coord_trans</code></a>. Previously, log tick positions were transformed twice, which misplaced or removed ticks, and stripes raised an error.</p></li>
