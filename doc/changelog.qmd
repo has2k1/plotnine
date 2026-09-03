@@ -100,6 +100,10 @@ title: Changelog
 - [](:class:`~plotnine.geom_polygon`) can now draw polygons with holes.
   Use the new `subgroup` aesthetic to identify each ring within a polygon.
 
+- Plot components that take a `random_state` now also accept a
+  [](`numpy.random.Generator`), in addition to an integer seed or a
+  [](`~numpy.random.RandomState`).
+
 ### API Changes
 
 - Removed `geom.to_layer()`, `stat.to_layer()`, `annotate.to_layer()`,
@@ -224,6 +228,28 @@ title: Changelog
 - Saving a composition now honours the `dpi` argument. For example,
   `(p1 | p2).save("composition.png", dpi=200)` saves the image at 200 DPI
   instead of the default resolution.
+
+- Plots containing an unseeded [](:class:`~plotnine.geom_sina`) can now be
+  copied, including when the geom has been added to every plot in a
+  composition. Copying previously raised
+  `TypeError: cannot pickle 'module' object`.
+  ({{< issue 1115 >}})
+
+- [](:class:`~plotnine.position_jitter`) and
+  [](:class:`~plotnine.position_jitterdodge`) now make independent random
+  draws for the horizontal and vertical axes when given a seed. Both axes
+  previously received identical offsets, placing points along a diagonal.
+
+- [](:class:`~plotnine.position_jitter`),
+  [](:class:`~plotnine.position_jitterdodge`),
+  [](:class:`~plotnine.stat_summary`), and
+  [](:class:`~plotnine.stat_summary_bin`) now treat `0` as a valid
+  `random_state` seed. They previously selected NumPy's global random state,
+  so results depended on other random draws.
+
+- Broadcasting a layer to every plot in a composition with `&` or `*` now
+  gives each target plot an independent copy. Changes made while drawing one
+  plot no longer affect the layer in another plot.
 
 ### Enhancements
 
