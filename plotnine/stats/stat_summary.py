@@ -135,7 +135,10 @@ def mean_se(series, mult=1):
         Multiplication factor.
     """
     m = np.mean(series)
-    se = mult * np.sqrt(np.var(series) / len(series))
+    # ddof=1: the standard error of the mean is built from the sample
+    # variance. numpy defaults to ddof=0, which is the population
+    # variance and understates the error by a factor of sqrt((n-1)/n).
+    se = mult * np.sqrt(np.var(series, ddof=1) / len(series))
     return pd.DataFrame({"y": [m], "ymin": m - se, "ymax": m + se})
 
 
