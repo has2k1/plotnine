@@ -152,17 +152,6 @@ title: Changelog
 
 ### Bug Fixes
 
-- [](:class:`~plotnine.scale_color_brewer`) and
-  [](:class:`~plotnine.scale_fill_brewer`) now infer the palette type from its
-  name. For example, `scale_color_brewer(palette="Set2")` works without an
-  explicit `type`. Previously, a name from a type other than the default
-  `"seq"` raised an `AttributeError`.
-
-- [](:class:`~plotnine.scale_color_distiller`) and
-  [](:class:`~plotnine.scale_fill_distiller`) now warn when they interpolate a
-  named qualitative palette such as `"Set2"`, matching their behaviour for
-  `type="qual"`.
-
 - [](:class:`~plotnine.scale_size_datetime`) now honours its `range`
   argument. Previously it was ignored and mapping data raised an error.
 
