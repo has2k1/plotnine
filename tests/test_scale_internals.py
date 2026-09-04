@@ -171,6 +171,26 @@ def test_continuous_color_palettes():
     _assert(s)
 
 
+def test_brewer_palette_names_determine_type():
+    sc = scale_color
+
+    # A name determines its type, while an explicit type remains relevant for
+    # numeric palettes.
+    s = sc.scale_color_brewer(palette="Set2")
+    assert all(c.startswith("#") for c in s.palette(3))
+
+    s = sc.scale_color_brewer(type="qual", palette="Blues")
+    assert all(c.startswith("#") for c in s.palette(3))
+
+    with pytest.raises(ValueError):
+        sc.scale_color_brewer(palette="Sett2")
+
+    # Named and explicit qualitative palettes produce the same warning because
+    # both interpolate a qualitative palette.
+    with pytest.warns(PlotnineWarning):
+        sc.scale_color_distiller(palette="Set2")
+
+
 def test_color_aliases():
     # American and British names should refer to the same scales
     names = (

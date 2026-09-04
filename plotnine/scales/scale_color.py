@@ -152,13 +152,15 @@ class scale_color_brewer(_scale_color_discrete):
         ]
     ] = "seq"
     """
-    Type of data
+    Type to use when `palette` is numeric. A named palette determines its
+    own type, so this value is ignored.
     """
 
     palette: InitVar[int | str] = 1
     """
-    If a string, will use that named palette. If a number, will index
-    into the list of palettes of appropriate type.
+    Palette to use. A string names a palette and determines its type. A number
+    selects a palette of the requested type by alphabetical order. An unknown
+    name raises a `ValueError`.
     """
 
     direction: InitVar[Literal[1, -1]] = 1
@@ -428,13 +430,15 @@ class scale_color_distiller(_scale_color_continuous):
         ]
     ] = "seq"
     """
-    Type of data
+    Type to use when `palette` is numeric. A named palette determines its
+    own type, so this value is ignored.
     """
 
     palette: InitVar[int | str] = 1
     """
-    If a string, will use that named palette. If a number, will index
-    into the list of palettes of appropriate type.
+    Palette to use. A string names a palette and determines its type. A number
+    selects a palette of the requested type by alphabetical order. An unknown
+    name raises a `ValueError`.
     """
 
     values: InitVar[Sequence[float] | None] = None
@@ -456,9 +460,11 @@ class scale_color_distiller(_scale_color_continuous):
         """
         from mizani.palettes import brewer_pal, gradient_n_pal
 
-        if type.lower() in ("qual", "qualitative"):
+        # Use the resolved type so the warning matches the selected palette.
+        pal = brewer_pal(type, palette, direction=direction)
+        if pal.type == "qualitative":
             warn(
-                "Using a discrete color palette in a continuous scale."
+                "Using a discrete color palette in a continuous scale. "
                 "Consider using type = 'seq' or type = 'div' instead",
                 PlotnineWarning,
             )
@@ -467,7 +473,7 @@ class scale_color_distiller(_scale_color_continuous):
         # An odd number matches the midpoint of the palette to that
         # of the data
         super().__post_init__()
-        colors = brewer_pal(type, palette, direction=direction)(7)
+        colors = pal(7)
         self.palette = gradient_n_pal(colors, values)  # type: ignore
 
 
