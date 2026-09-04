@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Changelog – plotnine 999.post1+ga674efb5b</title>
+<title>Changelog – plotnine 999.post1+g1f5ee9f11</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -81,7 +81,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-3154a52da2b13509d7b4f2c9febd40cf.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-7bbe61d008ee373fce4623d4cd0db0a9.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-4dc9fad167bb48581f1637bf6d811f68.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -121,7 +121,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">plotnine 999.post1+ga674efb5b</span>
+    <span class="navbar-title">plotnine 999.post1+g1f5ee9f11</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -390,6 +390,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>Added <a href="./reference/geom_contour.html#plotnine.geom_contour"><code>geom_contour</code></a> and <a href="./reference/geom_contour_filled.html#plotnine.geom_contour_filled"><code>geom_contour_filled</code></a> to represent a gridded surface with contour lines and filled bands. (<a href="https://github.com/has2k1/plotnine/issues/1084" title="Issue: #1084">#1084</a>)</p></li>
 <li><p>Added <a href="./reference/geom_density_2d_filled.html#plotnine.geom_density_2d_filled"><code>geom_density_2d_filled</code></a>, the filled counterpart of <a href="./reference/geom_density_2d.html#plotnine.geom_density_2d"><code>geom_density_2d</code></a>.</p></li>
 <li><p><a href="./reference/geom_polygon.html#plotnine.geom_polygon"><code>geom_polygon</code></a> can now draw polygons with holes. Use the new <code>subgroup</code> aesthetic to identify each ring within a polygon.</p></li>
+<li><p>Plot components that take a <code>random_state</code> now also accept a <a href="https://numpy.org/doc/stable/reference/random/generator.html#numpy.random.Generator"><code>numpy.random.Generator</code></a>, in addition to an integer seed or a <a href="https://numpy.org/doc/stable/reference/random/legacy.html#numpy.random.RandomState"><code>RandomState</code></a>.</p></li>
 </ul>
 </section>
 <section id="api-changes" class="level3">
@@ -433,6 +434,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>Fixed <code>geom_legend</code> to show an empty key for <a href="./reference/geom_point.html#plotnine.geom_point"><code>geom_point</code></a> when the shape is mapped to variable with missing values.</p></li>
 <li><p>Specific theme elements now override blank general elements. For example, adding <code>theme(axis_text_x_bottom=element_text(size=14))</code> to <a href="./reference/theme_void.html#plotnine.theme_void"><code>theme_void</code></a> displays the bottom x-axis tick labels and reserves space for them. Previously, the blank <code>axis_text_x</code> element prevented layout from reserving their space, so the labels could render outside the figure.</p></li>
 <li><p>Saving a composition now honours the <code>dpi</code> argument. For example, <code>(p1 | p2).save("composition.png", dpi=200)</code> saves the image at 200 DPI instead of the default resolution.</p></li>
+<li><p>Plots containing an unseeded <a href="./reference/geom_sina.html#plotnine.geom_sina"><code>geom_sina</code></a> can now be copied, including when the geom has been added to every plot in a composition. Copying previously raised <code>TypeError: cannot pickle 'module' object</code>. (<a href="https://github.com/has2k1/plotnine/issues/1115" title="Issue: #1115">#1115</a>)</p></li>
+<li><p><a href="./reference/position_jitter.html#plotnine.position_jitter"><code>position_jitter</code></a> and <a href="./reference/position_jitterdodge.html#plotnine.position_jitterdodge"><code>position_jitterdodge</code></a> now make independent random draws for the horizontal and vertical axes when given a seed. Both axes previously received identical offsets, placing points along a diagonal.</p></li>
+<li><p><a href="./reference/position_jitter.html#plotnine.position_jitter"><code>position_jitter</code></a>, <a href="./reference/position_jitterdodge.html#plotnine.position_jitterdodge"><code>position_jitterdodge</code></a>, <a href="./reference/stat_summary.html#plotnine.stat_summary"><code>stat_summary</code></a>, and <a href="./reference/stat_summary_bin.html#plotnine.stat_summary_bin"><code>stat_summary_bin</code></a> now treat <code>0</code> as a valid <code>random_state</code> seed. They previously selected NumPy’s global random state, so results depended on other random draws.</p></li>
+<li><p>Broadcasting a layer to every plot in a composition with <code>&amp;</code> or <code>*</code> now gives each target plot an independent copy. Changes made while drawing one plot no longer affect the layer in another plot.</p></li>
 </ul>
 </section>
 <section id="enhancements" class="level3">
