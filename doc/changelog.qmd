@@ -152,6 +152,12 @@ title: Changelog
 
 ### Bug Fixes
 
+- The `mean_se` summary function used by
+  [](:class:`~plotnine.stat_summary`) and
+  [](:class:`~plotnine.stat_summary_bin`) now computes the standard error
+  from the sample variance. It previously used the population variance,
+  which understated the interval by a factor of `sqrt((n-1)/n)`.
+
 - [](:class:`~plotnine.scale_size_datetime`) now honours its `range`
   argument. Previously it was ignored and mapping data raised an error.
 
