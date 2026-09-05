@@ -6,6 +6,7 @@ import numpy as np
 
 from .._utils import SIZE_FACTOR, to_rgba
 from ..doctools import document
+from ..exceptions import PlotnineError
 from .geom import geom
 from .geom_path import geom_path
 
@@ -21,6 +22,74 @@ if typing.TYPE_CHECKING:
     from plotnine.coords.coord import coord
     from plotnine.iapi import panel_view
     from plotnine.layer import layer
+
+
+# key side (pt) at which a one-character pattern reads as a pattern on its own
+HATCH_KEY_SIZE = 32
+_VALID_HATCH = set(r"-+|/\xXoO.*")
+
+
+def _add_hatch_overlays(ax, polygons, hatch, color, alpha, params, cls):
+    """
+    Draw hatch strokes over polygons that another collection already filled
+
+    A matplotlib `Collection` takes one hatch pattern for all of its paths, so
+    each distinct pattern needs a collection of its own. These carry no fill
+    and no border: the caller's collection drew both, and drawing the border
+    again would double its stroke and lose its linetype.
+    """
+    import matplotlib as mpl
+    import pandas as pd
+
+    # A fresh Series indexes by position, so the groups below can index into
+    # `polygons`; object dtype keeps categorical hatch column from rejecting ""
+    hatch = pd.Series(list(hatch), dtype=object).fillna("")
+    if not hatch.ne("").any():
+        return
+
+    # A non-string reaches set_hatch intact and fails in the renderer, and an
+    # unhashable one fails in the groupby below, so check before either.
+    bad = next((h for h in hatch if not isinstance(h, str)), None)
+    if bad is not None:
+        raise PlotnineError(
+            f"Cannot interpret hatch pattern {bad!r}. Hatch must be a string "
+            "(e.g. '/', '//', 'xx', '.o'). If you mapped a variable to "
+            "hatch, ensure it is a string column."
+        )
+
+    # matplotlib takes the hatch colour from the edge, and plotnine's default
+    # `color` is None -- which would leave the strokes invisible. Fall back to
+    # the colour the legend key ends up using.
+    colors = to_rgba(
+        pd.Series(list(color), dtype=object).fillna(
+            mpl.rcParams["patch.edgecolor"]
+        ),
+        list(alpha),
+    )
+
+    for pattern, idx in hatch.groupby(hatch).groups.items():
+        if not pattern:
+            continue
+        # matplotlib will allow some characters to fail silently (eg.: by
+        # drawing an empty bar), so we raise here.
+        invalid = set(pattern) - _VALID_HATCH
+        if invalid:
+            raise PlotnineError(
+                f"Cannot interpret hatch pattern {pattern!r}: "
+                f"{''.join(sorted(invalid))!r} is not a hatch character. "
+                r"Valid characters are '-+|/\xXoO.*'."
+            )
+        idx = list(idx)
+        overlay = cls(
+            [polygons[i] for i in idx],
+            facecolors="none",
+            edgecolors=[colors[i] for i in idx],
+            linewidths=0,
+            zorder=params["zorder"],
+            rasterized=params["raster"],
+        )
+        overlay.set_hatch(pattern)
+        ax.add_collection(overlay)
 
 
 @document
@@ -112,6 +181,8 @@ class geom_polygon(geom):
         edgecolor = []
         linestyle = []
         linewidth = []
+        hatch = []
+        alpha = []
 
         # Some stats may order the data in ways that prevent
         # objects from occluding other objects. We do not want
@@ -135,6 +206,8 @@ class geom_polygon(geom):
             edgecolor.append(df["color"].iloc[0] or "none")
             linestyle.append(df["linetype"].iloc[0])
             linewidth.append(df["linewidth"].iloc[0])
+            hatch.append(df["hatch"].iloc[0] if "hatch" in df else None)
+            alpha.append(df["alpha"].iloc[0])
 
         cls = PathCollection if has_subgroups else PolyCollection
         col = cls(
@@ -148,6 +221,15 @@ class geom_polygon(geom):
         )
 
         ax.add_collection(col)
+        _add_hatch_overlays(
+            ax,
+            polygons,
+            hatch,
+            [e if e != "none" else None for e in edgecolor],
+            alpha,
+            params,
+            cls,
+        )
 
     @staticmethod
     def draw_legend(
@@ -183,6 +265,18 @@ class geom_polygon(geom):
         if facecolor is None:
             facecolor = "none"
 
+        # matplotlib tiles the hatch at a fixed physical size, so a key already
+        # shows more strokes the bigger it is. Repeat the pattern only while
+        # the key is too small to show it; a key of HATCH_KEY_SIZE or more
+        # shows the pattern at the same density as the panel.
+        hatch = data.get("hatch")
+        if isinstance(hatch, str) and hatch:
+            size = max(min(da.width, da.height), 1)
+            reps = max(1, round(HATCH_KEY_SIZE / size))
+            hatch = "".join(c * reps for c in hatch)
+        else:
+            hatch = None
+
         rect = Rectangle(
             (0 + linewidth / 2, 0 + linewidth / 2),
             width=da.width - linewidth,
@@ -191,6 +285,7 @@ class geom_polygon(geom):
             linestyle=data["linetype"],
             facecolor=facecolor,
             edgecolor=data["color"],
+            hatch=hatch,
             capstyle="projecting",
         )
         da.add_artist(rect)

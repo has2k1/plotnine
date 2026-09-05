@@ -135,7 +135,7 @@ quartodoc:
         yield varied results, so a `stat` must be paired with a `geom` that
         can represent all or some of the computations.
 
-    - package:  plotnine.stats.stat
+    - package: plotnine.stats.stat
       contents:
         - stat
 
@@ -255,10 +255,17 @@ quartodoc:
         - scale_color_identity
         - scale_colour_identity
         - scale_fill_identity
+        - scale_hatch_identity
         - scale_linetype_identity
         - scale_shape_identity
         - scale_size_identity
         - scale_stroke_identity
+
+    - subtitle: Hatch Scales
+      options: *no-members
+      contents:
+        - scale_hatch
+        - scale_hatch_discrete
 
     - subtitle: Linetype Scales
       options: *no-members
@@ -273,6 +280,7 @@ quartodoc:
         - scale_color_manual
         - scale_colour_manual
         - scale_fill_manual
+        - scale_hatch_manual
         - scale_linetype_manual
         - scale_shape_manual
         - scale_size_manual
@@ -368,7 +376,6 @@ quartodoc:
         - position_jitterdodge
         - position_nudge
         - position_stack
-
 
     - title: Themes
       desc: |
@@ -652,11 +659,11 @@ quartodoc:
         Functions that you may occasioanally find helpful
       package: plotnine.helpers
       contents:
-          - get_aesthetic_limits
+        - get_aesthetic_limits
 
     - package: plotnine.session
       contents:
-          - last_plot
+        - last_plot
 
     - title: Datasets
       desc: |
