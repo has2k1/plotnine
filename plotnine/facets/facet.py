@@ -12,6 +12,7 @@ import pandas.api.types as pdtypes
 from .._mpl.axes import p9Axes
 from .._utils import cross_join, match
 from ..exceptions import PlotnineError
+from ..mapping._asis import asis_columns
 from ..scales.scales import Scales
 from .strips import Strips
 
@@ -274,10 +275,12 @@ class facet:
         # loop over each layer, training x and y scales in turn
         for layer in layers:
             data = layer.data
+            asis = asis_columns(data)
             match_id = match(data["PANEL"], _layout["PANEL"])
             if panel_scales_x:
                 x_vars = list(
-                    set(panel_scales_x[0].aesthetics) & set(data.columns)
+                    (set(panel_scales_x[0].aesthetics) & set(data.columns))
+                    - asis
                 )
                 # the scale index for each data point
                 SCALE_X = _layout["SCALE_X"].iloc[match_id].tolist()
@@ -285,7 +288,8 @@ class facet:
 
             if panel_scales_y:
                 y_vars = list(
-                    set(panel_scales_y[0].aesthetics) & set(data.columns)
+                    (set(panel_scales_y[0].aesthetics) & set(data.columns))
+                    - asis
                 )
                 # the scale index for each data point
                 SCALE_Y = _layout["SCALE_Y"].iloc[match_id].tolist()
