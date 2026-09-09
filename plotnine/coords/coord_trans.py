@@ -4,13 +4,15 @@ from types import SimpleNamespace as NS
 from typing import TYPE_CHECKING, cast
 from warnings import warn
 
+import numpy as np
+
 from ..exceptions import PlotnineWarning
 from ..iapi import panel_ranges, panel_view
 from ..positions.position import transform_position
 from .coord import coord, dist_euclidean
 
 if TYPE_CHECKING:
-    from typing import Optional
+    from typing import Literal, Optional
 
     import pandas as pd
     from mizani.transforms import trans
@@ -19,6 +21,7 @@ if TYPE_CHECKING:
     from plotnine.scales.scale_xy import ScaleX, ScaleY
     from plotnine.typing import (
         FloatArray,
+        FloatArrayLike,
         FloatSeries,
         TFloatArrayLike,
     )
@@ -97,6 +100,35 @@ class coord_trans(coord):
             x=self.trans_x.inverse(panel_params.x.range),
             y=self.trans_y.inverse(panel_params.y.range),
         )
+
+    def panel_fraction_to_data(
+        self,
+        fractions: FloatArrayLike,
+        panel_params: panel_view,
+        dimension: Literal["x", "y"],
+    ) -> FloatArray:
+        """
+        Convert panel fractions to data coordinates
+
+        Measure the fraction in transformed drawing space, then invert it
+        before storing it in the data column that this coordinate system
+        transforms again during drawing.
+
+        Parameters
+        ----------
+        fractions :
+            Fractions where 0 and 1 mark the panel edges along
+            `dimension`. Values outside that range fall outside the
+            panel.
+        panel_params :
+            Panel ranges and breaks.
+        dimension :
+            Data dimension represented by the fractions.
+        """
+        trans = self.trans_x if dimension == "x" else self.trans_y
+        lo, hi = getattr(panel_params, dimension).range
+        value = lo + np.asarray(fractions, dtype=float) * (hi - lo)
+        return trans.inverse(value)
 
     def setup_panel_params(self, scale_x, scale_y) -> panel_view:
         """
