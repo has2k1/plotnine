@@ -37,6 +37,7 @@ quartodoc:
         - after_stat
         - after_scale
         - stage
+        - I
 
     - subtitle: Functions in the Aesthetic Evaluation Environment
       desc: |

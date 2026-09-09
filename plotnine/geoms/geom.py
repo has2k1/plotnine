@@ -235,20 +235,20 @@ class geom(ABC, metaclass=Register):
         for ae in evaled.columns.intersection(data.columns):
             data[ae] = evaled[ae]
 
+        n = len(data)
         num_panels = len(data["PANEL"].unique()) if "PANEL" in data else 1
         across_panels = num_panels > 1 and not self.params["inherit_aes"]
 
         # Aesthetics set as parameters in the geom/stat
         for ae, value in self.aes_params.items():
-            if is_asis(value):
-                # Preserve the dtype tag when repeating a literal parameter
-                # so position fractions remain available for later resolution.
-                n = len(data)
-                data[ae] = np.repeat(value, n) if len(value) == 1 else value
-            elif isinstance(value, (str, int, float, np.integer, np.floating)):
+            if isinstance(value, (str, int, float, np.integer, np.floating)):
                 data[ae] = value
             elif isinstance(value, ae_value):
                 data[ae] = value * len(data)
+            elif is_asis(value):
+                # Preserve the dtype tag when repeating a literal parameter
+                # so position fractions remain available for later resolution.
+                data[ae] = np.repeat(value, n) if len(value) == 1 else value
             elif across_panels:
                 value = list(chain(*repeat(value, num_panels)))
                 data[ae] = value

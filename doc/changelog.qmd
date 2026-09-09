@@ -104,6 +104,16 @@ title: Changelog
   [](`numpy.random.Generator`), in addition to an integer seed or a
   [](`~numpy.random.RandomState`).
 
+- Added [](:func:`~plotnine.I`), with which you can mark a value as literal.
+  A literal value takes no scale, so it is not trained, not mapped, and gets
+  no legend. One layer can draw literal colours while another maps the same
+  aesthetic through a scale. ({{< issue 1008 >}})
+
+- You can now place an annotation relative to the panel by wrapping a position
+  in [](:func:`~plotnine.I`). `x=I(0.5)` is the centre of the panel and
+  `x=I(0.9)` is 90% across, whatever the data, the limits or the expansion.
+  ({{< issue 939 >}})
+
 ### API Changes
 
 - Removed `geom.to_layer()`, `stat.to_layer()`, `annotate.to_layer()`,
