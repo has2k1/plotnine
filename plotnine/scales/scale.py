@@ -9,6 +9,7 @@ import numpy as np
 
 from .._utils.registry import Register
 from ..exceptions import PlotnineError
+from ..mapping._asis import is_asis
 from ..mapping.aes import is_position_aes, rename_aesthetics
 from ._runtime_typing import (
     BreaksUserT,
@@ -279,7 +280,11 @@ class scale(
         """
         Train scale from a dataframe
         """
-        aesthetics = sorted(set(self.aesthetics) & set(df.columns))
+        aesthetics = sorted(
+            ae
+            for ae in set(self.aesthetics) & set(df.columns)
+            if not is_asis(df[ae])
+        )
         for ae in aesthetics:
             self.train(df[ae])
 
@@ -290,7 +295,11 @@ class scale(
         if len(df) == 0:
             return df
 
-        aesthetics = set(self.aesthetics) & set(df.columns)
+        aesthetics = {
+            ae
+            for ae in set(self.aesthetics) & set(df.columns)
+            if not is_asis(df[ae])
+        }
         for ae in aesthetics:
             df[ae] = self.map(df[ae])
 

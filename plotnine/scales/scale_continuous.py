@@ -13,6 +13,7 @@ from mizani.palettes import identity_pal
 from .._utils import match
 from ..exceptions import PlotnineError, PlotnineWarning
 from ..iapi import range_view, scale_view
+from ..mapping._asis import is_asis
 from ._expand import expand_range
 from ._runtime_typing import (
     ContinuousBreaksUser,
@@ -216,7 +217,11 @@ class scale_continuous(
         if len(df) == 0:
             return df
 
-        aesthetics = set(self.aesthetics) & set(df.columns)
+        aesthetics = {
+            ae
+            for ae in set(self.aesthetics) & set(df.columns)
+            if not is_asis(df[ae])
+        }
         for ae in aesthetics:
             with suppress(TypeError):
                 df[ae] = self.transform(df[ae])
@@ -236,7 +241,11 @@ class scale_continuous(
         if len(df) == 0:
             return df
 
-        aesthetics = set(self.aesthetics) & set(df.columns)
+        aesthetics = {
+            ae
+            for ae in set(self.aesthetics) & set(df.columns)
+            if not is_asis(df[ae])
+        }
         for ae in aesthetics:
             with suppress(TypeError):
                 df[ae] = self.inverse(df[ae])

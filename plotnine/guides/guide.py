@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING, cast
 
 from .._utils import MARGIN_SIDE, ensure_xy_location
 from .._utils.registry import Register
+from ..mapping._asis import asis_columns
 from ..themes.theme import theme as Theme
 
 if TYPE_CHECKING:
@@ -109,7 +110,7 @@ class guide(ABC, metaclass=Register):
         )
         geom_ae = l.geom.REQUIRED_AES | l.geom.DEFAULT_AES.keys()
         matched = all_ae & geom_ae & legend_ae
-        matched = list(matched - set(l.geom.aes_params))
+        matched = list(matched - set(l.geom.aes_params) - asis_columns(l.data))
         return matched
 
     def _bind_source(self, plot: ggplot):

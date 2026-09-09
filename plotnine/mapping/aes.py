@@ -13,6 +13,7 @@ import pandas as pd
 from mizani._colors.utils import is_color_tuple
 
 from ..iapi import labels_view
+from ._asis import is_asis, is_literal_expression
 from .evaluation import after_stat, stage
 
 if TYPE_CHECKING:
@@ -181,11 +182,12 @@ class aes(Dict[str, Any]):
       ggplot(df, aes(x="df.index", y="np.sin(gam ma)"))
       ```
 
-    `aes` has 2 internal functions that you can use in your expressions
+    `aes` has 3 internal functions that you can use in your expressions
     when transforming the variables.
 
       1. [](:func:`~plotnine.mapping._eval_environment.factor`)
       1. [](:func:`~plotnine.mapping._eval_environment.reorder`)
+      1. [](:func:`~plotnine.I`)
 
     **The group aesthetic**
 
@@ -518,7 +520,9 @@ def make_labels(mapping: dict[str, Any] | aes) -> labels_view:
     """
 
     def _nice_label(value: Any) -> str | None:
-        if isinstance(value, str):
+        if is_asis(value) or is_literal_expression(value):
+            return None
+        elif isinstance(value, str):
             return value
         elif isinstance(value, pd.Series):
             return value.name  # pyright: ignore

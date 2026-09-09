@@ -3,9 +3,11 @@ import warnings
 import pandas as pd
 
 from plotnine import (
+    I,
     aes,
     after_scale,
     geom_bar,
+    geom_line,
     geom_point,
     ggplot,
     stage,
@@ -60,3 +62,24 @@ def test_guide_legend_missing_value_for_shapes():
     data = pd.DataFrame({"a": [1, 2, 3], "b": ["a", None, "z"]})
     p = ggplot(data, aes("a", "b")) + geom_point(aes(shape="b"), na_rm=True)
     assert p == "guide_legend_missing_value_for_shapes"
+
+
+def test_literal_layer_does_not_join_another_layer_guide():
+    # A layer with a literal colour has no scale of its own. Its glyph
+    # must not join a guide trained from another layer's colour mapping.
+    colours = ["red", "green", "blue", "red"]
+    data = pd.DataFrame(
+        {"x": [1, 2, 3, 4], "y": [1, 4, 9, 16], "c": ["a", "b", "a", "b"]}
+    )
+    p = (
+        ggplot(data, aes("x", "y"))
+        + geom_point(aes(colour=I(colours)))
+        + geom_line(aes(colour="c"))
+    )
+    p.draw_test()
+
+    ((_, g),) = p.guides._lookup.values()
+    contributing = [
+        lp.layer.geom.__class__.__name__ for lp in g._layer_parameters
+    ]
+    assert contributing == ["geom_line"]

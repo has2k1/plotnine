@@ -8,6 +8,7 @@ import pandas as pd
 import pandas.api.types as pdtypes
 
 from ..exceptions import PlotnineError
+from ._asis import I
 from ._eval_environment import factor, reorder
 
 if TYPE_CHECKING:
@@ -20,7 +21,7 @@ if TYPE_CHECKING:
 __all__ = ("after_stat", "after_scale", "stage")
 
 
-EVAL_ENVIRONMENT = {"factor": factor, "reorder": reorder}
+EVAL_ENVIRONMENT = {"factor": factor, "reorder": reorder, "I": I}
 
 _TPL_EVAL_FAIL = """\
 Could not evaluate the '{}' mapping: '{}' \

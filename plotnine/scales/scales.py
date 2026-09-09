@@ -12,6 +12,7 @@ import pandas.api.types as pdtypes
 from .._utils import array_kind
 from .._utils.registry import Registry
 from ..exceptions import PlotnineError, PlotnineWarning
+from ..mapping._asis import is_asis
 from ..mapping.aes import aes_to_scale
 from .scale import scale
 
@@ -286,6 +287,8 @@ class Scales(List[scale]):
             col = aesthetics[ae]
             if col not in data:
                 col = ae
+            if col in data and is_asis(data[col]):
+                continue
             scale_var = aes_to_scale(ae)
 
             if self.get_scales(scale_var):

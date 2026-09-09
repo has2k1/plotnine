@@ -105,6 +105,7 @@ from .labels import (
     ylab,
 )
 from .mapping import (
+    I,
     aes,
     after_scale,
     after_stat,
@@ -287,6 +288,7 @@ from .watermark import (
 )
 
 __all__ = (
+    "I",
     "aes",
     "after_scale",
     "after_stat",
