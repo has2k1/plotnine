@@ -10,11 +10,19 @@ import pandas as pd
 from ._utils import array_kind, check_required_aesthetics, ninteraction
 from ._utils.registry import Registry
 from .exceptions import PlotnineError
-from .mapping.aes import NO_GROUP, aes, make_labels
+from .mapping._asis import asis_columns
+from .mapping.aes import (
+    NO_GROUP,
+    POSITION_AESTHETICS,
+    X_AESTHETICS,
+    Y_AESTHETICS,
+    aes,
+    make_labels,
+)
 from .mapping.evaluation import evaluate, stage
 
 if typing.TYPE_CHECKING:
-    from typing import Any, Sequence, SupportsIndex
+    from typing import Any, Literal, Sequence, SupportsIndex
 
     from plotnine import ggplot
     from plotnine.coords.coord import coord
@@ -408,6 +416,43 @@ class layer:
         data = self.position.compute_layer(data, params, layout)
         self.data = data
 
+    def resolve_asis_positions(self, layout: Layout, coord: coord):
+        """
+        Convert panel fractions in position aesthetics to data coordinates
+
+        Parameters
+        ----------
+        layout :
+            Layout containing each panel's trained ranges.
+        coord :
+            Coordinate system that converts panel ranges to the
+            unflipped, untransformed data coordinates in the columns.
+        """
+        data = self.data
+        if not len(data):
+            return
+
+        columns = asis_columns(data) & POSITION_AESTHETICS
+        if not columns:
+            return
+
+        # Convert integer fractions to float before replacing them with
+        # resolved coordinates; an integer column cannot hold those floats.
+        for col in columns:
+            data[col] = data[col].astype(float)
+
+        by_dimension: tuple[tuple[set[str], Literal["x", "y"]], ...] = (
+            (columns & X_AESTHETICS, "x"),
+            (columns & Y_AESTHETICS, "y"),
+        )
+        for pid, idx in data.groupby("PANEL", observed=True).groups.items():
+            panel_params = layout.panel_params[cast("int", pid) - 1]
+            for cols, dimension in by_dimension:
+                for col in cols:
+                    data.loc[idx, col] = coord.panel_fraction_to_data(
+                        data.loc[idx, col], panel_params, dimension
+                    )
+
     def draw(self, layout: Layout, coord: coord):
         """
         Draw geom
@@ -549,6 +594,20 @@ class Layers(List[layer]):
     def compute_position(self, layout: Layout):
         for l in self:
             l.compute_position(layout)
+
+    def resolve_asis_positions(self, layout: Layout, coord: coord):
+        """
+        Convert panel fractions in position aesthetics to data coordinates
+
+        Parameters
+        ----------
+        layout :
+            Layout containing each panel's trained ranges.
+        coord :
+            Coordinate system used by each layer.
+        """
+        for l in self:
+            l.resolve_asis_positions(layout, coord)
 
     def use_defaults_after_scale(self, scales: Scales):
         for l in self:

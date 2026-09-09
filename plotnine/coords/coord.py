@@ -11,7 +11,7 @@ from ..iapi import panel_ranges
 from ..mapping.aes import POSITION_AESTHETICS
 
 if typing.TYPE_CHECKING:
-    from typing import Any, Sequence
+    from typing import Any, Literal, Sequence
 
     import numpy.typing as npt
     import pandas as pd
@@ -397,6 +397,28 @@ class coord:
         this method. e.g. coord_trans has to override this method.
         """
         return self.range(panel_params)
+
+    def panel_fraction_to_data(
+        self,
+        fractions: FloatArrayLike,
+        panel_params: panel_view,
+        dimension: Literal["x", "y"],
+    ) -> FloatArray:
+        """
+        Convert panel fractions to data coordinates
+
+        Parameters
+        ----------
+        fractions :
+            Fractions where 0 and 1 mark the panel edges along
+            `dimension`. Values outside that range fall outside the panel.
+        panel_params :
+            Panel ranges and breaks.
+        dimension :
+            Data dimension represented by the fractions.
+        """
+        lo, hi = getattr(self.backtransform_range(panel_params), dimension)
+        return lo + np.asarray(fractions, dtype=float) * (hi - lo)
 
     def distance(
         self,

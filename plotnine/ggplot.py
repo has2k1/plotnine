@@ -507,6 +507,9 @@ class ggplot:
         # fill in the defaults
         layers.use_defaults_after_scale(scales)
 
+        # Resolve panel fractions after the ranges for every panel are known.
+        layers.resolve_asis_positions(layout, self.coordinates)
+
         # Allow stats to modify the layer data
         layers.finish_statistics()
 

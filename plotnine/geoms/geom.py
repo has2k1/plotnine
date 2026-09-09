@@ -217,6 +217,7 @@ class geom(ABC, metaclass=Register):
         :
             Data used for drawing the geom.
         """
+        from plotnine.mapping._asis import is_asis
         from plotnine.mapping._atomic import ae_value, broadcast_ae_value
 
         missing_aes = (
@@ -239,7 +240,12 @@ class geom(ABC, metaclass=Register):
 
         # Aesthetics set as parameters in the geom/stat
         for ae, value in self.aes_params.items():
-            if isinstance(value, (str, int, float, np.integer, np.floating)):
+            if is_asis(value):
+                # Preserve the dtype tag when repeating a literal parameter
+                # so position fractions remain available for later resolution.
+                n = len(data)
+                data[ae] = np.repeat(value, n) if len(value) == 1 else value
+            elif isinstance(value, (str, int, float, np.integer, np.floating)):
                 data[ae] = value
             elif isinstance(value, ae_value):
                 data[ae] = value * len(data)
