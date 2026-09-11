@@ -213,7 +213,7 @@ def uniform_offset(
     if random_state is None:
         random_state = np.random
     return (
-        random_state.uniform(-1, 1, len(data)) * maxwidth * data[width_col] / 2
+        data[width_col] * random_state.uniform(-1, 1, len(data)) * maxwidth / 2
     )
 
 
