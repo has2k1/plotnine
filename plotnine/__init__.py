@@ -42,6 +42,7 @@ from .geoms import (
     geom_abline,
     geom_area,
     geom_bar,
+    geom_beeswarm,
     geom_bin2d,
     geom_bin_2d,
     geom_blank,
@@ -229,6 +230,7 @@ from .scales import (
     ylim,
 )
 from .stats import (
+    stat_beeswarm,
     stat_bin,
     stat_bin2d,
     stat_bin_2d,
@@ -316,6 +318,7 @@ __all__ = (
     "geom_abline",
     "geom_area",
     "geom_bar",
+    "geom_beeswarm",
     "geom_bin2d",
     "geom_bin_2d",
     "geom_blank",
@@ -481,6 +484,7 @@ __all__ = (
     "scale_y_timedelta",
     "sec_axis",
     "stage",
+    "stat_beeswarm",
     "stat_bin",
     "stat_bin2d",
     "stat_bin_2d",
