@@ -6,9 +6,9 @@ from ._swarm import (
     check_x_is_discrete,
     estimate_group_density,
     finish_swarm_layer,
+    quasirandom_offset,
     setup_swarm_params,
     swarm_widths,
-    van_der_corput_offset,
 )
 from .stat import stat
 
@@ -124,8 +124,8 @@ class stat_beeswarm(stat):
         swarm_widths(data, params["scale"], "width_fraction")
         data["xmin"] = data["x"] - maxwidth / 2
         data["xmax"] = data["x"] + maxwidth / 2
-        data["x_diff"] = van_der_corput_offset(
-            data, maxwidth, "width_fraction"
+        data["x_diff"] = quasirandom_offset(
+            data, maxwidth, "width_fraction", params
         )
         data["width"] = maxwidth
 

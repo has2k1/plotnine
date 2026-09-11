@@ -32,8 +32,8 @@ __all__ = (
     "setup_swarm_params",
     "estimate_group_density",
     "swarm_widths",
-    "uniform_offset",
-    "van_der_corput_offset",
+    "pseudorandom_offset",
+    "quasirandom_offset",
     "finish_swarm_layer",
 )
 
@@ -197,11 +197,11 @@ def swarm_widths(data: pd.DataFrame, scale: str, width_col: str):
         data.loc[is_infinite, width_col] = 0
 
 
-def uniform_offset(
+def pseudorandom_offset(
     data: pd.DataFrame, maxwidth: float, width_col: str, params
 ) -> pd.Series:
     """
-    Draw each `stat_sina` row's `x` offset from uniform noise
+    Draw each row's `x` offset from uniform noise
 
     Parameters
     ----------
@@ -217,13 +217,17 @@ def uniform_offset(
     )
 
 
-def van_der_corput_offset(data: pd.DataFrame, maxwidth: float, width_col: str):
+def quasirandom_offset(
+    data: pd.DataFrame, maxwidth: float, width_col: str, params
+) -> pd.Series:
     """
-    Derive each `stat_beeswarm` row's `x` offset from its rank
+    Derive each row's `x` offset from its rank
 
     Rank each group's points by `y`, then assign the corresponding
     `van_der_corput` values. Points close in `y` therefore remain close
-    in `x`, unlike `stat_sina`'s independent random offsets.
+    in `x`, unlike `pseudorandom_offset`'s independent random offsets.
+    The shared offset signature requires `params`, but this calculation
+    does not use it.
     """
     x_diff = pd.Series(0.0, index=data.index)
     for _, grp in data.groupby("group", sort=False):

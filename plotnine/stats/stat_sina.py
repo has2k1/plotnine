@@ -6,9 +6,9 @@ from ._swarm import (
     check_x_is_discrete,
     estimate_group_density,
     finish_swarm_layer,
+    pseudorandom_offset,
     setup_swarm_params,
     swarm_widths,
-    uniform_offset,
 )
 from .stat import stat
 
@@ -124,7 +124,7 @@ class stat_sina(stat):
         swarm_widths(data, params["scale"], "width_fraction")
         data["xmin"] = data["x"] - maxwidth / 2
         data["xmax"] = data["x"] + maxwidth / 2
-        data["x_diff"] = uniform_offset(
+        data["x_diff"] = pseudorandom_offset(
             data, maxwidth, "width_fraction", params
         )
         data["width"] = maxwidth
