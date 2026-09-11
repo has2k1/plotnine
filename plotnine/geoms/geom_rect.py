@@ -8,7 +8,7 @@ import pandas as pd
 from .._utils import SIZE_FACTOR, to_rgba
 from ..doctools import document
 from .geom import geom
-from .geom_polygon import geom_polygon
+from .geom_polygon import _add_hatch_overlays, geom_polygon
 
 if typing.TYPE_CHECKING:
     from typing import Any
@@ -31,9 +31,29 @@ class geom_rect(geom):
     {common_parameters}
     """
 
+    _aesthetics_doc = r"""
+    {aesthetics_table}
+
+    **Aesthetics Descriptions**
+
+    `hatch`
+
+    :   A pattern of strokes drawn over the fill, built from the characters
+        `-`, `+`, `|`, `/`, `\`, `x`, `X`, `o`, `O`, `.` and `*`. Repeating
+        a character makes that pattern denser, and characters can be
+        combined, e.g. `'//'`, `'xx'`, `'.o'`. The strokes take the colour of
+        the `color` aesthetic, matplotlib's convention for a hatch, and are
+        black when `color` is not set.
+
+        A legend key is much smaller than the shapes it stands for, so the
+        pattern is repeated in the key until it reads at that size. Expect a
+        key to look denser than the shapes when the key is small.
+    """
+
     DEFAULT_AES = {
         "color": None,
         "fill": "#595959",
+        "hatch": None,
         "linetype": "solid",
         "size": 0.5,
         "alpha": 1,
@@ -122,6 +142,17 @@ def fill_rects(
         rasterized=params["raster"],
     )
     ax.add_collection(col)
+
+    if "hatch" in data:
+        _add_hatch_overlays(
+            ax,
+            verts,
+            data["hatch"],
+            data["color"],
+            data["alpha"],
+            params,
+            PolyCollection,
+        )
 
 
 def _rectangles_to_polygons(df: pd.DataFrame) -> pd.DataFrame:

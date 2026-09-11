@@ -65,12 +65,19 @@ from .scale_color import (
     scale_fill_ordinal,
 )
 
+# hatch
+from .scale_hatch import (
+    scale_hatch,
+    scale_hatch_discrete,
+)
+
 # identity
 from .scale_identity import (
     scale_alpha_identity,
     scale_color_identity,
     scale_colour_identity,
     scale_fill_identity,
+    scale_hatch_identity,
     scale_linetype_identity,
     scale_shape_identity,
     scale_size_identity,
@@ -89,6 +96,7 @@ from .scale_manual import (
     scale_color_manual,
     scale_colour_manual,
     scale_fill_manual,
+    scale_hatch_manual,
     scale_linetype_manual,
     scale_shape_manual,
     scale_size_manual,
@@ -199,6 +207,9 @@ __all__ = (
     # linetype
     "scale_linetype",
     "scale_linetype_discrete",
+    # hatch
+    "scale_hatch",
+    "scale_hatch_discrete",
     # shape
     "scale_shape",
     "scale_shape_discrete",
@@ -219,6 +230,7 @@ __all__ = (
     "scale_colour_identity",
     "scale_fill_identity",
     "scale_linetype_identity",
+    "scale_hatch_identity",
     "scale_shape_identity",
     "scale_size_identity",
     "scale_stroke_identity",
@@ -226,6 +238,7 @@ __all__ = (
     "scale_color_manual",
     "scale_colour_manual",
     "scale_fill_manual",
+    "scale_hatch_manual",
     "scale_shape_manual",
     "scale_linetype_manual",
     "scale_alpha_manual",

@@ -98,6 +98,7 @@ class labels_view:
     color: Optional[str] = None
     colour: Optional[str] = None
     fill: Optional[str] = None
+    hatch: Optional[str] = None
     linetype: Optional[str] = None
     shape: Optional[str] = None
     size: Optional[str] = None
