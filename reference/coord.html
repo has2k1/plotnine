@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.11.3">
+<meta name="generator" content="quarto-1.11.4">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -78,7 +78,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-3154a52da2b13509d7b4f2c9febd40cf.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-03d3dfde56ecdf7ec35882f3b46e7ba8.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../site_libs/bootstrap/bootstrap-4dc9fad167bb48581f1637bf6d811f68.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
@@ -117,11 +117,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark" aria-label="Site">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine 999.post1+ge3696f048</span>
+    <span class="navbar-title">plotnine 999.post1+g019a08b9a</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -153,7 +153,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
+        <nav id="TOC" role="doc-toc" aria-labelledby="toc-title" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
   <ul>
@@ -169,6 +169,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#plotnine.coords.coord.coord.backtransform_range" id="toc-plotnine.coords.coord.coord.backtransform_range" class="nav-link" data-scroll-target="#plotnine.coords.coord.coord.backtransform_range"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">backtransform_range</span></a></li>
   <li><a href="#plotnine.coords.coord.coord.draw" id="toc-plotnine.coords.coord.coord.draw" class="nav-link" data-scroll-target="#plotnine.coords.coord.coord.draw"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">draw</span></a></li>
   <li><a href="#plotnine.coords.coord.coord.labels" id="toc-plotnine.coords.coord.coord.labels" class="nav-link" data-scroll-target="#plotnine.coords.coord.coord.labels"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">labels</span></a></li>
+  <li><a href="#plotnine.coords.coord.coord.panel_fraction_to_data" id="toc-plotnine.coords.coord.coord.panel_fraction_to_data" class="nav-link" data-scroll-target="#plotnine.coords.coord.coord.panel_fraction_to_data"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">panel_fraction_to_data</span></a></li>
   <li><a href="#plotnine.coords.coord.coord.range" id="toc-plotnine.coords.coord.coord.range" class="nav-link" data-scroll-target="#plotnine.coords.coord.coord.range"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">range</span></a></li>
   <li><a href="#plotnine.coords.coord.coord.setup_ax" id="toc-plotnine.coords.coord.coord.setup_ax" class="nav-link" data-scroll-target="#plotnine.coords.coord.coord.setup_ax"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">setup_ax</span></a></li>
   <li><a href="#plotnine.coords.coord.coord.setup_data" id="toc-plotnine.coords.coord.coord.setup_data" class="nav-link" data-scroll-target="#plotnine.coords.coord.coord.setup_data"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">setup_data</span></a></li>
@@ -264,30 +265,34 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>Modify labels</td>
 </tr>
 <tr class="odd">
+<td><a href="#plotnine.coords.coord.coord.panel_fraction_to_data">panel_fraction_to_data</a></td>
+<td>Convert panel fractions to data coordinates</td>
+</tr>
+<tr class="even">
 <td><a href="#plotnine.coords.coord.coord.range">range</a></td>
 <td>Return the range along the dimensions of the coordinate system</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><a href="#plotnine.coords.coord.coord.setup_ax">setup_ax</a></td>
 <td>Axes state for one panel: limits, breaks, labels, and active side</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><a href="#plotnine.coords.coord.coord.setup_data">setup_data</a></td>
 <td>Allow the coordinate system to manipulate the layer data</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><a href="#plotnine.coords.coord.coord.setup_layout">setup_layout</a></td>
 <td>Allow the coordinate system alter the layout dataframe</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><a href="#plotnine.coords.coord.coord.setup_panel_params">setup_panel_params</a></td>
 <td>Compute the range and break information for the panel</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><a href="#plotnine.coords.coord.coord.setup_params">setup_params</a></td>
 <td>Create additional parameters</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><a href="#plotnine.coords.coord.coord.transform">transform</a></td>
 <td>Transform data before it is plotted</td>
 </tr>
@@ -354,10 +359,38 @@ Modified labels. Same object as the input.
 </div>
 </section>
 </section>
+<section id="plotnine.coords.coord.coord.panel_fraction_to_data" class="level3 title doc-object doc-method">
+<h3 class="title doc-object doc-method anchored" data-anchor-id="plotnine.coords.coord.coord.panel_fraction_to_data"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">panel_fraction_to_data</span></h3>
+<div class="doc-signature doc-method">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>panel_fraction_to_data(fractions, panel_params, dimension)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="doc-text">
+<p>Convert panel fractions to data coordinates</p>
+</div>
+<section id="parameters-1" class="level4 doc-parameters">
+<h4 class="doc-parameters anchored" data-anchor-id="parameters-1">Parameters</h4>
+<div class="doc-definition-items">
+<dl>
+<dt><code><span class="doc-parameter-name">fractions</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="../reference/typing.html#plotnine.typing.FloatArrayLike">FloatArrayLike</a></span></code></dt>
+<dd>
+<p>Fractions where 0 and 1 mark the panel edges along <code>dimension</code>. Values outside that range fall outside the panel.</p>
+</dd>
+<dt><code><span class="doc-parameter-name">panel_params</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">panel_view</span></code></dt>
+<dd>
+<p>Panel ranges and breaks.</p>
+</dd>
+<dt><code><span class="doc-parameter-name">dimension</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/typing.html#typing.Literal">Literal</a>[<span class="st">"x"</span>, <span class="st">"y"</span>]</span></code></dt>
+<dd>
+Data dimension represented by the fractions.
+</dd>
+</dl>
+</div>
+</section>
+</section>
 <section id="plotnine.coords.coord.coord.range" class="level3 title doc-object doc-method">
 <h3 class="title doc-object doc-method anchored" data-anchor-id="plotnine.coords.coord.coord.range"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">range</span></h3>
 <div class="doc-signature doc-method">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="bu">range</span>(panel_params)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="bu">range</span>(panel_params)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="doc-text">
 <p>Return the range along the dimensions of the coordinate system</p>
@@ -366,7 +399,7 @@ Modified labels. Same object as the input.
 <section id="plotnine.coords.coord.coord.setup_ax" class="level3 title doc-object doc-method">
 <h3 class="title doc-object doc-method anchored" data-anchor-id="plotnine.coords.coord.coord.setup_ax"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">setup_ax</span></h3>
 <div class="doc-signature doc-method">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>setup_ax(ax, panel_params, layout_info)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>setup_ax(ax, panel_params, layout_info)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="doc-text">
 <p>Axes state for one panel: limits, breaks, labels, and active side</p>
@@ -376,13 +409,13 @@ Modified labels. Same object as the input.
 <section id="plotnine.coords.coord.coord.setup_data" class="level3 title doc-object doc-method">
 <h3 class="title doc-object doc-method anchored" data-anchor-id="plotnine.coords.coord.coord.setup_data"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">setup_data</span></h3>
 <div class="doc-signature doc-method">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>setup_data(data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>setup_data(data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="doc-text">
 <p>Allow the coordinate system to manipulate the layer data</p>
 </div>
-<section id="parameters-1" class="level4 doc-parameters">
-<h4 class="doc-parameters anchored" data-anchor-id="parameters-1">Parameters</h4>
+<section id="parameters-2" class="level4 doc-parameters">
+<h4 class="doc-parameters anchored" data-anchor-id="parameters-2">Parameters</h4>
 <div class="doc-definition-items">
 <dl>
 <dt><code><span class="doc-parameter-name">data</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#list">list</a>[<a href="https://pandas.pydata.org/pandas-docs/stable/index.html#module-pandas">pd</a>.<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a>]</span></code></dt>
@@ -407,13 +440,13 @@ Modified layer data
 <section id="plotnine.coords.coord.coord.setup_layout" class="level3 title doc-object doc-method">
 <h3 class="title doc-object doc-method anchored" data-anchor-id="plotnine.coords.coord.coord.setup_layout"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">setup_layout</span></h3>
 <div class="doc-signature doc-method">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>setup_layout(layout)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>setup_layout(layout)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="doc-text">
 <p>Allow the coordinate system alter the layout dataframe</p>
 </div>
-<section id="parameters-2" class="level4 doc-parameters">
-<h4 class="doc-parameters anchored" data-anchor-id="parameters-2">Parameters</h4>
+<section id="parameters-3" class="level4 doc-parameters">
+<h4 class="doc-parameters anchored" data-anchor-id="parameters-3">Parameters</h4>
 <div class="doc-definition-items">
 <dl>
 <dt><code><span class="doc-parameter-name">layout</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://pandas.pydata.org/pandas-docs/stable/index.html#module-pandas">pd</a>.<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span></code></dt>
@@ -442,7 +475,7 @@ layout dataframe altered to according to the requirements of the coordinate syst
 <section id="plotnine.coords.coord.coord.setup_panel_params" class="level3 title doc-object doc-method">
 <h3 class="title doc-object doc-method anchored" data-anchor-id="plotnine.coords.coord.coord.setup_panel_params"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">setup_panel_params</span></h3>
 <div class="doc-signature doc-method">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>setup_panel_params(scale_x, scale_y)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>setup_panel_params(scale_x, scale_y)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="doc-text">
 <p>Compute the range and break information for the panel</p>
@@ -451,14 +484,14 @@ layout dataframe altered to according to the requirements of the coordinate syst
 <section id="plotnine.coords.coord.coord.setup_params" class="level3 title doc-object doc-method">
 <h3 class="title doc-object doc-method anchored" data-anchor-id="plotnine.coords.coord.coord.setup_params"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">setup_params</span></h3>
 <div class="doc-signature doc-method">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>setup_params(data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>setup_params(data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="doc-text">
 <p>Create additional parameters</p>
 <p>A coordinate system may need to create parameters depending on the <em>original</em> data that the layers get.</p>
 </div>
-<section id="parameters-3" class="level4 doc-parameters">
-<h4 class="doc-parameters anchored" data-anchor-id="parameters-3">Parameters</h4>
+<section id="parameters-4" class="level4 doc-parameters">
+<h4 class="doc-parameters anchored" data-anchor-id="parameters-4">Parameters</h4>
 <div class="doc-definition-items">
 <dl>
 <dt><code><span class="doc-parameter-name">data</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#list">list</a>[<a href="https://pandas.pydata.org/pandas-docs/stable/index.html#module-pandas">pd</a>.<a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a>]</span></code></dt>
@@ -472,7 +505,7 @@ Data for each layer before it is manipulated in any way.
 <section id="plotnine.coords.coord.coord.transform" class="level3 title doc-object doc-method">
 <h3 class="title doc-object doc-method anchored" data-anchor-id="plotnine.coords.coord.coord.transform"><code class="doc-symbol doc-symbol-method"></code> <span class="doc-object-name doc-method-name">transform</span></h3>
 <div class="doc-signature doc-method">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>transform(data, panel_params, munch<span class="op">=</span><span class="va">False</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>transform(data, panel_params, munch<span class="op">=</span><span class="va">False</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="doc-text">
 <p>Transform data before it is plotted</p>

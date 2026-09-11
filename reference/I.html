@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>strip_placement – plotnine {{&lt; var version &gt;}}</title>
+<title>i – plotnine {{&lt; var version &gt;}}</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -157,8 +157,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#plotnine.themes.themeable.strip_placement" id="toc-plotnine.themes.themeable.strip_placement" class="nav-link active" data-scroll-target="#plotnine.themes.themeable.strip_placement"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.themes.themeable.strip_placement</span></a></li>
+  <li><a href="#plotnine.I" id="toc-plotnine.I" class="nav-link active" data-scroll-target="#plotnine.I"><code class="doc-symbol doc-symbol-function"></code> <span class="doc-object-name doc-function-name">plotnine.I</span></a></li>
   <li><a href="#parameters" id="toc-parameters" class="nav-link" data-scroll-target="#parameters">Parameters</a></li>
+  <li><a href="#returns" id="toc-returns" class="nav-link" data-scroll-target="#returns">Returns</a></li>
+  <li><a href="#notes" id="toc-notes" class="nav-link" data-scroll-target="#notes">Notes</a></li>
   </ul>
 </nav>
     </div>
@@ -169,26 +171,43 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <header id="title-block-header" class="quarto-title-block default">
-<section id="plotnine.themes.themeable.strip_placement" class="level1 title doc-object doc-class quarto-title display-7">
-<h1 class="title doc-object doc-class"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.themes.themeable.strip_placement</span></h1>
+<section id="plotnine.I" class="level1 title doc-object doc-function quarto-title display-7">
+<h1 class="title doc-object doc-function"><code class="doc-symbol doc-symbol-function"></code> <span class="doc-object-name doc-function-name">plotnine.I</span></h1>
 </section>
 </header>
-<div class="doc-signature doc-class">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>strip_placement(theme_element)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="doc-signature doc-function">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>I(x)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="doc-text">
-<p>Where a facet strip sits relative to an axis on the same side</p>
+<p>Mark an aesthetic value as literal</p>
+<p>A literal value bypasses scales, reaches the geom unchanged, and contributes no training data, mapping, or legend. Use it to mix literal and scaled values for one aesthetic across layers.</p>
+<p>For position aesthetics (<code>x</code>, <code>y</code>, and their <code>min</code>/<code>max</code>/<code>end</code>/ <code>intercept</code> variants), the value represents a fraction of the expanded panel range. <code>I(0)</code> and <code>I(1)</code> mark the panel edges, <code>I(0.5)</code> marks its centre, and values outside <code>0</code> to <code>1</code> fall outside the panel and are clipped like other out-of-range data. Use this form to place annotations relative to the panel.</p>
 </div>
 <section id="parameters" class="level2 doc-parameters">
 <h2 class="doc-parameters anchored" data-anchor-id="parameters">Parameters</h2>
 <div class="doc-definition-items">
 <dl>
-<dt><code><span class="doc-parameter-name">theme_element</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">Literal[<span class="st">"inside"</span>, <span class="st">"outside"</span>]</span></code></dt>
+<dt><code><span class="doc-parameter-name">x</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/typing.html#typing.Any">Any</a></span></code></dt>
 <dd>
-With <code>"inside"</code> the strip is next to the panel and the axis is beyond the strip. With <code>"outside"</code> the axis is next to the panel and the strip is beyond the axis. Only has a visible effect when a moved axis shares the strip’s side.
+Value, or array of values, to use literally.
 </dd>
 </dl>
 </div>
+</section>
+<section id="returns" class="level2 doc-returns">
+<h2 class="doc-returns anchored" data-anchor-id="returns">Returns</h2>
+<div class="doc-definition-items">
+<dl>
+<dt><code><span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/typing.html#typing.Any">Any</a></span></code></dt>
+<dd>
+The values in a column that bypasses scales.
+</dd>
+</dl>
+</div>
+</section>
+<section id="notes" class="level2 doc-notes">
+<h2 class="doc-notes anchored" data-anchor-id="notes">Notes</h2>
+<p>Use <code>I()</code> with <code>stat_identity</code>, the default stat for most geoms. Behaviour through another stat or through <code>position_stack</code> / <code>position_dodge</code> is undefined.</p>
 
 
 </section>
