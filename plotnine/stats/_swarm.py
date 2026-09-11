@@ -198,19 +198,18 @@ def swarm_widths(data: pd.DataFrame, scale: str, width_col: str):
 
 
 def uniform_offset(
-    data: pd.DataFrame, maxwidth: float, width_col: str, random_state
-):
+    data: pd.DataFrame, maxwidth: float, width_col: str, params
+) -> pd.Series:
     """
     Draw each `stat_sina` row's `x` offset from uniform noise
 
     Parameters
     ----------
-    random_state :
-        Integer seed, [](`~numpy.random.RandomState`), or
-        [](`numpy.random.Generator`). If `None`, use NumPy's global
-        random state.
+    params :
+        Resolved stat parameters. This function reads only
+        `random_state`.
     """
-    random_state = normalise_random_state(random_state)
+    random_state = params["random_state"]
     if random_state is None:
         random_state = np.random
     return (

@@ -116,9 +116,6 @@ class stat_sina(stat):
     def compute_panel(self, data, scales):
         params = self.params
         maxwidth = params["maxwidth"]
-        random_state = params["random_state"]
-        if random_state is None:
-            random_state = np.random
         data = super().compute_panel(data, scales)
 
         if not len(data):
@@ -128,7 +125,7 @@ class stat_sina(stat):
         data["xmin"] = data["x"] - maxwidth / 2
         data["xmax"] = data["x"] + maxwidth / 2
         data["x_diff"] = uniform_offset(
-            data, maxwidth, "width_fraction", random_state
+            data, maxwidth, "width_fraction", params
         )
         data["width"] = maxwidth
 
@@ -138,7 +135,7 @@ class stat_sina(stat):
         all_integers = (y == np.floor(y)).all()
         some_are_unique = len(np.unique(y)) > 1
         if all_integers and some_are_unique:
-            data["y"] = jitter(y, random_state=random_state)
+            data["y"] = jitter(y, random_state=params["random_state"])
 
         return data
 
