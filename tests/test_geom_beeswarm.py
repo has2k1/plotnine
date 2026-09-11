@@ -3,7 +3,7 @@ import numpy.testing as npt
 import pandas as pd
 
 from plotnine import aes, coord_flip, geom_beeswarm, geom_violin, ggplot
-from plotnine.stats.stat_beeswarm import van_der_corput
+from plotnine.stats._swarm import van_der_corput
 
 n = 50
 random_state = np.random.RandomState(123)

@@ -1,39 +1,16 @@
-from typing import TYPE_CHECKING, cast
-
 import numpy as np
-import pandas as pd
 
-from .._utils import array_kind, jitter, nextafter_range, resolution
+from .._utils import jitter
 from ..doctools import document
-from ..exceptions import PlotnineError
-from ..mapping.aes import has_groups
-from .binning import breaks_from_bins, breaks_from_binwidth
+from ._swarm import (
+    check_x_is_discrete,
+    estimate_group_density,
+    finish_swarm_layer,
+    setup_swarm_params,
+    swarm_widths,
+    van_der_corput_offset,
+)
 from .stat import stat
-from .stat_density import compute_density
-
-if TYPE_CHECKING:
-    from plotnine.typing import FloatArray, IntArray
-
-
-def van_der_corput(n: int) -> np.ndarray:
-    """
-    Van der Corput low-discrepancy sequence
-
-    Rotate the sequence so the value nearest 0.5 comes first. This
-    places the point with the lowest `y` value at the swarm centre.
-
-    Parameters
-    ----------
-    n :
-        Length of the sequence.
-    """
-    if n <= 0:
-        return np.array([])
-    indices = np.arange(n, dtype=np.uint32)
-    bytes_ = indices.astype(">u4").view(np.uint8).reshape(n, 4)
-    vdc = np.unpackbits(bytes_, axis=1) @ np.exp2(-np.arange(32, 0, -1))
-    start = int(np.argmin(np.abs(vdc - 0.5)))
-    return np.roll(vdc, -start)
 
 
 @document
@@ -131,32 +108,10 @@ class stat_beeswarm(stat):
     CREATES = {"scaled"}
 
     def setup_data(self, data):
-        if (
-            array_kind.continuous(data["x"])
-            and not has_groups(data)
-            and (data["x"] != data["x"].iloc[0]).any()
-        ):
-            raise TypeError(
-                "Continuous x aesthetic -- did you forget aes(group=...)?"
-            )
-        return data
+        return check_x_is_discrete(data)
 
     def setup_params(self, data):
-        params = self.params
-
-        if params["maxwidth"] is None:
-            params["maxwidth"] = resolution(data["x"], False) * 0.9
-
-        if params["binwidth"] is None and self.params["bins"] is None:
-            params["bins"] = 50
-
-        # Required by compute_density
-        params["kernel"] = "gau"  # It has to be a gaussian kernel
-        params["cut"] = 0
-        params["gridsize"] = None
-        params["clip"] = (-np.inf, np.inf)
-        params["bounds"] = (-np.inf, np.inf)
-        params["n"] = 512
+        setup_swarm_params(self.params, data)
 
     def compute_panel(self, data, scales):
         params = self.params
@@ -166,38 +121,13 @@ class stat_beeswarm(stat):
         if not len(data):
             return data
 
-        if params["scale"] == "area":
-            data["swarmwidth"] = data["density"] / data["density"].max()
-        elif params["scale"] == "count":
-            data["swarmwidth"] = (
-                data["density"]
-                / data["density"].max()
-                * data["n"]
-                / data["n"].max()
-            )
-        elif params["scale"] == "width":
-            data["swarmwidth"] = data["scaled"]
-        else:
-            msg = "Unknown scale value '{}'"
-            raise PlotnineError(msg.format(params["scale"]))
-
-        is_infinite = ~np.isfinite(data["swarmwidth"])
-        if is_infinite.any():
-            data.loc[is_infinite, "swarmwidth"] = 0
-
+        swarm_widths(data, params["scale"], "width_fraction")
         data["xmin"] = data["x"] - maxwidth / 2
         data["xmax"] = data["x"] + maxwidth / 2
-        data["x_diff"] = 0.0
+        data["x_diff"] = van_der_corput_offset(
+            data, maxwidth, "width_fraction"
+        )
         data["width"] = maxwidth
-
-        for _, grp in data.groupby("group", sort=False):
-            idx = grp.index
-            n = len(grp)
-            y_rank = np.argsort(np.argsort(grp["y"].to_numpy()))
-            seq = van_der_corput(n)
-            data.loc[idx, "x_diff"] = (
-                (seq[y_rank] - 0.5) * maxwidth * grp["swarmwidth"].to_numpy()
-            )
 
         # jitter y values if the input is integer,
         # but not if it is the same value
@@ -210,86 +140,9 @@ class stat_beeswarm(stat):
         return data
 
     def compute_group(self, data, scales):
-        binwidth = self.params["binwidth"]
-        maxwidth = self.params["maxwidth"]
-        bin_limit = self.params["bin_limit"]
-        weight = None
-        y = data["y"]
-
-        if len(data) == 0:
-            return pd.DataFrame()
-
-        elif len(data) < 3 or len(np.unique(y)) < 2:
-            data["density"] = 1
-            data["scaled"] = 1
-        elif self.params["method"] == "density":
-            from scipy.interpolate import interp1d
-
-            # density kernel estimation
-            range_y = y.min(), y.max()
-            dens = compute_density(y, weight, range_y, self.params)
-            densf = interp1d(
-                dens["x"],
-                dens["density"],
-                bounds_error=False,
-                fill_value="extrapolate",  # pyright: ignore
-            )
-            data["density"] = densf(y)
-            data["scaled"] = data["density"] / dens["density"].max()
-        else:
-            expanded_y_range = nextafter_range(scales.y.dimension())
-            if binwidth is not None:
-                bins = breaks_from_binwidth(expanded_y_range, binwidth)
-            else:
-                bins = breaks_from_bins(expanded_y_range, self.params["bins"])
-
-            # bin based estimation
-            bin_index = pd.cut(y, bins, include_lowest=True, labels=False)  # pyright: ignore[reportCallIssue,reportArgumentType]
-            data["density"] = (
-                pd.Series(bin_index)
-                .groupby(bin_index)
-                .apply(len)[bin_index]
-                .to_numpy()
-            )
-            data.loc[data["density"] <= bin_limit, "density"] = 0
-            data["scaled"] = data["density"] / data["density"].max()
-
-        # Compute width if x has multiple values
-        if len(data["x"].unique()) > 1:
-            width = np.ptp(data["x"]) * maxwidth
-        else:
-            width = maxwidth
-
-        data["width"] = width
-        data["n"] = len(data)
-        data["x"] = np.mean([data["x"].max(), data["x"].min()])
-
-        return data
+        return estimate_group_density(
+            data, scales, self.params, few_rows_density=1
+        )
 
     def finish_layer(self, data):
-        # Rescale x in case positions have been adjusted
-        style = self.params["style"]
-        x_mean = cast("FloatArray", data["x"].to_numpy())
-        x_mod = (data["xmax"] - data["xmin"]) / data["width"]
-        data["x"] = data["x"] + data["x_diff"] * x_mod
-        group = cast("IntArray", data["group"].to_numpy())
-        x = cast("FloatArray", data["x"].to_numpy())
-        even = group % 2 == 0
-
-        def mirror_x(bool_idx):
-            """
-            Mirror x locations along the mean value
-            """
-            data.loc[bool_idx, "x"] = 2 * x_mean[bool_idx] - x[bool_idx]
-
-        match style:
-            case "left":
-                mirror_x(x_mean < x)
-            case "right":
-                mirror_x(x < x_mean)
-            case "left-right":
-                mirror_x(even & (x < x_mean) | ~even & (x_mean < x))
-            case "right-left":
-                mirror_x(even & (x_mean < x) | ~even & (x < x_mean))
-
-        return data
+        return finish_swarm_layer(data, self.params["style"])
