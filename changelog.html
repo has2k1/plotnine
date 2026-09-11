@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.11.1">
+<meta name="generator" content="quarto-1.11.4">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Changelog – plotnine 0.16.0a13</title>
+<title>Changelog – plotnine 0.16.0a14</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -78,10 +78,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-d5b4e69c7e37b49c6591bcc5116dd748.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-03d3dfde56ecdf7ec35882f3b46e7ba8.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-0e98b6cd893899cdbeb447ff6df6c6a6.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-4dc9fad167bb48581f1637bf6d811f68.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -113,19 +113,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </head>
 
-<body class="nav-fixed quarto-light">
+<body class="nav-fixed quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark" aria-label="Site">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">plotnine 0.16.0a13</span>
+    <span class="navbar-title">plotnine 0.16.0a14</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -153,7 +153,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
+        <nav id="TOC" role="doc-toc" aria-labelledby="toc-title" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
   <ul>
@@ -332,7 +332,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content" id="quarto-document-content" tabindex="-1">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
@@ -387,6 +387,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="op">+</span> scale_x_continuous(position<span class="op">=</span><span class="st">"top"</span>)</span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="op">+</span> theme(strip_placement<span class="op">=</span><span class="st">"outside"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
 <li><p><a href="./reference/facet_wrap.html#plotnine.facet_wrap"><code>facet_wrap</code></a> gained a <code>strip_position</code> parameter with which you can place the strip on any side of the panel; <code>"top"</code> (default), <code>"bottom"</code>, <code>"left"</code> or <code>"right"</code>.</p></li>
+<li><p>Added <a href="./reference/geom_contour.html#plotnine.geom_contour"><code>geom_contour</code></a> and <a href="./reference/geom_contour_filled.html#plotnine.geom_contour_filled"><code>geom_contour_filled</code></a> to represent a gridded surface with contour lines and filled bands. (<a href="https://github.com/has2k1/plotnine/issues/1084" title="Issue: #1084">#1084</a>)</p></li>
+<li><p>Added <a href="./reference/geom_density_2d_filled.html#plotnine.geom_density_2d_filled"><code>geom_density_2d_filled</code></a>, the filled counterpart of <a href="./reference/geom_density_2d.html#plotnine.geom_density_2d"><code>geom_density_2d</code></a>.</p></li>
+<li><p><a href="./reference/geom_polygon.html#plotnine.geom_polygon"><code>geom_polygon</code></a> can now draw polygons with holes. Use the new <code>subgroup</code> aesthetic to identify each ring within a polygon.</p></li>
+<li><p>Plot components that take a <code>random_state</code> now also accept a <a href="https://numpy.org/doc/stable/reference/random/generator.html#numpy.random.Generator"><code>numpy.random.Generator</code></a>, in addition to an integer seed or a <a href="https://numpy.org/doc/stable/reference/random/legacy.html#numpy.random.RandomState"><code>RandomState</code></a>.</p></li>
+<li><p>Added <a href="./reference/I.html#plotnine.I"><code>I</code></a>, with which you can mark a value as literal. A literal value takes no scale, so it is not trained, not mapped, and gets no legend. One layer can draw literal colours while another maps the same aesthetic through a scale. (<a href="https://github.com/has2k1/plotnine/issues/1008" title="Issue: #1008">#1008</a>)</p></li>
+<li><p>You can now place an annotation relative to the panel by wrapping a position in <a href="./reference/I.html#plotnine.I"><code>I</code></a>. <code>x=I(0.5)</code> is the centre of the panel and <code>x=I(0.9)</code> is 90% across, whatever the data, the limits or the expansion. (<a href="https://github.com/has2k1/plotnine/issues/939" title="Issue: #939">#939</a>)</p></li>
 </ul>
 </section>
 <section id="api-changes" class="level3">
@@ -406,6 +412,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p><code>DEFAULT_PARAMS</code> declarations are now inherited down the class hierarchy; a subclass geom or stat only declares the parameters that differ from its parent. The base <code>geom</code> class declares <code>stat="identity"</code>, <code>position="identity"</code> and <code>na_rm=False</code>, and the base <code>stat</code> class declares <code>geom="blank"</code>, <code>position="identity"</code> and <code>na_rm=False</code>, so all geoms and stats include them automatically.</p></li>
 <li><p>plotnine now supports Matplotlib 3.10. This allows installation under Pyodide. Matplotlib 3.10 and 3.11 use different text metrics, so text extents, line spacing, and plot margins may differ. Use Matplotlib 3.11 or later to reproduce the documentation output.</p></li>
 <li><p><code>statsmodels&gt;=0.14.6</code> is now required on every platform. This replaces the separate <code>statsmodels&lt;=0.14.4</code> requirement for Pyodide.</p></li>
+<li><p><code>contourpy&gt;=1.2.0</code> is now required. It computes the contours of a surface.</p></li>
+<li><p><a href="./reference/stat_density_2d.html#plotnine.stat_density_2d"><code>stat_density_2d</code></a> gained <code>contour_var</code>, <code>bins</code>, <code>binwidth</code> and <code>breaks</code>. Every panel now uses the same contour heights. The stat divides density into ten bands by default instead of five, so <a href="./reference/geom_density_2d.html#plotnine.geom_density_2d"><code>geom_density_2d</code></a> draws more contour lines for the same data. The <code>levels</code> parameter is deprecated; use <code>bins</code> or <code>breaks</code> instead.</p></li>
 </ul>
 </section>
 <section id="bug-fixes" class="level3">
@@ -415,6 +423,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p><a href="./reference/scale_size_datetime.html#plotnine.scale_size_datetime"><code>scale_size_datetime</code></a> now honours its <code>date_breaks</code>, <code>date_labels</code> and <code>date_minor_breaks</code> arguments, which it previously ignored.</p></li>
 <li><p>In a non-linear coordinate system (e.g.&nbsp;<a href="./reference/coord_trans.html#plotnine.coord_trans"><code>coord_trans</code></a>), the closing edge of a polygon is now curved along with the rest of its boundary instead of being drawn as a straight chord.</p></li>
 <li><p>Stacked bars in a non-linear coordinate system (e.g. <a href="./reference/coord_trans.html#plotnine.coord_trans"><code>coord_trans</code></a>) no longer show triangular spikes; each rectangle is now drawn as its own polygon instead of merging a bar’s segments into a single path.</p></li>
+<li><p>Under a non-linear coordinate system such as <a href="./reference/coord_trans.html#plotnine.coord_trans"><code>coord_trans</code></a>, a <a href="./reference/geom_polygon.html#plotnine.geom_polygon"><code>geom_polygon</code></a> with several groups no longer draws an edge from one polygon to the next.</p></li>
+<li><p>Under a non-linear coordinate system, separate <a href="./reference/geom_path.html#plotnine.geom_path"><code>geom_path</code></a> groups no longer connect when an aesthetic such as <code>color</code> varies along the path. The fix also applies to <a href="./reference/geom_line.html#plotnine.geom_line"><code>geom_line</code></a>, <a href="./reference/geom_step.html#plotnine.geom_step"><code>geom_step</code></a>, <a href="./reference/geom_density.html#plotnine.geom_density"><code>geom_density</code></a> and the line drawn by <a href="./reference/geom_smooth.html#plotnine.geom_smooth"><code>geom_smooth</code></a>.</p></li>
 <li><p>In a non-linear coordinate system (e.g.&nbsp;<a href="./reference/coord_trans.html#plotnine.coord_trans"><code>coord_trans</code></a>), both edges of a <a href="./reference/geom_ribbon.html#plotnine.geom_ribbon"><code>geom_ribbon</code></a> or <a href="./reference/geom_area.html#plotnine.geom_area"><code>geom_area</code></a> now curve. Previously each edge held the value of the point its segment started from, so the band was drawn as a staircase.</p></li>
 <li><p><a href="./reference/geom_ribbon.html#plotnine.geom_ribbon"><code>geom_ribbon</code></a> and <a href="./reference/geom_area.html#plotnine.geom_area"><code>geom_area</code></a> now draw every outline type correctly in non-linear coordinate systems. The <code>upper</code>, <code>lower</code> and <code>both</code> outlines follow the transformed band edges, and <code>full</code> outlines no longer raise an error.</p></li>
 <li><p><a href="./reference/annotation_logticks.html#plotnine.annotation_logticks"><code>annotation_logticks</code></a> and <a href="./reference/annotation_stripes.html#plotnine.annotation_stripes"><code>annotation_stripes</code></a> now render correctly in non-linear coordinate systems such as <a href="./reference/coord_trans.html#plotnine.coord_trans"><code>coord_trans</code></a>. Previously, log tick positions were transformed twice, which misplaced or removed ticks, and stripes raised an error.</p></li>
@@ -425,6 +435,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>Fixed rendering of SVGs in jupyter notebooks.</p></li>
 <li><p>Fixed <code>geom_legend</code> to show an empty key for <a href="./reference/geom_point.html#plotnine.geom_point"><code>geom_point</code></a> when the shape is mapped to variable with missing values.</p></li>
 <li><p>Specific theme elements now override blank general elements. For example, adding <code>theme(axis_text_x_bottom=element_text(size=14))</code> to <a href="./reference/theme_void.html#plotnine.theme_void"><code>theme_void</code></a> displays the bottom x-axis tick labels and reserves space for them. Previously, the blank <code>axis_text_x</code> element prevented layout from reserving their space, so the labels could render outside the figure.</p></li>
+<li><p>Saving a composition now honours the <code>dpi</code> argument. For example, <code>(p1 | p2).save("composition.png", dpi=200)</code> saves the image at 200 DPI instead of the default resolution.</p></li>
+<li><p>Plots containing an unseeded <a href="./reference/geom_sina.html#plotnine.geom_sina"><code>geom_sina</code></a> can now be copied, including when the geom has been added to every plot in a composition. Copying previously raised <code>TypeError: cannot pickle 'module' object</code>. (<a href="https://github.com/has2k1/plotnine/issues/1115" title="Issue: #1115">#1115</a>)</p></li>
+<li><p><a href="./reference/position_jitter.html#plotnine.position_jitter"><code>position_jitter</code></a> and <a href="./reference/position_jitterdodge.html#plotnine.position_jitterdodge"><code>position_jitterdodge</code></a> now make independent random draws for the horizontal and vertical axes when given a seed. Both axes previously received identical offsets, placing points along a diagonal.</p></li>
+<li><p><a href="./reference/position_jitter.html#plotnine.position_jitter"><code>position_jitter</code></a>, <a href="./reference/position_jitterdodge.html#plotnine.position_jitterdodge"><code>position_jitterdodge</code></a>, <a href="./reference/stat_summary.html#plotnine.stat_summary"><code>stat_summary</code></a>, and <a href="./reference/stat_summary_bin.html#plotnine.stat_summary_bin"><code>stat_summary_bin</code></a> now treat <code>0</code> as a valid <code>random_state</code> seed. They previously selected NumPy’s global random state, so results depended on other random draws.</p></li>
+<li><p>Broadcasting a layer to every plot in a composition with <code>&amp;</code> or <code>*</code> now gives each target plot an independent copy. Changes made while drawing one plot no longer affect the layer in another plot.</p></li>
 </ul>
 </section>
 <section id="enhancements" class="level3">
