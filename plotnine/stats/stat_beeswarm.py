@@ -16,10 +16,16 @@ if TYPE_CHECKING:
 
 
 def van_der_corput(n: int) -> np.ndarray:
-    """Van der Corput low-discrepancy sequence of length n.
+    """
+    Van der Corput low-discrepancy sequence
 
-    Rotated so the value closest to 0.5 comes first, placing the
-    minimum-y point at the swarm centre.
+    Rotate the sequence so the value nearest 0.5 comes first. This
+    places the point with the lowest `y` value at the swarm centre.
+
+    Parameters
+    ----------
+    n :
+        Length of the sequence.
     """
     if n <= 0:
         return np.array([])
@@ -68,6 +74,9 @@ class stat_beeswarm(stat):
         If the samples within the same y-axis bin are more
         than `bin_limit`, the samples's X coordinates will be adjusted.
         This parameter is effective only when `method="counts"`{.py}
+    random_state : int | ~numpy.random.RandomState, default=None
+        Seed or random number generator for jittering integer `y`
+        values. If `None`, use NumPy's global random state.
     scale : Literal["area", "count", "width"], default="area"
         How to scale the beeswarm groups.
 
@@ -115,6 +124,7 @@ class stat_beeswarm(stat):
         "maxwidth": None,
         "adjust": 1,
         "bin_limit": 1,
+        "random_state": None,
         "scale": "area",
         "style": "full",
     }
@@ -195,8 +205,7 @@ class stat_beeswarm(stat):
         all_integers = (y == np.floor(y)).all()
         some_are_unique = len(np.unique(y)) > 1
         if all_integers and some_are_unique:
-            # TODO: expose random_state as a stat parameter for reproducibility
-            data["y"] = jitter(y, random_state=42)
+            data["y"] = jitter(y, random_state=params["random_state"])
 
         return data
 
