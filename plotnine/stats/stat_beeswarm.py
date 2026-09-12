@@ -6,8 +6,8 @@ from ._swarm import (
     check_x_is_discrete,
     estimate_group_density,
     finish_swarm_layer,
-    quasirandom_offset,
     setup_swarm_params,
+    spread_offset,
     swarm_widths,
 )
 from .stat import stat
@@ -70,6 +70,16 @@ class stat_beeswarm(stat):
         'left-right'  # Alternate (left first) half by the group
         'right-left'  # Alternate (right first) half by the group
         ```
+    spread : Literal["quasirandom", "pseudorandom", "smiley", "frowney"],
+        default="quasirandom"
+        Strategy for spreading points within each `y` neighbourhood.
+
+        - `quasirandom` places points from a van der Corput sequence
+          according to their `y` rank.
+        - `pseudorandom` places points using uniform noise scaled by
+          local density.
+        - `smiley` places extreme values near the outer edges.
+        - `frowney` places extreme values near the centre.
 
     See Also
     --------
@@ -104,6 +114,7 @@ class stat_beeswarm(stat):
         "random_state": None,
         "scale": "area",
         "style": "full",
+        "spread": "quasirandom",
     }
     CREATES = {"scaled"}
 
@@ -124,7 +135,7 @@ class stat_beeswarm(stat):
         swarm_widths(data, params["scale"], "width_fraction")
         data["xmin"] = data["x"] - maxwidth / 2
         data["xmax"] = data["x"] + maxwidth / 2
-        data["x_diff"] = quasirandom_offset(
+        data["x_diff"] = spread_offset(
             data, maxwidth, "width_fraction", params
         )
         data["width"] = maxwidth
