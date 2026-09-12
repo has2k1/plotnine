@@ -7,6 +7,7 @@ for `stat_sina` and `stat_beeswarm`.
 
 from __future__ import annotations
 
+import math
 from typing import TYPE_CHECKING, cast
 
 import numpy as np
@@ -237,6 +238,80 @@ def quasirandom_offset(
             (seq[y_rank] - 0.5) * maxwidth * grp[width_col].to_numpy()
         )
     return x_diff
+
+
+def _extremes_bin_index(y: pd.Series, params) -> np.ndarray:
+    """
+    Assign points to `y` neighbourhoods for extreme-value ranking
+
+    Use a dedicated density estimate sized to the group. The stat's
+    `method`, `bins`, and `binwidth` parameters affect width scaling but
+    not these neighbourhoods.
+    """
+    n = len(y)
+    if n < 3 or len(np.unique(y)) < 2:
+        return np.zeros(n, dtype=int)
+    density_params = {**params, "n": max(2, math.ceil(n / 5))}
+    dens = compute_density(y, None, (y.min(), y.max()), density_params)
+    return pd.cut(y, dens["x"], include_lowest=True, labels=False).to_numpy()
+
+
+def _alternate_extremes(y: np.ndarray, ascending: bool) -> np.ndarray:
+    """
+    Map ordered values to alternating positions across a neighbourhood
+
+    Return each point's position in `[0, 1]`. Place the two most extreme
+    points, ordered by `y` when `ascending` and by `-y` otherwise, at
+    opposite ends and the least extreme point at the centre. Preserve
+    input order for ties, so equal values produce the same result in
+    either direction.
+    """
+    n = len(y)
+    if n == 1:
+        return np.array([0.5])
+    order = y if ascending else -y
+    rank1 = np.argsort(np.argsort(order, kind="stable")) + 1
+    signed = np.where(rank1 % 2 == 1, -rank1, rank1)
+    return np.argsort(np.argsort(signed, kind="stable")) / (n - 1)
+
+
+def _extremes_offset(
+    data: pd.DataFrame,
+    maxwidth: float,
+    width_col: str,
+    params,
+    ascending: bool,
+) -> pd.Series:
+    x_diff = pd.Series(0.0, index=data.index)
+    for _, grp in data.groupby("group", sort=False):
+        bin_index = _extremes_bin_index(grp["y"], params)
+        prop = pd.Series(0.5, index=grp.index)
+        for _, cell in grp.groupby(bin_index):
+            prop.loc[cell.index] = _alternate_extremes(
+                cell["y"].to_numpy(), ascending
+            )
+        x_diff.loc[grp.index] = (
+            (prop - 0.5) * maxwidth * grp[width_col].to_numpy()
+        )
+    return x_diff
+
+
+def smiley_offset(
+    data: pd.DataFrame, maxwidth: float, width_col: str, params
+) -> pd.Series:
+    """
+    Place each `y` neighbourhood's most extreme points at the edges
+    """
+    return _extremes_offset(data, maxwidth, width_col, params, ascending=True)
+
+
+def frowney_offset(
+    data: pd.DataFrame, maxwidth: float, width_col: str, params
+) -> pd.Series:
+    """
+    Place each `y` neighbourhood's most extreme points near the centre
+    """
+    return _extremes_offset(data, maxwidth, width_col, params, ascending=False)
 
 
 def finish_swarm_layer(data: pd.DataFrame, style: str) -> pd.DataFrame:

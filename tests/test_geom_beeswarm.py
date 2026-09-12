@@ -3,7 +3,12 @@ import numpy.testing as npt
 import pandas as pd
 
 from plotnine import aes, coord_flip, geom_beeswarm, geom_violin, ggplot
-from plotnine.stats._swarm import van_der_corput
+from plotnine.stats._swarm import (
+    _alternate_extremes,
+    frowney_offset,
+    smiley_offset,
+    van_der_corput,
+)
 
 n = 50
 random_state = np.random.RandomState(123)
@@ -125,3 +130,81 @@ def test_van_der_corput_space_filling():
         max_gap = gaps.max()
         assert max_gap < prev_max_gap
         prev_max_gap = max_gap
+
+
+# --- _alternate_extremes ---
+
+
+def test_alternate_extremes_mirrors_ascending_and_descending():
+    y = np.array([1.0, 2.0, 3.0, 4.0, 5.0])
+    smiley = _alternate_extremes(y, ascending=True)
+    frowney = _alternate_extremes(y, ascending=False)
+    npt.assert_array_almost_equal(smiley, [0.5, 0.75, 0.25, 1.0, 0.0])
+    npt.assert_array_almost_equal(frowney, [0.0, 1.0, 0.25, 0.75, 0.5])
+
+
+def test_alternate_extremes_ties_collapse():
+    # Equal values have no directional ordering, so both rankings must
+    # produce the same positions.
+    y = np.array([5.0] * 8)
+    smiley = _alternate_extremes(y, ascending=True)
+    frowney = _alternate_extremes(y, ascending=False)
+    npt.assert_array_equal(smiley, frowney)
+
+
+def test_alternate_extremes_single_point():
+    npt.assert_array_equal(_alternate_extremes(np.array([3.0]), True), [0.5])
+
+
+# --- smiley_offset / frowney_offset ---
+
+_extremes_params = {
+    "bw": "nrd0",
+    "adjust": 1,
+    "kernel": "gau",
+    "cut": 0,
+    "gridsize": None,
+    "clip": (-np.inf, np.inf),
+    "bounds": (-np.inf, np.inf),
+}
+
+
+def test_smiley_offset_bounded_and_shaped():
+    df = pd.DataFrame(
+        {
+            "group": [1] * 10,
+            "y": np.arange(10, dtype=float),
+            "width_fraction": np.ones(10),
+        }
+    )
+    offset = smiley_offset(df, 0.9, "width_fraction", _extremes_params)
+    assert len(offset) == 10
+    assert (offset.abs() <= 0.9 / 2 + 1e-9).all()
+
+
+def test_frowney_offset_bounded_and_shaped():
+    df = pd.DataFrame(
+        {
+            "group": [1] * 10,
+            "y": np.arange(10, dtype=float),
+            "width_fraction": np.ones(10),
+        }
+    )
+    offset = frowney_offset(df, 0.9, "width_fraction", _extremes_params)
+    assert len(offset) == 10
+    assert (offset.abs() <= 0.9 / 2 + 1e-9).all()
+
+
+def test_smiley_offset_independent_groups():
+    # Each group is binned and ranked independently. Removing one group
+    # must not change another group's offsets.
+    df = pd.DataFrame(
+        {
+            "group": [1] * 10 + [2] * 3,
+            "y": list(np.arange(10, dtype=float)) + [0.0, 1.0, 2.0],
+            "width_fraction": np.ones(13),
+        }
+    )
+    combined = smiley_offset(df, 0.9, "width_fraction", _extremes_params)
+    solo = smiley_offset(df.iloc[10:], 0.9, "width_fraction", _extremes_params)
+    npt.assert_array_almost_equal(combined.to_numpy()[10:], solo.to_numpy())
