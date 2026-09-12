@@ -45,15 +45,16 @@ class stat_beeswarm(stat):
         The `str`{.py} choices are:
         `"nrd0", "normal_reference", "scott", "silverman"`{.py}
 
-        `nrd0` is a port of `stats::bw.nrd0` in R; it is eqiuvalent
+        `nrd0` is a port of `stats::bw.nrd0` in R; it is equivalent
         to `silverman` when there is more than 1 value in a group.
     bin_limit : int, default=1
-        If the samples within the same y-axis bin are more
-        than `bin_limit`, the samples's X coordinates will be adjusted.
+        Adjust the points' `x` positions when a `y` bin contains more
+        than `bin_limit` points.
         This parameter is effective only when `method="counts"`{.py}
     random_state : int | ~numpy.random.RandomState, default=None
         Seed or random number generator for jittering integer `y`
-        values. If `None`, use NumPy's global random state.
+        values and applying `spread="pseudorandom"`. If `None`, use
+        NumPy's global random state.
     scale : Literal["area", "count", "width"], default="area"
         How to scale the beeswarm groups.
 

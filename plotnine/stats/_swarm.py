@@ -254,7 +254,8 @@ def _extremes_bin_index(y: pd.Series, params: dict[str, Any]) -> np.ndarray:
 
     Use a dedicated density estimate sized to the group. The stat's
     `method`, `bins`, and `binwidth` parameters affect width scaling but
-    not these neighbourhoods.
+    not these neighbourhoods. Assign groups with fewer than three
+    points or one unique `y` value to a single neighbourhood.
     """
     n = len(y)
     if n < 3 or len(np.unique(y)) < 2:
@@ -290,6 +291,18 @@ def _extremes_offset(
     params: dict[str, Any],
     ascending: bool,
 ) -> pd.Series:
+    """
+    Place neighbourhood values towards the swarm's centre or edges
+
+    Divide each group into `y` neighbourhoods, rank values within each
+    neighbourhood, and alternate their positions across the swarm.
+
+    Parameters
+    ----------
+    ascending :
+        If `True`, place the most extreme values near the edges. If
+        `False`, place them near the centre.
+    """
     x_diff = pd.Series(0.0, index=data.index)
     for _, grp in data.groupby("group", sort=False):
         bin_index = _extremes_bin_index(grp["y"], params)
@@ -336,11 +349,14 @@ def spread_offset(
     """
     Calculate offsets with the selected spread strategy
     """
+    spread = params["spread"]
     try:
-        offset_fn = _SPREAD_OFFSETS[params["spread"]]
+        offset_fn = _SPREAD_OFFSETS[spread]
     except KeyError:
-        msg = "Unknown spread value {!r}"
-        raise PlotnineError(msg.format(params["spread"])) from None
+        msg = "Unknown spread value {!r}. Choose one of {}"
+        raise PlotnineError(
+            msg.format(spread, sorted(_SPREAD_OFFSETS))
+        ) from None
     return offset_fn(data, maxwidth, width_col, params)
 
 

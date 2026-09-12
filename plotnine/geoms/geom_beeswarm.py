@@ -9,10 +9,9 @@ class geom_beeswarm(geom_point):
 
     {usage}
 
-    A beeswarm plot is a data visualization chart suitable for plotting
-    any single variable in a multiclass dataset. It is an enhanced
-    jitter strip chart, where the width of the jitter is controlled
-    by the density distribution of the data within each class.
+    A beeswarm plot arranges points along one variable and spreads
+    nearby values sideways into a swarm. The default deterministic
+    placement assigns a low-discrepancy sequence by `y` rank.
 
     Parameters
     ----------
@@ -21,10 +20,6 @@ class geom_beeswarm(geom_point):
     See Also
     --------
     plotnine.stat_beeswarm : The default `stat` for this `geom`.
-
-    References
-    ----------
-
     """
 
     DEFAULT_PARAMS = {"stat": "beeswarm", "position": "dodge"}

@@ -114,6 +114,12 @@ title: Changelog
   `x=I(0.9)` is 90% across, whatever the data, the limits or the expansion.
   ({{< issue 939 >}})
 
+- Added [](:class:`~plotnine.geom_beeswarm`) and
+  [](:class:`~plotnine.stat_beeswarm`), which arrange points along one variable
+  and spread nearby values sideways into a swarm. Use the `spread` parameter to
+  select `"quasirandom"` (the default), `"pseudorandom"`, `"smiley"`, or
+  `"frowney"` placement.
+
 ### API Changes
 
 - Removed `geom.to_layer()`, `stat.to_layer()`, `annotate.to_layer()`,
