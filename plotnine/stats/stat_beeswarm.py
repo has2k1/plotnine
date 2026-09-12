@@ -70,7 +70,7 @@ class stat_beeswarm(stat):
         'left-right'  # Alternate (left first) half by the group
         'right-left'  # Alternate (right first) half by the group
         ```
-    spread : Literal["quasirandom", "pseudorandom", "smiley", "frowney"],
+    spread : Literal["quasirandom", "pseudorandom", "smiley", "frowney"], \
         default="quasirandom"
         Strategy for spreading points within each `y` neighbourhood.
 
