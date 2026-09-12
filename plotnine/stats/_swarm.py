@@ -8,7 +8,7 @@ for `stat_sina` and `stat_beeswarm`.
 from __future__ import annotations
 
 import math
-from typing import TYPE_CHECKING, cast
+from typing import TYPE_CHECKING, Any, Callable, cast
 
 import numpy as np
 import pandas as pd
@@ -25,6 +25,7 @@ from .binning import breaks_from_bins, breaks_from_binwidth
 from .stat_density import compute_density
 
 if TYPE_CHECKING:
+    from plotnine.iapi import pos_scales
     from plotnine.typing import FloatArray, IntArray
 
 __all__ = (
@@ -35,6 +36,9 @@ __all__ = (
     "swarm_widths",
     "pseudorandom_offset",
     "quasirandom_offset",
+    "smiley_offset",
+    "frowney_offset",
+    "spread_offset",
     "finish_swarm_layer",
 )
 
@@ -75,7 +79,7 @@ def check_x_is_discrete(data: pd.DataFrame) -> pd.DataFrame:
     return data
 
 
-def setup_swarm_params(params, data: pd.DataFrame):
+def setup_swarm_params(params: dict[str, Any], data: pd.DataFrame):
     """
     Resolve swarm parameters and configure density estimation
     """
@@ -98,7 +102,10 @@ def setup_swarm_params(params, data: pd.DataFrame):
 
 
 def estimate_group_density(
-    data: pd.DataFrame, scales, params, few_rows_density: float
+    data: pd.DataFrame,
+    scales: pos_scales,
+    params: dict[str, Any],
+    few_rows_density: float,
 ) -> pd.DataFrame:
     """
     Estimate the density or bin count for each row in a group
@@ -199,7 +206,7 @@ def swarm_widths(data: pd.DataFrame, scale: str, width_col: str):
 
 
 def pseudorandom_offset(
-    data: pd.DataFrame, maxwidth: float, width_col: str, params
+    data: pd.DataFrame, maxwidth: float, width_col: str, params: dict[str, Any]
 ) -> pd.Series:
     """
     Draw each row's `x` offset from uniform noise
@@ -213,13 +220,14 @@ def pseudorandom_offset(
     random_state = params["random_state"]
     if random_state is None:
         random_state = np.random
+    # Lead with the indexed widths so multiplication preserves a Series.
     return (
         data[width_col] * random_state.uniform(-1, 1, len(data)) * maxwidth / 2
     )
 
 
 def quasirandom_offset(
-    data: pd.DataFrame, maxwidth: float, width_col: str, params
+    data: pd.DataFrame, maxwidth: float, width_col: str, params: dict[str, Any]
 ) -> pd.Series:
     """
     Derive each row's `x` offset from its rank
@@ -240,7 +248,7 @@ def quasirandom_offset(
     return x_diff
 
 
-def _extremes_bin_index(y: pd.Series, params) -> np.ndarray:
+def _extremes_bin_index(y: pd.Series, params: dict[str, Any]) -> np.ndarray:
     """
     Assign points to `y` neighbourhoods for extreme-value ranking
 
@@ -279,7 +287,7 @@ def _extremes_offset(
     data: pd.DataFrame,
     maxwidth: float,
     width_col: str,
-    params,
+    params: dict[str, Any],
     ascending: bool,
 ) -> pd.Series:
     x_diff = pd.Series(0.0, index=data.index)
@@ -297,7 +305,7 @@ def _extremes_offset(
 
 
 def smiley_offset(
-    data: pd.DataFrame, maxwidth: float, width_col: str, params
+    data: pd.DataFrame, maxwidth: float, width_col: str, params: dict[str, Any]
 ) -> pd.Series:
     """
     Place each `y` neighbourhood's most extreme points at the edges
@@ -312,6 +320,28 @@ def frowney_offset(
     Place each `y` neighbourhood's most extreme points near the centre
     """
     return _extremes_offset(data, maxwidth, width_col, params, ascending=False)
+
+
+_SPREAD_OFFSETS: dict[str, Callable[..., pd.Series]] = {
+    "pseudorandom": pseudorandom_offset,
+    "quasirandom": quasirandom_offset,
+    "smiley": smiley_offset,
+    "frowney": frowney_offset,
+}
+
+
+def spread_offset(
+    data: pd.DataFrame, maxwidth: float, width_col: str, params: dict[str, Any]
+) -> pd.Series:
+    """
+    Calculate offsets with the selected spread strategy
+    """
+    try:
+        offset_fn = _SPREAD_OFFSETS[params["spread"]]
+    except KeyError:
+        msg = "Unknown spread value {!r}"
+        raise PlotnineError(msg.format(params["spread"])) from None
+    return offset_fn(data, maxwidth, width_col, params)
 
 
 def finish_swarm_layer(data: pd.DataFrame, style: str) -> pd.DataFrame:

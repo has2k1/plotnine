@@ -1,12 +1,15 @@
 import numpy as np
 import numpy.testing as npt
 import pandas as pd
+import pytest
 
 from plotnine import aes, coord_flip, geom_beeswarm, geom_violin, ggplot
+from plotnine.exceptions import PlotnineError
 from plotnine.stats._swarm import (
     _alternate_extremes,
     frowney_offset,
     smiley_offset,
+    spread_offset,
     van_der_corput,
 )
 
@@ -208,3 +211,19 @@ def test_smiley_offset_independent_groups():
     combined = smiley_offset(df, 0.9, "width_fraction", _extremes_params)
     solo = smiley_offset(df.iloc[10:], 0.9, "width_fraction", _extremes_params)
     npt.assert_array_almost_equal(combined.to_numpy()[10:], solo.to_numpy())
+
+
+# --- spread_offset ---
+
+
+def test_spread_offset_unknown_value_raises():
+    df = pd.DataFrame(
+        {
+            "group": [1, 1],
+            "y": [1.0, 2.0],
+            "width_fraction": [1.0, 1.0],
+        }
+    )
+    params = {"spread": "not-a-real-method", "random_state": None}
+    with pytest.raises(PlotnineError, match="not-a-real-method"):
+        spread_offset(df, 0.9, "width_fraction", params)
