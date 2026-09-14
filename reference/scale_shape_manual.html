@@ -121,7 +121,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine 999.post1+g019a08b9a</span>
+    <span class="navbar-title">plotnine 999.post1+gcb5a46fff</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -198,7 +198,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="doc-init-parameters anchored" data-anchor-id="init-parameters">Init Parameters</h2>
 <div class="doc-definition-items">
 <dl>
-<dt><code>values: <a href="https://docs.python.org/3/library/typing.html#typing.Sequence">Sequence</a>[<a href="https://docs.python.org/3/library/typing.html#typing.Any">Any</a>] | <a href="https://docs.python.org/3/library/stdtypes.html#dict">dict</a>[<a href="https://docs.python.org/3/library/typing.html#typing.Any">Any</a>, <a href="https://docs.python.org/3/library/typing.html#typing.Any">Any</a>] </code></dt>
+<dt><code>values: <a href="https://docs.python.org/3/library/typing.html#typing.Sequence">Sequence</a>[<a href="https://docs.python.org/3/library/typing.html#typing.Any">Any</a>] | <a href="https://docs.python.org/3/builtins/stdtypes.html#dict">dict</a>[<a href="https://docs.python.org/3/library/typing.html#typing.Any">Any</a>, <a href="https://docs.python.org/3/library/typing.html#typing.Any">Any</a>] </code></dt>
 <dd>
 Shapes that make up the palette. See <a href="https://matplotlib.org/stable/api/markers_api.html#module-matplotlib.markers"><code>matplotlib.markers</code></a> for list of all possible shapes. The values will be matched with the <code>limits</code> of the scale or the <code>breaks</code> if provided. If it is a dict then it should map data values to shapes.
 </dd>
@@ -209,7 +209,7 @@ Shapes that make up the palette. See <a href="https://matplotlib.org/stable/api/
 <h2 class="doc-parameter-attributes anchored" data-anchor-id="parameter-attributes">Parameter Attributes</h2>
 <div class="doc-definition-items">
 <dl>
-<dt><code>name: <a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> | None = None</code></dt>
+<dt><code>name: <a href="https://docs.python.org/3/builtins/stdtypes.html#str">str</a> | None = None</code></dt>
 <dd>
 <p>The name of the scale. It is used as the label of the axis or the title of the guide. Suitable defaults are chosen depending on the type of scale.</p>
 </dd>
@@ -225,7 +225,7 @@ Shapes that make up the palette. See <a href="https://matplotlib.org/stable/api/
 <dd>
 <p>Labels at the <code>breaks</code>. Alternatively, a callable that takes an array_like of break points as input and returns a list of strings.</p>
 </dd>
-<dt><code>expand: (<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://docs.python.org/3/library/stdtypes.html#tuple">tuple</a>[<a href="https://docs.python.org/3/library/functions.html#float">float</a>, <a href="https://docs.python.org/3/library/functions.html#float">float</a>]<br>&nbsp;&nbsp;&nbsp;&nbsp;| <a href="https://docs.python.org/3/library/stdtypes.html#tuple">tuple</a>[<a href="https://docs.python.org/3/library/functions.html#float">float</a>, <a href="https://docs.python.org/3/library/functions.html#float">float</a>, <a href="https://docs.python.org/3/library/functions.html#float">float</a>, <a href="https://docs.python.org/3/library/functions.html#float">float</a>]<br>&nbsp;&nbsp;&nbsp;&nbsp;| None<br>) = None</code></dt>
+<dt><code>expand: (<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://docs.python.org/3/builtins/stdtypes.html#tuple">tuple</a>[<a href="https://docs.python.org/3/builtins/functions.html#float">float</a>, <a href="https://docs.python.org/3/builtins/functions.html#float">float</a>]<br>&nbsp;&nbsp;&nbsp;&nbsp;| <a href="https://docs.python.org/3/builtins/stdtypes.html#tuple">tuple</a>[<a href="https://docs.python.org/3/builtins/functions.html#float">float</a>, <a href="https://docs.python.org/3/builtins/functions.html#float">float</a>, <a href="https://docs.python.org/3/builtins/functions.html#float">float</a>, <a href="https://docs.python.org/3/builtins/functions.html#float">float</a>]<br>&nbsp;&nbsp;&nbsp;&nbsp;| None<br>) = None</code></dt>
 <dd>
 <p>Multiplicative and additive expansion constants that determine how the scale is expanded. If specified must be of length 2 or 4. Specifically the values are in this order:</p>
 <pre><code>(mul, add)
@@ -254,11 +254,11 @@ Shapes that make up the palette. See <a href="https://matplotlib.org/stable/api/
 <dd>
 <p>Aesthetics affected by this scale. These are defined by each scale and the user should probably not change them. Have fun.</p>
 </dd>
-<dt><code>drop: <a href="https://docs.python.org/3/library/functions.html#bool">bool</a> = True</code></dt>
+<dt><code>drop: <a href="https://docs.python.org/3/builtins/functions.html#bool">bool</a> = True</code></dt>
 <dd>
 <p>Whether to drop unused categories from the scale</p>
 </dd>
-<dt><code>na_translate: <a href="https://docs.python.org/3/library/functions.html#bool">bool</a> = True</code></dt>
+<dt><code>na_translate: <a href="https://docs.python.org/3/builtins/functions.html#bool">bool</a> = True</code></dt>
 <dd>
 If <code>True</code> translate missing values and show them. If <code>False</code> remove missing values.
 </dd>

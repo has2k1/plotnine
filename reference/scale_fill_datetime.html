@@ -121,7 +121,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine 999.post1+g019a08b9a</span>
+    <span class="navbar-title">plotnine 999.post1+gcb5a46fff</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -202,19 +202,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="doc-init-parameters anchored" data-anchor-id="init-parameters">Init Parameters</h2>
 <div class="doc-definition-items">
 <dl>
-<dt><code>cmap_name: <a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> = <span class="st">'viridis'</span></code></dt>
+<dt><code>cmap_name: <a href="https://docs.python.org/3/builtins/stdtypes.html#str">str</a> = <span class="st">'viridis'</span></code></dt>
 <dd>
 <p>A standard Matplotlib colormap name. The default is <code>viridis</code>. For the list of names checkout the output of <code>matplotlib.cm.cmap_d.keys()</code> or see <a href="https://matplotlib.org/stable/users/explain/colors/colormaps.html">colormaps</a>.</p>
 </dd>
-<dt><code>date_breaks: <a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> | None = None</code></dt>
+<dt><code>date_breaks: <a href="https://docs.python.org/3/builtins/stdtypes.html#str">str</a> | None = None</code></dt>
 <dd>
 <p>A string giving the distance between major breaks. For example <code>'2 weeks'</code>, <code>'5 years'</code>. If specified, <code>date_breaks</code> takes precedence over <code>breaks</code>.</p>
 </dd>
-<dt><code>date_labels: <a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> | None = None</code></dt>
+<dt><code>date_labels: <a href="https://docs.python.org/3/builtins/stdtypes.html#str">str</a> | None = None</code></dt>
 <dd>
 <p>Format string for the labels. See strftime. If specified, <code>date_labels</code> takes precedence over <code>labels</code>.</p>
 </dd>
-<dt><code>date_minor_breaks: <a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> | None = None</code></dt>
+<dt><code>date_minor_breaks: <a href="https://docs.python.org/3/builtins/stdtypes.html#str">str</a> | None = None</code></dt>
 <dd>
 A string giving the distance between minor breaks. For example <code>'2 weeks'</code>, <code>'5 years'</code>. If specified, <code>date_minor_breaks</code> takes precedence over <code>minor_breaks</code>.
 </dd>
@@ -225,7 +225,7 @@ A string giving the distance between minor breaks. For example <code>'2 weeks'</
 <h2 class="doc-parameter-attributes anchored" data-anchor-id="parameter-attributes">Parameter Attributes</h2>
 <div class="doc-definition-items">
 <dl>
-<dt><code>name: <a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> | None = None</code></dt>
+<dt><code>name: <a href="https://docs.python.org/3/builtins/stdtypes.html#str">str</a> | None = None</code></dt>
 <dd>
 <p>The name of the scale. It is used as the label of the axis or the title of the guide. Suitable defaults are chosen depending on the type of scale.</p>
 </dd>
@@ -241,7 +241,7 @@ A string giving the distance between minor breaks. For example <code>'2 weeks'</
 <dd>
 <p>Labels at the <code>breaks</code>. Alternatively, a callable that takes an array_like of break points as input and returns a list of strings.</p>
 </dd>
-<dt><code>expand: ( # pyright: ignore[reportIncompatibleVariableOverride]<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://docs.python.org/3/library/stdtypes.html#tuple">tuple</a>[<a href="https://docs.python.org/3/library/functions.html#float">float</a>, <a href="https://docs.python.org/3/library/datetime.html#datetime.timedelta">timedelta</a>]<br>&nbsp;&nbsp;&nbsp;&nbsp;| <a href="https://docs.python.org/3/library/stdtypes.html#tuple">tuple</a>[<a href="https://docs.python.org/3/library/functions.html#float">float</a>, <a href="https://docs.python.org/3/library/datetime.html#datetime.timedelta">timedelta</a>, <a href="https://docs.python.org/3/library/functions.html#float">float</a>, <a href="https://docs.python.org/3/library/datetime.html#datetime.timedelta">timedelta</a>]<br>&nbsp;&nbsp;&nbsp;&nbsp;| None<br>) = None</code></dt>
+<dt><code>expand: ( # pyright: ignore[reportIncompatibleVariableOverride]<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://docs.python.org/3/builtins/stdtypes.html#tuple">tuple</a>[<a href="https://docs.python.org/3/builtins/functions.html#float">float</a>, <a href="https://docs.python.org/3/library/datetime.html#datetime.timedelta">timedelta</a>]<br>&nbsp;&nbsp;&nbsp;&nbsp;| <a href="https://docs.python.org/3/builtins/stdtypes.html#tuple">tuple</a>[<a href="https://docs.python.org/3/builtins/functions.html#float">float</a>, <a href="https://docs.python.org/3/library/datetime.html#datetime.timedelta">timedelta</a>, <a href="https://docs.python.org/3/builtins/functions.html#float">float</a>, <a href="https://docs.python.org/3/library/datetime.html#datetime.timedelta">timedelta</a>]<br>&nbsp;&nbsp;&nbsp;&nbsp;| None<br>) = None</code></dt>
 <dd>
 <p>Multiplicative and additive expansion constants that determine how the scale is expanded. If specified must be of length 2 or 4. Specifically the values are in this order:</p>
 <pre><code>(mul, add)
@@ -261,7 +261,7 @@ A string giving the distance between minor breaks. For example <code>'2 weeks'</
 <dd>
 
 </dd>
-<dt><code>na_value: <a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> = <span class="st">"#7F7F7F"</span></code></dt>
+<dt><code>na_value: <a href="https://docs.python.org/3/builtins/stdtypes.html#str">str</a> = <span class="st">"#7F7F7F"</span></code></dt>
 <dd>
 <p>Color of missing values.</p>
 </dd>

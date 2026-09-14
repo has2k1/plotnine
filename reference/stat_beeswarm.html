@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>scale_stroke_identity – plotnine {{&lt; var version &gt;}}</title>
+<title>stat_beeswarm – plotnine {{&lt; var version &gt;}}</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -157,8 +157,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#plotnine.scale_stroke_identity" id="toc-plotnine.scale_stroke_identity" class="nav-link active" data-scroll-target="#plotnine.scale_stroke_identity"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.scale_stroke_identity</span></a></li>
-  <li><a href="#parameter-attributes" id="toc-parameter-attributes" class="nav-link" data-scroll-target="#parameter-attributes">Parameter Attributes</a></li>
+  <li><a href="#plotnine.stat_beeswarm" id="toc-plotnine.stat_beeswarm" class="nav-link active" data-scroll-target="#plotnine.stat_beeswarm"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.stat_beeswarm</span></a></li>
+  <li><a href="#parameters" id="toc-parameters" class="nav-link" data-scroll-target="#parameters">Parameters</a></li>
+  <li><a href="#see-also" id="toc-see-also" class="nav-link" data-scroll-target="#see-also">See Also</a></li>
   </ul>
 </nav>
     </div>
@@ -169,87 +170,162 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <header id="title-block-header" class="quarto-title-block default">
-<section id="plotnine.scale_stroke_identity" class="level1 title doc-object doc-class doc-has-member-docs quarto-title display-7">
-<h1 class="title doc-object doc-class doc-has-member-docs"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.scale_stroke_identity</span></h1>
+<section id="plotnine.stat_beeswarm" class="level1 title doc-object doc-class doc-has-member-docs quarto-title display-7">
+<h1 class="title doc-object doc-class doc-has-member-docs"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.stat_beeswarm</span></h1>
 </section>
 </header>
-<div class="doc-signature doc-class">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>scale_stroke_identity(</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span>,</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    name<span class="op">=</span><span class="va">None</span>,</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    breaks<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    limits<span class="op">=</span><span class="va">None</span>,</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    labels<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    expand<span class="op">=</span><span class="va">None</span>,</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    guide<span class="op">=</span><span class="va">None</span>,</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    na_value<span class="op">=</span>np.nan,</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    aesthetics<span class="op">=</span>(),</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    drop<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    na_translate<span class="op">=</span><span class="va">True</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
 <div class="doc-text">
-<p>No stroke scaling</p>
+<p>Compute beeswarm plot values</p>
+<div class="doc-signature doc-class doc-usage">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>stat_beeswarm(</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    mapping<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span>,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    geom<span class="op">=</span><span class="st">"beeswarm"</span>,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    position<span class="op">=</span><span class="st">"dodge"</span>,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    na_rm<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    binwidth<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    bins<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    method<span class="op">=</span><span class="st">"density"</span>,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    bw<span class="op">=</span><span class="st">"nrd0"</span>,</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    maxwidth<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    adjust<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    bin_limit<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    random_state<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    scale<span class="op">=</span><span class="st">"area"</span>,</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    style<span class="op">=</span><span class="st">"full"</span>,</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    spread<span class="op">=</span><span class="st">"quasirandom"</span>,</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    <span class="op">**</span>kwargs</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<section id="parameter-attributes" class="level2 doc-parameter-attributes">
-<h2 class="doc-parameter-attributes anchored" data-anchor-id="parameter-attributes">Parameter Attributes</h2>
+</div>
+<section id="parameters" class="level2 doc-parameters">
+<h2 class="doc-parameters anchored" data-anchor-id="parameters">Parameters</h2>
 <div class="doc-definition-items">
 <dl>
-<dt><code>name: <a href="https://docs.python.org/3/builtins/stdtypes.html#str">str</a> | None = None</code></dt>
+<dt><code><span class="doc-parameter-name">mapping</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="../reference/aes.html#plotnine.aes">aes</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
 <dd>
-<p>The name of the scale. It is used as the label of the axis or the title of the guide. Suitable defaults are chosen depending on the type of scale.</p>
+<p>Aesthetic mappings created with <a href="../reference/aes.html#plotnine.aes">aes</a>. If specified and <code class="sourceCode python py">inherit_aes<span class="op">=</span><span class="va">True</span></code>, it is combined with the default mapping for the plot. You must supply mapping if there is no plot mapping.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 19%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Aesthetic</th>
+<th>Default value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>x</strong></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><strong>y</strong></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>The <strong>bold</strong> aesthetics are required.</p>
+<p><strong>Options for computed aesthetics</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">"quantile"</span>  <span class="co"># quantile</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">"group"</span>     <span class="co"># group identifier</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Calculated aesthetics are accessed using the <code>after_stat</code> function. e.g.&nbsp;<code class="sourceCode python py">after_stat(<span class="st">'quantile'</span>)</code>.</p>
 </dd>
-<dt><code>breaks: <a href="../reference/scales._runtime_typing.html#plotnine.scales._runtime_typing.DiscreteBreaksUser">DiscreteBreaksUser</a> = True</code></dt>
+<dt><code><span class="doc-parameter-name">data</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame">DataFrame</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
 <dd>
-<p>List of major break points. Or a callable that takes a tuple of limits and returns a list of breaks. If <code>True</code>, automatically calculate the breaks.</p>
+<p>The data to be displayed in this layer. If <code class="sourceCode python py"><span class="va">None</span></code>, the data from from the <code class="sourceCode python py">ggplot()</code> call is used. If specified, it overrides the data from the <code class="sourceCode python py">ggplot()</code> call.</p>
 </dd>
-<dt><code>limits: <a href="../reference/scales._runtime_typing.html#plotnine.scales._runtime_typing.DiscreteLimitsUser">DiscreteLimitsUser</a> = None</code></dt>
+<dt><code><span class="doc-parameter-name">geom</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/builtins/stdtypes.html#str">str</a> | <a href="../reference/geom.html#plotnine.geoms.geom.geom">geom</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default"><span class="st">"beeswarm"</span></span></code></dt>
 <dd>
-<p>Limits of the scale. These are the categories (unique values) of the variables. If is only a subset of the values, those that are left out will be treated as missing data and represented with a <code>na_value</code>.</p>
+<p>The statistical transformation to use on the data for this layer. If it is a string, it must be the registered and known to Plotnine.</p>
 </dd>
-<dt><code>labels: <a href="../reference/scales._runtime_typing.html#plotnine.scales._runtime_typing.ScaleLabelsUser">ScaleLabelsUser</a> = True</code></dt>
+<dt><code><span class="doc-parameter-name">position</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/builtins/stdtypes.html#str">str</a> | <a href="../reference/position.html#plotnine.positions.position.position">position</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default"><span class="st">"dodge"</span></span></code></dt>
 <dd>
-<p>Labels at the <code>breaks</code>. Alternatively, a callable that takes an array_like of break points as input and returns a list of strings.</p>
+<p>Position adjustment. If it is a string, it must be registered and known to Plotnine.</p>
 </dd>
-<dt><code>expand: (<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://docs.python.org/3/builtins/stdtypes.html#tuple">tuple</a>[<a href="https://docs.python.org/3/builtins/functions.html#float">float</a>, <a href="https://docs.python.org/3/builtins/functions.html#float">float</a>]<br>&nbsp;&nbsp;&nbsp;&nbsp;| <a href="https://docs.python.org/3/builtins/stdtypes.html#tuple">tuple</a>[<a href="https://docs.python.org/3/builtins/functions.html#float">float</a>, <a href="https://docs.python.org/3/builtins/functions.html#float">float</a>, <a href="https://docs.python.org/3/builtins/functions.html#float">float</a>, <a href="https://docs.python.org/3/builtins/functions.html#float">float</a>]<br>&nbsp;&nbsp;&nbsp;&nbsp;| None<br>) = None</code></dt>
+<dt><code><span class="doc-parameter-name">na_rm</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/builtins/functions.html#bool">bool</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">False</span></code></dt>
 <dd>
-<p>Multiplicative and additive expansion constants that determine how the scale is expanded. If specified must be of length 2 or 4. Specifically the values are in this order:</p>
-<pre><code>(mul, add)
-(mul_low, add_low, mul_high, add_high)</code></pre>
-<p>For example,</p>
+<p>If <code class="sourceCode python py"><span class="va">False</span></code>, removes missing values with a warning. If <code class="sourceCode python py"><span class="va">True</span></code> silently removes missing values.</p>
+</dd>
+<dt><code><span class="doc-parameter-name">binwidth</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/builtins/functions.html#float">float</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
+<dd>
+<p>The width of the bins. The default is to use bins that cover the range of the data. You should always override this value, exploring multiple widths to find the best to illustrate the stories in your data.</p>
+</dd>
+<dt><code><span class="doc-parameter-name">bins</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/builtins/functions.html#int">int</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">50</span></code></dt>
+<dd>
+<p>Number of bins. Overridden by binwidth.</p>
+</dd>
+<dt><code><span class="doc-parameter-name">method</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">Literal[density, counts]</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default"><span class="st">"density"</span></span></code></dt>
+<dd>
+<p>Choose the method to spread the samples within the same bin along the x-axis. Available methods: “density”, “counts” (can be abbreviated, e.g.&nbsp;“d”). See Details.</p>
+</dd>
+<dt><code><span class="doc-parameter-name">maxwidth</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/builtins/functions.html#float">float</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
+<dd>
+<p>Control the maximum width the points can spread into. Values should be in the range (0, 1).</p>
+</dd>
+<dt><code><span class="doc-parameter-name">adjust</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/builtins/functions.html#float">float</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">1</span></code></dt>
+<dd>
+<p>Adjusts the bandwidth of the density kernel when <code>method="density"</code>. see <code>stat_density</code>.</p>
+</dd>
+<dt><code><span class="doc-parameter-name">bw</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/builtins/stdtypes.html#str">str</a> | <a href="https://docs.python.org/3/builtins/functions.html#float">float</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default"><span class="st">"nrd0"</span></span></code></dt>
+<dd>
+<p>The bandwidth to use, If a float is given, it is the bandwidth. The <code class="sourceCode python py"><span class="bu">str</span></code> choices are: <code class="sourceCode python py"><span class="co">"nrd0"</span>, <span class="st">"normal_reference"</span>, <span class="st">"scott"</span>, <span class="st">"silverman"</span></code></p>
+<p><code>nrd0</code> is a port of <code>stats::bw.nrd0</code> in R; it is equivalent to <code>silverman</code> when there is more than 1 value in a group.</p>
+</dd>
+<dt><code><span class="doc-parameter-name">bin_limit</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/builtins/functions.html#int">int</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">1</span></code></dt>
+<dd>
+<p>Adjust the points’ <code>x</code> positions when a <code>y</code> bin contains more than <code>bin_limit</code> points. This parameter is effective only when <code class="sourceCode python py">method<span class="op">=</span><span class="st">"counts"</span></code></p>
+</dd>
+<dt><code><span class="doc-parameter-name">random_state</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/builtins/functions.html#int">int</a> | <a href="https://numpy.org/doc/stable/reference/random/legacy.html#numpy.random.RandomState">RandomState</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
+<dd>
+<p>Seed or random number generator for jittering integer <code>y</code> values and applying <code>spread="pseudorandom"</code>. If <code>None</code>, use NumPy’s global random state.</p>
+</dd>
+<dt><code><span class="doc-parameter-name">scale</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">Literal[area, count, width]</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default"><span class="st">"area"</span></span></code></dt>
+<dd>
+<p>How to scale the beeswarm groups.</p>
 <ul>
-<li><code>(0, 0)</code> - Do not expand.</li>
-<li><code>(0, 1)</code> - Expand lower and upper limits by 1 unit.</li>
-<li><code>(1, 0)</code> - Expand lower and upper limits by 100%.</li>
-<li><code>(0, 0, 0, 0)</code> - Do not expand, as <code>(0, 0)</code>.</li>
-<li><code>(0, 0, 0, 1)</code> - Expand upper limit by 1 unit.</li>
-<li><code>(0, 1, 0.1, 0)</code> - Expand lower limit by 1 unit and upper limit by 10%.</li>
-<li><code>(0, 0, 0.1, 2)</code> - Expand upper limit by 10% plus 2 units.</li>
+<li><code>area</code> - Scale by the largest density/bin among the different beeswarms.</li>
+<li><code>count</code> - areas are scaled proportionally to the number of points</li>
+<li><code>width</code> - Only scale according to the maxwidth parameter.</li>
 </ul>
-<p>If not specified, suitable defaults are chosen.</p>
 </dd>
-<dt><code>guide: <a href="../reference/scales._runtime_typing.html#plotnine.scales._runtime_typing.OptionalLegend">OptionalLegend</a> = None</code></dt>
+<dt><code><span class="doc-parameter-name">style</span></code></dt>
 <dd>
-
+<p>Type of beeswarm plot to draw. The options are</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">'full'</span>        <span class="co"># Regular (2 sided)</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">'left'</span>        <span class="co"># Left-sided half</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">'right'</span>       <span class="co"># Right-sided half</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">'left-right'</span>  <span class="co"># Alternate (left first) half by the group</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">'right-left'</span>  <span class="co"># Alternate (right first) half by the group</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </dd>
-<dt><code>na_value: <a href="https://docs.python.org/3/library/typing.html#typing.Any">Any</a> = np.nan</code></dt>
+<dt><code><span class="doc-parameter-name">spread</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">Literal[quasirandom, pseudorandom, smiley, frowney]</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default"><span class="st">"quasirandom"</span></span></code></dt>
 <dd>
-<p>If <code>na_translate=True</code>, what aesthetic value should be assigned to the missing values. This parameter does not apply to position scales where <code>nan</code> is always placed on the right.</p>
+<p>Strategy for spreading points within each <code>y</code> neighbourhood.</p>
+<ul>
+<li><code>quasirandom</code> places points from a van der Corput sequence according to their <code>y</code> rank.</li>
+<li><code>pseudorandom</code> places points using uniform noise scaled by local density.</li>
+<li><code>smiley</code> places extreme values near the outer edges.</li>
+<li><code>frowney</code> places extreme values near the centre.</li>
+</ul>
 </dd>
-<dt><code>aesthetics: <a href="https://docs.python.org/3/library/typing.html#typing.Sequence">Sequence</a>[<a href="../reference/typing.html#plotnine.typing.ScaledAestheticsName">ScaledAestheticsName</a>] = ()</code></dt>
+<dt><code><span class="doc-parameter-name">**kwargs</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/typing.html#typing.Any">Any</a></span></code></dt>
 <dd>
-<p>Aesthetics affected by this scale. These are defined by each scale and the user should probably not change them. Have fun.</p>
-</dd>
-<dt><code>drop: <a href="https://docs.python.org/3/builtins/functions.html#bool">bool</a> = True</code></dt>
-<dd>
-<p>Whether to drop unused categories from the scale</p>
-</dd>
-<dt><code>na_translate: <a href="https://docs.python.org/3/builtins/functions.html#bool">bool</a> = True</code></dt>
-<dd>
-If <code>True</code> translate missing values and show them. If <code>False</code> remove missing values.
+Aesthetics or parameters used by the <code>geom</code>.
 </dd>
 </dl>
 </div>
+</section>
+<section id="see-also" class="level2 doc-see-also">
+<h2 class="doc-see-also anchored" data-anchor-id="see-also">See Also</h2>
+<dl>
+<dt><a href="../reference/geom_beeswarm.html#plotnine.geom_beeswarm"><code>geom_beeswarm</code></a></dt>
+<dd>
+<p>The default <code>geom</code> for this <code>stat</code>.</p>
+</dd>
+</dl>
 
 
 </section>

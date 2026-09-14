@@ -121,7 +121,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine 999.post1+g019a08b9a</span>
+    <span class="navbar-title">plotnine 999.post1+gcb5a46fff</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -195,35 +195,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="doc-parameters anchored" data-anchor-id="parameters">Parameters</h2>
 <div class="doc-definition-items">
 <dl>
-<dt><code><span class="doc-parameter-name">theta</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#str">str</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default"><span class="st">"x"</span></span></code></dt>
+<dt><code><span class="doc-parameter-name">theta</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/builtins/stdtypes.html#str">str</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default"><span class="st">"x"</span></span></code></dt>
 <dd>
 <p>Which variable maps to the angle axis, <code>"x"</code> (default) or <code>"y"</code>.</p>
 </dd>
-<dt><code><span class="doc-parameter-name">start</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#float">float</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">0</span></code></dt>
+<dt><code><span class="doc-parameter-name">start</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/builtins/functions.html#float">float</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">0</span></code></dt>
 <dd>
 <p>Starting angle in radians, measured clockwise from 12 o’clock. Default 0.</p>
 </dd>
-<dt><code><span class="doc-parameter-name">end</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#float">float</a> | None</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
+<dt><code><span class="doc-parameter-name">end</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/builtins/functions.html#float">float</a> | None</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
 <dd>
 <p>Ending angle in radians, measured clockwise from 12 o’clock. <code>None</code> (default) draws a full circle. Angles separated by whole turns are equivalent, except that <code>end == start</code> raises a <code>PlotnineError</code> because it defines a zero-width arc.</p>
 </dd>
-<dt><code><span class="doc-parameter-name">expand</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#bool">bool</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">True</span></code></dt>
+<dt><code><span class="doc-parameter-name">expand</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/builtins/functions.html#bool">bool</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">True</span></code></dt>
 <dd>
 <p>If <code>True</code> (the default), add a small buffer around the data on both axes, so the data stops short of the arc ends and of the outer radius. If <code>False</code>, use the limits from the data.</p>
 </dd>
-<dt><code><span class="doc-parameter-name">inner_radius</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#float">float</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">0</span></code></dt>
+<dt><code><span class="doc-parameter-name">inner_radius</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/builtins/functions.html#float">float</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">0</span></code></dt>
 <dd>
 <p>Size of the inner hole as a fraction of the outer radius, in <code>[0, 1)</code>. <code>0</code> (default) means no hole; <code>0.3</code> creates a 30 % donut hole, useful for gauge and donut charts.</p>
 </dd>
-<dt><code><span class="doc-parameter-name">rotate_angle</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#bool">bool</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">False</span></code></dt>
+<dt><code><span class="doc-parameter-name">rotate_angle</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/builtins/functions.html#bool">bool</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">False</span></code></dt>
 <dd>
 <p>If <code>True</code>, rotate the <code>angle</code> aesthetic so that text or other rotated marks align tangentially with the arc at their spoke. The rotation is folded so labels stay upright (readable) rather than appearing upside-down in the lower half. Default <code>False</code>.</p>
 </dd>
-<dt><code><span class="doc-parameter-name">thetalim</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#tuple">tuple</a>[<a href="https://docs.python.org/3/library/functions.html#float">float</a>, <a href="https://docs.python.org/3/library/functions.html#float">float</a>] | None</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
+<dt><code><span class="doc-parameter-name">thetalim</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/builtins/stdtypes.html#tuple">tuple</a>[<a href="https://docs.python.org/3/builtins/functions.html#float">float</a>, <a href="https://docs.python.org/3/builtins/functions.html#float">float</a>] | None</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
 <dd>
 <p>Data-space limits for the theta axis as <code>(lo, hi)</code>. Only data within this range is mapped to the arc; equivalent to zooming on the angular axis. <code>None</code> (default) uses the full data range.</p>
 </dd>
-<dt><code><span class="doc-parameter-name">rlim</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#tuple">tuple</a>[<a href="https://docs.python.org/3/library/functions.html#float">float</a>, <a href="https://docs.python.org/3/library/functions.html#float">float</a>] | None</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
+<dt><code><span class="doc-parameter-name">rlim</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/builtins/stdtypes.html#tuple">tuple</a>[<a href="https://docs.python.org/3/builtins/functions.html#float">float</a>, <a href="https://docs.python.org/3/builtins/functions.html#float">float</a>] | None</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
 <dd>
 <p>Data-space limits for the r axis as <code>(lo, hi)</code>. Only data within this range is shown; equivalent to zooming on the radial axis. <code>None</code> (default) uses the full data range.</p>
 </dd>

@@ -121,7 +121,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine 999.post1+g019a08b9a</span>
+    <span class="navbar-title">plotnine 999.post1+gcb5a46fff</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -263,35 +263,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <dd>
 <p>The data to be displayed in this layer. If <code class="sourceCode python py"><span class="va">None</span></code>, the data from from the <code class="sourceCode python py">ggplot()</code> call is used. If specified, it overrides the data from the <code class="sourceCode python py">ggplot()</code> call.</p>
 </dd>
-<dt><code><span class="doc-parameter-name">stat</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> | <a href="../reference/stat.html#plotnine.stats.stat.stat">stat</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default"><span class="st">"ydensity"</span></span></code></dt>
+<dt><code><span class="doc-parameter-name">stat</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/builtins/stdtypes.html#str">str</a> | <a href="../reference/stat.html#plotnine.stats.stat.stat">stat</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default"><span class="st">"ydensity"</span></span></code></dt>
 <dd>
 <p>The statistical transformation to use on the data for this layer. If it is a string, it must be the registered and known to Plotnine.</p>
 </dd>
-<dt><code><span class="doc-parameter-name">position</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> | <a href="../reference/position.html#plotnine.positions.position.position">position</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default"><span class="st">"dodge"</span></span></code></dt>
+<dt><code><span class="doc-parameter-name">position</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/builtins/stdtypes.html#str">str</a> | <a href="../reference/position.html#plotnine.positions.position.position">position</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default"><span class="st">"dodge"</span></span></code></dt>
 <dd>
 <p>Position adjustment. If it is a string, it must be registered and known to Plotnine.</p>
 </dd>
-<dt><code><span class="doc-parameter-name">na_rm</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#bool">bool</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">False</span></code></dt>
+<dt><code><span class="doc-parameter-name">na_rm</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/builtins/functions.html#bool">bool</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">False</span></code></dt>
 <dd>
 <p>If <code class="sourceCode python py"><span class="va">False</span></code>, removes missing values with a warning. If <code class="sourceCode python py"><span class="va">True</span></code> silently removes missing values.</p>
 </dd>
-<dt><code><span class="doc-parameter-name">inherit_aes</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#bool">bool</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">True</span></code></dt>
+<dt><code><span class="doc-parameter-name">inherit_aes</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/builtins/functions.html#bool">bool</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">True</span></code></dt>
 <dd>
 <p>If <code class="sourceCode python py"><span class="va">False</span></code>, overrides the default aesthetics.</p>
 </dd>
-<dt><code><span class="doc-parameter-name">show_legend</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#bool">bool</a> | <a href="https://docs.python.org/3/library/stdtypes.html#dict">dict</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
+<dt><code><span class="doc-parameter-name">show_legend</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/builtins/functions.html#bool">bool</a> | <a href="https://docs.python.org/3/builtins/stdtypes.html#dict">dict</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
 <dd>
-<p>Whether this layer should be included in the legends. <code class="sourceCode python py"><span class="va">None</span></code> the default, includes any aesthetics that are mapped. If a <a href="https://docs.python.org/3/library/functions.html#bool"><code>bool</code></a>, <code class="sourceCode python py"><span class="va">False</span></code> never includes and <code class="sourceCode python py"><span class="va">True</span></code> always includes. A <a href="https://docs.python.org/3/library/stdtypes.html#dict"><code>dict</code></a> can be used to <em>exclude</em> specific aesthetis of the layer from showing in the legend. e.g <code class="sourceCode python py">show_legend<span class="op">=</span>{<span class="st">'color'</span>: <span class="va">False</span>}</code>, any other aesthetic are included by default.</p>
+<p>Whether this layer should be included in the legends. <code class="sourceCode python py"><span class="va">None</span></code> the default, includes any aesthetics that are mapped. If a <a href="https://docs.python.org/3/builtins/functions.html#bool"><code>bool</code></a>, <code class="sourceCode python py"><span class="va">False</span></code> never includes and <code class="sourceCode python py"><span class="va">True</span></code> always includes. A <a href="https://docs.python.org/3/builtins/stdtypes.html#dict"><code>dict</code></a> can be used to <em>exclude</em> specific aesthetis of the layer from showing in the legend. e.g <code class="sourceCode python py">show_legend<span class="op">=</span>{<span class="st">'color'</span>: <span class="va">False</span>}</code>, any other aesthetic are included by default.</p>
 </dd>
-<dt><code><span class="doc-parameter-name">raster</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#bool">bool</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">False</span></code></dt>
+<dt><code><span class="doc-parameter-name">raster</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/builtins/functions.html#bool">bool</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">False</span></code></dt>
 <dd>
 <p>If <code>True</code>, draw onto this layer a raster (bitmap) object even ifthe final image is in vector format.</p>
 </dd>
-<dt><code><span class="doc-parameter-name">draw_quantiles</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#float">float</a> | <a href="https://docs.python.org/3/library/stdtypes.html#list">list</a>[<a href="https://docs.python.org/3/library/functions.html#float">float</a>]</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
+<dt><code><span class="doc-parameter-name">draw_quantiles</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/builtins/functions.html#float">float</a> | <a href="https://docs.python.org/3/builtins/stdtypes.html#list">list</a>[<a href="https://docs.python.org/3/builtins/functions.html#float">float</a>]</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
 <dd>
 <p>draw horizontal lines at the given quantiles (0..1) of the density estimate.</p>
 </dd>
-<dt><code><span class="doc-parameter-name">style</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#str">str</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default"><span class="st">"full"</span></span></code></dt>
+<dt><code><span class="doc-parameter-name">style</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/builtins/stdtypes.html#str">str</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default"><span class="st">"full"</span></span></code></dt>
 <dd>
 <p>The type of violin plot to draw. The options are:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">'full'</span>        <span class="co"># Regular (2 sided violins)</span></span>
@@ -300,15 +300,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">'left-right'</span>  <span class="co"># Alternate (left first) half violins by the group</span></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">'right-left'</span>  <span class="co"># Alternate (right first) half violins by the group</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </dd>
-<dt><code><span class="doc-parameter-name">quantile_color</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#str">str</a> | <a href="https://docs.python.org/3/library/stdtypes.html#tuple">tuple</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
+<dt><code><span class="doc-parameter-name">quantile_color</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/builtins/stdtypes.html#str">str</a> | <a href="https://docs.python.org/3/builtins/stdtypes.html#tuple">tuple</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
 <dd>
 <p>Color of the quantile lines.</p>
 </dd>
-<dt><code><span class="doc-parameter-name">quantile_size</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/stdtypes.html#str">str</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default"><span class="st">"o"</span></span></code></dt>
+<dt><code><span class="doc-parameter-name">quantile_size</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/builtins/stdtypes.html#str">str</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default"><span class="st">"o"</span></span></code></dt>
 <dd>
 <p>The linewidth of the quantile lines.</p>
 </dd>
-<dt><code><span class="doc-parameter-name">quantile_linetype</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/library/functions.html#float">float</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">1.5</span></code></dt>
+<dt><code><span class="doc-parameter-name">quantile_linetype</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/builtins/functions.html#float">float</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">1.5</span></code></dt>
 <dd>
 <p>The linetype of the quantile lines.</p>
 </dd>
