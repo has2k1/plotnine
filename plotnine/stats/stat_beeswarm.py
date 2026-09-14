@@ -6,17 +6,17 @@ from ._swarm import (
     check_x_is_discrete,
     estimate_group_density,
     finish_swarm_layer,
-    pseudorandom_offset,
     setup_swarm_params,
+    spread_offset,
     swarm_widths,
 )
 from .stat import stat
 
 
 @document
-class stat_sina(stat):
+class stat_beeswarm(stat):
     """
-    Compute Sina plot values
+    Compute beeswarm plot values
 
     {usage}
 
@@ -45,24 +45,25 @@ class stat_sina(stat):
         The `str`{.py} choices are:
         `"nrd0", "normal_reference", "scott", "silverman"`{.py}
 
-        `nrd0` is a port of `stats::bw.nrd0` in R; it is eqiuvalent
+        `nrd0` is a port of `stats::bw.nrd0` in R; it is equivalent
         to `silverman` when there is more than 1 value in a group.
     bin_limit : int, default=1
-        If the samples within the same y-axis bin are more
-        than `bin_limit`, the samples's X coordinates will be adjusted.
+        Adjust the points' `x` positions when a `y` bin contains more
+        than `bin_limit` points.
         This parameter is effective only when `method="counts"`{.py}
-    random_state :
-        Integer seed, [](`~numpy.random.RandomState`), or
-        [](`numpy.random.Generator`). If `None`, draw from NumPy's global
-        random state.
+    random_state : int | ~numpy.random.RandomState, default=None
+        Seed or random number generator for jittering integer `y`
+        values and applying `spread="pseudorandom"`. If `None`, use
+        NumPy's global random state.
     scale : Literal["area", "count", "width"], default="area"
-        How to scale the sina groups.
+        How to scale the beeswarm groups.
 
-        - `area` - Scale by the largest density/bin among the different sinas
+        - `area` - Scale by the largest density/bin among the
+          different beeswarms.
         - `count` - areas are scaled proportionally to the number of points
         - `width` - Only scale according to the maxwidth parameter.
     style :
-        Type of sina plot to draw. The options are
+        Type of beeswarm plot to draw. The options are
         ```python
         'full'        # Regular (2 sided)
         'left'        # Left-sided half
@@ -70,10 +71,20 @@ class stat_sina(stat):
         'left-right'  # Alternate (left first) half by the group
         'right-left'  # Alternate (right first) half by the group
         ```
+    spread : Literal["quasirandom", "pseudorandom", "smiley", "frowney"], \
+        default="quasirandom"
+        Strategy for spreading points within each `y` neighbourhood.
+
+        - `quasirandom` places points from a van der Corput sequence
+          according to their `y` rank.
+        - `pseudorandom` places points using uniform noise scaled by
+          local density.
+        - `smiley` places extreme values near the outer edges.
+        - `frowney` places extreme values near the centre.
 
     See Also
     --------
-    plotnine.geom_sina : The default `geom` for this `stat`.
+    plotnine.geom_beeswarm : The default `geom` for this `stat`.
     """
 
     _aesthetics_doc = """
@@ -92,7 +103,7 @@ class stat_sina(stat):
 
     REQUIRED_AES = {"x", "y"}
     DEFAULT_PARAMS = {
-        "geom": "sina",
+        "geom": "beeswarm",
         "position": "dodge",
         "binwidth": None,
         "bins": None,
@@ -104,6 +115,7 @@ class stat_sina(stat):
         "random_state": None,
         "scale": "area",
         "style": "full",
+        "spread": "quasirandom",
     }
     CREATES = {"scaled"}
 
@@ -124,7 +136,7 @@ class stat_sina(stat):
         swarm_widths(data, params["scale"], "width_fraction")
         data["xmin"] = data["x"] - maxwidth / 2
         data["xmax"] = data["x"] + maxwidth / 2
-        data["x_diff"] = pseudorandom_offset(
+        data["x_diff"] = spread_offset(
             data, maxwidth, "width_fraction", params
         )
         data["width"] = maxwidth
@@ -141,7 +153,7 @@ class stat_sina(stat):
 
     def compute_group(self, data, scales):
         return estimate_group_density(
-            data, scales, self.params, few_rows_density=0
+            data, scales, self.params, few_rows_density=1
         )
 
     def finish_layer(self, data):

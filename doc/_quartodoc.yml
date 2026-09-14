@@ -67,6 +67,7 @@ quartodoc:
         - geom_abline
         - geom_area
         - geom_bar
+        - geom_beeswarm
         - geom_bin_2d
         - geom_blank
         - geom_boxplot
@@ -142,6 +143,7 @@ quartodoc:
 
     - options: *no-members
       contents:
+        - stat_beeswarm
         - stat_bin
         - stat_bin_2d
         - stat_bindot
