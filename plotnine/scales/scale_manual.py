@@ -143,6 +143,24 @@ class scale_linetype_manual(_scale_manual):
 
 
 @dataclass
+class scale_hatch_manual(_scale_manual):
+    """
+    Custom discrete hatch scale
+    """
+
+    _aesthetics = ["hatch"]
+    values: InitVar[Sequence[Any] | dict[Any, Any]]
+    """
+    Hatch patterns that make up the palette. See
+    `matplotlib.patches.Patch.set_hatch` for valid patterns
+    (e.g. '/', '//', 'xx', '.o', '\\\\|'). The values will be
+    matched with the `limits` of the scale or the `breaks` if
+    provided. If it is a dict then it should map data values to
+    hatch patterns.
+    """
+
+
+@dataclass
 class scale_alpha_manual(_scale_manual):
     """
     Custom discrete alpha scale
