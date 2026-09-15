@@ -17,14 +17,13 @@ LAST_PLOT: ggplot | Compose | None = None
 
 def last_plot() -> ggplot | Compose | None:
     """
-    Retrieve the last plot rendered in this session
+    Return the specification of the last plot drawn in this session
 
     Returns
     -------
     ggplot | Compose | None
-        The last plot that was rendered via `draw()`, `save()`,
-        or notebook display. Returns `None` if no plot has been
-        rendered yet.
+        The plot specification captured before `draw()`, `save()`, or notebook
+        display builds it. Returns `None` before the session draws a plot.
     """
     return LAST_PLOT
 
