@@ -480,9 +480,10 @@ class ggplot:
         -----
         The result contains independent copies of `layers`, `scales` and
         `layout`, so building does not train or modify those plot attributes.
-        The result shares `labels`, `facet` and `coordinates` with the plot;
-        building can add data-derived defaults such as mapped axis labels to
-        these objects.
+        The result shares `labels`, `facet` and `coordinates` with the plot.
+        Building records their data-derived parameters and adds labels from
+        layer mappings or statistics. It does not add labels inherited from
+        the plot's mapping.
         """
         layers = deepcopy(self.layers)
         if not layers:
@@ -879,9 +880,13 @@ class ggplot:
         pd.DataFrame
             Data used by the specified layer after all transformations,
             statistics, and position adjustments have been applied.
+
+        Notes
+        -----
+        Building can add data-derived defaults to the plot's labels, facet and
+        coordinates. See `build()`.
         """
-        p = deepcopy(self)
-        return p.build().layers.data[i]
+        return self.build().layers.data[i]
 
 
 ggsave = ggplot.save

@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from copy import deepcopy
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -38,10 +37,13 @@ def get_aesthetic_limits(
     out :
         The limits of the aesthetic. If the plot is facetted, (has many
         panels), it is a sequence of limits, one for each panel.
+
+    Notes
+    -----
+    Building can add data-derived defaults to the plot's labels, facet and
+    coordinates. See `ggplot.build`.
     """
-    # Building can add data-derived defaults to the plot's labels, facet and
-    # coordinates. Copy the plot to keep those changes from the caller.
-    built = deepcopy(plot).build()
+    built = plot.build()
     limits = [getattr(panel, ae).limits for panel in built.layout.panel_params]
 
     return limits[0] if len(limits) == 1 else limits
