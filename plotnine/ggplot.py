@@ -84,7 +84,7 @@ if TYPE_CHECKING:
             ...
 
 
-__all__ = ("PlotBuild", "ggplot", "ggsave", "save_as_pdf_pages")
+__all__ = ("ggplot", "ggsave", "save_as_pdf_pages")
 
 
 class ggplot:
@@ -107,6 +107,11 @@ class ggplot:
     """
 
     figure: p9Figure
+    _drawn_figure: p9Figure
+    """
+    Figure used for this plot's most recent completed draw
+    """
+
     axs: list[Axes]
     _gridspec: p9GridSpec
     """
@@ -136,6 +141,11 @@ class ggplot:
     """
 
     _sidespaces: PlotSideSpaces
+
+    built: PlotBuild
+    """
+    Most recent build result, unset until the first draw
+    """
 
     def __init__(
         self,
@@ -240,6 +250,10 @@ class ggplot:
         # don't make a deepcopy of data
         shallow = {"data", "figure", "gs", "_build_objs", "_drawn_figure"}
         for key, item in old.items():
+            if key == "built":
+                # A plot copied through `+` has not been built, even if its
+                # source has. Do not give the copy a stale build result.
+                continue
             if key in shallow:
                 new[key] = item
                 memo[id(new[key])] = new[key]
@@ -423,9 +437,10 @@ class ggplot:
         """
         Create the figure and gridspec for this plot
 
-        Replace a figure and gridspec created by an earlier `draw()` call.
-        Retain a figure that a parent composition assigned for the current
-        draw.
+        Replace the figure, gridspec, axes and sub-gridspec created by an
+        earlier `draw()` call. Retaining the axes would allow the facet to
+        reuse axes from the discarded figure. Preserve a figure that a parent
+        composition assigned for the current draw.
         """
         import matplotlib.pyplot as plt
 
@@ -463,7 +478,11 @@ class ggplot:
 
         Notes
         -----
-        Building does not modify the plot.
+        The result contains independent copies of `layers`, `scales` and
+        `layout`, so building does not train or modify those plot attributes.
+        The result shares `labels`, `facet` and `coordinates` with the plot;
+        building can add data-derived defaults such as mapped axis labels to
+        these objects.
         """
         layers = deepcopy(self.layers)
         if not layers:
@@ -861,7 +880,8 @@ class ggplot:
             Data used by the specified layer after all transformations,
             statistics, and position adjustments have been applied.
         """
-        return self.build().layers.data[i]
+        p = deepcopy(self)
+        return p.build().layers.data[i]
 
 
 ggsave = ggplot.save

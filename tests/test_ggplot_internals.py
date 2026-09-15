@@ -444,6 +444,18 @@ def test_build_does_not_mutate_the_plot():
     assert result1.layers[0].data is not result2.layers[0].data
 
 
+def test_build_keeps_an_autodetected_scale_off_the_plot():
+    """
+    Confirm that automatic scale detection changes only the build result
+    """
+    p = ggplot(data, aes(x="x", y="y", color="x")) + geom_point()
+
+    result = p.build()
+
+    assert len(p.scales) == 0
+    assert result.scales.get_scales("color") is not None
+
+
 def test_build_with_no_layers_adds_a_blank_layer():
     """
     Confirm that an empty plot builds without retaining the fallback layer

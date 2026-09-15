@@ -17,7 +17,7 @@ quartodoc:
       desc: ""
       contents:
         - name: ggplot
-          members: [__add__, __iadd__, show, draw, save, save_helper]
+          members: [__add__, __iadd__, show, draw, build, save, save_helper]
         - qplot
         - watermark
         - name: layer

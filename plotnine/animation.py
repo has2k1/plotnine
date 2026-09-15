@@ -204,7 +204,7 @@ class PlotnineAnimation(ArtistAnimation):
                 figure = first_plot.draw()
                 axs = first_plot.figure.get_axes()
                 initialise_artist_offsets(len(axs))
-                scales = first_plot._build_objs.scales
+                scales = first_plot.built.scales
                 set_scale_limits(scales)
             else:
                 plot = self._draw_animation_plot(p, first_plot)
