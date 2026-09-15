@@ -3,7 +3,6 @@ import locale
 import shutil
 import types
 import warnings
-from copy import deepcopy
 from pathlib import Path
 
 import matplotlib as mpl
@@ -121,27 +120,6 @@ def draw_test(self):
 
 
 ggplot.draw_test = draw_test
-
-
-def build_test(self):
-    """
-    Try building the ggplot object
-
-    Parameters
-    ----------
-    self : ggplot
-        ggplot object
-
-    This function is meant to monkey patch ggplot.build_test
-    so that tests can build a plot and inspect the side effects
-    on the plot object.
-    """
-    self = deepcopy(self)
-    self._build()
-    return self
-
-
-ggplot.build_test = build_test
 
 
 def pytest_assertrepr_compare(op, left, right):
