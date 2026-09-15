@@ -454,3 +454,22 @@ def test_build_with_no_layers_adds_a_blank_layer():
 
     assert len(result.layers) == 1
     assert len(p.layers) == 0
+
+
+def test_draw_can_be_called_more_than_once():
+    """
+    Confirm that repeated draws produce the same output
+    """
+    p = ggplot(data) + geom_line(aes(x="x", y="y"))
+    p.draw(show=False)
+    assert p == "test_draw_can_be_called_more_than_once"
+
+
+def test_draw_reflects_a_layer_added_after_a_previous_draw():
+    """
+    Confirm that a copied plot draws layers added after an earlier draw
+    """
+    p = ggplot(data) + geom_line(aes(x="x", y="y"))
+    p.draw(show=False)
+    p2 = p + geom_point(aes(x="x", y="y"))
+    assert p2 == "test_draw_reflects_a_layer_added_after_a_previous_draw"

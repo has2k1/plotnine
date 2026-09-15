@@ -238,7 +238,7 @@ class ggplot:
         new = result.__dict__
 
         # don't make a deepcopy of data
-        shallow = {"data", "figure", "gs", "_build_objs"}
+        shallow = {"data", "figure", "gs", "_build_objs", "_drawn_figure"}
         for key, item in old.items():
             if key in shallow:
                 new[key] = item
@@ -406,6 +406,8 @@ class ggplot:
 
             self._insets.draw(which="above")
 
+            self._drawn_figure = self.figure
+
         return figure
 
     def _setup(self) -> Figure:
@@ -419,11 +421,26 @@ class ggplot:
 
     def _create_figure(self):
         """
-        Create gridspec for the panels
-        """
-        if not hasattr(self, "figure"):
-            import matplotlib.pyplot as plt
+        Create the figure and gridspec for this plot
 
+        Replace a figure and gridspec created by an earlier `draw()` call.
+        Retain a figure that a parent composition assigned for the current
+        draw.
+        """
+        import matplotlib.pyplot as plt
+
+        # A parent composition assigns its figure before calling `draw()`, so
+        # only discard the exact figure used for the plot's previous draw.
+        if hasattr(self, "figure") and self.figure is getattr(
+            self, "_drawn_figure", None
+        ):
+            if not is_closed(self.figure):
+                plt.close(self.figure)
+            del self.figure, self._gridspec
+            if hasattr(self, "axs"):
+                del self.axs, self._sub_gridspec
+
+        if not hasattr(self, "figure"):
             from ._mpl.figure import p9Figure
             from ._mpl.layout_manager import PlotnineLayoutEngine
 
