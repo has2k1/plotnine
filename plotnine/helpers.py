@@ -40,8 +40,7 @@ def get_aesthetic_limits(
 
     Notes
     -----
-    Building can add data-derived defaults to the plot's labels, facet and
-    coordinates. See `ggplot.build`.
+    See `ggplot.build` for the plot state shared with and changed by a build.
     """
     built = plot.build()
     limits = [getattr(panel, ae).limits for panel in built.layout.panel_params]

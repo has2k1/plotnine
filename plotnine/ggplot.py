@@ -481,9 +481,9 @@ class ggplot:
         The result contains independent copies of `layers`, `scales` and
         `layout`, so building does not train or modify those plot attributes.
         The result shares `labels`, `facet` and `coordinates` with the plot.
-        Building records their data-derived parameters and adds labels from
-        layer mappings or statistics. It does not add labels inherited from
-        the plot's mapping.
+        Building can add labels from layer mappings or statistics, but not
+        labels inherited from the plot's mapping. A facet can also record
+        data-derived state such as `facet_wrap` panel-grid dimensions.
         """
         layers = deepcopy(self.layers)
         if not layers:
@@ -883,8 +883,7 @@ class ggplot:
 
         Notes
         -----
-        Building can add data-derived defaults to the plot's labels, facet and
-        coordinates. See `build()`.
+        See `build()` for the plot state shared with and changed by a build.
         """
         return self.build().layers.data[i]
 
