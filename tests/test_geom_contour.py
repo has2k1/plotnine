@@ -58,7 +58,7 @@ def test_single_point_grid():
 
 def test_unsorted_breaks():
     p = p0 + geom_contour_filled(breaks=[0.02, 0.005, 0.01])
-    data = p.build().layers[0].data
+    data = p.layer_data(0)
     # Sorting the breaks also orders the band categories.
     assert list(data["level"].cat.categories) == [
         "(0.005, 0.01]",
@@ -67,7 +67,7 @@ def test_unsorted_breaks():
 
 
 def test_contour_lines_expose_computed_variables():
-    data = (p0 + geom_contour()).build().layers[0].data
+    data = (p0 + geom_contour()).layer_data(0)
     assert {"level", "nlevel", "piece"} <= set(data.columns)
     assert data.groupby("group").ngroups > 1
     assert data["nlevel"].max() == 1
@@ -87,7 +87,7 @@ def test_filled_contours_with_bin_count():
 
 def test_filled_contour_levels_are_ordered():
     p = p0 + geom_contour_filled()
-    data = p.build().layers[0].data
+    data = p.layer_data(0)
     assert data["level"].cat.ordered
     assert "subgroup" in data
 
@@ -102,11 +102,11 @@ def test_facet_panels_share_breaks():
         + geom_contour()
         + facet_wrap("panel")
     )
-    built = p.build().layers[0].data
-    assert built["PANEL"].nunique() == 2
+    data = p.layer_data(0)
+    assert data["PANEL"].nunique() == 2
     # Shared breaks produce one evenly spaced sequence of contour values.
     # Per-panel breaks would interleave different sequences.
-    levels = np.sort(built["level"].unique())
+    levels = np.sort(data["level"].unique())
     steps = np.diff(levels)
     assert np.allclose(steps, steps[0])
 
