@@ -208,7 +208,7 @@ class PlotnineAnimation(ArtistAnimation):
                 set_scale_limits(scales)
             else:
                 plot = self._draw_animation_plot(p, first_plot)
-                check_scale_limits(plot.scales, frame_no)
+                check_scale_limits(plot.built.scales, frame_no)
 
             artists.append(get_frame_artists(axs))
 

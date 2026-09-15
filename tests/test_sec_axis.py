@@ -46,12 +46,12 @@ def test_facet_wrap_sec_axis_flags():
 
     # gear: 3 panels in a 2x2 grid -> (1,1), (1,2), (2,1)
     p = (p0 + facet_wrap("gear", nrow=2)).build_test()
-    layout = p.layout.layout
+    layout = p.built.layout.layout
     # secondary x on the top edge of each column
     assert list(layout["AXIS_X_SEC"]) == [True, True, False]
     # secondary y on the right edge of each row
     assert list(layout["AXIS_Y_SEC"]) == [False, True, True]
-    details = p.layout.get_details()
+    details = p.built.layout.get_details()
     assert details[0].axis_x_sec and not details[2].axis_x_sec
 
 
@@ -60,7 +60,7 @@ def test_facet_grid_sec_axis_flags():
 
     # am: 2 rows, gear: 3 cols
     p = (p0 + facet_grid("am", "gear")).build_test()
-    layout = p.layout.layout
+    layout = p.built.layout.layout
     is_top = layout["ROW"] == layout["ROW"].min()
     is_right = layout["COL"] == layout["COL"].max()
     assert list(layout["AXIS_X_SEC"]) == is_top.tolist()
@@ -69,7 +69,7 @@ def test_facet_grid_sec_axis_flags():
 
 def test_facet_null_sec_axis_flags():
     p = p0.build_test()
-    details = p.layout.get_details()[0]
+    details = p.built.layout.get_details()[0]
     assert details.axis_x_sec and details.axis_y_sec
 
 
@@ -81,7 +81,7 @@ def test_coord_trans_sec_axis():
         + scale_y_continuous(sec_axis=sec_axis(lambda y: y * 2))
         + coord_trans(y="log10")
     ).build_test()
-    sec = p.layout.panel_params[0].y.sec
+    sec = p.built.layout.panel_params[0].y.sec
     # The coordinate transform moves the secondary positions exactly
     # like the primary breaks: position = log10(value / 2)
     values = np.array([float(l) for l in sec.labels])

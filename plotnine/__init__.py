@@ -89,6 +89,7 @@ from .geoms import (
     geom_vline,
 )
 from .ggplot import (
+    PlotBuild,
     ggplot,
     ggsave,
     save_as_pdf_pages,
@@ -291,6 +292,7 @@ from .watermark import (
 
 __all__ = (
     "I",
+    "PlotBuild",
     "aes",
     "after_scale",
     "after_stat",

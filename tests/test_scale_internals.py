@@ -893,7 +893,7 @@ def test_layer_with_only_infs():
         + geom_point(color="red", size=3)
     )
     p = p.build_test()
-    assert isinstance(p.scales.get_scales("x"), scale_x_discrete)
+    assert isinstance(p.built.scales.get_scales("x"), scale_x_discrete)
 
 
 def test_discrete_scale_exceeding_maximum_number_of_values():

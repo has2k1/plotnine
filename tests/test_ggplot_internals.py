@@ -425,3 +425,32 @@ def test_pickle_matplotlib_figure():
     p = ggplot(data, aes("x", "y")) + geom_point()
     fig = p.draw()
     pickle_and_unpickle(fig)
+
+
+def test_build_does_not_mutate_the_plot():
+    """
+    Confirm that each build is independent and leaves the plot unchanged
+    """
+    p = ggplot(data) + geom_line(aes(x="x", y="y"))
+
+    result1 = p.build()
+    assert not hasattr(p.layers[0], "data")
+
+    result2 = p.build()
+    assert not hasattr(p.layers[0], "data")
+
+    assert "PANEL" in result1.layers[0].data.columns
+    assert "PANEL" in result2.layers[0].data.columns
+    assert result1.layers[0].data is not result2.layers[0].data
+
+
+def test_build_with_no_layers_adds_a_blank_layer():
+    """
+    Confirm that an empty plot builds without retaining the fallback layer
+    """
+    p = ggplot(data)
+
+    result = p.build()
+
+    assert len(result.layers) == 1
+    assert len(p.layers) == 0

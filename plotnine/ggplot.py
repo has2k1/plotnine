@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Sequence
 from copy import copy, deepcopy
+from dataclasses import dataclass
 from io import BytesIO
 from itertools import chain
 from pathlib import Path
@@ -24,7 +25,7 @@ from ._utils import (
     to_inches,
     ungroup,
 )
-from ._utils.context import plot_context
+from ._utils.context import is_closed, plot_context
 from ._utils.ipython import (
     get_ipython,
     get_mimebundle,
@@ -38,7 +39,7 @@ from .facets.layout import Layout
 from .geoms.geom_blank import geom_blank
 from .guides.guides import guides
 from .iapi import labels_view, mpl_save_view
-from .layer import Layers
+from .layer import Layers, layer
 from .mapping.aes import aes
 from .options import get_option
 from .scales.scales import Scales
@@ -83,7 +84,7 @@ if TYPE_CHECKING:
             ...
 
 
-__all__ = ("ggplot", "ggsave", "save_as_pdf_pages")
+__all__ = ("PlotBuild", "ggplot", "ggsave", "save_as_pdf_pages")
 
 
 class ggplot:
@@ -434,37 +435,45 @@ class ggplot:
 
             self._gridspec = p9GridSpec(1, 1, self.figure)
 
-    def _build(self):
+    def build(self) -> PlotBuild:
         """
-        Build ggplot for rendering.
+        Build the plot's layers, scales and layout
+
+        Returns
+        -------
+        :
+            The built layers, scales and layout.
 
         Notes
         -----
-        This method modifies the ggplot object. The caller is
-        responsible for making a copy and using that to make
-        the method call.
+        Building does not modify the plot.
         """
-        if not self.layers:
-            self += geom_blank()
+        layers = deepcopy(self.layers)
+        if not layers:
+            layers.append(layer(geom=geom_blank()))
+        scales = deepcopy(self.scales)
+        layout = deepcopy(self.layout)
 
-        layers = self._build_objs.layers = self.layers
-        scales = self._build_objs.scales = self.scales
-        layout = self._build_objs.layout = self.layout
+        # Layer setup and statistic mapping detect scales and train their
+        # ranges through the plot. Use a shallow copy to confine those changes
+        # to this build's layers, scales and layout.
+        plot = copy(self)
+        plot.layers, plot.scales, plot.layout = layers, scales, layout
 
         # Update the label information for the plot
         layers.update_labels(self.labels)
 
         # Give each layer a copy of the data, the mappings and
         # the execution environment
-        layers.setup(self)
+        layers.setup(plot)
 
         # Initialise panels, add extra data for margins & missing
         # facetting variables, and add on a PANEL variable to data
-        layout.setup(layers, self)
+        layout.setup(layers, plot)
 
         # Compute aesthetics to produce data with generalised
         # variable names
-        layers.compute_aesthetics(self)
+        layers.compute_aesthetics(plot)
 
         # Transform data using all scales
         layers.transform(scales)
@@ -479,7 +488,7 @@ class ggplot:
 
         # Apply and map statistics
         layers.compute_statistic(layout)
-        layers.map_statistic(self)
+        layers.map_statistic(plot)
 
         # Prepare data in geoms
         # e.g. from y and width to ymin and ymax
@@ -516,6 +525,22 @@ class ggplot:
         # Allow layout to modify data before rendering
         layout.finish_data(layers)
 
+        return PlotBuild(layers, scales, layout)
+
+    def _build(self):
+        """
+        Build the plot and attach the result
+
+        Notes
+        -----
+        Unlike `build()`, this method stores the result on the plot. It also
+        refreshes the deprecated build-object alias.
+        """
+        self.built = self.build()
+        self._build_objs.layers = self.built.layers
+        self._build_objs.scales = self.built.scales
+        self._build_objs.layout = self.built.layout
+
     def _draw_panel_borders(self):
         """
         Draw Panel boders
@@ -549,7 +574,7 @@ class ggplot:
         Draw the main plot(s) onto the axes.
         """
         # Draw the geoms
-        self.layers.draw(self.layout, self.coordinates)
+        self.built.layers.draw(self.built.layout, self.coordinates)
         self.coordinates.draw(self.axs)
 
     def _draw_breaks_and_labels(self):
@@ -562,10 +587,10 @@ class ggplot:
         #
         # pidx is the panel index (location left to right, top to bottom)
         self.facet.strips.draw()
-        for layout_info in self.layout.get_details():
+        for layout_info in self.built.layout.get_details():
             pidx = layout_info.panel_index
             ax = self.axs[pidx]
-            panel_params = self.layout.panel_params[pidx]
+            panel_params = self.built.layout.panel_params[pidx]
             self.coordinates.setup_ax(ax, panel_params, layout_info)
 
     def _draw_figure_texts(self):
@@ -595,12 +620,12 @@ class ggplot:
         # Get the axis labels (default or specified by user)
         # and let the coordinate modify them e.g. flip
         labels = self.coordinates.labels(
-            self.layout.set_xy_labels(self.labels)
+            self.built.layout.set_xy_labels(self.labels)
         )
 
         # The axis title is registered under a per-side target named for
         # its axis position.
-        pp = self.layout.panel_params[0]
+        pp = self.built.layout.panel_params[0]
         if labels.x:
             t = self.figure.add_artist(Text(text=labels.x))
             setattr(targets, f"axis_title_x_{pp.x.position}", t)
@@ -819,12 +844,31 @@ class ggplot:
             Data used by the specified layer after all transformations,
             statistics, and position adjustments have been applied.
         """
-        p = deepcopy(self)
-        p._build()
-        return p.layers.data[i]
+        return self.build().layers.data[i]
 
 
 ggsave = ggplot.save
+
+
+@dataclass(frozen=True)
+class PlotBuild:
+    """
+    A plot's computed layers, scales and layout
+
+    Parameters
+    ----------
+    layers :
+        Layers with computed aesthetics, statistics and position
+        adjustments applied.
+    scales :
+        Scales trained on the built layer data.
+    layout :
+        Panel layout with panel parameters resolved.
+    """
+
+    layers: Layers
+    scales: Scales
+    layout: Layout
 
 
 def save_as_pdf_pages(

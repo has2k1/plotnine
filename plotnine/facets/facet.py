@@ -141,7 +141,7 @@ class facet:
 
     def setup(self, plot: ggplot):
         self.plot = plot
-        self.layout = plot.layout
+        self.layout = plot.built.layout
         self.figure = plot.figure
 
         if hasattr(plot, "axs"):
