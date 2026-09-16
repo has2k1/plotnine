@@ -407,7 +407,7 @@ class ggplot:
             self._draw_plot_background()
             self._insets.draw(which="below")
 
-            self._sub_gridspec, self.axs = self.facet.setup(self)
+            self._sub_gridspec, self.axs = self.built.layout.facet.setup(self)
             self._draw_layers()
             self._draw_panel_borders()
             self._draw_breaks_and_labels()
@@ -469,36 +469,43 @@ class ggplot:
 
     def build(self) -> PlotBuild:
         """
-        Build the plot's layers, scales and layout
+        Build the plot's layers, scales, layout, facet and labels
 
         Returns
         -------
         :
-            The built layers, scales and layout.
+            The built layers, scales, layout, facet and labels.
 
         Notes
         -----
-        The result contains independent copies of `layers`, `scales` and
-        `layout`, so building does not train or modify those plot attributes.
-        The result shares `labels`, `facet` and `coordinates` with the plot.
-        Building can add labels from layer mappings or statistics, but not
-        labels inherited from the plot's mapping. A facet can also record
-        data-derived state such as `facet_wrap` panel-grid dimensions.
+        The result contains independent copies of `layers`, `scales`,
+        `layout`, `facet` and `labels`, so building does not modify those
+        plot attributes. Layer mappings and statistics can add labels, while
+        facets can record state such as panel-grid dimensions. These changes
+        remain on the build's copies. The result shares `coordinates` with the
+        plot because coordinate systems do not modify themselves during a
+        build.
         """
         layers = deepcopy(self.layers)
         if not layers:
             layers.append(layer(geom=geom_blank()))
         scales = deepcopy(self.scales)
         layout = deepcopy(self.layout)
+        facet = deepcopy(self.facet)
+        labels = deepcopy(self.labels)
 
-        # Layer setup and statistic mapping detect scales and train their
-        # ranges through the plot. Use a shallow copy to confine those changes
-        # to this build's layers, scales and layout.
+        # Layer setup and statistic mapping update scales through the plot. Use
+        # a shallow copy so those changes remain local to this build.
         plot = copy(self)
-        plot.layers, plot.scales, plot.layout = layers, scales, layout
+        plot.layers, plot.scales, plot.layout, plot.facet = (
+            layers,
+            scales,
+            layout,
+            facet,
+        )
 
-        # Update the label information for the plot
-        layers.update_labels(self.labels)
+        # Keep labels derived from layers on the build result.
+        layers.update_labels(labels)
 
         # Give each layer a copy of the data, the mappings and
         # the execution environment
@@ -562,7 +569,7 @@ class ggplot:
         # Allow layout to modify data before rendering
         layout.finish_data(layers)
 
-        return PlotBuild(layers, scales, layout)
+        return PlotBuild(layers, scales, layout, labels)
 
     def _build(self):
         """
@@ -623,7 +630,7 @@ class ggplot:
         #      - xaxis & yaxis breaks, labels, limits, ...
         #
         # pidx is the panel index (location left to right, top to bottom)
-        self.facet.strips.draw()
+        self.built.layout.facet.strips.draw()
         for layout_info in self.built.layout.get_details():
             pidx = layout_info.panel_index
             ax = self.axs[pidx]
@@ -891,7 +898,7 @@ ggsave = ggplot.save
 @dataclass(frozen=True)
 class PlotBuild:
     """
-    A plot's computed layers, scales and layout
+    A plot's computed layers, scales, layout and labels
 
     Parameters
     ----------
@@ -901,12 +908,17 @@ class PlotBuild:
     scales :
         Scales trained on the built layer data.
     layout :
-        Panel layout with panel parameters resolved.
+        Panel layout with panel parameters resolved. Its `facet`
+        attribute is this build's own copy of the plot's facet.
+    labels :
+        Labels with each layer's own mapping and statistic defaults
+        filled in.
     """
 
     layers: Layers
     scales: Scales
     layout: Layout
+    labels: labels_view
 
 
 def save_as_pdf_pages(

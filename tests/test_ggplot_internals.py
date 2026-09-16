@@ -11,6 +11,7 @@ from plotnine import (
     annotate,
     coord_trans,
     facet_null,
+    facet_wrap,
     geom_bar,
     geom_col,
     geom_histogram,
@@ -444,6 +445,31 @@ def test_build_does_not_mutate_the_plot():
     assert result1.layers[0].data is not result2.layers[0].data
 
 
+def test_build_does_not_mutate_the_plots_facet():
+    p = ggplot(data, aes("x", "y")) + geom_point() + facet_wrap("x")
+
+    result1 = p.build()
+    assert not hasattr(p.facet, "nrow")
+    assert not hasattr(p.facet, "ncol")
+
+    result2 = p.build()
+    assert not hasattr(p.facet, "nrow")
+    assert not hasattr(p.facet, "ncol")
+
+    assert result1.layout.facet is not result2.layout.facet
+    assert result1.layout.facet.nrow == result2.layout.facet.nrow
+
+
+def test_build_does_not_mutate_the_plots_labels():
+    # A layer mapping can supply a label only to the build result.
+    p = ggplot(data) + geom_point(aes(x="x", y="y", color="x"))
+
+    result = p.build()
+
+    assert p.labels.get("color", "") == ""
+    assert result.labels.get("color", "") == "x"
+
+
 def test_build_keeps_an_autodetected_scale_off_the_plot():
     """
     Confirm that automatic scale detection changes only the build result
@@ -474,7 +500,7 @@ def test_draw_can_be_called_more_than_once():
     """
     p = ggplot(data) + geom_line(aes(x="x", y="y"))
     p.draw(show=False)
-    assert p == "test_draw_can_be_called_more_than_once"
+    p.draw(show=False)
 
 
 def test_draw_reflects_a_layer_added_after_a_previous_draw():
@@ -484,4 +510,4 @@ def test_draw_reflects_a_layer_added_after_a_previous_draw():
     p = ggplot(data) + geom_line(aes(x="x", y="y"))
     p.draw(show=False)
     p2 = p + geom_point(aes(x="x", y="y"))
-    assert p2 == "test_draw_reflects_a_layer_added_after_a_previous_draw"
+    assert p2 == "draw_reflects_a_layer_added_after_a_previous_draw"
