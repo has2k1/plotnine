@@ -1032,7 +1032,7 @@ class PlotSideSpaces:
         # It is simpler to adjust for the aspect ratio than to calculate
         # the final parameters that are true to the aspect ratio in
         # one-short
-        if (ratio := self.plot.facet._aspect_ratio()) is not None:
+        if (ratio := self.plot.built.layout.facet._aspect_ratio()) is not None:
             current_ratio = self.aspect_ratio
             if ratio > current_ratio:
                 # Increase aspect ratio, taller panels
@@ -1239,8 +1239,8 @@ class PlotSideSpaces:
         """
         theme = self.plot.theme
 
-        ncol = self.plot.facet.ncol
-        nrow = self.plot.facet.nrow
+        ncol = self.plot.built.layout.facet.ncol
+        nrow = self.plot.built.layout.facet.nrow
 
         # Both spacings are specified as fractions of the figure width
         # Multiply the vertical by (W/H) so that the gullies along both
@@ -1266,7 +1266,7 @@ class PlotSideSpaces:
         """
         Calculate spacing parts for facet_wrap
         """
-        facet = cast("facet_wrap", self.plot.facet)
+        facet = cast("facet_wrap", self.plot.built.layout.facet)
         theme = self.plot.theme
 
         ncol = facet.ncol
@@ -1346,7 +1346,7 @@ class PlotSideSpaces:
         h1 = ratio * self.w * (self.W / self.H)
 
         # Half of the total vertical reduction w.r.t figure height
-        dh = (self.h - h1) * self.plot.facet.nrow / 2
+        dh = (self.h - h1) * self.plot.built.layout.facet.nrow / 2
 
         # Add more vertical plot margin
         self.increase_vertical_plot_margin(dh)
@@ -1366,7 +1366,7 @@ class PlotSideSpaces:
         w1 = (self.h * self.H) / (ratio * self.W)
 
         # Half of the total horizontal reduction w.r.t figure width
-        dw = (self.w - w1) * self.plot.facet.ncol / 2
+        dw = (self.w - w1) * self.plot.built.layout.facet.ncol / 2
 
         # Add more horizontal margin
         self.increase_horizontal_plot_margin(dw)
