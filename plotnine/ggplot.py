@@ -664,7 +664,7 @@ class ggplot:
         # Get the axis labels (default or specified by user)
         # and let the coordinate modify them e.g. flip
         labels = self.coordinates.labels(
-            self.built.layout.set_xy_labels(self.labels)
+            self.built.layout.set_xy_labels(self.built.labels)
         )
 
         # The axis title is registered under a per-side target named for
