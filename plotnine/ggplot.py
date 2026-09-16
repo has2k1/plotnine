@@ -880,12 +880,9 @@ class ggplot:
         pd.DataFrame
             Data used by the specified layer after all transformations,
             statistics, and position adjustments have been applied.
-
-        Notes
-        -----
-        See `build()` for the plot state shared with and changed by a build.
         """
-        return self.build().layers.data[i]
+        p = deepcopy(self)
+        return p.build().layers.data[i]
 
 
 ggsave = ggplot.save
