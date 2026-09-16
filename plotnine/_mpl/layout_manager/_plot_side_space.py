@@ -1185,14 +1185,15 @@ class PlotSideSpaces:
         This ensures that the same fraction gives equals space
         in both directions.
         """
-        if isinstance(self.plot.facet, facet_wrap):
+        facet = self.plot.built.layout.facet
+        if isinstance(facet, facet_wrap):
             wspace, hspace = self._calculate_panel_spacing_facet_wrap()
-        elif isinstance(self.plot.facet, facet_grid):
+        elif isinstance(facet, facet_grid):
             wspace, hspace = self._calculate_panel_spacing_facet_grid()
-        elif isinstance(self.plot.facet, facet_null):
+        elif isinstance(facet, facet_null):
             wspace, hspace = self._calculate_panel_spacing_facet_null()
         else:
-            raise TypeError(f"Unknown type of facet: {type(self.plot.facet)}")
+            raise TypeError(f"Unknown type of facet: {type(facet)}")
 
         return GridSpecParams(
             self.l.panel_left_relative,

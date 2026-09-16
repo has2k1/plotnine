@@ -469,22 +469,24 @@ class ggplot:
 
     def build(self) -> PlotBuild:
         """
-        Build the plot's layers, scales, layout, facet and labels
+        Build the plot's layers, scales, layout and labels
 
         Returns
         -------
         :
-            The built layers, scales, layout, facet and labels.
+            The built layers, scales, layout and labels.
 
         Notes
         -----
         The result contains independent copies of `layers`, `scales`,
         `layout`, `facet` and `labels`, so building does not modify those
-        plot attributes. Layer mappings and statistics can add labels, while
-        facets can record state such as panel-grid dimensions. These changes
-        remain on the build's copies. The result shares `coordinates` with the
-        plot because coordinate systems do not modify themselves during a
-        build.
+        plot attributes. The built facet is available through `layout.facet`.
+        Layer mappings and statistics can add labels, while facets can record
+        state such as panel-grid dimensions. These changes remain on the
+        build's copies.
+
+        The result shares `coordinates` with the plot. During a build, a
+        coordinate system writes only an empty, unused `params` dictionary.
         """
         layers = deepcopy(self.layers)
         if not layers:
@@ -664,7 +666,7 @@ class ggplot:
         # Get the axis labels (default or specified by user)
         # and let the coordinate modify them e.g. flip
         labels = self.coordinates.labels(
-            self.built.layout.set_xy_labels(self.built.labels)
+            self.built.layout.set_xy_labels(copy(self.built.labels))
         )
 
         # The axis title is registered under a per-side target named for
