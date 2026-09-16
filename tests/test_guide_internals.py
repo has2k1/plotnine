@@ -14,6 +14,8 @@ from plotnine import (
 )
 from plotnine.data import mpg, mtcars
 
+data = pd.DataFrame({"x": range(10), "y": range(10)})
+
 
 def test_no_after_scale_warning():
     p = ggplot(mtcars, aes("wt", "mpg")) + geom_point()
@@ -83,3 +85,12 @@ def test_literal_layer_does_not_join_another_layer_guide():
         lp.layer.geom.__class__.__name__ for lp in g._layer_parameters
     ]
     assert contributing == ["geom_line"]
+
+
+def test_guide_title_falls_back_to_a_layers_own_mapping():
+    # A layer mapping supplies its default label only to the build result.
+    p = ggplot(data) + geom_point(aes(x="x", y="y", color="x"))
+    p.draw_test()
+
+    ((_, g),) = p.guides._lookup.values()
+    assert g.title == "x"

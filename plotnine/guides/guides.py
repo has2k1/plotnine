@@ -277,7 +277,7 @@ class guides:
                 if scale.name:
                     g.title = scale.name
                 else:
-                    g.title = getattr(self.plot.labels, ae)
+                    g.title = getattr(self.plot.built.labels, ae)
                     if g.title is None:
                         warn(
                             f"Cannot generate legend for the {ae!r} "
