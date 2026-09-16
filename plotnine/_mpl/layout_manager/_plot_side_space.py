@@ -1032,7 +1032,7 @@ class PlotSideSpaces:
         # It is simpler to adjust for the aspect ratio than to calculate
         # the final parameters that are true to the aspect ratio in
         # one-short
-        if (ratio := self.plot.built.layout.facet._aspect_ratio()) is not None:
+        if (ratio := self.plot.built.facet._aspect_ratio()) is not None:
             current_ratio = self.aspect_ratio
             if ratio > current_ratio:
                 # Increase aspect ratio, taller panels
@@ -1185,7 +1185,7 @@ class PlotSideSpaces:
         This ensures that the same fraction gives equals space
         in both directions.
         """
-        facet = self.plot.built.layout.facet
+        facet = self.plot.built.facet
         if isinstance(facet, facet_wrap):
             wspace, hspace = self._calculate_panel_spacing_facet_wrap()
         elif isinstance(facet, facet_grid):
@@ -1240,8 +1240,8 @@ class PlotSideSpaces:
         """
         theme = self.plot.theme
 
-        ncol = self.plot.built.layout.facet.ncol
-        nrow = self.plot.built.layout.facet.nrow
+        ncol = self.plot.built.facet.ncol
+        nrow = self.plot.built.facet.nrow
 
         # Both spacings are specified as fractions of the figure width
         # Multiply the vertical by (W/H) so that the gullies along both
@@ -1267,7 +1267,7 @@ class PlotSideSpaces:
         """
         Calculate spacing parts for facet_wrap
         """
-        facet = cast("facet_wrap", self.plot.built.layout.facet)
+        facet = cast("facet_wrap", self.plot.built.facet)
         theme = self.plot.theme
 
         ncol = facet.ncol
@@ -1347,7 +1347,7 @@ class PlotSideSpaces:
         h1 = ratio * self.w * (self.W / self.H)
 
         # Half of the total vertical reduction w.r.t figure height
-        dh = (self.h - h1) * self.plot.built.layout.facet.nrow / 2
+        dh = (self.h - h1) * self.plot.built.facet.nrow / 2
 
         # Add more vertical plot margin
         self.increase_vertical_plot_margin(dh)
@@ -1367,7 +1367,7 @@ class PlotSideSpaces:
         w1 = (self.h * self.H) / (ratio * self.W)
 
         # Half of the total horizontal reduction w.r.t figure width
-        dw = (self.w - w1) * self.plot.built.layout.facet.ncol / 2
+        dw = (self.w - w1) * self.plot.built.facet.ncol / 2
 
         # Add more horizontal margin
         self.increase_horizontal_plot_margin(dw)

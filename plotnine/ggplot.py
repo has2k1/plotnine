@@ -407,7 +407,7 @@ class ggplot:
             self._draw_plot_background()
             self._insets.draw(which="below")
 
-            self._sub_gridspec, self.axs = self.built.layout.facet.setup(self)
+            self._sub_gridspec, self.axs = self.built.facet.setup(self)
             self._draw_layers()
             self._draw_panel_borders()
             self._draw_breaks_and_labels()
@@ -469,42 +469,31 @@ class ggplot:
 
     def build(self) -> PlotBuild:
         """
-        Build the plot's layers, scales, layout and labels
+        Build the plot's layers, scales, layout, facet and labels
 
         Returns
         -------
         :
-            The built layers, scales, layout and labels.
+            The built layers, scales, layout, facet and labels.
 
         Notes
         -----
         The result contains independent copies of `layers`, `scales`,
         `layout`, `facet` and `labels`, so building does not modify those
-        plot attributes. The built facet is available through `layout.facet`.
-        Layer mappings and statistics can add labels, while facets can record
-        state such as panel-grid dimensions. These changes remain on the
-        build's copies.
-
-        The result shares `coordinates` with the plot. During a build, a
-        coordinate system writes only an empty, unused `params` dictionary.
+        plot attributes. Layer mappings and statistics can add labels, while
+        facets can record state such as panel-grid dimensions. These changes
+        remain on the build's copies.
         """
-        layers = deepcopy(self.layers)
+        plot = deepcopy(self)
+        layers, scales, layout, facet, labels = (
+            plot.layers,
+            plot.scales,
+            plot.layout,
+            plot.facet,
+            plot.labels,
+        )
         if not layers:
             layers.append(layer(geom=geom_blank()))
-        scales = deepcopy(self.scales)
-        layout = deepcopy(self.layout)
-        facet = deepcopy(self.facet)
-        labels = deepcopy(self.labels)
-
-        # Layer setup and statistic mapping update scales through the plot. Use
-        # a shallow copy so those changes remain local to this build.
-        plot = copy(self)
-        plot.layers, plot.scales, plot.layout, plot.facet = (
-            layers,
-            scales,
-            layout,
-            facet,
-        )
 
         # Keep labels derived from layers on the build result.
         layers.update_labels(labels)
@@ -571,7 +560,7 @@ class ggplot:
         # Allow layout to modify data before rendering
         layout.finish_data(layers)
 
-        return PlotBuild(layers, scales, layout, labels)
+        return PlotBuild(layers, scales, layout, facet, labels)
 
     def _build(self):
         """
@@ -632,7 +621,7 @@ class ggplot:
         #      - xaxis & yaxis breaks, labels, limits, ...
         #
         # pidx is the panel index (location left to right, top to bottom)
-        self.built.layout.facet.strips.draw()
+        self.built.facet.strips.draw()
         for layout_info in self.built.layout.get_details():
             pidx = layout_info.panel_index
             ax = self.axs[pidx]
@@ -899,7 +888,7 @@ ggsave = ggplot.save
 @dataclass(frozen=True)
 class PlotBuild:
     """
-    A plot's computed layers, scales, layout and labels
+    A plot's computed layers, scales, layout, facet and labels
 
     Parameters
     ----------
@@ -909,8 +898,10 @@ class PlotBuild:
     scales :
         Scales trained on the built layer data.
     layout :
-        Panel layout with panel parameters resolved. Its `facet`
-        attribute is this build's own copy of the plot's facet.
+        Panel layout with panel parameters resolved.
+    facet :
+        Facet state computed for this build. This is the same object as
+        `layout.facet`.
     labels :
         Labels with each layer's own mapping and statistic defaults
         filled in.
@@ -919,6 +910,7 @@ class PlotBuild:
     layers: Layers
     scales: Scales
     layout: Layout
+    facet: facet
     labels: labels_view
 
 
