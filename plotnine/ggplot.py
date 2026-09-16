@@ -888,8 +888,7 @@ class ggplot:
             Data used by the specified layer after all transformations,
             statistics, and position adjustments have been applied.
         """
-        p = deepcopy(self)
-        return p.build().layers.data[i]
+        return self.build().layers.data[i]
 
 
 ggsave = ggplot.save
