@@ -236,6 +236,6 @@ class PlotnineAnimation(ArtistAnimation):
         plot._sub_gridspec = first_plot._sub_gridspec
         with plot_context(plot):
             plot._build()
-            _ = plot.facet.setup(plot)
+            _ = plot.built.layout.facet.setup(plot)
             plot._draw_layers()
         return plot
