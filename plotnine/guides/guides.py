@@ -140,7 +140,7 @@ class guides:
 
         Parameters
         ----------
-        plot :
+        other :
             ggplot object being created
 
         Returns

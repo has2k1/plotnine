@@ -395,7 +395,7 @@ class stat(ABC, metaclass=Register):
 
         Parameters
         ----------
-        gg :
+        other :
             ggplot object
 
         Returns

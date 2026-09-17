@@ -282,7 +282,7 @@ class ggplot:
 
         Parameters
         ----------
-        other :
+        rhs :
             Either an object that knows how to "radd"
             itself to a ggplot, or a list of such objects.
         """
