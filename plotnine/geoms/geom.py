@@ -439,7 +439,7 @@ class geom(ABC, metaclass=Register):
 
         Parameters
         ----------
-        plot :
+        other :
             ggplot object
 
         Returns
