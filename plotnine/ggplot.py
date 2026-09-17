@@ -25,7 +25,7 @@ from ._utils import (
     to_inches,
     ungroup,
 )
-from ._utils.context import is_closed, plot_context
+from ._utils.context import assign_figure, plot_context
 from ._utils.ipython import (
     get_ipython,
     get_mimebundle,
@@ -107,11 +107,6 @@ class ggplot:
     """
 
     figure: p9Figure
-    _drawn_figure: p9Figure
-    """
-    Figure used for this plot's most recent completed draw
-    """
-
     axs: list[Axes]
     _gridspec: p9GridSpec
     """
@@ -247,14 +242,20 @@ class ggplot:
         old = self.__dict__
         new = result.__dict__
 
-        # don't make a deepcopy of data
-        shallow = {"data", "figure", "gs", "_build_objs", "_drawn_figure"}
+        skip = {
+            "figure",
+            "_gridspec",
+            "_sub_gridspec",
+            "axs",
+            # A copied plot has no build result, even when its source does.
+            "built",
+        }
         for key, item in old.items():
-            if key == "built":
-                # A plot copied through `+` has not been built, even if its
-                # source has. Do not give the copy a stale build result.
+            if key in skip:
                 continue
-            if key in shallow:
+
+            # Share data and the build-result scaffold with the copy.
+            if key in ("data", "_build_objs"):
                 new[key] = item
                 memo[id(new[key])] = new[key]
             else:
@@ -420,8 +421,6 @@ class ggplot:
 
             self._insets.draw(which="above")
 
-            self._drawn_figure = self.figure
-
         return figure
 
     def _setup(self) -> Figure:
@@ -435,34 +434,23 @@ class ggplot:
 
     def _create_figure(self):
         """
-        Create the figure and gridspec for this plot
+        Create or reuse the plot's figure and gridspec
 
-        Replace the figure, gridspec, axes and sub-gridspec created by an
-        earlier `draw()` call. Retaining the axes would allow the facet to
-        reuse axes from the discarded figure. Preserve a figure that a parent
-        composition assigned for the current draw.
+        Reuse a figure supplied by a parent composition or host inset, adding
+        any missing gridspec. When this plot owns the current figure, replace
+        it with a fresh figure and close the previous one.
         """
         import matplotlib.pyplot as plt
 
-        # A parent composition assigns its figure before calling `draw()`, so
-        # only discard the exact figure used for the plot's previous draw.
-        if hasattr(self, "figure") and self.figure is getattr(
-            self, "_drawn_figure", None
-        ):
-            if not is_closed(self.figure):
-                plt.close(self.figure)
-            del self.figure, self._gridspec
-            if hasattr(self, "axs"):
-                del self.axs, self._sub_gridspec
-
-        if not hasattr(self, "figure"):
+        if not hasattr(self, "figure") or self.figure._owner is self:
             from ._mpl.figure import p9Figure
-            from ._mpl.layout_manager import PlotnineLayoutEngine
+            from ._mpl.gridspec import p9GridSpec
 
-            self.figure = cast("p9Figure", plt.figure(FigureClass=p9Figure))
-            self.figure.set_layout_engine(PlotnineLayoutEngine(self))
-
-        if not hasattr(self, "_gridspec"):
+            figure = cast(
+                "p9Figure", plt.figure(FigureClass=p9Figure, owner=self)
+            )
+            assign_figure(self, figure, p9GridSpec(1, 1, figure))
+        elif not hasattr(self, "_gridspec"):
             from ._mpl.gridspec import p9GridSpec
 
             self._gridspec = p9GridSpec(1, 1, self.figure)

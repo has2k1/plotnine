@@ -213,9 +213,7 @@ class PlotnineAnimation(ArtistAnimation):
             artists.append(get_frame_artists(axs))
 
         if figure is None:
-            from plotnine._mpl.figure import p9Figure
-
-            figure = plt.figure(FigureClass=p9Figure)
+            figure = plt.figure()
 
         # Prevent Jupyter from plotting any static figure
         plt.close(figure)

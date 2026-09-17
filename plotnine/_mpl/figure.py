@@ -1,9 +1,13 @@
 from __future__ import annotations
 
-from typing import TypeVar
+from typing import TYPE_CHECKING, TypeVar
 
 from matplotlib.artist import Artist
 from matplotlib.figure import Figure
+
+if TYPE_CHECKING:
+    from plotnine.composition import Compose
+    from plotnine.ggplot import ggplot
 
 TArtist = TypeVar("TArtist", bound=Artist)
 
@@ -20,11 +24,22 @@ class p9Figure(Figure):
     """
 
     _next_zorder: int
+    _owner: ggplot | Compose
+    """
+    Plot or composition permitted to close and replace this figure
 
-    def __init__(self, *args, **kwargs):
+    Other plots and compositions may draw into the figure, but they cannot
+    retire it.
+    """
+
+    def __init__(self, *args, owner: ggplot | Compose, **kwargs):
+        from plotnine._mpl.layout_manager import PlotnineLayoutEngine
+
         super().__init__(*args, **kwargs)
         # figure.patch sits at zorder 1; start above it.
         self._next_zorder = 2
+        self._owner = owner
+        self.set_layout_engine(PlotnineLayoutEngine(owner))
 
     def _stamp(self, artist: TArtist) -> TArtist:
         artist.set_zorder(self._next_zorder)
