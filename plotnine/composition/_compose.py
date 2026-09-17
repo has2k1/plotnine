@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING, TypeVar, cast, overload
 
 from plotnine.themes.theme import theme, theme_get
 
-from .._utils.context import plot_composition_context
+from .._utils.context import is_closed, plot_composition_context
 from .._utils.ipython import (
     get_ipython,
     get_mimebundle,
@@ -111,6 +111,11 @@ class Compose:
 
     # These are created in the ._create_figure
     figure: p9Figure
+    _drawn_figure: p9Figure
+    """
+    Figure used for the composition's most recent completed draw
+    """
+
     _gridspec: p9GridSpec
     """
     Gridspec (1x1) that contains the annotations and the composition items
@@ -585,7 +590,7 @@ class Compose:
         old = self.__dict__
         new = result.__dict__
 
-        shallow = {"figure", "gridsspec", "__copy"}
+        shallow = {"figure", "gridsspec", "_drawn_figure", "__copy"}
         for key, item in old.items():
             if key in shallow:
                 new[key] = item
@@ -617,11 +622,22 @@ class Compose:
 
     def _create_figure(self):
         """
-        Create figure & gridspecs for all sub compositions
-        """
-        if not hasattr(self, "figure"):
-            import matplotlib.pyplot as plt
+        Create the figure and gridspecs for this composition
 
+        Replace the figure and gridspecs from an earlier `draw()` call. Each
+        item then draws onto a fresh figure instead of a closed figure from
+        the previous draw.
+        """
+        import matplotlib.pyplot as plt
+
+        if hasattr(self, "figure") and self.figure is getattr(
+            self, "_drawn_figure", None
+        ):
+            if not is_closed(self.figure):
+                plt.close(self.figure)
+            del self.figure, self._gridspec
+
+        if not hasattr(self, "figure"):
             from plotnine._mpl.figure import p9Figure
             from plotnine._mpl.layout_manager import PlotnineLayoutEngine
 
@@ -668,6 +684,10 @@ class Compose:
             if isinstance(item, ggplot):
                 item.figure = figure
                 item._gridspec = _container_gs
+                # Axes from the previous draw belong to the discarded figure.
+                # Clear them so the facet creates axes for the new figure.
+                if hasattr(item, "axs"):
+                    del item.axs, item._sub_gridspec
             else:
                 item._generate_gridspecs(figure, _container_gs)
 
@@ -764,6 +784,8 @@ class Compose:
                 cmp.guides.draw()
             self._draw_annotation()
             self.theme.apply()
+
+            self._drawn_figure = self.figure
 
         return figure
 
