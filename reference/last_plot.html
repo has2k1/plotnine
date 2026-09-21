@@ -121,7 +121,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">plotnine 999.post1+gd3451663f</span>
+    <span class="navbar-title">plotnine 999.post1+g623524a4b</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -177,7 +177,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>last_plot()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="doc-text">
-<p>Retrieve the last plot rendered in this session</p>
+<p>Return the specification of the last plot drawn in this session</p>
 </div>
 <section id="returns" class="level2 doc-returns">
 <h2 class="doc-returns anchored" data-anchor-id="returns">Returns</h2>
@@ -185,7 +185,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <dl>
 <dt><code><span class="doc-parameter-annotation"><a href="../reference/ggplot.html#plotnine.ggplot">ggplot</a> | <a href="../reference/Compose.html#plotnine.composition.Compose">Compose</a> | None</span></code></dt>
 <dd>
-The last plot that was rendered via <code>draw()</code>, <code>save()</code>, or notebook display. Returns <code>None</code> if no plot has been rendered yet.
+The plot specification captured before <code>draw()</code>, <code>save()</code>, or notebook display builds it. Returns <code>None</code> before the session draws a plot.
 </dd>
 </dl>
 </div>
