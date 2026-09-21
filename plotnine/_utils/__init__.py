@@ -24,6 +24,8 @@ from ..exceptions import PlotnineError, PlotnineWarning
 from ..mapping import aes
 
 if TYPE_CHECKING:
+    from io import BytesIO
+    from pathlib import Path
     from typing import Any, Callable, Literal, TypeVar
 
     import numpy.typing as npt
@@ -1289,3 +1291,28 @@ def nextafter_range(rng: tuple[float, float]) -> tuple[float, float]:
     from math import inf, nextafter
 
     return (nextafter(rng[0], -inf), nextafter(rng[1], inf))
+
+
+def get_save_format(
+    filename: str | Path | BytesIO | None,
+    format: str | None,
+    *,
+    default: str | None,
+) -> str | None:
+    """
+    Resolve the output format for a saved figure
+
+    An explicit format takes priority over the filename suffix and the
+    default. A `.png` suffix retains a `retina` default.
+    """
+    from pathlib import Path
+
+    if format is None and isinstance(filename, (str, Path)):
+        format = Path(filename).suffix.lstrip(".").lower() or None
+        if format == "png" and (default or "").lower() == "retina":
+            format = "retina"
+    format = format if format is not None else default
+    if format is None:
+        return None
+    format = format.lower()
+    return "jpeg" if format == "jpg" else format

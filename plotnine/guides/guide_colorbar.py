@@ -28,7 +28,6 @@ if TYPE_CHECKING:
     from matplotlib.text import Text
 
     from plotnine import theme
-    from plotnine.guides import guides
     from plotnine.scales.scale import scale
     from plotnine.typing import Side
 
@@ -81,12 +80,6 @@ class guide_colorbar(guide):
 
         if self.nbin is None:
             self.nbin = 300  # if self.display == "gradient" else 300
-
-    def setup(self, guides: guides):
-        super().setup(guides)
-        # See: add_segmented_colorbar
-        if guides.plot._build_objs.meta.get("figure_format") == "svg":
-            self.display = "rectangles"
 
     def train(self, scale: scale, aesthetic=None):
         self.nbin = cast("int", self.nbin)
@@ -184,7 +177,11 @@ class guide_colorbar(guide):
         reverse = slice(None, None, -1)
         nbars = len(self.bar)
         elements = self.elements
-        raster = self.display == "raster"
+        format = self.theme.getp("figure_format")
+        display = self.display
+        if format is not None and format.lower() in {"svg", "svgz"}:
+            display = "rectangles"
+        raster = display == "raster"
         alpha = self.alpha
 
         colors = self.bar["color"].tolist()
@@ -233,7 +230,7 @@ class guide_colorbar(guide):
             targets.legend_text_colorbar = texts
 
         # colorbar
-        if self.display == "rectangles":
+        if display == "rectangles":
             add_segmented_colorbar(auxbox, colors, alpha, elements)
         else:
             add_gradient_colorbar(auxbox, colors, alpha, elements, raster)

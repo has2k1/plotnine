@@ -7,6 +7,11 @@ title: Changelog
 
 ### New
 
+- Set a plot's preferred notebook and save format with
+  `theme(figure_format="svg")`. An explicit save format takes priority,
+  followed by the filename extension. For a composition, set the preference
+  with `plot_annotation(theme=theme(figure_format="svg"))`.
+
 - You can now add a secondary axis to a plot, either as a one-to-one
   transformation of the primary axis with [](:class:`~plotnine.sec_axis`), or as a
   mirror of the primary axis with [](:func:`~plotnine.dup_axis`).
@@ -170,6 +175,10 @@ title: Changelog
   instead.
 
 ### Bug Fixes
+
+- SVG colourbars now use overlapping rectangles to prevent misplaced
+  gradients in some SVG viewers. This applies to compositions and insets
+  without changing the colourbar mode used for other output formats.
 
 - [](:class:`~plotnine.scale_size_datetime`) now honours its `range`
   argument. Previously it was ignored and mapping data raised an error.

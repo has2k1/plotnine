@@ -248,6 +248,7 @@ class theme:
         panel_ontop=None,
         aspect_ratio=None,
         dpi=None,
+        figure_format: str | None = None,
         figure_size=None,
         legend_box=None,
         legend_box_margin=None,
@@ -575,16 +576,16 @@ class theme:
 
     def _inherit_figure_props(self, other: theme) -> None:
         """
-        Copy themeables that modify the figure
+        Inherit figure properties from another theme
 
-        Used when this theme is attached to a plot that does not own
-        its figure (an inset, or a member of a composition). Such a plot
-        has no figure to size or DPI; the values must come from the
-        figure's owner.
+        Plots and guides that share a figure use its owner's size, DPI, and
+        output format.
         """
+        self.themeables.pop("figure_format", None)
         self += theme(
             figure_size=other.getp("figure_size"),
             dpi=other.getp("dpi"),
+            figure_format=other.getp("figure_format"),
         )
 
     def _smart_title_and_subtitle_ha(

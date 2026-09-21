@@ -2981,6 +2981,32 @@ class dpi(themeable):
         return rcParams
 
 
+class figure_format(themeable):
+    """
+    Preferred output format for a figure
+
+    Parameters
+    ----------
+    theme_element :
+        Format such as `png`, `svg`, `pdf`, or `retina`. Notebook display
+        supports PNG, JPEG, SVG, PDF, and retina PNG. Saved files also support
+        formats provided by the selected backend. Retina PNG uses twice the
+        theme DPI.
+
+    Notes
+    -----
+    An explicit save format takes priority over the filename suffix, which
+    takes priority over this preference. A `.png` suffix retains a `retina`
+    preference; pass `format="png"` for ordinary resolution. Without a theme
+    preference, notebook display uses the global option, then IPython's
+    setting.
+
+    The figure's theme determines the format for all its plots, insets, and
+    guides. Set a composition's preference through
+    [](`~plotnine.composition.plot_annotation`) or broadcast it with `&`.
+    """
+
+
 class figure_size(themeable):
     """
     Figure size in inches

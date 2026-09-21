@@ -40,14 +40,18 @@ Default figure size in inches
 
 figure_format: Optional[FigureFormat] = None
 """
-The format for the inline figures outputted by the jupyter kernel.
+Default format for figures displayed in Jupyter
 
-If `None`, it is the value of
+A plot or composition theme takes priority over this option. When both are
+unset, use the IPython setting:
 
     %config InlineBackend.figure_format
 
-If that has not been set, the default is "retina".
-You can set it explicitly with:
+If IPython has no setting, use `"retina"`. Set a plot-specific preference
+with `theme(figure_format="svg")`. This option does not set the default
+format for saved files.
+
+Set the IPython fallback with:
 
     %config InlineBackend.figure_format = "retina"
 """

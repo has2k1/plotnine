@@ -20,6 +20,7 @@ from warnings import warn
 
 from ._utils import (
     from_inches,
+    get_save_format,
     is_data_like,
     order_as_data_mapping,
     to_inches,
@@ -167,9 +168,6 @@ class ggplot:
         self.watermarks: list[watermark] = []
         self._insets: Insets = Insets()
 
-        # build artefacts
-        self._build_objs = NS(meta={})
-
     def __str__(self) -> str:
         """
         Return a wrapped display size (in pixels) of the plot
@@ -197,10 +195,14 @@ class ggplot:
         """
         ip = get_ipython()
         format: FigureFormat = (
-            get_option("figure_format")
+            self.theme.getp("figure_format")
+            or get_option("figure_format")
             or (ip and ip.config.InlineBackend.get("figure_format"))
             or "retina"
         )
+        format = cast("FigureFormat", format.lower())
+        if format == "jpg":
+            format = "jpeg"
 
         # While jpegs can be displayed as retina, we restrict the output
         # of "retina" to png
@@ -560,9 +562,13 @@ class ggplot:
         refreshes the deprecated build-object alias.
         """
         self.built = self.build()
-        self._build_objs.layers = self.built.layers
-        self._build_objs.scales = self.built.scales
-        self._build_objs.layout = self.built.layout
+        # Preserve the deprecated build-object alias for extensions that
+        # still depend on it.
+        self._build_objs = NS(
+            layers=self.built.layers,
+            scales=self.built.scales,
+            layout=self.built.layout,
+        )
 
     def _draw_panel_borders(self):
         """
@@ -731,22 +737,32 @@ class ggplot:
         This method has the same arguments as [](`~plotnine.ggplot.save`).
         Use it to get access to the figure that will be saved.
         """
-        if format is None and isinstance(filename, (str, Path)):
-            format = str(filename).split(".")[-1]
-
-        fig_kwargs: Dict[str, Any] = {"format": format, **kwargs}
+        append_extension = (
+            format is None
+            and isinstance(filename, (str, Path))
+            and not Path(filename).suffix.lstrip(".")
+        )
+        format = get_save_format(
+            filename, format, default=self.theme.getp("figure_format")
+        )
+        retina = format == "retina"
+        if retina:
+            format = "png"
 
         if limitsize is None:
             limitsize = cast("bool", get_option("limitsize"))
 
         # filename, depends on the object
         if filename is None:
-            ext = format if format else "pdf"
-            filename = self._save_filename(ext)
+            format = format or "pdf"
+            filename = self._save_filename(format)
+        elif append_extension and format is not None:
+            filename = f"{str(filename).rstrip('.')}.{format}"
 
         if path and isinstance(filename, (Path, str)):
             filename = Path(path) / filename
 
+        fig_kwargs: Dict[str, Any] = {"format": format, **kwargs}
         fig_kwargs["fname"] = filename
 
         # Preserve the users object
@@ -783,7 +799,9 @@ class ggplot:
         if dpi is not None:
             self.theme = self.theme + theme(dpi=dpi)
 
-        self._build_objs.meta["figure_format"] = format
+        if retina:
+            self.theme = self.theme.to_retina()
+        self.theme = self.theme + theme(figure_format=format)
         figure = self.draw(show=False)
         return mpl_save_view(figure, fig_kwargs)
 
@@ -809,8 +827,12 @@ class ggplot:
             File name to write the plot to. If not specified, a name
             like “plotnine-save-<hash>.<format>” is used.
         format :
-            Image format to use, automatically extract from
-            file name extension.
+            Output format. An explicit value takes priority over the filename
+            extension and the theme's `figure_format`. Without a filename or
+            preference, use PDF; otherwise use Matplotlib's default. The
+            `retina` format saves a PNG at twice the requested DPI. A `.png`
+            extension retains a `retina` theme preference; pass
+            `format="png"` for ordinary resolution.
         path :
             Path to save plot to (if you just want to set path and
             not filename).
@@ -1003,6 +1025,8 @@ def save_as_pdf_pages(
     with PdfPages(filename) as pdf:
         # Re-add the first element to the iterator, if it was removed
         for plot in plots:
+            plot = deepcopy(plot)
+            plot.theme = plot.theme + theme(figure_format="pdf")
             fig = plot.draw()
             with plot_context(plot).rc_context:
                 # Save as a page in the PDF file

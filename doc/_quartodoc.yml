@@ -485,6 +485,7 @@ quartodoc:
         - axis_title_y_left
         - axis_title_y_right
         - dpi
+        - figure_format
         - figure_size
         - legend_background
         - legend_box

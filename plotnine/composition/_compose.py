@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING, TypeVar, cast, overload
 
 from plotnine.themes.theme import theme, theme_get
 
+from .._utils import get_save_format
 from .._utils.context import assign_figure, plot_composition_context
 from .._utils.ipython import (
     get_ipython,
@@ -386,10 +387,14 @@ class Compose:
         """
         ip = get_ipython()
         format: FigureFormat = (
-            get_option("figure_format")
+            self.theme.getp("figure_format")
+            or get_option("figure_format")
             or (ip and ip.config.InlineBackend.get("figure_format"))
             or "retina"
         )
+        format = cast("FigureFormat", format.lower())
+        if format == "jpg":
+            format = "jpeg"
 
         if format == "retina":
             self = deepcopy(self)
@@ -844,10 +849,13 @@ class Compose:
         Parameters
         ----------
         filename :
-            File name to write the plot to. If not specified, a name
+            File name or buffer to write the composition to.
         format :
-            Image format to use, automatically extract from
-            file name extension.
+            Output format. An explicit value takes priority over the filename
+            extension and the composition theme's `figure_format`. If none is
+            set, use Matplotlib's default. The `retina` format saves a PNG at
+            twice the requested DPI. A `.png` extension retains a `retina`
+            theme preference; pass `format="png"` for ordinary resolution.
         dpi :
             DPI for raster graphics. If `None`, use the composition theme's
             `dpi`.
@@ -855,14 +863,26 @@ class Compose:
             These are ignored. Here to "softly" match the API of
             `ggplot.save()`.
         """
-        from plotnine import theme
+        from pathlib import Path
 
-        # Set the composition theme's DPI because the composition owns the
-        # figure. Inner plots inherit this value.
-        cmp = self
-        if dpi:
-            cmp = deepcopy(self)
+        append_extension = (
+            format is None
+            and isinstance(filename, (str, Path))
+            and not Path(filename).suffix.lstrip(".")
+        )
+        format = get_save_format(
+            filename, format, default=self.theme.getp("figure_format")
+        )
+        cmp = deepcopy(self)
+        # Child plots inherit the composition's DPI and output format.
+        if dpi is not None:
             cmp.theme = cmp.theme + theme(dpi=dpi)
+        if format == "retina":
+            cmp._to_retina()
+            format = "png"
+        if append_extension and format is not None:
+            filename = f"{str(filename).rstrip('.')}.{format}"
+        cmp.theme = cmp.theme + theme(figure_format=format)
 
         figure = cmp.draw()
 

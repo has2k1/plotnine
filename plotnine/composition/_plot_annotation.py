@@ -45,9 +45,10 @@ class plot_annotation(ComposeAddable):
     """
     Theme for the plot title, subtitle, caption, footer, margin and background
 
-    It also controls the [](`~plotnine.themes.themeables.figure_size`) of the
-    composition. The default theme is the same as the default one used for the
-    plots, which you can change with [](`~plotnine.theme_set`).
+    The theme also sets the composition's
+    [](`~plotnine.themes.themeable.figure_size`) and preferred
+    [](`~plotnine.themes.themeable.figure_format`). By default, it uses the
+    plot theme selected by [](`~plotnine.theme_set`).
     """
 
     def __radd__(self, cmp: Compose) -> Compose:
