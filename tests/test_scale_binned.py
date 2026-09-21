@@ -3,10 +3,13 @@ from typing import Any, cast
 
 import numpy as np
 import numpy.testing as npt
+import pandas as pd
 import pytest
 
+from plotnine import aes, geom_bar, ggplot
 from plotnine.exceptions import PlotnineError, PlotnineWarning
 from plotnine.scales.scale_binned import scale_binned
+from plotnine.scales.scale_xy import scale_x_binned, scale_y_binned
 
 
 @pytest.mark.parametrize(
@@ -196,3 +199,42 @@ def test_omitting_breaks_disables_a_non_position_guide():
     )
 
     assert scale.guide is None
+
+
+def test_binned_position_restores_bar_coordinates_after_statistics():
+    data = pd.DataFrame({"x": [1, 2, 8, 9]})
+    p = (
+        ggplot(data, aes("x"))
+        + geom_bar()
+        + scale_x_binned(breaks=[5], limits=(0, 10))
+    )
+
+    layer = p.layer_data().sort_values("x")
+
+    npt.assert_allclose(layer["x"], [2.5, 7.5])
+    npt.assert_allclose(layer["count"], [2, 2])
+    npt.assert_allclose(layer["xmin"], [0.25, 5.25])
+    npt.assert_allclose(layer["xmax"], [4.75, 9.75])
+
+
+def test_binned_position_keeps_bins_across_the_statistical_phase():
+    scale = scale_x_binned(breaks=[5], limits=(0, 10))
+    scale.train([1, 2, 8, 9])
+    before = scale._resolve_partition()
+
+    mapped = scale.map(np.array([1, 5, 9]))
+    scale.reset()
+    scale.train(mapped)
+
+    assert scale._resolve_partition() is before
+    npt.assert_allclose(scale.map(np.array([1, 1.5, 2])), [2.5, 5, 7.5])
+
+
+def test_binned_y_scale_maps_each_position_aesthetic():
+    scale = scale_y_binned(breaks=[5], limits=(0, 10))
+    scale.train([1, 9])
+
+    npt.assert_array_equal(scale.map(np.array([1, 9])), [1, 2])
+    assert {"y", "ymin", "ymax", "lower", "middle", "upper"} <= set(
+        scale.aesthetics
+    )

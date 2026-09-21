@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from itertools import chain
 from typing import TYPE_CHECKING
 
@@ -12,8 +12,13 @@ from .._utils.registry import alias
 from ..exceptions import PlotnineError
 from ..iapi import range_view, scale_position_view
 from ._expand import expand_range
-from ._runtime_typing import SecAxisUser, TransUser  # noqa: TCH001
+from ._runtime_typing import (  # noqa: TCH001
+    OptionalBinnedGuide,
+    SecAxisUser,
+    TransUser,
+)
 from .range import RangeContinuous
+from .scale_binned import scale_binned
 from .scale_continuous import scale_continuous
 from .scale_datetime import scale_datetime
 from .scale_discrete import scale_discrete
@@ -23,8 +28,14 @@ if TYPE_CHECKING:
 
     from mizani.transforms import trans
 
-    ScaleX: TypeAlias = "scale_x_continuous | scale_x_discrete"
-    ScaleY: TypeAlias = "scale_y_continuous | scale_y_discrete"
+    from plotnine.typing import FloatArray, FloatArrayLike
+
+    ScaleX: TypeAlias = (
+        "scale_x_binned | scale_x_continuous | scale_x_discrete"
+    )
+    ScaleY: TypeAlias = (
+        "scale_y_binned | scale_y_continuous | scale_y_discrete"
+    )
 
 
 # Valid axis sides per position aesthetic
@@ -244,6 +255,75 @@ class scale_position_continuous(scale_position, scale_continuous[None]):
 
 
 @dataclass(kw_only=True)
+class scale_position_binned(scale_position, scale_binned):
+    """Base class for position scales that bin continuous data"""
+
+    guide: OptionalBinnedGuide = None
+    _map_changes_dtype = True
+    _after_stat: bool = field(init=False, default=False, repr=False)
+
+    @property
+    def final_limits(self) -> tuple[float, float]:
+        """Return the bin limits retained across the statistical phase"""
+        if self._after_stat and self._intervals is not None:
+            return self._intervals.limits
+        return super().final_limits
+
+    def train(self, x: FloatArrayLike) -> None:
+        """Train numeric positions before the statistical phase"""
+        if self._after_stat:
+            return
+        super().train(x)
+
+    def map(
+        self,
+        x: FloatArrayLike,
+        limits: tuple[float, float] | None = None,
+    ) -> FloatArray:
+        """Map data to bin numbers and statistics back to coordinates"""
+        if not len(x):
+            return np.asarray(x, dtype=float)
+
+        intervals = self._resolve_intervals(limits)
+        values = np.asarray(x, dtype=float)
+        missing = pd.isna(values)
+
+        if not self._after_stat:
+            values = np.asarray(
+                self.oob(values, intervals.limits),
+                dtype=float,
+            )
+            mapped = np.digitize(
+                values,
+                intervals.breaks,
+                right=self.right,
+            ).astype(float)
+            mapped += 1
+        else:
+            bin_count = len(intervals.midpoints)
+            bin_numbers = np.digitize(
+                values,
+                np.arange(bin_count + 1) + 0.5,
+                right=self.right,
+            )
+            bin_numbers = np.clip(bin_numbers, 1, bin_count)
+            widths = np.diff(intervals.boundaries)
+            mapped = (values - bin_numbers + 0.5) * widths[
+                bin_numbers - 1
+            ] + intervals.boundaries[bin_numbers - 1]
+
+        mapped[missing] = self.na_value
+        return mapped
+
+    def reset(self) -> None:
+        """Begin post-statistical mapping without discarding the bin limits"""
+        intervals = self._resolve_intervals()
+        self._after_stat = True
+        self._range.reset()
+        self._range.train(intervals.boundaries)
+
+
+@dataclass(kw_only=True)
 class scale_x_discrete(scale_position_discrete):
     """
     Discrete x position
@@ -260,6 +340,35 @@ class scale_y_discrete(scale_position_discrete):
     """
 
     _aesthetics = ["y", "ymin", "ymax", "yend", "yintercept"]
+    position: Literal["left", "right"] = "left"
+
+
+@dataclass(kw_only=True)
+class scale_x_binned(scale_position_binned):
+    """A binned x-position scale"""
+
+    _aesthetics = ["x", "xmin", "xmax", "xend", "xintercept"]
+    n_breaks: int | None = 10
+    position: Literal["bottom", "top"] = "bottom"
+
+
+@dataclass(kw_only=True)
+class scale_y_binned(scale_position_binned):
+    """A binned y-position scale"""
+
+    _aesthetics = [
+        "y",
+        "ymin",
+        "ymax",
+        "yend",
+        "yintercept",
+        "ymin_final",
+        "ymax_final",
+        "lower",
+        "middle",
+        "upper",
+    ]
+    n_breaks: int | None = 10
     position: Literal["left", "right"] = "left"
 
 
