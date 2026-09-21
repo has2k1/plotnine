@@ -29,7 +29,7 @@ if TYPE_CHECKING:
 
     from plotnine import theme
     from plotnine.scales.scale import scale
-    from plotnine.typing import Side
+    from plotnine.typing import FloatArrayLike, Side
 
 
 @dataclass
@@ -153,6 +153,45 @@ class guide_colorbar(guide):
 
         return self
 
+    def _tick_locations(self, elements: GuideElementsColorbar) -> np.ndarray:
+        """Calculate tick positions along the colour bar"""
+        nbars = len(self.bar)
+        # A half-step offset centres ticks on segmented bars and places them
+        # between the interpolation points on gradient bars.
+        _from = self.bar["value"].min(), self.bar["value"].max()
+        locations = (
+            rescale(self.key["value"], (0.5, nbars - 0.5), _from)
+            * elements.key_height
+            / nbars
+        )
+
+        # Floating-point error can make the end ticks overlap the frame when
+        # there are many bins, so snap dense tick positions to whole pixels.
+        if nbars >= 150 and len(locations) >= 2:
+            locations = np.asarray(
+                [
+                    np.floor(locations[0]),
+                    *np.round(locations[1:-1]),
+                    np.ceil(locations[-1]),
+                ]
+            )
+        return np.asarray(locations)
+
+    def _draw_bar(
+        self,
+        auxbox: AuxTransformBox,
+        colors: Sequence[str],
+        alpha: float | None,
+        elements: GuideElementsColorbar,
+        display: str,
+        raster: bool,
+    ) -> None:
+        """Draw the configured continuous colour bar"""
+        if display == "rectangles":
+            add_segmented_colorbar(auxbox, colors, alpha, elements)
+        else:
+            add_gradient_colorbar(auxbox, colors, alpha, elements, raster)
+
     def draw(self):
         """
         Draw guide
@@ -175,7 +214,6 @@ class guide_colorbar(guide):
 
         obverse = slice(0, None)
         reverse = slice(None, None, -1)
-        nbars = len(self.bar)
         elements = self.elements
         format = self.theme.getp("figure_format")
         display = self.display
@@ -188,28 +226,7 @@ class guide_colorbar(guide):
         labels = self.key["label"].tolist()
         targets = self.theme.targets
 
-        # .5 puts the ticks in the middle of the bars when
-        # raster=False. So when raster=True the ticks are
-        # in between interpolation points and the matching is
-        # close though not exactly right.
-        _from = self.bar["value"].min(), self.bar["value"].max()
-        tick_locations = (
-            rescale(self.key["value"], (0.5, nbars - 0.5), _from)
-            * elements.key_height
-            / nbars
-        )
-
-        # With many bins, the ticks approach the edges of the colorbar.
-        # This may look odd if there is a border and the top & bottom ticks
-        # partly overlap the border only because of floating point arithmetic.
-        # This eliminates some of those cases so that user does no have to
-        # use llim and ulim
-        if nbars >= 150 and len(tick_locations) >= 2:
-            tick_locations = [
-                np.floor(tick_locations[0]),
-                *np.round(tick_locations[1:-1]),
-                np.ceil(tick_locations[-1]),
-            ]
+        tick_locations = self._tick_locations(elements)
 
         if self.reverse:
             colors = colors[::-1]
@@ -226,14 +243,13 @@ class guide_colorbar(guide):
 
         # labels
         if not self.elements.text.is_blank:
-            texts = add_labels(auxbox, labels, tick_locations, elements)
+            texts = add_labels(
+                auxbox, labels, tick_locations.tolist(), elements
+            )
             targets.legend_text_colorbar = texts
 
         # colorbar
-        if display == "rectangles":
-            add_segmented_colorbar(auxbox, colors, alpha, elements)
-        else:
-            add_gradient_colorbar(auxbox, colors, alpha, elements, raster)
+        self._draw_bar(auxbox, colors, alpha, elements, display, raster)
 
         # ticks
         visible = slice(
@@ -343,6 +359,7 @@ def add_segmented_colorbar(
     colors: Sequence[str],
     alpha: float | None,
     elements: GuideElementsColorbar,
+    boundaries: FloatArrayLike | None = None,
 ):
     """
     Add 'non-rastered' colorbar to AuxTransformBox
@@ -365,16 +382,28 @@ def add_segmented_colorbar(
     # minimise apparent artefacts by using a large overlap_factor.
     # A value of 2 gives the best results in the rare case should alpha < 1.
     overlap_factor = 2
+    boundary_values = (
+        None if boundaries is None else np.asarray(boundaries, dtype=float)
+    )
+    if boundary_values is not None and len(boundary_values) != nbreak + 1:
+        raise PlotnineError(
+            "Segment boundaries must contain one more value than `colors`."
+        )
+
     if elements.is_vertical:
         colorbar_height = elements.key_height
         colorbar_width = elements.key_width
 
-        linewidth = colorbar_height / nbreak
         verts = []
         x1, x2 = 0, colorbar_width
         for i in range(nbreak):
-            y1 = i * linewidth
-            y2 = y1 + linewidth
+            if boundary_values is None:
+                linewidth = colorbar_height / nbreak
+                y1 = i * linewidth
+                y2 = y1 + linewidth
+            else:
+                y1, y2 = boundary_values[i : i + 2] * colorbar_height
+                linewidth = y2 - y1
             if i > 1:
                 y1 -= linewidth * overlap_factor
             verts.append(((x1, y1), (x1, y2), (x2, y2), (x2, y1)))
@@ -382,12 +411,16 @@ def add_segmented_colorbar(
         colorbar_width = elements.key_height
         colorbar_height = elements.key_width
 
-        linewidth = colorbar_width / nbreak
         verts = []
         y1, y2 = 0, colorbar_height
         for i in range(nbreak):
-            x1 = i * linewidth
-            x2 = x1 + linewidth
+            if boundary_values is None:
+                linewidth = colorbar_width / nbreak
+                x1 = i * linewidth
+                x2 = x1 + linewidth
+            else:
+                x1, x2 = boundary_values[i : i + 2] * colorbar_width
+                linewidth = x2 - x1
             if i > 1:
                 x1 -= linewidth * overlap_factor
             verts.append(((x1, y1), (x1, y2), (x2, y2), (x2, y1)))
@@ -438,7 +471,7 @@ def add_ticks(auxbox, locations, elements) -> LineCollection:
 def add_labels(
     auxbox: AuxTransformBox,
     labels: Sequence[str],
-    ys: Sequence[float],
+    ys: FloatArrayLike,
     elements: GuideElementsColorbar,
 ) -> list[Text]:
     """
