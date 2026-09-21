@@ -1,10 +1,11 @@
 from dataclasses import KW_ONLY, InitVar, dataclass
 from warnings import warn
 
-from plotnine.scales._runtime_typing import OptionalLegend
+from plotnine.scales._runtime_typing import OptionalBinnedGuide, OptionalLegend
 
 from .._utils.registry import alias
 from ..exceptions import PlotnineError, PlotnineWarning
+from .scale_binned import binned_pal, scale_binned
 from .scale_continuous import scale_continuous
 from .scale_discrete import scale_discrete
 
@@ -88,6 +89,23 @@ class scale_shape_ordinal(scale_shape):
             PlotnineWarning,
         )
         super().__post_init__(unfilled)
+
+
+@dataclass
+class scale_shape_binned(scale_binned):
+    """A binned shape scale"""
+
+    _aesthetics = ["shape"]
+    unfilled: InitVar[bool] = False
+    _: KW_ONLY
+    guide: OptionalBinnedGuide = "bins"
+
+    def __post_init__(self, unfilled: bool) -> None:
+        from mizani.palettes import manual_pal
+
+        super().__post_init__()
+        values = unfilled_shapes if unfilled else shapes
+        self.palette = binned_pal(manual_pal(values))
 
 
 class scale_shape_continuous(scale_continuous):

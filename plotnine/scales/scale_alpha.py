@@ -3,10 +3,11 @@ from warnings import warn
 
 import numpy as np
 
-from plotnine.scales._runtime_typing import OptionalLegend
+from plotnine.scales._runtime_typing import OptionalBinnedGuide, OptionalLegend
 
 from .._utils.registry import alias
 from ..exceptions import PlotnineWarning
+from .scale_binned import scale_binned
 from .scale_continuous import scale_continuous
 from .scale_datetime import scale_datetime
 from .scale_discrete import scale_discrete
@@ -38,6 +39,22 @@ class scale_alpha(scale_continuous[OptionalLegend]):
 @alias
 class scale_alpha_continuous(scale_alpha):
     pass
+
+
+@dataclass
+class scale_alpha_binned(scale_binned):
+    """A binned alpha scale"""
+
+    _aesthetics = ["alpha"]
+    range: InitVar[tuple[float, float]] = (0.1, 1)
+    _: KW_ONLY
+    guide: OptionalBinnedGuide = "bins"
+
+    def __post_init__(self, range: tuple[float, float]) -> None:
+        from mizani.palettes import rescale_pal
+
+        super().__post_init__()
+        self.palette = rescale_pal(range)
 
 
 @dataclass

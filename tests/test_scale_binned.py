@@ -8,7 +8,14 @@ import pytest
 
 from plotnine import aes, geom_bar, ggplot
 from plotnine.exceptions import PlotnineError, PlotnineWarning
+from plotnine.scales.scale_alpha import scale_alpha_binned
 from plotnine.scales.scale_binned import scale_binned
+from plotnine.scales.scale_linetype import scale_linetype_binned
+from plotnine.scales.scale_shape import scale_shape_binned, unfilled_shapes
+from plotnine.scales.scale_size import (
+    scale_size_binned,
+    scale_size_binned_area,
+)
 from plotnine.scales.scale_xy import scale_x_binned, scale_y_binned
 
 
@@ -238,3 +245,54 @@ def test_binned_y_scale_maps_each_position_aesthetic():
     assert {"y", "ymin", "ymax", "lower", "middle", "upper"} <= set(
         scale.aesthetics
     )
+
+
+@pytest.mark.parametrize(
+    "scale",
+    [
+        scale_alpha_binned(breaks=[0.5], limits=(0, 1)),
+        scale_size_binned(breaks=[0.5], limits=(0, 1)),
+        scale_size_binned_area(breaks=[0.5], limits=(0, 1)),
+        scale_shape_binned(breaks=[0.5], limits=(0, 1)),
+        scale_linetype_binned(breaks=[0.5], limits=(0, 1)),
+    ],
+)
+def test_aesthetic_binned_scales_map_each_bin_to_one_value(scale):
+    result = scale.map(np.array([0.1, 0.2, 0.8, 0.9]))
+
+    assert result[0] == result[1]
+    assert result[2] == result[3]
+    assert result[0] != result[2]
+
+
+def test_alpha_binned_honours_range():
+    scale = scale_alpha_binned(
+        range=(0.2, 0.8),
+        breaks=[0.5],
+        limits=(0, 1),
+    )
+
+    npt.assert_allclose(scale.map([0.1, 0.9]), [0.35, 0.65])
+
+
+def test_size_binned_area_honours_max_size():
+    scale = scale_size_binned_area(
+        max_size=8,
+        breaks=[2],
+        limits=(1, 3),
+    )
+
+    npt.assert_allclose(
+        scale.map([1.1, 2.9]),
+        np.sqrt([0.5, 5 / 6]) * 8,
+    )
+
+
+def test_shape_binned_honours_unfilled():
+    scale = scale_shape_binned(
+        unfilled=True,
+        breaks=[0.5],
+        limits=(0, 1),
+    )
+
+    assert set(scale.map([0.1, 0.9])) <= set(unfilled_shapes)

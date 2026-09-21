@@ -1,16 +1,23 @@
+from __future__ import annotations
+
 from dataclasses import KW_ONLY, InitVar, dataclass
+from typing import TYPE_CHECKING
 from warnings import warn
 
 import numpy as np
 from mizani.bounds import rescale_max
 
-from plotnine.scales._runtime_typing import OptionalLegend
+from plotnine.scales._runtime_typing import OptionalBinnedGuide, OptionalLegend
 
 from .._utils.registry import alias
 from ..exceptions import PlotnineWarning
+from .scale_binned import scale_binned
 from .scale_continuous import scale_continuous
 from .scale_datetime import scale_datetime
 from .scale_discrete import scale_discrete
+
+if TYPE_CHECKING:
+    from mizani.typing import PRescale
 
 
 @dataclass
@@ -81,6 +88,22 @@ class scale_size(scale_size_continuous):
 
 
 @dataclass
+class scale_size_binned(scale_binned):
+    """A binned scale that maps values to marker areas"""
+
+    _aesthetics = ["size"]
+    range: InitVar[tuple[float, float]] = (1, 6)
+    _: KW_ONLY
+    guide: OptionalBinnedGuide = "bins"
+
+    def __post_init__(self, range: tuple[float, float]) -> None:
+        from mizani.palettes import area_pal
+
+        super().__post_init__()
+        self.palette = area_pal(range)
+
+
+@dataclass
 class scale_size_radius(scale_continuous[OptionalLegend]):
     """
     Continuous radius size scale
@@ -119,6 +142,23 @@ class scale_size_area(scale_continuous[OptionalLegend]):
     guide: OptionalLegend = "legend"
 
     def __post_init__(self, max_size):
+        from mizani.palettes import abs_area
+
+        super().__post_init__()
+        self.palette = abs_area(max_size)
+
+
+@dataclass
+class scale_size_binned_area(scale_binned):
+    """A binned area scale whose size range starts at zero"""
+
+    _aesthetics = ["size"]
+    max_size: InitVar[float] = 6
+    _: KW_ONLY
+    rescaler: PRescale = rescale_max
+    guide: OptionalBinnedGuide = "bins"
+
+    def __post_init__(self, max_size: float) -> None:
         from mizani.palettes import abs_area
 
         super().__post_init__()
