@@ -876,7 +876,7 @@ def _decimal_columns_to_float(data: pd.DataFrame) -> pd.DataFrame:
         if series.dtype == object:
             mask = series.notna()
             if mask.any() and isinstance(
-                series[mask.idxmax()], decimal.Decimal
+                series[cast("int", mask.idxmax())], decimal.Decimal
             ):
                 data[col] = series.astype("float64")
     return data
