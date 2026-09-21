@@ -120,6 +120,9 @@ title: Changelog
   select `"quasirandom"` (the default), `"pseudorandom"`, `"smiley"`, or
   `"frowney"` placement.
 
+- Added [](:meth:`~plotnine.ggplot.build`) to compute a plot's layers, scales
+  and layout without drawing it.
+
 ### API Changes
 
 - Removed `geom.to_layer()`, `stat.to_layer()`, `annotate.to_layer()`,
@@ -266,6 +269,10 @@ title: Changelog
 - Broadcasting a layer to every plot in a composition with `&` or `*` now
   gives each target plot an independent copy. Changes made while drawing one
   plot no longer affect the layer in another plot.
+
+- Calling [](:meth:`~plotnine.ggplot.draw`) more than once on the same plot no
+  longer duplicates artists or leaves ticks and labels partially hidden.
+  ({{< issue 1009 >}})
 
 ### Enhancements
 

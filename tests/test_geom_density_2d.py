@@ -69,16 +69,16 @@ def test_levels_yields_to_breaks():
     # no contours. The explicit breaks must therefore determine the result.
     p = p0 + geom_density_2d(levels=[0.5], breaks=[0.001, 0.002])
     with pytest.warns(FutureWarning, match="in favour of `breaks`"):
-        data = p.build_test().layers[0].data
+        data = p.layer_data(0)
     assert set(data["level"]) == {0.001, 0.002}
 
 
 def test_levels_yields_to_bins():
     p = p0 + geom_density_2d(levels=3, bins=5)
     with pytest.warns(FutureWarning, match="in favour of `bins`"):
-        data = p.build_test().layers[0].data
+        data = p.layer_data(0)
     # Match an equivalent call that omits deprecated `levels`.
-    expected = (p0 + geom_density_2d(bins=5)).build_test().layers[0].data
+    expected = (p0 + geom_density_2d(bins=5)).layer_data(0)
     assert sorted(set(data["level"])) == sorted(set(expected["level"]))
 
 
@@ -86,7 +86,7 @@ def test_no_contours_keeps_the_panel():
     # An empty contour layer must retain its panel column and schema.
     p = p0 + geom_density_2d(breaks=[100.0])
     with pytest.warns(PlotnineWarning):
-        data = p.build_test().layers[0].data
+        data = p.layer_data(0)
     assert len(data) == 0
     assert {"x", "y", "group", "PANEL"} <= set(data.columns)
 
@@ -99,19 +99,19 @@ def test_no_contours_draws():
 
 def test_uncontoured_density_exposes_grid_variables():
     p = p0 + geom_density_2d(contour=False)
-    data = p.build_test().layers[0].data
+    data = p.layer_data(0)
     assert {"density", "ndensity", "count", "n"} <= set(data.columns)
     assert data["ndensity"].max() == 1
 
 
 def test_contoured_density_excludes_grid_variables():
     p = p0 + geom_density_2d()
-    data = p.build_test().layers[0].data
+    data = p.layer_data(0)
     assert not {"z", "density", "ndensity", "count", "n"} & set(data.columns)
 
 
 def test_default_uses_more_than_three_contour_levels():
-    data = (p0 + geom_density_2d()).build_test().layers[0].data
+    data = (p0 + geom_density_2d()).layer_data(0)
     # The former five-band default produced only three contour levels for
     # this fixture. The new ten-band default must produce more.
     assert len(data["level"].unique()) > 3

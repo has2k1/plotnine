@@ -13,6 +13,8 @@ if TYPE_CHECKING:
     from typing_extensions import Self
 
     from plotnine import ggplot
+    from plotnine._mpl.figure import p9Figure
+    from plotnine._mpl.gridspec import p9GridSpec
     from plotnine.composition import Compose
 
 PANDAS_LT_3 = Version(pd.__version__) < Version("3.0")
@@ -30,15 +32,6 @@ def reopen(fig):
     from matplotlib._pylab_helpers import Gcf
 
     Gcf.set_active(fig.canvas.manager)
-
-
-def is_closed(fig) -> bool:
-    """
-    Return True if figure is closed
-    """
-    import matplotlib.pyplot as plt
-
-    return not plt.fignum_exists(fig.number)
 
 
 @dataclass
@@ -155,3 +148,51 @@ class plot_composition_context:
                 plt.close(self.cmp.figure)
 
         self._rc_context.__exit__(exc_type, exc_value, exc_traceback)
+
+
+def is_closed(fig) -> bool:
+    """
+    Return whether the figure is closed
+    """
+    import matplotlib.pyplot as plt
+
+    return not plt.fignum_exists(fig.number)
+
+
+def assign_figure(
+    obj: ggplot | Compose,
+    figure: p9Figure,
+    gridspec: p9GridSpec | None = None,
+) -> None:
+    """
+    Assign a figure to a plot or composition
+
+    Close the object's current figure when the object owns it. Clear axes and
+    sub-gridspec state associated with the previous figure.
+
+    Parameters
+    ----------
+    obj :
+        Plot or composition that receives the figure.
+    figure :
+        Figure that `obj` will draw into.
+    gridspec :
+        Gridspec that `obj` will use. Leave unset when `obj` must create its
+        own, such as when an inset supplies only the figure.
+    """
+    import matplotlib.pyplot as plt
+
+    if (
+        hasattr(obj, "figure")
+        and obj.figure._owner is obj
+        and not is_closed(obj.figure)
+    ):
+        plt.close(obj.figure)
+
+    obj.figure = figure
+    if gridspec is not None:
+        obj._gridspec = gridspec
+
+    if hasattr(obj, "axs"):
+        delattr(obj, "axs")
+        delattr(obj, "_sub_gridspec")

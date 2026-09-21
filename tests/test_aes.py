@@ -53,8 +53,8 @@ def test_labels_series():
 def test_labels_lists():
     p = ggplot(data, aes(x=[0, 1, 2, 3], y=range(4))) + geom_col()
     p.draw()
-    assert p.labels.x == ""
-    assert p.labels.y == ""
+    assert p.labels.x is None
+    assert p.labels.y is None
 
 
 def test_irregular_shapes():

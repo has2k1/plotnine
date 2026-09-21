@@ -28,7 +28,7 @@ def test_non_monotonic_transform():
         + scale_x_continuous(sec_axis=sec_axis(lambda x: x**2))
     )
     with pytest.raises(PlotnineError, match="monotonic"):
-        p.build_test()
+        p.build()
 
 
 def test_labels_copy_requires_breaks_copy():
@@ -45,13 +45,13 @@ def test_facet_wrap_sec_axis_flags():
     from plotnine import facet_wrap
 
     # gear: 3 panels in a 2x2 grid -> (1,1), (1,2), (2,1)
-    p = (p0 + facet_wrap("gear", nrow=2)).build_test()
-    layout = p.layout.layout
+    built = (p0 + facet_wrap("gear", nrow=2)).build()
+    layout = built.layout.layout
     # secondary x on the top edge of each column
     assert list(layout["AXIS_X_SEC"]) == [True, True, False]
     # secondary y on the right edge of each row
     assert list(layout["AXIS_Y_SEC"]) == [False, True, True]
-    details = p.layout.get_details()
+    details = built.layout.get_details()
     assert details[0].axis_x_sec and not details[2].axis_x_sec
 
 
@@ -59,8 +59,8 @@ def test_facet_grid_sec_axis_flags():
     from plotnine import facet_grid
 
     # am: 2 rows, gear: 3 cols
-    p = (p0 + facet_grid("am", "gear")).build_test()
-    layout = p.layout.layout
+    built = (p0 + facet_grid("am", "gear")).build()
+    layout = built.layout.layout
     is_top = layout["ROW"] == layout["ROW"].min()
     is_right = layout["COL"] == layout["COL"].max()
     assert list(layout["AXIS_X_SEC"]) == is_top.tolist()
@@ -68,20 +68,20 @@ def test_facet_grid_sec_axis_flags():
 
 
 def test_facet_null_sec_axis_flags():
-    p = p0.build_test()
-    details = p.layout.get_details()[0]
+    built = p0.build()
+    details = built.layout.get_details()[0]
     assert details.axis_x_sec and details.axis_y_sec
 
 
 def test_coord_trans_sec_axis():
     from plotnine import coord_trans
 
-    p = (
+    built = (
         p0
         + scale_y_continuous(sec_axis=sec_axis(lambda y: y * 2))
         + coord_trans(y="log10")
-    ).build_test()
-    sec = p.layout.panel_params[0].y.sec
+    ).build()
+    sec = built.layout.panel_params[0].y.sec
     # The coordinate transform moves the secondary positions exactly
     # like the primary breaks: position = log10(value / 2)
     values = np.array([float(l) for l in sec.labels])

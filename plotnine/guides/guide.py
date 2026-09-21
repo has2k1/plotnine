@@ -125,7 +125,7 @@ class guide(ABC, metaclass=Register):
         plot :
             The plot that supplies layers and mapping for this guide.
         """
-        self.plot_layers = plot.layers
+        self.plot_layers = plot.built.layers
         self.plot_mapping = plot.mapping
 
     def _bind_owner(self, owner: LegendOwner):

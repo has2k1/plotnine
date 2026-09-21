@@ -204,18 +204,16 @@ class PlotnineAnimation(ArtistAnimation):
                 figure = first_plot.draw()
                 axs = first_plot.figure.get_axes()
                 initialise_artist_offsets(len(axs))
-                scales = first_plot._build_objs.scales
+                scales = first_plot.built.scales
                 set_scale_limits(scales)
             else:
                 plot = self._draw_animation_plot(p, first_plot)
-                check_scale_limits(plot.scales, frame_no)
+                check_scale_limits(plot.built.scales, frame_no)
 
             artists.append(get_frame_artists(axs))
 
         if figure is None:
-            from plotnine._mpl.figure import p9Figure
-
-            figure = plt.figure(FigureClass=p9Figure)
+            figure = plt.figure()
 
         # Prevent Jupyter from plotting any static figure
         plt.close(figure)
@@ -236,6 +234,6 @@ class PlotnineAnimation(ArtistAnimation):
         plot._sub_gridspec = first_plot._sub_gridspec
         with plot_context(plot):
             plot._build()
-            _ = plot.facet.setup(plot)
+            _ = plot.built.facet.setup(plot)
             plot._draw_layers()
         return plot

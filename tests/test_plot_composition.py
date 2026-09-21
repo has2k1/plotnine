@@ -496,3 +496,18 @@ def test_broadcast_unseeded_geom_sina():
     data = pd.DataFrame({"cat": ["a", "b"] * 10, "value": range(20)})
     cmp = (plot.red | plot.green) & geom_sina(aes("cat", "value"), data)
     cmp.save(BytesIO(), format="png")
+
+
+def test_draw_can_be_called_more_than_once():
+    # Each draw must replace the composition's figure and its children's axes.
+    c = (plot.red + g.points) | (plot.green + g.points)
+    c.draw(show=False)
+    c.draw(show=False)
+
+
+def test_nested_draw_can_be_called_more_than_once():
+    # A repeated draw must replace figures and axes at every nested level.
+    inner = (plot.red + g.points) | (plot.green + g.points)
+    c = inner / (plot.blue + g.points)
+    c.draw(show=False)
+    assert c == "nested_draw_can_be_called_more_than_once"

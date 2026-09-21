@@ -148,11 +148,12 @@ class inset_element:
         parent :
             The host plot whose figure this inset adopts.
         """
+        from .._utils.context import assign_figure
         from ..ggplot import ggplot
         from ._compose import Compose
 
         if isinstance(self.obj, (ggplot, Compose)):
-            self.obj.figure = parent.figure
+            assign_figure(self.obj, parent.figure)
             self.obj.theme._inherit_figure_props(parent.theme)
         elif isinstance(self.obj, _InsetImage):
             self.obj._setup(parent)

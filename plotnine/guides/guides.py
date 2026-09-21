@@ -187,7 +187,7 @@ class guides:
             if (g := getattr(self, f.name)) is not None
         }
 
-        for scale in self.plot.scales:
+        for scale in self.plot.built.scales:
             for ae in scale.aesthetics:
                 # The guide for aesthetic 'xxx' is stored
                 # in plot.guides['xxx']. The priority for
@@ -277,7 +277,7 @@ class guides:
                 if scale.name:
                     g.title = scale.name
                 else:
-                    g.title = getattr(self.plot.labels, ae)
+                    g.title = getattr(self.plot.built.labels, ae)
                     if g.title is None:
                         warn(
                             f"Cannot generate legend for the {ae!r} "

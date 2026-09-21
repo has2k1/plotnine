@@ -11,6 +11,7 @@ from plotnine import (
     annotate,
     coord_trans,
     facet_null,
+    facet_wrap,
     geom_bar,
     geom_col,
     geom_histogram,
@@ -425,3 +426,88 @@ def test_pickle_matplotlib_figure():
     p = ggplot(data, aes("x", "y")) + geom_point()
     fig = p.draw()
     pickle_and_unpickle(fig)
+
+
+def test_build_does_not_mutate_the_plot():
+    """
+    Confirm that each build is independent and leaves the plot unchanged
+    """
+    p = ggplot(data) + geom_line(aes(x="x", y="y"))
+
+    result1 = p.build()
+    assert not hasattr(p.layers[0], "data")
+
+    result2 = p.build()
+    assert not hasattr(p.layers[0], "data")
+
+    assert "PANEL" in result1.layers[0].data.columns
+    assert "PANEL" in result2.layers[0].data.columns
+    assert result1.layers[0].data is not result2.layers[0].data
+
+
+def test_build_does_not_mutate_the_plots_facet():
+    p = ggplot(data, aes("x", "y")) + geom_point() + facet_wrap("x")
+
+    result1 = p.build()
+    assert not hasattr(p.facet, "nrow")
+    assert not hasattr(p.facet, "ncol")
+
+    result2 = p.build()
+    assert not hasattr(p.facet, "nrow")
+    assert not hasattr(p.facet, "ncol")
+
+    assert result1.layout.facet is not result2.layout.facet
+    assert result1.layout.facet.nrow == result2.layout.facet.nrow
+
+
+def test_build_does_not_mutate_the_plots_labels():
+    # A layer mapping can supply a label only to the build result.
+    p = ggplot(data) + geom_point(aes(x="x", y="y", color="x"))
+
+    result = p.build()
+
+    assert p.labels.get("color", "") == ""
+    assert result.labels.get("color", "") == "x"
+
+
+def test_build_keeps_an_autodetected_scale_off_the_plot():
+    """
+    Confirm that automatic scale detection changes only the build result
+    """
+    p = ggplot(data, aes(x="x", y="y", color="x")) + geom_point()
+
+    result = p.build()
+
+    assert len(p.scales) == 0
+    assert result.scales.get_scales("color") is not None
+
+
+def test_build_with_no_layers_adds_a_blank_layer():
+    """
+    Confirm that an empty plot builds without retaining the fallback layer
+    """
+    p = ggplot(data)
+
+    result = p.build()
+
+    assert len(result.layers) == 1
+    assert len(p.layers) == 0
+
+
+def test_draw_can_be_called_more_than_once():
+    """
+    Confirm that repeated draws produce the same output
+    """
+    p = ggplot(data) + geom_line(aes(x="x", y="y"))
+    p.draw(show=False)
+    p.draw(show=False)
+
+
+def test_draw_reflects_a_layer_added_after_a_previous_draw():
+    """
+    Confirm that a copied plot draws layers added after an earlier draw
+    """
+    p = ggplot(data) + geom_line(aes(x="x", y="y"))
+    p.draw(show=False)
+    p2 = p + geom_point(aes(x="x", y="y"))
+    assert p2 == "draw_reflects_a_layer_added_after_a_previous_draw"
