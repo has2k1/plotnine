@@ -10,6 +10,23 @@ from plotnine import aes, geom_bar, ggplot
 from plotnine.exceptions import PlotnineError, PlotnineWarning
 from plotnine.scales.scale_alpha import scale_alpha_binned
 from plotnine.scales.scale_binned import scale_binned
+from plotnine.scales.scale_color import (
+    scale_color_binned,
+    scale_color_fermenter,
+    scale_color_steps,
+    scale_color_steps2,
+    scale_color_stepsn,
+    scale_colour_binned,
+    scale_colour_fermenter,
+    scale_colour_steps,
+    scale_colour_steps2,
+    scale_colour_stepsn,
+    scale_fill_binned,
+    scale_fill_fermenter,
+    scale_fill_steps,
+    scale_fill_steps2,
+    scale_fill_stepsn,
+)
 from plotnine.scales.scale_linetype import scale_linetype_binned
 from plotnine.scales.scale_shape import scale_shape_binned, unfilled_shapes
 from plotnine.scales.scale_size import (
@@ -296,3 +313,106 @@ def test_shape_binned_honours_unfilled():
     )
 
     assert set(scale.map([0.1, 0.9])) <= set(unfilled_shapes)
+
+
+@pytest.mark.parametrize(
+    "scale",
+    [scale_color_binned(), scale_fill_binned()],
+)
+def test_color_binned_uses_viridis_colormap(scale):
+    scale.breaks = [0.5]
+    scale.limits = (0, 1)
+
+    assert list(scale.map([0.1, 0.9])) == ["#3b528b", "#5ec962"]
+    assert scale.guide == "colorsteps"
+
+
+def test_color_binned_honours_cmap_name():
+    scale = scale_color_binned(
+        cmap_name="plasma",
+        breaks=[0.5],
+        limits=(0, 1),
+    )
+
+    assert list(scale.map([0.1, 0.9])) == ["#7e03a8", "#f89540"]
+
+
+@pytest.mark.parametrize(
+    "scale",
+    [scale_color_steps(), scale_fill_steps()],
+)
+def test_color_steps_maps_constant_colors_per_bin(scale):
+    scale.breaks = [0.5]
+    scale.limits = (0, 1)
+
+    assert list(scale.map([0.1, 0.2, 0.8, 0.9])) == [
+        "#244d70",
+        "#244d70",
+        "#458fca",
+        "#458fca",
+    ]
+
+
+@pytest.mark.parametrize(
+    "scale",
+    [scale_color_steps2(), scale_fill_steps2()],
+)
+def test_color_steps2_uses_midpoint_rescaling(scale):
+    scale.breaks = [0]
+    scale.limits = (-1, 1)
+
+    assert list(scale.map([-0.9, 0.9])) == ["#c19292", "#9d9dcc"]
+
+
+@pytest.mark.parametrize(
+    "scale",
+    [
+        scale_color_stepsn(
+            colors=["black", "red", "white"], values=[0, 0.25, 1]
+        ),
+        scale_fill_stepsn(
+            colors=["black", "red", "white"], values=[0, 0.25, 1]
+        ),
+    ],
+)
+def test_color_stepsn_honours_colors(scale):
+    scale.breaks = [0.5]
+    scale.limits = (0, 1)
+
+    assert list(scale.map([0.1, 0.9])) == ["#ff0000", "#ffaaaa"]
+
+
+@pytest.mark.parametrize(
+    "color_scale, colour_scale",
+    [
+        (scale_color_binned, scale_colour_binned),
+        (scale_color_steps, scale_colour_steps),
+        (scale_color_steps2, scale_colour_steps2),
+        (scale_color_stepsn, scale_colour_stepsn),
+        (scale_color_fermenter, scale_colour_fermenter),
+    ],
+)
+def test_colour_aliases_match_color_scale_behaviour(color_scale, colour_scale):
+    kwargs = (
+        {"colors": ["black", "white"]}
+        if "stepsn" in color_scale.__name__
+        else {}
+    )
+
+    assert (
+        color_scale(**kwargs).aesthetics == colour_scale(**kwargs).aesthetics
+    )
+
+
+def test_fermenter_maps_one_brewer_color_per_bin():
+    scales = [scale_color_fermenter(), scale_fill_fermenter()]
+    for scale in scales:
+        scale.breaks = [0.5]
+        scale.limits = (0, 1)
+
+        assert list(scale.map([0.1, 0.9])) == ["#9ECAE1", "#DEEBF7"]
+
+
+def test_fermenter_warns_for_qualitative_palette():
+    with pytest.warns(PlotnineWarning, match="qualitative"):
+        scale_color_fermenter(type="qual")
