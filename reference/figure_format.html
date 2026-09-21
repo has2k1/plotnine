@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>coord_equal – plotnine {{&lt; var version &gt;}}</title>
+<title>figure_format – plotnine {{&lt; var version &gt;}}</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -157,7 +157,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#plotnine.coord_equal" id="toc-plotnine.coord_equal" class="nav-link active" data-scroll-target="#plotnine.coord_equal"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.coord_equal</span></a></li>
+  <li><a href="#plotnine.themes.themeable.figure_format" id="toc-plotnine.themes.themeable.figure_format" class="nav-link active" data-scroll-target="#plotnine.themes.themeable.figure_format"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.themes.themeable.figure_format</span></a></li>
   <li><a href="#parameters" id="toc-parameters" class="nav-link" data-scroll-target="#parameters">Parameters</a></li>
   <li><a href="#notes" id="toc-notes" class="nav-link" data-scroll-target="#notes">Notes</a></li>
   </ul>
@@ -170,44 +170,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <header id="title-block-header" class="quarto-title-block default">
-<section id="plotnine.coord_equal" class="level1 title doc-object doc-class doc-has-member-docs quarto-title display-7">
-<h1 class="title doc-object doc-class doc-has-member-docs"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.coord_equal</span></h1>
+<section id="plotnine.themes.themeable.figure_format" class="level1 title doc-object doc-class quarto-title display-7">
+<h1 class="title doc-object doc-class"><code class="doc-symbol doc-symbol-class"></code> <span class="doc-object-name doc-class-name">plotnine.themes.themeable.figure_format</span></h1>
 </section>
 </header>
 <div class="doc-signature doc-class">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>coord_equal(ratio<span class="op">=</span><span class="dv">1</span>, xlim<span class="op">=</span><span class="va">None</span>, ylim<span class="op">=</span><span class="va">None</span>, expand<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>figure_format(theme_element)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="doc-text">
-<p>Cartesian coordinates with fixed relationship between x and y scales</p>
+<p>Preferred output format for a figure</p>
 </div>
 <section id="parameters" class="level2 doc-parameters">
 <h2 class="doc-parameters anchored" data-anchor-id="parameters">Parameters</h2>
 <div class="doc-definition-items">
 <dl>
-<dt><code><span class="doc-parameter-name">ratio</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/builtins/functions.html#float">float</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">1</span></code></dt>
+<dt><code><span class="doc-parameter-name">theme_element</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">element_base | <a href="https://docs.python.org/3/builtins/stdtypes.html#str">str</a> | <a href="https://docs.python.org/3/builtins/functions.html#float">float</a></span></code></dt>
 <dd>
-<p>Desired aspect_ratio (:math:<code>y/x</code>) of the panel(s).</p>
-</dd>
-<dt><code><span class="doc-parameter-name">xlim</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/builtins/stdtypes.html#tuple">tuple</a>[<a href="https://docs.python.org/3/builtins/functions.html#float">float</a>, <a href="https://docs.python.org/3/builtins/functions.html#float">float</a>]</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
-<dd>
-<p>Limits for x axis. If None, then they are automatically computed.</p>
-</dd>
-<dt><code><span class="doc-parameter-name">ylim</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/builtins/stdtypes.html#tuple">tuple</a>[<a href="https://docs.python.org/3/builtins/functions.html#float">float</a>, <a href="https://docs.python.org/3/builtins/functions.html#float">float</a>]</span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">None</span></code></dt>
-<dd>
-<p>Limits for y axis. If None, then they are automatically computed.</p>
-</dd>
-<dt><code><span class="doc-parameter-name">expand</span> <span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation"><a href="https://docs.python.org/3/builtins/functions.html#bool">bool</a></span> <span class="doc-parameter-default-sep">=</span> <span class="doc-parameter-default">True</span></code></dt>
-<dd>
-If <code>True</code>, expand the coordinate axes by some factor. If <code>False</code>, use the limits from the data.
+Format such as <code>png</code>, <code>svg</code>, <code>pdf</code>, or <code>retina</code>. Notebook display supports PNG, JPEG, SVG, PDF, and retina PNG. Saved files also support formats provided by the selected backend. Retina PNG uses twice the theme DPI.
 </dd>
 </dl>
 </div>
 </section>
 <section id="notes" class="level2 doc-notes">
 <h2 class="doc-notes anchored" data-anchor-id="notes">Notes</h2>
-<p>To specify aspect ratio of the visual size for the axes use the <a href="../reference/aspect_ratio.html#plotnine.themes.themeable.aspect_ratio"><code>aspect_ratio</code></a> themeable.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>ggplot(data, aes(<span class="st">'x'</span>, <span class="st">'y'</span>)) <span class="op">+</span> theme(aspect_ratio<span class="op">=</span><span class="fl">0.5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>When changing the <code>aspect_ratio</code> in either way, the <code>width</code> of the panel remains constant (as derived from the <a href="../reference/figure_size.html#plotnine.themes.themeable.figure_size"><code>plotnine.themes.themeable.figure_size</code></a> themeable) and the <code>height</code> is altered to achieve desired ratio.</p>
+<p>An explicit save format takes priority over the filename suffix, which takes priority over this preference. A <code>.png</code> suffix retains a <code>retina</code> preference; pass <code>format="png"</code> for ordinary resolution. Without a theme preference, notebook display uses the global option, then IPython’s setting.</p>
+<p>The figure’s theme determines the format for all its plots, insets, and guides. Set a composition’s preference through <a href="../reference/plot_annotation.html#plotnine.composition.plot_annotation"><code>plot_annotation</code></a> or broadcast it with <code>&amp;</code>.</p>
 
 
 </section>
