@@ -134,7 +134,14 @@ LegendPosition: TypeAlias = (
     Literal["left", "right", "top", "bottom", "inside"] | tuple[float, float]
 )
 Orientation: TypeAlias = Literal["horizontal", "vertical"]
-GuideKind: TypeAlias = Literal["legend", "colorbar", "colourbar"]
+GuideKind: TypeAlias = Literal[
+    "bins",
+    "colorbar",
+    "colorsteps",
+    "colourbar",
+    "coloursteps",
+    "legend",
+]
 NoGuide: TypeAlias = Literal["none", False]
 VerticalJustification: TypeAlias = Literal["bottom", "center", "top"]
 HorizontalJustification: TypeAlias = Literal["left", "center", "right"]

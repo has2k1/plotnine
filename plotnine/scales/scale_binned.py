@@ -75,6 +75,8 @@ class scale_binned(scale_continuous[OptionalBinnedGuide]):
         ):
             raise PlotnineError("`n_breaks` must be a positive integer.")
         super().__post_init__()
+        if self.breaks is False:
+            self.guide = None
 
     def train(self, x: FloatArrayLike) -> None:
         """Train the continuous range and discard its resolved intervals"""

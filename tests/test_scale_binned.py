@@ -9,7 +9,7 @@ import pytest
 from plotnine import aes, geom_bar, ggplot
 from plotnine.exceptions import PlotnineError, PlotnineWarning
 from plotnine.scales.scale_alpha import scale_alpha_binned
-from plotnine.scales.scale_binned import scale_binned
+from plotnine.scales.scale_binned import _BinIntervals, scale_binned
 from plotnine.scales.scale_color import (
     scale_color_binned,
     scale_color_fermenter,
@@ -28,6 +28,7 @@ from plotnine.scales.scale_color import (
     scale_fill_stepsn,
 )
 from plotnine.scales.scale_linetype import scale_linetype_binned
+from plotnine.scales.scale_manual import scale_color_manual
 from plotnine.scales.scale_shape import scale_shape_binned, unfilled_shapes
 from plotnine.scales.scale_size import (
     scale_size_binned,
@@ -107,10 +108,10 @@ def test_inferred_limits_give_terminal_bins_equal_widths():
     )
     scale.train([1, 5])
 
-    partition = scale._resolve_partition()
+    intervals = scale._resolve_intervals()
 
-    npt.assert_allclose(partition.limits, [0, 6])
-    npt.assert_allclose(partition.boundaries, [0, 2, 4, 6])
+    npt.assert_allclose(intervals.limits, [0, 6])
+    npt.assert_allclose(intervals.boundaries, [0, 2, 4, 6])
 
 
 def test_constant_range_creates_finite_bins():
@@ -121,10 +122,10 @@ def test_constant_range_creates_finite_bins():
     )
     scale.train([5, 5])
 
-    partition = scale._resolve_partition()
+    intervals = scale._resolve_intervals()
 
-    assert partition.limits[0] < 5 < partition.limits[1]
-    assert np.all(np.isfinite(partition.boundaries))
+    assert intervals.limits[0] < 5 < intervals.limits[1]
+    assert np.all(np.isfinite(intervals.boundaries))
 
 
 @pytest.mark.parametrize("n_breaks", [0, -1, 1.5, True])
@@ -177,17 +178,50 @@ def test_fixed_labels_follow_breaks_within_the_limits():
     assert scale.get_labels(scale.get_breaks()) == ["middle"]
 
 
-def test_training_discards_resolved_bins():
+@pytest.mark.parametrize(
+    "values",
+    [
+        pd.IntervalIndex.from_breaks([0, 1, 3]),
+        ["(0, 1]", "(1, 3]"],
+    ],
+)
+def test_bin_intervals_accept_contiguous_discrete_intervals(values):
+    scale = scale_color_manual(values=["red", "blue"])
+    scale.train(values)
+
+    intervals = _BinIntervals.make(scale)
+
+    npt.assert_allclose(intervals.boundaries, [0, 1, 3])
+    npt.assert_allclose(intervals.midpoints, [0.5, 2])
+
+
+@pytest.mark.parametrize(
+    "values",
+    [
+        ["not an interval", "(1, 3]"],
+        ["(0, 2]", "(1, 3]"],
+        ["(0, 1]", "(2, 3]"],
+    ],
+)
+def test_bin_intervals_reject_invalid_discrete_intervals(values):
+    scale = scale_color_manual(values=["red", "blue"])
+    scale.train(values)
+
+    with pytest.raises(PlotnineError, match="interval breaks"):
+        _BinIntervals.make(scale)
+
+
+def test_training_discards_resolved_intervals():
     scale = scale_binned(
         breaks=[5],
         guide=None,
         aesthetics=["color"],
     )
     scale.train([0, 10])
-    first = scale._resolve_partition()
+    first = scale._resolve_intervals()
 
     scale.train([-10, 10])
-    second = scale._resolve_partition()
+    second = scale._resolve_intervals()
 
     assert first is not second
     assert first.limits != second.limits
@@ -215,9 +249,10 @@ def test_binned_scale_rejects_non_numeric_training_data():
         scale.train(cast("Any", ["a", "b"]))
 
 
-def test_omitting_breaks_disables_a_non_position_guide():
+@pytest.mark.parametrize("breaks", [None, False])
+def test_disabled_breaks_disable_a_non_position_guide(breaks):
     scale = scale_binned(
-        breaks=None,
+        breaks=breaks,
         limits=(0, 10),
         aesthetics=["color"],
     )
@@ -241,16 +276,23 @@ def test_binned_position_restores_bar_coordinates_after_statistics():
     npt.assert_allclose(layer["xmax"], [4.75, 9.75])
 
 
-def test_binned_position_keeps_bins_across_the_statistical_phase():
+def test_scale_x_binned_geom_bar():
+    data = pd.DataFrame({"x": [1, 2, 7, 8, 9]})
+    p = ggplot(data, aes("x")) + geom_bar() + scale_x_binned(breaks=[5])
+
+    assert p == "scale_x_binned_geom_bar"
+
+
+def test_binned_position_keeps_intervals_across_the_statistical_phase():
     scale = scale_x_binned(breaks=[5], limits=(0, 10))
     scale.train([1, 2, 8, 9])
-    before = scale._resolve_partition()
+    before = scale._resolve_intervals()
 
     mapped = scale.map(np.array([1, 5, 9]))
     scale.reset()
     scale.train(mapped)
 
-    assert scale._resolve_partition() is before
+    assert scale._resolve_intervals() is before
     npt.assert_allclose(scale.map(np.array([1, 1.5, 2])), [2.5, 5, 7.5])
 
 

@@ -5,6 +5,7 @@ import numpy.testing as npt
 import pandas as pd
 import pytest
 
+import plotnine as p9
 from plotnine import aes, geom_point, ggplot, guides
 from plotnine.exceptions import PlotnineWarning
 from plotnine.guides.guide_bins import guide_bins
@@ -17,18 +18,31 @@ if TYPE_CHECKING:
     from plotnine.guides.guide_colorbar import GuideElementsColorbar
 
 
-def test_colorsteps_trains_segments_and_boundary_labels():
-    scale = scale_color_binned(breaks=[5], limits=(0, 10))
-    guide = guide_colorsteps(title="value")
+data = pd.DataFrame({"x": range(10), "y": range(10), "z": range(10)})
 
-    result = guide.train(scale)
 
-    assert result is guide
-    npt.assert_allclose(guide.key["value"], [5])
-    assert guide.key["label"].tolist() == ["5"]
-    npt.assert_allclose(guide.bar["value"], [2.5, 7.5])
-    assert guide.bar["color"].tolist() == ["#3b528b", "#5ec962"]
-    npt.assert_allclose(guide._intervals.boundaries, [0, 5, 10])
+def test_binned_guides_are_part_of_the_public_api():
+    names = {"guide_bins", "guide_colorsteps", "guide_coloursteps"}
+
+    assert names <= set(p9.__all__)
+    assert all(callable(getattr(p9, name)) for name in names)
+    assert p9.guide_coloursteps is p9.guide_colorsteps
+
+
+@pytest.mark.parametrize(
+    ("aesthetic", "scale", "guide_type"),
+    [
+        ("color", scale_color_binned(), guide_colorsteps),
+        ("shape", scale_shape_binned(), guide_bins),
+    ],
+)
+def test_binned_scale_default_guide_is_resolved(aesthetic, scale, guide_type):
+    data = pd.DataFrame({"x": [1, 2], "y": [1, 2], "z": [0, 1]})
+    p = ggplot(data, aes("x", "y", **{aesthetic: "z"})) + geom_point() + scale
+
+    p.draw_test()
+
+    assert isinstance(next(iter(p.guides._lookup.values()))[1], guide_type)
 
 
 def test_colorsteps_inherits_limit_labels_from_scale():
@@ -162,7 +176,6 @@ def test_colorsteps_uses_equal_or_proportional_segment_locations():
     ],
 )
 def test_colorsteps_draws_in_both_orientations(even_steps, direction, reverse):
-    data = pd.DataFrame({"x": [1, 2, 3], "y": [1, 2, 3], "z": [0, 1, 3]})
     p = (
         ggplot(data, aes("x", "y", color="z"))
         + geom_point(size=4)
@@ -221,7 +234,6 @@ def test_bins_trains_from_interval_valued_discrete_scale():
     [("vertical", False), ("horizontal", True)],
 )
 def test_bins_draws_geom_keys_in_both_orientations(direction, reverse):
-    data = pd.DataFrame({"x": [1, 2, 3], "y": [1, 2, 3], "z": [0, 1, 3]})
     p = (
         ggplot(data, aes("x", "y", shape="z"))
         + geom_point(size=4)
@@ -233,7 +245,6 @@ def test_bins_draws_geom_keys_in_both_orientations(direction, reverse):
 
 
 def test_bins_reuses_legend_geom_key_overrides():
-    data = pd.DataFrame({"x": [1, 2], "y": [1, 2], "z": [0, 1]})
     p = (
         ggplot(data, aes("x", "y", shape="z"))
         + geom_point()
@@ -249,3 +260,56 @@ def test_bins_reuses_legend_geom_key_overrides():
         (params.data["size"] == 9).all()
         for params in trained._layer_parameters
     )
+
+
+def test_colorsteps_draws_equal_segments():
+    p = (
+        ggplot(data, aes("x", "y", color="z"))
+        + geom_point(size=4)
+        + scale_color_binned()
+    )
+
+    assert p == "colorsteps_equal"
+
+
+def test_colorsteps_draws_proportional_segments():
+    p = (
+        ggplot(data, aes("x", "y", color="z"))
+        + geom_point(size=4)
+        + scale_color_binned(breaks=[1, 2, 4, 8])
+        + guides(color=guide_colorsteps(even_steps=False))
+    )
+
+    assert p == "colorsteps_proportional"
+
+
+def test_colorsteps_draws_horizontally():
+    p = (
+        ggplot(data, aes("x", "y", color="z"))
+        + geom_point(size=4)
+        + scale_color_binned()
+        + guides(color=guide_colorsteps(direction="horizontal"))
+    )
+
+    assert p == "colorsteps_horizontal"
+
+
+def test_bins_draws_shape_keys():
+    p = (
+        ggplot(data, aes("x", "y", shape="z"))
+        + geom_point(size=4)
+        + scale_shape_binned()
+    )
+
+    assert p == "bins_shape"
+
+
+def test_bins_draws_horizontally():
+    p = (
+        ggplot(data, aes("x", "y", shape="z"))
+        + geom_point(size=4)
+        + scale_shape_binned()
+        + guides(shape=guide_bins(direction="horizontal"))
+    )
+
+    assert p == "bins_horizontal"

@@ -1,14 +1,23 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING, cast
+
 from matplotlib.offsetbox import (
     AnchoredOffsetbox,
     AuxTransformBox,
     DrawingArea,
+    PackerBase,
 )
 from matplotlib.patches import bbox_artist as mbbox_artist
 from matplotlib.transforms import Affine2D, Bbox
 
 from .patches import InsideStrokedRectangle
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
+
+    from matplotlib.artist import Artist
+    from matplotlib.backend_bases import RendererBase
 
 DEBUG = False
 
@@ -117,3 +126,32 @@ class FlexibleAnchoredOffsetbox(AnchoredOffsetbox):
         container = parentbbox.padded(-pad)
         x0, y0 = _bbox.anchored(self.xy_loc, container=container).p0
         return x0 - bbox.x0, y0 - bbox.y0
+
+
+class FixedSizePacker(PackerBase):
+    """A fixed-size packer for children placed at explicit offsets"""
+
+    def __init__(
+        self,
+        width: float,
+        height: float,
+        children: Sequence[Artist],
+        offsets: Sequence[tuple[float, float]],
+    ) -> None:
+        super().__init__(children=list(children))
+        self._box_width = width
+        self._box_height = height
+        self._child_offsets = offsets
+
+    def _get_bbox_and_child_offsets(
+        self, renderer: RendererBase
+    ) -> tuple[Bbox, list[tuple[float, float]]]:
+        scale = cast("float", renderer.points_to_pixels(1.0))
+        bbox = Bbox.from_bounds(
+            0,
+            0,
+            self._box_width * scale,
+            self._box_height * scale,
+        )
+        offsets = [(x * scale, y * scale) for x, y in self._child_offsets]
+        return bbox, offsets

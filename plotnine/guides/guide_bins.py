@@ -113,9 +113,9 @@ class guide_bins(guide_legend):
             )
             order = drawings if self.reverse else drawings[::-1]
             y = 0.0
+            drawing_offsets = []
             for drawing in order:
-                drawing.set_offset((0, y))
-                canvas.add_artist(drawing)
+                drawing_offsets.append((0, y))
                 y += drawing.height
             locations = self._boundary_locations(heights, total_height)
             texts = []
@@ -146,9 +146,9 @@ class guide_bins(guide_legend):
             )
             order = drawings[::-1] if self.reverse else drawings
             x = 0.0
+            drawing_offsets = []
             for drawing in order:
-                drawing.set_offset((x, label_height + text_margin))
-                canvas.add_artist(drawing)
+                drawing_offsets.append((x, label_height + text_margin))
                 x += drawing.width
             locations = self._boundary_locations(widths, total_width)
             texts = []
@@ -178,6 +178,12 @@ class guide_bins(guide_legend):
         ticks = LineCollection(tick_segments)
         canvas.add_artist(ticks)
         canvas.add_artist(frame)
+        content = FixedSizePacker(
+            canvas.width,
+            canvas.height,
+            [*order, canvas],
+            [*drawing_offsets, (0, 0)],
+        )
         targets.legend_text_legend = texts
         targets.legend_ticks = ticks
         targets.legend_frame = frame
@@ -195,7 +201,7 @@ class guide_bins(guide_legend):
         }
         packer, slc = lookup[elements.title_position]
         children: list[Artist] = (
-            [canvas] if elements.title.is_blank else [title_box, canvas][slc]
+            [content] if elements.title.is_blank else [title_box, content][slc]
         )
         return packer(
             children=children,
