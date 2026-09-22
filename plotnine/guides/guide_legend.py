@@ -28,6 +28,8 @@ if TYPE_CHECKING:
     from plotnine.layer import layer
     from plotnine.typing import Side
 
+    from .._mpl.offsetbox import ColoredDrawingArea
+
 
 # See guides.py for terminology
 
@@ -247,6 +249,29 @@ class guide_legend(guide):
 
         return nrow, ncol
 
+    def _draw_keys(
+        self, elements: GuideElementsLegend
+    ) -> list[ColoredDrawingArea]:
+        """Draw each merged geom layer in every legend key"""
+        from .._mpl.offsetbox import ColoredDrawingArea
+
+        drawings: list[ColoredDrawingArea] = []
+        for i in range(self.num_breaks):
+            try:
+                w, h = elements.key_widths[i], elements.key_heights[i]
+            except IndexError:
+                w, h = elements.empty_key_size
+
+            da = ColoredDrawingArea(w, h, 0, 0)
+            for params in self._layer_parameters:
+                with suppress(IndexError):
+                    key_data = params.data.iloc[i]
+                    params.geom.draw_legend(key_data, da, params.layer)
+            drawings.append(da)
+
+        self.theme.targets.legend_key = drawings
+        return drawings
+
     def draw(self):
         """
         Draw guide
@@ -258,11 +283,8 @@ class guide_legend(guide):
         """
         from matplotlib.offsetbox import HPacker, TextArea, VPacker
 
-        from .._mpl.offsetbox import ColoredDrawingArea
-
         obverse = slice(0, None)
         reverse = slice(None, None, -1)
-        nbreak = self.num_breaks
         targets = self.theme.targets
         keys_order = reverse if self.reverse else obverse
         elements = self.elements
@@ -283,23 +305,7 @@ class guide_legend(guide):
         targets.legend_text_legend = _texts
 
         # Drawings
-        drawings: list[ColoredDrawingArea] = []
-        for i in range(nbreak):
-            try:
-                w, h = elements.key_widths[i], elements.key_heights[i]
-            except IndexError:
-                w, h = elements.empty_key_size
-
-            da = ColoredDrawingArea(w, h, 0, 0)
-
-            # overlay geoms
-            for params in self._layer_parameters:
-                with suppress(IndexError):
-                    key_data = params.data.iloc[i]
-                    params.geom.draw_legend(key_data, da, params.layer)
-
-            drawings.append(da)
-        targets.legend_key = drawings
+        drawings = self._draw_keys(elements)
 
         # Match Drawings with labels to create the entries
         lookup: dict[Side, tuple[type[PackerBase], slice]] = {

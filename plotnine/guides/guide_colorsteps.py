@@ -1,18 +1,14 @@
 from __future__ import annotations
 
 import hashlib
-from collections.abc import Sequence
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
-from warnings import warn
 
 import numpy as np
 import pandas as pd
 from mizani.bounds import rescale
 
-from ..exceptions import PlotnineWarning
-from ..scales.scale_binned import scale_binned
-from ._binned import _GuideIntervals
+from ..scales.scale_binned import _BinIntervals, scale_binned
 from .guide_colorbar import (
     GuideElementsColorbar,
     add_segmented_colorbar,
@@ -20,10 +16,11 @@ from .guide_colorbar import (
 )
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
+
     from matplotlib.offsetbox import AuxTransformBox
 
     from ..scales.scale import scale
-    from ..typing import FloatArrayLike
 
 
 @dataclass
@@ -36,7 +33,7 @@ class guide_colorsteps(guide_colorbar):
     show_limits: bool | None = None
     """Whether to label both scale limits"""
 
-    _intervals: _GuideIntervals = field(init=False, repr=False)
+    _intervals: _BinIntervals = field(init=False, repr=False)
 
     def __post_init__(self) -> None:
         super().__post_init__()
@@ -50,10 +47,13 @@ class guide_colorsteps(guide_colorbar):
         if aesthetic is None:
             aesthetic = scale.aesthetics[0]
 
-        self._intervals = _GuideIntervals.make(scale)
-        colors = list(scale.map(self._intervals.values))
+        self._intervals = _BinIntervals.make(scale)
+        colors = list(scale.map(self._intervals.source_values))
         ticks = self._tick_values(scale)
-        labels = self._labels(scale, ticks)
+        if isinstance(scale, scale_binned):
+            labels = scale.get_labels(ticks.tolist())
+        else:
+            labels = [str(x) for x in ticks]
 
         color_indexes = np.searchsorted(
             self._intervals.boundaries,
@@ -91,39 +91,7 @@ class guide_colorsteps(guide_colorbar):
         if show_limits is None:
             show_limits = bool(getattr(scale, "show_limits", False))
 
-        include_lower = show_limits or self._intervals.explicit_limits[0]
-        include_upper = show_limits or self._intervals.explicit_limits[1]
-        values = self._intervals.breaks
-        if include_lower:
-            values = np.concatenate((self._intervals.boundaries[:1], values))
-        if include_upper:
-            values = np.concatenate((values, self._intervals.boundaries[-1:]))
-        return np.asarray(values, dtype=float)
-
-    def _labels(self, scale: scale, ticks: FloatArrayLike) -> Sequence[str]:
-        if isinstance(scale, scale_binned):
-            labels = scale.labels
-            if (
-                isinstance(labels, Sequence)
-                and not isinstance(labels, str)
-                and len(labels) != len(ticks)
-            ):
-                warn(
-                    "Fixed labels do not cover every requested boundary; "
-                    "formatting the missing labels.",
-                    PlotnineWarning,
-                    stacklevel=3,
-                )
-                formatted = list(scale._trans.format(scale.inverse(ticks)))
-                breaks = np.asarray(scale.get_breaks(), dtype=float)
-                break_labels = scale.get_labels(breaks.tolist())
-                for value, label in zip(breaks, break_labels):
-                    index = np.flatnonzero(np.isclose(ticks, value))
-                    if len(index):
-                        formatted[index[0]] = label
-                return formatted
-            return scale.get_labels(list(ticks))
-        return [str(x) for x in ticks]
+        return self._intervals.get_breaks(show_limits)
 
     def _tick_locations(self, elements: GuideElementsColorbar) -> np.ndarray:
         values = self.key["value"].to_numpy()
