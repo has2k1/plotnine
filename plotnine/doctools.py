@@ -159,7 +159,7 @@ DOCSTRING_SECTIONS = {
 
 PARAM_PATTERN = re.compile(r"\s*" r"([_A-Za-z]\w*)" r"\s:\s")
 SECTIONS_PATTERN = re.compile(
-    r"\n(?P<section>(?:\w+|(\w+\s\w+)+))\s*"  # section name
+    r"\n(?P<section>\w+(?:[ \t]+\w+)*)[ \t]*"  # section name
     r"\n-{3,}\n",  # underline
 )
 GENERATING_QUARTODOC = os.environ.get("GENERATING_QUARTODOC")
@@ -282,14 +282,14 @@ def docstring_section_lines(docstring: str, section_name: str) -> str:
     return "\n".join(lines)
 
 
-def append_to_section(s: str, docstring: str, section: str) -> str:
+def append_to_parameters(text: str, docstring: str) -> str:
     """
-    Append string s to a section in the docstring
+    Append text to the `Parameters` section of a docstring
     """
     idx = -1
     found = False
     for m in SECTIONS_PATTERN.finditer(docstring):
-        if section == m.group("section"):
+        if m.group("section") == "Parameters":
             found = True
         elif found:
             idx = m.start()
@@ -297,9 +297,9 @@ def append_to_section(s: str, docstring: str, section: str) -> str:
 
     if found:
         if idx == -1:
-            s = f"\n{s}"
+            text = f"\n{text}"
         top, bottom = docstring[:idx], docstring[idx:]
-        docstring = f"{top}{s}{bottom}"
+        docstring = f"{top}{text}{bottom}"
 
     return docstring
 
@@ -430,7 +430,7 @@ def document_geom(geom: type[geom]) -> type[geom]:
     `{aesthetics}` with generated documentation.
     """
     docstring = dedent(geom.__doc__ or "")
-    docstring = append_to_section(geom_kwargs, docstring, "Parameters")
+    docstring = append_to_parameters(geom_kwargs, docstring)
 
     # usage
     signature = make_signature(
@@ -482,7 +482,7 @@ def document_stat(stat: type[stat]) -> type[stat]:
     # Dedented so that it lineups (in sphinx) with the part
     # generated parts when put together
     docstring = dedent(stat.__doc__ or "")
-    docstring = append_to_section(stat_kwargs, docstring, "Parameters")
+    docstring = append_to_parameters(stat_kwargs, docstring)
 
     # usage:
     signature = make_signature(
