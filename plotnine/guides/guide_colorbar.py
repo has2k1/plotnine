@@ -377,10 +377,10 @@ def add_segmented_colorbar(
     #    colorbar touch each other precisely. The "bars" appear to
     #    be separated by lines.
     #
-    # For a wayout, we overlap the bars. Overlapping creates artefacts
-    # when alpha < 1, but having a gradient + alpha is rare. And, we can
-    # minimise apparent artefacts by using a large overlap_factor.
-    # A value of 2 gives the best results in the rare case should alpha < 1.
+    # For a wayout, we overlap the bars.
+    # Continuous gradients overlap backwards to prevent hairline SVG gaps.
+    # Explicit steps overlap forwards beneath polygons drawn later, so their
+    # nominal starting edges preserve every colour segment.
     overlap_factor = 2
     boundary_values = (
         None if boundaries is None else np.asarray(boundaries, dtype=float)
@@ -399,13 +399,15 @@ def add_segmented_colorbar(
         for i in range(nbreak):
             if boundary_values is None:
                 linewidth = colorbar_height / nbreak
-                y1 = i * linewidth
-                y2 = y1 + linewidth
+                y1, y2 = i * linewidth, (i + 1) * linewidth
+                if i > 0:
+                    y1 -= linewidth * overlap_factor
             else:
                 y1, y2 = boundary_values[i : i + 2] * colorbar_height
                 linewidth = y2 - y1
-            if i > 1:
-                y1 -= linewidth * overlap_factor
+                if i < nbreak - 1:
+                    y2 = min(y2 + linewidth * overlap_factor, colorbar_height)
+
             verts.append(((x1, y1), (x1, y2), (x2, y2), (x2, y1)))
     else:
         colorbar_width = elements.key_height
@@ -416,13 +418,15 @@ def add_segmented_colorbar(
         for i in range(nbreak):
             if boundary_values is None:
                 linewidth = colorbar_width / nbreak
-                x1 = i * linewidth
-                x2 = x1 + linewidth
+                x1, x2 = i * linewidth, (i + 1) * linewidth
+                if i > 0:
+                    x1 -= linewidth * overlap_factor
             else:
                 x1, x2 = boundary_values[i : i + 2] * colorbar_width
                 linewidth = x2 - x1
-            if i > 1:
-                x1 -= linewidth * overlap_factor
+                if i < nbreak - 1:
+                    x2 = min(x2 + linewidth * overlap_factor, colorbar_width)
+
             verts.append(((x1, y1), (x1, y2), (x2, y2), (x2, y1)))
 
     coll = PolyCollection(
