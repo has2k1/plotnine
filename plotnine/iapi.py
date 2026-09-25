@@ -269,7 +269,7 @@ class layout_details:
 @dataclass
 class strip_label_details:
     """
-    Strip Label Details
+    Strip label details
     """
 
     # facet variable: label for the value
