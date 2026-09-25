@@ -1,7 +1,9 @@
 import numpy as np
 import pandas as pd
+import pytest
 
 from plotnine import aes, ggplot, stat_summary_bin
+from plotnine.exceptions import PlotnineWarning
 
 data = pd.DataFrame(
     {
@@ -31,3 +33,11 @@ def test_continuous_x():
 def test_setting_binwidth():
     p = ggplot(data, aes("xc", "y")) + stat_summary_bin(binwidth=3, geom="bar")
     assert p == "setting_binwidth"
+
+
+def test_no_summary_function_warns():
+    # A missing summary function falls back to mean_se(), and the
+    # fallback must be announced.
+    p = ggplot(data, aes("xc", "y")) + stat_summary_bin(bins=5)
+    with pytest.warns(PlotnineWarning, match="defaulting to mean_se"):
+        p._build()
