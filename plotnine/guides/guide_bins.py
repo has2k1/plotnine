@@ -2,13 +2,14 @@ from __future__ import annotations
 
 import hashlib
 from dataclasses import dataclass, field
+from functools import cached_property
 from typing import TYPE_CHECKING, cast
 
 import numpy as np
 import pandas as pd
 
 from ..scales.scale_binned import _BinIntervals, scale_binned
-from .guide_legend import guide_legend
+from .guide_legend import GuideElementsLegend, guide_legend
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
@@ -30,6 +31,11 @@ class guide_bins(guide_legend):
     _intervals: _BinIntervals = field(init=False, repr=False)
     _boundary_values: FloatArray = field(init=False, repr=False)
     _boundary_labels: Sequence[str] = field(init=False, repr=False)
+
+    def __post_init__(self) -> None:
+        super().__post_init__()
+        self._elements_cls = GuideElementsBins
+        self.elements: GuideElementsBins  # pyright: ignore[reportIncompatibleVariableOverride]
 
     def train(self, scale: scale, aesthetic: str | None = None):
         """Create one geom key per bin and label selected boundaries"""
@@ -226,3 +232,17 @@ class guide_bins(guide_legend):
         if self.elements.is_vertical:
             locations = total - locations
         return locations.tolist()
+
+
+class GuideElementsBins(GuideElementsLegend):
+    """Theme values and dimensions for adjacent binned keys"""
+
+    @cached_property
+    def key_widths(self) -> list[float]:
+        widths = [width for width, _ in self._key_dimensions]
+        return [max(widths)] * len(widths)
+
+    @cached_property
+    def key_heights(self) -> list[float]:
+        heights = [height for _, height in self._key_dimensions]
+        return [max(heights)] * len(heights)
