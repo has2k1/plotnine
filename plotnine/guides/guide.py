@@ -128,6 +128,12 @@ class guide(ABC, metaclass=Register):
         self.plot_layers = plot.built.layers
         self.plot_mapping = plot.mapping
 
+    def _resolve_theme(self, owner: LegendOwner) -> Theme:
+        """
+        Return the guide theme resolved against its rendering owner
+        """
+        return owner.theme + self.theme
+
     def _bind_owner(self, owner: LegendOwner):
         """
         Bind to the rendering owner
@@ -145,7 +151,7 @@ class guide(ABC, metaclass=Register):
         # The guide theme controls styling, but the owner supplies figure
         # properties. Keep the guide's targets separate from the owner's.
         self.figure = owner.figure
-        self.theme = owner.theme + self.theme
+        self.theme = self._resolve_theme(owner)
         self.theme._inherit_figure_props(owner.theme)
         self.theme._setup(self)
         self.elements = self._elements_cls(self.theme, self)

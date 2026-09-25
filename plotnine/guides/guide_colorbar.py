@@ -17,6 +17,8 @@ from .._utils import OPPOSITE_SIDE
 from ..exceptions import PlotnineError, PlotnineWarning
 from ..mapping.aes import rename_aesthetics
 from ..scales.scale_continuous import scale_continuous
+from ..themes.elements import element_line
+from ..themes.theme import theme
 from .guide import GuideElements, guide
 
 if TYPE_CHECKING:
@@ -27,7 +29,7 @@ if TYPE_CHECKING:
     from matplotlib.offsetbox import AuxTransformBox, PackerBase
     from matplotlib.text import Text
 
-    from plotnine import theme
+    from plotnine.guides.guides import LegendOwner
     from plotnine.scales.scale import scale
     from plotnine.typing import FloatArrayLike, Side
 
@@ -80,6 +82,17 @@ class guide_colorbar(guide):
 
         if self.nbin is None:
             self.nbin = 300  # if self.display == "gradient" else 300
+
+    def _resolve_theme(self, owner: LegendOwner) -> theme:
+        """
+        Return the resolved colour-bar theme with default tick styling
+        """
+        resolved = super()._resolve_theme(owner)
+        if resolved.T.get("legend_ticks") is None:
+            resolved += theme(
+                legend_ticks=element_line(color="#CCCCCC", size=1)
+            )
+        return resolved
 
     def train(self, scale: scale, aesthetic=None):
         self.nbin = cast("int", self.nbin)
@@ -209,8 +222,6 @@ class guide_colorbar(guide):
         from matplotlib.transforms import IdentityTransform
 
         from .._mpl.offsetbox import DPICorAuxTransformBox
-
-        self.theme = cast("theme", self.theme)
 
         obverse = slice(0, None)
         reverse = slice(None, None, -1)

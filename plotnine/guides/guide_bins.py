@@ -10,6 +10,8 @@ import pandas as pd
 
 from ..exceptions import PlotnineError
 from ..scales.scale_binned import _BinIntervals, scale_binned
+from ..themes.elements import element_line
+from ..themes.theme import theme
 from .guide_legend import GuideElementsLegend, guide_legend
 
 if TYPE_CHECKING:
@@ -21,6 +23,7 @@ if TYPE_CHECKING:
     from .._mpl.offsetbox import ColoredDrawingArea
     from ..scales.scale import scale
     from ..typing import FloatArray, Side
+    from .guides import LegendOwner
 
 
 @dataclass
@@ -38,6 +41,15 @@ class guide_bins(guide_legend):
         super().__post_init__()
         self._elements_cls = GuideElementsBins
         self.elements: GuideElementsBins  # pyright: ignore[reportIncompatibleVariableOverride]
+
+    def _resolve_theme(self, owner: LegendOwner) -> theme:
+        """
+        Return the resolved binned-guide theme with default tick styling
+        """
+        resolved = super()._resolve_theme(owner)
+        if resolved.T.get("legend_ticks") is None:
+            resolved += theme(legend_ticks=element_line(color="black", size=1))
+        return resolved
 
     def train(self, scale: scale, aesthetic: str | None = None):
         """Create one geom key per bin and label selected boundaries"""
