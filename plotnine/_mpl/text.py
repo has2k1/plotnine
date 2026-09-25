@@ -86,8 +86,8 @@ class StripText(Text):
                 PlotnineWarning,
             )
         else:
-            # The the text has multiple lines, we use the maximum height
-            # of anyone single line.
+            # If the text has multiple lines, use the maximum height
+            # of any single line.
             height = max([p[1][1] for p in parts])
 
         return height
