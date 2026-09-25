@@ -5,7 +5,7 @@
 # make target
 
 # Use uv (if it is installed) to run all python related commands,
-# and prefere the active environment over .venv in a parent folder
+# and prefer the active environment over .venv in a parent folder
 ifeq ($(OS),Windows_NT)
   HAS_UV := $(if $(shell where uv 2>NUL),true,false)
 else

@@ -106,7 +106,7 @@ class scale_discrete(
 
     def dimension(self, expand=(0, 0, 0, 0), limits=None):
         """
-        Get the phyical size of the scale
+        Get the physical size of the scale
 
         Unlike limits, this always returns a numeric vector of length 2
         """
