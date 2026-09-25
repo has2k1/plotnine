@@ -34,6 +34,7 @@ class ThemeTargets:
     legends: Optional[legend_artists] = None
     legend_text_colorbar: list[Text] = field(default_factory=list)
     legend_text_legend: list[Text] = field(default_factory=list)
+    legend_axis_line: Optional[LineCollection] = None
     legend_ticks: Optional[LineCollection] = None
     legend_title: Optional[Text] = None
     panel_border: list[Rectangle] = field(default_factory=list)

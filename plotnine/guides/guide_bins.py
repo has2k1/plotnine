@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING, cast
 import numpy as np
 import pandas as pd
 
+from ..exceptions import PlotnineError
 from ..scales.scale_binned import _BinIntervals, scale_binned
 from .guide_legend import GuideElementsLegend, guide_legend
 
@@ -17,6 +18,7 @@ if TYPE_CHECKING:
     from matplotlib.artist import Artist
     from matplotlib.offsetbox import PackerBase
 
+    from .._mpl.offsetbox import ColoredDrawingArea
     from ..scales.scale import scale
     from ..typing import FloatArray, Side
 
@@ -87,6 +89,16 @@ class guide_bins(guide_legend):
             )
         ]
 
+    def _order_keys(
+        self, drawings: list[ColoredDrawingArea]
+    ) -> list[ColoredDrawingArea]:
+        """
+        Order key drawings for their display coordinates
+        """
+        if self.elements.is_vertical:
+            return drawings if self.reverse else drawings[::-1]
+        return drawings[::-1] if self.reverse else drawings
+
     def draw(self) -> PackerBase:
         """Draw adjacent geom keys and label their boundaries"""
         from matplotlib.collections import LineCollection
@@ -96,107 +108,135 @@ class guide_bins(guide_legend):
             TextArea,
             VPacker,
         )
-        from matplotlib.patches import Rectangle
-        from matplotlib.text import Text
 
-        from .._mpl.offsetbox import FixedSizePacker
+        from .._mpl.offsetbox import OffsetPacker
 
-        elements = self.elements
-        drawings = self._draw_keys(elements)
         targets = self.theme.targets
-        font_size = self.theme.getp(("legend_text_legend", "size"))
-        text_margin = 6
+        elements = self.elements
+        drawings = self._order_keys(self._draw_keys(elements))
+        labels: list[TextArea] = []
 
         if elements.is_vertical:
-            key_width = max(d.width for d in drawings)
-            heights = [d.height for d in drawings]
+            # axis line and axis ticks coordinates
+            key_width = elements.key_widths[0]
+            heights = [da.height for da in drawings]
             total_height = sum(heights)
-            label_width = max(30, font_size * 4)
-            canvas = DrawingArea(
-                key_width + text_margin + label_width,
-                total_height,
-                clip=False,
-            )
-            order = drawings if self.reverse else drawings[::-1]
             y = 0.0
-            drawing_offsets = []
-            for drawing in order:
-                drawing_offsets.append((0, y))
-                y += drawing.height
+            offsets: list[tuple[float, float]] = []
+            for da in drawings:
+                offsets.append((0, y))
+                y += da.height
+
             locations = self._boundary_locations(heights, total_height)
-            texts = []
-            for label, y in zip(self._boundary_labels, locations):
-                text = Text(
-                    key_width + text_margin,
-                    y,
-                    label,
-                    fontsize=font_size,
-                    ha="left",
-                    va="center",
-                )
-                canvas.add_artist(text)
-                texts.append(text)
-            tick_segments = [((0, y), (key_width, y)) for y in locations]
-            frame = Rectangle(
-                (0, 0), key_width, total_height, facecolor="none"
+            axis_x = 0 if elements.text_position == "left" else key_width
+            tick_x = axis_x + (
+                key_width * elements.ticks_length
+                if elements.text_position == "left"
+                else -key_width * elements.ticks_length
             )
+            axis_segment = ((axis_x, 0), (axis_x, total_height))
+            tick_segments = [((axis_x, y), (tick_x, y)) for y in locations]
+
+            # axis line and axis ticks artists
+            axis_canvas = DrawingArea(key_width, total_height, clip=False)
+            axis_line = LineCollection([axis_segment])
+            ticks = LineCollection(tick_segments)
+            axis_canvas.add_artist(axis_line)
+            axis_canvas.add_artist(ticks)
+            key_box = OffsetPacker(
+                key_width,
+                total_height,
+                [*drawings, axis_canvas],
+                [*offsets, (0, 0)],
+            )
+            content = key_box
+            if not elements.text.is_blank:
+                ha = "right" if elements.text_position == "left" else "left"
+                labels = [
+                    TextArea(label, textprops={"ha": ha, "va": "center"})
+                    for label in self._boundary_labels
+                ]
+                label_box = OffsetPacker(
+                    None,
+                    total_height,
+                    labels,
+                    [(0, y) for y in locations],
+                )
+                children = (
+                    [label_box, key_box]
+                    if elements.text_position == "left"
+                    else [key_box, label_box]
+                )
+                content = HPacker(
+                    children=children,
+                    sep=elements.text.margins[0],
+                    align="baseline",
+                    pad=0,
+                )
         else:
+            # axis line and axis ticks coordinates
             widths = [d.width for d in drawings]
-            key_height = max(d.height for d in drawings)
+            key_height = elements.key_heights[0]
             total_width = sum(widths)
-            label_height = max(14, font_size * 1.5)
-            canvas = DrawingArea(
-                total_width,
-                key_height + text_margin + label_height,
-                clip=False,
-            )
-            order = drawings[::-1] if self.reverse else drawings
             x = 0.0
-            drawing_offsets = []
-            for drawing in order:
-                drawing_offsets.append((x, label_height + text_margin))
-                x += drawing.width
+            offsets: list[tuple[float, float]] = []
+            for da in drawings:
+                offsets.append((x, 0))
+                x += da.width
+
             locations = self._boundary_locations(widths, total_width)
-            texts = []
-            for label, x in zip(self._boundary_labels, locations):
-                text = Text(
-                    x,
-                    0,
-                    label,
-                    fontsize=font_size,
-                    ha="center",
-                    va="bottom",
-                )
-                canvas.add_artist(text)
-                texts.append(text)
-            key_bottom = label_height + text_margin
-            tick_segments = [
-                ((x, key_bottom), (x, key_bottom + key_height))
-                for x in locations
-            ]
-            frame = Rectangle(
-                (0, key_bottom),
+            axis_y = key_height if elements.text_position == "top" else 0
+            tick_y = axis_y + (
+                -key_height * elements.ticks_length
+                if elements.text_position == "top"
+                else key_height * elements.ticks_length
+            )
+            axis_segment = ((0, axis_y), (total_width, axis_y))
+            tick_segments = [((x, axis_y), (x, tick_y)) for x in locations]
+
+            # axis line and axis ticks artists
+            axis_canvas = DrawingArea(total_width, key_height, clip=False)
+            axis_line = LineCollection([axis_segment])
+            ticks = LineCollection(tick_segments)
+            axis_canvas.add_artist(axis_line)
+            axis_canvas.add_artist(ticks)
+            key_box = OffsetPacker(
                 total_width,
                 key_height,
-                facecolor="none",
+                [*drawings, axis_canvas],
+                [*offsets, (0, 0)],
             )
+            content = key_box
+            if not elements.text.is_blank:
+                labels = [
+                    TextArea(label, textprops={"ha": "center"})
+                    for label in self._boundary_labels
+                ]
+                label_box = OffsetPacker(
+                    total_width,
+                    None,
+                    labels,
+                    [(x, 0) for x in locations],
+                )
+                children = (
+                    [label_box, key_box]
+                    if elements.text_position == "top"
+                    else [key_box, label_box]
+                )
+                content = VPacker(
+                    children=children,
+                    sep=elements.text.margins[0],
+                    align="baseline",
+                    pad=0,
+                )
 
-        ticks = LineCollection(tick_segments)
-        canvas.add_artist(ticks)
-        canvas.add_artist(frame)
-        content = FixedSizePacker(
-            canvas.width,
-            canvas.height,
-            [*order, canvas],
-            [*drawing_offsets, (0, 0)],
-        )
-        targets.legend_text_legend = texts
+        targets.legend_axis_line = axis_line
         targets.legend_ticks = ticks
-        targets.legend_frame = frame
+        targets.legend_text_legend = [box._text for box in labels]  # pyright: ignore[reportAttributeAccessIssue]
 
         title = cast("str", self.title)
         title_box = TextArea(title)
-        targets.legend_title = title_box._text  # type: ignore
+        targets.legend_title = title_box._text  # pyright: ignore[reportAttributeAccessIssue]
         obverse = slice(0, None)
         reverse = slice(None, None, -1)
         lookup: dict[Side, tuple[type[PackerBase], slice]] = {
@@ -235,7 +275,30 @@ class guide_bins(guide_legend):
 
 
 class GuideElementsBins(GuideElementsLegend):
-    """Theme values and dimensions for adjacent binned keys"""
+    """Theme properties and dimensions for adjacent binned keys"""
+
+    def __post_init__(self) -> None:
+        super().__post_init__()
+        self.guide_kind = "legend"
+
+    @cached_property
+    def text_position(self) -> Side:
+        valid = ("left", "right") if self.is_vertical else ("top", "bottom")
+        position = self.theme.getp("legend_text_position") or valid[1]
+        if position not in valid:
+            raise PlotnineError(
+                f"For a {self.direction} guide, legend_text_position must be "
+                f"one of {set(valid)!r}, not {position!r}."
+            )
+        return cast("Side", position)
+
+    @cached_property
+    def text_positions(self) -> Sequence[Side]:
+        return (self.text_position,) * self.guide.num_breaks
+
+    @cached_property
+    def ticks_length(self) -> float:
+        return self.theme.getp("legend_ticks_length")
 
     @cached_property
     def key_widths(self) -> list[float]:

@@ -6,16 +6,26 @@ import pandas as pd
 import pytest
 
 import plotnine as p9
-from plotnine import aes, geom_point, ggplot, guides
-from plotnine.exceptions import PlotnineWarning
+from plotnine import (
+    aes,
+    element_line,
+    element_text,
+    geom_point,
+    ggplot,
+    guides,
+    theme,
+)
+from plotnine.exceptions import PlotnineError, PlotnineWarning
 from plotnine.guides.guide_bins import guide_bins
 from plotnine.guides.guide_colorsteps import guide_colorsteps
 from plotnine.scales.scale_color import scale_color_binned
 from plotnine.scales.scale_manual import scale_color_manual, scale_shape_manual
 from plotnine.scales.scale_shape import scale_shape_binned
+from plotnine.scales.scale_size import scale_size_binned
 
 if TYPE_CHECKING:
     from plotnine.guides.guide_colorbar import GuideElementsColorbar
+    from plotnine.typing import Orientation
 
 
 data = pd.DataFrame({"x": range(10), "y": range(10), "z": range(10)})
@@ -260,6 +270,61 @@ def test_bins_reuses_legend_geom_key_overrides():
         (params.data["size"] == 9).all()
         for params in trained._layer_parameters
     )
+
+
+@pytest.mark.parametrize(
+    ("direction", "position"),
+    [("vertical", "top"), ("horizontal", "left")],
+)
+def test_bins_rejects_text_positions_for_other_orientation(
+    direction: "Orientation", position: str
+) -> None:
+    p = (
+        ggplot(data, aes("x", "y", shape="z"))
+        + geom_point()
+        + scale_shape_binned()
+        + guides(shape=guide_bins(direction=direction))
+        + theme(legend_text_position=position)
+    )
+    with pytest.raises(PlotnineError, match="legend_text_position"):
+        p.draw_test()  # pyright: ignore[reportAttributeAccessIssue]
+
+
+def test_bins_applies_axis_theme() -> None:
+    p = (
+        ggplot(data, aes("x", "y", shape="z"))
+        + geom_point(size=20)
+        + scale_shape_binned()
+        + theme(
+            legend_axis_line=element_line(color="green"),
+            legend_text_position="left",
+            legend_text=element_text(color="red", margin={"r": 10}),
+            legend_ticks=element_line(color="blue"),
+            legend_ticks_length=0.4,
+        )
+    )
+    assert p == "bins_axis_theme"
+
+
+def test_bins_contains_large_keys_and_labels() -> None:
+    labels = [
+        "Lower boundary\nwith a long label",
+        "Middle boundary\nwith a long label",
+        "Upper boundary\nwith a long label",
+    ]
+    p = (
+        ggplot(data, aes("x", "y", size="z"))
+        + geom_point()
+        + scale_size_binned(range=(4, 20), breaks=[0, 4.5, 9], labels=labels)
+        + guides(size=guide_bins(direction="horizontal"))
+        + theme(
+            legend_position="bottom",
+            legend_text=element_text(size=24),
+            legend_key_width=220,
+            figure_size=(15, 5),
+        )
+    )
+    assert p == "bins_large_keys_and_labels"
 
 
 def test_colorsteps_draws_equal_segments():

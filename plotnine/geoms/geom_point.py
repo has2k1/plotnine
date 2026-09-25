@@ -159,11 +159,16 @@ class geom_point(geom):
     def legend_key_size(
         data: pd.Series[Any], min_size: tuple[int, int], lyr: layer
     ) -> tuple[int, int]:
+        from matplotlib.markers import MarkerStyle
+
         w, h = min_size
         pad_w, pad_h = w * 0.5, h * 0.5
-        _size = data["size"] * SIZE_FACTOR
-        _edgewidth = 2 * data["stroke"] * SIZE_FACTOR
-        _w = _h = _size + _edgewidth
+        marker = MarkerStyle(data["shape"])
+        bbox = marker.get_path().get_extents(marker.get_transform())
+        _size = (data["size"] + data["stroke"]) * SIZE_FACTOR
+        _edgewidth = data["stroke"] * SIZE_FACTOR
+        _w = max(1, bbox.width) * _size + _edgewidth
+        _h = max(1, bbox.height) * _size + _edgewidth
         if data["color"] is not None:
             w = max(w, _w + pad_w)
             h = max(h, _h + pad_h)

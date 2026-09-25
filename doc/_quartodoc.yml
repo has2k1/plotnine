@@ -487,6 +487,7 @@ quartodoc:
         - dpi
         - figure_format
         - figure_size
+        - legend_axis_line
         - legend_background
         - legend_box
         - legend_box_background

@@ -205,6 +205,7 @@ class theme:
         axis_ticks_y=None,
         axis_ticks=None,
         legend_ticks=None,
+        legend_axis_line=None,
         panel_grid_major_x=None,
         panel_grid_major_y=None,
         panel_grid_minor_x=None,
