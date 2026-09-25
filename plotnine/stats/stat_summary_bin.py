@@ -1,4 +1,5 @@
 from typing import TYPE_CHECKING, cast
+from warnings import warn
 
 import numpy as np
 import pandas as pd
@@ -107,8 +108,9 @@ class stat_summary_bin(stat):
     def setup_params(self, data):
         keys = ("fun_data", "fun_y", "fun_ymin", "fun_ymax")
         if not any(self.params[k] for k in keys):
-            PlotnineWarning(
-                "No summary function, supplied, defaulting to mean_se()"
+            warn(
+                "No summary function supplied, defaulting to mean_se()",
+                PlotnineWarning,
             )
             self.params["fun_data"] = "mean_se"
 
