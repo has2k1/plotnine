@@ -2074,6 +2074,20 @@ class legend_ticks(themeable):
             coll.set_visible(False)
 
 
+class legend_axis_line(legend_ticks):
+    """Line along the boundary of binned legend keys"""
+
+    def apply_figure(self, figure: Figure, targets: ThemeTargets) -> None:
+        super().apply_figure(figure, targets)
+        if line := targets.legend_axis_line:
+            line.set(**self._get_properties(omit=("solid_capstyle",)))
+
+    def blank_figure(self, figure: Figure, targets: ThemeTargets) -> None:
+        super().blank_figure(figure, targets)
+        if line := targets.legend_axis_line:
+            line.set_visible(False)
+
+
 class panel_grid_major_x(themeable):
     """
     Vertical major grid lines
@@ -2196,7 +2210,9 @@ class plot_footer_line(themeable):
             targets.plot_footer_line.set_visible(False)
 
 
-class line(axis_line, axis_ticks, panel_grid, legend_ticks, plot_footer_line):
+class line(
+    axis_line, axis_ticks, panel_grid, legend_axis_line, plot_footer_line
+):
     """
     All line elements
 

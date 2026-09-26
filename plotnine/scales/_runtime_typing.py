@@ -41,7 +41,7 @@ ContinuousBreaksUser: TypeAlias = (
     bool
     | None
     | Sequence[float]
-    | Callable[[tuple[float, float]], Sequence[float]]
+    | Callable[..., Sequence[float]]
 )
 
 MinorBreaksUser: TypeAlias = ContinuousBreaksUser
@@ -66,7 +66,12 @@ SecAxisUser: TypeAlias = "sec_axis | None"
 
 OptionalLegend: TypeAlias = Literal["legend"] | None
 OptionalColorbar: TypeAlias = Literal["colorbar"] | None
-OptionalGuide: TypeAlias = Literal["legend", "colorbar"] | None
+OptionalBinnedGuide: TypeAlias = (
+    Literal["bins", "colorbar", "colorsteps", "coloursteps", "legend"] | None
+)
+OptionalGuide: TypeAlias = (
+    Literal["bins", "colorbar", "colorsteps", "coloursteps", "legend"] | None
+)
 
 RangeT = TypeVar("RangeT", bound=Range)
 BreaksUserT = TypeVar("BreaksUserT")

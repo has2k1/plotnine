@@ -185,7 +185,9 @@ class Scales(List[scale]):
         # Loop through each variable, mapping across each scale,
         # then joining back into the copy of the data
         for col in vars:
-            use_df = array_kind.discrete(data[col])
+            use_df = array_kind.discrete(data[col]) or any(
+                getattr(sc, "_map_changes_dtype", False) for sc in self
+            )
             for i, sc in enumerate(self, start=1):
                 bool_idx = i == idx
                 results = sc.map(data.loc[bool_idx, col])

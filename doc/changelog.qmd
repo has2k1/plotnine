@@ -7,6 +7,18 @@ title: Changelog
 
 ### New
 
+- Added binned scales for position, alpha, linetype, shape, size, colour,
+  and fill. Use `scale_x_binned`, `scale_y_binned`, or the corresponding
+  `scale_*_binned` aesthetic scale to divide continuous data into numeric
+  bins before mapping it. Colour and fill scales also provide the
+  `scale_*_steps`, `scale_*_steps2`, `scale_*_stepsn`, and
+  `scale_*_fermenter` families. `guide_colorsteps` draws one colour segment
+  per bin, while `guide_bins` draws adjacent geom keys. Both guides label bin
+  boundaries. `guide_bins` positions boundary labels with
+  `legend_text_position`, uses the key-facing `legend_text` margin, and styles
+  its ticks and axis line with `legend_ticks`, `legend_ticks_length`, and
+  `legend_axis_line`. ({{< issue 680 >}})
+
 - Set a plot's preferred notebook and save format with
   `theme(figure_format="svg")`. An explicit save format takes priority,
   followed by the filename extension. For a composition, set the preference

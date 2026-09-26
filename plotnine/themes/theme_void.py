@@ -1,7 +1,6 @@
 from ..options import get_option
 from .elements import (
     element_blank,
-    element_line,
     element_text,
     margin,
     margin_auto,
@@ -62,7 +61,6 @@ class theme_void(theme):
                 size=base_size * 0.8,
                 margin=margin_auto(m / 1.5, unit="fig"),
             ),
-            legend_ticks=element_line(color="#CCCCCC", size=1),
             legend_title=element_text(
                 margin=margin(t=m, l=m * 2, b=m / 2, r=m * 2, unit="fig")
             ),

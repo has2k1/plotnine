@@ -29,7 +29,9 @@ if TYPE_CHECKING:
 
     from plotnine import (
         ggplot,
+        guide_bins,
         guide_colorbar,
+        guide_colorsteps,
         guide_legend,
         theme,
     )
@@ -49,9 +51,22 @@ if TYPE_CHECKING:
     )
 
     LegendOrColorbar: TypeAlias = (
-        guide_legend | guide_colorbar | Literal["legend", "colorbar"]
+        guide_legend
+        | guide_bins
+        | guide_colorbar
+        | guide_colorsteps
+        | Literal[
+            "bins",
+            "legend",
+            "colorbar",
+            "colourbar",
+            "colorsteps",
+            "coloursteps",
+        ]
     )
-    LegendOnly: TypeAlias = guide_legend | Literal["legend"]
+    LegendOnly: TypeAlias = (
+        guide_legend | guide_bins | Literal["legend", "bins"]
+    )
 
     class LegendOwner(Protocol):
         """
@@ -118,7 +133,7 @@ class guides:
     stroke: Optional[LegendOnly | NoGuide] = None
     """Guide for stroke scale."""
 
-    colour: Optional[LegendOnly | NoGuide] = None
+    colour: Optional[LegendOrColorbar | NoGuide] = None
     """Guide for colour scale."""
 
     def __post_init__(self):

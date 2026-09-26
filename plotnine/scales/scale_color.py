@@ -4,10 +4,15 @@ from dataclasses import KW_ONLY, InitVar, dataclass, field
 from typing import Literal, Sequence
 from warnings import warn
 
-from plotnine.scales._runtime_typing import OptionalGuide, OptionalLegend
+from plotnine.scales._runtime_typing import (
+    OptionalBinnedGuide,
+    OptionalGuide,
+    OptionalLegend,
+)
 
 from .._utils.registry import alias
 from ..exceptions import PlotnineWarning
+from .scale_binned import binned_pal, scale_binned
 from .scale_continuous import scale_continuous
 from .scale_datetime import scale_datetime
 from .scale_discrete import scale_discrete
@@ -43,6 +48,16 @@ class _scale_color_continuous(
     """
     Color of missing values.
     """
+
+
+@dataclass
+class _scale_color_binned(scale_binned):
+    """Base class for colour scales that map through numeric bins"""
+
+    _aesthetics = ["color"]
+    _: KW_ONLY
+    guide: OptionalBinnedGuide = "colorsteps"
+    na_value: str = "#7F7F7F"
 
 
 # Discrete color scales #
@@ -228,6 +243,106 @@ class scale_fill_grey(scale_color_grey):
 
 
 # Continuous color scales #
+
+
+@dataclass
+class scale_color_binned(_scale_color_binned):
+    """A binned colour scale that uses a Matplotlib colormap"""
+
+    cmap_name: InitVar[str] = "viridis"
+
+    def __post_init__(self, cmap_name: str) -> None:
+        from mizani.palettes import cmap_pal
+
+        super().__post_init__()
+        self.palette = cmap_pal(cmap_name)
+
+
+@dataclass
+class scale_fill_binned(scale_color_binned):
+    """A binned fill scale that uses a Matplotlib colormap"""
+
+    _aesthetics = ["fill"]
+
+
+@dataclass
+class scale_color_steps(_scale_color_binned):
+    """A binned two-colour gradient scale"""
+
+    low: InitVar[str] = "#132B43"
+    high: InitVar[str] = "#56B1F7"
+
+    def __post_init__(self, low: str, high: str) -> None:
+        from mizani.palettes import gradient_n_pal
+
+        super().__post_init__()
+        self.palette = gradient_n_pal([low, high])
+
+
+@dataclass
+class scale_fill_steps(scale_color_steps):
+    """A binned two-colour fill gradient scale"""
+
+    _aesthetics = ["fill"]
+
+
+@dataclass
+class scale_color_steps2(_scale_color_binned):
+    """A binned diverging colour gradient scale"""
+
+    low: InitVar[str] = "#832424"
+    mid: InitVar[str] = "#FFFFFF"
+    high: InitVar[str] = "#3A3A98"
+    midpoint: InitVar[float] = 0
+
+    def __post_init__(
+        self,
+        low: str,
+        mid: str,
+        high: str,
+        midpoint: float,
+    ) -> None:
+        from mizani.bounds import rescale_mid
+        from mizani.palettes import gradient_n_pal
+
+        def _rescale_mid(*args, **kwargs):
+            return rescale_mid(*args, mid=midpoint, **kwargs)
+
+        self.rescaler = _rescale_mid
+        self.palette = gradient_n_pal([low, mid, high])
+        super().__post_init__()
+
+
+@dataclass
+class scale_fill_steps2(scale_color_steps2):
+    """A binned diverging fill gradient scale"""
+
+    _aesthetics = ["fill"]
+
+
+@dataclass
+class scale_color_stepsn(_scale_color_binned):
+    """A binned multi-colour gradient scale"""
+
+    colors: InitVar[Sequence[str]]
+    values: InitVar[Sequence[float] | None] = None
+
+    def __post_init__(
+        self,
+        colors: Sequence[str],
+        values: Sequence[float] | None,
+    ) -> None:
+        from mizani.palettes import gradient_n_pal
+
+        super().__post_init__()
+        self.palette = gradient_n_pal(colors, values)
+
+
+@dataclass
+class scale_fill_stepsn(scale_color_stepsn):
+    """A binned multi-colour fill gradient scale"""
+
+    _aesthetics = ["fill"]
 
 
 @dataclass
@@ -486,6 +601,45 @@ class scale_fill_distiller(scale_color_distiller):
     _aesthetics = ["fill"]
 
 
+@dataclass
+class scale_color_fermenter(_scale_color_binned):
+    """A binned colour scale that uses ColorBrewer palettes"""
+
+    type: InitVar[
+        Literal[
+            "diverging",
+            "qualitative",
+            "sequential",
+            "div",
+            "qual",
+            "seq",
+        ]
+    ] = "seq"
+    palette: InitVar[int | str] = 1
+    direction: InitVar[Literal[1, -1]] = -1
+
+    def __post_init__(self, type, palette, direction) -> None:
+        from mizani.palettes import brewer_pal
+
+        pal = brewer_pal(type, palette, direction=direction)
+        if pal.type == "qualitative":
+            warn(
+                "A qualitative colour palette is being used for a binned "
+                "scale. Use `type='seq'` or `type='div'` instead.",
+                PlotnineWarning,
+            )
+
+        super().__post_init__()
+        self.palette = binned_pal(pal)  # type: ignore
+
+
+@dataclass
+class scale_fill_fermenter(scale_color_fermenter):
+    """A binned fill scale that uses ColorBrewer palettes"""
+
+    _aesthetics = ["fill"]
+
+
 # matplotlib colormaps
 @dataclass
 class scale_color_cmap(_scale_color_continuous):
@@ -659,6 +813,16 @@ class scale_colour_brewer(scale_color_brewer):
 
 
 @alias
+class scale_colour_binned(scale_color_binned):
+    pass
+
+
+@alias
+class scale_colour_fermenter(scale_color_fermenter):
+    pass
+
+
+@alias
 class scale_colour_desaturate(scale_color_desaturate):
     pass
 
@@ -675,6 +839,21 @@ class scale_colour_gradient2(scale_color_gradient2):
 
 @alias
 class scale_colour_gradientn(scale_color_gradientn):
+    pass
+
+
+@alias
+class scale_colour_steps(scale_color_steps):
+    pass
+
+
+@alias
+class scale_colour_steps2(scale_color_steps2):
+    pass
+
+
+@alias
+class scale_colour_stepsn(scale_color_stepsn):
     pass
 
 

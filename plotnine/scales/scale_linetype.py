@@ -1,10 +1,11 @@
 from dataclasses import KW_ONLY, dataclass
 from warnings import warn
 
-from plotnine.scales._runtime_typing import OptionalLegend
+from plotnine.scales._runtime_typing import OptionalBinnedGuide, OptionalLegend
 
 from .._utils.registry import alias
 from ..exceptions import PlotnineError, PlotnineWarning
+from .scale_binned import binned_pal, scale_binned
 from .scale_continuous import scale_continuous
 from .scale_discrete import scale_discrete
 
@@ -51,6 +52,21 @@ class scale_linetype_ordinal(scale_linetype):
             "Using linetype for an ordinal variable is not advised.",
             PlotnineWarning,
         )
+
+
+@dataclass
+class scale_linetype_binned(scale_binned):
+    """A binned line-pattern scale"""
+
+    _aesthetics = ["linetype"]
+    _: KW_ONLY
+    guide: OptionalBinnedGuide = "bins"
+
+    def __post_init__(self) -> None:
+        from mizani.palettes import manual_pal
+
+        super().__post_init__()
+        self.palette = binned_pal(manual_pal(LINETYPES))
 
 
 class scale_linetype_continuous(scale_continuous):

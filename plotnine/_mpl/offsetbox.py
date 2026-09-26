@@ -1,14 +1,24 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING, cast
+
 from matplotlib.offsetbox import (
     AnchoredOffsetbox,
     AuxTransformBox,
     DrawingArea,
+    PackerBase,
 )
 from matplotlib.patches import bbox_artist as mbbox_artist
 from matplotlib.transforms import Affine2D, Bbox
 
 from .patches import InsideStrokedRectangle
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
+
+    from matplotlib.artist import Artist
+    from matplotlib.backend_bases import RendererBase
+    from matplotlib.offsetbox import OffsetBox
 
 DEBUG = False
 
@@ -117,3 +127,67 @@ class FlexibleAnchoredOffsetbox(AnchoredOffsetbox):
         container = parentbbox.padded(-pad)
         x0, y0 = _bbox.anchored(self.xy_loc, container=container).p0
         return x0 - bbox.x0, y0 - bbox.y0
+
+
+class OffsetPacker(PackerBase):
+    """
+    Container for children placed at fixed point offsets
+
+    Numeric dimensions set a minimum extent from the origin. The bounds expand
+    to include each visible child's measured extent without shifting its
+    offset. A `None` dimension uses only the child bounds.
+    """
+
+    def __init__(
+        self,
+        width: float | None,
+        height: float | None,
+        children: Sequence[Artist],
+        offsets: Sequence[tuple[float, float]],
+    ) -> None:
+        super().__init__(children=list(children))
+        self._box_width = width
+        self._box_height = height
+        self._child_offsets = offsets
+
+    def _get_bbox_and_child_offsets(
+        self, renderer: RendererBase
+    ) -> tuple[Bbox, list[tuple[float, float]]]:
+        scale = cast("float", renderer.points_to_pixels(1.0))
+        offsets = [(x * scale, y * scale) for x, y in self._child_offsets]
+        visible = [
+            (child, offset)
+            for child, offset in zip(self.get_children(), offsets)
+            if child.get_visible()
+        ]
+        child_boxes = [
+            cast("OffsetBox", child).get_bbox(renderer).translated(x, y)
+            for child, (x, y) in visible
+        ]
+        contents = (
+            Bbox.union(child_boxes)
+            if child_boxes
+            else Bbox.from_bounds(0, 0, 0, 0)
+        )
+        x0 = (
+            min(0, contents.x0) if self._box_width is not None else contents.x0
+        )
+        y0 = (
+            min(0, contents.y0)
+            if self._box_height is not None
+            else contents.y0
+        )
+        x1 = (
+            max(self._box_width * scale, contents.x1)
+            if self._box_width is not None
+            else contents.x1
+        )
+        y1 = (
+            max(self._box_height * scale, contents.y1)
+            if self._box_height is not None
+            else contents.y1
+        )
+        return (
+            Bbox.from_extents(x0, y0, x1, y1),
+            [offset for _, offset in visible],
+        )
