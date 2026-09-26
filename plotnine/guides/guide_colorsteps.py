@@ -33,6 +33,11 @@ class guide_colorsteps(guide_colorbar):
     show_limits: bool | None = None
     """Whether to label both scale limits"""
 
+    # The parameters are only used by guide_colorbar
+    nbin: int = field(default=300, init=False, repr=False)
+    draw_ulim: bool = field(default=True, init=False, repr=False)
+    draw_llim: bool = field(default=True, init=False, repr=False)
+
     _intervals: _BinIntervals = field(init=False, repr=False)
 
     @property
