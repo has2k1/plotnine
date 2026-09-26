@@ -179,7 +179,7 @@ class scale(
 
     def dimension(self, expand=None, limits=None):
         """
-        Get the phyical size of the scale.
+        Get the physical size of the scale.
         """
         raise NotImplementedError
 

@@ -287,7 +287,7 @@ class scale_continuous(
 
     def dimension(self, expand=(0, 0, 0, 0), limits=None):
         """
-        Get the phyical size of the scale
+        Get the physical size of the scale
 
         Unlike limits, this always returns a numeric vector of length 2
         """
@@ -385,7 +385,7 @@ class scale_continuous(
 
     def palette(self, x):
         """
-        Map an data values to values of the scale
+        Map data values to values of the scale
         """
         return identity_pal()(x)
 

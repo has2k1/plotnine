@@ -92,14 +92,14 @@ class labs:
 
     footer: str | None = None
     """
-    The footer at the bottom of the plot
+    The footer at the bottom of the plot.
 
-    The footer when added is below the caption
+    The footer when added is below the caption.
     """
 
     tag: str | None = None
     """
-    A plot tag
+    Tag for the plot.
     """
 
     def __post_init__(self):
@@ -120,7 +120,7 @@ class labs:
 
 class xlab(labs):
     """
-    Label/name for the x aesthetic
+    Label/Name for the x aesthetic.
 
     Parameters
     ----------
@@ -134,7 +134,7 @@ class xlab(labs):
 
 class ylab(labs):
     """
-    Label/name for the y aesthetic
+    Label/Name for the y aesthetic.
 
     Parameters
     ----------
