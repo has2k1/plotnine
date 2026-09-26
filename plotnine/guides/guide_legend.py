@@ -69,9 +69,13 @@ class guide_legend(guide):
         init=False, default_factory=list
     )
 
-    def __post_init__(self):
-        self._elements_cls = GuideElementsLegend
-        self.elements: GuideElementsLegend
+    elements: GuideElementsLegend = field(  # pyright: ignore[reportIncompatibleVariableOverride]
+        init=False, repr=False
+    )
+
+    @property
+    def _elements_cls(self) -> type[GuideElementsLegend]:
+        return GuideElementsLegend
 
     def train(self, scale, aesthetic=None):
         """

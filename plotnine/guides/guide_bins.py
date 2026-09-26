@@ -37,10 +37,13 @@ class guide_bins(guide_legend):
     _boundary_values: FloatArray = field(init=False, repr=False)
     _boundary_labels: Sequence[str] = field(init=False, repr=False)
 
-    def __post_init__(self) -> None:
-        super().__post_init__()
-        self._elements_cls = GuideElementsBins
-        self.elements: GuideElementsBins  # pyright: ignore[reportIncompatibleVariableOverride]
+    elements: GuideElementsBins = field(  # pyright: ignore[reportIncompatibleVariableOverride]
+        init=False, repr=False
+    )
+
+    @property
+    def _elements_cls(self) -> type[GuideElementsBins]:
+        return GuideElementsBins
 
     def _resolve_theme(self, owner: LegendOwner) -> theme:
         """

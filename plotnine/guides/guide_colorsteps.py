@@ -35,9 +35,9 @@ class guide_colorsteps(guide_colorbar):
 
     _intervals: _BinIntervals = field(init=False, repr=False)
 
-    def __post_init__(self) -> None:
-        super().__post_init__()
-        self._elements_cls = GuideElementsColorsteps
+    @property
+    def _elements_cls(self) -> type[GuideElementsColorsteps]:
+        return GuideElementsColorsteps
 
     def train(self, scale: scale, aesthetic: str | None = None):
         """Create segment colours and label the selected bin boundaries"""

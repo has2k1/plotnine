@@ -76,12 +76,17 @@ class guide_colorbar(guide):
         init=False, default_factory=lambda: {"colour", "color", "fill"}
     )
 
-    def __post_init__(self):
-        self._elements_cls = GuideElementsColorbar
-        self.elements: GuideElementsColorbar
+    elements: GuideElementsColorbar = field(  # pyright: ignore[reportIncompatibleVariableOverride]
+        init=False, repr=False
+    )
 
+    def __post_init__(self):
         if self.nbin is None:
             self.nbin = 300  # if self.display == "gradient" else 300
+
+    @property
+    def _elements_cls(self) -> type[GuideElementsColorbar]:
+        return GuideElementsColorbar
 
     def _resolve_theme(self, owner: LegendOwner) -> theme:
         """

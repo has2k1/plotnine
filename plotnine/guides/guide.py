@@ -74,17 +74,15 @@ class guide(ABC, metaclass=Register):
     # Non-Parameter Attributes
     available_aes: set[str] = field(init=False, default_factory=set)
 
-    # Set in `setup()`; the guide's theme reads it via `self.owner.figure`.
-    figure: Figure = field(init=False)
+    hash: str = field(init=False, repr=False)
+    key: pd.DataFrame = field(init=False, repr=False)
+    plot_layers: Layers = field(init=False, repr=False)
+    plot_mapping: aes = field(init=False, repr=False)
+    guides_elements: GuidesElements = field(init=False, repr=False)
+    elements: GuideElements = field(init=False, repr=False)
 
-    def __post_init__(self):
-        self.hash: str
-        self.key: pd.DataFrame
-        self.plot_layers: Layers
-        self.plot_mapping: aes
-        self._elements_cls = GuideElements
-        self.elements = cast("GuideElements", None)
-        self.guides_elements: GuidesElements
+    # Set in `_bind_owner()`; the guide theme reads it through its owner.
+    figure: Figure = field(init=False, repr=False)
 
     def legend_aesthetics(self, layer: layer):
         """
@@ -133,6 +131,10 @@ class guide(ABC, metaclass=Register):
         Return the guide theme resolved against its rendering owner
         """
         return owner.theme + self.theme
+
+    @property
+    def _elements_cls(self) -> type[GuideElements]:
+        return GuideElements
 
     def _bind_owner(self, owner: LegendOwner):
         """
@@ -240,7 +242,6 @@ class GuideElements:
 
     def __post_init__(self):
         self.guide_kind = type(self.guide).__name__.split("_")[-1]
-        self._elements_cls = GuideElements
 
     @cached_property
     def margin(self):
