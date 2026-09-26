@@ -19,7 +19,7 @@ from ..mapping.aes import rename_aesthetics
 from .guide import GuideElements, guide
 
 if TYPE_CHECKING:
-    from typing import Any, Optional, Sequence
+    from typing import Any, Sequence
 
     from matplotlib.artist import Artist
     from matplotlib.offsetbox import PackerBase
@@ -47,10 +47,10 @@ class guide_legend(guide):
     Legend guide
     """
 
-    nrow: Optional[int] = None
+    nrow: int | None = None
     """Number of rows of legends."""
 
-    ncol: Optional[int] = None
+    ncol: int | None = None
     """Number of columns of legends."""
 
     byrow: bool = False

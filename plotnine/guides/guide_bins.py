@@ -33,6 +33,11 @@ class guide_bins(guide_legend):
     show_limits: bool | None = None
     """Whether to label both scale limits"""
 
+    # The parameters are only used by guide_legend
+    nrow: int | None = field(default=None, init=False, repr=False)
+    ncol: int | None = field(default=None, init=False, repr=False)
+    byrow: bool = field(default=False, init=False, repr=False)
+
     _intervals: _BinIntervals = field(init=False, repr=False)
     _boundary_values: FloatArray = field(init=False, repr=False)
     _boundary_labels: Sequence[str] = field(init=False, repr=False)
