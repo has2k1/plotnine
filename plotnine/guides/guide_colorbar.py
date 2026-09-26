@@ -45,7 +45,7 @@ class guide_colorbar(guide):
     or `pdf`, you should set the `dpi` to 72 i.e. `theme(dpi=72)`{.py}.
     """
 
-    nbin: Optional[int] = None
+    nbin: int = 300
     """
     Number of bins for drawing a colorbar. A larger value yields
     a smoother colorbar
@@ -80,10 +80,6 @@ class guide_colorbar(guide):
         init=False, repr=False
     )
 
-    def __post_init__(self):
-        if self.nbin is None:
-            self.nbin = 300  # if self.display == "gradient" else 300
-
     @property
     def _elements_cls(self) -> type[GuideElementsColorbar]:
         return GuideElementsColorbar
@@ -100,7 +96,6 @@ class guide_colorbar(guide):
         return resolved
 
     def train(self, scale: scale, aesthetic=None):
-        self.nbin = cast("int", self.nbin)
         self.title = cast("str", self.title)
 
         if not isinstance(scale, scale_continuous):
