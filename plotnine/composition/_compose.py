@@ -9,11 +9,7 @@ from typing import TYPE_CHECKING, TypeVar, cast, overload
 from plotnine.themes.theme import theme, theme_get
 
 from .._utils import get_save_format
-from .._utils.context import (
-    assign_figure,
-    is_closed,
-    plot_composition_context,
-)
+from .._utils.context import assign_figure, draw_context, is_closed
 from .._utils.ipython import (
     get_ipython,
     get_mimebundle,
@@ -772,7 +768,7 @@ class Compose:
                 _draw_items(sub_cmp)
 
         # Drawing (order matters)
-        with plot_composition_context(self, show):
+        with draw_context(self, show):
             figure = self._setup()
             self.theme._setup(self)
             self._draw_composition_background()

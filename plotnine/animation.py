@@ -225,14 +225,14 @@ class PlotnineAnimation(ArtistAnimation):
 
         This methods draws plots from the 2nd onwards
         """
-        from ._utils.context import plot_context
+        from ._utils.context import draw_context
 
         plot = deepcopy(plot)
         plot.figure = first_plot.figure
         plot.axs = first_plot.axs
         plot._gridspec = first_plot._sub_gridspec
         plot._sub_gridspec = first_plot._sub_gridspec
-        with plot_context(plot):
+        with draw_context(plot):
             plot._build()
             _ = plot.built.facet.setup(plot)
             plot._draw_layers()

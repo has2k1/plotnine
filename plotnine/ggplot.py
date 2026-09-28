@@ -18,7 +18,12 @@ from ._utils import (
     to_inches,
     ungroup,
 )
-from ._utils.context import assign_figure, is_closed, plot_context
+from ._utils.context import (
+    assign_figure,
+    draw_context,
+    is_closed,
+    save_context,
+)
 from ._utils.ipython import (
     get_ipython,
     get_mimebundle,
@@ -388,7 +393,7 @@ class ggplot:
         :
             Matplotlib figure
         """
-        with plot_context(self, show=show):
+        with draw_context(self, show=show):
             figure = self._setup()
             self._build()
 
@@ -867,7 +872,7 @@ class ggplot:
             **kwargs,
         )
 
-        with plot_context(self).rc_context:
+        with save_context(self):
             sv.figure.savefig(**sv.kwargs)
 
     def layer_data(self, i: int = 0) -> pd.DataFrame:
@@ -1024,6 +1029,6 @@ def save_as_pdf_pages(
             plot = deepcopy(plot)
             plot.theme = plot.theme + theme(figure_format="pdf")
             fig = plot.draw()
-            with plot_context(plot).rc_context:
+            with save_context(plot):
                 # Save as a page in the PDF file
                 pdf.savefig(fig, **fig_kwargs)
