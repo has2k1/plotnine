@@ -35,6 +35,7 @@ if TYPE_CHECKING:
         CompositionSideSpaces,
     )
     from plotnine._mpl.layout_manager._grid import Grid
+    from plotnine._utils.context import _FigureState
     from plotnine.composition._design import DesignSpec
     from plotnine.composition._guide_area import guide_area
     from plotnine.ggplot import PlotAddable, ggplot
@@ -110,13 +111,9 @@ class Compose:
     plotnine.composition.plot_spacer : To add a blank space between plots
     """
 
-    # These are created in the ._create_figure
-    figure: p9Figure
-    _gridspec: p9GridSpec
+    _figure_state: _FigureState
     """
-    Gridspec (1x1) that contains the annotations and the composition items
-
-    plot_layout's theme parameter affects this gridspec.
+    Figure this composition draws into, with its gridspecs
     """
 
     _design_spec: DesignSpec | None = None
@@ -124,25 +121,42 @@ class Compose:
     Parsed `plot_layout(design=...)`. `None` when no design is set.
     """
 
-    _sub_gridspec: p9GridSpec
-    """
-    Gridspec (nxn) that contains the composed [ggplot | Compose] items
-
-     -------------------
-    |  title            |<----- ._gridspec
-    |  subtitle         |
-    |                   |
-    |   -------------   |
-    |  |      |      |<-+------ ._sub_gridspec
-    |  |      |      |  |
-    |   -------------   |
-    |                   |
-    |           caption |
-    |-------------------|
-    |       footer      |
-     -------------------
-    """
     _sidespaces: CompositionSideSpaces
+
+    @property
+    def figure(self) -> p9Figure:
+        """
+        Figure this composition draws into
+        """
+        return self._figure_state.figure
+
+    @property
+    def _gridspec(self) -> p9GridSpec:
+        """
+        Gridspec (1x1) that contains the annotations and the items
+
+        plot_layout's theme parameter affects this gridspec. Raises
+        `AttributeError` until the composition lays out its own gridspec
+        on the figure it was given.
+        """
+        gridspec = self._figure_state.gridspec
+        if gridspec is None:
+            raise AttributeError("Composition has no gridspec yet.")
+        return gridspec
+
+    @property
+    def _sub_gridspec(self) -> p9GridSpec:
+        """
+        Gridspec (nxn) that contains the composed [ggplot | Compose] items
+
+        Raises `AttributeError` until the items are laid out.
+        """
+        sub_gridspec = self._figure_state.sub_gridspec
+        if sub_gridspec is None:
+            raise AttributeError(
+                "Composition has no sub-gridspec; the items are not laid out."
+            )
+        return sub_gridspec
 
     def __init__(self, items: list[ggplot | Compose]):
         # The way we handle the plots has consequences that would
@@ -590,10 +604,11 @@ class Compose:
         old = self.__dict__
         new = result.__dict__
 
-        skip = {"figure", "_gridspec", "_sub_gridspec"}
+        # A copied composition carries no figure or layout state; it must
+        # create its own on the next draw.
+        skip = {"_figure_state"}
         for key, item in old.items():
             if key in skip:
-                # A copied composition must create its own figure and layout.
                 continue
             if key == "__copy":
                 new[key] = item
@@ -635,9 +650,9 @@ class Compose:
         import matplotlib.pyplot as plt
 
         if (
-            not hasattr(self, "figure")
-            or self.figure._owner is self
-            or is_closed(self.figure)
+            not hasattr(self, "_figure_state")
+            or self._figure_state.figure._owner is self
+            or is_closed(self._figure_state.figure)
         ):
             from plotnine._mpl.figure import p9Figure
             from plotnine._mpl.gridspec import p9GridSpec
@@ -648,11 +663,12 @@ class Compose:
             self._generate_gridspecs(
                 figure, p9GridSpec(1, 1, figure, nest_into=None)
             )
-        elif not hasattr(self, "_gridspec"):
+        elif self._figure_state.gridspec is None:
             from plotnine._mpl.gridspec import p9GridSpec
 
             self._generate_gridspecs(
-                self.figure, p9GridSpec(1, 1, self.figure, nest_into=None)
+                self._figure_state.figure,
+                p9GridSpec(1, 1, self._figure_state.figure, nest_into=None),
             )
 
     def _generate_gridspecs(self, figure: p9Figure, container_gs: p9GridSpec):
@@ -661,7 +677,7 @@ class Compose:
 
         assign_figure(self, figure, container_gs)
         self.layout._setup(self)
-        self._sub_gridspec = p9GridSpec.from_layout(
+        self._figure_state.sub_gridspec = p9GridSpec.from_layout(
             self.layout, figure=figure, nest_into=container_gs[0]
         )
 

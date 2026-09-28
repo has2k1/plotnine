@@ -54,6 +54,7 @@ if TYPE_CHECKING:
     from plotnine._mpl.figure import p9Figure
     from plotnine._mpl.gridspec import p9GridSpec
     from plotnine._mpl.layout_manager._plot_side_space import PlotSideSpaces
+    from plotnine._utils.context import _FigureState
     from plotnine.composition import Compose
     from plotnine.coords.coord import coord
     from plotnine.facets.facet import facet
@@ -103,33 +104,9 @@ class ggplot:
     by pickled objects should not reference variables in the namespace.
     """
 
-    figure: p9Figure
-    axs: list[Axes]
-    _gridspec: p9GridSpec
+    _figure_state: _FigureState
     """
-    Gridspec (1x1) that contains the whole plot
-    """
-
-    _sub_gridspec: p9GridSpec
-    """
-    Gridspec (nxn) that contains the facet panels
-
-     -------------------------
-    |  title                  |<----- ._gridspec
-    |  subtitle               |
-    |                         |
-    |   -------------         |
-    |  |      |      |<-------+------ ._sub_gridspec
-    |  |      |      |        |
-    |  |      |      | legend |
-    |   -------------         |
-    |   axis_ticks            |
-    |   axis_text             |
-    |   axis_title            |
-    |                 caption |
-    |-------------------------|
-    |          footer         |
-     -------------------------
+    Figure this plot draws into, with its gridspecs and panel axes
     """
 
     _sidespaces: PlotSideSpaces
@@ -138,6 +115,54 @@ class ggplot:
     """
     Most recent build result, unset until the first draw
     """
+
+    @property
+    def figure(self) -> p9Figure:
+        """
+        Figure this plot draws into
+        """
+        return self._figure_state.figure
+
+    @property
+    def axs(self) -> list[Axes]:
+        """
+        Panel axes for the current draw
+
+        Raises `AttributeError` until the panels are laid out.
+        """
+        axs = self._figure_state.axs
+        if axs is None:
+            raise AttributeError(
+                "Plot has no axes; the panels are not laid out."
+            )
+        return axs
+
+    @property
+    def _gridspec(self) -> p9GridSpec:
+        """
+        Gridspec (1x1) that contains the whole plot
+
+        Raises `AttributeError` until the plot lays out its own gridspec
+        on the figure it was given.
+        """
+        gridspec = self._figure_state.gridspec
+        if gridspec is None:
+            raise AttributeError("Plot has no gridspec yet.")
+        return gridspec
+
+    @property
+    def _sub_gridspec(self) -> p9GridSpec:
+        """
+        Gridspec (nxn) that contains the facet panels
+
+        Raises `AttributeError` until the panels are laid out.
+        """
+        sub_gridspec = self._figure_state.sub_gridspec
+        if sub_gridspec is None:
+            raise AttributeError(
+                "Plot has no sub-gridspec; the panels are not laid out."
+            )
+        return sub_gridspec
 
     def __init__(
         self,
@@ -241,11 +266,9 @@ class ggplot:
         new = result.__dict__
 
         skip = {
-            "figure",
-            "_gridspec",
-            "_sub_gridspec",
-            "axs",
-            # A copied plot has no build result, even when its source does.
+            # A copied plot carries no figure or layout state and no
+            # build result, even when its source has them.
+            "_figure_state",
             "built",
         }
         for key, item in old.items():
@@ -406,7 +429,9 @@ class ggplot:
             self._draw_plot_background()
             self._insets.draw(which="below")
 
-            self._sub_gridspec, self.axs = self.built.facet.setup(self)
+            gs, axs = self.built.facet.setup(self)
+            self._figure_state.sub_gridspec = gs
+            self._figure_state.axs = axs
             self._draw_layers()
             self._draw_panel_borders()
             self._draw_breaks_and_labels()
@@ -442,9 +467,9 @@ class ggplot:
         import matplotlib.pyplot as plt
 
         if (
-            not hasattr(self, "figure")
-            or self.figure._owner is self
-            or is_closed(self.figure)
+            not hasattr(self, "_figure_state")
+            or self._figure_state.figure._owner is self
+            or is_closed(self._figure_state.figure)
         ):
             from ._mpl.figure import p9Figure
             from ._mpl.gridspec import p9GridSpec
@@ -453,10 +478,12 @@ class ggplot:
                 "p9Figure", plt.figure(FigureClass=p9Figure, owner=self)
             )
             assign_figure(self, figure, p9GridSpec(1, 1, figure))
-        elif not hasattr(self, "_gridspec"):
+        elif self._figure_state.gridspec is None:
             from ._mpl.gridspec import p9GridSpec
 
-            self._gridspec = p9GridSpec(1, 1, self.figure)
+            self._figure_state.gridspec = p9GridSpec(
+                1, 1, self._figure_state.figure
+            )
 
     def build(self) -> PlotBuild:
         """

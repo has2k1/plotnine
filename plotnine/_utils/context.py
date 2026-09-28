@@ -13,25 +13,14 @@ if TYPE_CHECKING:
     from contextlib import AbstractContextManager
     from typing import Self
 
+    from matplotlib.axes import Axes
+
     from plotnine import ggplot
     from plotnine._mpl.figure import p9Figure
     from plotnine._mpl.gridspec import p9GridSpec
     from plotnine.composition import Compose
 
 PANDAS_LT_3 = Version(pd.__version__) < Version("3.0")
-
-
-def reopen(fig):
-    """
-    Reopen an MPL figure that has been closed with plt.close
-
-    A closed figure cannot be shown with plt.show. Only the figure's owner
-    closes it, but a user may have closed the window themselves before
-    compose.show() runs.
-    """
-    from matplotlib._pylab_helpers import Gcf
-
-    Gcf.set_active(fig.canvas.manager)
 
 
 @dataclass
@@ -146,6 +135,73 @@ class save_context:
         self._rc_context.__exit__(exc_type, exc_value, exc_traceback)
 
 
+@dataclass
+class _FigureState:
+    """
+    Figure of a plot or composition, with the gridspecs and axes on it
+
+    Every field belongs to one figure. A plot or composition given a new
+    figure replaces the whole object, so no gridspec or axes from the
+    previous figure survive, and a copy of the plot or composition starts
+    without one.
+    """
+
+    figure: p9Figure
+    """
+    Figure the plot or composition draws into
+    """
+
+    gridspec: p9GridSpec | None = None
+    """
+    Gridspec (1x1) that contains the whole plot or composition
+
+    `None` while an object given only a figure, such as an inset, has yet
+    to lay out its own.
+    """
+
+    sub_gridspec: p9GridSpec | None = None
+    """
+    Gridspec (nxn) that contains a plot's facet panels or a composition's
+    items
+
+    `None` until they are laid out.
+
+     -------------------------
+    |  title                  |<----- .gridspec
+    |  subtitle               |
+    |                         |
+    |   -------------         |
+    |  |      |      |<-------+------ .sub_gridspec
+    |  |      |      |        |
+    |  |      |      | legend |
+    |   -------------         |
+    |                         |
+    |                 caption |
+    |-------------------------|
+    |          footer         |
+     -------------------------
+    """
+
+    axs: list[Axes] | None = None
+    """
+    Panel axes
+
+    `None` until the panels are laid out, and always `None` for a
+    composition, whose panels belong to its plots.
+    """
+
+
+def reopen(fig):
+    """
+    Reopen a matplotlib figure closed with `plt.close`
+
+    A closed figure cannot be shown with `plt.show` until it is reopened.
+    """
+    from matplotlib._pylab_helpers import Gcf
+
+    Gcf.set_active(fig.canvas.manager)
+
+
 def is_closed(fig) -> bool:
     """
     Return whether the figure is closed
@@ -163,8 +219,9 @@ def assign_figure(
     """
     Assign a figure to a plot or composition
 
-    Close the object's current figure when the object owns it. Clear axes and
-    gridspec state associated with the previous figure.
+    Close the object's current figure when the object owns it. Replace the
+    object's figure state so nothing bound to the previous figure survives
+    the handover.
 
     Parameters
     ----------
@@ -179,20 +236,10 @@ def assign_figure(
     import matplotlib.pyplot as plt
 
     if (
-        hasattr(obj, "figure")
-        and obj.figure._owner is obj
-        and not is_closed(obj.figure)
+        hasattr(obj, "_figure_state")
+        and obj._figure_state.figure._owner is obj
+        and not is_closed(obj._figure_state.figure)
     ):
-        plt.close(obj.figure)
+        plt.close(obj._figure_state.figure)
 
-    obj.figure = figure
-    if gridspec is not None:
-        obj._gridspec = gridspec
-    elif hasattr(obj, "_gridspec"):
-        # A gridspec is bound to the figure it was created for; without a
-        # replacement, the stale one must not survive the handover.
-        delattr(obj, "_gridspec")
-
-    if hasattr(obj, "axs"):
-        delattr(obj, "axs")
-        delattr(obj, "_sub_gridspec")
+    obj._figure_state = _FigureState(figure, gridspec)
