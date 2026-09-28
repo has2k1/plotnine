@@ -18,7 +18,7 @@ from ._utils import (
     to_inches,
     ungroup,
 )
-from ._utils.context import assign_figure, plot_context
+from ._utils.context import assign_figure, is_closed, plot_context
 from ._utils.ipython import (
     get_ipython,
     get_mimebundle,
@@ -430,12 +430,17 @@ class ggplot:
         Create or reuse the plot's figure and gridspec
 
         Reuse a figure supplied by a parent composition or host inset, adding
-        any missing gridspec. When this plot owns the current figure, replace
-        it with a fresh figure and close the previous one.
+        any missing gridspec. When this plot owns the current figure, or when
+        a figure left over from a previous parent draw is closed, replace it
+        with a fresh figure and close the previous one.
         """
         import matplotlib.pyplot as plt
 
-        if not hasattr(self, "figure") or self.figure._owner is self:
+        if (
+            not hasattr(self, "figure")
+            or self.figure._owner is self
+            or is_closed(self.figure)
+        ):
             from ._mpl.figure import p9Figure
             from ._mpl.gridspec import p9GridSpec
 

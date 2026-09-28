@@ -9,7 +9,11 @@ from typing import TYPE_CHECKING, TypeVar, cast, overload
 from plotnine.themes.theme import theme, theme_get
 
 from .._utils import get_save_format
-from .._utils.context import assign_figure, plot_composition_context
+from .._utils.context import (
+    assign_figure,
+    is_closed,
+    plot_composition_context,
+)
 from .._utils.ipython import (
     get_ipython,
     get_mimebundle,
@@ -628,12 +632,17 @@ class Compose:
         Create or reuse the composition's figure and layout
 
         Reuse a figure supplied by a parent composition or host inset, adding
-        any missing layout. When this composition owns the current figure,
+        any missing layout. When this composition owns the current figure, or
+        when a figure left over from a previous parent draw is closed,
         replace it with a fresh figure and close the previous one.
         """
         import matplotlib.pyplot as plt
 
-        if not hasattr(self, "figure") or self.figure._owner is self:
+        if (
+            not hasattr(self, "figure")
+            or self.figure._owner is self
+            or is_closed(self.figure)
+        ):
             from plotnine._mpl.figure import p9Figure
             from plotnine._mpl.gridspec import p9GridSpec
 

@@ -63,6 +63,35 @@ def raise_no_baseline_image(filename: str):
     raise Exception(f"Baseline image {filename} is missing")
 
 
+def compare_with_baseline(
+    obj: ggplot | Compose | inset_element,
+    filenames: types.SimpleNamespace,
+) -> bool:
+    """
+    Compare a saved result image with its baseline image
+
+    Parameters
+    ----------
+    obj :
+        Object the result image was drawn from. It stores the comparison
+        error for the pytest error message.
+    filenames :
+        Result, baseline and expected filenames for the test image.
+    """
+    if filenames.baseline.exists():
+        shutil.copyfile(filenames.baseline, filenames.expected)
+    else:
+        # Putting the exception in short function makes for
+        #  short pytest error messages
+        raise_no_baseline_image(filenames.baseline)
+
+    err = compare_images(
+        filenames.expected, filenames.result, TOLERANCE, in_decorator=True
+    )
+    obj._err = err  # pyright: ignore[reportAttributeAccessIssue]
+    return not err
+
+
 def ggplot_equals(plot: ggplot, name: str) -> bool:
     """
     Compare ggplot object to image determined by `right`
@@ -85,18 +114,7 @@ def ggplot_equals(plot: ggplot, name: str) -> bool:
     with _test_cleanup():
         plot.save(filenames.result, verbose=False)
 
-    if filenames.baseline.exists():
-        shutil.copyfile(filenames.baseline, filenames.expected)
-    else:
-        # Putting the exception in short function makes for
-        #  short pytest error messages
-        raise_no_baseline_image(filenames.baseline)
-
-    err = compare_images(
-        filenames.expected, filenames.result, TOLERANCE, in_decorator=True
-    )
-    plot._err = err  # For the pytest error message
-    return not err
+    return compare_with_baseline(plot, filenames)
 
 
 ggplot.__eq__ = ggplot_equals
@@ -250,18 +268,7 @@ def composition_equals(cmp: Compose, name: str) -> bool:
     with _test_cleanup():
         _cmp.save(filenames.result)
 
-    if filenames.baseline.exists():
-        shutil.copyfile(filenames.baseline, filenames.expected)
-    else:
-        # Putting the exception in short function makes for
-        #  short pytest error messages
-        raise_no_baseline_image(filenames.baseline)
-    err = compare_images(
-        filenames.expected, filenames.result, TOLERANCE, in_decorator=True
-    )
-    # For the pytest error message
-    cmp._err = err  # pyright: ignore[reportAttributeAccessIssue]
-    return not err
+    return compare_with_baseline(cmp, filenames)
 
 
 # Note that, dataclass subclasses have their own __eq__ and not that of the
@@ -295,15 +302,40 @@ def inset_element_equals(inset: inset_element, name: str) -> bool:
     with _test_cleanup():
         (host + inset).save(filenames.result, verbose=False)
 
-    if filenames.baseline.exists():
-        shutil.copyfile(filenames.baseline, filenames.expected)
-    else:
-        raise_no_baseline_image(filenames.baseline)
-    err = compare_images(
-        filenames.expected, filenames.result, TOLERANCE, in_decorator=True
-    )
-    inset._err = err  # pyright: ignore[reportAttributeAccessIssue]
-    return not err
+    return compare_with_baseline(inset, filenames)
 
 
 inset_element.__eq__ = inset_element_equals  # pyright: ignore[reportAttributeAccessIssue]
+
+
+def draw_equals(self: ggplot | Compose, name: str) -> bool:
+    """
+    Draw the object itself and compare its figure to a baseline image
+
+    Parameters
+    ----------
+    self :
+        Plot or composition to draw.
+    name :
+        Identifier for the test image.
+
+    This function is meant to monkey patch ggplot.draw_equals and
+    Compose.draw_equals. `==` draws a copy, which starts without a
+    figure; this draws the object in place, so the image shows what a
+    repeat draw of that object produces. The object draws with its own
+    theme, so a composition gets the plot test size rather than the
+    larger composition test size.
+    """
+    test_file = inspect.stack()[1][1]
+    filenames = make_test_image_filenames(name, test_file)
+
+    with _test_cleanup():
+        figure = self.draw()
+        with mpl.rc_context(self.theme.rcParams):
+            figure.savefig(filenames.result, dpi=figure.get_dpi())
+
+    return compare_with_baseline(self, filenames)
+
+
+ggplot.draw_equals = draw_equals  # pyright: ignore[reportAttributeAccessIssue]
+Compose.draw_equals = draw_equals  # pyright: ignore[reportAttributeAccessIssue]

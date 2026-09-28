@@ -24,10 +24,9 @@ def reopen(fig):
     """
     Reopen an MPL figure that has been closed with plt.close
 
-    When drawing compositions, plot_composition_context will nest
-    plot_context. In this case, plot_context may close an MPL figure
-    that belongs to composition. A closed figure cannot be shown with
-    plt.show, so for compositions compose.show (if called) will do nothing.
+    A closed figure cannot be shown with plt.show. Only the figure's owner
+    closes it, but a user may have closed the window themselves before
+    compose.show() runs.
     """
     from matplotlib._pylab_helpers import Gcf
 
@@ -82,7 +81,9 @@ class plot_context:
         if exc_type is None:
             if self.show:
                 plt.show()
-            else:
+            elif self.plot.figure._owner is self.plot:
+                # A plot drawing into a figure it does not own (composition
+                # item or inset) leaves closing to the figure's owner.
                 plt.close(self.plot.figure)
             set_last_plot(self._last_plot)
         else:
@@ -168,7 +169,7 @@ def assign_figure(
     Assign a figure to a plot or composition
 
     Close the object's current figure when the object owns it. Clear axes and
-    sub-gridspec state associated with the previous figure.
+    gridspec state associated with the previous figure.
 
     Parameters
     ----------
@@ -192,6 +193,10 @@ def assign_figure(
     obj.figure = figure
     if gridspec is not None:
         obj._gridspec = gridspec
+    elif hasattr(obj, "_gridspec"):
+        # A gridspec is bound to the figure it was created for; without a
+        # replacement, the stale one must not survive the handover.
+        delattr(obj, "_gridspec")
 
     if hasattr(obj, "axs"):
         delattr(obj, "axs")
