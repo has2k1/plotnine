@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.11.4">
+<meta name="generator" content="quarto-1.11.5">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Changelog – plotnine 0.16.0a14</title>
+<title>Changelog – plotnine 0.16.0a15</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -78,10 +78,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-03d3dfde56ecdf7ec35882f3b46e7ba8.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-3b9ea68436acb9022c2fbce6dbb58b06.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-4dc9fad167bb48581f1637bf6d811f68.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-4e6311ce573b8e53542308166f34cb36.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -121,7 +121,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">plotnine 0.16.0a14</span>
+    <span class="navbar-title">plotnine 0.16.0a15</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -359,6 +359,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="new" class="level3">
 <h3 class="anchored" data-anchor-id="new">New</h3>
 <ul>
+<li><p>Added binned scales for position, alpha, linetype, shape, size, colour, and fill. Use <code>scale_x_binned</code>, <code>scale_y_binned</code>, or the corresponding <code>scale_*_binned</code> aesthetic scale to divide continuous data into numeric bins before mapping it. Colour and fill scales also provide the <code>scale_*_steps</code>, <code>scale_*_steps2</code>, <code>scale_*_stepsn</code>, and <code>scale_*_fermenter</code> families. <code>guide_colorsteps</code> draws one colour segment per bin, while <code>guide_bins</code> draws adjacent geom keys. Both guides label bin boundaries. <code>guide_bins</code> positions boundary labels with <code>legend_text_position</code>, uses the key-facing <code>legend_text</code> margin, and styles its ticks and axis line with <code>legend_ticks</code>, <code>legend_ticks_length</code>, and <code>legend_axis_line</code>. (<a href="https://github.com/has2k1/plotnine/issues/680" title="Issue: #680">#680</a>)</p></li>
+<li><p>Set a plot’s preferred notebook and save format with <code>theme(figure_format="svg")</code>. An explicit save format takes priority, followed by the filename extension. For a composition, set the preference with <code>plot_annotation(theme=theme(figure_format="svg"))</code>.</p></li>
 <li><p>You can now add a secondary axis to a plot, either as a one-to-one transformation of the primary axis with <a href="./reference/sec_axis.html#plotnine.sec_axis"><code>sec_axis</code></a>, or as a mirror of the primary axis with <a href="./reference/dup_axis.html#plotnine.dup_axis"><code>dup_axis</code></a>.</p></li>
 <li><p><a href="./reference/coord_radial.html#plotnine.coord_radial"><code>coord_radial</code></a> can now draw an angular scale’s secondary axis around the inner rim. Add a <a href="./reference/sec_axis.html#plotnine.sec_axis"><code>sec_axis</code></a> to the scale and set <code>inner_radius &gt; 0</code>.</p></li>
 <li><p>Added <a href="./reference/plot_layout.html#plotnine.composition.plot_layout"><code>plot_layout</code></a> with which you can customise the layout of plots in composition.</p></li>
@@ -393,6 +395,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>Plot components that take a <code>random_state</code> now also accept a <a href="https://numpy.org/doc/stable/reference/random/generator.html#numpy.random.Generator"><code>numpy.random.Generator</code></a>, in addition to an integer seed or a <a href="https://numpy.org/doc/stable/reference/random/legacy.html#numpy.random.RandomState"><code>RandomState</code></a>.</p></li>
 <li><p>Added <a href="./reference/I.html#plotnine.I"><code>I</code></a>, with which you can mark a value as literal. A literal value takes no scale, so it is not trained, not mapped, and gets no legend. One layer can draw literal colours while another maps the same aesthetic through a scale. (<a href="https://github.com/has2k1/plotnine/issues/1008" title="Issue: #1008">#1008</a>)</p></li>
 <li><p>You can now place an annotation relative to the panel by wrapping a position in <a href="./reference/I.html#plotnine.I"><code>I</code></a>. <code>x=I(0.5)</code> is the centre of the panel and <code>x=I(0.9)</code> is 90% across, whatever the data, the limits or the expansion. (<a href="https://github.com/has2k1/plotnine/issues/939" title="Issue: #939">#939</a>)</p></li>
+<li><p>Added <a href="./reference/geom_beeswarm.html#plotnine.geom_beeswarm"><code>geom_beeswarm</code></a> and <a href="./reference/stat_beeswarm.html#plotnine.stat_beeswarm"><code>stat_beeswarm</code></a>, which arrange points along one variable and spread nearby values sideways into a swarm. Use the <code>spread</code> parameter to select <code>"quasirandom"</code> (the default), <code>"pseudorandom"</code>, <code>"smiley"</code>, or <code>"frowney"</code> placement.</p></li>
+<li><p>Added <a href="./reference/ggplot.html#plotnine.ggplot.build"><code>build</code></a> to compute a plot’s layers, scales and layout without drawing it.</p></li>
 </ul>
 </section>
 <section id="api-changes" class="level3">
@@ -419,6 +423,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="bug-fixes" class="level3">
 <h3 class="anchored" data-anchor-id="bug-fixes">Bug Fixes</h3>
 <ul>
+<li><p>SVG colourbars now use overlapping rectangles to prevent misplaced gradients in some SVG viewers. This applies to compositions and insets without changing the colourbar mode used for other output formats.</p></li>
 <li><p><a href="./reference/scale_size_datetime.html#plotnine.scale_size_datetime"><code>scale_size_datetime</code></a> now honours its <code>range</code> argument. Previously it was ignored and mapping data raised an error.</p></li>
 <li><p><a href="./reference/scale_size_datetime.html#plotnine.scale_size_datetime"><code>scale_size_datetime</code></a> now honours its <code>date_breaks</code>, <code>date_labels</code> and <code>date_minor_breaks</code> arguments, which it previously ignored.</p></li>
 <li><p>In a non-linear coordinate system (e.g.&nbsp;<a href="./reference/coord_trans.html#plotnine.coord_trans"><code>coord_trans</code></a>), the closing edge of a polygon is now curved along with the rest of its boundary instead of being drawn as a straight chord.</p></li>
@@ -440,6 +445,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p><a href="./reference/position_jitter.html#plotnine.position_jitter"><code>position_jitter</code></a> and <a href="./reference/position_jitterdodge.html#plotnine.position_jitterdodge"><code>position_jitterdodge</code></a> now make independent random draws for the horizontal and vertical axes when given a seed. Both axes previously received identical offsets, placing points along a diagonal.</p></li>
 <li><p><a href="./reference/position_jitter.html#plotnine.position_jitter"><code>position_jitter</code></a>, <a href="./reference/position_jitterdodge.html#plotnine.position_jitterdodge"><code>position_jitterdodge</code></a>, <a href="./reference/stat_summary.html#plotnine.stat_summary"><code>stat_summary</code></a>, and <a href="./reference/stat_summary_bin.html#plotnine.stat_summary_bin"><code>stat_summary_bin</code></a> now treat <code>0</code> as a valid <code>random_state</code> seed. They previously selected NumPy’s global random state, so results depended on other random draws.</p></li>
 <li><p>Broadcasting a layer to every plot in a composition with <code>&amp;</code> or <code>*</code> now gives each target plot an independent copy. Changes made while drawing one plot no longer affect the layer in another plot.</p></li>
+<li><p>Calling <a href="./reference/ggplot.html#plotnine.ggplot.draw"><code>draw</code></a> more than once on the same plot no longer duplicates artists or leaves ticks and labels partially hidden. (<a href="https://github.com/has2k1/plotnine/issues/1009" title="Issue: #1009">#1009</a>)</p></li>
 </ul>
 </section>
 <section id="enhancements" class="level3">
