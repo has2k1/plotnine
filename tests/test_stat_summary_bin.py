@@ -41,3 +41,13 @@ def test_no_summary_function_warns():
     p = ggplot(data, aes("xc", "y")) + stat_summary_bin(bins=5)
     with pytest.warns(PlotnineWarning, match="defaulting to mean_se"):
         p._build()
+
+
+def test_uneven_breaks_width():
+    # Each bar must span its own bin, not the width of the last bin
+    p = ggplot(data, aes("xc", "y")) + stat_summary_bin(
+        breaks=np.array([0, 2, 10, 14]), fun_y=np.mean, geom="col"
+    )
+    out = p.build().layers[0].data
+    assert out["xmin"].tolist() == [0, 2, 10]
+    assert out["xmax"].tolist() == [2, 10, 14]
