@@ -150,4 +150,4 @@ def test_empty_layer_data():
     # e.g. the y of stat_ecdf. The path should draw nothing.
     data = pd.DataFrame({"x": pd.Series([], dtype=float)})
     p = ggplot(data, aes("x")) + stat_ecdf() + geom_freqpoly(bins=5)
-    p.draw_test()
+    p.build()
