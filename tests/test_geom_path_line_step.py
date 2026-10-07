@@ -150,4 +150,6 @@ def test_empty_layer_data():
     # e.g. the y of stat_ecdf. The path should draw nothing.
     data = pd.DataFrame({"x": pd.Series([], dtype=float)})
     p = ggplot(data, aes("x")) + stat_ecdf() + geom_freqpoly(bins=5)
-    p.build()
+    # Missing values are handled when the layers are drawn
+    for lyr in p.build().layers:
+        assert lyr.geom.handle_na(lyr.data).empty
