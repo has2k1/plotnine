@@ -109,3 +109,16 @@ def test_histogram_weights():
 
     p = ggplot(data, aes("x", weight="w")) + geom_histogram(bins=5)
     assert p == "histogram_weights"
+
+
+def test_histogram_ngroup():
+    data = pd.DataFrame({"x": [1, 2, 2, 3, 3, 3], "g": list("aabbbb")})
+    p = ggplot(data, aes("x", y=after_stat("count / ngroup"), fill="g")) + (
+        geom_histogram(binwidth=1, position="identity")
+    )
+    layer_data = p.layer_data()
+    ngroup = layer_data.groupby("group")["count"].sum()
+    assert ngroup.tolist() == [2, 4]
+    assert np.allclose(
+        layer_data["y"], layer_data["count"] / layer_data["group"].map(ngroup)
+    )

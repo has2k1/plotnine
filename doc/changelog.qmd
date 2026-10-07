@@ -295,6 +295,10 @@ title: Changelog
   longer duplicates artists or leaves ticks and labels partially hidden.
   ({{< issue 1009 >}})
 
+- [](:class:`~plotnine.stat_bin`) now creates the documented `ngroup`
+  computed variable, so `after_stat("ngroup")` works. The column was named
+  `"ngroup:"` by mistake.
+
 ### Enhancements
 
 - The `factor` function available when evaluating expressions in
