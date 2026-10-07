@@ -295,6 +295,11 @@ title: Changelog
   longer duplicates artists or leaves ticks and labels partially hidden.
   ({{< issue 1009 >}})
 
+- [](:class:`~plotnine.stat_qq_line`) now computes the sample quantiles at
+  `line_p` with linear interpolation (R's default `quantile` type 7), like
+  ggplot2. It used the `scipy.stats.mstats.mquantiles` defaults, which placed
+  the line differently, most visibly for small samples.
+
 ### Enhancements
 
 - The `factor` function available when evaluating expressions in

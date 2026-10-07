@@ -71,8 +71,6 @@ class stat_qq_line(stat):
             )
 
     def compute_group(self, data, scales):
-        from scipy.stats.mstats import mquantiles
-
         from .distributions import get_continuous_distribution
 
         line_p = self.params["line_p"]
@@ -92,7 +90,8 @@ class stat_qq_line(stat):
         # Compute slope & intercept of the line through the quantiles
         cdist = get_continuous_distribution(self.params["distribution"])
         x_coords = cdist.ppf(line_p, **dparams)
-        y_coords = mquantiles(sample, line_p)
+        # Linear interpolation (R's quantile type 7), as used by ggplot2
+        y_coords = np.quantile(sample, line_p)
         slope = (np.diff(y_coords) / np.diff(x_coords))[0]
         intercept = y_coords[0] - slope * x_coords[0]
 
