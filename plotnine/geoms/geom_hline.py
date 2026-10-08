@@ -87,7 +87,7 @@ class geom_hline(geom):
         data = data.drop_duplicates()
 
         for _, gdata in data.groupby("group"):
-            gdata.reset_index(inplace=True)
+            gdata = gdata.reset_index()
             geom_segment.draw_group(
                 gdata, panel_params, coord, ax, self.params
             )

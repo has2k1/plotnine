@@ -216,9 +216,8 @@ class geom_boxplot(geom):
         # box
         box_columns = ["xmin", "xmax", "lower", "middle", "upper"]
         box = data[common_columns + box_columns].copy()
-        box.rename(
+        box = box.rename(
             columns={"lower": "ymin", "middle": "y", "upper": "ymax"},
-            inplace=True,
         )
 
         # notch

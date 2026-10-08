@@ -67,7 +67,7 @@ class geom_point(geom):
         data = coord.transform(data, panel_params)
         units = "shape"
         for _, udata in data.groupby(units, dropna=False):
-            udata.reset_index(inplace=True, drop=True)
+            udata = udata.reset_index(drop=True)
             geom_point.draw_unit(udata, panel_params, coord, ax, params)
 
     @staticmethod

@@ -228,7 +228,7 @@ class position(ABC, metaclass=Register):
             idx = data.sort_values(["x", "group"], kind="mergesort").index
 
         data = data.loc[idx, :]
-        data.reset_index(inplace=True, drop=True)
+        data = data.reset_index(drop=True)
         return cls.strategy(data, params)
 
 
