@@ -234,7 +234,7 @@ def result_dataframe(count, x, width, xmin=None, xmax=None):
             "density": density,
             "ncount": count / np.max(np.abs(count)),
             "ndensity": density / np.max(np.abs(density)),
-            "ngroup:": np.sum(np.abs(count)),
+            "ngroup": np.sum(np.abs(count)),
         }
     )
     return out
