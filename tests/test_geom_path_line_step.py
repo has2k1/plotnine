@@ -6,11 +6,13 @@ from plotnine import (
     aes,
     arrow,
     facet_grid,
+    geom_freqpoly,
     geom_line,
     geom_path,
     geom_point,
     geom_step,
     ggplot,
+    stat_ecdf,
 )
 from plotnine.exceptions import PlotnineWarning
 
@@ -141,3 +143,13 @@ def test_groups_less_that_two_points():
         aes(x="A", y="C", group="B", color="D"), size=2
     )
     p.draw_test()
+
+
+def test_empty_layer_data():
+    # Stats that get no rows do not create their computed columns,
+    # e.g. the y of stat_ecdf. The path should draw nothing.
+    data = pd.DataFrame({"x": pd.Series([], dtype=float)})
+    p = ggplot(data, aes("x")) + stat_ecdf() + geom_freqpoly(bins=5)
+    # Missing values are handled when the layers are drawn
+    for lyr in p.build().layers:
+        assert lyr.geom.handle_na(lyr.data).empty

@@ -79,8 +79,9 @@ class geom_path(geom):
 
         # Get indices where any row for the select aesthetics has
         # NaNs at the beginning or the end. Those we drop
+        columns = ["x", "y", "size", "color", "linetype"]
         bool_idx = (
-            data[["x", "y", "size", "color", "linetype"]]
+            data[[c for c in columns if c in data]]
             .isna()  # Missing
             .apply(keep, axis=0)
         )  # Beginning or the End

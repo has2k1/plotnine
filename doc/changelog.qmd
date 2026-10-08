@@ -291,6 +291,11 @@ title: Changelog
   gives each target plot an independent copy. Changes made while drawing one
   plot no longer affect the layer in another plot.
 
+- [](:class:`~plotnine.geom_path`) and the geoms and stats that draw with it,
+  e.g. [](:class:`~plotnine.stat_ecdf`) and
+  [](:class:`~plotnine.geom_freqpoly`), no longer raise a `KeyError` when the
+  layer has no data.
+
 - Calling [](:meth:`~plotnine.ggplot.draw`) more than once on the same plot no
   longer duplicates artists or leaves ticks and labels partially hidden.
   ({{< issue 1009 >}})
