@@ -333,7 +333,7 @@ class stat(ABC, metaclass=Register):
         stats = []
         for _, old in data.groupby("group"):
             new = self.compute_group(old, scales)
-            new.reset_index(drop=True, inplace=True)
+            new = new.reset_index(drop=True)
             unique = uniquecols(old)
             missing = unique.columns.difference(new.columns)
             idx = [0] * len(new)

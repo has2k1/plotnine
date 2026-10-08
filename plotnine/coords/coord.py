@@ -245,6 +245,6 @@ def munch_data(data: pd.DataFrame, dist: FloatArray) -> pd.DataFrame:
     munched = data.loc[idx, list(data.columns.difference(["x", "y"]))]
     munched["x"] = x
     munched["y"] = y
-    munched.reset_index(drop=True, inplace=True)
+    munched = munched.reset_index(drop=True)
 
     return munched

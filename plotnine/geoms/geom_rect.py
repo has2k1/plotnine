@@ -59,7 +59,7 @@ class geom_rect(geom):
         if not coord.is_linear:
             data = _rectangles_to_polygons(data)
             for _, gdata in data.groupby("group"):
-                gdata.reset_index(inplace=True, drop=True)
+                gdata = gdata.reset_index(drop=True)
                 geom_polygon.draw_group(
                     gdata, panel_params, coord, ax, self.params
                 )

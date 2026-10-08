@@ -2,6 +2,15 @@
 title: Changelog
 ---
 
+## v0.15.9
+(not-yet-released)
+
+### Bug Fixes
+
+- plotnine no longer passes `inplace=True` to the pandas `DataFrame`
+  methods that pandas 3.1 deprecates it for (PDEP-8), so plots no longer emit
+  `Pandas4Warning`.
+
 ## v0.15.8
 (2026-08-14)
 
