@@ -140,7 +140,6 @@ class stat_summary_bin(stat):
         )
 
         breaks = fuzzybreaks(scales.x, breaks, boundary, binwidth, bins)
-        bins = len(breaks) - 1
         data["bin"] = pd.cut(
             data["x"],
             bins=breaks,  # pyright: ignore
@@ -162,10 +161,10 @@ class stat_summary_bin(stat):
         bin = cast("IntArray", out["bin"].to_numpy())
         bin_centers = centers[bin]
         out["x"] = bin_centers
-        out["bin"] += 1
         if isinstance(scales.x, scale_discrete):
             out["width"] = 0.9
         else:
-            out["width"] = np.diff(breaks)[bins - 1]
+            out["width"] = np.diff(breaks)[bin]
+        out["bin"] += 1
 
         return out
