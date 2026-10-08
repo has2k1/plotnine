@@ -337,7 +337,7 @@ class geom(ABC, metaclass=Register):
             includes the `zorder`.
         """
         for _, gdata in data.groupby("group"):
-            gdata.reset_index(inplace=True, drop=True)
+            gdata = gdata.reset_index(drop=True)
             self.draw_group(gdata, panel_params, coord, ax, self.params)
 
     @staticmethod

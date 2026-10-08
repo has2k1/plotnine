@@ -135,7 +135,7 @@ class facet_wrap(facet):
             }
         )
         if self.dir == "v":
-            layout.rename(columns={"ROW": "COL", "COL": "ROW"}, inplace=True)
+            layout = layout.rename(columns={"ROW": "COL", "COL": "ROW"})
 
         layout = pd.concat([layout, base], axis=1)
         self.nrow = layout["ROW"].nunique()
@@ -207,7 +207,7 @@ class facet_wrap(facet):
             ordered=True,
         )
 
-        data.reset_index(drop=True, inplace=True)
+        data = data.reset_index(drop=True)
         return data
 
     def make_strips(self, layout_info: layout_details, ax: Axes) -> Strips:

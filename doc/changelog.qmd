@@ -188,6 +188,10 @@ title: Changelog
 
 ### Bug Fixes
 
+- plotnine no longer passes `inplace=True` to the pandas `DataFrame`
+  methods that pandas 3.2 deprecates it for (PDEP-8), so plots no longer emit
+  `Pandas4Warning`.
+
 - SVG colourbars now use overlapping rectangles to prevent misplaced
   gradients in some SVG viewers. This applies to compositions and insets
   without changing the colourbar mode used for other output formats.

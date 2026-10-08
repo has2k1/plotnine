@@ -415,7 +415,7 @@ def mavg(data, xseq, params) -> pd.DataFrame:
     stderr = rolling.std()[window:]
     x = data["x"][window:]
     data = pd.DataFrame({"x": x, "y": y})
-    data.reset_index(inplace=True, drop=True)
+    data = data.reset_index(drop=True)
 
     if params["se"]:
         dof = n - window  # Original - Used
