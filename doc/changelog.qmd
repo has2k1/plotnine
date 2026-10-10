@@ -188,6 +188,10 @@ title: Changelog
 
 ### Bug Fixes
 
+- Plots no longer fail to build when a shape aesthetic mixes regular
+  marker tuples with tuples-of-tuples polygon specifications, such as
+  the matplotlib shapes drawn by `scale_shape_identity`. ({{< issue 950 >}})
+
 - SVG colourbars now use overlapping rectangles to prevent misplaced
   gradients in some SVG viewers. This applies to compositions and insets
   without changing the colourbar mode used for other output formats.
