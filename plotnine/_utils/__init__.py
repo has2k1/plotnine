@@ -199,7 +199,15 @@ def multitype_sort(arr: AnyArrayLike) -> list[Any]:
             types[type(x)].append(x)
 
     for t, values in types.items():
-        types[t] = sorted(values)
+        try:
+            types[t] = sorted(values)
+        except TypeError:
+            # Elements of the same type are not always comparable
+            # with each other, e.g. a tuple that mixes scalar tuples
+            # with tuples-of-tuples (matplotlib shape specifications).
+            # Order such a group by its string representation, which
+            # gives a deterministic (though arbitrary) order.
+            types[t] = sorted(values, key=repr)
 
     return list(itertools.chain.from_iterable(types[t] for t in types))
 

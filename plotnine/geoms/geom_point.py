@@ -66,7 +66,18 @@ class geom_point(geom):
     ):
         data = coord.transform(data, panel_params)
         units = "shape"
-        for _, udata in data.groupby(units, dropna=False):
+        try:
+            # Group keys that can be ordered are grouped in sorted
+            # order; this keeps the drawing order stable.
+            sorted(data[units].dropna().unique())
+            grouped = data.groupby(units, dropna=False)
+        except TypeError:
+            # Unorderable group keys, e.g. a tuple that mixes scalar
+            # tuples with tuples-of-tuples (matplotlib shape
+            # specifications). Keep the original data order instead.
+            grouped = data.groupby(units, dropna=False, sort=False)
+
+        for _, udata in grouped:
             udata.reset_index(inplace=True, drop=True)
             geom_point.draw_unit(udata, panel_params, coord, ax, params)
 
