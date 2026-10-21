@@ -1,21 +1,13 @@
 from __future__ import annotations
 
-from collections.abc import Sequence
+from collections.abc import Iterable, Sequence
 from copy import copy, deepcopy
 from dataclasses import dataclass
 from io import BytesIO
 from itertools import chain
 from pathlib import Path
 from types import SimpleNamespace as NS
-from typing import (
-    TYPE_CHECKING,
-    Any,
-    Dict,
-    Iterable,
-    Optional,
-    cast,
-    overload,
-)
+from typing import TYPE_CHECKING, Any, cast, overload
 from warnings import warn
 
 from ._utils import (
@@ -47,12 +39,11 @@ from .scales.scales import Scales
 from .themes.theme import theme, theme_get
 
 if TYPE_CHECKING:
-    from typing import Protocol
+    from typing import Protocol, Self
 
     import pandas as pd
     from matplotlib.axes import Axes
     from matplotlib.figure import Figure
-    from typing_extensions import Self
 
     from plotnine import watermark
     from plotnine._mpl.figure import p9Figure
@@ -145,8 +136,8 @@ class ggplot:
 
     def __init__(
         self,
-        data: Optional[DataLike] = None,
-        mapping: Optional[aes] = None,
+        data: DataLike | None = None,
+        mapping: aes | None = None,
     ):
         from .composition._inset_element import Insets
         from .mapping._env import Environment
@@ -718,13 +709,13 @@ class ggplot:
 
     def save_helper(
         self: ggplot,
-        filename: Optional[str | Path | BytesIO] = None,
-        format: Optional[str] = None,
-        path: Optional[str] = None,
-        width: Optional[float] = None,
-        height: Optional[float] = None,
+        filename: str | Path | BytesIO | None = None,
+        format: str | None = None,
+        path: str | None = None,
+        width: float | None = None,
+        height: float | None = None,
         units: str = "in",
-        dpi: Optional[float] = None,
+        dpi: float | None = None,
         limitsize: bool | None = None,
         verbose: bool = True,
         **kwargs: Any,
@@ -762,7 +753,7 @@ class ggplot:
         if path and isinstance(filename, (Path, str)):
             filename = Path(path) / filename
 
-        fig_kwargs: Dict[str, Any] = {"format": format, **kwargs}
+        fig_kwargs: dict[str, Any] = {"format": format, **kwargs}
         fig_kwargs["fname"] = filename
 
         # Preserve the users object
@@ -807,13 +798,13 @@ class ggplot:
 
     def save(
         self,
-        filename: Optional[str | Path | BytesIO] = None,
-        format: Optional[str] = None,
+        filename: str | Path | BytesIO | None = None,
+        format: str | None = None,
         path: str = "",
-        width: Optional[float] = None,
-        height: Optional[float] = None,
+        width: float | None = None,
+        height: float | None = None,
         units: str = "in",
-        dpi: Optional[int] = None,
+        dpi: int | None = None,
         limitsize: bool | None = None,
         verbose: bool = True,
         **kwargs: Any,
@@ -926,7 +917,7 @@ class PlotBuild:
 
 def save_as_pdf_pages(
     plots: Iterable[ggplot],
-    filename: Optional[str | Path] = None,
+    filename: str | Path | None = None,
     path: str | None = None,
     verbose: bool = True,
     **kwargs: Any,

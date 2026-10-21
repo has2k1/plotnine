@@ -7,8 +7,8 @@ from functools import lru_cache
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from collections.abc import Iterator
-    from typing import Any, Hashable, Protocol, Self
+    from collections.abc import Hashable, Iterator
+    from typing import Any, Protocol, Self
 
     from patsy.eval import EvalEnvironment
 

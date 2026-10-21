@@ -17,7 +17,8 @@ from ..scales.scales import Scales
 from .strips import Strips
 
 if typing.TYPE_CHECKING:
-    from typing import Any, Literal, Optional, Sequence
+    from collections.abc import Sequence
+    from typing import Any, Literal
 
     import numpy.typing as npt
     from matplotlib.axes import Axes
@@ -190,8 +191,8 @@ class facet:
     def init_scales(
         self,
         layout: pd.DataFrame,
-        x_scale: Optional[scale] = None,
-        y_scale: Optional[scale] = None,
+        x_scale: scale | None = None,
+        y_scale: scale | None = None,
     ) -> types.SimpleNamespace:
         scales = types.SimpleNamespace()
 
@@ -383,7 +384,7 @@ class facet:
         axs = axs[:num_panels]
         return gs, list(axs)
 
-    def _aspect_ratio(self) -> Optional[float]:
+    def _aspect_ratio(self) -> float | None:
         """
         Return the aspect_ratio
         """

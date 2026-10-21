@@ -6,7 +6,7 @@ from contextlib import suppress
 from copy import deepcopy
 from dataclasses import fields
 from functools import cached_property
-from typing import TYPE_CHECKING, Any, Dict
+from typing import TYPE_CHECKING, Any
 
 import numpy as np
 import pandas as pd
@@ -88,7 +88,7 @@ STAT_RE = re.compile(r"\bstat\(")
 DOTS_RE = re.compile(r"\.\.([a-zA-Z0-9_]+)\.\.")
 
 
-class aes(Dict[str, Any]):
+class aes(dict[str, Any]):
     """
     Create aesthetic mappings
 

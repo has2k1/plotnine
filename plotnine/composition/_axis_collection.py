@@ -11,7 +11,7 @@ from typing import TYPE_CHECKING, cast
 from .._utils import OPPOSITE_SIDE
 
 if TYPE_CHECKING:
-    from typing import Iterable
+    from collections.abc import Iterable
 
     from plotnine import ggplot, theme
     from plotnine._mpl.layout_manager._grid import Grid

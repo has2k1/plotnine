@@ -13,7 +13,8 @@ from ..exceptions import PlotnineWarning
 from .geom import geom
 
 if TYPE_CHECKING:
-    from typing import Any, Literal, Sequence
+    from collections.abc import Sequence
+    from typing import Any, Literal
 
     import numpy.typing as npt
     import pandas as pd

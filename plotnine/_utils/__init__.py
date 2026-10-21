@@ -24,12 +24,12 @@ from ..exceptions import PlotnineError, PlotnineWarning
 from ..mapping import aes
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
     from io import BytesIO
     from pathlib import Path
-    from typing import Any, Callable, Literal, TypeVar
+    from typing import Any, Literal, TypeGuard, TypeVar
 
     import numpy.typing as npt
-    from typing_extensions import TypeGuard
 
     from plotnine.typing import (
         AnyArrayLike,

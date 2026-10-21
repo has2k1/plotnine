@@ -234,7 +234,7 @@ def compute_density(x, weight, range, params):
 
     try:
         y = kde.evaluate(x2)
-        if np.isscalar(y) and np.isnan(y):
+        if np.isscalar(y) and np.isnan(y):  # pyright: ignore[reportArgumentType, reportCallIssue]
             raise ValueError("kde.evaluate returned nan")
     except ValueError:
         y = []

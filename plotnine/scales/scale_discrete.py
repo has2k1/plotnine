@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Any, Sequence
+from typing import TYPE_CHECKING, Any
 
 import numpy as np
 import pandas as pd
@@ -16,7 +16,7 @@ from .range import RangeDiscrete
 from .scale import scale
 
 if TYPE_CHECKING:
-    from typing import Optional
+    from collections.abc import Sequence
 
     from mizani.transforms import trans
 
@@ -141,8 +141,8 @@ class scale_discrete(
 
     def view(
         self,
-        limits: Optional[Sequence[str]] = None,
-        range: Optional[CoordRange] = None,
+        limits: Sequence[str] | None = None,
+        range: CoordRange | None = None,
     ) -> scale_view:
         """
         Information about the trained scale
@@ -182,7 +182,7 @@ class scale_discrete(
         """
         return none_pal()(n)
 
-    def map(self, x, limits: Optional[Sequence[str]] = None) -> Sequence[Any]:
+    def map(self, x, limits: Sequence[str] | None = None) -> Sequence[Any]:
         """
         Map values in x to a palette
         """
@@ -226,9 +226,7 @@ class scale_discrete(
 
         return pal_match
 
-    def get_breaks(
-        self, limits: Optional[Sequence[str]] = None
-    ) -> Sequence[str]:
+    def get_breaks(self, limits: Sequence[str] | None = None) -> Sequence[str]:
         """
         Return an ordered list of breaks
 
@@ -253,7 +251,7 @@ class scale_discrete(
         return breaks
 
     def get_bounded_breaks(
-        self, limits: Optional[Sequence[str]] = None
+        self, limits: Sequence[str] | None = None
     ) -> Sequence[str]:
         """
         Return Breaks that are within limits
@@ -264,9 +262,7 @@ class scale_discrete(
         lookup_limits = set(limits)
         return [b for b in self.get_breaks() if b in lookup_limits]
 
-    def get_labels(
-        self, breaks: Optional[Sequence[str]] = None
-    ) -> Sequence[str]:
+    def get_labels(self, breaks: Sequence[str] | None = None) -> Sequence[str]:
         """
         Generate labels for the legend/guide breaks
         """

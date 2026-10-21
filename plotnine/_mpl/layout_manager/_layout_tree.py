@@ -2,14 +2,15 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from functools import cached_property
-from typing import TYPE_CHECKING, Iterator, cast
+from typing import TYPE_CHECKING, cast
 
 import numpy as np
 
 from ._plot_side_space import PlotSideSpaces
 
 if TYPE_CHECKING:
-    from typing import Any, Callable, Literal, Sequence, TypeAlias
+    from collections.abc import Callable, Iterator, Sequence
+    from typing import Any, Literal, TypeAlias
 
     from plotnine._mpl.gridspec import p9GridSpec
     from plotnine._mpl.layout_manager._plot_side_space import (
@@ -125,7 +126,7 @@ class LayoutTree:
     represents.
     """
 
-    grid: Grid["Node"]
+    grid: Grid[Node]
     """
     Per-cell layout of `nodes`. `Grid` for compositions without a
     design; `DesignGrid` when `plot_layout(design=...)` is used.

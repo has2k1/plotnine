@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import sys
 from enum import Enum
-from typing import Optional
 
 RESET = "\033[0m"
 
@@ -60,9 +59,9 @@ class Effect(Enum):
 
 def T(
     s: str,
-    fg: Optional[str] = None,
-    bg: Optional[str] = None,
-    effect: Optional[str] = None,
+    fg: str | None = None,
+    bg: str | None = None,
+    effect: str | None = None,
 ) -> str:
     """
     Enclose text string with ANSI codes

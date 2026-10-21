@@ -22,7 +22,8 @@ from ..themes.theme import theme
 from .guide import GuideElements, guide
 
 if TYPE_CHECKING:
-    from typing import Literal, Optional, Sequence
+    from collections.abc import Sequence
+    from typing import Literal
 
     from matplotlib.artist import Artist
     from matplotlib.collections import LineCollection
@@ -59,7 +60,7 @@ class guide_colorbar(guide):
     better support across applications that render svg images.
     """
 
-    alpha: Optional[float] = None
+    alpha: float | None = None
     """
     Opacity (in the range `[0, 1]`) of the colorbar. The default
     `None`, is to use the opacity of the plot.

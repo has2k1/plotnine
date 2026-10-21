@@ -22,7 +22,8 @@ from ..mapping.aes import rename_aesthetics
 from .guide import guide
 
 if TYPE_CHECKING:
-    from typing import Literal, Optional, Protocol, Sequence, TypeAlias
+    from collections.abc import Sequence
+    from typing import Literal, Protocol, TypeAlias
 
     from matplotlib.figure import Figure
     from matplotlib.offsetbox import OffsetBox, PackerBase
@@ -112,28 +113,28 @@ class guides:
     of an aesthetic.
     """
 
-    alpha: Optional[LegendOrColorbar | NoGuide] = None
+    alpha: LegendOrColorbar | NoGuide | None = None
     """Guide for alpha scale."""
 
-    color: Optional[LegendOrColorbar | NoGuide] = None
+    color: LegendOrColorbar | NoGuide | None = None
     """Guide for color scale."""
 
-    fill: Optional[LegendOrColorbar | NoGuide] = None
+    fill: LegendOrColorbar | NoGuide | None = None
     """Guide for fill scale."""
 
-    linetype: Optional[LegendOnly | NoGuide] = None
+    linetype: LegendOnly | NoGuide | None = None
     """Guide for linetype scale."""
 
-    shape: Optional[LegendOnly | NoGuide] = None
+    shape: LegendOnly | NoGuide | None = None
     """Guide for shape scale."""
 
-    size: Optional[LegendOnly | NoGuide] = None
+    size: LegendOnly | NoGuide | None = None
     """Guide for size scale."""
 
-    stroke: Optional[LegendOnly | NoGuide] = None
+    stroke: LegendOnly | NoGuide | None = None
     """Guide for stroke scale."""
 
-    colour: Optional[LegendOrColorbar | NoGuide] = None
+    colour: LegendOrColorbar | NoGuide | None = None
     """Guide for colour scale."""
 
     def __post_init__(self):
@@ -320,7 +321,7 @@ class guides:
         """
         return [_g for g in gdefs if (_g := g.create_geoms())]
 
-    def draw(self) -> Optional[OffsetBox]:
+    def draw(self) -> OffsetBox | None:
         """
         Draw guides onto the figure
 

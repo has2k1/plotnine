@@ -20,7 +20,8 @@ from ._runtime_typing import (
 )
 
 if TYPE_CHECKING:
-    from typing import Any, Sequence
+    from collections.abc import Sequence
+    from typing import Any
 
     import pandas as pd
     from numpy.typing import NDArray
@@ -188,7 +189,7 @@ class scale(
         limits,  # : ScaleLimits
         expand,  # : tuple[float, float] | tuple[float, float, float, float]
         coord_limits,  # : CoordRange | None
-        trans,  # : Trans | Type[Trans]
+        trans,  # : Trans | type[Trans]
     ) -> range_view:
         """
         Expand the limits of the scale
@@ -221,8 +222,8 @@ class scale(
 
     def view(
         self,
-        limits=None,  # : Optional[ScaleLimits]
-        range=None,  # : Optional[CoordRange] = None
+        limits=None,  # : ScaleLimits | None
+        range=None,  # : CoordRange | None = None
     ) -> scale_view:
         """
         Information about the trained scale

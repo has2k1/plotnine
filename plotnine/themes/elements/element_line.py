@@ -5,7 +5,8 @@ from typing import TYPE_CHECKING
 from .element_base import element_base
 
 if TYPE_CHECKING:
-    from typing import Any, Literal, Sequence
+    from collections.abc import Sequence
+    from typing import Any, Literal
 
 
 class element_line(element_base):

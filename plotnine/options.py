@@ -5,12 +5,12 @@ from typing import TYPE_CHECKING
 from ._utils import quarto
 
 if TYPE_CHECKING:
-    from typing import Any, Literal, Optional, Type
+    from typing import Any, Literal
 
     from plotnine import theme
     from plotnine.typing import FigureFormat
 
-current_theme: Optional[theme | Type[theme]] = None
+current_theme: theme | type[theme] | None = None
 """Theme used when none is added to the ggplot object
 
 Another way to do it, to set a default theme using `theme_set()`.
@@ -38,7 +38,7 @@ figure_size: tuple[float, float] = (640 / dpi, 480 / dpi)
 Default figure size in inches
 """
 
-figure_format: Optional[FigureFormat] = None
+figure_format: FigureFormat | None = None
 """
 Default format for figures displayed in Jupyter
 
