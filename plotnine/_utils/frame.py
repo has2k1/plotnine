@@ -98,7 +98,24 @@ def to_frame(data: Any) -> DataFrame:
 
     if is_pandas_like_dataframe(data):
         df = _normalise_pandas(data)
-    return df
+    return _null_columns_to_float(df)
+
+
+def _null_columns_to_float(df: DataFrame) -> DataFrame:
+    """
+    Make the columns without a type (e.g. polars Null) float columns
+
+    Like an empty pandas column, an empty polars column has no type
+    and it is treated as continuous.
+    """
+    null_cols = [
+        name
+        for name, dtype in df.schema.items()
+        if dtype == nw.Unknown and df[name].null_count() == len(df)
+    ]
+    if not null_cols:
+        return df
+    return df.with_columns(nw.col(c).cast(nw.Float64) for c in null_cols)
 
 
 def _normalise_pandas(data: Any) -> DataFrame:
@@ -599,7 +616,7 @@ def group_split(
         groups = list(
             df.with_row_index(row).group_by(by, drop_null_keys=drop_missing)
         )
-        groups.sort(key=lambda item: item[1][row].item(0))
+        groups.sort(key=lambda item: item[1][row].min())
         for k, gdf in groups:
             yield k, gdf.drop(row)
         return
@@ -1113,7 +1130,11 @@ def scale_values(s: Series) -> Any:
     """
     if is_categorical(s):
         return s
-    return to_numpy(s)
+    arr = to_numpy(s)
+    if arr.dtype.kind == "m":
+        # mizani works with python timedeltas
+        arr = arr.astype("m8[us]").astype(object)
+    return arr
 
 
 def frame_like(

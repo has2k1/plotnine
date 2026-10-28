@@ -46,3 +46,36 @@ def test_pyarrow_table(name):
     data = p.layer_data()
     assert isinstance(data, pa.Table)
     p.draw_test()  # pyright: ignore[reportAttributeAccessIssue]
+
+
+def test_empty_polars_dataframe():
+    # The columns of an empty polars dataframe have no type
+    import polars as pl
+
+    p = ggplot(pl.DataFrame({"x": [], "y": []}), aes("x", "y")) + geom_point()
+    p.draw_test()  # pyright: ignore[reportAttributeAccessIssue]
+
+
+@pytest.mark.parametrize("library", ["pandas", "polars", "pyarrow"])
+def test_timedelta_column(library):
+    from datetime import timedelta
+
+    import pandas as pd
+
+    from plotnine import geom_line
+
+    df = pd.DataFrame(
+        {
+            "x": [timedelta(days=i, hours=3 * i) for i in range(10)],
+            "y": range(10),
+        }
+    )
+    if library == "polars":
+        import polars as pl
+
+        df = pl.from_pandas(df)
+    elif library == "pyarrow":
+        df = pa.Table.from_pandas(df)
+
+    p = ggplot(df, aes("x", "y")) + geom_line()
+    p.draw_test()  # pyright: ignore[reportAttributeAccessIssue]
