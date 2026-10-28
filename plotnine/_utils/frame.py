@@ -129,6 +129,19 @@ def backend(df: DataFrame | Series) -> Implementation:
     return df.implementation
 
 
+def is_installed(name: str) -> bool:
+    """
+    Return True if a package can be imported
+
+    The package is not imported.
+    """
+    try:
+        return find_spec(name) is not None
+    except (ImportError, ValueError):
+        # e.g. sys.modules[name] is None
+        return False
+
+
 @cache
 def default_backend() -> Implementation:
     """
@@ -136,9 +149,9 @@ def default_backend() -> Implementation:
 
     Polars is preferred, and pandas is the fallback.
     """
-    if find_spec("polars"):
+    if is_installed("polars"):
         return Implementation.POLARS
-    if find_spec("pandas"):
+    if is_installed("pandas"):
         return Implementation.PANDAS
     raise ImportError(
         "plotnine requires either polars or pandas to be installed."

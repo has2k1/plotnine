@@ -4,9 +4,10 @@ Plotnine Data
 
 from __future__ import annotations
 
-from importlib.util import find_spec
 from pathlib import Path
 from typing import TYPE_CHECKING, Literal
+
+from .._utils.frame import is_installed
 
 if TYPE_CHECKING:
     from typing import Any
@@ -87,9 +88,9 @@ def _default_backend() -> Literal["pandas", "polars"]:
     """
     Library of the datasets: pandas if it is installed, else polars
     """
-    if find_spec("pandas"):
+    if is_installed("pandas"):
         return "pandas"
-    if find_spec("polars"):
+    if is_installed("polars"):
         return "polars"
     raise ImportError("The plotnine datasets require either pandas or polars.")
 
