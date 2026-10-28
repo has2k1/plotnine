@@ -16,9 +16,9 @@ from ..exceptions import PlotnineError
 from .stat import as_frame_of, stat
 
 if TYPE_CHECKING:
-    from typing import Any
+    from typing import Any, Callable
 
-    from plotnine._utils.frame import DataFrame
+    from plotnine._utils.frame import DataFrame, Series
 
 
 def bootstrap_statistics(
@@ -175,6 +175,21 @@ function_dict = {
 }
 
 
+def _call(fun: Callable[..., Any], y: Series, kwargs: dict[str, Any]) -> Any:
+    """
+    Call a summary function
+
+    The function gets the native series of the values, e.g. a
+    pandas series. If that raises a TypeError, which happens when a
+    numpy function like np.mean gets a polars series, the function
+    gets a numpy array.
+    """
+    try:
+        return fun(y.to_native(), **kwargs)
+    except TypeError:
+        return fun(frame.to_numpy(y), **kwargs)
+
+
 def make_summary_fun(fun_data, fun_y, fun_ymin, fun_ymax, fun_args):
     """
     Make summary function
@@ -188,24 +203,23 @@ def make_summary_fun(fun_data, fun_y, fun_ymin, fun_ymax, fun_args):
     if any([fun_y, fun_ymin, fun_ymax]):
 
         def func(df: DataFrame) -> DataFrame:
-            y = df["y"].to_native()
             d = {}
             if fun_y:
                 kwargs = get_valid_kwargs(fun_y, fun_args)
-                d["y"] = [fun_y(y, **kwargs)]
+                d["y"] = [_call(fun_y, df["y"], kwargs)]
             if fun_ymin:
                 kwargs = get_valid_kwargs(fun_ymin, fun_args)
-                d["ymin"] = [fun_ymin(y, **kwargs)]
+                d["ymin"] = [_call(fun_ymin, df["y"], kwargs)]
             if fun_ymax:
                 kwargs = get_valid_kwargs(fun_ymax, fun_args)
-                d["ymax"] = [fun_ymax(y, **kwargs)]
+                d["ymax"] = [_call(fun_ymax, df["y"], kwargs)]
             return frame.frame_like(df, d)
 
     elif fun_data:
         kwargs = get_valid_kwargs(fun_data, fun_args)
 
         def func(df: DataFrame) -> DataFrame:
-            return as_frame_of(fun_data(df["y"].to_native(), **kwargs), df)
+            return as_frame_of(_call(fun_data, df["y"], kwargs), df)
 
     else:
         raise ValueError(f"Bad value for function fun_data={fun_data}")

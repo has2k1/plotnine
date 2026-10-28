@@ -1,6 +1,7 @@
 from collections.abc import Sequence
 from typing import Any, cast
 
+import narwhals as nw
 import numpy as np
 import numpy.testing as npt
 import pandas as pd
@@ -268,7 +269,7 @@ def test_binned_position_restores_bar_coordinates_after_statistics():
         + scale_x_binned(breaks=[5], limits=(0, 10))
     )
 
-    layer = p.layer_data().sort_values("x")
+    layer = nw.from_native(p.layer_data()).sort("x")
 
     npt.assert_allclose(layer["x"], [2.5, 7.5])
     npt.assert_allclose(layer["count"], [2, 2])

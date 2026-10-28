@@ -116,7 +116,13 @@ def pandas_to_polars(data):
         if isinstance(col.dtype, pd.CategoricalDtype):
             cats = [str(c) for c in col.cat.categories]
             values = [None if pd.isna(v) else str(v) for v in col]
-            dtype = pl.Enum(cats) if col.cat.ordered else pl.Categorical
+            # A polars Categorical has the categories in lexical order.
+            # A custom order requires an Enum, which is ordinal.
+            custom_order = cats != sorted(cats)
+            if col.cat.ordered or custom_order:
+                dtype = pl.Enum(cats)
+            else:
+                dtype = pl.Categorical
             columns[name] = pl.Series(name, values, dtype=pl.String).cast(
                 dtype
             )

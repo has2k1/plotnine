@@ -1,0 +1,6 @@
+# Tests that are expected to fail when the test data is converted to polars.
+# Each entry is a pytest node id; text after "#" is a comment.
+#
+# The expression uses the index of a pandas series (x.index); polars
+# dataframes do not have an index.
+tests/test_aes.py::test_reorder_index

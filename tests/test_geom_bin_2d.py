@@ -1,3 +1,4 @@
+import narwhals as nw
 import numpy as np
 import pandas as pd
 
@@ -32,7 +33,7 @@ def test_scale_transformed_breaks():
     p = ggplot(data, aes("x", "y")) + geom_bin_2d(
         breaks=([5, 50, 500], [0.5, 1.5, 2.5])
     )
-    out1 = p.layer_data()
-    out2 = (p + scale_x_log10()).layer_data()
-    np.testing.assert_allclose(out1.xmax, [50, 500])
-    np.testing.assert_allclose(out2.xmax, np.log10([50, 500]))
+    out1 = nw.from_native(p.layer_data())
+    out2 = nw.from_native((p + scale_x_log10()).layer_data())
+    np.testing.assert_allclose(out1["xmax"], [50, 500])
+    np.testing.assert_allclose(out2["xmax"], np.log10([50, 500]))

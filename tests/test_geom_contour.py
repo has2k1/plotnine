@@ -1,3 +1,4 @@
+import narwhals as nw
 import numpy as np
 import pandas as pd
 import pytest
@@ -58,20 +59,20 @@ def test_single_point_grid():
 
 def test_unsorted_breaks():
     p = p0 + geom_contour_filled(breaks=[0.02, 0.005, 0.01])
-    data = p.layer_data(0)
+    data = nw.from_native(p.layer_data(0))
     # Sorting the breaks also orders the band categories.
-    assert list(data["level"].cat.categories) == [
+    assert list(data["level"].dtype.categories) == [
         "(0.005, 0.01]",
         "(0.01, 0.02]",
     ]
 
 
 def test_contour_lines_expose_computed_variables():
-    data = (p0 + geom_contour()).layer_data(0)
+    data = nw.from_native((p0 + geom_contour()).layer_data(0))
     assert {"level", "nlevel", "piece"} <= set(data.columns)
-    assert data.groupby("group").ngroups > 1
+    assert data["group"].n_unique() > 1
     assert data["nlevel"].max() == 1
-    levels = np.sort(data["level"].unique())
+    levels = np.sort(data["level"].unique().to_numpy())
     assert np.allclose(np.diff(levels), 0.005)
 
 
@@ -87,9 +88,9 @@ def test_filled_contours_with_bin_count():
 
 def test_filled_contour_levels_are_ordered():
     p = p0 + geom_contour_filled()
-    data = p.layer_data(0)
-    assert data["level"].cat.ordered
-    assert "subgroup" in data
+    data = nw.from_native(p.layer_data(0))
+    assert isinstance(data["level"].dtype, nw.Enum)
+    assert "subgroup" in data.columns
 
 
 def test_facet_panels_share_breaks():
@@ -102,11 +103,11 @@ def test_facet_panels_share_breaks():
         + geom_contour()
         + facet_wrap("panel")
     )
-    data = p.layer_data(0)
-    assert data["PANEL"].nunique() == 2
+    data = nw.from_native(p.layer_data(0))
+    assert data["PANEL"].n_unique() == 2
     # Shared breaks produce one evenly spaced sequence of contour values.
     # Per-panel breaks would interleave different sequences.
-    levels = np.sort(data["level"].unique())
+    levels = np.sort(data["level"].unique().to_numpy())
     steps = np.diff(levels)
     assert np.allclose(steps, steps[0])
 

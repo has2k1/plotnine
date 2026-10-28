@@ -189,11 +189,18 @@ def match(
     """
     # NOTE: This function gets called a lot. If it can
     # be optimised, it should.
+
+    # Missing values (None & NaN) match each other
+    def key(x):
+        return _MISSING if x is None or x != x else x
+
     lookup = {}
     for i, x in enumerate(v2):
+        x = key(x)
         if x not in lookup:
             lookup[x] = i
 
+    v1 = [key(x) for x in v1]
     if incomparables:
         skip = set(incomparables) if incomparables else set()
         lst = [
@@ -203,6 +210,10 @@ def match(
     else:
         lst = [lookup[x] + start if x in lookup else nomatch for x in v1]
     return np.array(lst, dtype=np.int64)
+
+
+# A key for the missing values
+_MISSING = object()
 
 
 def multitype_sort(arr: AnyArrayLike) -> list[Any]:

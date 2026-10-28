@@ -158,8 +158,9 @@ def _infer_object_values(values: Sequence[Any]) -> IntoDType | None:
 
     Returns None if the backend should do the inference.
     """
-    has_str, has_other = False, False
+    has_str, has_other, has_value = False, False, False
     for v in values:
+        has_value = has_value or v is not None
         if v is None:
             continue
         elif isinstance(v, str):
@@ -180,7 +181,16 @@ def _infer_object_values(values: Sequence[Any]) -> IntoDType | None:
             return nw.Object
         if has_str and has_other:
             return nw.Object
+    if len(values) and not has_value:
+        return _ALL_MISSING
     return nw.String if has_str else None
+
+
+# Values that are all None. They are kept as object values in pandas
+# and as strings in other libraries, instead of letting the library
+# choose a type (e.g. polars would choose a Null type, which numpy
+# turns into NaN floats).
+_ALL_MISSING: Any = object()
 
 
 def _clean_strings(values: Sequence[Any]) -> list[Any]:
@@ -263,6 +273,9 @@ def series(
         dtype = _infer_object_values(values)
         if dtype == nw.String:
             values = _clean_strings(values)
+
+    if dtype is _ALL_MISSING:
+        dtype = nw.Object if backend.is_pandas_like() else nw.String
 
     if dtype == nw.Object:
         # The narwhals constructors cannot create object columns
