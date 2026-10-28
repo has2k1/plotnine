@@ -38,7 +38,9 @@ class stat_smooth(stat):
 
         ```python
         def my_smoother(data, xseq, params):
-            # * data - has the x and y values for the model
+            # * data - has the x and y values for the model. It is a
+            #   dataframe of the library of the plot data, e.g.
+            #   pandas (as below) or polars.
             # * xseq - x values to be predicted
             # * params - stat parameters
             #

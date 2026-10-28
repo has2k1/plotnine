@@ -698,42 +698,6 @@ def groupby_apply(
     return frame.group_apply(data, cols, _func, *args, **kwargs).to_native()
 
 
-def pivot_apply(df, column, index, func, *args, **kwargs):
-    """
-    Apply a function to each group of a column
-
-    The function is kind of equivalent to R's *tapply*.
-
-    Parameters
-    ----------
-    df : dataframe
-        Dataframe to be pivoted
-    column : str
-        Column to apply function to.
-    index : str
-        Column that will be grouped on (and whose unique values
-        will make up the index of the returned dataframe)
-    func : callable
-        Function to apply to each column group. It *should* return
-        a single value.
-    *args : tuple
-        Arguments to `func`
-    **kwargs : dict
-        Keyword arguments to `func`
-
-    Returns
-    -------
-    out : dataframe
-        Dataframe with index `index` and column `column` of
-        computed/aggregate values .
-    """
-
-    def _func(x):
-        return func(x, *args, **kwargs)
-
-    return df.pivot_table(column, index, aggfunc=_func)[column]
-
-
 def make_line_segments(
     x: FloatArrayLike, y: FloatArrayLike, ispath=True
 ) -> FloatArray:
@@ -896,14 +860,14 @@ def order_as_data_mapping(
 
     Parameter
     ---------
-    arg1 : pd.DataFrame | aes
+    arg1 : DataFrame | aes
         Dataframe or aes Mapping
-    arg2 : pd.DataFrame | aes
+    arg2 : DataFrame | aes
         Dataframe or aes Mapping
 
     Returns
     -------
-    data : pd.DataFrame | callable
+    data : DataFrame | callable
     mapping : aes
     """
     # Valid types for the values are:
