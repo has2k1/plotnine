@@ -14,6 +14,8 @@ from __future__ import annotations
 import datetime
 import numbers
 from collections.abc import Iterable, Mapping, Sequence
+from contextlib import contextmanager
+from contextvars import ContextVar
 from functools import cache
 from importlib.util import find_spec
 from typing import TYPE_CHECKING
@@ -85,20 +87,39 @@ def to_frame(data: Any) -> DataFrame:
     ):
         data = data.obj
 
-    df = nw.from_native(data, eager_only=True)
+    try:
+        df = nw.from_native(data, eager_only=True)
+    except TypeError:
+        # Objects that are not dataframes but can be turned into
+        # a pandas dataframe
+        if hasattr(data, "to_pandas"):
+            return to_frame(data.to_pandas())
+        raise
 
-    # pandas dataframes with a non-default index, can bring along
-    # an index with duplicates that pandas would align on. We only
-    # ever refer to rows by position.
     if is_pandas_like_dataframe(data):
-        index = data.index
-        if not (
-            type(index).__name__ == "RangeIndex"
-            and index.start == 0  # pyright: ignore[reportAttributeAccessIssue]
-            and index.step == 1  # pyright: ignore[reportAttributeAccessIssue]
-        ):
-            df = nw.from_native(data.reset_index(drop=True), eager_only=True)
+        df = _normalise_pandas(data)
     return df
+
+
+def _normalise_pandas(data: Any) -> DataFrame:
+    """
+    Make a pandas-like dataframe safe for positional row access
+
+    pandas dataframes with a non-default index can bring along
+    an index with duplicates that pandas would align on. We only
+    ever refer to rows by position. Column names that are not
+    strings are converted to strings.
+    """
+    index = data.index
+    if not (
+        type(index).__name__ == "RangeIndex"
+        and index.start == 0
+        and index.step == 1
+    ):
+        data = data.reset_index(drop=True)
+    if not all(isinstance(c, str) for c in data.columns):
+        data = data.rename(columns=str)
+    return nw.from_native(data, eager_only=True)
 
 
 def backend(df: DataFrame | Series) -> Implementation:
@@ -446,7 +467,10 @@ def concat(frames: Iterable[DataFrame]) -> DataFrame:
             aligned.append(df.with_columns(*exprs) if exprs else df)
         frames = aligned
 
-    return nw.concat(frames, how="diagonal")
+    df = nw.concat(frames, how="diagonal")
+    if df.implementation.is_pandas_like():
+        df = _normalise_pandas(df.to_native())
+    return df
 
 
 def _sort_key(value: Any) -> tuple[int, Any]:
@@ -615,16 +639,112 @@ def is_categorical(s: Series) -> bool:
     return isinstance(s.dtype, nw.Enum) or s.dtype == nw.Categorical
 
 
+# Libraries other than pandas cannot have a categorical with
+# a custom order of the categories that is not ordinal (ordered).
+# When plotnine creates such a categorical it uses an Enum, and it
+# records the categories of the Enum so that it is not taken to be
+# ordinal. The records are scoped to the building of a plot.
+_NOMINAL_ENUMS: ContextVar[set[tuple[Any, ...]]] = ContextVar(
+    "nominal_enums", default=set()
+)
+
+
+@contextmanager
+def nominal_enums_scope() -> Iterator[None]:
+    """
+    Context in which created nominal Enums are recorded
+    """
+    token = _NOMINAL_ENUMS.set(set())
+    try:
+        yield
+    finally:
+        _NOMINAL_ENUMS.reset(token)
+
+
 def is_ordinal(s: Series) -> bool:
     """
     Return True if the series is an ordered categorical
 
-    For pandas, it is a categorical with `ordered=True`. Other
-    libraries do not have the concept of an ordered categorical,
-    so an Enum, whose categories are fixed and in a meaningful
-    order, is taken to be ordinal.
+    For pandas, it is a categorical with `ordered=True`, which
+    narwhals represents as an Enum. Other libraries do not have
+    the concept of an ordered categorical, so an Enum, whose
+    categories are fixed and in a meaningful order, is taken to be
+    ordinal unless plotnine created it as a nominal categorical.
     """
-    return isinstance(s.dtype, nw.Enum)
+    dtype = s.dtype
+    return (
+        isinstance(dtype, nw.Enum)
+        and tuple(dtype.categories) not in _NOMINAL_ENUMS.get()
+    )
+
+
+def categorical(
+    values: Any,
+    categories: Sequence[Any] | None = None,
+    ordered: bool = False,
+    *,
+    name: str = "",
+    backend: Implementation,
+) -> Series:
+    """
+    Create a categorical series
+
+    Parameters
+    ----------
+    values :
+        Values of the categorical. Values that are not in the
+        categories become missing.
+    categories :
+        The categories in order. If None, they are the sorted
+        unique values.
+    ordered :
+        Whether the categorical is ordinal.
+    name :
+        Name of the series.
+    backend :
+        Library that should hold the series.
+
+    Notes
+    -----
+    For pandas, the result is a pandas categorical that can have
+    categories of any type. For other libraries, the result is an
+    Enum and the values and categories are converted to strings.
+    """
+    if isinstance(values, nw.Series) and values.implementation != backend:
+        values = values.to_list()
+
+    if categories is None:
+        s = (
+            values
+            if isinstance(values, nw.Series)
+            else series(values, backend=backend)
+        )
+        categories = levels(s)
+
+    if backend.is_pandas_like():
+        import pandas as pd
+
+        if isinstance(values, nw.Series):
+            values = values.to_native()
+        cat = pd.Categorical(values, categories=categories, ordered=ordered)
+        return series(pd.Series(cat, name=name), name, backend=backend)
+
+    if isinstance(values, nw.Series):
+        values = values.to_list()
+    elif isinstance(values, np.ndarray):
+        values = values.tolist()
+
+    str_categories = [str(c) for c in categories]
+    lookup = {c: str(c) for c in categories}
+    str_values = [
+        lookup.get(v) if v is not None and v == v else None  # noqa: PLR0124
+        for v in values
+    ]
+    if not ordered:
+        _NOMINAL_ENUMS.get().add(tuple(str_categories))
+    return series(str_values, name, backend=backend, dtype=nw.String).cast(
+        nw.Enum(str_categories)
+    )
 
 
 def to_numpy(s: Series) -> np.ndarray:
@@ -636,3 +756,131 @@ def to_numpy(s: Series) -> np.ndarray:
     if s.dtype.is_float() and s.null_count():
         s = s.fill_null(float("nan"))
     return s.to_numpy()
+
+
+def _is_native(obj: Any) -> bool:
+    if isinstance(obj, (nw.DataFrame, nw.Series)):
+        return False
+    try:
+        nw.from_native(obj, eager_only=True, allow_series=True)
+    except TypeError:
+        return False
+    return True
+
+
+def _to_nw(obj: Any) -> tuple[Any, bool]:
+    if isinstance(obj, (list, tuple)) and obj and all(map(_is_native, obj)):
+        return type(obj)(_to_nw(o)[0] for o in obj), True
+    if _is_native(obj):
+        if (pd := get_pandas()) is not None and isinstance(obj, pd.DataFrame):
+            return to_frame(obj), True
+        return nw.from_native(obj, eager_only=True, allow_series=True), True
+    return obj, False
+
+
+def _to_native(obj: Any) -> Any:
+    if isinstance(obj, (nw.DataFrame, nw.Series)):
+        return obj.to_native()
+    if isinstance(obj, (list, tuple)) and any(
+        isinstance(o, (nw.DataFrame, nw.Series)) for o in obj
+    ):
+        return type(obj)(_to_native(o) for o in obj)
+    return obj
+
+
+def native_io(func: Callable[..., Any]) -> Callable[..., Any]:
+    """
+    Let a function that works with narwhals objects accept native ones
+
+    Native dataframe & series arguments are converted to narwhals,
+    and if any argument was native, the narwhals return values are
+    converted back to native objects.
+
+    This is a transitional aid that allows the conversion of plotnine
+    to narwhals to proceed one function at a time.
+    """
+    from functools import wraps
+
+    @wraps(func)
+    def wrapper(*args: Any, **kwargs: Any) -> Any:
+        any_native = False
+        new_args = []
+        for a in args:
+            a, was_native = _to_nw(a)
+            any_native |= was_native
+            new_args.append(a)
+        for k, v in kwargs.items():
+            kwargs[k], was_native = _to_nw(v)
+            any_native |= was_native
+
+        result = func(*new_args, **kwargs)
+        return _to_native(result) if any_native else result
+
+    return wrapper
+
+
+def is_native_series(obj: Any) -> bool:
+    """
+    Return True if obj is a series of a library supported by narwhals
+    """
+    if isinstance(obj, (nw.Series, nw.DataFrame)):
+        return False
+    try:
+        nw.from_native(obj, series_only=True)
+    except TypeError:
+        return False
+    return True
+
+
+def as_series(obj: Any) -> Series | None:
+    """
+    Return obj as a narwhals series if it is a (native) series
+    """
+    if isinstance(obj, nw.Series):
+        return obj
+    if isinstance(obj, nw.DataFrame):
+        return None
+    try:
+        return nw.from_native(obj, series_only=True)
+    except TypeError:
+        return None
+
+
+def as_numpy(obj: Any) -> np.ndarray:
+    """
+    Convert a series or an array-like to a numpy array
+    """
+    if (s := as_series(obj)) is not None:
+        return to_numpy(s)
+    return np.asarray(obj)
+
+
+def _nw_dtype_kind(dtype: Any) -> str:
+    if dtype.is_float() or dtype == nw.Decimal:
+        return "f"
+    elif dtype.is_signed_integer():
+        return "i"
+    elif dtype.is_unsigned_integer():
+        return "u"
+    elif dtype == nw.Boolean:
+        return "b"
+    elif dtype in (nw.Datetime, nw.Date):
+        return "M"
+    elif dtype == nw.Duration:
+        return "m"
+    return "O"
+
+
+def dtype_kind(arr: Any) -> str:
+    """
+    Return the numpy dtype kind character of an array-like
+
+    The dtypes of series are mapped to the kind of numpy array
+    that pandas would use for them, e.g. strings and categoricals
+    are object ("O").
+    """
+    if (s := as_series(arr)) is not None:
+        return _nw_dtype_kind(s.dtype)
+    if hasattr(arr, "dtype") and hasattr(arr.dtype, "kind"):
+        return arr.dtype.kind
+    return np.asarray(arr).dtype.kind

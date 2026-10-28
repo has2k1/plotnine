@@ -209,3 +209,41 @@ def test_levels_and_kinds():
     assert F.levels(pldf["c"]) == ["a", "b"]
     assert F.is_ordinal(pldf["e"])
     assert not F.is_ordinal(pldf["c"])
+
+
+def test_categorical_nominal_enum():
+    with F.nominal_enums_scope():
+        s = F.categorical(
+            [3, 1, None], [3, 1, 2], backend=F.Implementation.POLARS
+        )
+        assert s.dtype == nw.Enum(["3", "1", "2"])
+        assert s.to_list() == ["3", "1", None]
+        assert F.is_categorical(s)
+        assert not F.is_ordinal(s)
+
+        o = F.categorical(
+            ["b", "a"],
+            ["b", "a"],
+            ordered=True,
+            backend=F.Implementation.POLARS,
+        )
+        assert F.is_ordinal(o)
+
+    # The record does not leak out of the scope
+    with F.nominal_enums_scope():
+        assert F.is_ordinal(s)
+
+
+def test_categorical_pandas():
+    s = F.categorical([3, 1, None], [3, 1, 2], backend=F.Implementation.PANDAS)
+    cat = s.to_native()
+    assert list(cat.cat.categories) == [3, 1, 2]
+    assert not cat.cat.ordered
+    assert not F.is_ordinal(s)
+    assert F.levels(s) == [3, 1, 2]
+
+    s = F.categorical(
+        ["b", "a"], ordered=True, backend=F.Implementation.PANDAS
+    )
+    assert F.is_ordinal(s)
+    assert F.levels(s) == ["a", "b"]
