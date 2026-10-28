@@ -363,8 +363,7 @@ def frame(
         cols.append(series(value, name, backend=backend))
 
     if not cols:
-        ns = backend.to_native_namespace()
-        return nw.from_native(ns.DataFrame(), eager_only=True)
+        return nw.from_dict({}, backend=backend)
     # Adding columns to a frame is safer than nw.from_dict, which
     # cannot handle object columns in polars
     return cols[0].to_frame().with_columns(*cols[1:])
@@ -849,11 +848,17 @@ def categorical(
         lookup.get(v) if v is not None and v == v else None  # noqa: PLR0124
         for v in values
     ]
+    s = series(str_values, name, backend=backend, dtype=nw.String)
+    try:
+        s = s.cast(nw.Enum(str_categories))
+    except NotImplementedError:
+        # e.g. pyarrow, whose categoricals (dictionaries) do not
+        # keep the order of the categories
+        return s.cast(nw.Categorical)
+
     if not ordered and (nominal := _NOMINAL_ENUMS.get()) is not None:
         nominal.add(tuple(str_categories))
-    return series(str_values, name, backend=backend, dtype=nw.String).cast(
-        nw.Enum(str_categories)
-    )
+    return s
 
 
 def to_numpy(s: Series) -> np.ndarray:
