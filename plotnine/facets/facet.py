@@ -517,7 +517,7 @@ def add_missing_facets(
     missing_facets = list(set(vars) - set(facet_vals.columns.tolist()))
     if missing_facets:
         to_add = layout.loc[:, missing_facets].drop_duplicates()
-        to_add.reset_index(drop=True, inplace=True)
+        to_add = to_add.reset_index(drop=True)
 
         # a point for each facet, [0, 1, ..., n-1, 0, 1, ..., n-1, ...]
         data_rep = np.tile(np.arange(len(data)), len(to_add))

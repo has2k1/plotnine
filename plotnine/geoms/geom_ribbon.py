@@ -99,7 +99,7 @@ class geom_ribbon(geom):
             raise PlotnineError(msg)
 
         for _, udata in data.groupby(units, dropna=False):
-            udata.reset_index(inplace=True, drop=True)
+            udata = udata.reset_index(drop=True)
             geom_ribbon.draw_unit(udata, panel_params, coord, ax, params)
 
     @staticmethod

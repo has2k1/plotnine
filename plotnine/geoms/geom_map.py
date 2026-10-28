@@ -95,14 +95,13 @@ class geom_map(geom):
                 index=data.index,
             )
         else:
-            bounds.rename(
+            bounds = bounds.rename(
                 columns={
                     "minx": "xmin",
                     "maxx": "xmax",
                     "miny": "ymin",
                     "maxy": "ymax",
                 },
-                inplace=True,
             )
 
         data = pd.concat([data, bounds], axis=1)
@@ -146,7 +145,7 @@ class geom_map(geom):
             data["x"] = arr[:, 0]
             data["y"] = arr[:, 1]
             for _, gdata in data.groupby("group"):
-                gdata.reset_index(inplace=True, drop=True)
+                gdata = gdata.reset_index(drop=True)
                 geom_point.draw_group(gdata, panel_params, coord, ax, params)
         elif geom_type == "MultiPoint":
             # Where n is the length of the dataframe (no. of multipoints),
