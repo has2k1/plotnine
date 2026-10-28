@@ -19,6 +19,7 @@ from typing import (
 from warnings import warn
 
 from ._utils import (
+    frame,
     from_inches,
     get_save_format,
     is_data_like,
@@ -50,7 +51,6 @@ from .themes.theme import theme, theme_get
 if TYPE_CHECKING:
     from typing import Protocol
 
-    import pandas as pd
     from matplotlib.axes import Axes
     from matplotlib.figure import Figure
     from typing_extensions import Self
@@ -882,7 +882,7 @@ class ggplot:
         with plot_context(self).rc_context:
             sv.figure.savefig(**sv.kwargs)
 
-    def layer_data(self, i: int = 0) -> pd.DataFrame:
+    def layer_data(self, i: int = 0) -> Any:
         """
         Return the data used to draw a specific plot layer
 
@@ -893,11 +893,13 @@ class ggplot:
 
         Returns
         -------
-        pd.DataFrame
+        :
             Data used by the specified layer after all transformations,
             statistics, and position adjustments have been applied.
+            It is a dataframe of the same library (e.g. pandas or
+            polars) as the data of the layer.
         """
-        return self.build().layers.data[i]
+        return frame.to_frame(self.build().layers[i].data).to_native()
 
 
 ggsave = ggplot.save

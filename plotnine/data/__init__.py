@@ -2,10 +2,14 @@
 Plotnine Data
 """
 
-from pathlib import Path
+from __future__ import annotations
 
-import pandas as pd
-from pandas.api.types import CategoricalDtype
+from importlib.util import find_spec
+from pathlib import Path
+from typing import TYPE_CHECKING, Literal
+
+if TYPE_CHECKING:
+    from typing import Any
 
 __all__ = (
     "anscombe_quartet",
@@ -26,67 +30,39 @@ __all__ = (
     "presidential",
     "seals",
     "txhousing",
+    "load_dataset",
 )
 
 DATA_DIR = Path(__file__).parent
 
-mtcars = pd.read_csv(DATA_DIR / "mtcars.csv")
-meat = pd.read_csv(DATA_DIR / "meat.csv", parse_dates=[0])
-pageviews = pd.read_csv(DATA_DIR / "pageviews.csv", parse_dates=[0])
-huron = pd.read_csv(DATA_DIR / "huron.csv")
-seals = pd.read_csv(DATA_DIR / "seals.csv")
-economics = pd.read_csv(DATA_DIR / "economics.csv", parse_dates=[0])
-economics_long = pd.read_csv(DATA_DIR / "economics_long.csv", parse_dates=[0])
-presidential = pd.read_csv(DATA_DIR / "presidential.csv", parse_dates=[1, 2])
-txhousing = pd.read_csv(DATA_DIR / "txhousing.csv")
-penguins = pd.read_csv(DATA_DIR / "penguins.csv")
-luv_colours = pd.read_csv(DATA_DIR / "luv_colours.csv")
-faithfuld = pd.read_csv(DATA_DIR / "faithfuld.csv")
-faithful = pd.read_csv(DATA_DIR / "faithful.csv")
-anscombe_quartet = pd.read_csv(DATA_DIR / "anscombe-quartet.csv")
+# The documentation of each dataset (filled in at the end of the module)
+_DOCS: dict[str, str | None] = {}
 
-# For convenience to the user, we set some columns in these
-# dataframes to categoricals.
-diamonds = pd.read_csv(DATA_DIR / "diamonds.csv")
-midwest = pd.read_csv(DATA_DIR / "midwest.csv")
-mpg = pd.read_csv(DATA_DIR / "mpg.csv")
-msleep = pd.read_csv(DATA_DIR / "msleep.csv")
-
-
-# add factors
-def _ordered_categories(df, categories):
-    """
-    Make the columns in df categorical
-
-    Parameters
-    ----------
-    df : pd.Dataframe
-        Dataframe
-    categories: dict
-        Of the form {str: list},
-        where the key the column name and the value is
-        the ordered category list
-    """
-    for col, cats in categories.items():
-        df[col] = df[col].astype(CategoricalDtype(cats, ordered=True))
-    return df
-
-
-def _unordered_categories(df, columns):
-    """Make the columns in df categorical"""
-    for col in columns:
-        df[col] = df[col].astype(CategoricalDtype(ordered=False))
-    return df
-
-
-def _process_categories():
-    """
-    Set columns in some of the dataframes to categoricals
-    """
-    global diamonds, penguins
-    diamonds = _ordered_categories(
-        diamonds,
-        {
+# For each dataset, the file and the columns that have special types.
+#   - dates: columns with dates
+#   - ordered: categoricals with ordered categories
+#   - unordered: categoricals whose categories are the sorted values
+_DATASETS: dict[str, dict[str, Any]] = {
+    "mtcars": {"file": "mtcars.csv"},
+    "meat": {"file": "meat.csv", "dates": ["date"]},
+    "pageviews": {"file": "pageviews.csv", "dates": ["date_hour"]},
+    "huron": {"file": "huron.csv"},
+    "seals": {"file": "seals.csv"},
+    "economics": {"file": "economics.csv", "dates": ["date"]},
+    "economics_long": {"file": "economics_long.csv", "dates": ["date"]},
+    "presidential": {"file": "presidential.csv", "dates": ["start", "end"]},
+    "txhousing": {"file": "txhousing.csv"},
+    "penguins": {
+        "file": "penguins.csv",
+        "unordered": ["species", "island", "sex"],
+    },
+    "luv_colours": {"file": "luv_colours.csv"},
+    "faithfuld": {"file": "faithfuld.csv"},
+    "faithful": {"file": "faithful.csv"},
+    "anscombe_quartet": {"file": "anscombe-quartet.csv"},
+    "diamonds": {
+        "file": "diamonds.csv",
+        "ordered": {
             "cut": ["Fair", "Good", "Very Good", "Premium", "Ideal"],
             "clarity": [
                 "I1",
@@ -100,11 +76,121 @@ def _process_categories():
             ],
             "color": list("DEFGHIJ"),
         },
+    },
+    "midwest": {"file": "midwest.csv"},
+    "mpg": {"file": "mpg.csv"},
+    "msleep": {"file": "msleep.csv"},
+}
+
+
+def _default_backend() -> Literal["pandas", "polars"]:
+    """
+    Library of the datasets: pandas if it is installed, else polars
+    """
+    if find_spec("pandas"):
+        return "pandas"
+    if find_spec("polars"):
+        return "polars"
+    raise ImportError("The plotnine datasets require either pandas or polars.")
+
+
+def load_dataset(
+    name: str, backend: Literal["pandas", "polars"] | None = None
+) -> Any:
+    """
+    Load one of the datasets that come with plotnine
+
+    Parameters
+    ----------
+    name :
+        Name of the dataset, e.g. `"mtcars"`.
+    backend :
+        The dataframe library to load the dataset with. If `None`,
+        it is pandas if pandas is installed, otherwise polars.
+
+    Returns
+    -------
+    :
+        A dataframe of the `backend` library.
+
+    Examples
+    --------
+    >>> from plotnine.data import load_dataset
+    >>> mpg = load_dataset("mpg", backend="polars")
+    """
+    try:
+        spec = _DATASETS[name]
+    except KeyError as err:
+        raise ValueError(
+            f"Unknown dataset {name!r}. Choose one of {sorted(_DATASETS)}."
+        ) from err
+
+    if backend is None:
+        backend = _default_backend()
+
+    if backend == "pandas":
+        df = _read_pandas(spec)
+    elif backend == "polars":
+        df = _read_polars(spec)
+    else:
+        raise ValueError(
+            f"Unknown backend {backend!r}, use 'pandas' or 'polars'."
+        )
+
+    df.__doc__ = _DOCS.get(name)
+    return df
+
+
+def _read_pandas(spec: dict[str, Any]) -> Any:
+    import pandas as pd
+
+    df = pd.read_csv(DATA_DIR / spec["file"], parse_dates=spec.get("dates"))
+    for col, cats in spec.get("ordered", {}).items():
+        df[col] = df[col].astype(pd.CategoricalDtype(cats, ordered=True))
+    for col in spec.get("unordered", []):
+        df[col] = df[col].astype(pd.CategoricalDtype(ordered=False))
+    return df
+
+
+def _read_polars(spec: dict[str, Any]) -> Any:
+    import polars as pl
+
+    df = pl.read_csv(
+        DATA_DIR / spec["file"],
+        null_values=["NA"],
+        infer_schema_length=None,
     )
-    penguins = _unordered_categories(penguins, ["species", "island", "sex"])
+    return df.with_columns(
+        *[pl.col(col).str.to_datetime() for col in spec.get("dates", [])],
+        *[
+            pl.col(col).cast(pl.Enum(cats))
+            for col, cats in spec.get("ordered", {}).items()
+        ],
+        *[
+            pl.col(col).cast(pl.Categorical)
+            for col in spec.get("unordered", [])
+        ],
+    )
 
 
-_process_categories()
+mtcars = load_dataset("mtcars")
+meat = load_dataset("meat")
+pageviews = load_dataset("pageviews")
+huron = load_dataset("huron")
+seals = load_dataset("seals")
+economics = load_dataset("economics")
+economics_long = load_dataset("economics_long")
+presidential = load_dataset("presidential")
+txhousing = load_dataset("txhousing")
+penguins = load_dataset("penguins")
+luv_colours = load_dataset("luv_colours")
+faithfuld = load_dataset("faithfuld")
+faithful = load_dataset("faithful")
+anscombe_quartet = load_dataset("anscombe_quartet")
+diamonds = load_dataset("diamonds")
+midwest = load_dataset("midwest")
+mpg = load_dataset("mpg")
+msleep = load_dataset("msleep")
 
 
 # Documentation
@@ -649,3 +735,6 @@ A dataframe with 44 rows and 3 variables
 Anscombe, F. J. (1973). "Graphs in Statistical Analysis".
 American Statistician. 27 (1): 17–21.
 """
+
+
+_DOCS.update({name: globals()[name].__doc__ for name in _DATASETS})

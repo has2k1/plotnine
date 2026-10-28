@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from typing import (
+    TYPE_CHECKING,
     Any,
     Callable,
     Literal,
@@ -12,9 +13,12 @@ from typing import (
 )
 
 import numpy as np
-import pandas as pd
 from numpy.typing import NDArray
 from typing_extensions import TypeAlias  # noqa: TCH002
+
+if TYPE_CHECKING:
+    import narwhals as nw
+    from narwhals.typing import IntoDataFrame, IntoSeries
 
 
 class DataFrameConvertible(Protocol):
@@ -22,7 +26,7 @@ class DataFrameConvertible(Protocol):
     Object that can be converted to a DataFrame
     """
 
-    def to_pandas(self) -> pd.DataFrame:
+    def to_pandas(self) -> Any:
         """
         Convert to pandas dataframe
 
@@ -41,33 +45,30 @@ FloatArray: TypeAlias = NDArray[np.floating]
 IntArray: TypeAlias = NDArray[np.int64]
 StrArray: TypeAlias = NDArray[np.str_]
 
-# Series
-AnySeries: TypeAlias = pd.Series[Any]
-IntSeries: TypeAlias = pd.Series[int]
-FloatSeries: TypeAlias = pd.Series[float]
+# Series of any dataframe library supported by narwhals
+AnySeries: TypeAlias = "IntoSeries | nw.Series[Any]"
+IntSeries: TypeAlias = AnySeries
+FloatSeries: TypeAlias = AnySeries
 
 # ArrayLikes
-AnyArrayLike: TypeAlias = AnyArray | pd.Series[Any] | Sequence[Any]
-IntArrayLike: TypeAlias = IntArray | IntSeries | Sequence[int]
-FloatArrayLike: TypeAlias = FloatArray | FloatSeries | Sequence[float]
+AnyArrayLike: TypeAlias = "AnyArray | AnySeries | Sequence[Any]"
+IntArrayLike: TypeAlias = "IntArray | IntSeries | Sequence[int]"
+FloatArrayLike: TypeAlias = "FloatArray | FloatSeries | Sequence[float]"
 
-# Input data can be a DataFrame, a DataFrame factory or things that
-# are convertible to DataFrames.
+# Input data can be a dataframe of any library supported by narwhals
+# (e.g. pandas and polars), a dataframe factory or things that are
+# convertible to dataframes.
 # `Data` is mostly used internally and `DataLike` is the input type
 # before automatic conversion.
-# Input data can actually also contain DataFrameGroupBy which is
-# specially handled, but pandas doesn't expose that data type in
-# their type stubs and instead treats it the same as a DataFrame
-# (df.groupby() returns a DataFrame in the stubs).
-Data: TypeAlias = pd.DataFrame | Callable[[pd.DataFrame], pd.DataFrame]
-DataLike: TypeAlias = Data | DataFrameConvertible
+# Input data can also be a pandas DataFrameGroupBy which is specially
+# handled.
+Data: TypeAlias = "IntoDataFrame | Callable[[Any], IntoDataFrame]"
+DataLike: TypeAlias = "Data | DataFrameConvertible"
 
-LayerData: TypeAlias = pd.DataFrame | Callable[[pd.DataFrame], pd.DataFrame]
-LayerDataLike: TypeAlias = LayerData | DataFrameConvertible
+LayerData: TypeAlias = "IntoDataFrame | Callable[[Any], IntoDataFrame]"
+LayerDataLike: TypeAlias = "LayerData | DataFrameConvertible"
 ColorLike: TypeAlias = str
-ColorsLike: TypeAlias = (
-    ColorLike | list[ColorLike] | pd.Series[ColorLike] | StrArray
-)
+ColorsLike: TypeAlias = "ColorLike | list[ColorLike] | AnySeries | StrArray"
 
 # NumPy random-number generators accepted by plotnine
 RandomGenerator: TypeAlias = np.random.RandomState | np.random.Generator

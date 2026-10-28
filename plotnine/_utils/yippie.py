@@ -2,8 +2,6 @@
 Functions/class to quickly create plots for development and testing
 """
 
-import pandas as pd
-
 from plotnine import (
     aes,
     element_blank,
@@ -19,6 +17,7 @@ from plotnine import (
     labs,
     theme,
 )
+from plotnine._utils import frame
 
 __all__ = ("geom", "legend", "plot", "rotate", "tag")
 
@@ -56,13 +55,14 @@ class _Geom:
     Create some simple geoms
     """
 
-    data = pd.DataFrame(
+    data = frame.frame(
         {
             "cat": ["a", "b", "c", "d"],
             "cat2": ["r", "r", "s", "s"],
             "value": [1, 2, 3, 4],
-        }
-    )
+        },
+        backend=frame.default_backend(),
+    ).to_native()
 
     @property
     def points(self):

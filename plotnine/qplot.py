@@ -5,9 +5,8 @@ from contextlib import suppress
 from warnings import warn
 
 import numpy as np
-import pandas as pd
 
-from ._utils import array_kind
+from ._utils import array_kind, frame
 from ._utils.registry import Registry
 from .exceptions import PlotnineError, PlotnineWarning
 from .facets import facet_grid, facet_null, facet_wrap
@@ -16,6 +15,7 @@ from .facets.facet_wrap import parse_wrap_facets_old
 from .ggplot import ggplot
 from .labels import labs
 from .mapping.aes import ALL_AESTHETICS, SCALED_AESTHETICS, aes
+from .mapping.evaluation import EVAL_ENVIRONMENT, eval_string
 from .scales import lims, scale_x_log10, scale_y_log10
 from .themes import theme
 
@@ -123,7 +123,7 @@ def qplot(
         geom = list(geom)
 
     if data is None:
-        data = pd.DataFrame()
+        data = frame.frame(backend=frame.default_backend()).to_native()
 
     # Work out plot data, and modify aesthetics, if necessary
     def replace_auto(lst: Sequence[str], str2: str) -> Sequence[str]:
@@ -139,13 +139,12 @@ def qplot(
             # If x is discrete we choose geom_bar &
             # geom_histogram otherwise. But we need to
             # evaluate the mapping to find out the dtype
-            env = environment.with_outer_namespace({"factor": pd.Categorical})
+            env = environment.with_outer_namespace(EVAL_ENVIRONMENT)
 
             if isinstance(aesthetics["x"], str):
                 try:
-                    x = env.eval(
-                        aesthetics["x"],
-                        inner_namespace=data,  # type: ignore
+                    x = eval_string(
+                        aesthetics["x"], frame.to_frame(data), env, "x"
                     )
                 except Exception as e:
                     msg = f"Could not evaluate aesthetic 'x={aesthetics['x']}'"
@@ -212,7 +211,7 @@ def qplot(
         params = {ae: kwargs[ae] for ae in recognized}
         p += geom_klass(**params)
 
-    # pd.Series objects have name attributes. In a dataframe, the
+    # Series objects have name attributes. In a dataframe, the
     # series have the name of the column.
     labels = {}
     for ae in SCALED_AESTHETICS & kwargs.keys():

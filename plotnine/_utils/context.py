@@ -1,15 +1,18 @@
 from __future__ import annotations
 
+from contextlib import AbstractContextManager, nullcontext
 from copy import copy, deepcopy
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
-import pandas as pd
+from narwhals.dependencies import get_pandas
 from packaging.version import Version
 
 from ..session import set_last_plot
 
 if TYPE_CHECKING:
+    from typing import Any
+
     from typing_extensions import Self
 
     from plotnine import ggplot
@@ -17,7 +20,17 @@ if TYPE_CHECKING:
     from plotnine._mpl.gridspec import p9GridSpec
     from plotnine.composition import Compose
 
-PANDAS_LT_3 = Version(pd.__version__) < Version("3.0")
+
+def _pandas_copy_on_write() -> AbstractContextManager[Any]:
+    """
+    Context in which pandas<3 uses copy-on-write
+
+    Only if pandas is in use, i.e. it has been imported.
+    """
+    pd = get_pandas()
+    if pd is not None and Version(pd.__version__) < Version("3.0"):
+        return pd.option_context("mode.copy_on_write", True)
+    return nullcontext()
 
 
 def reopen(fig):
@@ -55,11 +68,7 @@ class plot_context:
 
         # Contexts
         self.rc_context = mpl.rc_context(self.plot.theme.rcParams)
-        if PANDAS_LT_3:
-            self.pd_option_context = pd.option_context(
-                "mode.copy_on_write",
-                True,
-            )
+        self.pd_option_context = _pandas_copy_on_write()
 
     def __enter__(self) -> Self:
         """
@@ -68,8 +77,7 @@ class plot_context:
 
         self._last_plot = deepcopy(self.plot)
         self.rc_context.__enter__()
-        if PANDAS_LT_3:
-            self.pd_option_context.__enter__()
+        self.pd_option_context.__enter__()
 
         return self
 
@@ -91,8 +99,7 @@ class plot_context:
                 plt.close(self.plot.figure)
 
         self.rc_context.__exit__(exc_type, exc_value, exc_traceback)
-        if PANDAS_LT_3:
-            self.pd_option_context.__exit__(exc_type, exc_value, exc_traceback)
+        self.pd_option_context.__exit__(exc_type, exc_value, exc_traceback)
 
 
 @dataclass
