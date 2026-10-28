@@ -8,16 +8,19 @@ from dataclasses import fields
 from functools import cached_property
 from typing import TYPE_CHECKING, Any, Dict
 
+import narwhals as nw
 import numpy as np
-import pandas as pd
 from mizani._colors.utils import is_color_tuple
 
+from .._utils import frame
 from ..iapi import labels_view
 from ._asis import is_asis, is_literal_expression
 from .evaluation import after_stat, stage
 
 if TYPE_CHECKING:
     from typing import Protocol, TypeVar
+
+    from plotnine._utils.frame import DataFrame
 
     class ColorOrColour(Protocol):
         color: Any
@@ -524,8 +527,10 @@ def make_labels(mapping: dict[str, Any] | aes) -> labels_view:
             return None
         elif isinstance(value, str):
             return value
-        elif isinstance(value, pd.Series):
-            return value.name  # pyright: ignore
+        elif isinstance(value, nw.Expr):
+            return _expr_label(value)
+        elif (s := frame.as_series(value)) is not None:
+            return s.name or None
         elif not isinstance(value, Iterable):
             return str(value)
         elif isinstance(value, Sequence) and len(value) == 1:
@@ -661,7 +666,22 @@ def is_shape_points(obj: Any) -> bool:
         return False
 
 
-def has_groups(data: pd.DataFrame) -> bool:
+def _expr_label(expr: nw.Expr) -> str | None:
+    """
+    Return the name of the column that an expression creates
+
+    Like polars, the name is the alias of the expression or the
+    name of the first column in it.
+    """
+    text = repr(expr)
+    if m := re.search(r"\.alias\(name=(.+)\)$", text):
+        return m.group(1)
+    if m := re.search(r"col\((.+?)\)", text):
+        return m.group(1)
+    return None
+
+
+def has_groups(data: DataFrame) -> bool:
     """
     Check if data is grouped
 
@@ -677,4 +697,4 @@ def has_groups(data: pd.DataFrame) -> bool:
     """
     # If any row in the group column is equal to NO_GROUP, then
     # the data all of them are and the data has no groups
-    return data["group"].iloc[0] != NO_GROUP
+    return frame.as_series(data["group"]).item(0) != NO_GROUP
