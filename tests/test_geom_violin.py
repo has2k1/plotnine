@@ -152,3 +152,10 @@ def test_quantile_aesthetics():
         quantile_linetype=(0, (4, 4, 1, 4)),
     )
     assert p == "quantile_aesthetics"
+
+
+def test_violin_without_x():
+    # stat_ydensity adds an x when there is none
+    df = pd.DataFrame({"y": [1, 2, 2, 3, 3, 3, 4, 4, 5]})
+    p = ggplot(df, aes(y="y")) + geom_violin()
+    p.draw_test()
