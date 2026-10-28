@@ -170,32 +170,32 @@ def _infer_object_values(values: Any) -> IntoDType | None:
 
     Returns None if the backend should do the inference.
     """
-    has_str, has_other, has_value = False, False, False
-    for v in values:
-        has_value = has_value or v is not None
-        if v is None:
-            continue
-        elif isinstance(v, str):
-            has_str = True
-        elif isinstance(v, float) and np.isnan(v):
-            continue
-        elif isinstance(
-            v,
-            (
-                numbers.Number,
-                np.generic,
-                datetime.date,
-                datetime.timedelta,
-            ),
+    types = set(map(type, values))
+    types.discard(type(None))
+    if not types:
+        return _ALL_MISSING if len(values) else None
+
+    strings = {t for t in types if issubclass(t, str)}
+    others = types - strings
+    if strings:
+        if not others:
+            return nw.String
+        # Strings with NaN for the missing values
+        if all(issubclass(t, (float, np.floating)) for t in others) and all(
+            np.isnan(v) for v in values if isinstance(v, (float, np.floating))
         ):
-            has_other = True
-        else:
-            return nw.Object
-        if has_str and has_other:
-            return nw.Object
-    if len(values) and not has_value:
-        return _ALL_MISSING
-    return nw.String if has_str else None
+            return nw.String
+        return nw.Object
+
+    scalar_types = (
+        numbers.Number,
+        np.generic,
+        datetime.date,
+        datetime.timedelta,
+    )
+    if all(issubclass(t, scalar_types) for t in others):
+        return None
+    return nw.Object
 
 
 # Values that are all None. They are kept as object values in pandas
@@ -398,11 +398,28 @@ def assign(df: DataFrame, **columns: Any) -> DataFrame:
     for name, value in columns.items():
         if isinstance(value, nw.Expr):
             exprs.append(value.alias(name))
+        elif (dtype := _literal_dtype(value)) is not None:
+            exprs.append(nw.lit(value, dtype).alias(name))
         elif _is_scalar(value):
             exprs.append(series([value] * len(df), name, backend=impl))
         else:
             exprs.append(series(value, name, backend=impl))
     return df.with_columns(*exprs)
+
+
+def _literal_dtype(value: Any) -> Any:
+    """
+    The dtype for a scalar that can be a narwhals literal, else None
+    """
+    if isinstance(value, bool):
+        return nw.Boolean
+    elif isinstance(value, (int, np.integer)):
+        return nw.Int64
+    elif isinstance(value, (float, np.floating)):
+        return nw.Float64
+    elif isinstance(value, str):
+        return nw.String
+    return None
 
 
 def _numeric_rank(dtype: Any) -> int:
