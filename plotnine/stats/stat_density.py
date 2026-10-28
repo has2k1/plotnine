@@ -166,7 +166,7 @@ def compute_density(x, weight, range, params, *, backend=None):
     The dataframe is of the library `backend`. If None, it is that
     of `x` if `x` is a series, otherwise it is the default library.
     """
-    import statsmodels.api as sm
+    from ._kde import KDEUnivariate
 
     if backend is None:
         backend = frame.backend_of(x)
@@ -208,7 +208,7 @@ def compute_density(x, weight, range, params, *, backend=None):
     if bw == "nrd0":
         bw = nrd0(x)
 
-    kde = sm.nonparametric.KDEUnivariate(x)
+    kde = KDEUnivariate(x)
     kde.fit(
         kernel=kernel,
         bw=bw,  # type: ignore
@@ -230,28 +230,11 @@ def compute_density(x, weight, range, params, *, backend=None):
         # Evaluating values beyond the ptp range helps us calculate a
         # boundary corrections. So we widen the range over which we will
         # evaluate, so that it contains all points supported by the grid.
-        x2 = np.linspace(
-            kde.support[0],  # pyright: ignore
-            kde.support[-1],  # pyright: ignore
-            params["n"],
-        )
+        x2 = np.linspace(kde.support[0], kde.support[-1], params["n"])
     else:
         x2 = np.linspace(range[0], range[1], params["n"])
 
-    try:
-        y = kde.evaluate(x2)
-        if np.isscalar(y) and np.isnan(y):
-            raise ValueError("kde.evaluate returned nan")
-    except ValueError:
-        y = []
-        for _x in x2:
-            result = kde.evaluate(_x)
-            if isinstance(result, (float, int)):
-                y.append(result)
-            else:
-                y.append(result[0])
-
-    y = np.asarray(y)
+    y = kde.evaluate(x2)
 
     # Evaluations outside the kernel domain return np.nan,
     # these values and corresponding x2s are dropped.

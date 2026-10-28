@@ -129,6 +129,39 @@ PLOTS = {
     "empty": """
         ggplot() + geom_blank() + xlim(0, 1)
     """,
+    "density": """
+        ggplot(mpg, aes("hwy", fill="drv"))
+        + geom_density(alpha=0.5)
+        + geom_density(kernel="epanechnikov", bounds=(10, 50))
+    """,
+    "violin": """
+        ggplot(mpg, aes("drv", "hwy"))
+        + geom_violin(draw_quantiles=[0.25, 0.5, 0.75])
+        + geom_sina(random_state=1)
+    """,
+    "beeswarm": """
+        ggplot(mpg, aes("drv", "hwy")) + geom_beeswarm()
+    """,
+    "smooth": """
+        ggplot(mpg, aes("displ", "hwy"))
+        + geom_point()
+        + geom_smooth(method="lm")
+        + geom_smooth(method="mavg", method_args={"window": 10})
+    """,
+    "smooth_glm": """
+        ggplot(diamonds, aes("carat", "price")) + geom_smooth()
+    """,
+    "density_2d": """
+        ggplot(faithfuld.head(400), aes("waiting", "eruptions"))
+        + geom_density_2d()
+        + geom_pointdensity()
+    """,
+    "ecdf_qq": """
+        ggplot(mpg, aes(sample="hwy"))
+        + stat_ecdf(aes(x="hwy"), inherit_aes=False)
+        + geom_qq()
+        + geom_qq_line()
+    """,
 }
 
 
@@ -147,6 +180,27 @@ def test_plot(name):
         p = ({PLOTS[name].strip()})
         p.save(BytesIO(), format="png", verbose=False)
         assert "pandas" not in sys.modules
+        """
+    )
+    assert result.returncode == 0, result.stderr
+
+
+def test_statsmodels_method_has_a_helpful_error():
+    result = run_without_pandas(
+        """
+        from io import BytesIO
+
+        from plotnine import *
+        from plotnine.data import mpg
+        from plotnine.exceptions import PlotnineError
+
+        p = ggplot(mpg, aes("displ", "hwy")) + geom_smooth(method="rlm")
+        try:
+            p.save(BytesIO(), format="png", verbose=False)
+        except PlotnineError as err:
+            assert "requires statsmodels" in str(err)
+        else:
+            raise AssertionError("Expected an error")
         """
     )
     assert result.returncode == 0, result.stderr

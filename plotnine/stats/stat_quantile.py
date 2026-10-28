@@ -4,7 +4,7 @@ import numpy as np
 
 from .._utils import frame
 from ..doctools import document
-from ..exceptions import PlotnineWarning
+from ..exceptions import PlotnineError, PlotnineWarning
 from .stat import stat
 
 
@@ -82,7 +82,14 @@ def quant_pred(q, data, params):
     """
     Quantile precitions
     """
-    import statsmodels.formula.api as smf
+    try:
+        import statsmodels.formula.api as smf
+    except ImportError as err:
+        msg = (
+            "stat_quantile requires statsmodels (which requires pandas). "
+            "Install them to use stat_quantile."
+        )
+        raise PlotnineError(msg) from err
 
     # statsmodels formulas can work with a dict of arrays, so the
     # data does not have to be in a pandas dataframe.

@@ -8,6 +8,7 @@ import numpy as np
 
 from .._utils import frame, get_valid_kwargs
 from ..exceptions import PlotnineError, PlotnineWarning
+from ._ols import add_constant, fit_least_squares
 from .stat import as_frame_of
 
 if TYPE_CHECKING:
@@ -83,29 +84,29 @@ def lm(data, xseq, params) -> DataFrame:
     """
     Fit OLS / WLS if data has weight
     """
-    import statsmodels.api as sm
-
     if params["formula"]:
         return lm_formula(data, xseq, params)
 
     x, y, weights = _xyw(data)
-    X = sm.add_constant(x)
-    Xseq = sm.add_constant(xseq)
+    if weights is not None and np.any(weights < 0):
+        raise ValueError("All weights must be greater than zero.")
 
-    if weights is None:
+    X = add_constant(x)
+    Xseq = add_constant(xseq)
+
+    if params["method_args"]:
+        # Arguments for the statsmodels model
+        sm = _import_statsmodels("lm", "with method_args")
+        klass = sm.OLS if weights is None else sm.WLS
         init_kwargs, fit_kwargs = separate_method_kwargs(
-            params["method_args"], sm.OLS, sm.OLS.fit
+            params["method_args"], klass, klass.fit
         )
-        model = sm.OLS(y, X, **init_kwargs)
+        if weights is not None:
+            init_kwargs["weights"] = weights
+        results = klass(y, X, **init_kwargs).fit(**fit_kwargs)
     else:
-        if np.any(weights < 0):
-            raise ValueError("All weights must be greater than zero.")
-        init_kwargs, fit_kwargs = separate_method_kwargs(
-            params["method_args"], sm.WLS, sm.WLS.fit
-        )
-        model = sm.WLS(y, X, weights=weights, **init_kwargs)
+        results = fit_least_squares(y, X, weights)
 
-    results = model.fit(**fit_kwargs)
     res = {"x": xseq, "y": results.predict(Xseq)}
 
     if params["se"]:
@@ -122,7 +123,7 @@ def lm_formula(data, xseq, params) -> DataFrame:
     """
     Fit OLS / WLS using a formula
     """
-    import statsmodels.api as sm
+    sm = _import_statsmodels("lm")
     import statsmodels.formula.api as smf
 
     eval_env = params["environment"].to_patsy_env()
@@ -167,7 +168,7 @@ def rlm(data, xseq, params) -> DataFrame:
     """
     Fit RLM
     """
-    import statsmodels.api as sm
+    sm = _import_statsmodels("rlm")
 
     if params["formula"]:
         return rlm_formula(data, xseq, params)
@@ -195,7 +196,7 @@ def rlm_formula(data, xseq, params) -> DataFrame:
     """
     Fit RLM using a formula
     """
-    import statsmodels.api as sm
+    sm = _import_statsmodels("rlm")
     import statsmodels.formula.api as smf
 
     eval_env = params["environment"].to_patsy_env()
@@ -220,7 +221,7 @@ def gls(data, xseq, params) -> DataFrame:
     """
     Fit GLS
     """
-    import statsmodels.api as sm
+    sm = _import_statsmodels("gls")
 
     if params["formula"]:
         return gls_formula(data, xseq, params)
@@ -250,7 +251,7 @@ def gls_formula(data, xseq, params):
     """
     Fit GLL using a formula
     """
-    import statsmodels.api as sm
+    sm = _import_statsmodels("gls")
     import statsmodels.formula.api as smf
 
     eval_env = params["environment"].to_patsy_env()
@@ -281,15 +282,30 @@ def glm(data, xseq, params) -> DataFrame:
     """
     Fit GLM
     """
-    import statsmodels.api as sm
-
     if params["formula"]:
         return glm_formula(data, xseq, params)
 
     x, y, _ = _xyw(data)
-    X = sm.add_constant(x)
-    Xseq = sm.add_constant(xseq)
+    X = add_constant(x)
+    Xseq = add_constant(xseq)
 
+    if not params["method_args"]:
+        # With the default gaussian family and identity link, the
+        # GLM is a linear model, but the confidence interval uses the
+        # normal distribution.
+        import scipy.stats as stats
+
+        results = fit_least_squares(y, X)
+        res = {"x": xseq, "y": results.predict(Xseq)}
+        if params["se"]:
+            cov = results.cov_params()
+            se = np.sqrt(np.sum(Xseq * np.dot(cov, Xseq.T).T, axis=1))
+            q = stats.norm.ppf(1 - (1 - params["level"]) / 2)
+            res["ymin"] = res["y"] - q * se
+            res["ymax"] = res["y"] + q * se
+        return frame.frame_like(data, res)
+
+    sm = _import_statsmodels("glm", "with method_args")
     init_kwargs, fit_kwargs = separate_method_kwargs(
         params["method_args"], sm.GLM, sm.GLM.fit
     )
@@ -314,7 +330,7 @@ def glm_formula(data, xseq, params):
     """
     Fit with GLM formula
     """
-    import statsmodels.api as sm
+    sm = _import_statsmodels("glm")
     import statsmodels.formula.api as smf
 
     eval_env = params["environment"].to_patsy_env()
@@ -344,7 +360,7 @@ def lowess(data, xseq, params) -> DataFrame:
     """
     Lowess fitting
     """
-    import statsmodels.api as sm
+    sm = _import_statsmodels("lowess")
 
     for k in ("is_sorted", "return_sorted"):
         with suppress(KeyError):
@@ -660,3 +676,19 @@ def _glm_family(family: str) -> sm.families.Family:
     except KeyError as err:
         msg = f"GLM family should be one of {tuple(lookup)}"
         raise ValueError(msg) from err
+
+
+def _import_statsmodels(method: str, condition: str = "") -> Any:
+    """
+    Import statsmodels.api, with a helpful error if it is missing
+    """
+    try:
+        import statsmodels.api as sm
+    except ImportError as err:
+        what = f"'{method}' {condition}".strip()
+        msg = (
+            f"Smoothing method {what} requires statsmodels "
+            "(which requires pandas). Install them or use another method."
+        )
+        raise PlotnineError(msg) from err
+    return sm
