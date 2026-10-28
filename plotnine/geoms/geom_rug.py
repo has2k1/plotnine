@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING, cast
 
 import numpy as np
 
-from .._utils import SIZE_FACTOR, make_line_segments, to_rgba
+from .._utils import SIZE_FACTOR, frame, make_line_segments, to_rgba
 from ..coords import coord_flip
 from ..doctools import document
 from .geom import geom
@@ -13,9 +13,9 @@ from .geom_path import geom_path
 if TYPE_CHECKING:
     from typing import Any
 
-    import pandas as pd
     from matplotlib.axes import Axes
 
+    from plotnine._utils.frame import DataFrame
     from plotnine.coords.coord import coord
     from plotnine.iapi import panel_view
     from plotnine.typing import FloatArray
@@ -51,7 +51,7 @@ class geom_rug(geom):
 
     @staticmethod
     def draw_group(
-        data: pd.DataFrame,
+        data: DataFrame,
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
@@ -69,7 +69,7 @@ class geom_rug(geom):
 
 
 def stroke_rugs(
-    data: pd.DataFrame,
+    data: DataFrame,
     panel_params: panel_view,
     ax: Axes,
     params: dict[str, Any],
@@ -77,29 +77,27 @@ def stroke_rugs(
     length: float,
 ) -> None:
     """
-    Draw rug marks in panel coordinates
+    Draw rugs from panel-coordinate data
 
     Parameters
     ----------
     data :
-        Rug-mark aesthetics. Include `x`, `y`, or both; position values
-        must use panel coordinates.
+        Data in panel coordinates. Must include `x`, `y` or both.
     panel_params :
-        Panel ranges used to determine the mark endpoints.
+        Panel ranges that anchor the rugs.
     ax :
-        Axes to draw on.
+        Axes on which to draw the rugs.
     params :
-        Geom and stat parameters that control line appearance.
+        Geom and stat parameters used to style the rugs.
     sides :
-        Panel sides to mark, using any combination of `b`, `t`, `l`, and
-        `r`. Resolve any axis flip before calling.
+        Sides on which to draw rugs. A string containing any of
+        `"t"`, `"b"`, `"l"` and `"r"`.
     length :
-        Length of each mark as a fraction of the panel width or height.
+        Length of each rug as a fraction of the panel range.
     """
     from matplotlib.collections import LineCollection
 
-    linewidth = data["size"] * SIZE_FACTOR
-
+    linewidth = frame.to_numpy(data["size"]) * SIZE_FACTOR
     has_x = "x" in data.columns
     has_y = "y" in data.columns
 
@@ -114,7 +112,7 @@ def stroke_rugs(
     yheight = (ymax - ymin) * length
 
     if has_x:
-        x = cast("FloatArray", np.repeat(data["x"].to_numpy(), 2))
+        x = cast("FloatArray", np.repeat(frame.to_numpy(data["x"]), 2))
 
         if "b" in sides:
             y = np.tile([ymin, ymin + yheight], n)
@@ -125,7 +123,7 @@ def stroke_rugs(
             rugs.extend(make_line_segments(x, y, ispath=False))
 
     if has_y:
-        y = cast("FloatArray", np.repeat(data["y"].to_numpy(), 2))
+        y = cast("FloatArray", np.repeat(frame.to_numpy(data["y"]), 2))
 
         if "l" in sides:
             x = np.tile([xmin, xmin + xheight], n)
@@ -140,7 +138,7 @@ def stroke_rugs(
         rugs,
         edgecolor=color,
         linewidth=linewidth,
-        linestyle=data["linetype"],
+        linestyle=data["linetype"].to_list(),
         zorder=params["zorder"],
         rasterized=params["raster"],
     )

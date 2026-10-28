@@ -6,8 +6,8 @@ from functools import cached_property
 from typing import TYPE_CHECKING, cast
 
 import numpy as np
-import pandas as pd
 
+from .._utils import frame
 from ..exceptions import PlotnineError
 from ..scales.scale_binned import _BinIntervals, scale_binned
 from ..themes.elements import element_line
@@ -79,11 +79,12 @@ class guide_bins(guide_legend):
             self._boundary_labels = [str(x) for x in self._boundary_values]
 
         mapped = scale.map(self._intervals.source_values)
-        self.key = pd.DataFrame(
+        self.key = frame.frame(
             {
                 aesthetic: mapped,
                 "label": self._interval_labels(scale),
-            }
+            },
+            backend=frame.default_backend(),
         )
         info = "\n".join(
             [

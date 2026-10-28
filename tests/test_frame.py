@@ -262,3 +262,19 @@ def test_sort_is_stable(impl):
     assert df["k"].to_list()[0] == 2
     values = df.filter(nw.col("k") == 2)["v"].to_numpy()
     assert np.all(np.diff(values) > 0)
+
+
+def test_group_split_unsorted(impl):
+    df = F.frame({"g": [3, 1, 3, 2], "v": [0, 1, 2, 3]}, backend=impl)
+    keys = [k for k, _ in F.group_split(df, "g", sort=False)]
+    assert keys == [(3,), (1,), (2,)]
+    indices = F.group_indices(df, "g", sort=False)
+    assert [i.tolist() for i in indices] == [[0, 2], [1], [3]]
+
+
+def test_unique_rows_object(impl):
+    df = F.frame(
+        {"a": [1, 1, 2], "b": [(0, (1, 1)), (0, (1, 1)), "solid"]},
+        backend=impl,
+    )
+    assert len(F.unique_rows(df)) == 2

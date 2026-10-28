@@ -3,9 +3,8 @@ from __future__ import annotations
 import typing
 
 import numpy as np
-import pandas as pd
 
-from .._utils import SIZE_FACTOR, to_rgba
+from .._utils import SIZE_FACTOR, frame, to_rgba
 from ..doctools import document
 from ..exceptions import PlotnineError
 from .geom import geom
@@ -22,6 +21,7 @@ if typing.TYPE_CHECKING:
     from shapely.geometry.polygon import LinearRing, Polygon
 
     from plotnine import aes
+    from plotnine._utils.frame import DataFrame
     from plotnine.coords.coord import coord
     from plotnine.iapi import panel_view
     from plotnine.layer import layer
@@ -71,45 +71,34 @@ class geom_map(geom):
         if "geometry" not in self.mapping:
             self.mapping["geometry"] = "geometry"
 
-    def setup_data(self, data: pd.DataFrame) -> pd.DataFrame:
+    def setup_data(self, data: DataFrame) -> DataFrame:
         if not len(data):
             return data
 
         # Remove any NULL geometries, and remember
         # All the non-Null shapes in a shapefile are required to be
         # of the same shape type.
-        bool_idx = np.array([g is not None for g in data["geometry"]])
+        bool_idx = np.array(
+            [g is not None for g in data["geometry"].to_list()]
+        )
         if not np.all(bool_idx):
-            data = data.loc[bool_idx]
+            data = frame.filter_rows(data, bool_idx)
 
         # Add polygon limits. Scale training uses them
-        try:
-            bounds = data["geometry"].bounds
-        except AttributeError:
-            # The geometry is not a GeoSeries
-            # Bounds calculation is extracted from
-            # geopandas.base.GeoPandasBase.bounds
-            bounds = pd.DataFrame(
-                np.array([x.bounds for x in data["geometry"]]),
-                columns=["xmin", "ymin", "xmax", "ymax"],
-                index=data.index,
-            )
-        else:
-            bounds = bounds.rename(
-                columns={
-                    "minx": "xmin",
-                    "maxx": "xmax",
-                    "miny": "ymin",
-                    "maxy": "ymax",
-                },
-            )
-
-        data = pd.concat([data, bounds], axis=1)
-        return data
+        bounds = np.array(
+            [g.bounds for g in data["geometry"].to_list()], dtype=float
+        ).reshape(-1, 4)
+        return frame.assign(
+            data,
+            xmin=bounds[:, 0],
+            ymin=bounds[:, 1],
+            xmax=bounds[:, 2],
+            ymax=bounds[:, 3],
+        )
 
     def draw_panel(
         self,
-        data: pd.DataFrame,
+        data: DataFrame,
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
@@ -118,21 +107,29 @@ class geom_map(geom):
             return
 
         params = self.params
-        data.loc[data["color"].isna(), "color"] = "none"
-        data.loc[data["fill"].isna(), "fill"] = "none"
 
-        geom_type = data.geometry.iloc[0].geom_type
+        def missing_as_none(col: str) -> list[Any]:
+            values = data[col].to_list()
+            missing = frame.isna(data[col])
+            return ["none" if na else v for v, na in zip(values, missing)]
+
+        data = frame.assign(
+            data, color=missing_as_none("color"), fill=missing_as_none("fill")
+        )
+        geometries = data["geometry"].to_list()
+        geom_type = geometries[0].geom_type
+
         if geom_type in ("Polygon", "MultiPolygon"):
             from matplotlib.collections import PatchCollection
 
-            linewidth = data["size"] * SIZE_FACTOR
+            linewidth = frame.to_numpy(data["size"]) * SIZE_FACTOR
             fill = to_rgba(data["fill"], data["alpha"])
-            patches = [PolygonPatch(g) for g in data["geometry"]]
+            patches = [PolygonPatch(g) for g in geometries]
             coll = PatchCollection(
                 patches,
-                edgecolor=data["color"],
+                edgecolor=data["color"].to_list(),
                 facecolor=fill,
-                linestyle=data["linetype"],
+                linestyle=data["linetype"].to_list(),
                 linewidth=linewidth,
                 zorder=params["zorder"],
                 rasterized=params["raster"],
@@ -141,11 +138,9 @@ class geom_map(geom):
         elif geom_type == "Point":
             # Extract point coordinates from shapely geom
             # and plot with geom_point
-            arr = np.array([list(g.coords)[0] for g in data["geometry"]])
-            data["x"] = arr[:, 0]
-            data["y"] = arr[:, 1]
-            for _, gdata in data.groupby("group"):
-                gdata = gdata.reset_index(drop=True)
+            arr = np.array([list(g.coords)[0] for g in geometries])
+            data = frame.assign(data, x=arr[:, 0], y=arr[:, 1])
+            for _, gdata in frame.group_split(data, "group"):
                 geom_point.draw_group(gdata, panel_params, coord, ax, params)
         elif geom_type == "MultiPoint":
             # Where n is the length of the dataframe (no. of multipoints),
@@ -155,20 +150,18 @@ class geom_map(geom):
             # - Explode the list, to create a dataframe were each point
             #      is associated with the right aesthetics (n -> m)
             # - Create x & y columns from the points (m -> m)
-            data["points"] = [
-                [p.coords[0] for p in mp.geoms] for mp in data["geometry"]
-            ]
-            data = data.explode("points", ignore_index=True)
-            data["x"] = [p[0] for p in data["points"]]
-            data["y"] = [p[1] for p in data["points"]]
+            points = [[p.coords[0] for p in mp.geoms] for mp in geometries]
+            idx = [i for i, pts in enumerate(points) for _ in pts]
+            xy = np.array([p for pts in points for p in pts]).reshape(-1, 2)
+            data = frame.assign(frame.take(data, idx), x=xy[:, 0], y=xy[:, 1])
             geom_point.draw_group(data, panel_params, coord, ax, params)
         elif geom_type in ("LineString", "MultiLineString"):
             from matplotlib.collections import LineCollection
 
-            linewidth = data["size"] * SIZE_FACTOR
+            linewidth = frame.to_numpy(data["size"]) * SIZE_FACTOR
             color = to_rgba(data["color"], data["alpha"])
             segments = []
-            for g in data["geometry"]:
+            for g in geometries:
                 if g.geom_type == "LineString":
                     segments.append(g.coords)
                 else:
@@ -178,7 +171,7 @@ class geom_map(geom):
                 segments,
                 edgecolor=color,
                 linewidth=linewidth,
-                linestyle=data["linetype"],
+                linestyle=data["linetype"].to_list(),
                 zorder=params["zorder"],
                 rasterized=params["raster"],
             )
@@ -188,7 +181,7 @@ class geom_map(geom):
 
     @staticmethod
     def draw_legend(
-        data: pd.Series[Any], da: DrawingArea, lyr: layer
+        data: dict[str, Any], da: DrawingArea, lyr: layer
     ) -> DrawingArea:
         """
         Draw a rectangle in the box

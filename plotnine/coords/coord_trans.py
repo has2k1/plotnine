@@ -15,15 +15,14 @@ from .coord import coord, dist_euclidean
 if TYPE_CHECKING:
     from typing import Literal, Optional
 
-    import pandas as pd
     from mizani.transforms import trans
 
+    from plotnine._utils.frame import DataFrame
     from plotnine.iapi import scale_position_view
     from plotnine.scales.scale_xy import ScaleX, ScaleY
     from plotnine.typing import (
         FloatArray,
         FloatArrayLike,
-        FloatSeries,
         TFloatArrayLike,
     )
 
@@ -66,14 +65,14 @@ class coord_trans(coord):
         self.expand = expand
 
     def transform(
-        self, data: pd.DataFrame, panel_params: panel_view, munch: bool = False
-    ) -> pd.DataFrame:
+        self, data: DataFrame, panel_params: panel_view, munch: bool = False
+    ) -> DataFrame:
         from mizani.bounds import squish_infinite
 
         if not self.is_linear and munch:
             data = self.munch(data, panel_params)
 
-        def trans_x(col: FloatSeries) -> FloatSeries:
+        def trans_x(col: FloatArray) -> FloatArray:
             result = transform_value(self.trans_x, col)
             if frame.isna(result).any():
                 warn(
@@ -83,7 +82,7 @@ class coord_trans(coord):
                 )
             return result
 
-        def trans_y(col: FloatSeries) -> FloatSeries:
+        def trans_y(col: FloatArray) -> FloatArray:
             result = transform_value(self.trans_y, col)
             if frame.isna(result).any():
                 warn(
@@ -168,8 +167,8 @@ class coord_trans(coord):
 
     def distance(
         self,
-        x: FloatSeries,
-        y: FloatSeries,
+        x: FloatArray,
+        y: FloatArray,
         panel_params: panel_view,
     ) -> FloatArray:
         max_dist = dist_euclidean(panel_params.x.range, panel_params.y.range)[

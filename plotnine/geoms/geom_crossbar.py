@@ -3,10 +3,16 @@ from __future__ import annotations
 import typing
 from warnings import warn
 
+import narwhals as nw
 import numpy as np
-import pandas as pd
 
-from .._utils import SIZE_FACTOR, copy_missing_columns, resolution, to_rgba
+from .._utils import (
+    SIZE_FACTOR,
+    copy_missing_columns,
+    frame,
+    resolution,
+    to_rgba,
+)
 from ..doctools import document
 from ..exceptions import PlotnineWarning
 from .geom import geom
@@ -20,6 +26,7 @@ if typing.TYPE_CHECKING:
     from matplotlib.axes import Axes
     from matplotlib.offsetbox import DrawingArea
 
+    from plotnine._utils.frame import DataFrame
     from plotnine.coords.coord import coord
     from plotnine.iapi import panel_view
     from plotnine.layer import layer
@@ -54,53 +61,52 @@ class geom_crossbar(geom):
 
     legend_key_size = staticmethod(geom_segment.legend_key_size)
 
-    def setup_data(self, data: pd.DataFrame) -> pd.DataFrame:
-        if "width" not in data:
+    def setup_data(self, data: DataFrame) -> DataFrame:
+        if "width" not in data.columns:
             if self.params["width"]:
-                data["width"] = self.params["width"]
+                width = self.params["width"]
             else:
-                data["width"] = resolution(data["x"], False) * 0.9
+                width = resolution(data["x"], False) * 0.9
+            data = frame.assign(data, width=width)
 
-        data["xmin"] = data["x"] - data["width"] / 2
-        data["xmax"] = data["x"] + data["width"] / 2
-        del data["width"]
-        return data
+        x = nw.col("x")
+        half_width = nw.col("width") / 2
+        return data.with_columns(
+            xmin=x - half_width, xmax=x + half_width
+        ).drop("width")
 
     @staticmethod
     def draw_group(
-        data: pd.DataFrame,
+        data: DataFrame,
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
         params: dict[str, Any],
     ):
-        y = data["y"]
-        xmin = data["xmin"]
-        xmax = data["xmax"]
-        ymin = data["ymin"]
-        ymax = data["ymax"]
-        group = data["group"]
+        y = frame.to_numpy(data["y"])
+        xmin = frame.to_numpy(data["xmin"])
+        xmax = frame.to_numpy(data["xmax"])
+        ymin = frame.to_numpy(data["ymin"])
+        ymax = frame.to_numpy(data["ymax"])
+        group = frame.to_numpy(data["group"])
 
         # From violin
         notchwidth = typing.cast("float", params.get("notchwidth"))
         # ynotchupper = data.get('ynotchupper')
         # ynotchlower = data.get('ynotchlower')
 
-        def flat(*args: pd.Series[Any]) -> npt.NDArray[Any]:
+        def flat(*args: npt.NDArray[Any]) -> npt.NDArray[Any]:
             """Flatten list-likes"""
             return np.hstack(args)
 
-        middle = pd.DataFrame(
-            {"x": xmin, "y": y, "xend": xmax, "yend": y, "group": group}
-        )
-        copy_missing_columns(middle, data)
-        middle["alpha"] = 1
-        middle["size"] *= params["fatten"]
+        middle = {"x": xmin, "y": y, "xend": xmax, "yend": y, "group": group}
 
-        has_notch = "ynotchupper" in data and "ynotchlower" in data
+        has_notch = (
+            "ynotchupper" in data.columns and "ynotchlower" in data.columns
+        )
         if has_notch:  # 10 points + 1 closing
-            ynotchupper = data["ynotchupper"]
-            ynotchlower = data["ynotchlower"]
+            ynotchupper = frame.to_numpy(data["ynotchupper"])
+            ynotchlower = frame.to_numpy(data["ynotchlower"])
 
             if any(ynotchlower < ymin) or any(ynotchupper > ymax):
                 warn(
@@ -110,56 +116,58 @@ class geom_crossbar(geom):
 
             notchindent = (1 - notchwidth) * (xmax - xmin) / 2
 
-            middle["x"] += notchindent
-            middle["xend"] -= notchindent
-            box = pd.DataFrame(
-                {
-                    "x": flat(
-                        xmin,
-                        xmin,
-                        xmin + notchindent,
-                        xmin,
-                        xmin,
-                        xmax,
-                        xmax,
-                        xmax - notchindent,
-                        xmax,
-                        xmax,
-                        xmin,
-                    ),
-                    "y": flat(
-                        ymax,
-                        ynotchupper,
-                        y,
-                        ynotchlower,
-                        ymin,
-                        ymin,
-                        ynotchlower,
-                        y,
-                        ynotchupper,
-                        ymax,
-                        ymax,
-                    ),
-                    "group": np.tile(np.arange(1, len(group) + 1), 11),
-                }
-            )
+            middle["x"] = middle["x"] + notchindent
+            middle["xend"] = middle["xend"] - notchindent
+            box = {
+                "x": flat(
+                    xmin,
+                    xmin,
+                    xmin + notchindent,
+                    xmin,
+                    xmin,
+                    xmax,
+                    xmax,
+                    xmax - notchindent,
+                    xmax,
+                    xmax,
+                    xmin,
+                ),
+                "y": flat(
+                    ymax,
+                    ynotchupper,
+                    y,
+                    ynotchlower,
+                    ymin,
+                    ymin,
+                    ynotchlower,
+                    y,
+                    ynotchupper,
+                    ymax,
+                    ymax,
+                ),
+                "group": np.tile(np.arange(1, len(group) + 1), 11),
+            }
         else:
             # No notch, 4 points + 1 closing
-            box = pd.DataFrame(
-                {
-                    "x": flat(xmin, xmin, xmax, xmax, xmin),
-                    "y": flat(ymax, ymax, ymax, ymin, ymin),
-                    "group": np.tile(np.arange(1, len(group) + 1), 5),
-                }
-            )
+            box = {
+                "x": flat(xmin, xmin, xmax, xmax, xmin),
+                "y": flat(ymax, ymax, ymax, ymin, ymin),
+                "group": np.tile(np.arange(1, len(group) + 1), 5),
+            }
 
-        copy_missing_columns(box, data)
-        geom_polygon.draw_group(box, panel_params, coord, ax, params)
-        geom_segment.draw_group(middle, panel_params, coord, ax, params)
+        middle_data = copy_missing_columns(
+            frame.frame_like(data, middle), data
+        )
+        middle_data = middle_data.with_columns(
+            alpha=nw.lit(1), size=nw.col("size") * params["fatten"]
+        )
+        box_data = copy_missing_columns(frame.frame_like(data, box), data)
+        geom_polygon.draw_group(box_data, panel_params, coord, ax, params)
+        geom_segment.draw_group(middle_data, panel_params, coord, ax, params)
 
     @staticmethod
     def draw_legend(
-        data: pd.Series[Any], da: DrawingArea, lyr: layer
+        data: dict[str, Any], da: DrawingArea, lyr: layer
     ) -> DrawingArea:
         """
         Draw a rectangle with a horizontal strike in the box

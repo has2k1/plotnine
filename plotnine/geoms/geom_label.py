@@ -9,7 +9,6 @@ from .geom_text import geom_text
 if typing.TYPE_CHECKING:
     from typing import Any
 
-    import pandas as pd
     from matplotlib.offsetbox import DrawingArea
 
     from plotnine.layer import layer
@@ -76,7 +75,7 @@ class geom_label(geom_text):
 
     @staticmethod
     def draw_legend(
-        data: pd.Series[Any], da: DrawingArea, lyr: layer
+        data: dict[str, Any], da: DrawingArea, lyr: layer
     ) -> DrawingArea:
         """
         Draw letter 'a' in the box

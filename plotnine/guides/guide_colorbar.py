@@ -8,12 +8,11 @@ from typing import TYPE_CHECKING, cast
 from warnings import warn
 
 import numpy as np
-import pandas as pd
 from mizani.bounds import rescale
 
 from plotnine.iapi import guide_text
 
-from .._utils import OPPOSITE_SIDE
+from .._utils import OPPOSITE_SIDE, frame
 from ..exceptions import PlotnineError, PlotnineWarning
 from ..mapping.aes import rename_aesthetics
 from ..scales.scale_continuous import scale_continuous
@@ -118,23 +117,27 @@ class guide_colorbar(guide):
         if not len(breaks):
             return None
 
-        self.key = pd.DataFrame(
+        backend = frame.default_backend()
+        self.key = frame.frame(
             {
                 aesthetic: scale.map(breaks),
                 "label": scale.get_labels(breaks),
                 "value": breaks,
-            }
+            },
+            backend=backend,
         )
 
         bar = np.linspace(limits[0], limits[1], self.nbin)
-        self.bar = pd.DataFrame({"color": scale.map(bar), "value": bar})
+        self.bar = frame.frame(
+            {"color": scale.map(bar), "value": bar}, backend=backend
+        )
 
         labels = " ".join(str(x) for x in self.key["label"])
         info = "\n".join(
             [
                 self.title,
                 labels,
-                " ".join(self.bar["color"].tolist()),
+                " ".join(self.bar["color"].to_list()),
                 self.__class__.__name__,
             ]
         )
@@ -173,7 +176,9 @@ class guide_colorbar(guide):
         # between the interpolation points on gradient bars.
         _from = self.bar["value"].min(), self.bar["value"].max()
         locations = (
-            rescale(self.key["value"], (0.5, nbars - 0.5), _from)
+            rescale(
+                frame.to_numpy(self.key["value"]), (0.5, nbars - 0.5), _from
+            )
             * elements.key_height
             / nbars
         )
@@ -233,8 +238,8 @@ class guide_colorbar(guide):
         raster = display == "raster"
         alpha = self.alpha
 
-        colors = self.bar["color"].tolist()
-        labels = self.key["label"].tolist()
+        colors = self.bar["color"].to_list()
+        labels = self.key["label"].to_list()
         targets = self.theme.targets
 
         tick_locations = self._tick_locations(elements)

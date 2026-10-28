@@ -4,7 +4,7 @@ import typing
 
 import numpy as np
 
-from .._utils import SIZE_FACTOR, to_rgba
+from .._utils import SIZE_FACTOR, frame, to_rgba
 from ..doctools import document
 from ..scales.scale_shape import FILLED_SHAPES
 from .geom import geom
@@ -12,10 +12,10 @@ from .geom import geom
 if typing.TYPE_CHECKING:
     from typing import Any
 
-    import pandas as pd
     from matplotlib.axes import Axes
     from matplotlib.offsetbox import DrawingArea
 
+    from plotnine._utils.frame import DataFrame
     from plotnine.coords.coord import coord
     from plotnine.iapi import panel_view
     from plotnine.layer import layer
@@ -46,7 +46,7 @@ class geom_point(geom):
 
     def draw_panel(
         self,
-        data: pd.DataFrame,
+        data: DataFrame,
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
@@ -58,7 +58,7 @@ class geom_point(geom):
 
     @staticmethod
     def draw_group(
-        data: pd.DataFrame,
+        data: DataFrame,
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
@@ -66,13 +66,12 @@ class geom_point(geom):
     ):
         data = coord.transform(data, panel_params)
         units = "shape"
-        for _, udata in data.groupby(units, dropna=False):
-            udata = udata.reset_index(drop=True)
+        for _, udata in frame.group_split(data, units, drop_missing=False):
             geom_point.draw_unit(udata, panel_params, coord, ax, params)
 
     @staticmethod
     def draw_unit(
-        data: pd.DataFrame,
+        data: DataFrame,
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
@@ -83,16 +82,17 @@ class geom_point(geom):
         # gives a large enough scaling factor
         # All other sizes for which the MPL units should
         # be in points must scaled using sqrt(pi)
-        size = ((data["size"] + data["stroke"]) ** 2) * np.pi
-        linewidth = data["stroke"] * SIZE_FACTOR
+        stroke = frame.to_numpy(data["stroke"])
+        size = ((frame.to_numpy(data["size"]) + stroke) ** 2) * np.pi
+        linewidth = stroke * SIZE_FACTOR
         color = to_rgba(data["color"], data["alpha"])
-        shape = data["shape"].iloc[0]
+        shape = data["shape"].item(0)
 
         # It is common to forget that scatter points are
         # filled and slip-up by manually assigning to the
         # color instead of the fill. We forgive.
         if shape in FILLED_SHAPES:
-            if all(c is None for c in data["fill"]):
+            if all(c is None for c in data["fill"].to_list()):
                 fill = color
             else:
                 fill = to_rgba(data["fill"], data["alpha"])
@@ -102,8 +102,8 @@ class geom_point(geom):
             color = None
 
         ax.scatter(
-            x=data["x"],
-            y=data["y"],
+            x=frame.to_numpy(data["x"]),
+            y=frame.to_numpy(data["y"]),
             s=size,
             facecolor=fill,
             edgecolor=color,
@@ -115,14 +115,14 @@ class geom_point(geom):
 
     @staticmethod
     def draw_legend(
-        data: pd.Series[Any], da: DrawingArea, lyr: layer
+        data: dict[str, Any], da: DrawingArea, lyr: layer
     ) -> DrawingArea:
         """
         Draw a point in the box
 
         Parameters
         ----------
-        data : Series
+        data : dict
             Data Row
         da : DrawingArea
             Canvas
@@ -157,7 +157,7 @@ class geom_point(geom):
 
     @staticmethod
     def legend_key_size(
-        data: pd.Series[Any], min_size: tuple[int, int], lyr: layer
+        data: dict[str, Any], min_size: tuple[int, int], lyr: layer
     ) -> tuple[int, int]:
         from matplotlib.markers import MarkerStyle
 

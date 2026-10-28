@@ -13,7 +13,6 @@ from ..themes.theme import theme as Theme
 if TYPE_CHECKING:
     from typing import Literal, Optional, Sequence, TypeAlias
 
-    import pandas as pd
     from matplotlib.figure import Figure
     from matplotlib.offsetbox import PackerBase
     from typing_extensions import Self
@@ -34,6 +33,7 @@ if TYPE_CHECKING:
     AlignDict: TypeAlias = dict[
         Literal["ha", "va"], dict[tuple[Orientation, Side], str]
     ]
+    from plotnine._utils.frame import DataFrame
 
 
 @dataclass
@@ -74,7 +74,7 @@ class guide(ABC, metaclass=Register):
     available_aes: set[str] = field(init=False, default_factory=set)
 
     hash: str = field(init=False, repr=False)
-    key: pd.DataFrame = field(init=False, repr=False)
+    key: DataFrame = field(init=False, repr=False)
     plot_layers: Layers = field(init=False, repr=False)
     plot_mapping: aes = field(init=False, repr=False)
     guides_elements: GuidesElements = field(init=False, repr=False)

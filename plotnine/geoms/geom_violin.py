@@ -2,10 +2,10 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, cast
 
+import narwhals as nw
 import numpy as np
-import pandas as pd
 
-from .._utils import groupby_apply, interleave, resolution
+from .._utils import frame, interleave, resolution
 from ..doctools import document
 from .geom import geom
 from .geom_path import geom_path
@@ -17,6 +17,7 @@ if TYPE_CHECKING:
     from matplotlib.axes import Axes
 
     from plotnine import aes
+    from plotnine._utils.frame import DataFrame
     from plotnine.coords.coord import coord
     from plotnine.iapi import panel_view
     from plotnine.typing import DataLike, FloatArray
@@ -102,78 +103,84 @@ class geom_violin(geom):
 
         super().__init__(mapping, data, **kwargs)
 
-    def setup_data(self, data: pd.DataFrame) -> pd.DataFrame:
-        if "width" not in data:
+    def setup_data(self, data: DataFrame) -> DataFrame:
+        if "width" not in data.columns:
             if self.params["width"]:
-                data["width"] = self.params["width"]
+                width = self.params["width"]
             else:
-                data["width"] = resolution(data["x"], False) * 0.9
+                width = resolution(data["x"], False) * 0.9
+            data = frame.assign(data, width=width)
 
-        def func(df: pd.DataFrame) -> pd.DataFrame:
-            df["ymin"] = df["y"].min()
-            df["ymax"] = df["y"].max()
-            df["xmin"] = df["x"] - df["width"] / 2
-            df["xmax"] = df["x"] + df["width"] / 2
-            return df
-
-        # This is a plyr::ddply
-        data = groupby_apply(data, ["group", "PANEL"], func)
-        return data
+        by = ["group", "PANEL"]
+        x, y, half_width = nw.col("x"), nw.col("y"), nw.col("width") / 2
+        return frame.sort(data, by).with_columns(
+            ymin=y.min().over(*by),
+            ymax=y.max().over(*by),
+            xmin=x - half_width,
+            xmax=x + half_width,
+        )
 
     def draw_panel(
         self,
-        data: pd.DataFrame,
+        data: DataFrame,
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
     ):
+        """
+        Plot all groups
+        """
         params = self.params.copy()
         quantiles = params.pop("draw_quantiles")
         style = params.pop("style")
         zorder = params.pop("zorder")
 
-        for i, (group, df) in enumerate(data.groupby("group")):
+        for i, ((group,), df) in enumerate(frame.group_split(data, "group")):
             # Place the violins with the smalleer group number on top
-            # of those with larger numbers. The group_zorder values should be
-            # in the range [zorder, zorder + 1) to stay within the layer.
+            # of those with larger numbers. The group_zorder values should
+            # be in the range [zorder, zorder + 1) to stay within the layer.
             group = cast("int", group)
             group_zorder = zorder + 0.9 / group
             params["zorder"] = group_zorder
 
             # Find the points for the line to go all the way around
-            df["xminv"] = df["x"] - df["violinwidth"] * (df["x"] - df["xmin"])
-            df["xmaxv"] = df["x"] + df["violinwidth"] * (df["xmax"] - df["x"])
+            x = frame.to_numpy(df["x"])
+            violinwidth = frame.to_numpy(df["violinwidth"])
+            xminv = x - violinwidth * (x - frame.to_numpy(df["xmin"]))
+            xmaxv = x + violinwidth * (frame.to_numpy(df["xmax"]) - x)
             even = i % 2 == 0
             if (
                 style == "left"
                 or (style == "left-right" and even)
                 or (style == "right-left" and not even)
             ):
-                df["xmaxv"] = df["x"]
+                xmaxv = x
             elif (
                 style == "right"
                 or (style == "right-left" and even)
                 or (style == "left-right" and not even)
             ):
-                df["xminv"] = df["x"]
+                xminv = x
+            df = frame.assign(df, xminv=xminv, xmaxv=xmaxv)
 
             # Make sure it's sorted properly to draw the outline
             # i.e violin = kde + mirror kde,
             # bottom to top then top to bottom
-            n = len(df)
-            polygon_df = pd.concat(
-                [df.sort_values("y"), df.sort_values("y", ascending=False)],
-                axis=0,
-                ignore_index=True,
+            up = frame.sort(df, "y")
+            down = frame.sort(df, "y", descending=True)
+            polygon_df = frame.concat([up, down])
+            polygon_df = frame.assign(
+                polygon_df,
+                x=np.hstack(
+                    [
+                        frame.to_numpy(up["xminv"]),
+                        frame.to_numpy(down["xmaxv"]),
+                    ]
+                ),
             )
 
-            _df = polygon_df.iloc
-            _loc = polygon_df.columns.get_loc
-            _df[:n, _loc("x")] = _df[:n, _loc("xminv")]  # type: ignore
-            _df[n:, _loc("x")] = _df[n:, _loc("xmaxv")]  # type: ignore
-
             # Close the polygon: set first and last point the same
-            polygon_df.loc[-1, :] = polygon_df.loc[0, :]
+            polygon_df = frame.concat([polygon_df, polygon_df.head(1)])
 
             # plot violin polygon
             geom_polygon.draw_group(
@@ -191,26 +198,31 @@ class geom_violin(geom):
                 # with aesthetics then put them together
                 # Each quantile segment is defined by 2 points and
                 # they all get similar aesthetics
-                aes_df = df.drop(["x", "y", "group"], axis=1)
-                aes_df = aes_df.reset_index()
-                idx = [0] * 2 * len(quantiles)
-                aes_df = aes_df.iloc[idx, :].reset_index(drop=True)
-                segment_df = pd.concat(
-                    [make_quantile_df(df, quantiles), aes_df], axis=1
+                aes_df = df.drop("x", "y", "group")
+                aes_df = frame.take(aes_df, [0] * 2 * len(quantiles))
+
+                # Create aes_df for quantile segments
+                segment_df = nw.concat(
+                    [make_quantile_df(df, quantiles), aes_df], how="horizontal"
                 )
 
                 color = params["quantile_colour"] or params["quantile_color"]
                 n = len(segment_df)
+                overrides = {}
                 if color:
-                    segment_df["color"] = broadcast_ae_value(color, "color", n)
+                    overrides["color"] = broadcast_ae_value(color, "color", n)
+
                 if linetype := params["quantile_linetype"]:
-                    segment_df["linetype"] = broadcast_ae_value(
+                    overrides["linetype"] = broadcast_ae_value(
                         linetype,
                         "linetype",
                         n,
                     )
+
                 if size := params["quantile_size"]:
-                    segment_df["size"] = size
+                    overrides["size"] = size
+
+                segment_df = frame.assign(segment_df, **overrides)
 
                 # plot quantile segments
                 geom_path.draw_group(
@@ -222,28 +234,27 @@ class geom_violin(geom):
                 )
 
 
-def make_quantile_df(
-    data: pd.DataFrame, draw_quantiles: FloatArray
-) -> pd.DataFrame:
+def make_quantile_df(data: DataFrame, draw_quantiles: FloatArray) -> DataFrame:
     """
     Return a dataframe with info needed to draw quantile segments
     """
     from scipy.interpolate import interp1d
 
-    dens = data["density"].cumsum() / data["density"].sum()
-    ecdf = interp1d(dens, data["y"], assume_sorted=True)
+    density = frame.to_numpy(data["density"])
+    y = frame.to_numpy(data["y"])
+    dens = density.cumsum() / density.sum()
+    ecdf = interp1d(dens, y, assume_sorted=True)
     ys = ecdf(draw_quantiles)
 
     # Get the violin bounds for the requested quantiles
-    violin_xminvs = interp1d(data["y"], data["xminv"])(ys)
-    violin_xmaxvs = interp1d(data["y"], data["xmaxv"])(ys)
+    violin_xminvs = interp1d(y, frame.to_numpy(data["xminv"]))(ys)
+    violin_xmaxvs = interp1d(y, frame.to_numpy(data["xmaxv"]))(ys)
 
-    data = pd.DataFrame(
+    return frame.frame_like(
+        data,
         {
             "x": interleave(violin_xminvs, violin_xmaxvs),
             "y": np.repeat(ys, 2),
             "group": np.repeat(np.arange(1, len(ys) + 1), 2),
-        }
+        },
     )
-
-    return data

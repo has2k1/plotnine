@@ -72,7 +72,28 @@ BOX_LOCATIONS: dict[str, tuple[float, float]] = {
     "centre": (0.5, 0.5),
 }
 
-to_rgba = color_utils.to_rgba
+
+def to_rgba(colors: Any, alpha: Any) -> Any:
+    """
+    Convert colors to rgba values
+
+    Parameters
+    ----------
+    colors :
+        Color(s) to convert. They can be in a series.
+    alpha :
+        Alpha value(s). They can be in a series.
+    """
+    # mizani expects python scalars
+    if (s := as_series(colors)) is not None:
+        colors = s.to_list()
+    if (s := as_series(alpha)) is not None:
+        alpha = s.to_list()
+    elif isinstance(alpha, np.ndarray):
+        alpha = alpha.tolist()
+    elif isinstance(alpha, np.generic):
+        alpha = alpha.item()
+    return color_utils.to_rgba(colors, alpha)
 
 
 def side_artists(side: Side | PolarSide) -> tuple[str, str]:
@@ -757,7 +778,7 @@ def get_valid_kwargs(func, potential_kwargs):
     return kwargs
 
 
-def copy_missing_columns(df, ref_df):
+def copy_missing_columns(df: DataFrame, ref_df: DataFrame) -> DataFrame:
     """
     Copy missing columns from ref_df to df
 
@@ -776,9 +797,15 @@ def copy_missing_columns(df, ref_df):
         Dataframe to which columns will be added
     ref_df : dataframe
         Dataframe from which columns will be copied
+
+    Returns
+    -------
+    :
+        df with the added columns
     """
-    cols = ref_df.columns.difference(df.columns)
-    _loc = ref_df.columns.get_loc
+    cols = [c for c in ref_df.columns if c not in df.columns]
+    if not cols:
+        return df
 
     l1, l2 = len(df), len(ref_df)
     if l1 >= l2 and l1 % l2 == 0:
@@ -786,8 +813,12 @@ def copy_missing_columns(df, ref_df):
     else:
         idx = np.repeat(0, l1)
 
-    for col in cols:
-        df[col] = ref_df.iloc[idx, _loc(col)].to_numpy()
+    copied = frame.convert(
+        frame.take(ref_df.select(cols), idx), df.implementation
+    )
+    if not df.columns:
+        return copied
+    return nw.concat([df, copied], how="horizontal")
 
 
 def data_mapping_as_kwargs(args, kwargs):

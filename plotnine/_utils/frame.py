@@ -501,7 +501,10 @@ def _sort_key(value: Any) -> tuple[int, Any]:
 
 
 def group_split(
-    df: DataFrame, by: str | Sequence[str]
+    df: DataFrame,
+    by: str | Sequence[str],
+    drop_missing: bool = True,
+    sort: bool = True,
 ) -> Iterator[tuple[tuple[Any, ...], DataFrame]]:
     """
     Split a dataframe into groups
@@ -516,6 +519,12 @@ def group_split(
         Dataframe
     by :
         Columns to group by
+    drop_missing :
+        Whether to leave out the rows with missing keys. If False,
+        they make up groups.
+    sort :
+        Whether to yield the groups in the sorted order of the keys.
+        If False, they are in the order in which they first appear.
     """
     by = [by] if isinstance(by, str) else list(by)
     if not len(df):
@@ -523,7 +532,7 @@ def group_split(
 
     # NaN keys are missing, like nulls
     float_by = [col for col in by if df.schema[col].is_float()]
-    if float_by:
+    if float_by and drop_missing:
         df = df.filter(
             ~nw.any_horizontal(
                 *[nw.col(c).is_nan() for c in float_by], ignore_nulls=True
@@ -544,9 +553,38 @@ def group_split(
             for col, v in zip(by, item[0])
         )
 
-    groups = list(df.group_by(by, drop_null_keys=True))
+    if not sort:
+        row = "__plotnine_group_order__"
+        groups = list(
+            df.with_row_index(row).group_by(by, drop_null_keys=drop_missing)
+        )
+        groups.sort(key=lambda item: item[1][row].item(0))
+        for k, gdf in groups:
+            yield k, gdf.drop(row)
+        return
+
+    groups = list(df.group_by(by, drop_null_keys=drop_missing))
     groups.sort(key=key)
     yield from groups
+
+
+def group_indices(
+    df: DataFrame,
+    by: str | Sequence[str],
+    drop_missing: bool = True,
+    sort: bool = True,
+) -> list[np.ndarray]:
+    """
+    Return the positions of the rows in each group
+
+    See `group_split` for the parameters.
+    """
+    row = "__plotnine_row__"
+    indexed = df.with_row_index(row)
+    return [
+        gdf[row].to_numpy()
+        for _, gdf in group_split(indexed, by, drop_missing, sort)
+    ]
 
 
 def group_apply(
@@ -1050,3 +1088,86 @@ def backend_of(obj: Any) -> Implementation:
             obj, eager_only=True, allow_series=True
         ).implementation
     return default_backend()
+
+
+def _hashable(value: Any) -> Any:
+    try:
+        hash(value)
+    except TypeError:
+        return repr(value)
+    return value
+
+
+def unique_rows(
+    df: DataFrame, subset: Sequence[str] | None = None
+) -> DataFrame:
+    """
+    Remove duplicate rows, keeping the first of each in order
+
+    Unlike `DataFrame.unique`, it works with object columns.
+
+    Parameters
+    ----------
+    df :
+        Dataframe
+    subset :
+        Columns that identify a duplicate. If None, all columns.
+    """
+    cols = list(subset) if subset is not None else df.columns
+    if not any(df.schema[c] == nw.Object for c in cols):
+        return df.unique(subset, keep="first", maintain_order=True)
+
+    seen = set()
+    keep = np.zeros(len(df), dtype=bool)
+    rows = zip(*(df[c].to_list() for c in cols))
+    for i, row in enumerate(rows):
+        key = tuple(_hashable(v) for v in row)
+        if key not in seen:
+            seen.add(key)
+            keep[i] = True
+    return filter_rows(df, keep)
+
+
+def inner_join(left: DataFrame, right: DataFrame) -> DataFrame:
+    """
+    Join two dataframes on the columns that they have in common
+
+    The order of the rows of `left` is preserved. This is like
+    `pandas.merge(left, right)` and it works for object columns. It
+    is meant for small dataframes.
+    """
+    common = [c for c in left.columns if c in right.columns]
+
+    def keys(df: DataFrame) -> Iterator[tuple[Any, ...]]:
+        rows = zip(*(df[c].to_list() for c in common))
+        return (tuple(_hashable(v) for v in row) for row in rows)
+
+    lookup: dict[tuple[Any, ...], list[int]] = {}
+    for j, key in enumerate(keys(right)):
+        lookup.setdefault(key, []).append(j)
+
+    left_idx, right_idx = [], []
+    for i, key in enumerate(keys(left)):
+        for j in lookup.get(key, []):
+            left_idx.append(i)
+            right_idx.append(j)
+
+    result = take(left, left_idx)
+    others = [c for c in right.columns if c not in common]
+    if others:
+        extra = convert(
+            take(right.select(others), right_idx), left.implementation
+        )
+        result = nw.concat([result, extra], how="horizontal")
+    return result
+
+
+def row_dict(df: DataFrame, i: int) -> dict[str, Any]:
+    """
+    Return row i of a dataframe as a dict
+
+    Raises IndexError if there is no row i.
+    """
+    if not -len(df) <= i < len(df):
+        raise IndexError(f"Row {i} is out of range.")
+    return dict(zip(df.columns, df.row(i)))

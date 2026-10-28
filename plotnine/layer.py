@@ -399,14 +399,14 @@ class layer:
         """
         Prepare/modify data for plotting
         """
-        data = self.data
+        data = frame.to_frame(self.data)
         if len(data) == 0:
             return
 
         self.geom.params["stat_params"] = self.stat.params
         self.geom.setup_params(data)
         self.geom.setup_aes_params(data)
-        data = self.geom.setup_data(data)
+        data = frame.to_frame(self.geom.setup_data(data))
 
         check_required_aesthetics(
             self.geom.REQUIRED_AES,
@@ -414,7 +414,7 @@ class layer:
             self.geom.__class__.__name__,
         )
 
-        self.data = data
+        self.data = frame.to_native_copy(data)
 
     def compute_position(self, layout: Layout):
         """
@@ -485,10 +485,11 @@ class layer:
         coord : coord
             Type of coordinate axes
         """
-        self.data = self.geom.handle_na(self.data)
+        data = frame.to_frame(self.geom.handle_na(frame.to_frame(self.data)))
+        self.data = frame.to_native_copy(data)
         # At this point each layer must have the data
         # that is created by the plot build process
-        self.geom.draw_layer(self.data, layout, coord)
+        self.geom.draw_layer(data, layout, coord)
 
     def use_defaults(
         self,
@@ -507,7 +508,8 @@ class layer:
             Expression to evaluate and replace aesthetics in
             the data.
         """
-        old_columns = set(frame.to_frame(data).columns)
+        data = frame.to_frame(data)
+        old_columns = set(data.columns)
         data = frame.to_frame(self.geom.use_defaults(data, aes_modifiers))
         if scales is not None:
             # The default aesthetics and the aesthetic parameters are
@@ -520,10 +522,10 @@ class layer:
             ]
             if new_columns:
                 transformed = frame.to_frame(
-                    scales.transform_df(data.select(new_columns).to_native())
+                    scales.transform_df(data.select(new_columns))
                 )
                 data = data.with_columns(transformed[c] for c in new_columns)
-        return frame.to_native_copy(data)
+        return data
 
     def finish_statistics(self):
         """
@@ -662,7 +664,8 @@ class Layers(List[layer]):
 
     def use_defaults_after_scale(self, scales: Scales):
         for l in self:
-            l.data = l.use_defaults(l.data, l.mapping._scaled, scales)
+            data = l.use_defaults(l.data, l.mapping._scaled, scales)
+            l.data = frame.to_native_copy(data)
 
     def transform(self, scales: Scales):
         for l in self:

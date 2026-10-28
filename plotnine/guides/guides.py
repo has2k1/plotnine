@@ -7,7 +7,6 @@ from typing import TYPE_CHECKING, Literal, cast
 from warnings import warn
 
 import numpy as np
-import pandas as pd
 
 from .._utils import ensure_xy_location
 from .._utils.registry import Registry
@@ -551,13 +550,12 @@ def _merge_guides(gdefs: Sequence[guide]) -> list[guide]:
     """
     if not gdefs:
         return []
-    definitions = pd.DataFrame(
-        {"gdef": list(gdefs), "hash": [g.hash for g in gdefs]}
-    )
-    grouped = definitions.groupby("hash", sort=False)
+    grouped: dict[str, list[guide]] = {}
+    for g in gdefs:
+        grouped.setdefault(g.hash, []).append(g)
+
     out: list[guide] = []
-    for _, group in grouped:
-        gs = list(group["gdef"])
+    for gs in grouped.values():
         survivor = gs[0]
         for other in gs[1:]:
             survivor = survivor.merge(other)

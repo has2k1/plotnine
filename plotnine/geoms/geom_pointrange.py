@@ -3,6 +3,8 @@ from __future__ import annotations
 import typing
 from copy import copy
 
+import narwhals as nw
+
 from ..doctools import document
 from .geom import geom
 from .geom_linerange import geom_linerange
@@ -12,10 +14,10 @@ from .geom_point import geom_point
 if typing.TYPE_CHECKING:
     from typing import Any
 
-    import pandas as pd
     from matplotlib.axes import Axes
     from matplotlib.offsetbox import DrawingArea
 
+    from plotnine._utils.frame import DataFrame
     from plotnine.coords.coord import coord
     from plotnine.iapi import panel_view
     from plotnine.layer import layer
@@ -49,20 +51,22 @@ class geom_pointrange(geom):
 
     @staticmethod
     def draw_group(
-        data: pd.DataFrame,
+        data: DataFrame,
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
         params: dict[str, Any],
     ):
-        geom_linerange.draw_group(data.copy(), panel_params, coord, ax, params)
-        data["size"] = data["size"] * params["fatten"]
-        data["stroke"] = geom_point.DEFAULT_AES["stroke"]
+        geom_linerange.draw_group(data, panel_params, coord, ax, params)
+        data = data.with_columns(
+            size=nw.col("size") * params["fatten"],
+            stroke=nw.lit(geom_point.DEFAULT_AES["stroke"]),
+        )
         geom_point.draw_group(data, panel_params, coord, ax, params)
 
     @staticmethod
     def draw_legend(
-        data: pd.Series[Any], da: DrawingArea, lyr: layer
+        data: dict[str, Any], da: DrawingArea, lyr: layer
     ) -> DrawingArea:
         """
         Draw a point in the box
@@ -88,7 +92,7 @@ class geom_pointrange(geom):
 
     @staticmethod
     def legend_key_size(
-        data: pd.Series[Any], min_size: tuple[int, int], lyr: layer
+        data: dict[str, Any], min_size: tuple[int, int], lyr: layer
     ) -> tuple[int, int]:
         data = copy(data)
         data["size"] = data["size"] * lyr.geom.params["fatten"]

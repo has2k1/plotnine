@@ -20,6 +20,7 @@ from plotnine import (
     ggplot,
     xlim,
 )
+from plotnine._utils.frame import to_frame
 from plotnine.coords.coord import munch_data
 from plotnine.data import mtcars
 
@@ -107,7 +108,7 @@ def test_munch_interpolates_every_position_aesthetic():
         }
     )
 
-    munched = munch_data(data, np.array([1.0]))
+    munched = munch_data(to_frame(data), np.array([1.0])).to_native()
 
     assert len(munched) > len(data)
     for column in ("x", "y", "ymin", "ymax"):
@@ -123,7 +124,7 @@ def test_munch_data_preserves_a_flagged_break():
         {"x": [0.0, 1.0, 2.0], "y": [0.0, 1.0, 2.0], "group": [1, 1, 1]}
     )
 
-    munched = munch_data(data, np.array([np.nan, 1.0]))
+    munched = munch_data(to_frame(data), np.array([np.nan, 1.0])).to_native()
 
     flagged_segment = munched[munched["x"] < 1.0]
     assert len(flagged_segment) == 1

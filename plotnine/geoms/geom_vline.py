@@ -4,9 +4,8 @@ import typing
 from warnings import warn
 
 import numpy as np
-import pandas as pd
 
-from .._utils import SIZE_FACTOR, order_as_data_mapping, to_rgba
+from .._utils import SIZE_FACTOR, frame, order_as_data_mapping, to_rgba
 from ..doctools import document
 from ..exceptions import PlotnineWarning
 from ..mapping import aes
@@ -19,6 +18,7 @@ if typing.TYPE_CHECKING:
     from matplotlib.axes import Axes
     from matplotlib.offsetbox import DrawingArea
 
+    from plotnine._utils.frame import DataFrame
     from plotnine.coords.coord import coord
     from plotnine.iapi import panel_view
     from plotnine.layer import layer
@@ -63,7 +63,10 @@ class geom_vline(geom):
                     "the aes() mapping.",
                     PlotnineWarning,
                 )
-            data = pd.DataFrame({"xintercept": np.repeat(xintercept, 1)})
+            data = frame.frame(
+                {"xintercept": np.repeat(xintercept, 1)},
+                backend=frame.default_backend(),
+            ).to_native()
             mapping = aes(xintercept="xintercept")
             kwargs["show_legend"] = False
 
@@ -71,7 +74,7 @@ class geom_vline(geom):
 
     def draw_panel(
         self,
-        data: pd.DataFrame,
+        data: DataFrame,
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
@@ -80,28 +83,30 @@ class geom_vline(geom):
         Plot all groups
         """
         ranges = coord.backtransform_range(panel_params)
-        data["x"] = data["xintercept"]
-        data["xend"] = data["xintercept"]
-        data["y"] = ranges.y[0]
-        data["yend"] = ranges.y[1]
-        data = data.drop_duplicates()
+        data = frame.assign(
+            data,
+            x=data["xintercept"],
+            xend=data["xintercept"],
+            y=ranges.y[0],
+            yend=ranges.y[1],
+        )
+        data = frame.unique_rows(data)
 
-        for _, gdata in data.groupby("group"):
-            gdata = gdata.reset_index()
+        for _, gdata in frame.group_split(data, "group"):
             geom_segment.draw_group(
                 gdata, panel_params, coord, ax, self.params
             )
 
     @staticmethod
     def draw_legend(
-        data: pd.Series[Any], da: DrawingArea, lyr: layer
+        data: dict[str, Any], da: DrawingArea, lyr: layer
     ) -> DrawingArea:
         """
         Draw a vertical line in the box
 
         Parameters
         ----------
-        data : Series
+        data : dict
             Data Row
         da : DrawingArea
             Canvas

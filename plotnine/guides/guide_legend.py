@@ -9,11 +9,10 @@ from typing import TYPE_CHECKING, cast
 from warnings import warn
 
 import numpy as np
-import pandas as pd
 
 from plotnine.iapi import guide_text
 
-from .._utils import remove_missing
+from .._utils import frame, remove_missing
 from ..exceptions import PlotnineError, PlotnineWarning
 from ..mapping.aes import rename_aesthetics
 from .guide import GuideElements, guide
@@ -24,6 +23,7 @@ if TYPE_CHECKING:
     from matplotlib.artist import Artist
     from matplotlib.offsetbox import PackerBase
 
+    from plotnine._utils.frame import DataFrame
     from plotnine.geoms.geom import geom
     from plotnine.layer import layer
     from plotnine.typing import Side
@@ -37,7 +37,7 @@ if TYPE_CHECKING:
 @dataclass
 class LayerParameters:
     geom: geom
-    data: pd.DataFrame
+    data: DataFrame
     layer: layer
 
 
@@ -99,8 +99,9 @@ class guide_legend(guide):
         if not breaks:
             return None
 
-        key = pd.DataFrame(
-            {aesthetic: scale.map(breaks), "label": scale.get_labels(breaks)}
+        key = frame.frame(
+            {aesthetic: scale.map(breaks), "label": scale.get_labels(breaks)},
+            backend=frame.default_backend(),
         )
 
         if len(key) == 0:
@@ -138,7 +139,7 @@ class guide_legend(guide):
         Would create similar guides for fill and color where only
         a single guide would do
         """
-        self.key = self.key.merge(other.key)
+        self.key = frame.inner_join(self.key, other.key)
         duplicated = set(self.override_aes) & set(other.override_aes)
         if duplicated:
             msg = f"Duplicated override_aes, `{duplicated}`, are  ignored."
@@ -185,7 +186,7 @@ class guide_legend(guide):
             if not matched_set - exclude:
                 continue
 
-            data = self.key[matched].copy()
+            data = self.key.select(matched)
 
             # Modify aesthetics
 
@@ -210,8 +211,13 @@ class guide_legend(guide):
                 data = l.use_defaults(data, {})
 
             # override.aes in guide_legend manually changes the geom
-            for ae in set(self.override_aes) & set(data.columns):
-                data[ae] = self.override_aes[ae]
+            data = frame.assign(
+                data,
+                **{
+                    ae: self.override_aes[ae]
+                    for ae in set(self.override_aes) & set(data.columns)
+                },
+            )
 
             data = remove_missing(
                 data,
@@ -269,7 +275,7 @@ class guide_legend(guide):
             da = ColoredDrawingArea(w, h, 0, 0)
             for params in self._layer_parameters:
                 with suppress(IndexError):
-                    key_data = params.data.iloc[i]
+                    key_data = frame.row_dict(params.data, i)
                     params.geom.draw_legend(key_data, da, params.layer)
             drawings.append(da)
 
@@ -467,7 +473,7 @@ class GuideElementsLegend(GuideElements):
             sizes.append([])
             get_key_size = params.geom.legend_key_size
             for i in range(len(params.data)):
-                key_data = params.data.iloc[i]
+                key_data = frame.row_dict(params.data, i)
                 sizes[-1].append(
                     get_key_size(key_data, min_size, params.layer)
                 )

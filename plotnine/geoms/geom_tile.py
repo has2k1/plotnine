@@ -2,12 +2,12 @@ from __future__ import annotations
 
 import typing
 
-from .._utils import resolution
+from .._utils import frame, resolution
 from ..doctools import document
 from .geom_rect import geom_rect
 
 if typing.TYPE_CHECKING:
-    import pandas as pd
+    from plotnine._utils.frame import DataFrame
 
 
 @document
@@ -37,25 +37,31 @@ class geom_tile(geom_rect):
     }
     REQUIRED_AES = {"x", "y"}
 
-    def setup_data(self, data: pd.DataFrame) -> pd.DataFrame:
-        try:
-            width = data.pop("width")
-        except KeyError:
+    def setup_data(self, data: DataFrame) -> DataFrame:
+        if "width" in data.columns:
+            width = frame.to_numpy(data["width"])
+            data = data.drop("width")
+        else:
             width = self.aes_params.get(
                 "width",
                 resolution(data["x"], False),
             )
 
-        try:
-            height = data.pop("height")
-        except KeyError:
+        if "height" in data.columns:
+            height = frame.to_numpy(data["height"])
+            data = data.drop("height")
+        else:
             height = self.aes_params.get(
                 "height",
                 resolution(data["y"], False),
             )
 
-        data["xmin"] = data["x"] - width / 2
-        data["xmax"] = data["x"] + width / 2
-        data["ymin"] = data["y"] - height / 2
-        data["ymax"] = data["y"] + height / 2
-        return data
+        x = frame.to_numpy(data["x"])
+        y = frame.to_numpy(data["y"])
+        return frame.assign(
+            data,
+            xmin=x - width / 2,
+            xmax=x + width / 2,
+            ymin=y - height / 2,
+            ymax=y + height / 2,
+        )

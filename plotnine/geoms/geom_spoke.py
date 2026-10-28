@@ -4,11 +4,12 @@ from typing import TYPE_CHECKING
 
 import numpy as np
 
+from .._utils import frame
 from ..doctools import document
 from .geom_segment import geom_segment
 
 if TYPE_CHECKING:
-    import pandas as pd
+    from plotnine._utils.frame import DataFrame
 
 
 @document
@@ -30,16 +31,21 @@ class geom_spoke(geom_segment):
 
     REQUIRED_AES = {"x", "y", "angle", "radius"}
 
-    def setup_data(self, data: pd.DataFrame) -> pd.DataFrame:
-        try:
-            radius = data["radius"]
-        except KeyError:
+    def setup_data(self, data: DataFrame) -> DataFrame:
+        if "radius" in data.columns:
+            radius = frame.to_numpy(data["radius"])
+        else:
             radius = self.aes_params["radius"]
-        try:
-            angle = data["angle"]
-        except KeyError:
+
+        if "angle" in data.columns:
+            angle = frame.to_numpy(data["angle"])
+        else:
             angle = self.aes_params["angle"]
 
-        data["xend"] = data["x"] + np.cos(angle) * radius
-        data["yend"] = data["y"] + np.sin(angle) * radius
-        return data
+        x = frame.to_numpy(data["x"])
+        y = frame.to_numpy(data["y"])
+        return frame.assign(
+            data,
+            xend=x + np.cos(angle) * radius,
+            yend=y + np.sin(angle) * radius,
+        )

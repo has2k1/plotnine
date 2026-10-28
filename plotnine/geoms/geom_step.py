@@ -3,9 +3,8 @@ from __future__ import annotations
 import typing
 
 import numpy as np
-import pandas as pd
 
-from .._utils import copy_missing_columns
+from .._utils import copy_missing_columns, frame
 from ..doctools import document
 from ..exceptions import PlotnineError
 from .geom import geom
@@ -16,6 +15,7 @@ if typing.TYPE_CHECKING:
 
     from matplotlib.axes import Axes
 
+    from plotnine._utils.frame import DataFrame
     from plotnine.coords.coord import coord
     from plotnine.iapi import panel_view
 
@@ -46,7 +46,7 @@ class geom_step(geom_path):
 
     @staticmethod
     def draw_group(
-        data: pd.DataFrame,
+        data: DataFrame,
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
@@ -54,9 +54,9 @@ class geom_step(geom_path):
     ):
         direction = params["direction"]
         n = len(data)
-        data = data.sort_values("x", kind="mergesort")
-        x = data["x"].to_numpy()
-        y = data["y"].to_numpy()
+        data = frame.sort(data, "x")
+        x = frame.to_numpy(data["x"])
+        y = frame.to_numpy(data["y"])
 
         if direction == "vh":
             # create stepped path -- interleave x with
@@ -78,6 +78,6 @@ class geom_step(geom_path):
         else:
             raise PlotnineError(f"Invalid direction `{direction}`")
 
-        path_data = pd.DataFrame({"x": new_x, "y": new_y})
-        copy_missing_columns(path_data, data)
+        path_data = frame.frame_like(data, {"x": new_x, "y": new_y})
+        path_data = copy_missing_columns(path_data, data)
         geom_path.draw_group(path_data, panel_params, coord, ax, params)
