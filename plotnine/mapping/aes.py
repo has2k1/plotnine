@@ -148,11 +148,25 @@ class aes(Dict[str, Any]):
       ggplot(df, aes(x="alpha", y=[4, 4, 4]))
       ```
 
+    - **Narwhals expression**
+
+      ```python
+      import narwhals as nw
+
+      ggplot(df, aes(x="alpha", y=nw.col("beta") * 2))
+      ggplot(df, aes(x="alpha", y=nw.col("beta").cum_sum()))
+      ```
+
+      A [narwhals expression](https://narwhals-dev.github.io/narwhals/api-reference/expr/)
+      works with the dataframes of every library that narwhals
+      supports, e.g. pandas and polars.
+
     - **String expression**
 
       ```python
       ggplot(df, aes(x="alpha", y="2*beta"))
       ggplot(df, aes(x="alpha", y="np.sin(beta)"))
+      # Only for pandas dataframes, which have an index
       ggplot(df, aes(x="df.index", y="beta"))
 
       # If `count` is an aesthetic calculated by a stat
@@ -169,6 +183,13 @@ class aes(Dict[str, Any]):
       with the column names having precedence over the variables.
       For expressions, columns in the dataframe that are mapped to
       must have names that would be valid python variable names.
+
+      A string expression is first evaluated with the columns as
+      narwhals expressions (e.g. `"np.sin(beta)"` becomes
+      `np.sin(nw.col("beta"))`), so it works the same for every
+      dataframe library. If that is not possible, the columns are
+      series of the dataframe library, e.g. `"beta.str.upper()"` for
+      pandas, and lastly numpy arrays.
 
       This is okay:
 
