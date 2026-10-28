@@ -80,9 +80,7 @@ class Layout:
 
         # Map the data to the panels
         for layer, ldata in zip(layers, data):
-            layer.data = frame.to_native_copy(
-                frame.to_frame(self.facet.map(ldata, self.layout))
-            )
+            layer.data = frame.to_frame(self.facet.map(ldata, self.layout))
 
     def train_position(self, layers: Layers, scales: Scales):
         """

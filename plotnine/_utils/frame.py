@@ -136,11 +136,10 @@ def default_backend() -> Implementation:
 
     Polars is preferred, and pandas is the fallback.
     """
-    # TODO(narwhals): Prefer polars once all of plotnine is converted
-    if find_spec("pandas"):
-        return Implementation.PANDAS
     if find_spec("polars"):
         return Implementation.POLARS
+    if find_spec("pandas"):
+        return Implementation.PANDAS
     raise ImportError(
         "plotnine requires either polars or pandas to be installed."
     )
@@ -876,8 +875,10 @@ def native_io(func: Callable[..., Any]) -> Callable[..., Any]:
     and if any argument was native, the narwhals return values are
     converted back to native objects.
 
-    This is a transitional aid that allows the conversion of plotnine
-    to narwhals to proceed one function at a time.
+    plotnine works with narwhals dataframes, but code outside plotnine
+    (e.g. extensions) may call these functions with the dataframes of
+    the user's library. e.g. a pandas dataframe in gives a pandas
+    dataframe out.
     """
     from functools import wraps
 
@@ -1008,18 +1009,6 @@ def convert(df: DataFrame, backend: Implementation) -> DataFrame:
         {name: series(df[name], name, backend=backend) for name in df.columns},
         backend=backend,
     )
-
-
-def to_native_copy(data: DataFrame) -> Any:
-    """
-    Return a native dataframe that can be modified
-
-    TODO(narwhals): Remove when layer.data is a narwhals dataframe
-    """
-    native = data.to_native()
-    if data.implementation.is_pandas_like():
-        native = native.copy()
-    return native
 
 
 def isna(values: Any) -> np.ndarray:

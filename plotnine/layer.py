@@ -86,7 +86,7 @@ class layer:
         *geom* is a class or string.
     """
 
-    # Data for this layer
+    # Data for this layer. It is a narwhals dataframe.
     data: DataFrame
 
     # The dataframe library to use when the layer has no data
@@ -270,7 +270,7 @@ class layer:
             )
             raise PlotnineError(msg)
 
-        self.data = frame.to_native_copy(_decimal_columns_to_float(self.data))
+        self.data = _decimal_columns_to_float(self.data)
 
     def _make_layer_mapping(self, plot_mapping: aes):
         """
@@ -345,7 +345,7 @@ class layer:
 
         evaled = frame.assign(evaled, PANEL=panel)
         data = add_group(evaled)
-        self.data = frame.to_native_copy(frame.sort(data, "PANEL"))
+        self.data = frame.sort(data, "PANEL")
 
     def compute_statistic(self, layout: Layout):
         """
@@ -359,7 +359,7 @@ class layer:
         data = self.stat.use_defaults(data)
         data = self.stat.setup_data(data)
         data = self.stat.compute_layer(data, layout)
-        self.data = frame.to_native_copy(frame.to_frame(data))
+        self.data = frame.to_frame(data)
 
     def map_statistic(self, plot: ggplot):
         """
@@ -387,9 +387,9 @@ class layer:
         # ones in stat_data
         columns = [c for c in data.columns if c not in stat_data.columns]
         data = nw.concat([data.select(columns), stat_data], how="horizontal")
-        self.data = frame.to_native_copy(data)
+        self.data = data
         data = self._apply_scales(plot.scales.transform_df)
-        self.data = frame.to_native_copy(data)
+        self.data = data
 
         # Add any new scales, if needed
         new = {ae: ae for ae in stat_data.columns if ae not in self.asis}
@@ -414,7 +414,7 @@ class layer:
             self.geom.__class__.__name__,
         )
 
-        self.data = frame.to_native_copy(data)
+        self.data = data
 
     def compute_position(self, layout: Layout):
         """
@@ -430,7 +430,7 @@ class layer:
         params = self.position.setup_params(data)
         data = self.position.setup_data(data, params)
         data = self.position.compute_layer(data, params, layout)
-        self.data = frame.to_native_copy(frame.to_frame(data))
+        self.data = frame.to_frame(data)
 
     def resolve_asis_positions(self, layout: Layout, coord: coord):
         """
@@ -471,7 +471,7 @@ class layer:
                         resolved[col][idx], panel_params, dimension
                     )
 
-        self.data = frame.to_native_copy(frame.assign(data, **resolved))
+        self.data = frame.assign(data, **resolved)
 
     def draw(self, layout: Layout, coord: coord):
         """
@@ -486,7 +486,7 @@ class layer:
             Type of coordinate axes
         """
         data = frame.to_frame(self.geom.handle_na(frame.to_frame(self.data)))
-        self.data = frame.to_native_copy(data)
+        self.data = data
         # At this point each layer must have the data
         # that is created by the plot build process
         self.geom.draw_layer(data, layout, coord)
@@ -532,7 +532,7 @@ class layer:
         Prepare/modify data for plotting
         """
         data = self.stat.finish_layer(frame.to_frame(self.data))
-        self.data = frame.to_native_copy(frame.to_frame(data))
+        self.data = frame.to_frame(data)
 
     def update_labels(self, labels: labels_view):
         """
@@ -562,9 +562,9 @@ class layer:
         data = frame.to_frame(self.data)
         asis = [c for c in data.columns if c in self.asis]
         if not asis:
-            return frame.to_frame(func(data.to_native()))
+            return frame.to_frame(func(data))
 
-        result = frame.to_frame(func(data.drop(*asis).to_native()))
+        result = frame.to_frame(func(data.drop(*asis)))
         result = nw.concat([result, data.select(asis)], how="horizontal")
         order = [c for c in data.columns if c in result.columns]
         order += [c for c in result.columns if c not in order]
@@ -665,22 +665,20 @@ class Layers(List[layer]):
     def use_defaults_after_scale(self, scales: Scales):
         for l in self:
             data = l.use_defaults(l.data, l.mapping._scaled, scales)
-            l.data = frame.to_native_copy(data)
+            l.data = data
 
     def transform(self, scales: Scales):
         for l in self:
-            l.data = frame.to_native_copy(l._apply_scales(scales.transform_df))
+            l.data = l._apply_scales(scales.transform_df)
 
     def train(self, scales: Scales):
         for l in self:
             data = frame.to_frame(l.data)
-            scales.train_df(
-                data.drop(*(l.asis & set(data.columns))).to_native()
-            )
+            scales.train_df(data.drop(*(l.asis & set(data.columns))))
 
     def map(self, scales: Scales):
         for l in self:
-            l.data = frame.to_native_copy(l._apply_scales(scales.map_df))
+            l.data = l._apply_scales(scales.map_df)
 
     def finish_statistics(self):
         for l in self:
