@@ -164,7 +164,7 @@ def _is_scalar(value: Any) -> bool:
     )
 
 
-def _infer_object_values(values: Sequence[Any]) -> IntoDType | None:
+def _infer_object_values(values: Any) -> IntoDType | None:
     """
     Infer the narwhals dtype for values held in a python sequence
 
@@ -302,7 +302,7 @@ def series(
         else:
             arr = np.empty(len(values), dtype=object)
             arr[:] = list(values)
-            return nw.new_series(name, arr, backend=backend)
+            return nw.new_series(name, arr, backend=backend)  # pyright: ignore[reportArgumentType]
 
     if (
         backend == Implementation.POLARS
@@ -314,7 +314,7 @@ def series(
         unit = "datetime64[ns]" if values.dtype.kind == "M" else "m8[ns]"
         values = values.astype(unit)
 
-    return nw.new_series(name, values, dtype, backend=backend)
+    return nw.new_series(name, values, dtype, backend=backend)  # pyright: ignore[reportArgumentType]
 
 
 def _length(values: Any) -> int | None:
@@ -866,7 +866,7 @@ def _to_nw(obj: Any) -> tuple[Any, bool]:
     if _is_native(obj):
         if (pd := get_pandas()) is not None and isinstance(obj, pd.DataFrame):
             return to_frame(obj), True
-        return nw.from_native(obj, eager_only=True, allow_series=True), True
+        return nw.from_native(obj, eager_only=True, allow_series=True), True  # pyright: ignore[reportCallIssue,reportArgumentType]
     return obj, False
 
 
@@ -1147,7 +1147,7 @@ def unique_rows(
     """
     cols = list(subset) if subset is not None else df.columns
     if not any(df.schema[c] == nw.Object for c in cols):
-        return df.unique(subset, keep="first", maintain_order=True)
+        return df.unique(cols, keep="first", maintain_order=True)
 
     seen = set()
     keep = np.zeros(len(df), dtype=bool)

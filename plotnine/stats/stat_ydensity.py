@@ -105,8 +105,8 @@ class stat_ydensity(stat):
     DROPPED_AES = ["weight"]
 
     def setup_data(self, data):
-        if "x" not in data:
-            data["x"] = 0
+        if "x" not in data.columns:
+            data = frame.assign(data, x=0)
         return data
 
     def setup_params(self, data):

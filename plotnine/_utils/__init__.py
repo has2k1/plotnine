@@ -12,7 +12,7 @@ from collections.abc import Iterable, Sequence
 from contextlib import suppress
 from copy import deepcopy
 from dataclasses import field
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 from warnings import warn
 
 import mizani._colors.utils as color_utils
@@ -657,7 +657,7 @@ def remove_missing(
         ok = is_ok(data[v])
         keep = ok if keep is None else (keep & ok)
 
-    if not keep.all():  # pyright: ignore[reportOptionalMemberAccess]
+    if keep is not None and not keep.all():
         data = data.filter(keep)
 
     if len(data) < n and not na_rm:
@@ -881,7 +881,7 @@ def ungroup(data: DataLike) -> DataLike:
     """Return an ungrouped DataFrame, or pass the original data back."""
     _pd = get_pandas()
     if _pd is not None and isinstance(data, _pd.core.groupby.DataFrameGroupBy):
-        return data.obj  # pyright: ignore[reportReturnType]
+        return cast("Any", data).obj
 
     return data
 

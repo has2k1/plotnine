@@ -11,7 +11,7 @@ from ..scales.scale_discrete import scale_discrete
 if typing.TYPE_CHECKING:
     from typing import Literal, Optional
 
-    from plotnine._utils.frame import DataFrame, Implementation
+    from plotnine._utils.frame import DataFrame, Implementation, Series
     from plotnine.typing import FloatArray, FloatArrayLike
 
 
@@ -134,7 +134,7 @@ def breaks_from_bins(
 def assign_bins(
     x,
     breaks: FloatArrayLike,
-    weight: Optional[FloatArrayLike] = None,
+    weight: FloatArrayLike | Series | None = None,
     pad: bool = False,
     closed: Literal["right", "left"] = "right",
     *,

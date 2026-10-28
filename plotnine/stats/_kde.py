@@ -96,9 +96,9 @@ def _select_sigma(x: FloatArray) -> float:
     IQR = iqr / normalize
     std_dev = np.std(x, axis=0, ddof=1)
     if IQR > 0:
-        return np.minimum(std_dev, IQR)
+        return float(np.minimum(std_dev, IQR))
     else:
-        return std_dev
+        return float(std_dev)
 
 
 def _select_bandwidth(x: FloatArray, bw: str, kernel: Kernel) -> float:
@@ -116,7 +116,7 @@ def _select_bandwidth(x: FloatArray, bw: str, kernel: Kernel) -> float:
         raise ValueError(f"Bandwidth {bw} not understood") from err
 
     bandwidth = C * _select_sigma(x) * len(x) ** (-0.2)
-    if np.any(bandwidth == 0):
+    if bandwidth == 0:
         raise RuntimeError(
             "Selected KDE bandwidth is 0. Cannot estimate density. "
             "Either provide the bandwidth during initialization or use "

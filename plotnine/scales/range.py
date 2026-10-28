@@ -134,7 +134,7 @@ def train_discrete(
         try:
             new = list(np.unique(values))
         except TypeError:
-            new = multitype_sort(set(values))
+            new = multitype_sort(list(set(values)))
 
         limits = old + [i for i in new if (i not in old_set)]
 

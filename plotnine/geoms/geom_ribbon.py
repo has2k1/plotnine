@@ -147,7 +147,7 @@ class geom_ribbon(geom):
             _x,
             _min,
             _max,
-            where=where,  # pyright: ignore[reportArgumentType]
+            where=where,
             interpolate=interpolate,
             facecolor=fill,
             edgecolor=color,

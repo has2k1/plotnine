@@ -697,4 +697,6 @@ def has_groups(data: DataFrame) -> bool:
     """
     # If any row in the group column is equal to NO_GROUP, then
     # the data all of them are and the data has no groups
-    return frame.as_series(data["group"]).item(0) != NO_GROUP
+    group = frame.as_series(data["group"])
+    assert group is not None
+    return group.item(0) != NO_GROUP

@@ -22,7 +22,7 @@ if typing.TYPE_CHECKING:
     from plotnine.coords.coord import coord
     from plotnine.iapi import panel_view
     from plotnine.layer import layer
-    from plotnine.typing import FloatArray
+    from plotnine.typing import AnyArray
 
 
 @document
@@ -96,28 +96,28 @@ class geom_dotplot(geom):
         # Set up the stacking function and range
         if gp["stackdir"] in (None, "up"):
 
-            def stackdots(a: FloatArray) -> FloatArray:
+            def stackdots(a: AnyArray) -> AnyArray:
                 return a - 0.5
 
             stackaxismin: float = 0
             stackaxismax: float = 1
         elif gp["stackdir"] == "down":
 
-            def stackdots(a: FloatArray) -> FloatArray:
+            def stackdots(a: AnyArray) -> AnyArray:
                 return -a + 0.5
 
             stackaxismin = -1
             stackaxismax = 0
         elif gp["stackdir"] == "center":
 
-            def stackdots(a: FloatArray) -> FloatArray:
+            def stackdots(a: AnyArray) -> AnyArray:
                 return a - 1 - np.max(a - 1) / 2
 
             stackaxismin = -0.5
             stackaxismax = 0.5
         elif gp["stackdir"] == "centerwhole":
 
-            def stackdots(a: FloatArray) -> FloatArray:
+            def stackdots(a: AnyArray) -> AnyArray:
                 return a - 1 - np.floor(np.max(a - 1) / 2)
 
             stackaxismin = -0.5

@@ -17,8 +17,8 @@ from numpy.typing import NDArray
 from typing_extensions import TypeAlias  # noqa: TCH002
 
 if TYPE_CHECKING:
-    import narwhals as nw
-    from narwhals.typing import IntoDataFrame, IntoSeries
+    import pandas as pd
+    from narwhals.typing import IntoDataFrame
 
 
 class DataFrameConvertible(Protocol):
@@ -45,10 +45,12 @@ FloatArray: TypeAlias = NDArray[np.floating]
 IntArray: TypeAlias = NDArray[np.int64]
 StrArray: TypeAlias = NDArray[np.str_]
 
-# Series of any dataframe library supported by narwhals
-AnySeries: TypeAlias = "IntoSeries | nw.Series[Any]"
-IntSeries: TypeAlias = AnySeries
-FloatSeries: TypeAlias = AnySeries
+# Series. At runtime, they can be series of any dataframe library
+# supported by narwhals (e.g. pandas or polars). For static type
+# checking, they are described with pandas series.
+AnySeries: TypeAlias = "pd.Series[Any]"
+IntSeries: TypeAlias = "pd.Series[int]"
+FloatSeries: TypeAlias = "pd.Series[float]"
 
 # ArrayLikes
 AnyArrayLike: TypeAlias = "AnyArray | AnySeries | Sequence[Any]"
@@ -161,7 +163,7 @@ TextJustification: TypeAlias = (
 TFloatArrayLike = TypeVar("TFloatArrayLike", bound=FloatArrayLike)
 
 # Column transformation function
-TransformCol: TypeAlias = Callable[[FloatSeries], FloatSeries | FloatArray]
+TransformCol: TypeAlias = Callable[[FloatArray], FloatSeries | FloatArray]
 
 
 class PTransform(Protocol):

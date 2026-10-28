@@ -211,7 +211,7 @@ def compute_density(x, weight, range, params, *, backend=None):
     kde = KDEUnivariate(x)
     kde.fit(
         kernel=kernel,
-        bw=bw,  # type: ignore
+        bw=bw,
         fft=fft,
         weights=weight,
         adjust=params["adjust"],

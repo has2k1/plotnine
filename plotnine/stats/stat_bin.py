@@ -92,7 +92,7 @@ class stat_bin(stat):
     def setup_params(self, data):
         params = self.params
 
-        if "y" in data or "y" in params:
+        if "y" in data.columns or "y" in params:
             msg = "stat_bin() must not be used with a y aesthetic."
             raise PlotnineError(msg)
 

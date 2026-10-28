@@ -14,7 +14,7 @@ from ..exceptions import PlotnineWarning
 from .geom import geom
 
 if TYPE_CHECKING:
-    from typing import Any, Literal, Sequence
+    from typing import Any, Literal
 
     import numpy.typing as npt
     from matplotlib.axes import Axes
@@ -65,7 +65,7 @@ class geom_path(geom):
     }
 
     def handle_na(self, data: DataFrame) -> DataFrame:
-        def keep(x: Sequence[float]) -> BoolArray:
+        def keep(x: BoolArray) -> BoolArray:
             # first non-missing to last non-missing
             first = match([False], x, nomatch=1, start=0)[0]
             last = len(x) - match([False], x[::-1], nomatch=1, start=0)[0]

@@ -21,7 +21,7 @@ from .stat import stat
 if typing.TYPE_CHECKING:
     from typing import Optional
 
-    from plotnine._utils.frame import DataFrame, Implementation
+    from plotnine._utils.frame import DataFrame, Implementation, Series
     from plotnine.typing import FloatArrayLike
 
 
@@ -245,7 +245,7 @@ class stat_bindot(stat):
 
 def densitybin(
     x,
-    weight: FloatArrayLike | None,
+    weight: FloatArrayLike | Series | None,
     binwidth: float | None,
     bins: int = 30,
     rangee: Optional[tuple[float, float]] = None,
