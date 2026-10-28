@@ -423,13 +423,14 @@ class layer:
         This is in concert with the other objects in the panel depending
         on the position class of the geom
         """
-        if len(self.data) == 0:
+        data = frame.to_frame(self.data)
+        if len(data) == 0:
             return
 
-        params = self.position.setup_params(self.data)
-        data = self.position.setup_data(self.data, params)
+        params = self.position.setup_params(data)
+        data = self.position.setup_data(data, params)
         data = self.position.compute_layer(data, params, layout)
-        self.data = data
+        self.data = frame.to_native_copy(frame.to_frame(data))
 
     def resolve_asis_positions(self, layout: Layout, coord: coord):
         """

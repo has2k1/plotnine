@@ -1,10 +1,9 @@
 from __future__ import annotations
 
 import typing
-from contextlib import suppress
 from copy import copy
 
-from .._utils import jitter, normalise_random_state, resolution
+from .._utils import frame, jitter, normalise_random_state, resolution
 from ..exceptions import PlotnineError
 from ..mapping.aes import SCALED_AESTHETICS
 from .position import position
@@ -59,6 +58,7 @@ class position_jitterdodge(position):
     def setup_params(self, data):
         params = copy(self.params)
         params["random_state"] = normalise_random_state(params["random_state"])
+
         width = params["jitter_width"]
         if width is None:
             width = resolution(data["x"]) * 0.4
@@ -66,7 +66,7 @@ class position_jitterdodge(position):
         # Adjust the x transformation based on the number
         # of dodge variables
         dvars = SCALED_AESTHETICS - self.REQUIRED_AES
-        dodge_columns = data.columns.intersection(list(dvars))
+        dodge_columns = [col for col in data.columns if col in dvars]
         if len(dodge_columns) == 0:
             raise PlotnineError(
                 "'position_jitterdodge' requires at least one "
@@ -75,8 +75,8 @@ class position_jitterdodge(position):
 
         s = set()
         for col in dodge_columns:
-            with suppress(AttributeError):
-                s.update(data[col].cat.categories)
+            if frame.is_categorical(data[col]):
+                s.update(frame.levels(data[col]))
         ndodge = len(s)
 
         params["jitter_width"] = width / (ndodge + 2)

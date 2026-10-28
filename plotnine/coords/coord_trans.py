@@ -6,6 +6,7 @@ from warnings import warn
 
 import numpy as np
 
+from .._utils import frame
 from ..exceptions import PlotnineWarning
 from ..iapi import panel_ranges, panel_view
 from ..positions.position import transform_position
@@ -74,7 +75,7 @@ class coord_trans(coord):
 
         def trans_x(col: FloatSeries) -> FloatSeries:
             result = transform_value(self.trans_x, col)
-            if any(result.isna()):
+            if frame.isna(result).any():
                 warn(
                     "Coordinate transform of x aesthetic "
                     "created one or more NaN values.",
@@ -84,7 +85,7 @@ class coord_trans(coord):
 
         def trans_y(col: FloatSeries) -> FloatSeries:
             result = transform_value(self.trans_y, col)
-            if any(result.isna()):
+            if frame.isna(result).any():
                 warn(
                     "Coordinate transform of y aesthetic "
                     "created one or more NaN values.",

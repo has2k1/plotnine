@@ -521,6 +521,15 @@ def group_split(
     if not len(df):
         return
 
+    # NaN keys are missing, like nulls
+    float_by = [col for col in by if df.schema[col].is_float()]
+    if float_by:
+        df = df.filter(
+            ~nw.any_horizontal(
+                *[nw.col(c).is_nan() for c in float_by], ignore_nulls=True
+            )
+        )
+
     level_lookup = {}
     for col in by:
         dtype = df.schema[col]
