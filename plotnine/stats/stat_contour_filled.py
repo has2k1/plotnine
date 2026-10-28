@@ -62,8 +62,8 @@ class stat_contour_filled(stat_contour):
         "subgroup",
     }
 
-    def compute_contours(self, x, y, Z, breaks, group):
+    def compute_contours(self, x, y, Z, breaks, group, *, backend=None):
         """
         Trace each band between neighbouring breaks on an axis-aligned grid
         """
-        return contour_bands(x, y, Z, breaks, group)
+        return contour_bands(x, y, Z, breaks, group, backend=backend)

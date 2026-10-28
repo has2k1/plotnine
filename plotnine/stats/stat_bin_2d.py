@@ -1,13 +1,13 @@
 import itertools
 import types
 
+import narwhals as nw
 import numpy as np
-import pandas as pd
 
-from .._utils import is_scalar
+from .._utils import frame, is_scalar
 from ..doctools import document
 from ..mapping.evaluation import after_stat
-from .binning import fuzzybreaks
+from .binning import cut, fuzzybreaks
 from .stat import stat
 
 
@@ -79,20 +79,20 @@ class stat_bin_2d(stat):
         breaks = self.params["breaks"]
         binwidth = self.params["binwidth"]
         drop = self.params["drop"]
-        weight = data.get("weight")
 
-        if weight is None:
-            weight = np.ones(len(data["x"]))
+        if "weight" in data.columns:
+            weight = np.nan_to_num(frame.to_numpy(data["weight"]))
+        else:
+            weight = np.ones(len(data))
 
         # The bins will be over the dimension(full size) of the
         # trained x and y scales
         range_x = scales.x.dimension()
         range_y = scales.y.dimension()
 
-        # Trick pd.cut into creating cuts over the range of
-        # the scale
-        x = np.append(data["x"], range_x)
-        y = np.append(data["y"], range_y)
+        # Trick cut into creating cuts over the range of the scale
+        x = np.append(frame.to_numpy(data["x"]), range_x)
+        y = np.append(frame.to_numpy(data["y"]), range_y)
 
         # create the cutting parameters
         xbreaks = fuzzybreaks(
@@ -102,38 +102,23 @@ class stat_bin_2d(stat):
             scales.y, breaks.y, binwidth=binwidth.y, bins=bins.y
         )
 
-        xbins = pd.cut(
-            x,
-            bins=xbreaks,  # pyright: ignore
-            labels=False,
-            right=True,
-        )
-        ybins = pd.cut(
-            y,
-            bins=ybreaks,  # pyright: ignore
-            labels=False,
-            right=True,
-        )
-
         # Remove the spurious points
-        xbins = xbins[:-2]
-        ybins = ybins[:-2]
+        xbins = cut(x, xbreaks, right=True)[:-2]
+        ybins = cut(y, ybreaks, right=True)[:-2]
 
         # Because we are graphing, we want to see equal breaks
         # The original breaks have an extra room to the left
         ybreaks[0] -= np.diff(np.diff(ybreaks))[0]
         xbreaks[0] -= np.diff(np.diff(xbreaks))[0]
 
-        bins_grid_long = pd.DataFrame(
-            {
-                "xbins": xbins,
-                "ybins": ybins,
-                "weight": weight,
-            }
-        )
-        table = bins_grid_long.pivot_table(
-            "weight", index=["xbins", "ybins"], aggfunc="sum"
-        )["weight"]
+        # A weighted frequency table, with a cell for every bin
+        shape = (len(xbreaks) - 1, len(ybreaks) - 1)
+        valid = ~(np.isnan(xbins) | np.isnan(ybins))
+        cells = (xbins[valid].astype(int), ybins[valid].astype(int))
+        table = np.zeros(shape)
+        np.add.at(table, cells, weight[valid])
+        occupied = np.zeros(shape, dtype=bool)
+        occupied[cells] = True
 
         # create rectangles
         rects = []
@@ -141,27 +126,25 @@ class stat_bin_2d(stat):
             range(len(ybreaks) - 1), range(len(xbreaks) - 1)
         )
         for j, i in keys:
-            try:
-                cval = table[(i, j)]
-            except KeyError:
-                if drop:
-                    continue
+            if occupied[i, j]:
+                cval = table[i, j]
+            elif drop:
+                continue
+            else:
                 cval = 0
             # xmin, xmax, ymin, ymax, count
-            row = [
-                xbreaks[i],
-                xbreaks[i + 1],
-                ybreaks[j],
-                ybreaks[j + 1],
-                cval,
-            ]
-            rects.append(row)
+            rects.append(
+                [xbreaks[i], xbreaks[i + 1], ybreaks[j], ybreaks[j + 1], cval]
+            )
 
-        new_data = pd.DataFrame(
-            rects, columns=["xmin", "xmax", "ymin", "ymax", "count"]
+        columns = ["xmin", "xmax", "ymin", "ymax", "count"]
+        arr = np.array(rects, dtype=float).reshape(-1, len(columns))
+        new_data = frame.frame_like(
+            data, {name: arr[:, i] for i, name in enumerate(columns)}
         )
-        new_data["density"] = new_data["count"] / new_data["count"].sum()
-        return new_data
+        return new_data.with_columns(
+            density=nw.col("count") / nw.col("count").sum()
+        )
 
 
 stat_bin2d = stat_bin_2d

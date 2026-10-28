@@ -351,7 +351,7 @@ class layer:
         """
         Compute & return statistics for this layer
         """
-        data = self.data
+        data = frame.to_frame(self.data)
         if not len(data):
             return
 
@@ -359,7 +359,7 @@ class layer:
         data = self.stat.use_defaults(data)
         data = self.stat.setup_data(data)
         data = self.stat.compute_layer(data, layout)
-        self.data = data
+        self.data = frame.to_native_copy(frame.to_frame(data))
 
     def map_statistic(self, plot: ggplot):
         """
@@ -529,7 +529,8 @@ class layer:
         """
         Prepare/modify data for plotting
         """
-        self.stat.finish_layer(self.data)
+        data = self.stat.finish_layer(frame.to_frame(self.data))
+        self.data = frame.to_native_copy(frame.to_frame(data))
 
     def update_labels(self, labels: labels_view):
         """

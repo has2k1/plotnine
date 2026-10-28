@@ -1,8 +1,9 @@
 from contextlib import suppress
 
+import narwhals as nw
 import numpy as np
-import pandas as pd
 
+from .._utils import frame
 from ..doctools import document
 from ..exceptions import PlotnineError
 from .stat import stat
@@ -148,29 +149,26 @@ class stat_ydensity(stat):
         if not len(data):
             return data
 
+        density = nw.col("density")
         if params["scale"] == "area":
-            data["violinwidth"] = data["density"] / data["density"].max()
+            violinwidth = density / density.max()
         elif params["scale"] == "count":
-            data["violinwidth"] = (
-                data["density"]
-                / data["density"].max()
-                * data["n"]
-                / data["n"].max()
-            )
+            n = nw.col("n")
+            violinwidth = density / density.max() * n / n.max()
         elif params["scale"] == "width":
-            data["violinwidth"] = data["scaled"]
+            violinwidth = nw.col("scaled")
         else:
             msg = "Unknown scale value '{}'"
             raise PlotnineError(msg.format(params["scale"]))
 
-        return data
+        return data.with_columns(violinwidth=violinwidth)
 
     def compute_group(self, data, scales):
         n = len(data)
         if n == 0:
-            return pd.DataFrame()
+            return frame.empty_like(data)
 
-        weight = data.get("weight")
+        weight = data["weight"] if "weight" in data.columns else None
 
         if self.params["trim"]:
             range_y = data["y"].min(), data["y"].max()
@@ -182,11 +180,12 @@ class stat_ydensity(stat):
         if not len(dens):
             return dens
 
-        dens["y"] = dens["x"]
-        dens["x"] = np.mean([data["x"].min(), data["x"].max()])
+        x = frame.to_numpy(data["x"])
+        dens = dens.with_columns(y=nw.col("x"))
+        dens = frame.assign(dens, x=np.mean([x.min(), x.max()]))
 
         # Compute width if x has multiple values
-        if len(np.unique(data["x"])) > 1:
-            dens["width"] = np.ptp(data["x"]) * 0.9
+        if len(np.unique(x)) > 1:
+            dens = frame.assign(dens, width=np.ptp(x) * 0.9)
 
         return dens

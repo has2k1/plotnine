@@ -3,8 +3,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, cast
 
 import numpy as np
-import pandas as pd
 
+from .._utils import frame
 from ..doctools import document
 from ..exceptions import PlotnineError
 from ..mapping.evaluation import after_stat
@@ -74,7 +74,7 @@ class stat_qq(stat):
     }
 
     def compute_group(self, data, scales):
-        sample = cast("FloatArray", data["sample"].sort_values().to_numpy())
+        sample = cast("FloatArray", np.sort(frame.to_numpy(data["sample"])))
         theoretical = theoretical_qq(
             sample,
             self.params["distribution"],
@@ -83,7 +83,9 @@ class stat_qq(stat):
             quantiles=self.params["quantiles"],
             distribution_params=self.params["dparams"],
         )
-        return pd.DataFrame({"sample": sample, "theoretical": theoretical})
+        return frame.frame_like(
+            data, {"sample": sample, "theoretical": theoretical}
+        )
 
 
 def theoretical_qq(

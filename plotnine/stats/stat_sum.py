@@ -1,4 +1,6 @@
-from .._utils import groupby_apply
+import narwhals as nw
+
+from .._utils import frame, groupby_apply
 from ..doctools import document
 from ..mapping.aes import ALL_AESTHETICS
 from ..mapping.evaluation import after_stat
@@ -40,28 +42,21 @@ class stat_sum(stat):
     CREATES = {"n", "prop"}
 
     def compute_panel(self, data, scales):
-        if "weight" not in data:
-            data["weight"] = 1
+        if "weight" not in data.columns:
+            data = data.with_columns(weight=nw.lit(1))
 
-        def count(df):
-            """
-            Do a weighted count
-            """
-            df["n"] = df["weight"].sum()
-            return df.iloc[0:1]
-
-        def ave(df):
-            """
-            Calculate proportion values
-            """
-            df["prop"] = df["n"] / df["n"].sum()
-            return df
-
-        # group by all present aesthetics other than the weight,
-        # then sum them (i.e no. of uniques) to get the raw count
-        # 'n', and the proportions 'prop' per group
         s: set[str] = set(data.columns) & ALL_AESTHETICS
-        by = list(s.difference(["weight"]))
-        counts = groupby_apply(data, by, count)
-        counts = groupby_apply(counts, "group", ave)
-        return counts
+        by = [c for c in data.columns if c in s and c != "weight"]
+
+        # Do a weighted count
+        counts = groupby_apply(
+            data,
+            by,
+            lambda df: df.head(1).with_columns(n=nw.lit(df["weight"].sum())),
+        )
+
+        # Calculate proportion values
+        counts = counts.with_columns(
+            prop=nw.col("n") / nw.col("n").sum().over("group")
+        )
+        return frame.sort(counts, "group")

@@ -14,7 +14,7 @@ from __future__ import annotations
 import datetime
 import numbers
 from collections.abc import Iterable, Mapping, Sequence
-from contextlib import contextmanager
+from contextlib import contextmanager, suppress
 from contextvars import ContextVar
 from functools import cache
 from importlib.util import find_spec
@@ -1022,3 +1022,31 @@ def scale_values(s: Series) -> Any:
     if is_categorical(s):
         return s
     return to_numpy(s)
+
+
+def frame_like(
+    df: DataFrame | Series,
+    data: Mapping[str, Any] | None = None,
+    n: int | None = None,
+) -> DataFrame:
+    """
+    Create a dataframe with the same library as df
+
+    See `frame` for the parameters.
+    """
+    return frame(data, backend=df.implementation, n=n)
+
+
+def backend_of(obj: Any) -> Implementation:
+    """
+    Return the library of a (native) dataframe or series
+
+    For other objects, e.g. numpy arrays, it is the default library.
+    """
+    if isinstance(obj, (nw.DataFrame, nw.Series)):
+        return obj.implementation
+    with suppress(TypeError):
+        return nw.from_native(
+            obj, eager_only=True, allow_series=True
+        ).implementation
+    return default_backend()

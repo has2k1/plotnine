@@ -25,15 +25,6 @@ __all__ = (
 )
 
 
-def _backend_of(values: Any) -> frame.Implementation:
-    """
-    Library of the values if they are a series, else the default
-    """
-    if (s := frame.as_series(values)) is not None:
-        return s.implementation
-    return frame.default_backend()
-
-
 def factor(
     values: Sequence[Any] | float | str,
     categories: Sequence[Any] | None = None,
@@ -75,7 +66,7 @@ def factor(
         values,
         categories,
         ordered=bool(ordered),
-        backend=_backend_of(values),
+        backend=frame.backend_of(values),
     )
 
 
@@ -107,7 +98,7 @@ def reorder(x, y, fun=np.median, ascending=True):
     if len(x) != len(y):
         raise ValueError(f"Lengths are not equal. {len(x)=}, {len(x)=}")
 
-    backend = _backend_of(x)
+    backend = frame.backend_of(x)
     s = frame.as_series(x)
     xs = s.to_list() if s is not None else list(x)
     # An ordered categorical stays ordered

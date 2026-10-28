@@ -5,8 +5,8 @@ from typing import TYPE_CHECKING, cast
 from warnings import warn
 
 import numpy as np
-import pandas as pd
 
+from .._utils import frame
 from ..doctools import document
 from ..exceptions import PlotnineError, PlotnineWarning
 from ..mapping.evaluation import after_stat
@@ -149,7 +149,7 @@ class stat_density(stat):
             raise PlotnineError(msg)
 
     def compute_group(self, data, scales):
-        weight = data.get("weight")
+        weight = data["weight"] if "weight" in data.columns else None
 
         if self.params["trim"]:
             range_x = data["x"].min(), data["x"].max()
@@ -159,13 +159,19 @@ class stat_density(stat):
         return compute_density(data["x"], weight, range_x, self.params)
 
 
-def compute_density(x, weight, range, params):
+def compute_density(x, weight, range, params, *, backend=None):
     """
     Compute density
+
+    The dataframe is of the library `backend`. If None, it is that
+    of `x` if `x` is a series, otherwise it is the default library.
     """
     import statsmodels.api as sm
 
-    x = np.asarray(x, dtype=float)
+    if backend is None:
+        backend = frame.backend_of(x)
+
+    x = np.asarray(frame.as_numpy(x), dtype=float)
     not_nan = ~np.isnan(x)
     x = x[not_nan]
     bw = cast("str | float", params["bw"])
@@ -185,7 +191,7 @@ def compute_density(x, weight, range, params):
             "Groups with fewer than 2 data points have been removed.",
             PlotnineWarning,
         )
-        return pd.DataFrame()
+        return frame.frame(backend=backend)
 
     # kde is computed efficiently using fft. But the fft does
     # not support weights and is only available with the
@@ -195,7 +201,7 @@ def compute_density(x, weight, range, params):
         if kernel != "gau":
             weight = np.ones(n) / n
     else:
-        weight = np.asarray(weight, dtype=float)
+        weight = np.asarray(frame.as_numpy(weight), dtype=float)
 
     fft = kernel == "gau" and weight is None
 
@@ -258,14 +264,16 @@ def compute_density(x, weight, range, params):
     if has_bounds:
         x2, y = fit_density_to_bounds(x2, y, range, bounds)
 
-    return pd.DataFrame(
+    return frame.frame(
         {
             "x": x2,
             "density": y,
             "scaled": y / np.max(y) if len(y) else [],
             "count": y * n,
             "n": n,
-        }
+        },
+        backend=backend,
+        n=len(x2),
     )
 
 

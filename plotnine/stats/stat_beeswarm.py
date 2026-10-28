@@ -1,6 +1,6 @@
 import numpy as np
 
-from .._utils import jitter
+from .._utils import frame, jitter
 from ..doctools import document
 from ._swarm import (
     check_x_is_discrete,
@@ -133,21 +133,25 @@ class stat_beeswarm(stat):
         if not len(data):
             return data
 
-        swarm_widths(data, params["scale"], "width_fraction")
-        data["xmin"] = data["x"] - maxwidth / 2
-        data["xmax"] = data["x"] + maxwidth / 2
-        data["x_diff"] = spread_offset(
-            data, maxwidth, "width_fraction", params
+        data = swarm_widths(data, params["scale"], "width_fraction")
+        x = frame.to_numpy(data["x"])
+        data = frame.assign(
+            data,
+            xmin=x - maxwidth / 2,
+            xmax=x + maxwidth / 2,
+            x_diff=spread_offset(data, maxwidth, "width_fraction", params),
+            width=maxwidth,
         )
-        data["width"] = maxwidth
 
         # jitter y values if the input is integer,
         # but not if it is the same value
-        y = data["y"].to_numpy()
+        y = frame.to_numpy(data["y"])
         all_integers = (y == np.floor(y)).all()
         some_are_unique = len(np.unique(y)) > 1
         if all_integers and some_are_unique:
-            data["y"] = jitter(y, random_state=params["random_state"])
+            data = frame.assign(
+                data, y=jitter(y, random_state=params["random_state"])
+            )
 
         return data
 

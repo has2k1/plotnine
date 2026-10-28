@@ -1,19 +1,20 @@
-from typing import TYPE_CHECKING, cast
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
 from warnings import warn
 
 import numpy as np
-import pandas as pd
 
-from .._utils import groupby_apply, normalise_random_state
+from .._utils import frame, groupby_apply, normalise_random_state
 from ..doctools import document
 from ..exceptions import PlotnineWarning
 from ..scales.scale_discrete import scale_discrete
-from .binning import fuzzybreaks
+from .binning import cut, fuzzybreaks
 from .stat import stat
 from .stat_summary import make_summary_fun
 
 if TYPE_CHECKING:
-    from plotnine.typing import IntArray
+    from plotnine._utils.frame import DataFrame
 
 
 @document
@@ -140,31 +141,24 @@ class stat_summary_bin(stat):
         )
 
         breaks = fuzzybreaks(scales.x, breaks, boundary, binwidth, bins)
-        data["bin"] = pd.cut(
-            data["x"],
-            bins=breaks,  # pyright: ignore
-            labels=False,
-            include_lowest=True,
+        data = frame.assign(
+            data,
+            bin=cut(frame.to_numpy(data["x"]), breaks, include_lowest=True),
         )
 
-        def func_wrapper(data: pd.DataFrame) -> pd.DataFrame:
+        def func_wrapper(data: DataFrame) -> DataFrame:
             """
             Add `bin` column to each summary result.
             """
-            result = func(data)
-            result["bin"] = data["bin"].iloc[0]
-            return result
+            return frame.assign(func(data), bin=data["bin"].item(0))
 
         # This is a plyr::ddply
         out = groupby_apply(data, "bin", func_wrapper)
         centers = (breaks[:-1] + breaks[1:]) * 0.5
-        bin = cast("IntArray", out["bin"].to_numpy())
-        bin_centers = centers[bin]
-        out["x"] = bin_centers
+        bin = frame.to_numpy(out["bin"]).astype(int)
         if isinstance(scales.x, scale_discrete):
-            out["width"] = 0.9
+            width = 0.9
         else:
-            out["width"] = np.diff(breaks)[bin]
-        out["bin"] += 1
+            width = np.diff(breaks)[bin]
 
-        return out
+        return frame.assign(out, x=centers[bin], width=width, bin=bin + 1)

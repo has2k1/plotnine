@@ -135,7 +135,7 @@ class stat_bin(stat):
         new_data = assign_bins(
             data["x"],
             breaks,
-            data.get("weight"),
+            data["weight"] if "weight" in data.columns else None,
             params["pad"],
             params["closed"],
         )

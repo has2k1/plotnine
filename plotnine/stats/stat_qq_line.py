@@ -1,8 +1,8 @@
 from typing import TYPE_CHECKING, cast
 
 import numpy as np
-import pandas as pd
 
+from .._utils import frame
 from ..doctools import document
 from ..exceptions import PlotnineError
 from .stat import stat
@@ -77,7 +77,7 @@ class stat_qq_line(stat):
         dparams = self.params["dparams"]
 
         # Compute theoretical values
-        sample = cast("FloatArray", data["sample"].sort_values().to_numpy())
+        sample = cast("FloatArray", np.sort(frame.to_numpy(data["sample"])))
         theoretical = theoretical_qq(
             sample,
             self.params["distribution"],
@@ -90,7 +90,6 @@ class stat_qq_line(stat):
         # Compute slope & intercept of the line through the quantiles
         cdist = get_continuous_distribution(self.params["distribution"])
         x_coords = cdist.ppf(line_p, **dparams)
-        # Linear interpolation (R's quantile type 7), as used by ggplot2
         y_coords = np.quantile(sample, line_p)
         slope = (np.diff(y_coords) / np.diff(x_coords))[0]
         intercept = y_coords[0] - slope * x_coords[0]
@@ -103,5 +102,4 @@ class stat_qq_line(stat):
 
         x = np.asarray(x)
         y = slope * x + intercept
-        data = pd.DataFrame({"x": x, "y": y})
-        return data
+        return frame.frame_like(data, {"x": x, "y": y})

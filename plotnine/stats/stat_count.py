@@ -1,7 +1,7 @@
+import narwhals as nw
 import numpy as np
-import pandas as pd
 
-from .._utils import resolution
+from .._utils import frame, resolution
 from ..doctools import document
 from ..exceptions import PlotnineError
 from ..mapping.evaluation import after_stat
@@ -54,25 +54,20 @@ class stat_count(stat):
             self.params["width"] = resolution(data["x"], False) * 0.9
 
     def compute_group(self, data, scales):
-        x = data["x"]
-        if ("y" in data) or ("y" in self.params):
+        if ("y" in data.columns) or ("y" in self.params):
             msg = "stat_count() must not be used with a y aesthetic"
             raise PlotnineError(msg)
 
-        weight = data.get("weight", [1] * len(x))
+        if "weight" not in data.columns:
+            data = data.with_columns(weight=nw.lit(1))
+
         width = self.params["width"]
-        xdata_long = pd.DataFrame({"x": x, "weight": weight})
-        # weighted frequency count
-        count = xdata_long.pivot_table("weight", index=["x"], aggfunc="sum")[
-            "weight"
-        ]
-        x = count.index
-        count = count.to_numpy()
-        return pd.DataFrame(
-            {
-                "count": count,
-                "prop": count / np.abs(count).sum(),
-                "x": x,
-                "width": width,
-            }
+        count = frame.sort(
+            data.group_by("x").agg(nw.col("weight").sum().alias("count")), "x"
         )
+        counts = frame.to_numpy(count["count"])
+        return frame.assign(
+            count,
+            prop=counts / np.abs(counts).sum(),
+            width=width,
+        ).select("count", "prop", "x", "width")

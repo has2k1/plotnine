@@ -7,9 +7,10 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, cast
 from warnings import warn
 
+import narwhals as nw
 import numpy as np
-import pandas as pd
 
+from .._utils import frame
 from ..exceptions import PlotnineError, PlotnineWarning
 
 if TYPE_CHECKING:
@@ -17,6 +18,7 @@ if TYPE_CHECKING:
 
     from contourpy import ContourGenerator
 
+    from plotnine._utils.frame import DataFrame, Implementation
     from plotnine.typing import FloatArray, FloatArrayLike, IntArray
 
 
@@ -101,7 +103,7 @@ def contour_breaks(
 
 
 def xyz_to_grid(
-    data: pd.DataFrame,
+    data: DataFrame,
 ) -> tuple[FloatArray, FloatArray, FloatArray]:
     """
     Arrange tidy x, y, and z values on a grid
@@ -110,10 +112,14 @@ def xyz_to_grid(
     value per grid cell. Cells absent from the data contain `nan` and are
     not contoured.
     """
-    x = np.sort(data["x"].unique())
-    y = np.sort(data["y"].unique())
+    _x = frame.to_numpy(data["x"])
+    _y = frame.to_numpy(data["y"])
+    x = np.unique(_x)
+    y = np.unique(_y)
     Z = np.full((len(y), len(x)), np.nan)
-    Z[np.searchsorted(y, data["y"]), np.searchsorted(x, data["x"])] = data["z"]
+    Z[np.searchsorted(y, _y), np.searchsorted(x, _x)] = frame.to_numpy(
+        data["z"]
+    )
     return x, y, Z
 
 
@@ -148,15 +154,23 @@ def contour_lines(
     Z: FloatArray,
     breaks: FloatArray,
     group: Any,
-) -> pd.DataFrame:
+    *,
+    backend: Implementation | None = None,
+) -> DataFrame:
     """
     Trace the contour line at each break
 
     Assign each disconnected line its own `piece` and `group`, so geoms
     draw separate paths. A grid needs at least two rows and two columns to
     contain a cell; smaller grids return no contours.
+
+    The dataframe is of the library `backend`, and if None, of the
+    default library.
     """
     from mizani.bounds import rescale_max
+
+    if backend is None:
+        backend = frame.default_backend()
 
     if min(Z.shape) < 2:
         warn(
@@ -164,7 +178,7 @@ def contour_lines(
             "but the grid has fewer than two rows or columns.",
             PlotnineWarning,
         )
-        return _empty_contour_lines()
+        return _empty_contour_lines(backend)
 
     cgen = _contour_generator(x, y, Z)
 
@@ -177,11 +191,11 @@ def contour_lines(
 
     if not vertices:
         warn("No contours were generated.", PlotnineWarning)
-        return _empty_contour_lines()
+        return _empty_contour_lines(backend)
 
     xy = np.concatenate(vertices)
     level = np.repeat(levels, counts)
-    return pd.DataFrame(
+    return frame.frame(
         {
             "x": xy[:, 0],
             "y": xy[:, 1],
@@ -189,7 +203,8 @@ def contour_lines(
             "nlevel": rescale_max(level),
             "piece": np.repeat(np.arange(1, len(counts) + 1), counts),
             "group": np.repeat(_group_ids(group, len(counts)), counts),
-        }
+        },
+        backend=backend,
     )
 
 
@@ -199,7 +214,9 @@ def contour_bands(
     Z: FloatArray,
     breaks: FloatArray,
     group: Any,
-) -> pd.DataFrame:
+    *,
+    backend: Implementation | None = None,
+) -> DataFrame:
     """
     Trace the boundary of each contour band
 
@@ -207,8 +224,14 @@ def contour_bands(
     its rings with `subgroup`, starting with the exterior boundary.
     A band needs at least two breaks, and a grid needs at least two rows
     and two columns. Invalid inputs return no bands.
+
+    The dataframe is of the library `backend`, and if None, of the
+    default library.
     """
     from mizani.bounds import rescale_max
+
+    if backend is None:
+        backend = frame.default_backend()
 
     labels = band_labels(breaks)
 
@@ -218,7 +241,7 @@ def contour_bands(
             "required to bound a band.",
             PlotnineWarning,
         )
-        return _empty_contour_bands(labels)
+        return _empty_contour_bands(labels, backend)
 
     if min(Z.shape) < 2:
         warn(
@@ -226,7 +249,7 @@ def contour_bands(
             "but the grid has fewer than two rows or columns.",
             PlotnineWarning,
         )
-        return _empty_contour_bands(labels)
+        return _empty_contour_bands(labels, backend)
 
     cgen = _contour_generator(x, y, Z)
 
@@ -253,7 +276,7 @@ def contour_bands(
 
     if not vertices:
         warn("No contour bands were generated.", PlotnineWarning)
-        return _empty_contour_bands(labels)
+        return _empty_contour_bands(labels, backend)
 
     xy = np.concatenate(vertices)
     band = np.repeat(bands, counts)
@@ -261,12 +284,15 @@ def contour_bands(
     level_high = breaks[1:][band]
     ids = _group_ids(group, npieces)
 
-    return pd.DataFrame(
+    return frame.frame(
         {
             "x": xy[:, 0],
             "y": xy[:, 1],
-            "level": pd.Categorical(
-                [labels[i] for i in band], categories=labels, ordered=True
+            "level": frame.categorical(
+                [labels[i] for i in band],
+                labels,
+                ordered=True,
+                backend=backend,
             ),
             "level_low": level_low,
             "level_high": level_high,
@@ -275,31 +301,40 @@ def contour_bands(
             "piece": np.repeat(pieces, counts),
             "subgroup": np.repeat(subgroups, counts),
             "group": np.repeat([ids[p - 1] for p in pieces], counts),
-        }
+        },
+        backend=backend,
     )
 
 
-def drop_duplicate_xy(data: pd.DataFrame) -> pd.DataFrame:
+def drop_duplicate_xy(data: DataFrame) -> DataFrame:
     """
     Remove duplicate coordinates and report how many were dropped
 
     A grid contains one `z` value per coordinate. Keep the last duplicate,
     matching the order in which the grid cells are populated.
     """
-    columns = [c for c in ("x", "y", "group", "PANEL") if c in data]
+    columns = [c for c in ("x", "y", "group", "PANEL") if c in data.columns]
     if not columns:
         return data
 
-    duplicated = data.duplicated(subset=columns, keep="last")
-    if not duplicated.any():
+    row = "__plotnine_row__"
+    last = (
+        data.with_row_index(row)
+        .group_by(columns)
+        .agg(nw.col(row).max())[row]
+        .to_numpy()
+    )
+    keep = np.zeros(len(data), dtype=bool)
+    keep[last] = True
+    if keep.all():
         return data
 
     warn(
         "Contour data contains duplicate x and y coordinates. "
-        f"Duplicate coordinates were removed from {duplicated.sum()} rows.",
+        f"Duplicate coordinates were removed from {(~keep).sum()} rows.",
         PlotnineWarning,
     )
-    return data.loc[~duplicated]
+    return frame.filter_rows(data, keep)
 
 
 def estimate_grid_angle(x: FloatArrayLike, y: FloatArrayLike) -> float:
@@ -371,45 +406,63 @@ def _breaks_of_width(
     return np.asarray(breaks_width(binwidth)(z_range), dtype=float)
 
 
-def _empty_contour_lines() -> pd.DataFrame:
+def _empty_contour_lines(backend: Implementation) -> DataFrame:
     """
     Return an empty contour-line result
 
     Preserve every column of a populated result so an empty layer retains
     the same schema.
     """
-    return pd.DataFrame(
+    return frame.frame(
         {
-            "x": pd.Series(dtype=float),
-            "y": pd.Series(dtype=float),
-            "level": pd.Series(dtype=float),
-            "nlevel": pd.Series(dtype=float),
-            "piece": pd.Series(dtype=int),
-            "group": pd.Series(dtype=object),
-        }
+            "x": frame.series([], "x", backend=backend, dtype=nw.Float64),
+            "y": frame.series([], "y", backend=backend, dtype=nw.Float64),
+            "level": frame.series(
+                [], "level", backend=backend, dtype=nw.Float64
+            ),
+            "nlevel": frame.series(
+                [], "nlevel", backend=backend, dtype=nw.Float64
+            ),
+            "piece": frame.series(
+                [], "piece", backend=backend, dtype=nw.Int64
+            ),
+            "group": frame.series(
+                [], "group", backend=backend, dtype=nw.String
+            ),
+        },
+        backend=backend,
     )
 
 
-def _empty_contour_bands(labels: list[str]) -> pd.DataFrame:
+def _empty_contour_bands(
+    labels: list[str], backend: Implementation
+) -> DataFrame:
     """
     Return an empty contour-band result
 
     Preserve every column of a populated result. Keep `labels` as the
     categories of the empty `level` column.
     """
-    return pd.DataFrame(
+
+    def empty(name: str, dtype: Any) -> nw.Series[Any]:
+        return frame.series([], name, backend=backend, dtype=dtype)
+
+    return frame.frame(
         {
-            "x": pd.Series(dtype=float),
-            "y": pd.Series(dtype=float),
-            "level": pd.Categorical([], categories=labels, ordered=True),
-            "level_low": pd.Series(dtype=float),
-            "level_high": pd.Series(dtype=float),
-            "level_mid": pd.Series(dtype=float),
-            "nlevel": pd.Series(dtype=float),
-            "piece": pd.Series(dtype=int),
-            "subgroup": pd.Series(dtype=int),
-            "group": pd.Series(dtype=object),
-        }
+            "x": empty("x", nw.Float64),
+            "y": empty("y", nw.Float64),
+            "level": frame.categorical(
+                [], labels, ordered=True, name="level", backend=backend
+            ),
+            "level_low": empty("level_low", nw.Float64),
+            "level_high": empty("level_high", nw.Float64),
+            "level_mid": empty("level_mid", nw.Float64),
+            "nlevel": empty("nlevel", nw.Float64),
+            "piece": empty("piece", nw.Int64),
+            "subgroup": empty("subgroup", nw.Int64),
+            "group": empty("group", nw.String),
+        },
+        backend=backend,
     )
 
 

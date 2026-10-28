@@ -2,13 +2,15 @@ from __future__ import annotations
 
 import typing
 from copy import deepcopy
+from typing import Any
 from warnings import warn
 
-import pandas as pd
+import narwhals as nw
 
 from .._utils import (
     check_required_aesthetics,
     data_mapping_as_kwargs,
+    frame,
     groupby_apply,
     remove_missing,
     uniquecols,
@@ -18,9 +20,8 @@ from ..layer import layer
 from ..mapping import aes
 
 if typing.TYPE_CHECKING:
-    from typing import Any
-
     from plotnine import ggplot
+    from plotnine._utils.frame import DataFrame
     from plotnine.facets.layout import Layout
     from plotnine.iapi import pos_scales
     from plotnine.mapping import Environment
@@ -37,8 +38,8 @@ variable into a categorial?
 
 
 def restore_constant_columns(
-    computed: pd.DataFrame, original: pd.DataFrame
-) -> pd.DataFrame:
+    computed: DataFrame, original: DataFrame
+) -> DataFrame:
     """
     Restore columns that are constant within the original group
 
@@ -54,15 +55,14 @@ def restore_constant_columns(
         Data of that group.
     """
     unique = uniquecols(original)
-    missing = unique.columns.difference(computed.columns)
-    idx = [0] * len(computed)
-    u = unique.loc[idx, missing].reset_index(drop=True)
-    # Replace a row-indexed frame with no columns before concatenation;
-    # otherwise pandas can alter the empty result.
-    if u.empty and len(u):
-        u = type(computed)()
+    missing = sorted(set(unique.columns) - set(computed.columns))
+    if not missing:
+        return computed
 
-    return pd.concat([computed, u], axis=1)
+    restored = frame.take(unique.select(missing), [0] * len(computed))
+    if not len(computed.columns):
+        return restored
+    return nw.concat([computed, restored], how="horizontal")
 
 
 class stat(ABC, metaclass=Register):
@@ -176,7 +176,7 @@ class stat(ABC, metaclass=Register):
             aesthetics.add(ae)
         return aesthetics
 
-    def use_defaults(self, data: pd.DataFrame) -> pd.DataFrame:
+    def use_defaults(self, data: DataFrame) -> DataFrame:
         """
         Combine data with defaults and set aesthetics from parameters
 
@@ -196,18 +196,14 @@ class stat(ABC, metaclass=Register):
             self.aesthetics() - set(self.aes_params.keys()) - set(data.columns)
         )
 
-        for ae in missing - self.REQUIRED_AES:
-            if self.DEFAULT_AES[ae] is not None:
-                data[ae] = self.DEFAULT_AES[ae]
+        defaults = {
+            ae: self.DEFAULT_AES[ae]
+            for ae in sorted(missing - self.REQUIRED_AES)
+            if self.DEFAULT_AES[ae] is not None
+        }
+        return frame.assign(data, **defaults, **self.aes_params)
 
-        missing = self.aes_params.keys() - set(data.columns)
-
-        for ae in self.aes_params:
-            data[ae] = self.aes_params[ae]
-
-        return data
-
-    def setup_params(self, data: pd.DataFrame):
+    def setup_params(self, data: DataFrame):
         """
         Override this to verify and/or adjust parameters
 
@@ -222,7 +218,7 @@ class stat(ABC, metaclass=Register):
             Parameters used by the stats.
         """
 
-    def setup_data(self, data: pd.DataFrame) -> pd.DataFrame:
+    def setup_data(self, data: DataFrame) -> DataFrame:
         """
         Override to modify data before compute_layer is called
 
@@ -238,7 +234,7 @@ class stat(ABC, metaclass=Register):
         """
         return data
 
-    def finish_layer(self, data: pd.DataFrame) -> pd.DataFrame:
+    def finish_layer(self, data: DataFrame) -> DataFrame:
         """
         Modify data after the aesthetics have been mapped
 
@@ -266,9 +262,7 @@ class stat(ABC, metaclass=Register):
         """
         return data
 
-    def compute_layer(
-        self, data: pd.DataFrame, layout: Layout
-    ) -> pd.DataFrame:
+    def compute_layer(self, data: DataFrame, layout: Layout) -> DataFrame:
         """
         Calculate statistics for this layers
 
@@ -311,12 +305,12 @@ class stat(ABC, metaclass=Register):
             # that does the real computation
             if len(pdata) == 0:
                 return pdata
-            pscales = layout.get_scales(pdata["PANEL"].iloc[0])
-            return self.compute_panel(pdata, pscales)
+            pscales = layout.get_scales(pdata["PANEL"].item(0))
+            return as_frame_of(self.compute_panel(pdata, pscales), pdata)
 
         return groupby_apply(data, "PANEL", fn)
 
-    def compute_panel(self, data: pd.DataFrame, scales: pos_scales):
+    def compute_panel(self, data: DataFrame, scales: pos_scales) -> DataFrame:
         """
         Calculate the statistics for all the groups
 
@@ -342,18 +336,17 @@ class stat(ABC, metaclass=Register):
             values if user did not set a particular parameter.
         """
         if not len(data):
-            return type(data)()
+            return frame.empty_like(data)
 
         stats = []
-        for _, old in data.groupby("group"):
-            new = self.compute_group(old, scales)
-            new = new.reset_index(drop=True)
+        for _, old in frame.group_split(data, "group"):
+            new = as_frame_of(self.compute_group(old, scales), old)
             stats.append(restore_constant_columns(new, old))
 
-        stats = pd.concat(stats, axis=0, ignore_index=True)
-        dropped = data.columns.difference(
-            stats.columns.union(self.DROPPED_AES)
-        ).to_list()
+        stats = frame.concat(stats)
+        dropped = sorted(
+            set(data.columns) - (set(stats.columns) | set(self.DROPPED_AES))
+        )
         if dropped:
             warn(DROPPED_TPL.format(dropped=dropped))
         # Note: If the data coming in has columns with non-unique
@@ -363,9 +356,7 @@ class stat(ABC, metaclass=Register):
         # it completely.
         return stats
 
-    def compute_group(
-        self, data: pd.DataFrame, scales: pos_scales
-    ) -> pd.DataFrame:
+    def compute_group(self, data: DataFrame, scales: pos_scales) -> DataFrame:
         """
         Calculate statistics for the group
 
@@ -405,3 +396,13 @@ class stat(ABC, metaclass=Register):
         """
         other += layer(stat=self)
         return other
+
+
+def as_frame_of(result: Any, data: DataFrame) -> DataFrame:
+    """
+    Make the result of a computation a dataframe of the same library
+
+    Stats (e.g. those in other packages) may return dataframes of
+    another library.
+    """
+    return frame.convert(frame.to_frame(result), data.implementation)

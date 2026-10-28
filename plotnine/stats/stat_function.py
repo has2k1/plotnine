@@ -3,8 +3,8 @@ from __future__ import annotations
 import typing
 
 import numpy as np
-import pandas as pd
 
+from .._utils import frame
 from ..doctools import document
 from ..exceptions import PlotnineError
 from ..mapping.evaluation import after_stat
@@ -12,7 +12,7 @@ from ..scales.scale_continuous import scale_continuous
 from .stat import stat
 
 if typing.TYPE_CHECKING:
-    from typing import Callable
+    from typing import Any, Callable
 
     from plotnine.typing import FloatArrayLike
 
@@ -69,10 +69,11 @@ class stat_function(stat):
     def __init__(self, mapping=None, data=None, **kwargs):
         if data is None:
 
-            def _data_func(data: pd.DataFrame) -> pd.DataFrame:
-                if data.empty:
-                    data = pd.DataFrame({"group": [1]})
-                return data
+            def _data_func(data: Any) -> Any:
+                df = frame.to_frame(data)
+                if not len(df):
+                    df = frame.frame_like(df, {"group": [1]})
+                return df.to_native()
 
             data = _data_func
 
@@ -124,5 +125,4 @@ class stat_function(stat):
         else:
             fx = [fun(val) for val in x]
 
-        new_data = pd.DataFrame({"x": x, "fx": fx})
-        return new_data
+        return frame.frame_like(data, {"x": x, "fx": fx})

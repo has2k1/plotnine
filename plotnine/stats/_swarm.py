@@ -11,20 +11,21 @@ import math
 from typing import TYPE_CHECKING, Any, Callable, cast
 
 import numpy as np
-import pandas as pd
 
 from .._utils import (
     array_kind,
+    frame,
     nextafter_range,
     normalise_random_state,
     resolution,
 )
 from ..exceptions import PlotnineError
 from ..mapping.aes import has_groups
-from .binning import breaks_from_bins, breaks_from_binwidth
+from .binning import breaks_from_bins, breaks_from_binwidth, cut
 from .stat_density import compute_density
 
 if TYPE_CHECKING:
+    from plotnine._utils.frame import DataFrame
     from plotnine.iapi import pos_scales
     from plotnine.typing import FloatArray, IntArray
 
@@ -64,14 +65,14 @@ def van_der_corput(n: int) -> np.ndarray:
     return np.roll(vdc, -start)
 
 
-def check_x_is_discrete(data: pd.DataFrame) -> pd.DataFrame:
+def check_x_is_discrete(data: DataFrame) -> DataFrame:
     """
     Reject ungrouped continuous `x` values
     """
     if (
         array_kind.continuous(data["x"])
         and not has_groups(data)
-        and (data["x"] != data["x"].iloc[0]).any()
+        and data["x"].n_unique() > 1
     ):
         raise TypeError(
             "Continuous x aesthetic -- did you forget aes(group=...)?"
@@ -79,7 +80,7 @@ def check_x_is_discrete(data: pd.DataFrame) -> pd.DataFrame:
     return data
 
 
-def setup_swarm_params(params: dict[str, Any], data: pd.DataFrame):
+def setup_swarm_params(params: dict[str, Any], data: DataFrame):
     """
     Resolve swarm parameters and configure density estimation
     """
@@ -102,11 +103,11 @@ def setup_swarm_params(params: dict[str, Any], data: pd.DataFrame):
 
 
 def estimate_group_density(
-    data: pd.DataFrame,
+    data: DataFrame,
     scales: pos_scales,
     params: dict[str, Any],
     few_rows_density: float,
-) -> pd.DataFrame:
+) -> DataFrame:
     """
     Estimate the density or bin count for each row in a group
 
@@ -121,30 +122,30 @@ def estimate_group_density(
     maxwidth = params["maxwidth"]
     bin_limit = params["bin_limit"]
     weight = None
-    y = data["y"]
 
     if len(data) == 0:
-        return pd.DataFrame()
-    elif len(data) < 3:
-        data["density"] = few_rows_density
-        data["scaled"] = 1
+        return frame.empty_like(data)
+
+    y = frame.to_numpy(data["y"])
+    if len(data) < 3:
+        density, scaled = few_rows_density, 1
     elif len(np.unique(y)) < 2:
-        data["density"] = 1
-        data["scaled"] = 1
+        density, scaled = 1, 1
     elif params["method"] == "density":
         from scipy.interpolate import interp1d
 
         # Interpolate the density estimate at each observed `y` value.
         range_y = y.min(), y.max()
         dens = compute_density(y, weight, range_y, params)
+        dens_y = frame.to_numpy(dens["density"])
         densf = interp1d(
-            dens["x"],
-            dens["density"],
+            frame.to_numpy(dens["x"]),
+            dens_y,
             bounds_error=False,
             fill_value="extrapolate",  # pyright: ignore
         )
-        data["density"] = densf(y)
-        data["scaled"] = data["density"] / dens["density"].max()
+        density = densf(y)
+        scaled = density / dens_y.max()
     else:
         expanded_y_range = nextafter_range(scales.y.dimension())
         if binwidth is not None:
@@ -153,30 +154,30 @@ def estimate_group_density(
             bins = breaks_from_bins(expanded_y_range, params["bins"])
 
         # Count observations within each `y` bin.
-        bin_index = pd.cut(y, bins, include_lowest=True, labels=False)  # pyright: ignore[reportCallIssue,reportArgumentType]
-        data["density"] = (
-            pd.Series(bin_index)
-            .groupby(bin_index)
-            .apply(len)[bin_index]
-            .to_numpy()
+        bin_index = cut(y, bins, include_lowest=True)
+        _, inverse, counts = np.unique(
+            bin_index, return_inverse=True, return_counts=True
         )
-        data.loc[data["density"] <= bin_limit, "density"] = 0
-        data["scaled"] = data["density"] / data["density"].max()
+        density = counts[inverse].astype(float)
+        density[density <= bin_limit] = 0
+        scaled = density / density.max()
 
     # Preserve the relative span of groups with multiple `x` values.
-    if len(data["x"].unique()) > 1:
-        width = np.ptp(data["x"]) * maxwidth
-    else:
-        width = maxwidth
+    x = frame.to_numpy(data["x"])
+    multiple_x = len(np.unique(x)) > 1
+    width = np.ptp(x) * maxwidth if multiple_x else maxwidth
 
-    data["width"] = width
-    data["n"] = len(data)
-    data["x"] = np.mean([data["x"].max(), data["x"].min()])
+    return frame.assign(
+        data,
+        density=density,
+        scaled=scaled,
+        width=width,
+        n=len(data),
+        x=np.mean([x.max(), x.min()]),
+    )
 
-    return data
 
-
-def swarm_widths(data: pd.DataFrame, scale: str, width_col: str):
+def swarm_widths(data: DataFrame, scale: str, width_col: str) -> DataFrame:
     """
     Scale each row's density to a fraction of `maxwidth`
 
@@ -185,29 +186,25 @@ def swarm_widths(data: pd.DataFrame, scale: str, width_col: str):
     width_col :
         Column that receives the scaled width fraction.
     """
+    density = frame.to_numpy(data["density"]).astype(float)
     if scale == "area":
-        data[width_col] = data["density"] / data["density"].max()
+        width = density / density.max()
     elif scale == "count":
-        data[width_col] = (
-            data["density"]
-            / data["density"].max()
-            * data["n"]
-            / data["n"].max()
-        )
+        n = frame.to_numpy(data["n"])
+        width = density / density.max() * n / n.max()
     elif scale == "width":
-        data[width_col] = data["scaled"]
+        width = frame.to_numpy(data["scaled"]).astype(float)
     else:
         msg = "Unknown scale value '{}'"
         raise PlotnineError(msg.format(scale))
 
-    is_infinite = ~np.isfinite(data[width_col])
-    if is_infinite.any():
-        data.loc[is_infinite, width_col] = 0
+    width[~np.isfinite(width)] = 0
+    return frame.assign(data, **{width_col: width})
 
 
 def pseudorandom_offset(
-    data: pd.DataFrame, maxwidth: float, width_col: str, params: dict[str, Any]
-) -> pd.Series:
+    data: DataFrame, maxwidth: float, width_col: str, params: dict[str, Any]
+) -> FloatArray:
     """
     Draw each row's `x` offset from uniform noise
 
@@ -220,15 +217,17 @@ def pseudorandom_offset(
     random_state = params["random_state"]
     if random_state is None:
         random_state = np.random
-    # Lead with the indexed widths so multiplication preserves a Series.
     return (
-        data[width_col] * random_state.uniform(-1, 1, len(data)) * maxwidth / 2
+        frame.to_numpy(data[width_col])
+        * random_state.uniform(-1, 1, len(data))
+        * maxwidth
+        / 2
     )
 
 
 def quasirandom_offset(
-    data: pd.DataFrame, maxwidth: float, width_col: str, params: dict[str, Any]
-) -> pd.Series:
+    data: DataFrame, maxwidth: float, width_col: str, params: dict[str, Any]
+) -> FloatArray:
     """
     Derive each row's `x` offset from its rank
 
@@ -238,17 +237,17 @@ def quasirandom_offset(
     The shared offset signature requires `params`, but this calculation
     does not use it.
     """
-    x_diff = pd.Series(0.0, index=data.index)
-    for _, grp in data.groupby("group", sort=False):
-        y_rank = np.argsort(np.argsort(grp["y"].to_numpy()))
-        seq = van_der_corput(len(grp))
-        x_diff.loc[grp.index] = (
-            (seq[y_rank] - 0.5) * maxwidth * grp[width_col].to_numpy()
-        )
+    y = frame.to_numpy(data["y"])
+    width = frame.to_numpy(data[width_col])
+    x_diff = np.zeros(len(data))
+    for idx in _group_rows(data):
+        y_rank = np.argsort(np.argsort(y[idx]))
+        seq = van_der_corput(len(idx))
+        x_diff[idx] = (seq[y_rank] - 0.5) * maxwidth * width[idx]
     return x_diff
 
 
-def _extremes_bin_index(y: pd.Series, params: dict[str, Any]) -> np.ndarray:
+def _extremes_bin_index(y: FloatArray, params: dict[str, Any]) -> FloatArray:
     """
     Assign points to `y` neighbourhoods for extreme-value ranking
 
@@ -259,10 +258,10 @@ def _extremes_bin_index(y: pd.Series, params: dict[str, Any]) -> np.ndarray:
     """
     n = len(y)
     if n < 3 or len(np.unique(y)) < 2:
-        return np.zeros(n, dtype=int)
+        return np.zeros(n)
     density_params = {**params, "n": max(2, math.ceil(n / 5))}
     dens = compute_density(y, None, (y.min(), y.max()), density_params)
-    return pd.cut(y, dens["x"], include_lowest=True, labels=False).to_numpy()
+    return cut(y, frame.to_numpy(dens["x"]), include_lowest=True)
 
 
 def _alternate_extremes(y: np.ndarray, ascending: bool) -> np.ndarray:
@@ -285,12 +284,12 @@ def _alternate_extremes(y: np.ndarray, ascending: bool) -> np.ndarray:
 
 
 def _extremes_offset(
-    data: pd.DataFrame,
+    data: DataFrame,
     maxwidth: float,
     width_col: str,
     params: dict[str, Any],
     ascending: bool,
-) -> pd.Series:
+) -> FloatArray:
     """
     Place neighbourhood values towards the swarm's centre or edges
 
@@ -303,23 +302,22 @@ def _extremes_offset(
         If `True`, place the most extreme values near the edges. If
         `False`, place them near the centre.
     """
-    x_diff = pd.Series(0.0, index=data.index)
-    for _, grp in data.groupby("group", sort=False):
-        bin_index = _extremes_bin_index(grp["y"], params)
-        prop = pd.Series(0.5, index=grp.index)
-        for _, cell in grp.groupby(bin_index):
-            prop.loc[cell.index] = _alternate_extremes(
-                cell["y"].to_numpy(), ascending
-            )
-        x_diff.loc[grp.index] = (
-            (prop - 0.5) * maxwidth * grp[width_col].to_numpy()
-        )
+    y = frame.to_numpy(data["y"])
+    width = frame.to_numpy(data[width_col])
+    x_diff = np.zeros(len(data))
+    for idx in _group_rows(data):
+        bin_index = _extremes_bin_index(y[idx], params)
+        prop = np.full(len(idx), 0.5)
+        for b in np.unique(bin_index[~np.isnan(bin_index)]):
+            cell = bin_index == b
+            prop[cell] = _alternate_extremes(y[idx][cell], ascending)
+        x_diff[idx] = (prop - 0.5) * maxwidth * width[idx]
     return x_diff
 
 
 def smiley_offset(
-    data: pd.DataFrame, maxwidth: float, width_col: str, params: dict[str, Any]
-) -> pd.Series:
+    data: DataFrame, maxwidth: float, width_col: str, params: dict[str, Any]
+) -> FloatArray:
     """
     Place each `y` neighbourhood's most extreme points at the edges
     """
@@ -327,15 +325,15 @@ def smiley_offset(
 
 
 def frowney_offset(
-    data: pd.DataFrame, maxwidth: float, width_col: str, params
-) -> pd.Series:
+    data: DataFrame, maxwidth: float, width_col: str, params
+) -> FloatArray:
     """
     Place each `y` neighbourhood's most extreme points near the centre
     """
     return _extremes_offset(data, maxwidth, width_col, params, ascending=False)
 
 
-_SPREAD_OFFSETS: dict[str, Callable[..., pd.Series]] = {
+_SPREAD_OFFSETS: dict[str, Callable[..., FloatArray]] = {
     "pseudorandom": pseudorandom_offset,
     "quasirandom": quasirandom_offset,
     "smiley": smiley_offset,
@@ -344,8 +342,8 @@ _SPREAD_OFFSETS: dict[str, Callable[..., pd.Series]] = {
 
 
 def spread_offset(
-    data: pd.DataFrame, maxwidth: float, width_col: str, params: dict[str, Any]
-) -> pd.Series:
+    data: DataFrame, maxwidth: float, width_col: str, params: dict[str, Any]
+) -> FloatArray:
     """
     Calculate offsets with the selected spread strategy
     """
@@ -360,7 +358,7 @@ def spread_offset(
     return offset_fn(data, maxwidth, width_col, params)
 
 
-def finish_swarm_layer(data: pd.DataFrame, style: str) -> pd.DataFrame:
+def finish_swarm_layer(data: DataFrame, style: str) -> DataFrame:
     """
     Rescale `x` after position adjustment, then apply the swarm style
 
@@ -368,18 +366,18 @@ def finish_swarm_layer(data: pd.DataFrame, style: str) -> pd.DataFrame:
     span after panel computation. Scale `x_diff` by the change before
     adding it to `x`.
     """
-    x_mean = cast("FloatArray", data["x"].to_numpy())
-    x_mod = (data["xmax"] - data["xmin"]) / data["width"]
-    data["x"] = data["x"] + data["x_diff"] * x_mod
-    group = cast("IntArray", data["group"].to_numpy())
-    x = cast("FloatArray", data["x"].to_numpy())
+    x_mean = cast("FloatArray", frame.to_numpy(data["x"]))
+    x_mod = frame.to_numpy((data["xmax"] - data["xmin"]) / data["width"])
+    x = x_mean + frame.to_numpy(data["x_diff"]) * x_mod
+    group = cast("IntArray", frame.to_numpy(data["group"]))
     even = group % 2 == 0
+    new_x = x.copy()
 
     def mirror_x(bool_idx):
         """
         Mirror selected `x` positions across their original centres
         """
-        data.loc[bool_idx, "x"] = 2 * x_mean[bool_idx] - x[bool_idx]
+        new_x[bool_idx] = 2 * x_mean[bool_idx] - x[bool_idx]
 
     match style:
         case "left":
@@ -391,4 +389,13 @@ def finish_swarm_layer(data: pd.DataFrame, style: str) -> pd.DataFrame:
         case "right-left":
             mirror_x(even & (x_mean < x) | ~even & (x < x_mean))
 
-    return data
+    return frame.assign(data, x=new_x)
+
+
+def _group_rows(data: DataFrame) -> list[IntArray]:
+    """
+    The positions of the rows in each group, in order of appearance
+    """
+    groups = frame.to_numpy(data["group"])
+    _, first = np.unique(groups, return_index=True)
+    return [np.flatnonzero(groups == groups[i]) for i in np.sort(first)]

@@ -1,7 +1,6 @@
 import numpy as np
-import pandas as pd
 
-from .._utils import resolution
+from .._utils import frame, resolution
 from ..doctools import document
 from .stat import stat
 
@@ -83,20 +82,20 @@ class stat_boxplot(stat):
     DROPPED_AES: list[str] = ["x", "y", "weight"]
 
     def setup_data(self, data):
-        if "x" not in data:
-            data["x"] = 0
+        if "x" not in data.columns:
+            data = frame.assign(data, x=0)
         return data
 
     def setup_params(self, data):
         if self.params["width"] is None:
-            x = data.get("x", 0)
+            x = data["x"] if "x" in data.columns else 0
             self.params["width"] = resolution(x, False) * 0.75
 
     def compute_group(self, data, scales):
         n = len(data)
-        y = data["y"].to_numpy()
-        if "weight" in data:
-            weights = data["weight"]
+        y = frame.to_numpy(data["y"])
+        if "weight" in data.columns:
+            weights = frame.to_numpy(data["weight"])
             total_weight = np.sum(weights)
         else:
             weights = None
@@ -105,15 +104,16 @@ class stat_boxplot(stat):
             y, weights=weights, whis=self.params["coef"]
         )
 
-        if len(np.unique(data["x"])) > 1:
-            width = np.ptp(data["x"]) * 0.9
+        if frame.is_categorical(data["x"]):
+            x = data["x"].item(0)
+        else:
+            _x = frame.to_numpy(data["x"])
+            x = np.mean([_x.min(), _x.max()])
+
+        if data["x"].n_unique() > 1:
+            width = np.ptp(frame.to_numpy(data["x"])) * 0.9
         else:
             width = self.params["width"]
-
-        if isinstance(data["x"].dtype, pd.CategoricalDtype):
-            x = data["x"].iloc[0]
-        else:
-            x = np.mean([data["x"].min(), data["x"].max()])
 
         d = {
             "ymin": res["whislo"],
@@ -129,7 +129,7 @@ class stat_boxplot(stat):
             "relvarwidth": np.sqrt(total_weight),
             "n": n,
         }
-        return pd.DataFrame(d)
+        return frame.frame_like(data, d)
 
 
 def weighted_percentile(a, q, weights=None):

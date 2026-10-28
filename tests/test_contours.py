@@ -2,18 +2,36 @@ import numpy as np
 import pandas as pd
 import pytest
 
+from plotnine._utils import frame
 from plotnine.data import faithfuld
 from plotnine.exceptions import PlotnineError, PlotnineWarning
+from plotnine.stats import contours
 from plotnine.stats.contours import (
     band_labels,
-    contour_bands,
     contour_breaks,
-    contour_lines,
-    drop_duplicate_xy,
     estimate_grid_angle,
     rotate_xy,
-    xyz_to_grid,
 )
+
+# The contour helpers work with narwhals dataframes. These tests use
+# pandas dataframes.
+PANDAS = frame.Implementation.PANDAS
+
+
+def contour_lines(*args):
+    return contours.contour_lines(*args, backend=PANDAS).to_native()
+
+
+def contour_bands(*args):
+    return contours.contour_bands(*args, backend=PANDAS).to_native()
+
+
+def xyz_to_grid(data):
+    return contours.xyz_to_grid(frame.to_frame(data))
+
+
+def drop_duplicate_xy(data):
+    return contours.drop_duplicate_xy(frame.to_frame(data)).to_native()
 
 
 @pytest.mark.parametrize(

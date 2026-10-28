@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from mizani.utils import min_max
 
+from .._utils import frame
 from ..doctools import document
 from .contours import (
     contour_breaks,
@@ -83,20 +84,29 @@ class stat_contour(stat):
 
         # Align a rotated grid with the axes before arranging `z` into rows
         # and columns. Restore the original orientation afterwards.
-        angle = estimate_grid_angle(data["x"], data["y"])
-        x, y = rotate_xy(data["x"], data["y"], -angle)
-        data = data.assign(x=x, y=y)
+        angle = estimate_grid_angle(
+            frame.to_numpy(data["x"]), frame.to_numpy(data["y"])
+        )
+        x, y = rotate_xy(
+            frame.to_numpy(data["x"]), frame.to_numpy(data["y"]), -angle
+        )
+        data = frame.assign(data, x=x, y=y)
 
         res = self.compute_contours(
-            *xyz_to_grid(data), breaks, data["group"].iloc[0]
+            *xyz_to_grid(data),
+            breaks,
+            data["group"].item(0),
+            backend=data.implementation,
         )
-        res["x"], res["y"] = rotate_xy(res["x"], res["y"], angle)
-        return res
+        x, y = rotate_xy(
+            frame.to_numpy(res["x"]), frame.to_numpy(res["y"]), angle
+        )
+        return frame.assign(res, x=x, y=y)
 
-    def compute_contours(self, x, y, Z, breaks, group):
+    def compute_contours(self, x, y, Z, breaks, group, *, backend=None):
         """
         Trace one contour line at every break on an axis-aligned grid
 
         The input grid must be aligned with the coordinate axes.
         """
-        return contour_lines(x, y, Z, breaks, group)
+        return contour_lines(x, y, Z, breaks, group, backend=backend)

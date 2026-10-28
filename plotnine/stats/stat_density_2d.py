@@ -3,11 +3,11 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, cast
 from warnings import warn
 
+import narwhals as nw
 import numpy as np
-import pandas as pd
 from mizani.utils import min_max
 
-from .._utils import groupby_apply, is_scalar
+from .._utils import frame, groupby_apply, is_scalar
 from ..doctools import document
 from ..exceptions import PlotnineError
 from .contours import contour_breaks, contour_lines, xyz_to_grid
@@ -15,6 +15,7 @@ from .density import get_var_type, kde
 from .stat import restore_constant_columns, stat
 
 if TYPE_CHECKING:
+    from plotnine._utils.frame import DataFrame
     from plotnine.typing import FloatArray, FloatArrayLike
 
 # Do not restore columns created during density estimation after
@@ -150,7 +151,7 @@ class stat_density_2d(stat):
         package = params["package"]
         kde_params = params["kde_params"]
 
-        group = data["group"].iloc[0]
+        group = data["group"].item(0)
         range_x = scales.x.dimension()
         range_y = scales.y.dimension()
         _x = np.linspace(range_x[0], range_x[1], params["n"])
@@ -158,14 +159,15 @@ class stat_density_2d(stat):
 
         # The grid must have a "similar" shape (n, p) to the var_data
         X, Y = np.meshgrid(_x, _y)
-        x = cast("FloatArrayLike", data["x"].to_numpy())
-        y = cast("FloatArrayLike", data["y"].to_numpy())
+        x = cast("FloatArrayLike", frame.to_numpy(data["x"]))
+        y = cast("FloatArrayLike", frame.to_numpy(data["y"]))
         var_data = np.array([x, y]).T
         grid = np.array([X.flatten(), Y.flatten()]).T
         density = kde(var_data, grid, package, **kde_params)
 
         n_obs = len(data)
-        return pd.DataFrame(
+        return frame.frame_like(
+            data,
             {
                 "x": X.flatten(),
                 "y": Y.flatten(),
@@ -176,7 +178,7 @@ class stat_density_2d(stat):
                 "group": group,
                 "level": 1,
                 "piece": 1,
-            }
+            },
         )
 
     def compute_layer(self, data, layout):
@@ -187,9 +189,9 @@ class stat_density_2d(stat):
         if not params["contour"] or not len(data):
             return data
 
-        data["z"] = data[params["contour_var"]]
+        data = data.with_columns(z=nw.col(params["contour_var"]))
         breaks = contour_breaks(
-            min_max(data["z"], na_rm=True, finite=True),
+            min_max(frame.to_numpy(data["z"]), na_rm=True, finite=True),
             params["bins"],
             params["binwidth"],
             params["breaks"],
@@ -198,24 +200,26 @@ class stat_density_2d(stat):
             data, ["PANEL", "group"], self._contour_group, breaks
         )
 
-    def _contour_group(
-        self, data: pd.DataFrame, breaks: FloatArray
-    ) -> pd.DataFrame:
+    def _contour_group(self, data: DataFrame, breaks: FloatArray) -> DataFrame:
         """
         Contour one panel group and restore its original constant columns
         """
         res = self.compute_contours(
-            *xyz_to_grid(data), breaks, data["group"].iloc[0]
+            *xyz_to_grid(data),
+            breaks,
+            data["group"].item(0),
+            backend=data.implementation,
         )
 
         # Contouring follows panel computation. Restore original constant
         # columns, but exclude columns created during density estimation.
         return restore_constant_columns(
-            res, data.drop(columns=list(_DENSITY_PHASE_COLUMNS))
+            res,
+            data.drop(*_DENSITY_PHASE_COLUMNS, strict=False),
         )
 
-    def compute_contours(self, x, y, Z, breaks, group):
+    def compute_contours(self, x, y, Z, breaks, group, *, backend=None):
         """
         Trace one contour line at every break on an axis-aligned grid
         """
-        return contour_lines(x, y, Z, breaks, group)
+        return contour_lines(x, y, Z, breaks, group, backend=backend)

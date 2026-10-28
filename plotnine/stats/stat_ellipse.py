@@ -3,9 +3,10 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 from warnings import warn
 
+import narwhals as nw
 import numpy as np
-import pandas as pd
 
+from .._utils import frame
 from ..doctools import document
 from ..exceptions import PlotnineWarning
 from .stat import stat
@@ -65,9 +66,19 @@ class stat_ellipse(stat):
 
         if dfd < 3:
             warn("Too few points to calculate an ellipse", PlotnineWarning)
-            return pd.DataFrame({"x": [], "y": []})
+            return frame.frame_like(
+                data,
+                {
+                    "x": frame.series(
+                        [], backend=data.implementation, dtype=nw.Float64
+                    ),
+                    "y": frame.series(
+                        [], backend=data.implementation, dtype=nw.Float64
+                    ),
+                },
+            )
 
-        m: FloatArray = np.asarray(data[["x", "y"]])
+        m: FloatArray = data.select("x", "y").to_numpy().astype(float)
 
         # The stats used to create the ellipse
         if type_ == "t":
@@ -100,7 +111,7 @@ class stat_ellipse(stat):
         unit_circle = np.column_stack([np.cos(space), np.sin(space)])
         res = center + radius * np.dot(unit_circle, chol_decomp)
 
-        return pd.DataFrame({"x": res[:, 0], "y": res[:, 1]})
+        return frame.frame_like(data, {"x": res[:, 0], "y": res[:, 1]})
 
 
 def cov_trob(
@@ -174,7 +185,7 @@ def cov_trob(
     from scipy import linalg
 
     def test_values(x):
-        if pd.isna(x).any() or np.isinf(x).any():
+        if np.isnan(x).any() or np.isinf(x).any():
             raise ValueError("Missing or infinite values in 'x'")
 
     def scale_simp(x: FloatArray, center: FloatArray, n: int, p: int):
