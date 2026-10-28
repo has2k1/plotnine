@@ -1,5 +1,6 @@
 import inspect
 import locale
+import os
 import shutil
 import types
 import warnings
@@ -37,6 +38,123 @@ set_option("figure_size", (640 / DPI, 480 / DPI))
 
 # Give compositions and standalone insets more room than a single plot.
 default_composition_theme = theme(figure_size=(8, 6), dpi=DPI)
+
+# The dataframe library that the plots are tested with. The tests
+# create pandas dataframes, and with the polars backend the data is
+# converted to polars just before it enters a plot. That way, every
+# plot in the test suite also tests the polars backend.
+BACKEND = os.environ.get("PLOTNINE_TEST_BACKEND", "pandas")
+KNOWN_FAILURES_FILE = Path(__file__).parent / "known_failures_polars.txt"
+
+
+def pytest_addoption(parser):
+    parser.addoption(
+        "--backend",
+        default=None,
+        choices=("pandas", "polars"),
+        help="Dataframe library to test the plots with.",
+    )
+
+
+def pytest_configure(config):
+    global BACKEND
+    BACKEND = config.getoption("--backend") or BACKEND
+    if BACKEND == "polars":
+        _use_polars_data()
+
+
+def pytest_report_header(config):
+    return f"plotnine dataframe backend: {BACKEND}"
+
+
+def _read_known_failures() -> set[str]:
+    if not KNOWN_FAILURES_FILE.exists():
+        return set()
+    lines = KNOWN_FAILURES_FILE.read_text().splitlines()
+    return {
+        line.split("#")[0].strip()
+        for line in lines
+        if line.split("#")[0].strip()
+    }
+
+
+def pytest_collection_modifyitems(config, items):
+    """
+    Mark the tests that are known to fail with polars
+
+    They are marked as strict xfails, so that the list has to be
+    updated when a test starts passing.
+    """
+    import pytest
+
+    if BACKEND != "polars":
+        return
+
+    known = _read_known_failures()
+    for item in items:
+        if item.nodeid in known:
+            item.add_marker(
+                pytest.mark.xfail(reason="Known polars failure", strict=True)
+            )
+
+
+def pandas_to_polars(data):
+    """
+    Convert a pandas dataframe to polars, the way a polars user
+    would have created it
+    """
+    import pandas as pd
+    import polars as pl
+
+    # geopandas dataframes (subclasses) are pandas only
+    if type(data) is not pd.DataFrame:
+        return data
+
+    columns = {}
+    for name, col in data.items():
+        name = str(name)
+        if isinstance(col.dtype, pd.CategoricalDtype):
+            cats = [str(c) for c in col.cat.categories]
+            values = [None if pd.isna(v) else str(v) for v in col]
+            dtype = pl.Enum(cats) if col.cat.ordered else pl.Categorical
+            columns[name] = pl.Series(name, values, dtype=pl.String).cast(
+                dtype
+            )
+        else:
+            try:
+                columns[name] = pl.from_pandas(col)
+            except Exception:
+                columns[name] = pl.Series(name, list(col), dtype=pl.Object)
+    return pl.DataFrame(columns)
+
+
+def _use_polars_data():
+    """
+    Convert pandas dataframes to polars as they enter a plot
+    """
+    from plotnine.layer import layer
+
+    original = layer._make_layer_data
+
+    def _make_layer_data(self, plot_data):
+        if callable(self._data):
+            if not getattr(self._data, "_polars_wrapped", False):
+                # The test functions are written for pandas
+                func = self._data
+
+                def wrapped(data):
+                    if hasattr(data, "to_pandas"):
+                        data = data.to_pandas()
+                    return pandas_to_polars(func(data))
+
+                wrapped._polars_wrapped = True
+                self._data = wrapped
+        else:
+            self._data = pandas_to_polars(self._data)
+        return original(self, pandas_to_polars(plot_data))
+
+    layer._make_layer_data = _make_layer_data
+
 
 tests_dir = Path(__file__).parent
 baseline_images_dir = tests_dir / "baseline_images"
