@@ -1,18 +1,22 @@
 from __future__ import annotations
 
+import datetime
 import numbers
-from typing import TYPE_CHECKING
+from collections.abc import Mapping, Sequence
+from contextlib import suppress
+from typing import TYPE_CHECKING, Any
 
+import narwhals as nw
 import numpy as np
-import pandas as pd
-import pandas.api.types as pdtypes
 
+from .._utils import frame
+from .._utils.frame import is_native_series, native_io
 from ..exceptions import PlotnineError
-from ._asis import I
+from ._asis import I, is_asis
 from ._eval_environment import factor, reorder
 
 if TYPE_CHECKING:
-    from typing import Any
+    from plotnine._utils.frame import DataFrame
 
     from . import aes
     from ._env import Environment
@@ -113,16 +117,20 @@ def after_scale(x):
     return stage(after_scale=x)
 
 
+@native_io
 def evaluate(
-    aesthetics: aes | dict[str, Any], data: pd.DataFrame, env: Environment
-) -> pd.DataFrame:
+    aesthetics: aes | dict[str, Any], data: DataFrame, env: Environment
+) -> DataFrame:
     """
     Evaluate aesthetics
 
     Parameters
     ----------
     aesthetics :
-        Aesthetics to evaluate. They must be of the form {name: expr}
+        Aesthetics to evaluate. They must be of the form {name: expr}.
+        An expression can be a column name, a narwhals expression,
+        a string with a python expression, a sequence of values or a
+        single value.
     data :
         Dataframe whose columns are/may-be variables in the aesthetic
         expressions i.e. it is a namespace with variables.
@@ -131,12 +139,24 @@ def evaluate(
 
     Returns
     -------
-    pd.DataFrame
+    :
         Dataframe of the form {name: result}, where each column is the
         result from evaluating an expression.
 
+    Notes
+    -----
+    A string expression is first evaluated with the column names
+    standing in for narwhals expressions, e.g. `"np.log(x) + 1"`
+    becomes `np.log(nw.col("x")) + 1`, which works for every
+    dataframe library. If that does not produce an expression, the
+    string is evaluated with the column names standing in for the
+    columns, e.g. pandas or polars series. This approach allows
+    expressions that use the API of the dataframe library. Lastly, the
+    column names stand in for numpy arrays.
+
     Examples
     --------
+    >>> import pandas as pd
     >>> from plotnine.mapping import Environment
     >>> var1 = 2
     >>> env = Environment.capture()
@@ -158,25 +178,14 @@ def evaluate(
     # If a column name is not in the data, it is evaluated/transformed
     # in the environment of the call to ggplot
     for ae, col in aesthetics.items():
-        if isinstance(col, str):
-            if col in data:
+        if isinstance(col, nw.Expr):
+            evaled[ae] = _eval_expr(col, data, ae)
+        elif isinstance(col, str):
+            if col in data.columns:
                 evaled[ae] = data[col]
             else:
-                try:
-                    new_val = env.eval(col, inner_namespace=data)
-                except Exception as e:
-                    msg = _TPL_EVAL_FAIL.format(ae, col, str(e))
-                    raise PlotnineError(msg) from e
-
-                try:
-                    evaled[ae] = new_val
-                except Exception as e:
-                    msg = _TPL_BAD_EVAL_TYPE.format(
-                        ae, col, str(type(new_val)), str(e)
-                    )
-                    raise PlotnineError(msg) from e
-
-        elif pdtypes.is_list_like(col):
+                evaled[ae] = _eval_string(col, data, env, ae)
+        elif is_list_like(col) or is_asis(col):
             n = len(col)
             if len(data) and n != len(data) and n != 1:
                 msg = (
@@ -193,22 +202,133 @@ def evaluate(
             msg = f"Do not know how to deal with aesthetic '{ae}'"
             raise PlotnineError(msg)
 
-    # Using `type` preserves the subclass of pd.DataFrame
-    index = data.index if len(data.index) and evaled else None
-    evaled = type(data)(data=evaled, index=index)
-    return evaled
+    n = len(data) if len(data) and evaled else None
+    try:
+        return frame.frame(evaled, backend=data.implementation, n=n)
+    except ValueError as e:
+        raise PlotnineError(
+            "Aesthetics must either be length one, "
+            f"or the same length as the data. {e}"
+        ) from e
+
+
+def _eval_expr(expr: nw.Expr, data: DataFrame, ae: str) -> Any:
+    """
+    Evaluate a narwhals expression on the data
+    """
+    try:
+        return data.select(expr.alias(ae))[ae]
+    except Exception as e:
+        msg = _TPL_EVAL_FAIL.format(ae, expr, str(e))
+        raise PlotnineError(msg) from e
+
+
+def _eval_string(expr: str, data: DataFrame, env: Environment, ae: str) -> Any:
+    """
+    Evaluate a string expression
+
+    The column names in the expression are first taken to be
+    narwhals expressions, and if that does not work, they are taken
+    to be the native series of the dataframe.
+    """
+    columns = _ColumnExpressions(data.columns)
+    try:
+        value = env.eval(expr, inner_namespace=columns)
+    except Exception:
+        pass
+    else:
+        if isinstance(value, nw.Expr):
+            with suppress(Exception):
+                return data.select(value.alias(ae))[ae]
+        elif not columns.accessed:
+            # The expression does not depend on the data
+            return value
+
+    try:
+        return env.eval(expr, inner_namespace=_NativeColumns(data))
+    except Exception as e:
+        error = e
+
+    # Finally, numpy arrays work with numpy functions for all libraries
+    try:
+        return env.eval(expr, inner_namespace=_NativeColumns(data, numpy=True))
+    except Exception:
+        msg = _TPL_EVAL_FAIL.format(ae, expr, str(error))
+        raise PlotnineError(msg) from error
+
+
+class _ColumnExpressions(Mapping[str, nw.Expr]):
+    """
+    Namespace with the column names as narwhals expressions
+    """
+
+    def __init__(self, columns: Sequence[str]):
+        self._columns = list(columns)
+        self._lookup = set(self._columns)
+        self.accessed = False
+
+    def __getitem__(self, key: str) -> nw.Expr:
+        if key in self._lookup:
+            self.accessed = True
+            return nw.col(key)
+        raise KeyError(key)
+
+    def __iter__(self):
+        return iter(self._columns)
+
+    def __len__(self) -> int:
+        return len(self._columns)
+
+
+class _NativeColumns(Mapping[str, Any]):
+    """
+    Namespace with the column names as the native series
+
+    Or as numpy arrays.
+    """
+
+    def __init__(self, data: DataFrame, numpy: bool = False):
+        self._data = data
+        self._lookup = set(data.columns)
+        self._numpy = numpy
+
+    def __getitem__(self, key: str) -> Any:
+        if key in self._lookup:
+            s = self._data[key]
+            return frame.to_numpy(s) if self._numpy else s.to_native()
+        raise KeyError(key)
+
+    def __iter__(self):
+        return iter(self._data.columns)
+
+    def __len__(self) -> int:
+        return len(self._data.columns)
 
 
 def is_known_scalar(value):
     """
     Return True if value is a type we expect in a dataframe
     """
+    return not np.iterable(value) and isinstance(
+        value,
+        (
+            numbers.Number,
+            datetime.date,
+            datetime.timedelta,
+            np.datetime64,
+            np.timedelta64,
+        ),
+    )
 
-    def _is_datetime_or_timedelta(value):
-        # Using pandas.Series helps catch python, numpy and pandas
-        # versions of these types
-        return pd.Series(value).dtype.kind in ("M", "m")
 
-    return not np.iterable(value) and (
-        isinstance(value, numbers.Number) or _is_datetime_or_timedelta(value)
+def is_list_like(obj: Any) -> bool:
+    """
+    Return True if *obj* is a list, tuple, series or array
+    """
+    if isinstance(obj, (list, tuple, range, np.ndarray, nw.Series)):
+        return True
+    return is_native_series(obj) or (
+        hasattr(obj, "__len__")
+        and hasattr(obj, "dtype")
+        and not isinstance(obj, (str, bytes))
     )

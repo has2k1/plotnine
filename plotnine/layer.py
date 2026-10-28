@@ -2,12 +2,14 @@ from __future__ import annotations
 
 import decimal
 import typing
-from copy import copy, deepcopy
+from contextlib import suppress
+from copy import deepcopy
 from typing import Iterable, List, cast, overload
 
-import pandas as pd
+import narwhals as nw
 
-from ._utils import array_kind, check_required_aesthetics, ninteraction
+from ._utils import array_kind, check_required_aesthetics, frame, ninteraction
+from ._utils.frame import native_io
 from ._utils.registry import Registry
 from .exceptions import PlotnineError
 from .mapping._asis import asis_columns
@@ -25,6 +27,7 @@ if typing.TYPE_CHECKING:
     from typing import Any, Literal, Sequence, SupportsIndex
 
     from plotnine import ggplot
+    from plotnine._utils.frame import DataFrame, Implementation
     from plotnine.coords.coord import coord
     from plotnine.facets.layout import Layout
     from plotnine.geoms.geom import geom
@@ -35,7 +38,6 @@ if typing.TYPE_CHECKING:
     from plotnine.scales.scales import Scales
     from plotnine.stats.stat import stat
     from plotnine.typing import (
-        DataFrameConvertible,
         DataLike,
         LayerDataLike,
     )
@@ -84,7 +86,10 @@ class layer:
     """
 
     # Data for this layer
-    data: pd.DataFrame
+    data: DataFrame
+
+    # The dataframe library to use when the layer has no data
+    _backend: Implementation
 
     def __init__(
         self,
@@ -215,6 +220,7 @@ class layer:
 
         Give the layer access to the data, mapping and environment
         """
+        self._backend = _plot_backend(plot)
         self._make_layer_data(plot.data)
         self._make_layer_mapping(plot.mapping)
         self._make_layer_environments(plot.environment)
@@ -230,44 +236,35 @@ class layer:
             ggplot object data
         """
         if plot_data is None:
-            data = pd.DataFrame()
-        elif hasattr(plot_data, "to_pandas"):
-            data = cast("DataFrameConvertible", plot_data).to_pandas()
+            data = frame.frame(backend=self._backend)
         else:
-            data = cast("pd.DataFrame", plot_data)
+            data = frame.to_frame(plot_data)
 
-        # Each layer that does not have data gets a copy of
-        # of the ggplot.data. If it has data it is replaced
-        # by copy so that we do not alter the users data
+        # Each layer that does not have data gets the ggplot.data.
+        # Since narwhals dataframes cannot be modified in place, the
+        # users data cannot be altered.
         if self._data is None:
-            try:
-                self.data = copy(data)
-            except AttributeError as e:
-                _geom_name = self.geom.__class__.__name__
-                _data_name = data.__class__.__name__
-                msg = (
-                    f"{_geom_name} layer expects a dataframe, "
-                    f"but it got {_data_name} instead."
-                )
-                raise PlotnineError(msg) from e
+            self.data = data
         elif callable(self._data):
-            self.data = self._data(data)
-            if not isinstance(self.data, pd.DataFrame):
+            result = self._data(data.to_native())
+            if not frame.is_frame(result):
                 raise PlotnineError(
-                    "Data function must return a Pandas dataframe"
+                    "Data function must return a dataframe, "
+                    f"but it returned a {type(result).__name__}."
                 )
+            self.data = frame.to_frame(result)
+        elif frame.is_frame(self._data) or hasattr(self._data, "to_pandas"):
+            self.data = frame.to_frame(self._data)
         else:
-            # Recognise polars dataframes
-            if hasattr(self._data, "to_pandas"):
-                self.data = cast(
-                    "DataFrameConvertible", self._data
-                ).to_pandas()
-            elif isinstance(self._data, pd.DataFrame):
-                self.data = self._data.copy()
-            else:
-                raise TypeError(f"Data has a bad type: {type(self.data)}")
+            _geom_name = self.geom.__class__.__name__
+            _data_name = self._data.__class__.__name__
+            msg = (
+                f"{_geom_name} layer expects a dataframe, "
+                f"but it got {_data_name} instead."
+            )
+            raise PlotnineError(msg)
 
-        self.data = _decimal_columns_to_float(self.data)
+        self.data = _native_copy(_decimal_columns_to_float(self.data))
 
     def _make_layer_mapping(self, plot_mapping: aes):
         """
@@ -323,18 +320,19 @@ class layer:
         Transformations like 'factor(cyl)' and other
         expression evaluation are  made in here
         """
-        evaled = evaluate(self.mapping._starting, self.data, plot.environment)
-        evaled_aes = aes(**{str(col): col for col in evaled})
-        plot.scales.add_defaults(evaled, evaled_aes)
+        data = frame.to_frame(self.data)
+        evaled = evaluate(self.mapping._starting, data, plot.environment)
+        evaled_aes = aes(**{col: col for col in evaled.columns})
+        plot.scales.add_defaults(evaled.to_native(), evaled_aes)
 
-        if len(self.data) == 0 and len(evaled) > 0:
-            # No data, and vectors suppled to aesthetics
-            evaled["PANEL"] = 1
-        else:
-            evaled["PANEL"] = self.data["PANEL"]
+        # With no data and vectors suppled to aesthetics, there is
+        # only one panel
+        no_data = len(data) == 0 and len(evaled) > 0
+        panel = 1 if no_data else data["PANEL"]
 
+        evaled = frame.assign(evaled, PANEL=panel)
         data = add_group(evaled)
-        self.data = data.sort_values("PANEL", kind="mergesort")
+        self.data = _native_copy(frame.sort(data, "PANEL"))
 
     def compute_statistic(self, layout: Layout):
         """
@@ -366,15 +364,15 @@ class layer:
         # we evaluate the mapping to them in data space.
         # NOTE: If the inverse-retransform turn out to be slow
         # we can try applying them to only the required columns.
-        data = plot.scales.inverse_df(self.data)
+        data = frame.to_frame(plot.scales.inverse_df(self.data))
         stat_data = evaluate(calculated, data, plot.environment)
 
         # If there are duplicate columns, we use the computed
         # ones in stat_data
-        columns = data.columns.difference(stat_data.columns)
-        data = pd.concat([data[columns], stat_data], axis=1)
+        columns = [c for c in data.columns if c not in stat_data.columns]
+        data = nw.concat([data.select(columns), stat_data], how="horizontal")
 
-        self.data = plot.scales.transform_df(data)
+        self.data = plot.scales.transform_df(_native_copy(data))
 
         # Add any new scales, if needed
         new = {ae: ae for ae in stat_data.columns}
@@ -472,10 +470,10 @@ class layer:
 
     def use_defaults(
         self,
-        data: pd.DataFrame,
+        data: DataFrame,
         aes_modifiers: dict[str, Any],
         scales: Scales | None = None,
-    ) -> pd.DataFrame:
+    ) -> DataFrame:
         """
         Prepare/modify data for plotting
 
@@ -562,7 +560,7 @@ class Layers(List[layer]):
         return result
 
     @property
-    def data(self) -> list[pd.DataFrame]:
+    def data(self) -> list[DataFrame]:
         return [l.data for l in self]
 
     def setup(self, plot: ggplot):
@@ -642,7 +640,8 @@ class Layers(List[layer]):
             l.update_labels(labels)
 
 
-def add_group(data: pd.DataFrame) -> pd.DataFrame:
+@native_io
+def add_group(data: DataFrame) -> DataFrame:
     """
     Add group to the dataframe
 
@@ -652,7 +651,7 @@ def add_group(data: pd.DataFrame) -> pd.DataFrame:
     if len(data) == 0:
         return data
 
-    if "group" not in data:
+    if "group" not in data.columns:
         # Exclude some "special" aesthetics from contributing towards
         # the grouping.
         # label - geom_text, geom_label
@@ -663,18 +662,17 @@ def add_group(data: pd.DataFrame) -> pd.DataFrame:
         ignore = ["PANEL", "label", "geometry", "where", "subgroup"]
         disc = discrete_columns(data, ignore=ignore)
         if disc:
-            data["group"] = ninteraction(data[disc], drop=True)
+            group = ninteraction(data.select(disc), drop=True)
         else:
-            data["group"] = NO_GROUP
+            group = NO_GROUP
     else:
-        data["group"] = ninteraction(data[["group"]], drop=True)
+        group = ninteraction(data.select("group"), drop=True)
 
-    return data
+    return frame.assign(data, group=group)
 
 
-def discrete_columns(
-    df: pd.DataFrame, ignore: Sequence[str] | pd.Index
-) -> Sequence[str]:
+@native_io
+def discrete_columns(df: DataFrame, ignore: Sequence[str]) -> Sequence[str]:
     """
     Return a list of the discrete columns in the dataframe
 
@@ -686,14 +684,15 @@ def discrete_columns(
         A list|set|tuple with the names of the columns to skip.
     """
     lst = []
-    for col in df:
+    for col in df.columns:
         if array_kind.discrete(df[col]) and (col not in ignore):
             # Some columns are represented as object dtype
             # but may have compound structures as values.
-            try:
-                hash(df[col].iloc[0])
-            except TypeError:
-                continue
+            if df.schema[col] == nw.Object:
+                try:
+                    hash(df[col].item(0))
+                except TypeError:
+                    continue
             lst.append(str(col))
     return lst
 
@@ -858,25 +857,59 @@ def _resolve_position(
     return klass()
 
 
-def _decimal_columns_to_float(data: pd.DataFrame) -> pd.DataFrame:
+def _decimal_columns_to_float(data: DataFrame) -> DataFrame:
     """
-    Cast columns of decimal.Decimal values to float
+    Cast columns of decimal values to float
 
-    polars' `to_pandas()` maps a Decimal column onto a pandas object column
-    holding `decimal.Decimal` values. plotnine treats object columns as
-    discrete, so such a column cannot be used with a continuous scale. Casting
+    A Decimal column or a pandas object column holding
+    `decimal.Decimal` values would be treated as discrete, and
+    such a column could not be used with a continuous scale. Casting
     it to float lets it behave like any other numeric column.
-
-    This runs for every dataframe, so we avoid the expense of `.dropna()`
-    (which builds a filtered copy) and use a mask to peek at the first
-    non-null value instead.
     """
-    for col in data.columns:
-        series = data[col]
-        if series.dtype == object:
-            mask = series.notna()
-            if mask.any() and isinstance(
-                series[cast("int", mask.idxmax())], decimal.Decimal
-            ):
-                data[col] = series.astype("float64")
-    return data
+    cols = []
+    for name, dtype in data.schema.items():
+        if dtype == nw.Decimal:
+            cols.append(name)
+        elif dtype == nw.Object:
+            values = data[name].drop_nulls()
+            if len(values) and isinstance(values.item(0), decimal.Decimal):
+                cols.append(name)
+
+    if not cols:
+        return data
+
+    return data.with_columns(
+        frame.series(
+            [None if v is None else float(v) for v in data[name].to_list()],
+            name,
+            backend=data.implementation,
+            dtype=nw.Float64,
+        )
+        for name in cols
+    )
+
+
+def _plot_backend(plot: ggplot) -> Implementation:
+    """
+    Library of the dataframes that plotnine creates for a plot
+
+    It is the library of the plot data or the first layer with data.
+    """
+    candidates = [plot.data] + [l._data for l in plot.layers]
+    for data in candidates:
+        if data is not None and not callable(data):
+            with suppress(TypeError):
+                return frame.to_frame(data).implementation
+    return frame.default_backend()
+
+
+def _native_copy(data: DataFrame) -> Any:
+    """
+    Return a native dataframe that can be modified
+
+    TODO(narwhals): Remove when layer.data is a narwhals dataframe
+    """
+    native = data.to_native()
+    if data.implementation.is_pandas_like():
+        native = native.copy()
+    return native

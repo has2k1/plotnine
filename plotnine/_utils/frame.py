@@ -136,10 +136,11 @@ def default_backend() -> Implementation:
 
     Polars is preferred, and pandas is the fallback.
     """
-    if find_spec("polars"):
-        return Implementation.POLARS
+    # TODO(narwhals): Prefer polars once all of plotnine is converted
     if find_spec("pandas"):
         return Implementation.PANDAS
+    if find_spec("polars"):
+        return Implementation.POLARS
     raise ImportError(
         "plotnine requires either polars or pandas to be installed."
     )
@@ -216,7 +217,16 @@ def series(
     if isinstance(values, nw.Series):
         s = values
         if s.implementation != backend:
-            s = series(s.to_list(), name, backend=backend, dtype=s.dtype)
+            if is_categorical(s):
+                s = categorical(
+                    s,
+                    levels(s),
+                    ordered=is_ordinal(s),
+                    name=name,
+                    backend=backend,
+                )
+            else:
+                s = series(s.to_list(), name, backend=backend, dtype=s.dtype)
         if s.name != name:
             s = s.alias(name)
         return s.cast(dtype) if dtype is not None else s
@@ -229,9 +239,12 @@ def series(
         return series(s, name, backend=backend, dtype=dtype)
 
     if (pd := get_pandas()) is not None and isinstance(
-        values, (pd.Categorical, pd.Index)
+        values, (pd.api.extensions.ExtensionArray, pd.Index)
     ):
-        return series(pd.Series(values), name, backend=backend, dtype=dtype)
+        if backend.is_pandas_like() or isinstance(values, pd.Categorical):
+            pds = pd.Series(values, name=name)
+            return series(pds, name, backend=backend, dtype=dtype)
+        values = np.asarray(values)
 
     if isinstance(values, np.ndarray):
         if values.ndim != 1:
@@ -644,8 +657,8 @@ def is_categorical(s: Series) -> bool:
 # When plotnine creates such a categorical it uses an Enum, and it
 # records the categories of the Enum so that it is not taken to be
 # ordinal. The records are scoped to the building of a plot.
-_NOMINAL_ENUMS: ContextVar[set[tuple[Any, ...]]] = ContextVar(
-    "nominal_enums", default=set()
+_NOMINAL_ENUMS: ContextVar[set[tuple[Any, ...]] | None] = ContextVar(
+    "nominal_enums", default=None
 )
 
 
@@ -670,12 +683,16 @@ def is_ordinal(s: Series) -> bool:
     the concept of an ordered categorical, so an Enum, whose
     categories are fixed and in a meaningful order, is taken to be
     ordinal unless plotnine created it as a nominal categorical.
+
+    The nominal Enums are identified by their categories, so within
+    a plot, an ordinal Enum with the same categories as a nominal Enum
+    is also taken to be nominal.
     """
     dtype = s.dtype
-    return (
-        isinstance(dtype, nw.Enum)
-        and tuple(dtype.categories) not in _NOMINAL_ENUMS.get()
-    )
+    if not isinstance(dtype, nw.Enum):
+        return False
+    nominal = _NOMINAL_ENUMS.get()
+    return nominal is None or tuple(dtype.categories) not in nominal
 
 
 def categorical(
@@ -740,8 +757,8 @@ def categorical(
         lookup.get(v) if v is not None and v == v else None  # noqa: PLR0124
         for v in values
     ]
-    if not ordered:
-        _NOMINAL_ENUMS.get().add(tuple(str_categories))
+    if not ordered and (nominal := _NOMINAL_ENUMS.get()) is not None:
+        nominal.add(tuple(str_categories))
     return series(str_values, name, backend=backend, dtype=nw.String).cast(
         nw.Enum(str_categories)
     )
@@ -884,3 +901,29 @@ def dtype_kind(arr: Any) -> str:
     if hasattr(arr, "dtype") and hasattr(arr.dtype, "kind"):
         return arr.dtype.kind
     return np.asarray(arr).dtype.kind
+
+
+def sort(
+    df: DataFrame,
+    by: str | Sequence[str],
+    descending: bool | Sequence[bool] = False,
+    nulls_last: bool = True,
+) -> DataFrame:
+    """
+    Sort a dataframe, keeping the order of rows with equal keys
+
+    Unlike the sort of narwhals (with pandas), this sort is stable.
+    """
+    by = [by] if isinstance(by, str) else list(by)
+    if isinstance(descending, bool):
+        descending = [descending] * len(by)
+    order = "__plotnine_row_order__"
+    return (
+        df.with_row_index(order)
+        .sort(
+            [*by, order],
+            descending=[*descending, False],
+            nulls_last=nulls_last,
+        )
+        .drop(order)
+    )

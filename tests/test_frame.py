@@ -247,3 +247,18 @@ def test_categorical_pandas():
     )
     assert F.is_ordinal(s)
     assert F.levels(s) == ["a", "b"]
+
+
+def test_sort_is_stable(impl):
+    rng = np.random.default_rng(123)
+    k = rng.integers(0, 3, 100_000)
+    v = np.arange(len(k))
+    df = F.sort(F.frame({"k": k, "v": v}, backend=impl), "k")
+    for i in range(3):
+        values = df.filter(nw.col("k") == i)["v"].to_numpy()
+        assert np.all(np.diff(values) > 0)
+
+    df = F.sort(F.frame({"k": k, "v": v}, backend=impl), "k", descending=True)
+    assert df["k"].to_list()[0] == 2
+    values = df.filter(nw.col("k") == 2)["v"].to_numpy()
+    assert np.all(np.diff(values) > 0)

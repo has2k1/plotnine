@@ -8,10 +8,13 @@ We only implement the most common functions.
 
 from __future__ import annotations
 
+from collections import defaultdict
 from typing import TYPE_CHECKING
 
+import narwhals as nw
 import numpy as np
-import pandas as pd
+
+from .._utils import frame
 
 if TYPE_CHECKING:
     from typing import Any, Sequence
@@ -22,15 +25,22 @@ __all__ = (
 )
 
 
+def _backend_of(values: Any) -> frame.Implementation:
+    """
+    Library of the values if they are a series, else the default
+    """
+    if (s := frame.as_series(values)) is not None:
+        return s.implementation
+    return frame.default_backend()
+
+
 def factor(
     values: Sequence[Any] | float | str,
     categories: Sequence[Any] | None = None,
     ordered: bool | None = None,
-) -> pd.Categorical:
+) -> nw.Series[Any]:
     """
     Turn x in to a categorical (factor) variable
-
-    It is just an alias to `pandas.Categorical`
 
     Parameters
     ----------
@@ -47,11 +57,26 @@ def factor(
         An ordered categorical respects, when sorted, the order of its
         `categories` attribute (which in turn is the `categories` argument, if
         provided).
+
+    Notes
+    -----
+    With pandas, the result holds a pandas categorical. With other
+    dataframe libraries, the result is an Enum of strings. An Enum
+    created with `ordered=False` is treated as unordered (nominal)
+    when choosing a scale.
     """
+    if isinstance(values, nw.Expr):
+        raise TypeError("factor() needs the values, not an expression")
+
     if isinstance(values, (int, float, str)):
         values = [values]
 
-    return pd.Categorical(values, categories=categories, ordered=None)  # pyright: ignore[reportReturnType]
+    return frame.categorical(
+        values,
+        categories,
+        ordered=bool(ordered),
+        backend=_backend_of(values),
+    )
 
 
 def reorder(x, y, fun=np.median, ascending=True):
@@ -76,13 +101,26 @@ def reorder(x, y, fun=np.median, ascending=True):
     ascending : bool
         If `True`, the `c` is ordered in ascending order of `x`.
     """
+    if isinstance(x, nw.Expr) or isinstance(y, nw.Expr):
+        raise TypeError("reorder() needs the values, not expressions")
+
     if len(x) != len(y):
         raise ValueError(f"Lengths are not equal. {len(x)=}, {len(x)=}")
-    summary = (
-        pd.Series(y)
-        .groupby(x, observed=True)
-        .apply(fun)
-        .sort_values(ascending=ascending)
-    )
-    cats = summary.index.to_list()
-    return pd.Categorical(x, categories=cats)
+
+    backend = _backend_of(x)
+    s = frame.as_series(x)
+    xs = s.to_list() if s is not None else list(x)
+    # An ordered categorical stays ordered
+    ordered = s is not None and frame.is_ordinal(s)
+    ys = frame.as_numpy(y)
+
+    groups: dict[Any, list[int]] = defaultdict(list)
+    for i, value in enumerate(xs):
+        if value is not None and value == value:
+            groups[value].append(i)
+
+    summary = {key: fun(ys[idx]) for key, idx in groups.items()}
+    # Sort by the categories first so that ties are resolved by them
+    keys = sorted(summary, key=frame._sort_key)
+    cats = sorted(keys, key=lambda k: summary[k], reverse=not ascending)
+    return frame.categorical(x, cats, ordered=ordered, backend=backend)

@@ -27,6 +27,7 @@ from ._utils import (
     ungroup,
 )
 from ._utils.context import assign_figure, plot_context
+from ._utils.frame import nominal_enums_scope
 from ._utils.ipython import (
     get_ipython,
     get_mimebundle,
@@ -473,6 +474,13 @@ class ggplot:
         plot attributes. Layer mappings and statistics can add labels, while
         facets can record state such as panel-grid dimensions. These changes
         remain on the build's copies.
+        """
+        with nominal_enums_scope():
+            return self._build_in_scope()
+
+    def _build_in_scope(self) -> PlotBuild:
+        """
+        Build the plot (see `build`)
         """
         plot = deepcopy(self)
         layers, scales, layout, facet, labels = (
