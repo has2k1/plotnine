@@ -995,14 +995,31 @@ def sort(
     if isinstance(descending, bool):
         descending = [descending] * len(by)
     order = "__plotnine_row_order__"
+
+    # The levels of a categorical that is not an Enum are in lexical
+    # order, but some libraries (e.g. older versions of polars) sort
+    # them in the order of appearance.
+    keys, temp = [], []
+    for i, col in enumerate(by):
+        if (
+            df.schema[col] == nw.Categorical
+            and not df.implementation.is_pandas_like()
+        ):
+            key = f"__plotnine_sort_key_{i}__"
+            df = df.with_columns(nw.col(col).cast(nw.String).alias(key))
+            keys.append(key)
+            temp.append(key)
+        else:
+            keys.append(col)
+
     return (
         df.with_row_index(order)
         .sort(
-            [*by, order],
+            [*keys, order],
             descending=[*descending, False],
             nulls_last=nulls_last,
         )
-        .drop(order)
+        .drop(order, *temp)
     )
 
 

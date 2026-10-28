@@ -26,8 +26,14 @@ jobs:
         include:
           - python-version: "3.11"
             resolution: "lowest-direct"
+            backend: "pandas"
           - python-version: 3.14
             resolution: "highest"
+            backend: "pandas"
+          # The test data is converted to polars before it is plotted
+          - python-version: 3.14
+            resolution: "highest"
+            backend: "polars"
     steps:
       - name: Checkout Code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -48,7 +54,12 @@ jobs:
         run: uv pip list
 
       - name: Run Tests
-        run: make test
+        run: |
+          if [ "${{ matrix.backend }}" = "polars" ]; then
+            make test-polars
+          else
+            make test
+          fi
 
       - name: List Directory
         run: ls -la
@@ -56,7 +67,7 @@ jobs:
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: failure()
         with:
-          name: result-images
+          name: result-images-${{ matrix.python-version }}-${{ matrix.backend }}
           path: tests/result_images/
           if-no-files-found: ignore
 
@@ -67,7 +78,7 @@ jobs:
         if: ${{ !inputs.skip_codecov }}
         uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
         with:
-          name: "py${{ matrix.python-version }}"
+          name: "py${{ matrix.python-version }}-${{ matrix.backend }}"
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
 
