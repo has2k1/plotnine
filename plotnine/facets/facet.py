@@ -12,7 +12,6 @@ from .._mpl.axes import p9Axes
 from .._utils import cross_join, frame, match
 from .._utils.frame import native_io
 from ..exceptions import PlotnineError
-from ..mapping._asis import asis_columns
 from ..mapping.evaluation import eval_string
 from ..scales.scales import Scales
 from .strips import Strips
@@ -280,7 +279,7 @@ class facet:
         for layer in layers:
             data = layer.data
             columns = set(frame.to_frame(data).columns)
-            asis = asis_columns(data)
+            asis = layer.asis
             match_id = match(frame.as_numpy(data["PANEL"]), layout_panels)
             if panel_scales_x:
                 x_aes = set(panel_scales_x[0].aesthetics)

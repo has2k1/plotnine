@@ -7,9 +7,10 @@ from typing import TYPE_CHECKING, Generic, cast
 
 import numpy as np
 
+from .._utils import frame
+from .._utils.frame import native_io
 from .._utils.registry import Register
 from ..exceptions import PlotnineError
-from ..mapping._asis import is_asis
 from ..mapping.aes import is_position_aes, rename_aesthetics
 from ._runtime_typing import (
     BreaksUserT,
@@ -22,9 +23,7 @@ from ._runtime_typing import (
 if TYPE_CHECKING:
     from typing import Any, Sequence
 
-    import pandas as pd
-    from numpy.typing import NDArray
-
+    from plotnine._utils.frame import DataFrame
     from plotnine.typing import ScaledAestheticsName
 
     from ..iapi import range_view, scale_view
@@ -166,7 +165,7 @@ class scale(
         """
         raise NotImplementedError
 
-    def train(self, x: pd.Series | NDArray):
+    def train(self, x: Any):
         """
         Train scale
 
@@ -195,7 +194,7 @@ class scale(
         """
         raise NotImplementedError
 
-    def transform_df(self, df: pd.DataFrame) -> pd.DataFrame:
+    def transform_df(self, df: DataFrame) -> DataFrame:
         """
         Transform dataframe
         """
@@ -207,7 +206,7 @@ class scale(
         """
         raise NotImplementedError
 
-    def inverse_df(self, df: pd.DataFrame) -> pd.DataFrame:
+    def inverse_df(self, df: DataFrame) -> DataFrame:
         """
         Inverse transform dataframe
         """
@@ -276,34 +275,28 @@ class scale(
     def final_limits(self) -> Any:
         raise NotImplementedError
 
-    def train_df(self, df: pd.DataFrame):
+    @native_io
+    def train_df(self, df: DataFrame):
         """
         Train scale from a dataframe
         """
-        aesthetics = sorted(
-            ae
-            for ae in set(self.aesthetics) & set(df.columns)
-            if not is_asis(df[ae])
-        )
+        aesthetics = sorted(set(self.aesthetics) & set(df.columns))
         for ae in aesthetics:
-            self.train(df[ae])
+            self.train(frame.scale_values(df[ae]))
 
-    def map_df(self, df: pd.DataFrame) -> pd.DataFrame:
+    @native_io
+    def map_df(self, df: DataFrame) -> DataFrame:
         """
         Map df
         """
         if len(df) == 0:
             return df
 
-        aesthetics = {
-            ae
-            for ae in set(self.aesthetics) & set(df.columns)
-            if not is_asis(df[ae])
-        }
-        for ae in aesthetics:
-            df[ae] = self.map(df[ae])
-
-        return df
+        aesthetics = sorted(set(self.aesthetics) & set(df.columns))
+        return frame.assign(
+            df,
+            **{ae: self.map(frame.scale_values(df[ae])) for ae in aesthetics},
+        )
 
     def get_labels(self, breaks=None) -> Sequence[str]:
         """

@@ -246,9 +246,10 @@ class geom(ABC, metaclass=Register):
             elif isinstance(value, ae_value):
                 data[ae] = value * len(data)
             elif is_asis(value):
-                # Preserve the dtype tag when repeating a literal parameter
-                # so position fractions remain available for later resolution.
-                data[ae] = np.repeat(value, n) if len(value) == 1 else value
+                # The layer records literal parameters, so position
+                # fractions remain available for later resolution.
+                values = value.to_numpy()
+                data[ae] = np.repeat(values, n) if len(values) == 1 else values
             elif across_panels:
                 value = list(chain(*repeat(value, num_panels)))
                 data[ae] = value

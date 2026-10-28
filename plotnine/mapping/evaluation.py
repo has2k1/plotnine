@@ -124,6 +124,17 @@ def evaluate(
     """
     Evaluate aesthetics
 
+    See `evaluate_aesthetics` for the details.
+    """
+    return evaluate_aesthetics(aesthetics, data, env)[0]
+
+
+def evaluate_aesthetics(
+    aesthetics: aes | dict[str, Any], data: DataFrame, env: Environment
+) -> tuple[DataFrame, set[str]]:
+    """
+    Evaluate aesthetics
+
     Parameters
     ----------
     aesthetics :
@@ -139,9 +150,12 @@ def evaluate(
 
     Returns
     -------
-    :
+    data :
         Dataframe of the form {name: result}, where each column is the
         result from evaluating an expression.
+    asis :
+        The aesthetics whose values are literal, i.e. they were
+        marked with `I()`.
 
     Notes
     -----
@@ -162,7 +176,7 @@ def evaluate(
     >>> env = Environment.capture()
     >>> df = pd.DataFrame({'x': range(1, 6)})
     >>> aesthetics = {'y': 'x**var1'}
-    >>> evaluate(aesthetics, df, env)
+    >>> evaluate_aesthetics(aesthetics, df, env)[0]
         y
     0   1
     1   4
@@ -202,14 +216,20 @@ def evaluate(
             msg = f"Do not know how to deal with aesthetic '{ae}'"
             raise PlotnineError(msg)
 
+    # Literal values are unwrapped
+    asis = {ae for ae, value in evaled.items() if is_asis(value)}
+    for ae in asis:
+        evaled[ae] = evaled[ae].to_numpy()
+
     n = len(data) if len(data) and evaled else None
     try:
-        return frame.frame(evaled, backend=data.implementation, n=n)
+        result = frame.frame(evaled, backend=data.implementation, n=n)
     except ValueError as e:
         raise PlotnineError(
             "Aesthetics must either be length one, "
             f"or the same length as the data. {e}"
         ) from e
+    return result, asis
 
 
 def _eval_expr(expr: nw.Expr, data: DataFrame, ae: str) -> Any:

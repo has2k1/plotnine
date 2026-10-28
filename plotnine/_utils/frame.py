@@ -960,3 +960,56 @@ def to_native_copy(data: DataFrame) -> Any:
     if data.implementation.is_pandas_like():
         native = native.copy()
     return native
+
+
+def isna(values: Any) -> np.ndarray:
+    """
+    Return a boolean array that is True where values are missing
+
+    Missing values are None, NaN and NaT.
+    """
+    if (s := as_series(values)) is not None:
+        return is_missing(s).to_numpy()
+
+    if isinstance(values, np.ndarray):
+        arr = values
+    else:
+        # Keep the items as they are, e.g. strings & NaN or tuples
+        arr = np.empty(len(values), dtype=object)
+        arr[:] = list(values)
+    kind = arr.dtype.kind
+    if kind in "fc":
+        return np.isnan(arr)
+    elif kind in "Mm":
+        return np.isnat(arr)
+    elif kind == "O":
+        if arr.ndim > 1:
+            # e.g. tuples that numpy turned into a 2d array
+            return np.array(
+                [all(_is_na_scalar(v) for v in row) for row in arr], dtype=bool
+            )
+        return np.array([_is_na_scalar(v) for v in arr.ravel()], dtype=bool)
+    return np.zeros(arr.shape, dtype=bool)
+
+
+def _is_na_scalar(v: Any) -> bool:
+    if v is None:
+        return True
+    if isinstance(v, (float, np.floating)):
+        return bool(np.isnan(v))
+    if isinstance(v, (np.datetime64, np.timedelta64)):
+        return bool(np.isnat(v))
+    # pandas NA & NaT
+    return type(v).__name__ in ("NAType", "NaTType")
+
+
+def scale_values(s: Series) -> Any:
+    """
+    Return the values of a column in the form that scales use
+
+    Categorical columns stay series so that the order of the levels
+    is known, other columns become numpy arrays.
+    """
+    if is_categorical(s):
+        return s
+    return to_numpy(s)

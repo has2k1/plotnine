@@ -6,7 +6,6 @@ from contextlib import suppress
 from .._utils import frame, match
 from ..exceptions import PlotnineError
 from ..iapi import labels_view, layout_details, pos_scales
-from ..mapping._asis import asis_columns
 
 if typing.TYPE_CHECKING:
     from matplotlib.axes import Axes
@@ -125,21 +124,23 @@ class Layout:
         for layer in layers:
             data = layer.data
             columns = set(frame.to_frame(data).columns)
-            asis = asis_columns(data)
+            asis = layer.asis
             match_id = match(frame.as_numpy(data["PANEL"]), layout_panels)
             if self.panel_scales_x:
                 x_vars = list(
                     (set(self.panel_scales_x[0].aesthetics) & columns) - asis
                 )
                 SCALE_X = _layout["SCALE_X"].to_numpy()[match_id].tolist()
-                self.panel_scales_x.map(data, x_vars, SCALE_X)
+                data = self.panel_scales_x.map(data, x_vars, SCALE_X)
 
             if self.panel_scales_y:
                 y_vars = list(
                     (set(self.panel_scales_y[0].aesthetics) & columns) - asis
                 )
                 SCALE_Y = _layout["SCALE_Y"].to_numpy()[match_id].tolist()
-                self.panel_scales_y.map(data, y_vars, SCALE_Y)
+                data = self.panel_scales_y.map(data, y_vars, SCALE_Y)
+
+            layer.data = data
 
     def get_scales(self, i: int) -> pos_scales:
         """

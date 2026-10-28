@@ -6,19 +6,20 @@ from contextlib import suppress
 from typing import List, cast
 from warnings import warn
 
+import narwhals as nw
 import numpy as np
-import pandas.api.types as pdtypes
 
-from .._utils import array_kind
+from .._utils import array_kind, frame
+from .._utils.frame import native_io
 from .._utils.registry import Registry
 from ..exceptions import PlotnineError, PlotnineWarning
-from ..mapping._asis import is_asis
 from ..mapping.aes import aes_to_scale
 from .scale import scale
 
 if typing.TYPE_CHECKING:
-    import pandas as pd
+    from typing import Any, Sequence
 
+    from plotnine._utils.frame import DataFrame
     from plotnine.scales.scale_xy import ScaleX, ScaleY
     from plotnine.typing import ScaledAestheticsName
 
@@ -129,7 +130,8 @@ class Scales(List[scale]):
         l = [s for s in self if ("x" in s.aesthetics) or ("y" in s.aesthetics)]
         return Scales(l)
 
-    def train(self, data, vars, idx):
+    @native_io
+    def train(self, data: DataFrame, vars: Sequence[str], idx: Any):
         """
         Train the scales on the data.
 
@@ -152,11 +154,13 @@ class Scales(List[scale]):
         """
         idx = np.asarray(idx)
         for col in vars:
+            values = frame.scale_values(data[col])
             for i, sc in enumerate(self, start=1):
                 bool_idx = i == idx
-                sc.train(data.loc[bool_idx, col])
+                sc.train(_subset(values, bool_idx))
 
-    def map(self, data, vars, idx):
+    @native_io
+    def map(self, data: DataFrame, vars: Sequence[str], idx: Any) -> DataFrame:
         """
         Map the data onto the scales
 
@@ -167,37 +171,38 @@ class Scales(List[scale]):
         ----------
         data : dataframe
             data with columns to map
-            This is modified inplace
         vars : list | tuple
             columns to map
         idx : array_like
             indices that link the data points to the
             scales. These start at 1, so subtract 1 to
             get the true index into the scales array
+
+        Returns
+        -------
+        :
+            Data with the mapped columns
         """
         idx = np.asarray(idx)
-        # discrete scales change the dtype
-        # from category to int. Use a new dataframe
-        # to collect these results.
-        # Using `type` preserves the subclass of pd.DataFrame
-        discrete_data = type(data)(index=data.index)
-
-        # Loop through each variable, mapping across each scale,
-        # then joining back into the copy of the data
+        n = len(data)
+        mapped = {}
         for col in vars:
-            use_df = array_kind.discrete(data[col]) or any(
-                getattr(sc, "_map_changes_dtype", False) for sc in self
-            )
+            values = frame.scale_values(data[col])
+            parts = []
             for i, sc in enumerate(self, start=1):
                 bool_idx = i == idx
-                results = sc.map(data.loc[bool_idx, col])
-                if use_df:
-                    discrete_data.loc[bool_idx, col] = results
-                else:
-                    data.loc[bool_idx, col] = results
+                if bool_idx.all():
+                    parts = [(bool_idx, sc.map(values))]
+                    break
+                elif bool_idx.any():
+                    parts.append((bool_idx, sc.map(_subset(values, bool_idx))))
 
-        for col in discrete_data:
-            data[col] = discrete_data[col]
+            if len(parts) == 1 and parts[0][0].all():
+                mapped[col] = parts[0][1]
+            elif parts:
+                mapped[col] = _combine(parts, n)
+
+        return frame.assign(data, **mapped)
 
     def reset(self):
         """
@@ -206,7 +211,8 @@ class Scales(List[scale]):
         for sc in self:
             sc.reset()
 
-    def train_df(self, data: pd.DataFrame, drop: bool = False):
+    @native_io
+    def train_df(self, data: DataFrame, drop: bool = False):
         """
         Train scales from a dataframe
         """
@@ -217,7 +223,8 @@ class Scales(List[scale]):
         for sc in self:
             sc.train_df(data)
 
-    def map_df(self, data: pd.DataFrame) -> pd.DataFrame:
+    @native_io
+    def map_df(self, data: DataFrame) -> DataFrame:
         """
         Map values from a dataframe.
 
@@ -231,7 +238,8 @@ class Scales(List[scale]):
             data = sc.map_df(data)
         return data
 
-    def transform_df(self, data: pd.DataFrame) -> pd.DataFrame:
+    @native_io
+    def transform_df(self, data: DataFrame) -> DataFrame:
         """
         Transform values in a dataframe.
 
@@ -245,7 +253,8 @@ class Scales(List[scale]):
             data = sc.transform_df(data)
         return data
 
-    def inverse_df(self, data: pd.DataFrame) -> pd.DataFrame:
+    @native_io
+    def inverse_df(self, data: DataFrame) -> DataFrame:
         """
         Inveres transform values in a dataframe.
         Returns dataframe
@@ -258,7 +267,8 @@ class Scales(List[scale]):
             data = sc.inverse_df(data)
         return data
 
-    def add_defaults(self, data, aesthetics):
+    @native_io
+    def add_defaults(self, data: DataFrame, aesthetics):
         """
         Add default scales for the aesthetics if there is none
 
@@ -284,19 +294,18 @@ class Scales(List[scale]):
         # If a new aesthetic corresponds to a column in the data
         # frame, find a default scale for the type of data in that
         # column
-        seen = set()
+        columns = set(data.columns)
         for ae in new_aesthetics:
             col = aesthetics[ae]
-            if col not in data:
+            if col not in columns:
                 col = ae
-            if col in data and is_asis(data[col]):
+            if col not in columns:
                 continue
             scale_var = aes_to_scale(ae)
 
             if self.get_scales(scale_var):
                 continue
 
-            seen.add(scale_var)
             try:
                 sc = make_scale(scale_var, data[col])
             except PlotnineError:
@@ -353,8 +362,10 @@ def make_scale(ae, series, *args, **kwargs):
     The scale is for the aesthetic ae, and args & kwargs
     are passed on to the scale creating class
     """
-    if pdtypes.is_float_dtype(series) and np.isinf(series).all():
-        raise PlotnineError("Cannot create scale for infinite data")
+    if frame.dtype_kind(series) == "f":
+        values = frame.as_numpy(series)
+        if len(values) and np.isinf(values).all():
+            raise PlotnineError("Cannot create scale for infinite data")
 
     stype = scale_type(series)
 
@@ -366,3 +377,35 @@ def make_scale(ae, series, *args, **kwargs):
     scale_name = f"scale_{ae}_{stype}"
     scale_klass = Registry[scale_name]
     return scale_klass(*args, **kwargs)
+
+
+def _subset(values: Any, bool_idx: np.ndarray) -> Any:
+    """
+    Select the values (array or series) where bool_idx is True
+    """
+    if bool_idx.all():
+        return values
+    if isinstance(values, nw.Series):
+        mask = frame.series(bool_idx, backend=values.implementation)
+        return values.filter(mask)
+    return values[bool_idx]
+
+
+def _combine(parts: list[tuple[np.ndarray, Any]], n: int) -> np.ndarray:
+    """
+    Combine values that belong to different rows into an array
+    """
+    arrays = [(idx, np.asarray(values)) for idx, values in parts]
+    if all(arr.ndim == 1 and arr.dtype.kind in "biuf" for _, arr in arrays):
+        dtype = np.result_type(float, *[arr.dtype for _, arr in arrays])
+        out = np.full(n, np.nan, dtype=dtype)
+        for idx, arr in arrays:
+            out[idx] = arr
+    else:
+        # e.g. strings or tuples
+        out = np.full(n, None, dtype=object)
+        for idx, values in parts:
+            _values = np.empty(len(values), dtype=object)
+            _values[:] = list(values)
+            out[idx] = _values
+    return out

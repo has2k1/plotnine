@@ -7,12 +7,13 @@ from copy import deepcopy
 from typing import Iterable, List, cast, overload
 
 import narwhals as nw
+import numpy as np
 
 from ._utils import array_kind, check_required_aesthetics, frame, ninteraction
 from ._utils.frame import native_io
 from ._utils.registry import Registry
 from .exceptions import PlotnineError
-from .mapping._asis import asis_columns
+from .mapping._asis import is_asis
 from .mapping.aes import (
     NO_GROUP,
     POSITION_AESTHETICS,
@@ -21,10 +22,10 @@ from .mapping.aes import (
     aes,
     make_labels,
 )
-from .mapping.evaluation import evaluate, stage
+from .mapping.evaluation import evaluate_aesthetics, stage
 
 if typing.TYPE_CHECKING:
-    from typing import Any, Literal, Sequence, SupportsIndex
+    from typing import Any, Callable, Literal, Sequence, SupportsIndex
 
     from plotnine import ggplot
     from plotnine._utils.frame import DataFrame, Implementation
@@ -91,6 +92,10 @@ class layer:
     # The dataframe library to use when the layer has no data
     _backend: Implementation
 
+    # The aesthetics whose values are literal i.e. they bypass
+    # the scales
+    asis: set[str]
+
     def __init__(
         self,
         geom: geom | type[geom] | str | None = None,
@@ -153,6 +158,7 @@ class layer:
         self.mapping = _geom.mapping
         self.position = _pos
         self.zorder = 0
+        self.asis = set()
 
     @staticmethod
     def _verify_arguments(geom: geom, stat: stat) -> None:
@@ -321,9 +327,16 @@ class layer:
         expression evaluation are  made in here
         """
         data = frame.to_frame(self.data)
-        evaled = evaluate(self.mapping._starting, data, plot.environment)
-        evaled_aes = aes(**{col: col for col in evaled.columns})
-        plot.scales.add_defaults(evaled.to_native(), evaled_aes)
+        evaled, asis = evaluate_aesthetics(
+            self.mapping._starting, data, plot.environment
+        )
+        self.asis = asis | {
+            ae for ae, value in self.geom.aes_params.items() if is_asis(value)
+        }
+        evaled_aes = aes(
+            **{col: col for col in evaled.columns if col not in asis}
+        )
+        plot.scales.add_defaults(evaled.drop(*asis), evaled_aes)
 
         # With no data and vectors suppled to aesthetics, there is
         # only one panel
@@ -364,19 +377,23 @@ class layer:
         # we evaluate the mapping to them in data space.
         # NOTE: If the inverse-retransform turn out to be slow
         # we can try applying them to only the required columns.
-        data = frame.to_frame(plot.scales.inverse_df(self.data))
-        stat_data = evaluate(calculated, data, plot.environment)
+        data = self._apply_scales(plot.scales.inverse_df)
+        stat_data, asis = evaluate_aesthetics(
+            calculated, data, plot.environment
+        )
+        self.asis = (self.asis - set(stat_data.columns)) | asis
 
         # If there are duplicate columns, we use the computed
         # ones in stat_data
         columns = [c for c in data.columns if c not in stat_data.columns]
         data = nw.concat([data.select(columns), stat_data], how="horizontal")
-
-        self.data = plot.scales.transform_df(frame.to_native_copy(data))
+        self.data = frame.to_native_copy(data)
+        data = self._apply_scales(plot.scales.transform_df)
+        self.data = frame.to_native_copy(data)
 
         # Add any new scales, if needed
-        new = {ae: ae for ae in stat_data.columns}
-        plot.scales.add_defaults(self.data, new)
+        new = {ae: ae for ae in stat_data.columns if ae not in self.asis}
+        plot.scales.add_defaults(data.select(list(new)), new)
 
     def setup_data(self):
         """
@@ -426,30 +443,34 @@ class layer:
             Coordinate system that converts panel ranges to the
             unflipped, untransformed data coordinates in the columns.
         """
-        data = self.data
+        data = frame.to_frame(self.data)
         if not len(data):
             return
 
-        columns = asis_columns(data) & POSITION_AESTHETICS
+        columns = (self.asis & POSITION_AESTHETICS) & set(data.columns)
         if not columns:
             return
-
-        # Convert integer fractions to float before replacing them with
-        # resolved coordinates; an integer column cannot hold those floats.
-        for col in columns:
-            data[col] = data[col].astype(float)
 
         by_dimension: tuple[tuple[set[str], Literal["x", "y"]], ...] = (
             (columns & X_AESTHETICS, "x"),
             (columns & Y_AESTHETICS, "y"),
         )
-        for pid, idx in data.groupby("PANEL", observed=True).groups.items():
-            panel_params = layout.panel_params[cast("int", pid) - 1]
+        panels = frame.as_numpy(data["PANEL"])
+        resolved = {}
+        for col in columns:
+            # Integer fractions become floats when they are resolved
+            resolved[col] = frame.as_numpy(data[col]).astype(float)
+
+        for pid in np.unique(panels):
+            idx = panels == pid
+            panel_params = layout.panel_params[int(pid) - 1]
             for cols, dimension in by_dimension:
                 for col in cols:
-                    data.loc[idx, col] = coord.panel_fraction_to_data(
-                        data.loc[idx, col], panel_params, dimension
+                    resolved[col][idx] = coord.panel_fraction_to_data(
+                        resolved[col][idx], panel_params, dimension
                     )
+
+        self.data = frame.to_native_copy(frame.assign(data, **resolved))
 
     def draw(self, layout: Layout, coord: coord):
         """
@@ -485,17 +506,23 @@ class layer:
             Expression to evaluate and replace aesthetics in
             the data.
         """
-        old_columns = data.columns
-        data = self.geom.use_defaults(data, aes_modifiers)
+        old_columns = set(frame.to_frame(data).columns)
+        data = frame.to_frame(self.geom.use_defaults(data, aes_modifiers))
         if scales is not None:
             # The default aesthetics and the aesthetic parameters are
             # specified in userspace. When we add them we have to
             # transform them.
-            new_columns = data.columns.difference(old_columns)
-            _data = scales.transform_df(self.data[new_columns])
-            for col in new_columns:
-                data[col] = _data[col]
-        return data
+            new_columns = [
+                c
+                for c in data.columns
+                if c not in old_columns and c not in self.asis
+            ]
+            if new_columns:
+                transformed = frame.to_frame(
+                    scales.transform_df(data.select(new_columns).to_native())
+                )
+                data = data.with_columns(transformed[c] for c in new_columns)
+        return frame.to_native_copy(data)
 
     def finish_statistics(self):
         """
@@ -514,6 +541,30 @@ class layer:
         """
         labels.add_defaults(self.mapping.labels)
         labels.add_defaults(make_labels(self.stat.DEFAULT_AES))
+
+    def _apply_scales(self, func: Callable[[Any], Any]) -> DataFrame:
+        """
+        Apply a function of the scales to the data that is not literal
+
+        Literal (`I()`) columns bypass the scales. They are left out of
+        the data that func gets, and then added back to the result.
+
+        Parameters
+        ----------
+        func :
+            A function that takes a dataframe and returns a dataframe
+            with the same number of rows, e.g. `scales.transform_df`.
+        """
+        data = frame.to_frame(self.data)
+        asis = [c for c in data.columns if c in self.asis]
+        if not asis:
+            return frame.to_frame(func(data.to_native()))
+
+        result = frame.to_frame(func(data.drop(*asis).to_native()))
+        result = nw.concat([result, data.select(asis)], how="horizontal")
+        order = [c for c in data.columns if c in result.columns]
+        order += [c for c in result.columns if c not in order]
+        return result.select(order)
 
 
 class Layers(List[layer]):
@@ -613,15 +664,18 @@ class Layers(List[layer]):
 
     def transform(self, scales: Scales):
         for l in self:
-            l.data = scales.transform_df(l.data)
+            l.data = frame.to_native_copy(l._apply_scales(scales.transform_df))
 
     def train(self, scales: Scales):
         for l in self:
-            scales.train_df(l.data)
+            data = frame.to_frame(l.data)
+            scales.train_df(
+                data.drop(*(l.asis & set(data.columns))).to_native()
+            )
 
     def map(self, scales: Scales):
         for l in self:
-            l.data = scales.map_df(l.data)
+            l.data = frame.to_native_copy(l._apply_scales(scales.map_df))
 
     def finish_statistics(self):
         for l in self:
