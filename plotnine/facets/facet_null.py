@@ -2,10 +2,12 @@ from __future__ import annotations
 
 import typing
 
+from .._utils import frame
+from .._utils.frame import native_io
 from .facet import facet, layout_null
 
 if typing.TYPE_CHECKING:
-    import pandas as pd
+    from plotnine._utils.frame import DataFrame
 
     from ..scales.scales import Scales
 
@@ -26,13 +28,13 @@ class facet_null(facet):
         self.nrow = 1
         self.ncol = 1
 
-    def map(self, data: pd.DataFrame, layout: pd.DataFrame) -> pd.DataFrame:
-        data["PANEL"] = 1
-        return data
+    @native_io
+    def map(self, data: DataFrame, layout: DataFrame) -> DataFrame:
+        return frame.assign(data, PANEL=1)
 
     def compute_layout(
         self,
-        data: list[pd.DataFrame],
+        data: list[DataFrame],
         scales: Scales,
-    ) -> pd.DataFrame:
-        return layout_null()
+    ) -> DataFrame:
+        return layout_null(data[0].implementation)

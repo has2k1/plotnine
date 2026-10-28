@@ -264,7 +264,7 @@ class layer:
             )
             raise PlotnineError(msg)
 
-        self.data = _native_copy(_decimal_columns_to_float(self.data))
+        self.data = frame.to_native_copy(_decimal_columns_to_float(self.data))
 
     def _make_layer_mapping(self, plot_mapping: aes):
         """
@@ -332,7 +332,7 @@ class layer:
 
         evaled = frame.assign(evaled, PANEL=panel)
         data = add_group(evaled)
-        self.data = _native_copy(frame.sort(data, "PANEL"))
+        self.data = frame.to_native_copy(frame.sort(data, "PANEL"))
 
     def compute_statistic(self, layout: Layout):
         """
@@ -372,7 +372,7 @@ class layer:
         columns = [c for c in data.columns if c not in stat_data.columns]
         data = nw.concat([data.select(columns), stat_data], how="horizontal")
 
-        self.data = plot.scales.transform_df(_native_copy(data))
+        self.data = plot.scales.transform_df(frame.to_native_copy(data))
 
         # Add any new scales, if needed
         new = {ae: ae for ae in stat_data.columns}
@@ -901,15 +901,3 @@ def _plot_backend(plot: ggplot) -> Implementation:
             with suppress(TypeError):
                 return frame.to_frame(data).implementation
     return frame.default_backend()
-
-
-def _native_copy(data: DataFrame) -> Any:
-    """
-    Return a native dataframe that can be modified
-
-    TODO(narwhals): Remove when layer.data is a narwhals dataframe
-    """
-    native = data.to_native()
-    if data.implementation.is_pandas_like():
-        native = native.copy()
-    return native

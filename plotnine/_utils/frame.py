@@ -364,7 +364,10 @@ def assign(df: DataFrame, **columns: Any) -> DataFrame:
 
     impl = df.implementation
     if not df.columns:
-        return frame(columns, backend=impl)
+        # A dataframe without columns has no rows, the values
+        # determine the number of rows.
+        has_vectors = any(not _is_scalar(v) for v in columns.values())
+        return frame(columns, backend=impl, n=None if has_vectors else 0)
 
     exprs = []
     for name, value in columns.items():
@@ -927,3 +930,33 @@ def sort(
         )
         .drop(order)
     )
+
+
+def convert(df: DataFrame, backend: Implementation) -> DataFrame:
+    """
+    Convert a dataframe to another library
+
+    This is meant for small dataframes created by plotnine, e.g. the
+    layout of the panels, when layers have data from different
+    libraries.
+    """
+    if df.implementation == backend:
+        return df
+    if not df.columns:
+        return frame(backend=backend)
+    return frame(
+        {name: series(df[name], name, backend=backend) for name in df.columns},
+        backend=backend,
+    )
+
+
+def to_native_copy(data: DataFrame) -> Any:
+    """
+    Return a native dataframe that can be modified
+
+    TODO(narwhals): Remove when layer.data is a narwhals dataframe
+    """
+    native = data.to_native()
+    if data.implementation.is_pandas_like():
+        native = native.copy()
+    return native

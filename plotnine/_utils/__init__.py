@@ -181,7 +181,7 @@ def match(
         ]
     else:
         lst = [lookup[x] + start if x in lookup else nomatch for x in v1]
-    return np.array(lst)
+    return np.array(lst, dtype=np.int64)
 
 
 def multitype_sort(arr: AnyArrayLike) -> list[Any]:

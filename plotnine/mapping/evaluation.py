@@ -184,7 +184,7 @@ def evaluate(
             if col in data.columns:
                 evaled[ae] = data[col]
             else:
-                evaled[ae] = _eval_string(col, data, env, ae)
+                evaled[ae] = eval_string(col, data, env, ae)
         elif is_list_like(col) or is_asis(col):
             n = len(col)
             if len(data) and n != len(data) and n != 1:
@@ -223,7 +223,7 @@ def _eval_expr(expr: nw.Expr, data: DataFrame, ae: str) -> Any:
         raise PlotnineError(msg) from e
 
 
-def _eval_string(expr: str, data: DataFrame, env: Environment, ae: str) -> Any:
+def eval_string(expr: str, data: DataFrame, env: Environment, ae: str) -> Any:
     """
     Evaluate a string expression
 
@@ -295,7 +295,15 @@ class _NativeColumns(Mapping[str, Any]):
     def __getitem__(self, key: str) -> Any:
         if key in self._lookup:
             s = self._data[key]
-            return frame.to_numpy(s) if self._numpy else s.to_native()
+            if self._numpy:
+                return frame.to_numpy(s)
+            native = s.to_native()
+            if getattr(native.dtype, "name", None) == "geometry":
+                # A geometry column of a geopandas dataframe
+                import geopandas as gpd
+
+                native = gpd.GeoSeries(native)
+            return native
         raise KeyError(key)
 
     def __iter__(self):

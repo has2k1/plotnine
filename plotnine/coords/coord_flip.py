@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, cast
 
+import narwhals as nw
 import pandas as pd
 
 from ..iapi import labels_view, panel_ranges, panel_view
@@ -10,6 +11,7 @@ from .coord_cartesian import coord_cartesian
 if TYPE_CHECKING:
     from typing import Sequence, TypeVar
 
+    from plotnine._utils.frame import DataFrame
     from plotnine.scales.scale import scale
     from plotnine.typing import Side
 
@@ -70,11 +72,11 @@ class coord_flip(coord_cartesian):
                 sv.sec.position = _FLIP_POSITION[cast("Side", sv.sec.position)]
         return panel_params
 
-    def setup_layout(self, layout: pd.DataFrame) -> pd.DataFrame:
+    def setup_layout(self, layout: DataFrame) -> DataFrame:
         # switch the scales
-        x, y = "SCALE_X", "SCALE_Y"
-        layout[x], layout[y] = layout[y].copy(), layout[x].copy()
-        return layout
+        return layout.with_columns(
+            SCALE_X=nw.col("SCALE_Y"), SCALE_Y=nw.col("SCALE_X")
+        )
 
     def range(self, panel_params: panel_view) -> panel_ranges:
         """

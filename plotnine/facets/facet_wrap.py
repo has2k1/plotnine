@@ -4,10 +4,11 @@ import re
 import typing
 from warnings import warn
 
+import narwhals as nw
 import numpy as np
-import pandas as pd
 
-from .._utils import join_keys, match
+from .._utils import frame, join_keys, match
+from .._utils.frame import native_io
 from ..exceptions import PlotnineError, PlotnineWarning
 from .facet import (
     add_missing_facets,
@@ -19,10 +20,12 @@ from .facet import (
 from .strips import Strips, strip
 
 if typing.TYPE_CHECKING:
-    from typing import Literal, Optional, Sequence
+    from typing import Any, Literal, Optional, Sequence
 
+    import numpy.typing as npt
     from matplotlib.axes import Axes
 
+    from plotnine._utils.frame import DataFrame
     from plotnine.iapi import layout_details
     from plotnine.typing import StripPosition
 
@@ -105,12 +108,12 @@ class facet_wrap(facet):
 
     def compute_layout(
         self,
-        data: list[pd.DataFrame],
+        data: list[DataFrame],
         scales: Scales,
-    ) -> pd.DataFrame:
+    ) -> DataFrame:
         if not self.vars:
             self.nrow, self.ncol = 1, 1
-            return layout_null()
+            return layout_null(data[0].implementation)
 
         base = combine_vars(data, self.environment, self.vars, drop=self.drop)
         n = len(base)
@@ -127,65 +130,68 @@ class facet_wrap(facet):
 
         col = (_id - 1) % dims[1] + 1
 
-        layout = pd.DataFrame(
-            {
-                "PANEL": pd.Categorical(range(1, n + 1)),
-                "ROW": row.astype(int),
-                "COL": col.astype(int),
-            }
-        )
         if self.dir == "v":
-            layout = layout.rename(columns={"ROW": "COL", "COL": "ROW"})
+            row, col = col, row
 
-        layout = pd.concat([layout, base], axis=1)
-        self.nrow = layout["ROW"].nunique()
-        self.ncol = layout["COL"].nunique()
-        n = layout.shape[0]
-
-        # Add scale identification
-        layout["SCALE_X"] = range(1, n + 1) if self.free["x"] else 1
-        layout["SCALE_Y"] = range(1, n + 1) if self.free["y"] else 1
+        layout = frame.frame(
+            {"PANEL": _id, "ROW": row.astype(int), "COL": col.astype(int)},
+            backend=base.implementation,
+        )
+        layout = nw.concat([layout, base], how="horizontal")
+        self.nrow = layout["ROW"].n_unique()
+        self.ncol = layout["COL"].n_unique()
 
         # Figure out where axes should go.
         # The row/column of each panel that shows the axis, on the side the
         # axis sits (default: bottom-most row, left-most column)
+        rows, cols = layout["ROW"].to_numpy(), layout["COL"].to_numpy()
         x_side, y_side = scales.axis_positions
-        rows_by_col = layout.groupby("COL")["ROW"]
-        cols_by_row = layout.groupby("ROW")["COL"]
         if x_side == "top":
-            x_idx, x_sec_idx = rows_by_col.idxmin(), rows_by_col.idxmax()
-        else:
-            x_idx, x_sec_idx = rows_by_col.idxmax(), rows_by_col.idxmin()
-        if y_side == "right":
-            y_idx, y_sec_idx = cols_by_row.idxmax(), cols_by_row.idxmin()
-        else:
-            y_idx, y_sec_idx = cols_by_row.idxmin(), cols_by_row.idxmax()
-        layout["AXIS_X"] = False
-        layout["AXIS_Y"] = False
-        layout["AXIS_X_SEC"] = False
-        layout["AXIS_Y_SEC"] = False
-        _loc = layout.columns.get_loc
-        layout.iloc[x_idx, _loc("AXIS_X")] = True  # type: ignore
-        layout.iloc[y_idx, _loc("AXIS_Y")] = True  # type: ignore
-        layout.iloc[x_sec_idx, _loc("AXIS_X_SEC")] = True  # type: ignore
-        layout.iloc[y_sec_idx, _loc("AXIS_Y_SEC")] = True  # type: ignore
-
-        if self.free["x"]:
-            layout.loc[:, "AXIS_X"] = True
-            layout.loc[:, "AXIS_X_SEC"] = True
-
-        if self.free["y"]:
-            layout.loc[:, "AXIS_Y"] = True
-            layout.loc[:, "AXIS_Y_SEC"] = True
-
-        return layout
-
-    def map(self, data: pd.DataFrame, layout: pd.DataFrame) -> pd.DataFrame:
-        if not len(data):
-            data["PANEL"] = pd.Categorical(
-                [], categories=layout["PANEL"].cat.categories, ordered=True
+            x_idx, x_sec_idx = (
+                _argext(cols, rows, min),
+                _argext(cols, rows, max),
             )
-            return data
+        else:
+            x_idx, x_sec_idx = (
+                _argext(cols, rows, max),
+                _argext(cols, rows, min),
+            )
+        if y_side == "right":
+            y_idx, y_sec_idx = (
+                _argext(rows, cols, max),
+                _argext(rows, cols, min),
+            )
+        else:
+            y_idx, y_sec_idx = (
+                _argext(rows, cols, min),
+                _argext(rows, cols, max),
+            )
+
+        def flags(idx: list[int], free: bool) -> npt.NDArray[np.bool_]:
+            arr = np.zeros(n, dtype=bool)
+            arr[idx] = True
+            return arr | free
+
+        return frame.assign(
+            layout,
+            # Add scale identification
+            SCALE_X=_id if self.free["x"] else 1,
+            SCALE_Y=_id if self.free["y"] else 1,
+            AXIS_X=flags(x_idx, self.free["x"]),
+            AXIS_Y=flags(y_idx, self.free["y"]),
+            AXIS_X_SEC=flags(x_sec_idx, self.free["x"]),
+            AXIS_Y_SEC=flags(y_sec_idx, self.free["y"]),
+        )
+
+    @native_io
+    def map(self, data: DataFrame, layout: DataFrame) -> DataFrame:
+        if not len(data):
+            return frame.assign(
+                data,
+                PANEL=frame.series(
+                    [], backend=data.implementation, dtype=nw.Int64
+                ),
+            )
 
         facet_vals = eval_facet_vars(data, self.vars, self.environment)
         data, facet_vals = add_missing_facets(
@@ -194,21 +200,17 @@ class facet_wrap(facet):
 
         # assign each point to a panel
         if len(facet_vals) and len(facet_vals.columns):
-            keys = join_keys(facet_vals, layout, self.vars)
-            data["PANEL"] = match(keys["x"], keys["y"], start=1)
+            keys = join_keys(
+                facet_vals,
+                frame.convert(layout, data.implementation),
+                self.vars,
+            )
+            panel = match(keys["x"], keys["y"], start=1)
         else:
             # Special case of no facetting
-            data["PANEL"] = 1
+            panel = 1
 
-        # matching dtype
-        data["PANEL"] = pd.Categorical(
-            data["PANEL"],
-            categories=layout["PANEL"].cat.categories,
-            ordered=True,
-        )
-
-        data = data.reset_index(drop=True)
-        return data
+        return frame.assign(data, PANEL=panel)
 
     def make_strips(self, layout_info: layout_details, ax: Axes) -> Strips:
         if not self.vars:
@@ -331,3 +333,17 @@ def n_to_nrow_ncol(n: int) -> tuple[int, int]:
         ncol = int(np.ceil(np.sqrt(n)))
         nrow = int(np.ceil(n / ncol))
     return (nrow, ncol)
+
+
+def _argext(
+    groups: npt.NDArray[Any], values: npt.NDArray[Any], fn
+) -> list[int]:
+    """
+    For each group, the position of the first min/max value
+    """
+    result = []
+    for g in np.unique(groups):
+        (positions,) = np.nonzero(groups == g)
+        target = fn(values[positions])
+        result.append(int(positions[values[positions] == target][0]))
+    return result
