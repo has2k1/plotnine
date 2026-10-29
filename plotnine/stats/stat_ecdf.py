@@ -1,9 +1,16 @@
-import numpy as np
-import pandas as pd
+from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
+import numpy as np
+
+from .._utils import frame
 from ..doctools import document
 from ..mapping.evaluation import after_stat
 from .stat import stat
+
+if TYPE_CHECKING:
+    from plotnine.typing import FloatArray, FloatArrayLike
 
 
 @document
@@ -46,19 +53,37 @@ class stat_ecdf(stat):
     DROPPED_AES = ["weight"]
 
     def compute_group(self, data, scales):
-        from statsmodels.distributions.empirical_distribution import ECDF
-
         n, pad = self.params["n"], self.params["pad"]
+        values = frame.to_numpy(data["x"])
 
-        # If n is None, use raw values; otherwise interpolate
         if n is None:
-            x = np.unique(data["x"])
+            x = np.unique(values)
         else:
-            x = np.linspace(data["x"].min(), data["x"].max(), n)
+            x = np.linspace(values.min(), values.max(), n)
 
         if pad:
             x = np.hstack([-np.inf, x, np.inf])
 
-        ecdf = ECDF(data["x"].to_numpy())(x)
-        res = pd.DataFrame({"x": x, "ecdf": ecdf})
-        return res
+        return frame.frame_like(data, {"x": x, "ecdf": ecdf(values, x)})
+
+
+def ecdf(values: FloatArrayLike, x: FloatArrayLike) -> FloatArray:
+    """
+    Evaluate the empirical cumulative distribution function
+
+    Parameters
+    ----------
+    values :
+        Values from which the distribution is created.
+    x :
+        Points at which to evaluate the distribution.
+
+    Notes
+    -----
+    This gives the same results as
+    `statsmodels.distributions.empirical_distribution.ECDF`.
+    """
+    values = np.sort(np.asarray(values))
+    n = len(values)
+    y = np.hstack([0, np.linspace(1.0 / n, 1, n)])
+    return y[np.searchsorted(values, x, side="right")]

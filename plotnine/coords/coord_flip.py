@@ -2,20 +2,21 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, cast
 
-import pandas as pd
+import narwhals as nw
 
+from .._utils import frame
 from ..iapi import labels_view, panel_ranges, panel_view
 from .coord_cartesian import coord_cartesian
 
 if TYPE_CHECKING:
-    from collections.abc import Sequence
     from typing import TypeVar
 
+    from plotnine._utils.frame import DataFrame
     from plotnine.scales.scale import scale
     from plotnine.typing import Side
 
     THasLabels = TypeVar(
-        "THasLabels", bound=pd.DataFrame | labels_view | panel_view
+        "THasLabels", bound="DataFrame | labels_view | panel_view"
     )
 
 
@@ -54,8 +55,8 @@ class coord_flip(coord_cartesian):
         return flip_labels(super().labels(cur_labels))
 
     def transform(
-        self, data: pd.DataFrame, panel_params: panel_view, munch: bool = False
-    ) -> pd.DataFrame:
+        self, data: DataFrame, panel_params: panel_view, munch: bool = False
+    ) -> DataFrame:
         data = flip_labels(data)
         return super().transform(data, panel_params, munch=munch)
 
@@ -71,11 +72,11 @@ class coord_flip(coord_cartesian):
                 sv.sec.position = _FLIP_POSITION[cast("Side", sv.sec.position)]
         return panel_params
 
-    def setup_layout(self, layout: pd.DataFrame) -> pd.DataFrame:
+    def setup_layout(self, layout: DataFrame) -> DataFrame:
         # switch the scales
-        x, y = "SCALE_X", "SCALE_Y"
-        layout[x], layout[y] = layout[y].copy(), layout[x].copy()
-        return layout
+        return layout.with_columns(
+            SCALE_X=nw.col("SCALE_Y"), SCALE_Y=nw.col("SCALE_X")
+        )
 
     def range(self, panel_params: panel_view) -> panel_ranges:
         """
@@ -91,25 +92,25 @@ def flip_labels(obj: THasLabels) -> THasLabels:
 
     Parameters
     ----------
-    obj : dict_like | dataclass
+    obj : dataframe | dataclass
         Object with labels to rename
     """
 
-    def sub(a: str, b: str, df: pd.DataFrame):
-        """
-        Substitute all keys that start with a to b
-        """
-        columns: Sequence[str] = df.columns.tolist()
-        for label in columns:
-            if label.startswith(a):
-                new_label = b + label[1:]
-                df[new_label] = df.pop(label)
+    def flip(label: str) -> str:
+        if label.startswith("x"):
+            return "y" + label[1:]
+        elif label.startswith("y"):
+            return "x" + label[1:]
+        return label
 
-    if isinstance(obj, pd.DataFrame):
-        sub("x", "z", obj)
-        sub("y", "x", obj)
-        sub("z", "y", obj)
-    elif isinstance(obj, (labels_view, panel_view)):
+    if isinstance(obj, (labels_view, panel_view)):
         obj.x, obj.y = obj.y, obj.x  # type: ignore
+    elif isinstance(obj, nw.DataFrame) or frame.is_frame(obj):
+        df = frame.to_frame(obj)
+        df = df.rename({c: flip(c) for c in df.columns if flip(c) != c})
+        return cast(
+            "THasLabels",
+            df if isinstance(obj, nw.DataFrame) else df.to_native(),
+        )
 
     return obj

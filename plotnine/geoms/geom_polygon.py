@@ -2,9 +2,10 @@ from __future__ import annotations
 
 import typing
 
+import narwhals as nw
 import numpy as np
 
-from .._utils import SIZE_FACTOR, to_rgba
+from .._utils import SIZE_FACTOR, frame, to_rgba
 from ..doctools import document
 from .geom import geom
 from .geom_path import geom_path
@@ -13,11 +14,11 @@ if typing.TYPE_CHECKING:
     from typing import Any
 
     import numpy.typing as npt
-    import pandas as pd
     from matplotlib.axes import Axes
     from matplotlib.offsetbox import DrawingArea
     from matplotlib.path import Path
 
+    from plotnine._utils.frame import DataFrame
     from plotnine.coords.coord import coord
     from plotnine.iapi import panel_view
     from plotnine.layer import layer
@@ -62,12 +63,12 @@ class geom_polygon(geom):
 
     legend_key_size = staticmethod(geom_path.legend_key_size)
 
-    def handle_na(self, data: pd.DataFrame) -> pd.DataFrame:
+    def handle_na(self, data: DataFrame) -> DataFrame:
         return data
 
     def draw_panel(
         self,
-        data: pd.DataFrame,
+        data: DataFrame,
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
@@ -79,7 +80,7 @@ class geom_polygon(geom):
 
     @staticmethod
     def draw_group(
-        data: pd.DataFrame,
+        data: DataFrame,
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
@@ -87,23 +88,20 @@ class geom_polygon(geom):
     ):
         from matplotlib.collections import PathCollection, PolyCollection
 
-        # Polygon vertices omit the closing edge. Non-linear coordinates
-        # must interpolate that edge with the others; otherwise a curved
-        # boundary closes with a straight chord. Append each ring's first
-        # vertex before transformation. Linear coordinates already close
-        # the ring correctly.
+        has_subgroups = "subgroup" in data.columns
         if not coord.is_linear:
-            by = ["group", "subgroup"] if "subgroup" in data else "group"
-            # A missing `subgroup` still identifies one ring. Preserve it
-            # during grouping or its vertices disappear.
-            indices = data.groupby(by, sort=False, dropna=False).indices
-            order = np.concatenate(
-                [np.append(idx, idx[0]) for idx in indices.values()]
+            # Close each ring before munching. Matplotlib closes the
+            # transformed polygon with a straight segment; we need the
+            # closing edge to be curved in the transformed space too.
+            by = ["group", "subgroup"] if has_subgroups else "group"
+            indices = frame.group_indices(
+                data, by, drop_missing=False, sort=False
             )
-            data = data.iloc[order].reset_index(drop=True)
+            order = np.concatenate([np.append(idx, idx[0]) for idx in indices])
+            data = frame.take(data, order)
 
         data = coord.transform(data, panel_params, munch=True)
-        data["linewidth"] = data["size"] * SIZE_FACTOR
+        data = data.with_columns(linewidth=nw.col("size") * SIZE_FACTOR)
 
         # Each group is a polygon with a single facecolor
         # with potentially an edgecolor for every edge.
@@ -116,25 +114,27 @@ class geom_polygon(geom):
         # Some stats may order the data in ways that prevent
         # objects from occluding other objects. We do not want
         # to undo that order.
-        has_subgroups = "subgroup" in data
-        grouper = data.groupby("group", sort=False)
-        for group, df in grouper:
-            fill = to_rgba(df["fill"].iloc[0], df["alpha"].iloc[0])
+        for _, df in frame.group_split(data, "group", sort=False):
+            fill = to_rgba(df["fill"].item(0), df["alpha"].item(0))
             if has_subgroups:
-                # A missing `subgroup` still identifies one ring. A group
-                # containing only that ring is a polygon without holes.
-                rings = df.groupby("subgroup", sort=False, dropna=False)
+                rings = frame.group_split(
+                    df, "subgroup", drop_missing=False, sort=False
+                )
                 polygons.append(
                     compound_path(
-                        [ring[["x", "y"]].to_numpy() for _, ring in rings]
+                        [ring.select("x", "y").to_numpy() for _, ring in rings]
                     )
                 )
             else:
-                polygons.append(tuple(zip(df["x"], df["y"])))
+                polygons.append(
+                    tuple(
+                        zip(frame.to_numpy(df["x"]), frame.to_numpy(df["y"]))
+                    )
+                )
             facecolor.append("none" if fill is None else fill)
-            edgecolor.append(df["color"].iloc[0] or "none")
-            linestyle.append(df["linetype"].iloc[0])
-            linewidth.append(df["linewidth"].iloc[0])
+            edgecolor.append(df["color"].item(0) or "none")
+            linestyle.append(df["linetype"].item(0))
+            linewidth.append(df["linewidth"].item(0))
 
         cls = PathCollection if has_subgroups else PolyCollection
         col = cls(
@@ -151,7 +151,7 @@ class geom_polygon(geom):
 
     @staticmethod
     def draw_legend(
-        data: pd.Series[Any], da: DrawingArea, lyr: layer
+        data: dict[str, Any], da: DrawingArea, lyr: layer
     ) -> DrawingArea:
         """
         Draw a rectangle in the box

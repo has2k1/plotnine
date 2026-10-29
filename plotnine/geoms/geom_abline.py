@@ -4,10 +4,10 @@ import typing
 from collections.abc import Sized
 from warnings import warn
 
+import narwhals as nw
 import numpy as np
-import pandas as pd
 
-from .._utils import order_as_data_mapping
+from .._utils import frame, order_as_data_mapping
 from ..doctools import document
 from ..exceptions import PlotnineWarning
 from ..mapping import aes
@@ -20,6 +20,7 @@ if typing.TYPE_CHECKING:
 
     from matplotlib.axes import Axes
 
+    from plotnine._utils.frame import DataFrame
     from plotnine.coords.coord import coord
     from plotnine.iapi import panel_view
     from plotnine.typing import DataLike
@@ -69,7 +70,6 @@ class geom_abline(geom):
                     "the aes() mapping.",
                     PlotnineWarning,
                 )
-
             if isinstance(data, Sized) and len(data):
                 warn(
                     "The 'intercept' and 'slope' when specified override "
@@ -82,10 +82,10 @@ class geom_abline(geom):
             if intercept is None:
                 intercept = 0
 
-            data = pd.DataFrame(
-                {"intercept": np.repeat(intercept, 1), "slope": slope}
-            )
-
+            data = frame.frame(
+                {"intercept": np.repeat(intercept, 1), "slope": slope},
+                backend=frame.default_backend(),
+            ).to_native()
             mapping = aes(intercept="intercept", slope="slope")
             kwargs["show_legend"] = False
 
@@ -93,7 +93,7 @@ class geom_abline(geom):
 
     def draw_panel(
         self,
-        data: pd.DataFrame,
+        data: DataFrame,
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
@@ -102,14 +102,17 @@ class geom_abline(geom):
         Plot all groups
         """
         ranges = coord.backtransform_range(panel_params)
-        data["x"] = ranges.x[0]
-        data["xend"] = ranges.x[1]
-        data["y"] = ranges.x[0] * data["slope"] + data["intercept"]
-        data["yend"] = ranges.x[1] * data["slope"] + data["intercept"]
-        data = data.drop_duplicates()
+        slope = nw.col("slope")
+        intercept = nw.col("intercept")
+        data = data.with_columns(
+            x=nw.lit(ranges.x[0]),
+            xend=nw.lit(ranges.x[1]),
+            y=ranges.x[0] * slope + intercept,
+            yend=ranges.x[1] * slope + intercept,
+        )
+        data = frame.unique_rows(data)
 
-        for _, gdata in data.groupby("group"):
-            gdata = gdata.reset_index()
+        for _, gdata in frame.group_split(data, "group"):
             geom_segment.draw_group(
                 gdata, panel_params, coord, ax, self.params
             )

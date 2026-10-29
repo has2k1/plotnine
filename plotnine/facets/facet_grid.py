@@ -2,10 +2,18 @@ from __future__ import annotations
 
 import typing
 
+import narwhals as nw
 import numpy as np
-import pandas as pd
 
-from .._utils import add_margins, cross_join, join_keys, match, ninteraction
+from .._utils import (
+    add_margins,
+    cross_join,
+    frame,
+    join_keys,
+    match,
+    ninteraction,
+)
+from .._utils.frame import native_io
 from ..exceptions import PlotnineError
 from .facet import (
     add_missing_facets,
@@ -22,6 +30,7 @@ if typing.TYPE_CHECKING:
 
     from matplotlib.axes import Axes
 
+    from plotnine._utils.frame import DataFrame
     from plotnine.iapi import layout_details
     from plotnine.typing import FacetSpaceRatios
 
@@ -120,26 +129,29 @@ class facet_grid(facet):
         space = self.space
         ratios = {}
 
+        def first_panels(col: str) -> list[int]:
+            # The position of first panel in each row/column
+            _layout = layout.layout.with_row_index("__i__")
+            return (
+                frame.sort(_layout, col)
+                .unique(col, keep="first", maintain_order=True)["__i__"]
+                .to_list()
+            )
+
         # Calculate the width (x) & height (y) ratios for space=free[xy]
         if isinstance(space, str):
             if space in {"free", "free_x"}:
-                pidx: list[int] = (
-                    layout.layout.sort_values("COL")
-                    .drop_duplicates("COL")
-                    .index.tolist()
-                )
-                panel_views = [layout.panel_params[i] for i in pidx]
+                panel_views = [
+                    layout.panel_params[i] for i in first_panels("COL")
+                ]
                 ratios["width_ratios"] = [
                     np.ptp(pv.x.range) for pv in panel_views
                 ]
 
             if space in {"free", "free_y"}:
-                pidx = (
-                    layout.layout.sort_values("ROW")
-                    .drop_duplicates("ROW")
-                    .index.tolist()
-                )
-                panel_views = [layout.panel_params[i] for i in pidx]
+                panel_views = [
+                    layout.panel_params[i] for i in first_panels("ROW")
+                ]
                 ratios["height_ratios"] = [
                     np.ptp(pv.y.range) for pv in panel_views
                 ]
@@ -170,12 +182,12 @@ class facet_grid(facet):
 
     def compute_layout(
         self,
-        data: list[pd.DataFrame],
+        data: list[DataFrame],
         scales: Scales,
-    ) -> pd.DataFrame:
+    ) -> DataFrame:
         if not self.rows and not self.cols:
             self.nrow, self.ncol = 1, 1
-            return layout_null()
+            return layout_null(data[0].implementation)
 
         base_rows = combine_vars(
             data, self.environment, self.rows, drop=self.drop
@@ -183,7 +195,7 @@ class facet_grid(facet):
 
         if not self.as_table:
             # Reverse the order of the rows
-            base_rows = base_rows[::-1]
+            base_rows = frame.take(base_rows, np.arange(len(base_rows))[::-1])
         base_cols = combine_vars(
             data, self.environment, self.cols, drop=self.drop
         )
@@ -192,65 +204,66 @@ class facet_grid(facet):
 
         if self.margins:
             base = add_margins(base, (self.rows, self.cols), self.margins)
-            base = base.drop_duplicates().reset_index(drop=True)
+            base = base.unique(maintain_order=True)
 
         n = len(base)
         panel = ninteraction(base, drop=True)
-        panel = pd.Categorical(panel, categories=range(1, n + 1))
-
-        if self.rows:
-            rows = ninteraction(base[self.rows], drop=True)
-        else:
-            rows = [1] * len(panel)
-
-        if self.cols:
-            cols = ninteraction(base[self.cols], drop=True)
-        else:
-            cols = [1] * len(panel)
-
-        layout = pd.DataFrame(
-            {
-                "PANEL": panel,
-                "ROW": rows,
-                "COL": cols,
-            }
+        rows = (
+            ninteraction(base.select(self.rows), drop=True) if self.rows else 1
         )
-        layout = pd.concat([layout, base], axis=1)
-        layout = layout.sort_values("PANEL")
-        layout = layout.reset_index(drop=True)
+        cols = (
+            ninteraction(base.select(self.cols), drop=True) if self.cols else 1
+        )
+
+        layout = frame.frame(
+            {"PANEL": panel, "ROW": rows, "COL": cols},
+            backend=base.implementation,
+            n=n,
+        )
+        layout = frame.sort(
+            nw.concat([layout, base], how="horizontal"), "PANEL"
+        )
 
         # Relax constraints, if necessary
-        layout["SCALE_X"] = layout["COL"] if self.free["x"] else 1
-        layout["SCALE_Y"] = layout["ROW"] if self.free["y"] else 1
+        row, col = nw.col("ROW"), nw.col("COL")
         x_side, y_side = scales.axis_positions
         if x_side == "top":
-            layout["AXIS_X"] = layout["ROW"] == layout["ROW"].min()
-            layout["AXIS_X_SEC"] = layout["ROW"] == layout["ROW"].max()
+            axis_x, axis_x_sec = row == row.min(), row == row.max()
         else:
-            layout["AXIS_X"] = layout["ROW"] == layout["ROW"].max()
-            layout["AXIS_X_SEC"] = layout["ROW"] == layout["ROW"].min()
+            axis_x, axis_x_sec = row == row.max(), row == row.min()
         if y_side == "right":
-            layout["AXIS_Y"] = layout["COL"] == layout["COL"].max()
-            layout["AXIS_Y_SEC"] = layout["COL"] == layout["COL"].min()
+            axis_y, axis_y_sec = col == col.max(), col == col.min()
         else:
-            layout["AXIS_Y"] = layout["COL"] == layout["COL"].min()
-            layout["AXIS_Y_SEC"] = layout["COL"] == layout["COL"].max()
+            axis_y, axis_y_sec = col == col.min(), col == col.max()
 
-        self.nrow = layout["ROW"].max()
-        self.ncol = layout["COL"].max()
+        layout = frame.assign(
+            layout,
+            SCALE_X=col if self.free["x"] else 1,
+            SCALE_Y=row if self.free["y"] else 1,
+            AXIS_X=axis_x,
+            AXIS_X_SEC=axis_x_sec,
+            AXIS_Y=axis_y,
+            AXIS_Y_SEC=axis_y_sec,
+        )
+
+        self.nrow = int(layout["ROW"].max())
+        self.ncol = int(layout["COL"].max())
         return layout
 
-    def map(self, data: pd.DataFrame, layout: pd.DataFrame) -> pd.DataFrame:
+    @native_io
+    def map(self, data: DataFrame, layout: DataFrame) -> DataFrame:
         if not len(data):
-            data["PANEL"] = pd.Categorical(
-                [], categories=layout["PANEL"].cat.categories, ordered=True
+            return frame.assign(
+                data,
+                PANEL=frame.series(
+                    [], backend=data.implementation, dtype=nw.Int64
+                ),
             )
-            return data
 
         vars = (*self.rows, *self.cols)
         margin_vars: tuple[list[str], list[str]] = (
-            list(data.columns.intersection(self.rows)),
-            list(data.columns.intersection(self.cols)),
+            [c for c in data.columns if c in self.rows],
+            [c for c in data.columns if c in self.cols],
         )
         data = add_margins(data, margin_vars, self.margins)
 
@@ -259,24 +272,15 @@ class facet_grid(facet):
 
         # assign each point to a panel
         if len(facet_vals) and len(facet_vals.columns):
-            keys = join_keys(facet_vals, layout, vars)
-            data["PANEL"] = match(keys["x"], keys["y"], start=1)
+            keys = join_keys(
+                facet_vals, frame.convert(layout, data.implementation), vars
+            )
+            panel = match(keys["x"], keys["y"], start=1)
         else:
             # Special case of no facetting
-            data["PANEL"] = 1
+            panel = 1
 
-        # matching dtype and
-        # the categories(panel numbers) for the data should be in the
-        # same order as the panels. i.e the panels are the reference,
-        # they "know" the right order
-        data["PANEL"] = pd.Categorical(
-            data["PANEL"],
-            categories=layout["PANEL"].cat.categories,
-            ordered=True,
-        )
-
-        data = data.reset_index(drop=True)
-        return data
+        return frame.assign(data, PANEL=panel)
 
     def make_strips(self, layout_info: layout_details, ax: Axes) -> Strips:
         lst = []

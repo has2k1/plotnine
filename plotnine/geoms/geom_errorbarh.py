@@ -2,10 +2,10 @@ from __future__ import annotations
 
 import typing
 
+import narwhals as nw
 import numpy as np
-import pandas as pd
 
-from .._utils import copy_missing_columns, resolution
+from .._utils import copy_missing_columns, frame, resolution
 from ..doctools import document
 from .geom import geom
 from .geom_path import geom_path
@@ -16,6 +16,7 @@ if typing.TYPE_CHECKING:
 
     from matplotlib.axes import Axes
 
+    from plotnine._utils.frame import DataFrame
     from plotnine.coords.coord import coord
     from plotnine.iapi import panel_view
 
@@ -45,36 +46,41 @@ class geom_errorbarh(geom):
 
     draw_legend = staticmethod(geom_path.draw_legend)
 
-    def setup_data(self, data: pd.DataFrame) -> pd.DataFrame:
-        if "height" not in data:
+    def setup_data(self, data: DataFrame) -> DataFrame:
+        if "height" not in data.columns:
             if self.params["height"]:
-                data["height"] = self.params["height"]
+                height = self.params["height"]
             else:
-                data["height"] = resolution(data["y"], False) * 0.9
+                height = resolution(data["y"], False) * 0.9
+            data = frame.assign(data, height=height)
 
-        data["ymin"] = data["y"] - data["height"] / 2
-        data["ymax"] = data["y"] + data["height"] / 2
-        del data["height"]
-        return data
+        y = nw.col("y")
+        half_height = nw.col("height") / 2
+        return data.with_columns(
+            ymin=y - half_height, ymax=y + half_height
+        ).drop("height")
 
     @staticmethod
     def draw_group(
-        data: pd.DataFrame,
+        data: DataFrame,
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
         params: dict[str, Any],
     ):
-        f = np.hstack
+        def f(*columns: str):
+            return np.hstack([frame.to_numpy(data[c]) for c in columns])
+
         # create (two vertical bars) + horizontal bar
-        bars = pd.DataFrame(
+        bars = frame.frame_like(
+            data,
             {
-                "y": f([data["ymin"], data["ymin"], data["y"]]),
-                "yend": f([data["ymax"], data["ymax"], data["y"]]),
-                "x": f([data["xmin"], data["xmax"], data["xmin"]]),
-                "xend": f([data["xmin"], data["xmax"], data["xmax"]]),
-            }
+                "y": f("ymin", "ymin", "y"),
+                "yend": f("ymax", "ymax", "y"),
+                "x": f("xmin", "xmax", "xmin"),
+                "xend": f("xmin", "xmax", "xmax"),
+            },
         )
 
-        copy_missing_columns(bars, data)
+        bars = copy_missing_columns(bars, data)
         geom_segment.draw_group(bars, panel_params, coord, ax, params)

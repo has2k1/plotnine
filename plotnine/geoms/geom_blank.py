@@ -6,9 +6,9 @@ from ..doctools import document
 from .geom import geom
 
 if typing.TYPE_CHECKING:
-    import pandas as pd
     from matplotlib.axes import Axes
 
+    from plotnine._utils.frame import DataFrame
     from plotnine.coords.coord import coord
     from plotnine.iapi import panel_view
 
@@ -27,12 +27,12 @@ class geom_blank(geom):
 
     def draw_panel(
         self,
-        data: pd.DataFrame,
+        data: DataFrame,
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
     ):
         pass
 
-    def handle_na(self, data: pd.DataFrame) -> pd.DataFrame:
+    def handle_na(self, data: DataFrame) -> DataFrame:
         return data

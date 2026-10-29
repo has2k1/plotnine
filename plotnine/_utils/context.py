@@ -1,17 +1,18 @@
 from __future__ import annotations
 
+from contextlib import nullcontext
 from copy import deepcopy
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
-import pandas as pd
+from narwhals.dependencies import get_pandas
 from packaging.version import Version
 
 from ..session import set_last_plot
 
 if TYPE_CHECKING:
     from contextlib import AbstractContextManager
-    from typing import Self
+    from typing import Any, Self
 
     from matplotlib.axes import Axes
 
@@ -20,7 +21,17 @@ if TYPE_CHECKING:
     from plotnine._mpl.gridspec import p9GridSpec
     from plotnine.composition import Compose
 
-PANDAS_LT_3 = Version(pd.__version__) < Version("3.0")
+
+def _pandas_copy_on_write() -> AbstractContextManager[Any]:
+    """
+    Context in which pandas<3 uses copy-on-write
+
+    Only if pandas is in use, i.e. it has been imported.
+    """
+    pd = get_pandas()
+    if pd is not None and Version(pd.__version__) < Version("3.0"):
+        return pd.option_context("mode.copy_on_write", True)
+    return nullcontext()
 
 
 @dataclass
@@ -38,8 +49,8 @@ class draw_context:
 
     obj: ggplot | Compose
     show: bool = False
-    _pd_context: AbstractContextManager[object] | None = field(
-        default=None, init=False, repr=False
+    _pd_context: AbstractContextManager[Any] = field(
+        default_factory=nullcontext, init=False, repr=False
     )
 
     def __post_init__(self):
@@ -51,11 +62,7 @@ class draw_context:
         # draws. The composition owns the figure, so its dpi is the one in
         # effect when the figure is created.
         self._rc_context = mpl.rc_context(self.obj.theme.rcParams)
-        if PANDAS_LT_3:
-            self._pd_context = pd.option_context(
-                "mode.copy_on_write",
-                True,
-            )
+        self._pd_context = _pandas_copy_on_write()
 
     def __enter__(self) -> Self:
         """
@@ -64,8 +71,7 @@ class draw_context:
 
         self._last_plot = deepcopy(self.obj)
         self._rc_context.__enter__()
-        if self._pd_context is not None:
-            self._pd_context.__enter__()
+        self._pd_context.__enter__()
 
         return self
 
@@ -95,8 +101,7 @@ class draw_context:
             plt.close(figure)
 
         self._rc_context.__exit__(exc_type, exc_value, exc_traceback)
-        if self._pd_context is not None:
-            self._pd_context.__exit__(exc_type, exc_value, exc_traceback)
+        self._pd_context.__exit__(exc_type, exc_value, exc_traceback)
 
 
 @dataclass

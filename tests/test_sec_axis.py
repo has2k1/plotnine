@@ -63,8 +63,8 @@ def test_facet_grid_sec_axis_flags():
     layout = built.layout.layout
     is_top = layout["ROW"] == layout["ROW"].min()
     is_right = layout["COL"] == layout["COL"].max()
-    assert list(layout["AXIS_X_SEC"]) == is_top.tolist()
-    assert list(layout["AXIS_Y_SEC"]) == is_right.tolist()
+    assert list(layout["AXIS_X_SEC"]) == is_top.to_list()
+    assert list(layout["AXIS_Y_SEC"]) == is_right.to_list()
 
 
 def test_facet_null_sec_axis_flags():

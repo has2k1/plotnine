@@ -1,4 +1,5 @@
 import numpy as np
+import pytest
 
 from plotnine.scales import scale_x_continuous, scale_x_discrete
 from plotnine.stats.binning import (
@@ -129,3 +130,20 @@ def test_adjust_breaks_right_False():
     a = np.linspace(-2, -1, 11)
     b = _adjust_breaks(a, right=False)
     _test(a, b)
+
+
+@pytest.mark.parametrize("right", [True, False])
+@pytest.mark.parametrize("include_lowest", [True, False])
+def test_cut_matches_pandas(right, include_lowest):
+    import pandas as pd
+
+    from plotnine.stats.binning import cut
+
+    rng = np.random.default_rng(123)
+    x = np.hstack([rng.uniform(-1, 11, 500), [0, 10, 5, np.nan]])
+    bins = np.linspace(0, 10, 11)
+    result = cut(x, bins, right=right, include_lowest=include_lowest)
+    expected = pd.cut(
+        x, bins, right=right, include_lowest=include_lowest, labels=False
+    )
+    np.testing.assert_array_equal(result, expected)

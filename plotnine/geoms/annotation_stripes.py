@@ -4,8 +4,8 @@ import typing
 from itertools import cycle, islice
 
 import numpy as np
-import pandas as pd
 
+from .._utils import frame
 from ..coords import coord_flip
 from ..scales.scale_discrete import scale_discrete
 from .annotate import annotate
@@ -19,6 +19,7 @@ if typing.TYPE_CHECKING:
 
     from matplotlib.axes import Axes
 
+    from plotnine._utils.frame import DataFrame
     from plotnine.coords.coord import coord
     from plotnine.facets.layout import Layout
     from plotnine.iapi import panel_view
@@ -94,7 +95,7 @@ class _geom_stripes(geom):
     }
     draw_legend = staticmethod(geom_polygon.draw_legend)
 
-    def draw_layer(self, data: pd.DataFrame, layout: Layout, coord: coord):
+    def draw_layer(self, data: DataFrame, layout: Layout, coord: coord):
         """
         Draw stripes on every panel
         """
@@ -106,7 +107,7 @@ class _geom_stripes(geom):
 
     @staticmethod
     def draw_group(
-        data: pd.DataFrame,
+        data: DataFrame,
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
@@ -177,7 +178,8 @@ class _geom_stripes(geom):
         if axis != "x":
             xmin, xmax, ymin, ymax = ymin, ymax, xmin, xmax
 
-        data = pd.DataFrame(
+        data = frame.frame_like(
+            data,
             {
                 "xmin": xmin,
                 "xmax": xmax,
@@ -188,7 +190,8 @@ class _geom_stripes(geom):
                 "color": params["color"],
                 "linetype": params["linetype"],
                 "size": params["size"],
-            }
+            },
+            n=len(fill),
         )
 
         fill_rects(data, ax, params)

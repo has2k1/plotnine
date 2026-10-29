@@ -3,9 +3,10 @@ from __future__ import annotations
 import typing
 from warnings import warn
 
+import narwhals as nw
 import numpy as np
 
-from .._utils import groupby_apply, resolution, to_rgba
+from .._utils import frame, groupby_apply, resolution, to_rgba
 from ..doctools import document
 from ..exceptions import PlotnineWarning
 from .geom import geom
@@ -14,14 +15,14 @@ from .geom_path import geom_path
 if typing.TYPE_CHECKING:
     from typing import Any
 
-    import pandas as pd
     from matplotlib.axes import Axes
     from matplotlib.offsetbox import DrawingArea
 
+    from plotnine._utils.frame import DataFrame
     from plotnine.coords.coord import coord
     from plotnine.iapi import panel_view
     from plotnine.layer import layer
-    from plotnine.typing import FloatSeries
+    from plotnine.typing import AnyArray
 
 
 @document
@@ -62,7 +63,7 @@ class geom_dotplot(geom):
 
     legend_key_size = staticmethod(geom_path.legend_key_size)
 
-    def setup_data(self, data: pd.DataFrame) -> pd.DataFrame:
+    def setup_data(self, data: DataFrame) -> DataFrame:
         gp = self.params
         sp = self.params["stat_params"]
 
@@ -85,37 +86,38 @@ class geom_dotplot(geom):
                 PlotnineWarning,
             )
 
-        if "width" not in data:
+        if "width" not in data.columns:
             if sp["width"]:
-                data["width"] = sp["width"]
+                width = sp["width"]
             else:
-                data["width"] = resolution(data["x"], False) * 0.9
+                width = resolution(data["x"], False) * 0.9
+            data = frame.assign(data, width=width)
 
         # Set up the stacking function and range
         if gp["stackdir"] in (None, "up"):
 
-            def stackdots(a: FloatSeries) -> FloatSeries:
+            def stackdots(a: AnyArray) -> AnyArray:
                 return a - 0.5
 
             stackaxismin: float = 0
             stackaxismax: float = 1
         elif gp["stackdir"] == "down":
 
-            def stackdots(a: FloatSeries) -> FloatSeries:
+            def stackdots(a: AnyArray) -> AnyArray:
                 return -a + 0.5
 
             stackaxismin = -1
             stackaxismax = 0
         elif gp["stackdir"] == "center":
 
-            def stackdots(a: FloatSeries) -> FloatSeries:
+            def stackdots(a: AnyArray) -> AnyArray:
                 return a - 1 - np.max(a - 1) / 2
 
             stackaxismin = -0.5
             stackaxismax = 0.5
         elif gp["stackdir"] == "centerwhole":
 
-            def stackdots(a: FloatSeries) -> FloatSeries:
+            def stackdots(a: AnyArray) -> AnyArray:
                 return a - 1 - np.floor(np.max(a - 1) / 2)
 
             stackaxismin = -0.5
@@ -125,9 +127,9 @@ class geom_dotplot(geom):
 
         # Fill the bins: at a given x (or y),
         # if count=3, make 3 entries at that x
-        idx = [i for i, c in enumerate(data["count"]) for j in range(int(c))]
-        data = data.iloc[idx]
-        data = data.reset_index(drop=True)
+        counts = data["count"].to_list()
+        idx = [i for i, c in enumerate(counts) for j in range(int(c))]
+        data = frame.take(data, idx)
         # Next part will set the position of each dot within each stack
         # If stackgroups=TRUE, split only on x (or y) and panel;
         # if not stacking, also split by group
@@ -137,10 +139,11 @@ class geom_dotplot(geom):
 
         # Within each x, or x+group, set countidx=1,2,3,
         # and set stackpos according to stack function
-        def func(df: pd.DataFrame) -> pd.DataFrame:
-            df["countidx"] = range(1, len(df) + 1)
-            df["stackpos"] = stackdots(df["countidx"])
-            return df
+        def func(df: DataFrame) -> DataFrame:
+            countidx = np.arange(1, len(df) + 1)
+            return frame.assign(
+                df, countidx=countidx, stackpos=stackdots(countidx)
+            )
 
         # Within each x, or x+group, set countidx=1,2,3, and set
         # stackpos according to stack function
@@ -153,11 +156,14 @@ class geom_dotplot(geom):
             # because y position isn't real.
             # After position code is rewritten, each dot should have
             # its own bounding box.
-            data["xmin"] = data["x"] - data["binwidth"] / 2
-            data["xmax"] = data["x"] + data["binwidth"] / 2
-            data["ymin"] = stackaxismin
-            data["ymax"] = stackaxismax
-            data["y"] = 0
+            x, half_binwidth = nw.col("x"), nw.col("binwidth") / 2
+            data = data.with_columns(
+                xmin=x - half_binwidth,
+                xmax=x + half_binwidth,
+                ymin=nw.lit(stackaxismin),
+                ymax=nw.lit(stackaxismax),
+                y=nw.lit(0),
+            )
         elif sp["binaxis"] == "y":
             # ymin, ymax, xmin, and xmax define the bounding
             # rectangle for each stack. Can't do bounding box per dot,
@@ -167,20 +173,27 @@ class geom_dotplot(geom):
             # can be dodged like other geoms.
             # After position code is rewritten, each dot should have
             # its own bounding box.
-            def func(df: pd.DataFrame) -> pd.DataFrame:
-                df["ymin"] = df["y"].min() - data["binwidth"][0] / 2
-                df["ymax"] = df["y"].max() + data["binwidth"][0] / 2
-                return df
+            half_binwidth = data["binwidth"].item(0) / 2
+
+            def func(df: DataFrame) -> DataFrame:
+                y = nw.col("y")
+                return df.with_columns(
+                    ymin=y.min() - half_binwidth,
+                    ymax=y.max() + half_binwidth,
+                )
 
             data = groupby_apply(data, "group", func)
-            data["xmin"] = data["x"] + data["width"] * stackaxismin
-            data["xmax"] = data["x"] + data["width"] * stackaxismax
+            x, width = nw.col("x"), nw.col("width")
+            data = data.with_columns(
+                xmin=x + width * stackaxismin,
+                xmax=x + width * stackaxismax,
+            )
 
         return data
 
     @staticmethod
     def draw_group(
-        data: pd.DataFrame,
+        data: DataFrame,
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
@@ -202,16 +215,18 @@ class geom_dotplot(geom):
         ax_width, ax_height = bbox.width, bbox.height
 
         factor = (ax_width / ax_height) * np.ptp(ranges.y) / np.ptp(ranges.x)
-        size = data["binwidth"].iloc[0] * params["dotsize"]
-        offsets = data["stackpos"] * params["stackratio"]
+        size = data["binwidth"].item(0) * params["dotsize"]
+        offsets = frame.to_numpy(data["stackpos"]) * params["stackratio"]
+        x = frame.to_numpy(data["x"])
+        y = frame.to_numpy(data["y"])
 
         binaxis = params["stat_params"]["binaxis"]
         if binaxis == "x":
             width, height = size, size * factor
-            xpos, ypos = data["x"], data["y"] + height * offsets
+            xpos, ypos = x, y + height * offsets
         elif binaxis == "y":
             width, height = size / factor, size
-            xpos, ypos = data["x"] + width * offsets, data["y"]
+            xpos, ypos = x + width * offsets, y
         else:
             raise ValueError(f"Invalid valid value binaxis={binaxis}")
 
@@ -230,7 +245,7 @@ class geom_dotplot(geom):
 
     @staticmethod
     def draw_legend(
-        data: pd.Series[Any], da: DrawingArea, lyr: layer
+        data: dict[str, Any], da: DrawingArea, lyr: layer
     ) -> DrawingArea:
         """
         Draw a point in the box

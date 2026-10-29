@@ -4,9 +4,8 @@ import typing
 from warnings import warn
 
 import numpy as np
-import pandas as pd
 
-from .._utils import order_as_data_mapping
+from .._utils import frame, order_as_data_mapping
 from ..doctools import document
 from ..exceptions import PlotnineWarning
 from ..mapping import aes
@@ -19,6 +18,7 @@ if typing.TYPE_CHECKING:
 
     from matplotlib.axes import Axes
 
+    from plotnine._utils.frame import DataFrame
     from plotnine.coords.coord import coord
     from plotnine.iapi import panel_view
     from plotnine.typing import DataLike
@@ -63,7 +63,10 @@ class geom_hline(geom):
                     "the aes() mapping.",
                     PlotnineWarning,
                 )
-            data = pd.DataFrame({"yintercept": np.repeat(yintercept, 1)})
+            data = frame.frame(
+                {"yintercept": np.repeat(yintercept, 1)},
+                backend=frame.default_backend(),
+            ).to_native()
             mapping = aes(yintercept="yintercept")
             kwargs["show_legend"] = False
 
@@ -71,7 +74,7 @@ class geom_hline(geom):
 
     def draw_panel(
         self,
-        data: pd.DataFrame,
+        data: DataFrame,
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
@@ -80,14 +83,16 @@ class geom_hline(geom):
         Plot all groups
         """
         ranges = coord.backtransform_range(panel_params)
-        data["y"] = data["yintercept"]
-        data["yend"] = data["yintercept"]
-        data["x"] = ranges.x[0]
-        data["xend"] = ranges.x[1]
-        data = data.drop_duplicates()
+        data = frame.assign(
+            data,
+            y=data["yintercept"],
+            yend=data["yintercept"],
+            x=ranges.x[0],
+            xend=ranges.x[1],
+        )
+        data = frame.unique_rows(data)
 
-        for _, gdata in data.groupby("group"):
-            gdata = gdata.reset_index()
+        for _, gdata in frame.group_split(data, "group"):
             geom_segment.draw_group(
                 gdata, panel_params, coord, ax, self.params
             )

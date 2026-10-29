@@ -1,9 +1,7 @@
 import sys
 from contextlib import suppress
 
-import pandas as pd
-
-from .._utils import array_kind
+from .._utils import array_kind, frame
 from ..exceptions import PlotnineError
 from ..geoms import geom_blank
 from ..mapping.aes import ALL_AESTHETICS, aes
@@ -21,7 +19,7 @@ class _lim:
         elif len(limits) == 1:
             limits = limits[0]
 
-        series = pd.Series(limits)
+        series = frame.series(list(limits), backend=frame.default_backend())
 
         # Type of transform
         if not any(x is None for x in limits) and limits[0] > limits[1]:
@@ -72,7 +70,9 @@ class _lim:
 
         for value in ae_values:
             if "factor(" in value or "Categorical(" in value:
-                series = pd.Categorical(self.limits_series)
+                series = frame.categorical(
+                    series, backend=series.implementation
+                )
                 break
         return make_scale(
             self.aesthetic, series, limits=self.limits, trans=self.trans
@@ -231,7 +231,7 @@ def expand_limits(**kwargs):
     if isinstance(kwargs, dict):
         as_list("x")
         as_list("y")
-        data = pd.DataFrame(kwargs)
+        data = frame.frame(kwargs, backend=frame.default_backend())
     else:
         data = kwargs
 

@@ -3,12 +3,13 @@ from __future__ import annotations
 import typing
 from warnings import warn
 
+import narwhals as nw
 import numpy as np
-import pandas as pd
 
 from .._utils import (
     SIZE_FACTOR,
     copy_missing_columns,
+    frame,
     resolution,
     to_rgba,
 )
@@ -29,6 +30,7 @@ if typing.TYPE_CHECKING:
     from matplotlib.offsetbox import DrawingArea
 
     from plotnine import aes
+    from plotnine._utils.frame import DataFrame
     from plotnine.coords.coord import coord
     from plotnine.iapi import panel_view
     from plotnine.layer import layer
@@ -129,68 +131,70 @@ class geom_boxplot(geom):
 
         super().__init__(mapping, data, **kwargs)
 
-    def setup_data(self, data: pd.DataFrame) -> pd.DataFrame:
-        if "width" not in data:
+    def setup_data(self, data: DataFrame) -> DataFrame:
+        if "width" not in data.columns:
             width = self.params.get("width", None)
-            if width is not None:
-                data["width"] = width
-            else:
-                data["width"] = resolution(data["x"], False) * 0.9
+            if width is None:
+                width = resolution(data["x"], False) * 0.9
+            data = frame.assign(data, width=width)
 
-        if (
-            "outliers" not in data
-            # Remove outliers if they will not show so that the scale
-            # limits do not recognise them.
-            or self.params["outlier_shape"] in (None, "")
+        if "outliers" not in data.columns or self.params["outlier_shape"] in (
+            None,
+            "",
         ):
-            data["outliers"] = [[] for i in range(len(data))]
+            data = frame.assign(
+                data,
+                outliers=frame.series(
+                    [[] for i in range(len(data))],
+                    backend=data.implementation,
+                    dtype=nw.Object,
+                ),
+            )
 
         # min and max outlier values
-        omin = [
-            np.min(lst) if len(lst) else +np.inf for lst in data["outliers"]
-        ]
-        omax = [
-            np.max(lst) if len(lst) else -np.inf for lst in data["outliers"]
-        ]
+        outliers = data["outliers"].to_list()
+        omin = [np.min(lst) if len(lst) else +np.inf for lst in outliers]
+        omax = [np.max(lst) if len(lst) else -np.inf for lst in outliers]
 
-        data["ymin_final"] = np.min(
-            np.column_stack([data["ymin"], omin]), axis=1
-        )
-        data["ymax_final"] = np.max(
-            np.column_stack([data["ymax"], omax]), axis=1
+        ymin = frame.to_numpy(data["ymin"])
+        ymax = frame.to_numpy(data["ymax"])
+        x = frame.to_numpy(data["x"])
+        width = frame.to_numpy(data["width"])
+        data = frame.assign(
+            data,
+            ymin_final=np.min(np.column_stack([ymin, omin]), axis=1),
+            ymax_final=np.max(np.column_stack([ymax, omax]), axis=1),
         )
 
         # if varwidth not requested or not available, don't use it
         if (
             "varwidth" not in self.params
             or not self.params["varwidth"]
-            or "relvarwidth" not in data
+            or "relvarwidth" not in data.columns
         ):
-            data["xmin"] = data["x"] - data["width"] / 2
-            data["xmax"] = data["x"] + data["width"] / 2
+            half_width = width / 2
         else:
             # make relvarwidth relative to the size of the
             # largest group
-            data["relvarwidth"] /= data["relvarwidth"].max()
-            data["xmin"] = data["x"] - data["relvarwidth"] * data["width"] / 2
-            data["xmax"] = data["x"] + data["relvarwidth"] * data["width"] / 2
-            del data["relvarwidth"]
+            relvarwidth = frame.to_numpy(data["relvarwidth"])
+            relvarwidth = relvarwidth / relvarwidth.max()
+            half_width = relvarwidth * width / 2
+            data = data.drop("relvarwidth")
 
-        del data["width"]
-
-        return data
+        data = frame.assign(data, xmin=x - half_width, xmax=x + half_width)
+        return data.drop("width")
 
     @staticmethod
     def draw_group(
-        data: pd.DataFrame,
+        data: DataFrame,
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
         params: dict[str, Any],
     ):
-        def flat(*args: pd.Series[Any]) -> npt.NDArray[Any]:
+        def flat(*columns: str) -> npt.NDArray[Any]:
             """Flatten list-likes"""
-            return np.hstack(args)
+            return np.hstack([frame.to_numpy(data[c]) for c in columns])
 
         common_columns = [
             "color",
@@ -202,52 +206,58 @@ class geom_boxplot(geom):
             "shape",
         ]
         # whiskers
-        whiskers = pd.DataFrame(
+        whiskers = frame.frame_like(
+            data,
             {
-                "x": flat(data["x"], data["x"]),
-                "y": flat(data["upper"], data["lower"]),
-                "yend": flat(data["ymax"], data["ymin"]),
+                "x": flat("x", "x"),
+                "y": flat("upper", "lower"),
+                "yend": flat("ymax", "ymin"),
                 "alpha": 1,
-            }
+            },
         )
-        whiskers["xend"] = whiskers["x"]
-        copy_missing_columns(whiskers, data[common_columns])
+        whiskers = whiskers.with_columns(xend=nw.col("x"))
+        whiskers = copy_missing_columns(whiskers, data.select(common_columns))
 
         # box
         box_columns = ["xmin", "xmax", "lower", "middle", "upper"]
-        box = data[common_columns + box_columns].copy()
-        box = box.rename(
-            columns={"lower": "ymin", "middle": "y", "upper": "ymax"},
+        box = data.select(common_columns + box_columns).rename(
+            {"lower": "ymin", "middle": "y", "upper": "ymax"}
         )
 
         # notch
         if params["notch"]:
-            box["ynotchlower"] = data["notchlower"]
-            box["ynotchupper"] = data["notchupper"]
+            box = box.with_columns(
+                data["notchlower"].alias("ynotchlower"),
+                data["notchupper"].alias("ynotchupper"),
+            )
 
         # outliers
-        num_outliers = len(data["outliers"].iloc[0])
+        outliers = data["outliers"].item(0)
+        num_outliers = len(outliers)
         if num_outliers:
 
             def outlier_value(param: str) -> Any:
                 oparam = f"outlier_{param}"
                 if params[oparam] is not None:
                     return params[oparam]
-                return data[param].iloc[0]
+                return data[param].item(0)
 
-            outliers = pd.DataFrame(
+            outliers_data = frame.frame_like(
+                data,
                 {
-                    "y": data["outliers"].iloc[0],
-                    "x": np.repeat(data["x"].iloc[0], num_outliers),
+                    "y": np.asarray(outliers, dtype=float),
+                    "x": np.repeat(data["x"].item(0), num_outliers),
                     "fill": [None] * num_outliers,
-                }
+                    "alpha": outlier_value("alpha"),
+                    "color": outlier_value("color"),
+                    "shape": outlier_value("shape"),
+                    "size": outlier_value("size"),
+                    "stroke": outlier_value("stroke"),
+                },
             )
-            outliers["alpha"] = outlier_value("alpha")
-            outliers["color"] = outlier_value("color")
-            outliers["shape"] = outlier_value("shape")
-            outliers["size"] = outlier_value("size")
-            outliers["stroke"] = outlier_value("stroke")
-            geom_point.draw_group(outliers, panel_params, coord, ax, params)
+            geom_point.draw_group(
+                outliers_data, panel_params, coord, ax, params
+            )
 
         # plot
         geom_segment.draw_group(whiskers, panel_params, coord, ax, params)
@@ -255,7 +265,7 @@ class geom_boxplot(geom):
 
     @staticmethod
     def draw_legend(
-        data: pd.Series[Any], da: DrawingArea, lyr: layer
+        data: dict[str, Any], da: DrawingArea, lyr: layer
     ) -> DrawingArea:
         """
         Draw a rectangle in the box

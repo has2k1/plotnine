@@ -3,14 +3,15 @@ from __future__ import annotations
 import typing
 
 import numpy as np
-import pandas as pd
 
+from .._utils import frame
 from ..exceptions import PlotnineError
 from ..scales.scale_discrete import scale_discrete
 
 if typing.TYPE_CHECKING:
     from typing import Literal
 
+    from plotnine._utils.frame import DataFrame, Implementation, Series
     from plotnine.typing import FloatArray, FloatArrayLike
 
 
@@ -19,6 +20,7 @@ __all__ = (
     "breaks_from_bins",
     "breaks_from_binwidth",
     "assign_bins",
+    "cut",
     "fuzzybreaks",
 )
 
@@ -132,10 +134,12 @@ def breaks_from_bins(
 def assign_bins(
     x,
     breaks: FloatArrayLike,
-    weight: FloatArrayLike | None = None,
+    weight: FloatArrayLike | Series | None = None,
     pad: bool = False,
     closed: Literal["right", "left"] = "right",
-):
+    *,
+    backend: Implementation | None = None,
+) -> DataFrame:
     """
     Assign value in x to bins demacated by the break points
 
@@ -153,51 +157,40 @@ def assign_bins(
     closed :
         Whether the right or left edges of the bins are part of the
         bin.
+    backend :
+        Library of the returned dataframe. If None, it is that of `x`
+        if `x` is a series.
 
     Returns
     -------
     out : dataframe
         Bin count and density information.
     """
+    if backend is None:
+        backend = frame.backend_of(x)
+
+    x = frame.as_numpy(x)
+    breaks = np.asarray(breaks)
     right = closed == "right"
     # If weight not supplied to, use one (no weight)
     if weight is None:
         weight = np.ones(len(x))
     else:
-        # If weight is a dtype that isn't writeable
-        # and does not own it's memory. Using a list
-        # as an intermediate easily solves this.
-        weight = np.array(list(weight))
+        weight = np.array(frame.as_numpy(weight), dtype=float)
         weight[np.isnan(weight)] = 0
 
-    bin_idx = pd.cut(
-        x,
-        bins=breaks,  # type: ignore
-        labels=False,
-        right=right,
-        include_lowest=True,
-    )
+    bin_idx = cut(x, breaks, right=right, include_lowest=True)
     bin_widths = np.diff(breaks)
-    bin_x = (breaks[:-1] + breaks[1:]) * 0.5  # type: ignore
+    bin_x = (breaks[:-1] + breaks[1:]) * 0.5
 
-    # Create a dataframe with two columns:
-    #   - the bins to which each x is assigned
-    #   - the weight of each x value
-    # Then create a weighted frequency table
-    bins_long = pd.DataFrame({"bin_idx": bin_idx, "weight": weight})
-    wftable = bins_long.pivot_table(
-        "weight", index=["bin_idx"], aggfunc="sum"
-    )["weight"]
-
-    # Empty bins get no value in the computed frequency table.
-    # We need to add the zeros and since frequency table is a
-    # Series object, we need to keep it ordered
-    if len(wftable) < len(bin_x):
-        empty_bins = set(range(len(bin_x))) - set(bin_idx)
-        for b in empty_bins:
-            wftable.loc[b] = 0  # pyright: ignore
-        wftable = wftable.sort_index()
-    bin_count = wftable.tolist()
+    # A weighted frequency table, where the empty bins
+    # have a count of zero
+    valid = ~np.isnan(bin_idx)
+    bin_count = np.bincount(
+        bin_idx[valid].astype(int),
+        weights=weight[valid],
+        minlength=len(bin_x),
+    )
 
     if pad:
         bw0 = bin_widths[0]
@@ -206,10 +199,18 @@ def assign_bins(
         bin_widths = np.hstack([bw0, bin_widths, bwn])
         bin_x = np.hstack([bin_x[0] - bw0, bin_x, bin_x[-1] + bwn])
 
-    return result_dataframe(bin_count, bin_x, bin_widths)
+    return result_dataframe(bin_count, bin_x, bin_widths, backend=backend)
 
 
-def result_dataframe(count, x, width, xmin=None, xmax=None):
+def result_dataframe(
+    count,
+    x,
+    width,
+    xmin=None,
+    xmax=None,
+    *,
+    backend: Implementation,
+) -> DataFrame:
     """
     Create a dataframe to hold bin information
     """
@@ -224,7 +225,7 @@ def result_dataframe(count, x, width, xmin=None, xmax=None):
     xmin[1:] = xmax[:-1]
     density = (count / width) / np.sum(np.abs(count))
 
-    out = pd.DataFrame(
+    return frame.frame(
         {
             "count": count,
             "x": x,
@@ -235,9 +236,9 @@ def result_dataframe(count, x, width, xmin=None, xmax=None):
             "ncount": count / np.max(np.abs(count)),
             "ndensity": density / np.max(np.abs(density)),
             "ngroup": np.sum(np.abs(count)),
-        }
+        },
+        backend=backend,
     )
-    return out
 
 
 def fuzzybreaks(
@@ -320,3 +321,44 @@ def _adjust_breaks(breaks: FloatArray, right: bool) -> FloatArray:
     fuzzy = np.nextafter(breaks, limit)
     fuzzy[idx] = np.nextafter(breaks[idx], -limit)
     return fuzzy
+
+
+def cut(
+    x: FloatArrayLike,
+    bins: FloatArrayLike,
+    right: bool = True,
+    include_lowest: bool = False,
+) -> FloatArray:
+    """
+    Return the indices of the bins to which the values belong
+
+    This is equivalent to `pandas.cut(x, bins, labels=False)`.
+
+    Parameters
+    ----------
+    x :
+        Values to be binned.
+    bins :
+        Monotonically increasing edges of the bins.
+    right :
+        Whether the bins include their right edges. If False, they
+        include their left edges.
+    include_lowest :
+        Whether the first bin should include its left edge.
+
+    Returns
+    -------
+    out :
+        The 0-based index of the bin of each value. The values
+        outside the bins and the missing values get NaN.
+    """
+    x = np.asarray(x, dtype=float)
+    bins = np.asarray(bins)
+    ids = np.searchsorted(bins, x, side="left" if right else "right")
+    if include_lowest:
+        ids[x == bins[0]] = 1
+
+    missing = np.isnan(x) | (ids == len(bins)) | (ids == 0)
+    result = (ids - 1).astype(float)
+    result[missing] = np.nan
+    return result

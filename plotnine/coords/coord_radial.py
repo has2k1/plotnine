@@ -5,9 +5,11 @@ from functools import cached_property
 from typing import TYPE_CHECKING, Any, Literal, TypeVar, cast
 from warnings import warn
 
+import narwhals as nw
 import numpy as np
 
 from .._mpl._radial_axes import p9RadialAxes  # noqa: TCH001
+from .._utils import frame
 from .._utils.registry import alias
 from ..exceptions import PlotnineError, PlotnineWarning
 from ..iapi import panel_ranges, radial_panel_view
@@ -22,9 +24,9 @@ if TYPE_CHECKING:
     from collections.abc import Sequence
 
     import numpy.typing as npt
-    import pandas as pd
     from matplotlib.axes import Axes
 
+    from plotnine._utils.frame import DataFrame
     from plotnine.iapi import (
         labels_view,
         layout_details,
@@ -33,7 +35,7 @@ if TYPE_CHECKING:
         sec_axis_view,
     )
     from plotnine.scales.scale import scale
-    from plotnine.typing import FloatArrayLike, FloatSeries, Side
+    from plotnine.typing import FloatArray, FloatArrayLike, Side
 
 T1 = TypeVar("T1")
 T2 = TypeVar("T2")
@@ -415,51 +417,71 @@ class coord_radial(coord):
 
     def transform(
         self,
-        data: pd.DataFrame,
+        data: DataFrame,
         panel_params: panel_view,
         munch: bool = False,
-    ) -> pd.DataFrame:
+    ) -> DataFrame:
         # Munch first (in original data space) so curved edges get enough
         # interpolation points before we convert theta → radians.
         if munch:
             data = self.munch(data, panel_params)
 
-        if "x" not in data or "y" not in data:
+        if "x" not in data.columns or "y" not in data.columns:
             return data
 
         view = cast("radial_panel_view", panel_params)
         theta_aesthetics = self._flip(X_AESTHETICS, Y_AESTHETICS)[0]
 
-        data = data.copy()
-        for aes in theta_aesthetics & set(data.columns):
-            data[aes] = self._to_radians(data[aes], view.theta.range)
+        data = frame.assign(
+            data,
+            **{
+                aes: self._to_radians(
+                    frame.to_numpy(data[aes]), view.theta.range
+                )
+                for aes in sorted(theta_aesthetics & set(data.columns))
+            },
+        )
 
         # Matplotlib requires theta in `x` and radius in `y`. Transpose every
         # position aesthetic so bounds, endpoints, and intercepts stay with
         # their dimension when `theta="y"`.
         if not self.preserves_dimensions:
-            data = data.rename(columns=TRANSPOSED_POSITION_AESTHETICS)
+            data = data.rename(
+                {
+                    k: v
+                    for k, v in TRANSPOSED_POSITION_AESTHETICS.items()
+                    if k in data.columns
+                }
+            )
 
         if self.reverse in ("r", "thetar"):
-            for aes in Y_AESTHETICS & set(data.columns):
-                data[aes] = -data[aes]
+            data = data.with_columns(
+                -nw.col(aes)
+                for aes in sorted(Y_AESTHETICS & set(data.columns))
+            )
 
         # After the swap, data["x"] is always theta in radians.
-        if self.rotate_angle and "angle" in data and "x" in data:
+        if (
+            self.rotate_angle
+            and "angle" in data.columns
+            and "x" in data.columns
+        ):
             # Align marks tangentially to their spoke. The PolarAxes places
             # a data theta t at on-screen angle (deg, CCW from East)
             #   screen = 90 - degrees(t),  since the sweep is clockwise
             # Tangential text rotation is screen - 90; folding into (-90, 90]
             # keeps labels upright (a bottom label reads "6", not "9").
-            rot = -np.degrees(data["x"])
+            rot = -np.degrees(frame.to_numpy(data["x"]))
             rot = (rot + 90.0) % 180.0 - 90.0
-            data["angle"] = data["angle"] + rot
+            data = frame.assign(
+                data, angle=frame.to_numpy(data["angle"]) + rot
+            )
         return data
 
     def distance(
         self,
-        x: FloatSeries,
-        y: FloatSeries,
+        x: FloatArray,
+        y: FloatArray,
         panel_params: panel_view,
     ) -> npt.NDArray[Any]:
         # Normalise theta and r to [0, 1] then compute Euclidean distance.

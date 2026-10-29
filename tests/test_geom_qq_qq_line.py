@@ -1,3 +1,4 @@
+import narwhals as nw
 import numpy as np
 import pandas as pd
 from scipy.stats import norm
@@ -25,9 +26,9 @@ def test_line_through_sample_quartiles():
     # with R's default quantile type, as in ggplot2
     data = pd.DataFrame({"x": [1.0, 2, 3, 4, 10]})
     p = ggplot(data, aes(sample="x")) + geom_qq_line()
-    line = p.layer_data()
+    line = nw.from_native(p.layer_data())
     slope = np.diff(line["y"])[0] / np.diff(line["x"])[0]
-    intercept = line["y"].iloc[0] - slope * line["x"].iloc[0]
+    intercept = line["y"].item(0) - slope * line["x"].item(0)
 
     x_coords = norm.ppf([0.25, 0.75])
     y_coords = slope * x_coords + intercept

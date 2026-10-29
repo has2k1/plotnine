@@ -3,9 +3,8 @@ from __future__ import annotations
 import typing
 
 import numpy as np
-import pandas as pd
 
-from .._utils import is_scalar
+from .._utils import frame, is_scalar
 from .._utils.registry import Registry
 from ..exceptions import PlotnineError
 from ..geoms.geom import geom as geom_base_class
@@ -90,9 +89,12 @@ class annotate:
             if variables[loc] is not None
         }
         # Record literal positions as expressions after removing their
-        # dtype tag so position scales skip them during training.
+        # tag so position scales skip them during training.
         asis_aes = {ae for ae, v in pos_aesthetics.items() if is_asis(v)}
-        pos_aesthetics = {ae: v for ae, v in pos_aesthetics.items()}
+        pos_aesthetics = {
+            ae: v.to_numpy() if is_asis(v) else v
+            for ae, v in pos_aesthetics.items()
+        }
         aesthetics = pos_aesthetics.copy()
         aesthetics.update(kwargs)
 
@@ -118,13 +120,7 @@ class annotate:
                 if not is_scalar(val) and len(val) == 1:
                     pos_aesthetics[ae] = np.repeat(val, max_length)
 
-        # Stop pandas from complaining about all scalars
-        if all(is_scalar(val) for val in pos_aesthetics.values()):
-            for ae in pos_aesthetics:
-                pos_aesthetics[ae] = [pos_aesthetics[ae]]
-                break
-
-        data = pd.DataFrame(pos_aesthetics)
+        data = frame.frame(pos_aesthetics, backend=frame.default_backend())
         if isinstance(geom, str):
             geom_klass: type[geom_base_class] = Registry[f"geom_{geom}"]
         elif isinstance(geom, type) and issubclass(geom, geom_base_class):

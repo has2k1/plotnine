@@ -8,16 +8,19 @@ from dataclasses import fields
 from functools import cached_property
 from typing import TYPE_CHECKING, Any
 
+import narwhals as nw
 import numpy as np
-import pandas as pd
 from mizani._colors.utils import is_color_tuple
 
+from .._utils import frame
 from ..iapi import labels_view
 from ._asis import is_asis, is_literal_expression
 from .evaluation import after_stat, stage
 
 if TYPE_CHECKING:
     from typing import Protocol, TypeVar
+
+    from plotnine._utils.frame import DataFrame
 
     class ColorOrColour(Protocol):
         color: Any
@@ -145,11 +148,25 @@ class aes(dict[str, Any]):
       ggplot(df, aes(x="alpha", y=[4, 4, 4]))
       ```
 
+    - **Narwhals expression**
+
+      ```python
+      import narwhals as nw
+
+      ggplot(df, aes(x="alpha", y=nw.col("beta") * 2))
+      ggplot(df, aes(x="alpha", y=nw.col("beta").cum_sum()))
+      ```
+
+      A [narwhals expression](https://narwhals-dev.github.io/narwhals/api-reference/expr/)
+      works with the dataframes of every library that narwhals
+      supports, e.g. pandas and polars.
+
     - **String expression**
 
       ```python
       ggplot(df, aes(x="alpha", y="2*beta"))
       ggplot(df, aes(x="alpha", y="np.sin(beta)"))
+      # Only for pandas dataframes, which have an index
       ggplot(df, aes(x="df.index", y="beta"))
 
       # If `count` is an aesthetic calculated by a stat
@@ -166,6 +183,13 @@ class aes(dict[str, Any]):
       with the column names having precedence over the variables.
       For expressions, columns in the dataframe that are mapped to
       must have names that would be valid python variable names.
+
+      A string expression is first evaluated with the columns as
+      narwhals expressions (e.g. `"np.sin(beta)"` becomes
+      `np.sin(nw.col("beta"))`), so it works the same for every
+      dataframe library. If that is not possible, the columns are
+      series of the dataframe library, e.g. `"beta.str.upper()"` for
+      pandas, and lastly numpy arrays.
 
       This is okay:
 
@@ -524,8 +548,10 @@ def make_labels(mapping: dict[str, Any] | aes) -> labels_view:
             return None
         elif isinstance(value, str):
             return value
-        elif isinstance(value, pd.Series):
-            return value.name  # pyright: ignore
+        elif isinstance(value, nw.Expr):
+            return _expr_label(value)
+        elif (s := frame.as_series(value)) is not None:
+            return s.name or None
         elif not isinstance(value, Iterable):
             return str(value)
         elif isinstance(value, Sequence) and len(value) == 1:
@@ -661,7 +687,22 @@ def is_shape_points(obj: Any) -> bool:
         return False
 
 
-def has_groups(data: pd.DataFrame) -> bool:
+def _expr_label(expr: nw.Expr) -> str | None:
+    """
+    Return the name of the column that an expression creates
+
+    Like polars, the name is the alias of the expression or the
+    name of the first column in it.
+    """
+    text = repr(expr)
+    if m := re.search(r"\.alias\(name=(.+)\)$", text):
+        return m.group(1)
+    if m := re.search(r"col\((.+?)\)", text):
+        return m.group(1)
+    return None
+
+
+def has_groups(data: DataFrame) -> bool:
     """
     Check if data is grouped
 
@@ -677,4 +718,6 @@ def has_groups(data: pd.DataFrame) -> bool:
     """
     # If any row in the group column is equal to NO_GROUP, then
     # the data all of them are and the data has no groups
-    return data["group"].iloc[0] != NO_GROUP
+    group = frame.as_series(data["group"])
+    assert group is not None
+    return group.item(0) != NO_GROUP

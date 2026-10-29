@@ -1,12 +1,10 @@
 from __future__ import annotations
 
 from contextlib import suppress
-from typing import TYPE_CHECKING, cast
+from typing import TYPE_CHECKING
 from warnings import warn
 
-import numpy as np
-
-from .._utils import order_as_data_mapping, to_rgba
+from .._utils import frame, order_as_data_mapping, to_rgba
 from ..doctools import document
 from ..exceptions import PlotnineError, PlotnineWarning
 from ..positions import position_nudge
@@ -16,12 +14,13 @@ if TYPE_CHECKING:
     from collections.abc import Sequence
     from typing import Any
 
-    import pandas as pd
+    import narwhals as nw
     from matplotlib.axes import Axes
     from matplotlib.offsetbox import DrawingArea
     from matplotlib.text import Text
 
     from plotnine import aes
+    from plotnine._utils.frame import DataFrame
     from plotnine.coords.coord import coord
     from plotnine.iapi import panel_view
     from plotnine.layer import layer
@@ -181,34 +180,35 @@ class geom_text(geom):
 
         geom.__init__(self, mapping, data, **kwargs)
 
-    def setup_data(self, data: pd.DataFrame) -> pd.DataFrame:
+    def setup_data(self, data: DataFrame) -> DataFrame:
         parse = self.params["parse"]
         fmt = self.params["format_string"]
 
-        def _format(series: pd.Series, tpl: str) -> list[str | None]:
+        def _format(series: nw.Series[Any], tpl: str) -> list[str | None]:
             """
             Format items in series
 
             Missing values are preserved as None
             """
-            if series.dtype == "float":
-                return [None if np.isnan(l) else tpl.format(l) for l in series]
-            else:
-                return [None if l is None else tpl.format(l) for l in series]
+            missing = frame.isna(series)
+            return [
+                None if na else tpl.format(l)
+                for l, na in zip(series.to_list(), missing)
+            ]
 
         # format
         if fmt:
-            data["label"] = _format(data["label"], fmt)
+            data = frame.assign(data, label=_format(data["label"], fmt))
 
         # Parse latex
         if parse:
-            data["label"] = _format(data["label"], "${}$")
+            data = frame.assign(data, label=_format(data["label"], "${}$"))
 
         return data
 
     def draw_panel(
         self,
-        data: pd.DataFrame,
+        data: DataFrame,
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
@@ -217,7 +217,7 @@ class geom_text(geom):
 
     @staticmethod
     def draw_group(
-        data: pd.DataFrame,
+        data: DataFrame,
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
@@ -225,34 +225,33 @@ class geom_text(geom):
     ):
         data = coord.transform(data, panel_params)
         zorder = params["zorder"]
+        n = len(data)
 
         # Bind color and alpha
         color = to_rgba(data["color"], data["alpha"])
 
-        # Create a dataframe for the plotting data required
-        # by ax.text
-        ae_names = list(set(geom_text.DEFAULT_AES) | geom_text.REQUIRED_AES)
-        plot_data = data[ae_names]
-        plot_data = plot_data.rename(
-            {
-                "label": "s",
-                "angle": "rotation",
-                "lineheight": "linespacing",
-            },
-            axis=1,
-        )
-        plot_data["color"] = color  # pyright: ignore[reportCallIssue,reportArgumentType]
-        plot_data["zorder"] = zorder
-        plot_data["rasterized"] = params["raster"]
-        plot_data["clip_on"] = True
+        # The plotting data required by ax.text, a list for each argument
+        rename = {
+            "label": "s",
+            "angle": "rotation",
+            "lineheight": "linespacing",
+        }
+        ae_names = sorted(set(geom_text.DEFAULT_AES) | geom_text.REQUIRED_AES)
+        plot_data = {rename.get(ae, ae): data[ae].to_list() for ae in ae_names}
+        plot_data["color"] = color if isinstance(color, list) else [color] * n
+        plot_data["zorder"] = [zorder] * n
+        plot_data["rasterized"] = [params["raster"]] * n
+        plot_data["clip_on"] = [True] * n
 
         # 'boxstyle' indicates geom_label so we need an MPL bbox
         draw_label = "boxstyle" in params
         if draw_label:
-            fill = to_rgba(data.pop("fill"), data["alpha"])
+            fill = to_rgba(data["fill"], data["alpha"])
             if isinstance(fill, tuple):
-                fill = [list(fill)] * len(data["x"])
-            plot_data["facecolor"] = fill  # pyright: ignore[reportCallIssue,reportArgumentType]
+                fill = [list(fill)] * n
+            elif not isinstance(fill, list):
+                fill = [fill] * n
+            plot_data["facecolor"] = fill
 
             tokens = [params["boxstyle"], f"pad={params['label_padding']}"]
             if params["boxstyle"] in {"round", "round4"}:
@@ -268,8 +267,9 @@ class geom_text(geom):
         texts: Sequence[Text] = []
 
         # For labels add a bbox
-        for i in range(len(data)):
-            kw = cast("dict[str, Any]", plot_data.iloc[i].to_dict())
+        names = list(plot_data)
+        for row in zip(*plot_data.values()):
+            kw = dict(zip(names, row))
             if draw_label:
                 kw["bbox"] = bbox
                 kw["bbox"]["edgecolor"] = params["boxcolor"] or kw["color"]
@@ -291,14 +291,14 @@ class geom_text(geom):
                 texts,
                 ax,
                 params["adjust_text"],
-                color[0],
+                plot_data["color"][0],
                 float(data["size"].mean()),
                 zorder,
             )
 
     @staticmethod
     def draw_legend(
-        data: pd.Series[Any], da: DrawingArea, lyr: layer
+        data: dict[str, Any], da: DrawingArea, lyr: layer
     ) -> DrawingArea:
         """
         Draw letter 'a' in the box
@@ -336,7 +336,7 @@ class geom_text(geom):
 
     @staticmethod
     def legend_key_size(
-        data: pd.Series[Any], min_size: tuple[int, int], lyr: layer
+        data: dict[str, Any], min_size: tuple[int, int], lyr: layer
     ) -> tuple[int, int]:
         w, h = min_size
         _w = _h = data["size"]

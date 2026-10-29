@@ -1,9 +1,10 @@
 from warnings import warn
 
-import pandas as pd
+import numpy as np
 
+from .._utils import frame
 from ..doctools import document
-from ..exceptions import PlotnineWarning
+from ..exceptions import PlotnineError, PlotnineWarning
 from .stat import stat
 
 
@@ -74,27 +75,38 @@ class stat_quantile(stat):
         res = [
             quant_pred(q, data, self.params) for q in self.params["quantiles"]
         ]
-        return pd.concat(res, axis=0, ignore_index=True)
+        return frame.concat(res)
 
 
 def quant_pred(q, data, params):
     """
     Quantile precitions
     """
-    import statsmodels.formula.api as smf
+    try:
+        import statsmodels.formula.api as smf
+    except ImportError as err:
+        msg = (
+            "stat_quantile requires statsmodels (which requires pandas). "
+            "Install them to use stat_quantile."
+        )
+        raise PlotnineError(msg) from err
 
+    # statsmodels formulas can work with a dict of arrays, so the
+    # data does not have to be in a pandas dataframe.
+    values = {c: frame.to_numpy(data[c]) for c in data.columns}
     mod = smf.quantreg(
         params["formula"],
-        data,
+        values,
         eval_env=params.get("eval_env"),
     )
     reg_res = mod.fit(q=q, **params["method_args"])
-    out = pd.DataFrame(
+    x = np.array([values["x"].min(), values["x"].max()])
+    return frame.frame_like(
+        data,
         {
-            "x": [data["x"].min(), data["x"].max()],
+            "x": x,
             "quantile": q,
-            "group": f"{data['group'].iloc[0]}-{q}",
-        }
+            "group": f"{data['group'].item(0)}-{q}",
+            "y": np.asarray(reg_res.predict({"x": x})),
+        },
     )
-    out["y"] = reg_res.predict(out)
-    return out

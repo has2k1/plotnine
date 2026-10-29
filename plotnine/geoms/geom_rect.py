@@ -2,10 +2,10 @@ from __future__ import annotations
 
 import typing
 
+import narwhals as nw
 import numpy as np
-import pandas as pd
 
-from .._utils import SIZE_FACTOR, to_rgba
+from .._utils import SIZE_FACTOR, frame, to_rgba
 from ..doctools import document
 from .geom import geom
 from .geom_polygon import geom_polygon
@@ -15,6 +15,7 @@ if typing.TYPE_CHECKING:
 
     from matplotlib.axes import Axes
 
+    from plotnine._utils.frame import DataFrame
     from plotnine.coords.coord import coord
     from plotnine.iapi import panel_view
 
@@ -44,7 +45,7 @@ class geom_rect(geom):
 
     def draw_panel(
         self,
-        data: pd.DataFrame,
+        data: DataFrame,
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
@@ -58,9 +59,10 @@ class geom_rect(geom):
             # `group` aesthetic would merge a stacked bar's segments into one
             # open path, and coord.munch would then bend the join between
             # consecutive rectangles into a spurious spike.
-            data["group"] = np.repeat(np.arange(len(data) // 4), 4)
-            for _, gdata in data.groupby("group"):
-                gdata = gdata.reset_index(drop=True)
+            data = frame.assign(
+                data, group=np.repeat(np.arange(len(data) // 4), 4)
+            )
+            for _, gdata in frame.group_split(data, "group"):
                 geom_polygon.draw_group(
                     gdata, panel_params, coord, ax, self.params
                 )
@@ -69,7 +71,7 @@ class geom_rect(geom):
 
     @staticmethod
     def draw_group(
-        data: pd.DataFrame,
+        data: DataFrame,
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
@@ -80,43 +82,44 @@ class geom_rect(geom):
 
 
 def fill_rects(
-    data: pd.DataFrame,
+    data: DataFrame,
     ax: Axes,
     params: dict[str, Any],
 ) -> None:
     """
-    Draw rectangles whose bounds use panel coordinates
+    Draw rectangles from panel-coordinate data
 
     Parameters
     ----------
     data :
-        Rectangle aesthetics with panel-coordinate `xmin`, `xmax`,
-        `ymin`, and `ymax` bounds.
+        Rectangle data in panel coordinates.
     ax :
-        Axes to draw on.
+        Axes on which to draw the rectangles.
     params :
-        Geom and stat parameters that control rectangle appearance.
+        Geom and stat parameters used to style the rectangles.
     """
     from matplotlib.collections import PolyCollection
 
-    linewidth = data["size"] * SIZE_FACTOR
-
-    limits = zip(data["xmin"], data["xmax"], data["ymin"], data["ymax"])
-
+    linewidth = frame.to_numpy(data["size"]) * SIZE_FACTOR
+    limits = zip(
+        frame.to_numpy(data["xmin"]),
+        frame.to_numpy(data["xmax"]),
+        frame.to_numpy(data["ymin"]),
+        frame.to_numpy(data["ymax"]),
+    )
     verts = [[(l, b), (l, t), (r, t), (r, b)] for (l, r, b, t) in limits]
-
     fill = to_rgba(data["fill"], data["alpha"])
-    color = data["color"]
+    color = data["color"].to_list()
 
     # prevent unnecessary borders
-    if all(color.isna()):
+    if frame.isna(data["color"]).all():
         color = "none"
 
     col = PolyCollection(
         verts,
         facecolors=fill,
         edgecolors=color,
-        linestyles=data["linetype"],
+        linestyles=data["linetype"].to_list(),
         linewidths=linewidth,
         zorder=params["zorder"],
         rasterized=params["raster"],
@@ -124,12 +127,12 @@ def fill_rects(
     ax.add_collection(col)
 
 
-def _rectangles_to_polygons(df: pd.DataFrame) -> pd.DataFrame:
+def _rectangles_to_polygons(df: DataFrame) -> DataFrame:
     """
     Convert rect data to polygons
 
-    Parameters
-    ----------
+    Paramters
+    ---------
     df : dataframe
         Dataframe with *xmin*, *xmax*, *ymin* and *ymax* columns,
         plus others for aesthetics ...
@@ -149,19 +152,21 @@ def _rectangles_to_polygons(df: pd.DataFrame) -> pd.DataFrame:
     ymax_idx = ~ymin_idx
 
     # There are 2 x and 2 y values for each of xmin, xmax, ymin & ymax
-    # The positions are as laid out in the indexing arrays
+    # The positions are as layed out in the indexing arrays
     # x and y values
     x = np.empty(n * 4)
     y = np.empty(n * 4)
-    x[xmin_idx] = df["xmin"].repeat(2)
-    x[xmax_idx] = df["xmax"].repeat(2)
-    y[ymin_idx] = df["ymin"].repeat(2)
-    y[ymax_idx] = df["ymax"].repeat(2)
+    x[xmin_idx] = frame.to_numpy(df["xmin"]).repeat(2)
+    x[xmax_idx] = frame.to_numpy(df["xmax"]).repeat(2)
+    y[ymin_idx] = frame.to_numpy(df["ymin"]).repeat(2)
+    y[ymax_idx] = frame.to_numpy(df["ymax"]).repeat(2)
 
     # Aesthetic columns and others
-    other_cols = df.columns.difference(
-        ["x", "y", "xmin", "xmax", "ymin", "ymax"]
+    other_cols = sorted(
+        set(df.columns) - {"x", "y", "xmin", "xmax", "ymin", "ymax"}
     )
-    d = {str(col): np.repeat(df[col].to_numpy(), 4) for col in other_cols}
-    data = pd.DataFrame({"x": x, "y": y, **d})
-    return data
+    others = frame.take(df.select(other_cols), np.repeat(np.arange(n), 4))
+    xy = frame.frame_like(df, {"x": x, "y": y})
+    if not other_cols:
+        return xy
+    return nw.concat([xy, others], how="horizontal")

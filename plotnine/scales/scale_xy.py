@@ -5,9 +5,8 @@ from itertools import chain
 from typing import TYPE_CHECKING
 
 import numpy as np
-import pandas as pd
 
-from .._utils import array_kind, match
+from .._utils import array_kind, frame, match
 from .._utils.registry import alias
 from ..exceptions import PlotnineError
 from ..iapi import range_view, scale_position_view
@@ -250,8 +249,10 @@ class scale_position_continuous(scale_position, scale_continuous[None]):
             return x
         if limits is None:
             limits = self.final_limits
-        scaled = self.oob(x, limits)  # type: ignore
-        scaled[pd.isna(scaled)] = self.na_value
+        scaled = self.oob(frame.as_numpy(x), limits)
+        if (missing := frame.isna(scaled)).any():
+            scaled = scaled.astype(float)
+            scaled[missing] = self.na_value
         return scaled
 
 
@@ -287,7 +288,7 @@ class scale_position_binned(scale_position, scale_binned):
 
         intervals = self._resolve_intervals(limits)
         values = np.asarray(x, dtype=float)
-        missing = pd.isna(values)
+        missing = frame.isna(values)
 
         if not self._after_stat:
             values = np.asarray(

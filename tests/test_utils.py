@@ -12,7 +12,6 @@ from plotnine._utils import (
     join_keys,
     match,
     ninteraction,
-    pivot_apply,
     remove_missing,
     uniquecols,
 )
@@ -247,20 +246,3 @@ def test_remove_missing():
         res = remove_missing(data, na_rm=True, finite=True)
         res.equals(data3)
         assert len(w) == 1
-
-
-def test_pivot_apply():
-    data = pd.DataFrame(
-        {
-            "id": list("abcabc"),
-            "x": [1, 2, 3, 11, 22, 33],
-            "y": [1, 2, 3, 11, 22, 33],
-        }
-    )
-
-    res1 = pivot_apply(data, "x", "id", np.min)
-    res2 = pivot_apply(data, "y", "id", np.max)
-
-    assert res1.index.tolist() == list("abc")
-    assert res1.index.name == "id"
-    assert (res1 + res2 == [12, 24, 36]).all()

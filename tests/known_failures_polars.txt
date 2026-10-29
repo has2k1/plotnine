@@ -1,0 +1,5 @@
+# Tests that are expected to fail when the test data is converted to polars.
+# Each entry is a pytest node id; text after "#" is a comment.
+#
+# Tests that use features that only pandas has (e.g. the index) are
+# not listed here; they are marked with @pytest.mark.pandas_only.

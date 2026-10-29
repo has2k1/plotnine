@@ -8,9 +8,10 @@ from typing import TYPE_CHECKING, Any, Protocol, TypeVar, cast
 from warnings import warn
 
 import numpy as np
-import pandas as pd
 from mizani.bounds import squish
+from narwhals.dependencies import get_pandas
 
+from .._utils import frame
 from ..exceptions import PlotnineError, PlotnineWarning
 from ._runtime_typing import MinorBreaksUser, OptionalBinnedGuide
 from .scale_continuous import scale_continuous
@@ -185,7 +186,7 @@ class scale_binned(scale_continuous[OptionalBinnedGuide]):
             self.oob(np.asarray(x, dtype=float), intervals.limits),
             dtype=float,
         )
-        missing = pd.isna(values)
+        missing = frame.isna(values)
         bin_numbers = np.digitize(
             values,
             intervals.breaks,
@@ -377,9 +378,10 @@ class _BinIntervals:
         return np.asarray(values, dtype=float)
 
 
-def _as_interval(value: pd.Interval | str) -> tuple[float, float]:
+def _as_interval(value: Any) -> tuple[float, float]:
     """Extract the numeric endpoints from an interval value"""
-    if isinstance(value, pd.Interval):
+    pd = get_pandas()
+    if pd is not None and isinstance(value, pd.Interval):
         try:
             return float(value.left), float(value.right)
         except (TypeError, ValueError) as err:

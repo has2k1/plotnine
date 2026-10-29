@@ -2,16 +2,19 @@ from __future__ import annotations
 
 import decimal
 import typing
-from collections.abc import Iterable, Sequence
-from copy import copy, deepcopy
+from collections.abc import Iterable
+from contextlib import suppress
+from copy import deepcopy
 from typing import cast, overload
 
-import pandas as pd
+import narwhals as nw
+import numpy as np
 
-from ._utils import array_kind, check_required_aesthetics, ninteraction
+from ._utils import array_kind, check_required_aesthetics, frame, ninteraction
+from ._utils.frame import native_io
 from ._utils.registry import Registry
 from .exceptions import PlotnineError
-from .mapping._asis import asis_columns
+from .mapping._asis import is_asis
 from .mapping.aes import (
     NO_GROUP,
     POSITION_AESTHETICS,
@@ -20,12 +23,14 @@ from .mapping.aes import (
     aes,
     make_labels,
 )
-from .mapping.evaluation import evaluate, stage
+from .mapping.evaluation import evaluate_aesthetics, stage
 
 if typing.TYPE_CHECKING:
+    from collections.abc import Callable, Sequence
     from typing import Any, Literal, SupportsIndex
 
     from plotnine import ggplot
+    from plotnine._utils.frame import DataFrame, Implementation
     from plotnine.coords.coord import coord
     from plotnine.facets.layout import Layout
     from plotnine.geoms.geom import geom
@@ -36,7 +41,6 @@ if typing.TYPE_CHECKING:
     from plotnine.scales.scales import Scales
     from plotnine.stats.stat import stat
     from plotnine.typing import (
-        DataFrameConvertible,
         DataLike,
         LayerDataLike,
     )
@@ -84,8 +88,15 @@ class layer:
         *geom* is a class or string.
     """
 
-    # Data for this layer
-    data: pd.DataFrame
+    # Data for this layer. It is a narwhals dataframe.
+    data: DataFrame
+
+    # The dataframe library to use when the layer has no data
+    _backend: Implementation
+
+    # The aesthetics whose values are literal i.e. they bypass
+    # the scales
+    asis: set[str]
 
     def __init__(
         self,
@@ -149,6 +160,7 @@ class layer:
         self.mapping = _geom.mapping
         self.position = _pos
         self.zorder = 0
+        self.asis = set()
 
     @staticmethod
     def _verify_arguments(geom: geom, stat: stat) -> None:
@@ -216,6 +228,7 @@ class layer:
 
         Give the layer access to the data, mapping and environment
         """
+        self._backend = _plot_backend(plot)
         self._make_layer_data(plot.data)
         self._make_layer_mapping(plot.mapping)
         self._make_layer_environments(plot.environment)
@@ -231,42 +244,33 @@ class layer:
             ggplot object data
         """
         if plot_data is None:
-            data = pd.DataFrame()
-        elif hasattr(plot_data, "to_pandas"):
-            data = cast("DataFrameConvertible", plot_data).to_pandas()
+            data = frame.frame(backend=self._backend)
         else:
-            data = cast("pd.DataFrame", plot_data)
+            data = frame.to_frame(plot_data)
 
-        # Each layer that does not have data gets a copy of
-        # of the ggplot.data. If it has data it is replaced
-        # by copy so that we do not alter the users data
+        # Each layer that does not have data gets the ggplot.data.
+        # Since narwhals dataframes cannot be modified in place, the
+        # users data cannot be altered.
         if self._data is None:
-            try:
-                self.data = copy(data)
-            except AttributeError as e:
-                _geom_name = self.geom.__class__.__name__
-                _data_name = data.__class__.__name__
-                msg = (
-                    f"{_geom_name} layer expects a dataframe, "
-                    f"but it got {_data_name} instead."
-                )
-                raise PlotnineError(msg) from e
+            self.data = data
         elif callable(self._data):
-            self.data = self._data(data)
-            if not isinstance(self.data, pd.DataFrame):
+            result = self._data(data.to_native())
+            if not frame.is_frame(result):
                 raise PlotnineError(
-                    "Data function must return a Pandas dataframe"
+                    "Data function must return a dataframe, "
+                    f"but it returned a {type(result).__name__}."
                 )
+            self.data = frame.to_frame(result)
+        elif frame.is_frame(self._data) or hasattr(self._data, "to_pandas"):
+            self.data = frame.to_frame(self._data)
         else:
-            # Recognise polars dataframes
-            if hasattr(self._data, "to_pandas"):
-                self.data = cast(
-                    "DataFrameConvertible", self._data
-                ).to_pandas()
-            elif isinstance(self._data, pd.DataFrame):
-                self.data = self._data.copy()
-            else:
-                raise TypeError(f"Data has a bad type: {type(self.data)}")
+            _geom_name = self.geom.__class__.__name__
+            _data_name = self._data.__class__.__name__
+            msg = (
+                f"{_geom_name} layer expects a dataframe, "
+                f"but it got {_data_name} instead."
+            )
+            raise PlotnineError(msg)
 
         self.data = _decimal_columns_to_float(self.data)
 
@@ -324,24 +328,32 @@ class layer:
         Transformations like 'factor(cyl)' and other
         expression evaluation are  made in here
         """
-        evaled = evaluate(self.mapping._starting, self.data, plot.environment)
-        evaled_aes = aes(**{str(col): col for col in evaled})
-        plot.scales.add_defaults(evaled, evaled_aes)
+        data = frame.to_frame(self.data)
+        evaled, asis = evaluate_aesthetics(
+            self.mapping._starting, data, plot.environment
+        )
+        self.asis = asis | {
+            ae for ae, value in self.geom.aes_params.items() if is_asis(value)
+        }
+        evaled_aes = aes(
+            **{col: col for col in evaled.columns if col not in asis}
+        )
+        plot.scales.add_defaults(evaled.drop(*asis), evaled_aes)
 
-        if len(self.data) == 0 and len(evaled) > 0:
-            # No data, and vectors suppled to aesthetics
-            evaled["PANEL"] = 1
-        else:
-            evaled["PANEL"] = self.data["PANEL"]
+        # With no data and vectors suppled to aesthetics, there is
+        # only one panel
+        no_data = len(data) == 0 and len(evaled) > 0
+        panel = 1 if no_data else data["PANEL"]
 
+        evaled = frame.assign(evaled, PANEL=panel)
         data = add_group(evaled)
-        self.data = data.sort_values("PANEL", kind="mergesort")
+        self.data = frame.sort(data, "PANEL")
 
     def compute_statistic(self, layout: Layout):
         """
         Compute & return statistics for this layer
         """
-        data = self.data
+        data = frame.to_frame(self.data)
         if not len(data):
             return
 
@@ -349,7 +361,7 @@ class layer:
         data = self.stat.use_defaults(data)
         data = self.stat.setup_data(data)
         data = self.stat.compute_layer(data, layout)
-        self.data = data
+        self.data = frame.to_frame(data)
 
     def map_statistic(self, plot: ggplot):
         """
@@ -367,32 +379,36 @@ class layer:
         # we evaluate the mapping to them in data space.
         # NOTE: If the inverse-retransform turn out to be slow
         # we can try applying them to only the required columns.
-        data = plot.scales.inverse_df(self.data)
-        stat_data = evaluate(calculated, data, plot.environment)
+        data = self._apply_scales(plot.scales.inverse_df)
+        stat_data, asis = evaluate_aesthetics(
+            calculated, data, plot.environment
+        )
+        self.asis = (self.asis - set(stat_data.columns)) | asis
 
         # If there are duplicate columns, we use the computed
         # ones in stat_data
-        columns = data.columns.difference(stat_data.columns)
-        data = pd.concat([data[columns], stat_data], axis=1)
-
-        self.data = plot.scales.transform_df(data)
+        columns = [c for c in data.columns if c not in stat_data.columns]
+        data = nw.concat([data.select(columns), stat_data], how="horizontal")
+        self.data = data
+        data = self._apply_scales(plot.scales.transform_df)
+        self.data = data
 
         # Add any new scales, if needed
-        new = {ae: ae for ae in stat_data.columns}
-        plot.scales.add_defaults(self.data, new)
+        new = {ae: ae for ae in stat_data.columns if ae not in self.asis}
+        plot.scales.add_defaults(data.select(list(new)), new)
 
     def setup_data(self):
         """
         Prepare/modify data for plotting
         """
-        data = self.data
+        data = frame.to_frame(self.data)
         if len(data) == 0:
             return
 
         self.geom.params["stat_params"] = self.stat.params
         self.geom.setup_params(data)
         self.geom.setup_aes_params(data)
-        data = self.geom.setup_data(data)
+        data = frame.to_frame(self.geom.setup_data(data))
 
         check_required_aesthetics(
             self.geom.REQUIRED_AES,
@@ -409,13 +425,14 @@ class layer:
         This is in concert with the other objects in the panel depending
         on the position class of the geom
         """
-        if len(self.data) == 0:
+        data = frame.to_frame(self.data)
+        if len(data) == 0:
             return
 
-        params = self.position.setup_params(self.data)
-        data = self.position.setup_data(self.data, params)
+        params = self.position.setup_params(data)
+        data = self.position.setup_data(data, params)
         data = self.position.compute_layer(data, params, layout)
-        self.data = data
+        self.data = frame.to_frame(data)
 
     def resolve_asis_positions(self, layout: Layout, coord: coord):
         """
@@ -429,30 +446,34 @@ class layer:
             Coordinate system that converts panel ranges to the
             unflipped, untransformed data coordinates in the columns.
         """
-        data = self.data
+        data = frame.to_frame(self.data)
         if not len(data):
             return
 
-        columns = asis_columns(data) & POSITION_AESTHETICS
+        columns = (self.asis & POSITION_AESTHETICS) & set(data.columns)
         if not columns:
             return
-
-        # Convert integer fractions to float before replacing them with
-        # resolved coordinates; an integer column cannot hold those floats.
-        for col in columns:
-            data[col] = data[col].astype(float)
 
         by_dimension: tuple[tuple[set[str], Literal["x", "y"]], ...] = (
             (columns & X_AESTHETICS, "x"),
             (columns & Y_AESTHETICS, "y"),
         )
-        for pid, idx in data.groupby("PANEL", observed=True).groups.items():
-            panel_params = layout.panel_params[cast("int", pid) - 1]
+        panels = frame.as_numpy(data["PANEL"])
+        resolved = {}
+        for col in columns:
+            # Integer fractions become floats when they are resolved
+            resolved[col] = frame.as_numpy(data[col]).astype(float)
+
+        for pid in np.unique(panels):
+            idx = panels == pid
+            panel_params = layout.panel_params[int(pid) - 1]
             for cols, dimension in by_dimension:
                 for col in cols:
-                    data.loc[idx, col] = coord.panel_fraction_to_data(
-                        data.loc[idx, col], panel_params, dimension
+                    resolved[col][idx] = coord.panel_fraction_to_data(
+                        resolved[col][idx], panel_params, dimension
                     )
+
+        self.data = frame.assign(data, **resolved)
 
     def draw(self, layout: Layout, coord: coord):
         """
@@ -466,17 +487,18 @@ class layer:
         coord : coord
             Type of coordinate axes
         """
-        self.data = self.geom.handle_na(self.data)
+        data = frame.to_frame(self.geom.handle_na(frame.to_frame(self.data)))
+        self.data = data
         # At this point each layer must have the data
         # that is created by the plot build process
-        self.geom.draw_layer(self.data, layout, coord)
+        self.geom.draw_layer(data, layout, coord)
 
     def use_defaults(
         self,
-        data: pd.DataFrame,
+        data: DataFrame,
         aes_modifiers: dict[str, Any],
         scales: Scales | None = None,
-    ) -> pd.DataFrame:
+    ) -> DataFrame:
         """
         Prepare/modify data for plotting
 
@@ -488,23 +510,31 @@ class layer:
             Expression to evaluate and replace aesthetics in
             the data.
         """
-        old_columns = data.columns
-        data = self.geom.use_defaults(data, aes_modifiers)
+        data = frame.to_frame(data)
+        old_columns = set(data.columns)
+        data = frame.to_frame(self.geom.use_defaults(data, aes_modifiers))
         if scales is not None:
             # The default aesthetics and the aesthetic parameters are
             # specified in userspace. When we add them we have to
             # transform them.
-            new_columns = data.columns.difference(old_columns)
-            _data = scales.transform_df(self.data[new_columns])
-            for col in new_columns:
-                data[col] = _data[col]
+            new_columns = [
+                c
+                for c in data.columns
+                if c not in old_columns and c not in self.asis
+            ]
+            if new_columns:
+                transformed = frame.to_frame(
+                    scales.transform_df(data.select(new_columns))
+                )
+                data = data.with_columns(transformed[c] for c in new_columns)
         return data
 
     def finish_statistics(self):
         """
         Prepare/modify data for plotting
         """
-        self.stat.finish_layer(self.data)
+        data = self.stat.finish_layer(frame.to_frame(self.data))
+        self.data = frame.to_frame(data)
 
     def update_labels(self, labels: labels_view):
         """
@@ -517,6 +547,30 @@ class layer:
         """
         labels.add_defaults(self.mapping.labels)
         labels.add_defaults(make_labels(self.stat.DEFAULT_AES))
+
+    def _apply_scales(self, func: Callable[[Any], Any]) -> DataFrame:
+        """
+        Apply a function of the scales to the data that is not literal
+
+        Literal (`I()`) columns bypass the scales. They are left out of
+        the data that func gets, and then added back to the result.
+
+        Parameters
+        ----------
+        func :
+            A function that takes a dataframe and returns a dataframe
+            with the same number of rows, e.g. `scales.transform_df`.
+        """
+        data = frame.to_frame(self.data)
+        asis = [c for c in data.columns if c in self.asis]
+        if not asis:
+            return frame.to_frame(func(data))
+
+        result = frame.to_frame(func(data.drop(*asis)))
+        result = nw.concat([result, data.select(asis)], how="horizontal")
+        order = [c for c in data.columns if c in result.columns]
+        order += [c for c in result.columns if c not in order]
+        return result.select(order)
 
 
 class Layers(list[layer]):
@@ -563,7 +617,7 @@ class Layers(list[layer]):
         return result
 
     @property
-    def data(self) -> list[pd.DataFrame]:
+    def data(self) -> list[DataFrame]:
         return [l.data for l in self]
 
     def setup(self, plot: ggplot):
@@ -612,19 +666,21 @@ class Layers(list[layer]):
 
     def use_defaults_after_scale(self, scales: Scales):
         for l in self:
-            l.data = l.use_defaults(l.data, l.mapping._scaled, scales)
+            data = l.use_defaults(l.data, l.mapping._scaled, scales)
+            l.data = data
 
     def transform(self, scales: Scales):
         for l in self:
-            l.data = scales.transform_df(l.data)
+            l.data = l._apply_scales(scales.transform_df)
 
     def train(self, scales: Scales):
         for l in self:
-            scales.train_df(l.data)
+            data = frame.to_frame(l.data)
+            scales.train_df(data.drop(*(l.asis & set(data.columns))))
 
     def map(self, scales: Scales):
         for l in self:
-            l.data = scales.map_df(l.data)
+            l.data = l._apply_scales(scales.map_df)
 
     def finish_statistics(self):
         for l in self:
@@ -643,7 +699,8 @@ class Layers(list[layer]):
             l.update_labels(labels)
 
 
-def add_group(data: pd.DataFrame) -> pd.DataFrame:
+@native_io
+def add_group(data: DataFrame) -> DataFrame:
     """
     Add group to the dataframe
 
@@ -653,7 +710,7 @@ def add_group(data: pd.DataFrame) -> pd.DataFrame:
     if len(data) == 0:
         return data
 
-    if "group" not in data:
+    if "group" not in data.columns:
         # Exclude some "special" aesthetics from contributing towards
         # the grouping.
         # label - geom_text, geom_label
@@ -664,18 +721,17 @@ def add_group(data: pd.DataFrame) -> pd.DataFrame:
         ignore = ["PANEL", "label", "geometry", "where", "subgroup"]
         disc = discrete_columns(data, ignore=ignore)
         if disc:
-            data["group"] = ninteraction(data[disc], drop=True)
+            group = ninteraction(data.select(disc), drop=True)
         else:
-            data["group"] = NO_GROUP
+            group = NO_GROUP
     else:
-        data["group"] = ninteraction(data[["group"]], drop=True)
+        group = ninteraction(data.select("group"), drop=True)
 
-    return data
+    return frame.assign(data, group=group)
 
 
-def discrete_columns(
-    df: pd.DataFrame, ignore: Sequence[str] | pd.Index
-) -> Sequence[str]:
+@native_io
+def discrete_columns(df: DataFrame, ignore: Sequence[str]) -> Sequence[str]:
     """
     Return a list of the discrete columns in the dataframe
 
@@ -687,14 +743,15 @@ def discrete_columns(
         A list|set|tuple with the names of the columns to skip.
     """
     lst = []
-    for col in df:
+    for col in df.columns:
         if array_kind.discrete(df[col]) and (col not in ignore):
             # Some columns are represented as object dtype
             # but may have compound structures as values.
-            try:
-                hash(df[col].iloc[0])
-            except TypeError:
-                continue
+            if df.schema[col] == nw.Object:
+                try:
+                    hash(df[col].item(0))
+                except TypeError:
+                    continue
             lst.append(str(col))
     return lst
 
@@ -859,25 +916,47 @@ def _resolve_position(
     return klass()
 
 
-def _decimal_columns_to_float(data: pd.DataFrame) -> pd.DataFrame:
+def _decimal_columns_to_float(data: DataFrame) -> DataFrame:
     """
-    Cast columns of decimal.Decimal values to float
+    Cast columns of decimal values to float
 
-    polars' `to_pandas()` maps a Decimal column onto a pandas object column
-    holding `decimal.Decimal` values. plotnine treats object columns as
-    discrete, so such a column cannot be used with a continuous scale. Casting
+    A Decimal column or a pandas object column holding
+    `decimal.Decimal` values would be treated as discrete, and
+    such a column could not be used with a continuous scale. Casting
     it to float lets it behave like any other numeric column.
-
-    This runs for every dataframe, so we avoid the expense of `.dropna()`
-    (which builds a filtered copy) and use a mask to peek at the first
-    non-null value instead.
     """
-    for col in data.columns:
-        series = data[col]
-        if series.dtype == object:
-            mask = series.notna()
-            if mask.any() and isinstance(
-                series[cast("int", mask.idxmax())], decimal.Decimal
-            ):
-                data[col] = series.astype("float64")
-    return data
+    cols = []
+    for name, dtype in data.schema.items():
+        if dtype == nw.Decimal:
+            cols.append(name)
+        elif dtype == nw.Object:
+            values = data[name].drop_nulls()
+            if len(values) and isinstance(values.item(0), decimal.Decimal):
+                cols.append(name)
+
+    if not cols:
+        return data
+
+    return data.with_columns(
+        frame.series(
+            [None if v is None else float(v) for v in data[name].to_list()],
+            name,
+            backend=data.implementation,
+            dtype=nw.Float64,
+        )
+        for name in cols
+    )
+
+
+def _plot_backend(plot: ggplot) -> Implementation:
+    """
+    Library of the dataframes that plotnine creates for a plot
+
+    It is the library of the plot data or the first layer with data.
+    """
+    candidates = [plot.data] + [l._data for l in plot.layers]
+    for data in candidates:
+        if data is not None and not callable(data):
+            with suppress(TypeError):
+                return frame.to_frame(data).implementation
+    return frame.default_backend()

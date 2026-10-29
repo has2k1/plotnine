@@ -5,8 +5,8 @@ from typing import TYPE_CHECKING, cast
 from warnings import warn
 
 import numpy as np
-import pandas as pd
 
+from .._utils import frame
 from ..doctools import document
 from ..exceptions import PlotnineError, PlotnineWarning
 from ..mapping.evaluation import after_stat
@@ -149,7 +149,7 @@ class stat_density(stat):
             raise PlotnineError(msg)
 
     def compute_group(self, data, scales):
-        weight = data.get("weight")
+        weight = data["weight"] if "weight" in data.columns else None
 
         if self.params["trim"]:
             range_x = data["x"].min(), data["x"].max()
@@ -159,13 +159,19 @@ class stat_density(stat):
         return compute_density(data["x"], weight, range_x, self.params)
 
 
-def compute_density(x, weight, range, params):
+def compute_density(x, weight, range, params, *, backend=None):
     """
     Compute density
-    """
-    import statsmodels.api as sm
 
-    x = np.asarray(x, dtype=float)
+    The dataframe is of the library `backend`. If None, it is that
+    of `x` if `x` is a series, otherwise it is the default library.
+    """
+    from ._kde import KDEUnivariate
+
+    if backend is None:
+        backend = frame.backend_of(x)
+
+    x = np.asarray(frame.as_numpy(x), dtype=float)
     not_nan = ~np.isnan(x)
     x = x[not_nan]
     bw = cast("str | float", params["bw"])
@@ -185,7 +191,7 @@ def compute_density(x, weight, range, params):
             "Groups with fewer than 2 data points have been removed.",
             PlotnineWarning,
         )
-        return pd.DataFrame()
+        return frame.frame(backend=backend)
 
     # kde is computed efficiently using fft. But the fft does
     # not support weights and is only available with the
@@ -195,17 +201,17 @@ def compute_density(x, weight, range, params):
         if kernel != "gau":
             weight = np.ones(n) / n
     else:
-        weight = np.asarray(weight, dtype=float)
+        weight = np.asarray(frame.as_numpy(weight), dtype=float)
 
     fft = kernel == "gau" and weight is None
 
     if bw == "nrd0":
         bw = nrd0(x)
 
-    kde = sm.nonparametric.KDEUnivariate(x)
+    kde = KDEUnivariate(x)
     kde.fit(
         kernel=kernel,
-        bw=bw,  # type: ignore
+        bw=bw,
         fft=fft,
         weights=weight,
         adjust=params["adjust"],
@@ -224,28 +230,11 @@ def compute_density(x, weight, range, params):
         # Evaluating values beyond the ptp range helps us calculate a
         # boundary corrections. So we widen the range over which we will
         # evaluate, so that it contains all points supported by the grid.
-        x2 = np.linspace(
-            kde.support[0],  # pyright: ignore
-            kde.support[-1],  # pyright: ignore
-            params["n"],
-        )
+        x2 = np.linspace(kde.support[0], kde.support[-1], params["n"])
     else:
         x2 = np.linspace(range[0], range[1], params["n"])
 
-    try:
-        y = kde.evaluate(x2)
-        if np.ndim(y) == 0 and np.isnan(y):
-            raise ValueError("kde.evaluate returned nan")
-    except ValueError:
-        y = []
-        for _x in x2:
-            result = kde.evaluate(_x)
-            if isinstance(result, (float, int)):
-                y.append(result)
-            else:
-                y.append(result[0])
-
-    y = np.asarray(y)
+    y = kde.evaluate(x2)
 
     # Evaluations outside the kernel domain return np.nan,
     # these values and corresponding x2s are dropped.
@@ -258,14 +247,16 @@ def compute_density(x, weight, range, params):
     if has_bounds:
         x2, y = fit_density_to_bounds(x2, y, range, bounds)
 
-    return pd.DataFrame(
+    return frame.frame(
         {
             "x": x2,
             "density": y,
             "scaled": y / np.max(y) if len(y) else [],
             "count": y * n,
             "n": n,
-        }
+        },
+        backend=backend,
+        n=len(x2),
     )
 
 

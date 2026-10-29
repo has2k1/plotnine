@@ -86,8 +86,8 @@ class stat_density_2d_filled(stat_density_2d):
         "subgroup",
     }
 
-    def compute_contours(self, x, y, Z, breaks, group):
+    def compute_contours(self, x, y, Z, breaks, group, *, backend=None):
         """
         Trace each band between neighbouring breaks on an axis-aligned grid
         """
-        return contour_bands(x, y, Z, breaks, group)
+        return contour_bands(x, y, Z, breaks, group, backend=backend)

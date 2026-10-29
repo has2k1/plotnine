@@ -10,13 +10,11 @@ from .coord import coord, dist_euclidean
 if typing.TYPE_CHECKING:
     from typing import Any
 
-    import pandas as pd
-
+    from plotnine._utils.frame import DataFrame
     from plotnine.iapi import scale_position_view
     from plotnine.scales.scale import scale
     from plotnine.typing import (
         FloatArray,
-        FloatSeries,
     )
 
 
@@ -49,14 +47,14 @@ class coord_cartesian(coord):
         self.expand = expand
 
     def transform(
-        self, data: pd.DataFrame, panel_params: panel_view, munch: bool = False
-    ) -> pd.DataFrame:
+        self, data: DataFrame, panel_params: panel_view, munch: bool = False
+    ) -> DataFrame:
         from mizani.bounds import squish_infinite
 
-        def squish_infinite_x(col: FloatSeries) -> FloatArray:
+        def squish_infinite_x(col: FloatArray) -> FloatArray:
             return squish_infinite(col, range=panel_params.x.range)
 
-        def squish_infinite_y(col: FloatSeries) -> FloatArray:
+        def squish_infinite_y(col: FloatArray) -> FloatArray:
             return squish_infinite(col, range=panel_params.y.range)
 
         return transform_position(data, squish_infinite_x, squish_infinite_y)
@@ -94,8 +92,8 @@ class coord_cartesian(coord):
 
     def distance(
         self,
-        x: FloatSeries,
-        y: FloatSeries,
+        x: FloatArray,
+        y: FloatArray,
         panel_params: panel_view,
     ) -> FloatArray:
         max_dist = dist_euclidean(panel_params.x.range, panel_params.y.range)[

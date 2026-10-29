@@ -36,11 +36,19 @@ def test_reorder():
     assert p == "reorder"
 
 
+@pytest.mark.pandas_only
 def test_reorder_index():
     # The dataframe is created with ordering according to the y
     # variable. So the x index should be ordered acc. to y too
     p = ggplot(data, aes("reorder(x, x.index)", "y")) + geom_col()
     assert p == "reorder_index"
+
+
+def test_reorder_row_order():
+    # Like test_reorder_index, but without the index (which only
+    # pandas has)
+    p = ggplot(data, aes("reorder(x, np.arange(len(x)))", "y")) + geom_col()
+    assert p == "reorder_row_order"
 
 
 def test_labels_series():

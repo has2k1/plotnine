@@ -19,8 +19,6 @@ from .._utils import array_kind
 if typing.TYPE_CHECKING:
     from typing import Any, Literal
 
-    import pandas as pd
-
     from plotnine.typing import FloatArray
 
 
@@ -72,11 +70,11 @@ def kde_statsmodels_u(
     out : numpy.array
         Density estimate. Has `m x 1` dimensions
     """
-    from statsmodels.nonparametric.kde import KDEUnivariate
+    from ._kde import KDEUnivariate
 
     kde = KDEUnivariate(data)
     kde.fit(**kwargs)
-    return kde.evaluate(grid)  # type: ignore
+    return kde.evaluate(grid)
 
 
 def kde_statsmodels_m(
@@ -101,6 +99,11 @@ def kde_statsmodels_m(
     out :
         Density estimate. Has `m x 1` dimensions
     """
+    from ._kde import can_use_multivariate, kde_multivariate
+
+    if can_use_multivariate(kwargs):
+        return kde_multivariate(data, grid, **kwargs)
+
     from statsmodels.nonparametric.kernel_density import KDEMultivariate
 
     kde = KDEMultivariate(data, **kwargs)
@@ -215,7 +218,7 @@ def kde(
     return func(data, grid, **kwargs)
 
 
-def get_var_type(col: pd.Series) -> Literal["c", "o", "u"]:
+def get_var_type(col: Any) -> Literal["c", "o", "u"]:
     """
     Return var_type (for KDEMultivariate) of the column
 
@@ -239,7 +242,7 @@ def get_var_type(col: pd.Series) -> Literal["c", "o", "u"]:
     if array_kind.continuous(col):
         return "c"
     elif array_kind.discrete(col):
-        return "o" if array_kind.ordinal else "u"
+        return "o" if array_kind.ordinal(col) else "u"
     else:
         # unordered if unsure
         return "u"

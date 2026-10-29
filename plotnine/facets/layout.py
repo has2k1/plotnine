@@ -3,18 +3,15 @@ from __future__ import annotations
 import typing
 from contextlib import suppress
 
-import numpy as np
-
-from .._utils import match
+from .._utils import frame, match
 from ..exceptions import PlotnineError
 from ..iapi import labels_view, layout_details, pos_scales
-from ..mapping._asis import asis_columns
 
 if typing.TYPE_CHECKING:
-    import pandas as pd
     from matplotlib.axes import Axes
 
     from plotnine import ggplot
+    from plotnine._utils.frame import DataFrame
     from plotnine.coords.coord import coord
     from plotnine.facets.facet import facet
     from plotnine.iapi import panel_view
@@ -34,7 +31,7 @@ class Layout:
     coord: coord
 
     # A dataframe with the layout information of the plot
-    layout: pd.DataFrame
+    layout: DataFrame
 
     # List of x scales
     panel_scales_x: Scales
@@ -61,7 +58,7 @@ class Layout:
         column `PANEL` that indicates the panel onto which each
         data row/item will be plotted.
         """
-        data = [l.data for l in layers]
+        data = [frame.to_frame(l.data) for l in layers]
 
         # setup facets
         self.facet = plot.facet
@@ -75,13 +72,15 @@ class Layout:
 
         # Generate panel layout
         data = self.facet.setup_data(data)
-        self.layout = self.facet.compute_layout(data, plot.scales)
-        self.layout = self.coord.setup_layout(self.layout)
+        self.layout = frame.to_frame(
+            self.facet.compute_layout(data, plot.scales)
+        )
+        self.layout = frame.to_frame(self.coord.setup_layout(self.layout))
         self.check_layout()
 
         # Map the data to the panels
         for layer, ldata in zip(layers, data):
-            layer.data = self.facet.map(ldata, self.layout)
+            layer.data = frame.to_frame(self.facet.map(ldata, self.layout))
 
     def train_position(self, layers: Layers, scales: Scales):
         """
@@ -118,32 +117,28 @@ class Layout:
         The real mapping is handled by the scale.map
         """
         _layout = self.layout
+        layout_panels = _layout["PANEL"].to_list()
 
         for layer in layers:
             data = layer.data
-            asis = asis_columns(data)
-            match_id = match(data["PANEL"], _layout["PANEL"])
+            columns = set(frame.to_frame(data).columns)
+            asis = layer.asis
+            match_id = match(frame.as_numpy(data["PANEL"]), layout_panels)
             if self.panel_scales_x:
                 x_vars = list(
-                    (
-                        set(self.panel_scales_x[0].aesthetics)
-                        & set(data.columns)
-                    )
-                    - asis
+                    (set(self.panel_scales_x[0].aesthetics) & columns) - asis
                 )
-                SCALE_X = _layout["SCALE_X"].iloc[match_id].tolist()
-                self.panel_scales_x.map(data, x_vars, SCALE_X)
+                SCALE_X = _layout["SCALE_X"].to_numpy()[match_id].tolist()
+                data = self.panel_scales_x.map(data, x_vars, SCALE_X)
 
             if self.panel_scales_y:
                 y_vars = list(
-                    (
-                        set(self.panel_scales_y[0].aesthetics)
-                        & set(data.columns)
-                    )
-                    - asis
+                    (set(self.panel_scales_y[0].aesthetics) & columns) - asis
                 )
-                SCALE_Y = _layout["SCALE_Y"].iloc[match_id].tolist()
-                self.panel_scales_y.map(data, y_vars, SCALE_Y)
+                SCALE_Y = _layout["SCALE_Y"].to_numpy()[match_id].tolist()
+                data = self.panel_scales_y.map(data, y_vars, SCALE_Y)
+
+            layer.data = data
 
     def get_scales(self, i: int) -> pos_scales:
         """
@@ -161,14 +156,12 @@ class Layout:
           for the y scale of the panel
 
         """
-        # wrapping with np.asarray prevents an exception
-        # on some datasets
-        bool_idx = np.asarray(self.layout["PANEL"]) == i
+        pos = self.layout["PANEL"].to_list().index(i)
 
-        idx = self.layout["SCALE_X"].loc[bool_idx].iloc[0]
+        idx = self.layout["SCALE_X"].item(pos)
         xsc = self.panel_scales_x[idx - 1]
 
-        idx = self.layout["SCALE_Y"].loc[bool_idx].iloc[0]
+        idx = self.layout["SCALE_Y"].item(pos)
         ysc = self.panel_scales_y[idx - 1]
 
         return pos_scales(x=xsc, y=ysc)
@@ -202,8 +195,9 @@ class Layout:
             raise PlotnineError("Missing a y scale")
 
         self.panel_params = []
-        cols = ["SCALE_X", "SCALE_Y"]
-        for i, j in self.layout[cols].itertuples(index=False):
+        scale_x = self.layout["SCALE_X"].to_list()
+        scale_y = self.layout["SCALE_Y"].to_list()
+        for i, j in zip(scale_x, scale_y):
             i, j = i - 1, j - 1
             params = coord.setup_panel_params(
                 self.panel_scales_x[i], self.panel_scales_y[j]
@@ -224,8 +218,7 @@ class Layout:
 
     def check_layout(self):
         required = {"PANEL", "SCALE_X", "SCALE_Y"}
-        common = self.layout.columns.intersection(list(required))
-        if len(required) != len(common):
+        if not required.issubset(self.layout.columns):
             raise PlotnineError(
                 "Facet layout has bad format. It must contain "
                 f"the columns '{required}'"
@@ -304,13 +297,13 @@ class Layout:
             "AXIS_X_SEC",
             "AXIS_Y_SEC",
         ]
-        vcols = self.layout.columns.difference(columns)
+        vcols = sorted(set(self.layout.columns) - set(columns))
         lst = []
         nrow = self.layout["ROW"].max()
         ncol = self.layout["COL"].max()
-        for pidx, row in self.layout.iterrows():
+        for pidx, row in enumerate(self.layout.iter_rows(named=True)):
             ld = layout_details(
-                panel_index=pidx,  # type: ignore
+                panel_index=pidx,
                 nrow=nrow,
                 ncol=ncol,
                 variables={name: row[name] for name in vcols},

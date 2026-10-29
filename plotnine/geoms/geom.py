@@ -10,6 +10,7 @@ import numpy as np
 
 from .._utils import (
     data_mapping_as_kwargs,
+    frame,
     remove_missing,
 )
 from .._utils.registry import Register, _MergedDefaultParams
@@ -21,11 +22,11 @@ from ..mapping.evaluation import evaluate
 if TYPE_CHECKING:
     from typing import Any
 
-    import pandas as pd
     from matplotlib.axes import Axes
     from matplotlib.offsetbox import DrawingArea
 
     from plotnine import aes, ggplot
+    from plotnine._utils.frame import DataFrame
     from plotnine.coords.coord import coord
     from plotnine.facets.layout import Layout
     from plotnine.iapi import panel_view
@@ -144,7 +145,7 @@ class geom(ABC, metaclass=Register):
 
         return result
 
-    def setup_params(self, data: pd.DataFrame):
+    def setup_params(self, data: DataFrame):
         """
         Override this method to verify and/or adjust parameters
 
@@ -154,7 +155,7 @@ class geom(ABC, metaclass=Register):
             Data
         """
 
-    def setup_aes_params(self, data: pd.DataFrame):
+    def setup_aes_params(self, data: DataFrame):
         """
         Override this method to verify and/or adjust aesthetic parameters
 
@@ -164,7 +165,7 @@ class geom(ABC, metaclass=Register):
             Data
         """
 
-    def setup_data(self, data: pd.DataFrame) -> pd.DataFrame:
+    def setup_data(self, data: DataFrame) -> DataFrame:
         """
         Modify the data before drawing takes place
 
@@ -198,8 +199,8 @@ class geom(ABC, metaclass=Register):
         return data
 
     def use_defaults(
-        self, data: pd.DataFrame, aes_modifiers: dict[str, Any]
-    ) -> pd.DataFrame:
+        self, data: DataFrame, aes_modifiers: dict[str, Any]
+    ) -> DataFrame:
         """
         Combine data with defaults and set aesthetics from parameters
 
@@ -223,55 +224,62 @@ class geom(ABC, metaclass=Register):
         missing_aes = (
             self.DEFAULT_AES.keys()
             - self.aes_params.keys()
-            - set(data.columns.to_list())
+            - set(data.columns)
         )
 
         # Not in data and not set, use default
-        for ae in missing_aes:
-            data[ae] = self.DEFAULT_AES[ae]
+        data = frame.assign(
+            data, **{ae: self.DEFAULT_AES[ae] for ae in sorted(missing_aes)}
+        )
 
         # Evaluate/Modify the mapped aesthetics
         evaled = evaluate(aes_modifiers, data, self.environment)
-        for ae in evaled.columns.intersection(data.columns):
-            data[ae] = evaled[ae]
+        modified = [ae for ae in evaled.columns if ae in data.columns]
+        if modified:
+            data = data.with_columns(evaled[ae] for ae in modified)
 
         n = len(data)
-        num_panels = len(data["PANEL"].unique()) if "PANEL" in data else 1
+        num_panels = data["PANEL"].n_unique() if "PANEL" in data.columns else 1
         across_panels = num_panels > 1 and not self.params["inherit_aes"]
 
         # Aesthetics set as parameters in the geom/stat
+        params = {}
         for ae, value in self.aes_params.items():
             if isinstance(value, (str, int, float, np.integer, np.floating)):
-                data[ae] = value
+                params[ae] = value
             elif isinstance(value, ae_value):
-                data[ae] = value * len(data)
+                params[ae] = value * n
             elif is_asis(value):
-                # Preserve the dtype tag when repeating a literal parameter
-                # so position fractions remain available for later resolution.
-                data[ae] = np.repeat(value, n) if len(value) == 1 else value
+                # The layer records literal parameters, so position
+                # fractions remain available for later resolution.
+                values = value.to_numpy()
+                params[ae] = (
+                    np.repeat(values, n) if len(values) == 1 else values
+                )
             elif across_panels:
-                value = list(chain(*repeat(value, num_panels)))
-                data[ae] = value
+                params[ae] = list(chain(*repeat(value, num_panels)))
             else:
                 # Try to make sense of aesthetics whose values can be tuples
                 # or sequences of sorts.
                 with suppress(ValueError):
-                    data[ae] = broadcast_ae_value(value, ae, len(data))
+                    params[ae] = broadcast_ae_value(value, ae, n)
                     continue
 
                 # This should catch the aesthetic assignments to
                 # non-numeric or non-string values or sequence of values.
                 # e.g. x=datetime, x=Sequence[datetime],
                 #      x=Sequence[float], shape=Sequence[str]
-                try:
-                    data[ae] = value
-                except ValueError as e:
-                    msg = f"'{ae}={value}' does not look like a valid value"
-                    raise PlotnineError(msg) from e
+                params[ae] = value
 
-        return data
+        try:
+            return frame.assign(data, **params)
+        except (ValueError, TypeError) as e:
+            msg = (
+                f"Aesthetic parameters {self.aes_params} are not valid values"
+            )
+            raise PlotnineError(msg) from e
 
-    def draw_layer(self, data: pd.DataFrame, layout: Layout, coord: coord):
+    def draw_layer(self, data: DataFrame, layout: Layout, coord: coord):
         """
         Draw layer across all panels
 
@@ -291,17 +299,17 @@ class geom(ABC, metaclass=Register):
             includes the stacking order of the layer in
             the plot (*zorder*)
         """
-        for pid, pdata in data.groupby("PANEL", observed=True):
+        for _, pdata in frame.group_split(data, "PANEL"):
             if len(pdata) == 0:
                 continue
-            ploc = pdata["PANEL"].iloc[0] - 1
+            ploc = pdata["PANEL"].item(0) - 1
             panel_params = layout.panel_params[ploc]
             ax = layout.axs[ploc]
             self.draw_panel(pdata, panel_params, coord, ax)
 
     def draw_panel(
         self,
-        data: pd.DataFrame,
+        data: DataFrame,
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
@@ -336,13 +344,12 @@ class geom(ABC, metaclass=Register):
             Combined parameters for the geom and stat. Also
             includes the `zorder`.
         """
-        for _, gdata in data.groupby("group"):
-            gdata = gdata.reset_index(drop=True)
+        for _, gdata in frame.group_split(data, "group"):
             self.draw_group(gdata, panel_params, coord, ax, self.params)
 
     @staticmethod
     def draw_group(
-        data: pd.DataFrame,
+        data: DataFrame,
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
@@ -379,7 +386,7 @@ class geom(ABC, metaclass=Register):
 
     @staticmethod
     def draw_unit(
-        data: pd.DataFrame,
+        data: DataFrame,
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
@@ -450,7 +457,7 @@ class geom(ABC, metaclass=Register):
         other += layer(geom=self)
         return other
 
-    def handle_na(self, data: pd.DataFrame) -> pd.DataFrame:
+    def handle_na(self, data: DataFrame) -> DataFrame:
         """
         Remove rows with NaN values
 
@@ -483,7 +490,7 @@ class geom(ABC, metaclass=Register):
 
     @staticmethod
     def draw_legend(
-        data: pd.Series[Any], da: DrawingArea, lyr: layer
+        data: dict[str, Any], da: DrawingArea, lyr: layer
     ) -> DrawingArea:
         """
         Draw a rectangle in the box
@@ -491,7 +498,8 @@ class geom(ABC, metaclass=Register):
         Parameters
         ----------
         data :
-            A row of the data plotted to this layer
+            A row of the data plotted to this layer. It maps the
+            column names to the values.
         da :
             Canvas on which to draw
         lyr :
@@ -507,7 +515,7 @@ class geom(ABC, metaclass=Register):
 
     @staticmethod
     def legend_key_size(
-        data: pd.Series[Any], min_size: tuple[int, int], lyr: layer
+        data: dict[str, Any], min_size: tuple[int, int], lyr: layer
     ) -> tuple[int, int]:
         """
         Calculate the size of key that would fit the layer contents

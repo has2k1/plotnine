@@ -6,14 +6,13 @@ from typing import TYPE_CHECKING, cast
 from warnings import warn
 
 import numpy as np
-import pandas as pd
 from mizani.bounds import censor, expand_range_distinct, rescale, zero_range
 from mizani.palettes import identity_pal
 
-from .._utils import match
+from .._utils import frame, match
+from .._utils.frame import native_io
 from ..exceptions import PlotnineError, PlotnineWarning
 from ..iapi import range_view, scale_view
-from ..mapping._asis import is_asis
 from ._expand import expand_range
 from ._runtime_typing import (
     ContinuousBreaksUser,
@@ -31,6 +30,7 @@ if TYPE_CHECKING:
     from mizani.transforms import trans
     from mizani.typing import PCensor, PRescale
 
+    from plotnine._utils.frame import DataFrame
     from plotnine.typing import (
         CoordRange,
         FloatArrayLike,
@@ -210,23 +210,19 @@ class scale_continuous(
 
         self._range.train(x)
 
-    def transform_df(self, df: pd.DataFrame) -> pd.DataFrame:
+    @native_io
+    def transform_df(self, df: DataFrame) -> DataFrame:
         """
         Transform dataframe
         """
         if len(df) == 0:
             return df
 
-        aesthetics = {
-            ae
-            for ae in set(self.aesthetics) & set(df.columns)
-            if not is_asis(df[ae])
-        }
-        for ae in aesthetics:
+        transformed = {}
+        for ae in sorted(set(self.aesthetics) & set(df.columns)):
             with suppress(TypeError):
-                df[ae] = self.transform(df[ae])
-
-        return df
+                transformed[ae] = self.transform(frame.scale_values(df[ae]))
+        return frame.assign(df, **transformed)
 
     def transform(self, x: TFloatArrayLike) -> TFloatArrayLike:
         """
@@ -234,23 +230,19 @@ class scale_continuous(
         """
         return self._trans.transform(x)
 
-    def inverse_df(self, df):
+    @native_io
+    def inverse_df(self, df: DataFrame) -> DataFrame:
         """
         Inverse Transform dataframe
         """
         if len(df) == 0:
             return df
 
-        aesthetics = {
-            ae
-            for ae in set(self.aesthetics) & set(df.columns)
-            if not is_asis(df[ae])
-        }
-        for ae in aesthetics:
+        inverted = {}
+        for ae in sorted(set(self.aesthetics) & set(df.columns)):
             with suppress(TypeError):
-                df[ae] = self.inverse(df[ae])
-
-        return df
+                inverted[ae] = self.inverse(frame.scale_values(df[ae]))
+        return frame.assign(df, **inverted)
 
     def inverse(self, x: TFloatArrayLike) -> TFloatArrayLike:
         """
@@ -395,7 +387,7 @@ class scale_continuous(
         if limits is None:
             limits = self.final_limits
 
-        x = self.oob(self.rescaler(x, _from=limits))
+        x = self.oob(self.rescaler(frame.as_numpy(x), _from=limits))
         na_value = cast("float", self.na_value)
 
         uniq = np.unique(x)
@@ -404,7 +396,8 @@ class scale_continuous(
         if scaled.dtype.kind == "U":
             scaled = [na_value if x == "nan" else x for x in scaled]
         else:
-            scaled[pd.isna(scaled)] = na_value
+            if (missing := frame.isna(scaled)).any():
+                scaled[missing] = na_value
         return scaled
 
     def get_breaks(

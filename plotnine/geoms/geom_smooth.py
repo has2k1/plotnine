@@ -2,7 +2,9 @@ from __future__ import annotations
 
 import typing
 
-from .._utils import to_rgba
+import narwhals as nw
+
+from .._utils import frame, to_rgba
 from ..doctools import document
 from .geom import geom
 from .geom_line import geom_line, geom_path
@@ -11,10 +13,10 @@ from .geom_ribbon import geom_ribbon
 if typing.TYPE_CHECKING:
     from typing import Any
 
-    import pandas as pd
     from matplotlib.axes import Axes
     from matplotlib.offsetbox import DrawingArea
 
+    from plotnine._utils.frame import DataFrame
     from plotnine.coords.coord import coord
     from plotnine.iapi import panel_view
     from plotnine.layer import layer
@@ -55,44 +57,41 @@ class geom_smooth(geom):
     legend_key_size = staticmethod(geom_path.legend_key_size)
 
     def use_defaults(
-        self, data: pd.DataFrame, aes_modifiers: dict[str, Any]
-    ) -> pd.DataFrame:
-        has_ribbon = "ymin" in data and "ymax" in data
+        self, data: DataFrame, aes_modifiers: dict[str, Any]
+    ) -> DataFrame:
+        has_ribbon = "ymin" in data.columns and "ymax" in data.columns
         data = super().use_defaults(data, aes_modifiers)
-
         # When there is no ribbon, the default values for 'ymin'
-        # and 'ymax' are None (not numeric). So we remove them
-        # prevent any computations that may use them without checking.
+        # and 'ymax' are None (not numeric). So we remove those
+        # so that this geom does not train the y scale.
         if not has_ribbon:
-            del data["ymin"]
-            del data["ymax"]
+            data = data.drop("ymin", "ymax")
         return data
 
-    def setup_data(self, data: pd.DataFrame) -> pd.DataFrame:
-        return data.sort_values(["PANEL", "group", "x"])
+    def setup_data(self, data: DataFrame) -> DataFrame:
+        return frame.sort(data, ["PANEL", "group", "x"])
 
     @staticmethod
     def draw_group(
-        data: pd.DataFrame,
+        data: DataFrame,
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
         params: dict[str, Any],
     ):
-        has_ribbon = "ymin" in data and "ymax" in data
+        has_ribbon = "ymin" in data.columns and "ymax" in data.columns
         if has_ribbon:
-            data2 = data.copy()
-            data2["color"] = "none"
+            data2 = data.with_columns(color=nw.lit("none"))
             params2 = params.copy()
             params2["outline_type"] = "full"
             geom_ribbon.draw_group(data2, panel_params, coord, ax, params2)
 
-        data["alpha"] = 1
+        data = data.with_columns(alpha=nw.lit(1))
         geom_line.draw_group(data, panel_params, coord, ax, params)
 
     @staticmethod
     def draw_legend(
-        data: pd.Series[Any], da: DrawingArea, lyr: layer
+        data: dict[str, Any], da: DrawingArea, lyr: layer
     ) -> DrawingArea:
         """
         Draw letter 'a' in the box

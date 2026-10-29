@@ -1,6 +1,6 @@
 import numpy as np
-import pandas as pd
 
+from .._utils import frame
 from ..doctools import document
 from .stat import stat
 
@@ -49,16 +49,17 @@ class stat_hull(stat):
     def compute_group(self, data, scales):
         from scipy.spatial import ConvexHull
 
+        x, y = frame.to_numpy(data["x"]), frame.to_numpy(data["y"])
         hull = ConvexHull(
-            data[["x", "y"]], qhull_options=self.params["qhull_options"]
+            np.column_stack([x, y]), qhull_options=self.params["qhull_options"]
         )
         idx = np.hstack([hull.vertices, hull.vertices[0]])
 
-        new_data = pd.DataFrame(
+        return frame.frame_like(
+            data,
             {
-                "x": data["x"].iloc[idx].to_numpy(),
-                "y": data["y"].iloc[idx].to_numpy(),
+                "x": x[idx],
+                "y": y[idx],
                 "area": hull.area,
-            }
+            },
         )
-        return new_data

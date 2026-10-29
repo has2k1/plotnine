@@ -5,9 +5,9 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 import numpy as np
-import pandas as pd
 from mizani.bounds import rescale
 
+from .._utils import frame
 from ..scales.scale_binned import _BinIntervals, scale_binned
 from .guide_colorbar import (
     GuideElementsColorbar,
@@ -66,18 +66,21 @@ class guide_colorsteps(guide_colorbar):
             side="left",
         )
         color_indexes = np.clip(color_indexes, 1, len(colors)) - 1
-        self.key = pd.DataFrame(
+        backend = frame.default_backend()
+        self.key = frame.frame(
             {
                 aesthetic: np.asarray(colors, dtype=object)[color_indexes],
                 "label": labels,
                 "value": ticks,
-            }
+            },
+            backend=backend,
         )
-        self.bar = pd.DataFrame(
+        self.bar = frame.frame(
             {
                 "color": colors,
                 "value": self._intervals.midpoints,
-            }
+            },
+            backend=backend,
         )
 
         info = "\n".join(
@@ -99,7 +102,7 @@ class guide_colorsteps(guide_colorbar):
         return self._intervals.get_breaks(show_limits)
 
     def _tick_locations(self, elements: GuideElementsColorbar) -> np.ndarray:
-        values = self.key["value"].to_numpy()
+        values = frame.to_numpy(self.key["value"])
         if self.even_steps:
             indexes = np.searchsorted(self._intervals.boundaries, values)
             locations = indexes / (len(self._intervals.boundaries) - 1)

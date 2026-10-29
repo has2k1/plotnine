@@ -1,31 +1,34 @@
 from __future__ import annotations
 
 import warnings
+from collections.abc import Callable
 from contextlib import suppress
-from typing import TYPE_CHECKING, cast
+from typing import TYPE_CHECKING, Any, cast
 
 import numpy as np
-import pandas as pd
 
-from .._utils import get_valid_kwargs
+from .._utils import frame, get_valid_kwargs
 from ..exceptions import PlotnineError, PlotnineWarning
+from ._ols import add_constant, fit_least_squares
+from .stat import as_frame_of
 
 if TYPE_CHECKING:
     from collections.abc import Callable
 
     import statsmodels.api as sm
 
+    from plotnine._utils.frame import DataFrame
     from plotnine.typing import FloatArray
 
 
-def predictdf(data, xseq, params) -> pd.DataFrame:
+def predictdf(data, xseq, params) -> DataFrame:
     """
     Make prediction on the data
 
     This is a general function responsible for dispatching
     to functions that do predictions for the specific models.
     """
-    methods: dict[str, Callable[..., pd.DataFrame]] = {
+    methods: dict[str, Callable[..., DataFrame]] = {
         "lm": lm,
         "ols": lm,
         "wls": lm,
@@ -38,7 +41,7 @@ def predictdf(data, xseq, params) -> pd.DataFrame:
         "gpr": gpr,
     }
 
-    method = cast("str | Callable[..., pd.DataFrame]", params["method"])
+    method = cast("str | Callable[..., DataFrame]", params["method"])
 
     if isinstance(method, str):
         try:
@@ -54,65 +57,88 @@ def predictdf(data, xseq, params) -> pd.DataFrame:
         )
         raise PlotnineError(msg)
 
-    return method(data, xseq, params)
+    if method in methods.values():
+        return method(data, xseq, params)
+
+    # A method from the user gets a native dataframe
+    return as_frame_of(method(data.to_native(), xseq, params), data)
 
 
-def lm(data, xseq, params) -> pd.DataFrame:
+def _xyw(data: DataFrame) -> tuple[FloatArray, FloatArray, FloatArray | None]:
+    """
+    The x, y and weight values of the data
+    """
+    x = frame.to_numpy(data["x"])
+    y = frame.to_numpy(data["y"])
+    w = frame.to_numpy(data["weight"]) if "weight" in data.columns else None
+    return x, y, w
+
+
+def _values(data: DataFrame) -> dict[str, Any]:
+    """
+    The columns of the data as numpy arrays
+
+    The statsmodels formulas can use them.
+    """
+    return {c: frame.to_numpy(data[c]) for c in data.columns}
+
+
+def lm(data, xseq, params) -> DataFrame:
     """
     Fit OLS / WLS if data has weight
     """
-    import statsmodels.api as sm
-
     if params["formula"]:
         return lm_formula(data, xseq, params)
 
-    X = sm.add_constant(data["x"])
-    Xseq = sm.add_constant(xseq)
-    weights = data.get("weight", None)
+    x, y, weights = _xyw(data)
+    if weights is not None and np.any(weights < 0):
+        raise ValueError("All weights must be greater than zero.")
 
-    if weights is None:
+    X = add_constant(x)
+    Xseq = add_constant(xseq)
+
+    if params["method_args"]:
+        # Arguments for the statsmodels model
+        sm = _import_statsmodels("lm", "with method_args")
+        klass = sm.OLS if weights is None else sm.WLS
         init_kwargs, fit_kwargs = separate_method_kwargs(
-            params["method_args"], sm.OLS, sm.OLS.fit
+            params["method_args"], klass, klass.fit
         )
-        model = sm.OLS(data["y"], X, **init_kwargs)
+        if weights is not None:
+            init_kwargs["weights"] = weights
+        results = klass(y, X, **init_kwargs).fit(**fit_kwargs)
     else:
-        if np.any(weights < 0):
-            raise ValueError("All weights must be greater than zero.")
-        init_kwargs, fit_kwargs = separate_method_kwargs(
-            params["method_args"], sm.WLS, sm.WLS.fit
-        )
-        model = sm.WLS(data["y"], X, weights=data["weight"], **init_kwargs)
+        results = fit_least_squares(y, X, weights)
 
-    results = model.fit(**fit_kwargs)
-    data = pd.DataFrame({"x": xseq})
-    data["y"] = results.predict(Xseq)
+    res = {"x": xseq, "y": results.predict(Xseq)}
 
     if params["se"]:
         alpha = 1 - params["level"]
         prstd, iv_l, iv_u = wls_prediction_std(results, Xseq, alpha=alpha)
-        data["se"] = prstd
-        data["ymin"] = iv_l
-        data["ymax"] = iv_u
+        res["se"] = prstd
+        res["ymin"] = iv_l
+        res["ymax"] = iv_u
 
-    return data
+    return frame.frame_like(data, res)
 
 
-def lm_formula(data, xseq, params) -> pd.DataFrame:
+def lm_formula(data, xseq, params) -> DataFrame:
     """
     Fit OLS / WLS using a formula
     """
-    import statsmodels.api as sm
+    sm = _import_statsmodels("lm")
     import statsmodels.formula.api as smf
 
     eval_env = params["environment"].to_patsy_env()
     formula = params["formula"]
-    weights = data.get("weight", None)
+    values = _values(data)
+    weights = values.get("weight", None)
 
     if weights is None:
         init_kwargs, fit_kwargs = separate_method_kwargs(
             params["method_args"], sm.OLS, sm.OLS.fit
         )
-        model = smf.ols(formula, data, eval_env=eval_env, **init_kwargs)
+        model = smf.ols(formula, values, eval_env=eval_env, **init_kwargs)
     else:
         if np.any(weights < 0):
             raise ValueError("All weights must be greater than zero.")
@@ -120,47 +146,45 @@ def lm_formula(data, xseq, params) -> pd.DataFrame:
             params["method_args"], sm.OLS, sm.OLS.fit
         )
         model = smf.wls(
-            formula, data, weights=weights, eval_env=eval_env, **init_kwargs
+            formula, values, weights=weights, eval_env=eval_env, **init_kwargs
         )
 
     results = model.fit(**fit_kwargs)
-    data = pd.DataFrame({"x": xseq})
-    data["y"] = results.predict(data)
+    res = {"x": xseq}
+    res["y"] = np.asarray(results.predict(res))
 
     if params["se"]:
         from patsy import dmatrices  # pyright: ignore
 
-        _, predictors = dmatrices(formula, data, eval_env=eval_env)
+        _, predictors = dmatrices(formula, res, eval_env=eval_env)
         alpha = 1 - params["level"]
         prstd, iv_l, iv_u = wls_prediction_std(
             results, predictors, alpha=alpha
         )
-        data["se"] = prstd
-        data["ymin"] = iv_l
-        data["ymax"] = iv_u
-    return data
+        res["se"] = prstd
+        res["ymin"] = iv_l
+        res["ymax"] = iv_u
+    return frame.frame_like(data, res)
 
 
-def rlm(data, xseq, params) -> pd.DataFrame:
+def rlm(data, xseq, params) -> DataFrame:
     """
     Fit RLM
     """
-    import statsmodels.api as sm
+    sm = _import_statsmodels("rlm")
 
     if params["formula"]:
         return rlm_formula(data, xseq, params)
 
-    X = sm.add_constant(data["x"])
+    x, y, _ = _xyw(data)
+    X = sm.add_constant(x)
     Xseq = sm.add_constant(xseq)
 
     init_kwargs, fit_kwargs = separate_method_kwargs(
         params["method_args"], sm.RLM, sm.RLM.fit
     )
-    model = sm.RLM(data["y"], X, **init_kwargs)
+    model = sm.RLM(y, X, **init_kwargs)
     results = model.fit(**fit_kwargs)
-
-    data = pd.DataFrame({"x": xseq})
-    data["y"] = results.predict(Xseq)
 
     if params["se"]:
         warnings.warn(
@@ -168,14 +192,14 @@ def rlm(data, xseq, params) -> pd.DataFrame:
             PlotnineWarning,
         )
 
-    return data
+    return frame.frame_like(data, {"x": xseq, "y": results.predict(Xseq)})
 
 
-def rlm_formula(data, xseq, params) -> pd.DataFrame:
+def rlm_formula(data, xseq, params) -> DataFrame:
     """
     Fit RLM using a formula
     """
-    import statsmodels.api as sm
+    sm = _import_statsmodels("rlm")
     import statsmodels.formula.api as smf
 
     eval_env = params["environment"].to_patsy_env()
@@ -183,10 +207,9 @@ def rlm_formula(data, xseq, params) -> pd.DataFrame:
     init_kwargs, fit_kwargs = separate_method_kwargs(
         params["method_args"], sm.RLM, sm.RLM.fit
     )
-    model = smf.rlm(formula, data, eval_env=eval_env, **init_kwargs)
+    model = smf.rlm(formula, _values(data), eval_env=eval_env, **init_kwargs)
     results = model.fit(**fit_kwargs)
-    data = pd.DataFrame({"x": xseq})
-    data["y"] = results.predict(data)
+    y = np.asarray(results.predict({"x": xseq}))
 
     if params["se"]:
         warnings.warn(
@@ -194,45 +217,44 @@ def rlm_formula(data, xseq, params) -> pd.DataFrame:
             PlotnineWarning,
         )
 
-    return data
+    return frame.frame_like(data, {"x": xseq, "y": y})
 
 
-def gls(data, xseq, params) -> pd.DataFrame:
+def gls(data, xseq, params) -> DataFrame:
     """
     Fit GLS
     """
-    import statsmodels.api as sm
+    sm = _import_statsmodels("gls")
 
     if params["formula"]:
         return gls_formula(data, xseq, params)
 
-    X = sm.add_constant(data["x"])
+    x, y, _ = _xyw(data)
+    X = sm.add_constant(x)
     Xseq = sm.add_constant(xseq)
 
     init_kwargs, fit_kwargs = separate_method_kwargs(
         params["method_args"], sm.OLS, sm.OLS.fit
     )
-    model = sm.GLS(data["y"], X, **init_kwargs)
+    model = sm.GLS(y, X, **init_kwargs)
     results = model.fit(**fit_kwargs)
-
-    data = pd.DataFrame({"x": xseq})
-    data["y"] = results.predict(Xseq)
+    res = {"x": xseq, "y": results.predict(Xseq)}
 
     if params["se"]:
         alpha = 1 - params["level"]
         prstd, iv_l, iv_u = wls_prediction_std(results, Xseq, alpha=alpha)
-        data["se"] = prstd
-        data["ymin"] = iv_l
-        data["ymax"] = iv_u
+        res["se"] = prstd
+        res["ymin"] = iv_l
+        res["ymax"] = iv_u
 
-    return data
+    return frame.frame_like(data, res)
 
 
 def gls_formula(data, xseq, params):
     """
     Fit GLL using a formula
     """
-    import statsmodels.api as sm
+    sm = _import_statsmodels("gls")
     import statsmodels.formula.api as smf
 
     eval_env = params["environment"].to_patsy_env()
@@ -240,37 +262,53 @@ def gls_formula(data, xseq, params):
     init_kwargs, fit_kwargs = separate_method_kwargs(
         params["method_args"], sm.GLS, sm.GLS.fit
     )
-    model = smf.gls(formula, data, eval_env=eval_env, **init_kwargs)
+    model = smf.gls(formula, _values(data), eval_env=eval_env, **init_kwargs)
     results = model.fit(**fit_kwargs)
-    data = pd.DataFrame({"x": xseq})
-    data["y"] = results.predict(data)
+    res = {"x": xseq}
+    res["y"] = np.asarray(results.predict(res))
 
     if params["se"]:
         from patsy import dmatrices  # pyright: ignore
 
-        _, predictors = dmatrices(formula, data, eval_env=eval_env)
+        _, predictors = dmatrices(formula, res, eval_env=eval_env)
         alpha = 1 - params["level"]
         prstd, iv_l, iv_u = wls_prediction_std(
             results, predictors, alpha=alpha
         )
-        data["se"] = prstd
-        data["ymin"] = iv_l
-        data["ymax"] = iv_u
-    return data
+        res["se"] = prstd
+        res["ymin"] = iv_l
+        res["ymax"] = iv_u
+    return frame.frame_like(data, res)
 
 
-def glm(data, xseq, params) -> pd.DataFrame:
+def glm(data, xseq, params) -> DataFrame:
     """
     Fit GLM
     """
-    import statsmodels.api as sm
-
     if params["formula"]:
         return glm_formula(data, xseq, params)
 
-    X = sm.add_constant(data["x"])
-    Xseq = sm.add_constant(xseq)
+    x, y, _ = _xyw(data)
+    X = add_constant(x)
+    Xseq = add_constant(xseq)
 
+    if not params["method_args"]:
+        # With the default gaussian family and identity link, the
+        # GLM is a linear model, but the confidence interval uses the
+        # normal distribution.
+        import scipy.stats as stats
+
+        results = fit_least_squares(y, X)
+        res = {"x": xseq, "y": results.predict(Xseq)}
+        if params["se"]:
+            cov = results.cov_params()
+            se = np.sqrt(np.sum(Xseq * np.dot(cov, Xseq.T).T, axis=1))
+            q = stats.norm.ppf(1 - (1 - params["level"]) / 2)
+            res["ymin"] = res["y"] - q * se
+            res["ymax"] = res["y"] + q * se
+        return frame.frame_like(data, res)
+
+    sm = _import_statsmodels("glm", "with method_args")
     init_kwargs, fit_kwargs = separate_method_kwargs(
         params["method_args"], sm.GLM, sm.GLM.fit
     )
@@ -278,26 +316,24 @@ def glm(data, xseq, params) -> pd.DataFrame:
     if isinstance(family := init_kwargs.get("family"), str):
         init_kwargs["family"] = _glm_family(family)
 
-    model = sm.GLM(data["y"], X, **init_kwargs)
+    model = sm.GLM(y, X, **init_kwargs)
     results = model.fit(**fit_kwargs)
-
-    data = pd.DataFrame({"x": xseq})
-    data["y"] = results.predict(Xseq)
+    res = {"x": xseq, "y": results.predict(Xseq)}
 
     if params["se"]:
         prediction = results.get_prediction(Xseq)
         ci = prediction.conf_int(alpha=1 - params["level"])
-        data["ymin"] = ci[:, 0]
-        data["ymax"] = ci[:, 1]
+        res["ymin"] = ci[:, 0]
+        res["ymax"] = ci[:, 1]
 
-    return data
+    return frame.frame_like(data, res)
 
 
 def glm_formula(data, xseq, params):
     """
     Fit with GLM formula
     """
-    import statsmodels.api as sm
+    sm = _import_statsmodels("glm")
     import statsmodels.formula.api as smf
 
     eval_env = params["environment"].to_patsy_env()
@@ -308,39 +344,40 @@ def glm_formula(data, xseq, params):
     if isinstance(family := init_kwargs.get("family"), str):
         init_kwargs["family"] = _glm_family(family)
 
-    model = smf.glm(params["formula"], data, eval_env=eval_env, **init_kwargs)
+    model = smf.glm(
+        params["formula"], _values(data), eval_env=eval_env, **init_kwargs
+    )
     results = model.fit(**fit_kwargs)
-    data = pd.DataFrame({"x": xseq})
-    data["y"] = results.predict(data)
+    res = {"x": xseq}
+    res["y"] = np.asarray(results.predict(res))
 
     if params["se"]:
-        xdata = pd.DataFrame({"x": xseq})
-        prediction = results.get_prediction(xdata)
+        prediction = results.get_prediction({"x": xseq})
         ci = prediction.conf_int(alpha=1 - params["level"])
-        data["ymin"] = ci[:, 0]
-        data["ymax"] = ci[:, 1]
-    return data
+        res["ymin"] = ci[:, 0]
+        res["ymax"] = ci[:, 1]
+    return frame.frame_like(data, res)
 
 
-def lowess(data, xseq, params) -> pd.DataFrame:
+def lowess(data, xseq, params) -> DataFrame:
     """
     Lowess fitting
     """
-    import statsmodels.api as sm
+    sm = _import_statsmodels("lowess")
 
     for k in ("is_sorted", "return_sorted"):
         with suppress(KeyError):
             del params["method_args"][k]
             warnings.warn(f"Smoothing method argument: {k}, has been ignored.")
 
+    x, y, _ = _xyw(data)
     result = sm.nonparametric.lowess(
-        data["y"],
-        data["x"],
+        y,
+        x,
         frac=params["span"],
         is_sorted=True,
         **params["method_args"],
     )
-    data = pd.DataFrame({"x": result[:, 0], "y": result[:, 1]})
 
     if params["se"]:
         warnings.warn(
@@ -349,10 +386,10 @@ def lowess(data, xseq, params) -> pd.DataFrame:
             PlotnineWarning,
         )
 
-    return data
+    return frame.frame_like(data, {"x": result[:, 0], "y": result[:, 1]})
 
 
-def loess(data, xseq, params) -> pd.DataFrame:
+def loess(data, xseq, params) -> DataFrame:
     """
     Loess smoothing
     """
@@ -362,14 +399,10 @@ def loess(data, xseq, params) -> pd.DataFrame:
         msg = "For loess smoothing, install 'scikit-misc'"
         raise PlotnineError(msg) from e
 
-    try:
-        weights = data["weight"]
-    except KeyError:
-        weights = None
-
+    x, y, weights = _xyw(data)
     kwargs = params["method_args"]
 
-    extrapolate = min(xseq) < min(data["x"]) or max(xseq) > max(data["x"])
+    extrapolate = min(xseq) < min(x) or max(xseq) > max(x)
     if "surface" not in kwargs and extrapolate:
         # Creates a loess model that allows extrapolation
         # when making predictions
@@ -383,48 +416,77 @@ def loess(data, xseq, params) -> pd.DataFrame:
     if "span" not in kwargs:
         kwargs["span"] = params["span"]
 
-    lo = loess_klass(data["x"], data["y"], weights, **kwargs)
+    lo = loess_klass(x, y, weights, **kwargs)
     lo.fit()
 
-    data = pd.DataFrame({"x": xseq})
+    res = {"x": xseq}
 
     if params["se"]:
         alpha = 1 - params["level"]
         prediction = lo.predict(xseq, stderror=True)
         ci = prediction.confidence(alpha=alpha)
-        data["se"] = prediction.stderr
-        data["ymin"] = ci.lower
-        data["ymax"] = ci.upper
+        res["se"] = prediction.stderr
+        res["ymin"] = ci.lower
+        res["ymax"] = ci.upper
     else:
         prediction = lo.predict(xseq, stderror=False)
 
-    data["y"] = prediction.values  # noqa: PD011
+    res["y"] = prediction.values  # noqa: PD011
 
-    return data
+    return frame.frame_like(data, res)
 
 
-def mavg(data, xseq, params) -> pd.DataFrame:
+def mavg(data, xseq, params) -> DataFrame:
     """
     Fit moving average
     """
-    window = params["method_args"]["window"]
+    method_args = params["method_args"]
+    window = method_args["window"]
+    x, y, _ = _xyw(data)
+    n = len(data)
 
     # The first average comes after the full window size
     # has been swept over
-    rolling = data["y"].rolling(**params["method_args"])
-    y = rolling.mean()[window:]
-    n = len(data)
-    stderr = rolling.std()[window:]
-    x = data["x"][window:]
-    data = pd.DataFrame({"x": x, "y": y})
-    data = data.reset_index(drop=True)
+    mean, std = _rolling_mean_std(y, method_args)
+    res = {"x": x[window:], "y": mean[window:]}
+    stderr = std[window:]
 
     if params["se"]:
         dof = n - window  # Original - Used
-        data["ymin"], data["ymax"] = tdist_ci(y, dof, stderr, params["level"])
-        data["se"] = stderr
+        res["ymin"], res["ymax"] = tdist_ci(
+            res["y"], dof, stderr, params["level"]
+        )
+        res["se"] = stderr
 
-    return data
+    return frame.frame_like(data, res)
+
+
+def _rolling_mean_std(
+    y: FloatArray, method_args: dict[str, Any]
+) -> tuple[FloatArray, FloatArray]:
+    """
+    Rolling mean and standard deviation
+
+    For each value, it is the statistic of the window that ends at
+    the value. The values before the first full window are NaN.
+    Arguments other than the `window` require pandas, whose `rolling`
+    method gets all the arguments.
+    """
+    if set(method_args) - {"window"}:
+        import pandas as pd
+
+        rolling = pd.Series(y).rolling(**method_args)
+        return rolling.mean().to_numpy(), rolling.std().to_numpy()
+
+    window = method_args["window"]
+    mean = np.full(len(y), np.nan)
+    std = np.full(len(y), np.nan)
+    if 0 < window <= len(y):
+        windows = np.lib.stride_tricks.sliding_window_view(y, window)
+        mean[window - 1 :] = windows.mean(axis=1)
+        if window > 1:
+            std[window - 1 :] = windows.std(axis=1, ddof=1)
+    return mean, std
 
 
 def gpr(data, xseq, params):
@@ -449,25 +511,24 @@ def gpr(data, xseq, params):
         )
 
     regressor = gaussian_process.GaussianProcessRegressor(**kwargs)
-    X = np.atleast_2d(data["x"]).T
+    x, y, _ = _xyw(data)
+    X = np.atleast_2d(x).T
     n = len(data)
     Xseq = np.atleast_2d(xseq).T
-    regressor.fit(X, data["y"])
+    regressor.fit(X, y)
 
-    data = pd.DataFrame({"x": xseq})
+    res = {"x": xseq}
     if params["se"]:
         y, stderr = regressor.predict(Xseq, return_std=True)
-        data["y"] = y
-        data["se"] = cast("FloatArray", stderr)
-        data["ymin"], data["ymax"] = tdist_ci(
-            y, n - 1, stderr, params["level"]
-        )
+        res["y"] = y
+        res["se"] = cast("FloatArray", stderr)
+        res["ymin"], res["ymax"] = tdist_ci(y, n - 1, stderr, params["level"])
     else:
-        data["y"] = cast(
+        res["y"] = cast(
             "FloatArray", regressor.predict(Xseq, return_std=False)
         )
 
-    return data
+    return frame.frame_like(data, res)
 
 
 def tdist_ci(x, dof, stderr, level):
@@ -618,3 +679,19 @@ def _glm_family(family: str) -> sm.families.Family:
     except KeyError as err:
         msg = f"GLM family should be one of {tuple(lookup)}"
         raise ValueError(msg) from err
+
+
+def _import_statsmodels(method: str, condition: str = "") -> Any:
+    """
+    Import statsmodels.api, with a helpful error if it is missing
+    """
+    try:
+        import statsmodels.api as sm
+    except ImportError as err:
+        what = f"'{method}' {condition}".strip()
+        msg = (
+            f"Smoothing method {what} requires statsmodels "
+            "(which requires pandas). Install them or use another method."
+        )
+        raise PlotnineError(msg) from err
+    return sm

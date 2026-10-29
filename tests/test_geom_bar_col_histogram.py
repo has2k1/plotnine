@@ -1,3 +1,4 @@
+import narwhals as nw
 import numpy as np
 import pandas as pd
 
@@ -58,10 +59,10 @@ def test_histogram_count():
 def test_scale_transformed_breaks():
     data = pd.DataFrame({"x": np.repeat(range(1, 5), range(1, 5))})
     p = ggplot(data, aes("x")) + geom_histogram(breaks=[1, 2.5, 4])
-    out1 = p.layer_data()
-    out2 = (p + scale_x_sqrt()).layer_data()
-    np.testing.assert_allclose(out1.xmin, [1, 2.5])
-    np.testing.assert_allclose(out2.xmin, np.sqrt([1, 2.5]))
+    out1 = nw.from_native(p.layer_data())
+    out2 = nw.from_native((p + scale_x_sqrt()).layer_data())
+    np.testing.assert_allclose(out1["xmin"], [1, 2.5])
+    np.testing.assert_allclose(out2["xmin"], np.sqrt([1, 2.5]))
 
 
 def test_stat_count_int():

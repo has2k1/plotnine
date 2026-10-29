@@ -4,11 +4,10 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any
 
 import numpy as np
-import pandas as pd
 from mizani.bounds import expand_range_distinct
 from mizani.palettes import none_pal
 
-from .._utils import match
+from .._utils import frame, match
 from ..iapi import range_view, scale_view
 from ._expand import expand_range
 from ._runtime_typing import DiscreteBreaksUser, DiscreteLimitsUser, GuideTypeT
@@ -20,6 +19,7 @@ if TYPE_CHECKING:
 
     from mizani.transforms import trans
 
+    from plotnine._utils.frame import DataFrame
     from plotnine.typing import AnyArrayLike, CoordRange
 
 
@@ -154,7 +154,10 @@ class scale_discrete(
             range = self.dimension(limits=limits)
 
         breaks_d = self.get_breaks(limits)
-        breaks = self.map(pd.Categorical(breaks_d))  # pyright: ignore[reportCallIssue,reportArgumentType]
+        # An object array so that the breaks are treated as discrete
+        _breaks_d = np.empty(len(breaks_d), dtype=object)
+        _breaks_d[:] = list(breaks_d)
+        breaks = self.map(_breaks_d)
         minor_breaks = []
         labels = self.get_labels(breaks_d)
 
@@ -189,7 +192,7 @@ class scale_discrete(
         if limits is None:
             limits = self.final_limits
 
-        n = sum(~pd.isna(list(limits)))
+        n = int(np.sum(~frame.isna(list(limits))))
         pal = self.palette(n)
         if isinstance(pal, dict):
             # manual palette with specific assignments
@@ -213,11 +216,7 @@ class scale_discrete(
                 pal_match = list(pal[idx])
 
         if self.na_translate:
-            bool_pal_match = pd.isna(pal_match)
-            if len(bool_pal_match.shape) > 1:
-                # linetypes take tuples, these return 2d
-                bool_pal_match = bool_pal_match.any(axis=1)
-            bool_idx = pd.isna(x) | bool_pal_match
+            bool_idx = frame.isna(x) | frame.isna(pal_match)
             if bool_idx.any():
                 pal_match = [
                     x if i else self.na_value
@@ -292,7 +291,7 @@ class scale_discrete(
             label_lookup = dict(zip(self.get_breaks(), self.labels))
             return [label_lookup[b] for b in breaks]
 
-    def transform_df(self, df: pd.DataFrame) -> pd.DataFrame:
+    def transform_df(self, df: DataFrame) -> DataFrame:
         """
         Transform dataframe
         """
@@ -306,7 +305,7 @@ class scale_discrete(
         # Discrete scales do not do transformations
         return x
 
-    def inverse_df(self, df: pd.DataFrame) -> pd.DataFrame:
+    def inverse_df(self, df: DataFrame) -> DataFrame:
         """
         Inverse Transform dataframe
         """

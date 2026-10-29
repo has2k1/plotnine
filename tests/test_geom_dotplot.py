@@ -1,3 +1,4 @@
+import narwhals as nw
 import pandas as pd
 import pytest
 
@@ -65,12 +66,10 @@ def test_binaxis_y_binpositions_all():
         binwidth=1,
         geom="point",
     )
-    ldata = p.layer_data()
+    ldata = nw.from_native(p.layer_data())
     result = {
         (group, y): count
-        for group, y, count in ldata[["group", "y", "count"]].itertuples(
-            index=False
-        )
+        for group, y, count in ldata.select("group", "y", "count").iter_rows()
     }
 
     assert result == {

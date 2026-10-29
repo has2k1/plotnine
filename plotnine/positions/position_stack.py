@@ -2,10 +2,10 @@ from __future__ import annotations
 
 from warnings import warn
 
+import narwhals as nw
 import numpy as np
-import pandas as pd
 
-from .._utils import remove_missing
+from .._utils import frame, remove_missing
 from ..exceptions import PlotnineWarning
 from .position import position
 
@@ -36,14 +36,16 @@ class position_stack(position):
         Verify, modify & return a copy of the params.
         """
         # Variable for which to do the stacking
-        if "ymax" in data:
-            if any((data["ymin"] != 0) & (data["ymax"] != 0)):
+        if "ymax" in data.columns:
+            ymin = frame.to_numpy(data["ymin"])
+            ymax = frame.to_numpy(data["ymax"])
+            if any((ymin != 0) & (ymax != 0)):
                 warn(
                     "Stacking not well defined when not anchored on the axis.",
                     PlotnineWarning,
                 )
             var = "ymax"
-        elif "y" in data:
+        elif "y" in data.columns:
             var = "y"
         else:
             warn(
@@ -63,15 +65,17 @@ class position_stack(position):
             return data
 
         if params["var"] == "y":
-            data["ymax"] = data["y"]
+            data = data.with_columns(ymax=nw.col("y"))
         elif params["var"] == "ymax":
-            bool_idx = data["ymax"] == 0
-            data.loc[bool_idx, "ymax"] = data.loc[bool_idx, "ymin"]
+            data = data.with_columns(
+                ymax=nw.when(nw.col("ymax") == 0)
+                .then(nw.col("ymin"))
+                .otherwise(nw.col("ymax"))
+            )
 
         data = remove_missing(
             data, vars=("x", "xmin", "xmax", "y"), name="position_stack"
         )
-
         return data
 
     @classmethod
@@ -95,9 +99,9 @@ class position_stack(position):
         if undo_transform:
             data = cls.transform_position(data, trans_y=scales.y.inverse)
 
-        negative = data["ymax"] < 0
-        neg = data.loc[negative]
-        pos = data.loc[~negative]
+        negative = frame.to_numpy(data["ymax"]) < 0
+        neg = frame.filter_rows(data, negative)
+        pos = frame.filter_rows(data, ~negative)
 
         if len(neg):
             neg = cls.collide(neg, params=params)
@@ -105,7 +109,7 @@ class position_stack(position):
         if len(pos):
             pos = cls.collide(pos, params=params)
 
-        data = pd.concat([neg, pos], axis=0, ignore_index=True, sort=True)
+        data = frame.concat([neg, pos])
 
         if undo_transform:
             data = cls.transform_position(data, trans_y=scales.y.transform)
@@ -121,17 +125,17 @@ class position_stack(position):
         """
         vjust = params["vjust"]
 
-        y = data["y"].copy()
+        y = frame.to_numpy(data["y"]).astype(float)
         y[np.isnan(y)] = 0
         heights = np.append(0, y.cumsum())
 
         if params["fill"]:
             heights = heights / np.abs(heights[-1])
 
-        data["ymin"] = np.min([heights[:-1], heights[1:]], axis=0)
-        data["ymax"] = np.max([heights[:-1], heights[1:]], axis=0)
+        ymin = np.min([heights[:-1], heights[1:]], axis=0)
+        ymax = np.max([heights[:-1], heights[1:]], axis=0)
         # less intuitive than (ymin + vjust(ymax-ymin)), but
         # this way avoids subtracting numbers of potentially
         # similar precision
-        data["y"] = (1 - vjust) * data["ymin"] + vjust * data["ymax"]
-        return data
+        y = (1 - vjust) * ymin + vjust * ymax
+        return frame.assign(data, ymin=ymin, ymax=ymax, y=y)

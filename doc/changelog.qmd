@@ -7,6 +7,34 @@ title: Changelog
 
 ### New
 
+- plotnine now works with [polars](https://pola.rs) dataframes natively,
+  and with the other dataframe libraries supported by
+  [narwhals](https://narwhals-dev.github.io/narwhals/). The data is no
+  longer converted to pandas; the layer data and the dataframes that
+  plotnine creates are of the same library as the data you plot. plotnine
+  does not import pandas unless your data is a pandas dataframe, or you use
+  a feature that requires pandas, e.g. the smoothing methods that use
+  statsmodels.
+
+  For a polars categorical, the order of the categories is lexical. To
+  plot categories in another order, use a polars `Enum`. A polars `Enum`
+  is treated as an ordered categorical (it gets an ordinal scale by
+  default), which matches pandas categoricals with `ordered=True`. To get
+  an unordered categorical in a custom order, use
+  `factor(x, categories=[...])` in the aesthetic mapping.
+
+- Aesthetics can be [narwhals expressions](https://narwhals-dev.github.io/narwhals/api-reference/expr/),
+  e.g. `aes(y=nw.col("y") * 2)`. String expressions remain supported and
+  where possible they are evaluated as narwhals expressions, e.g.
+  `aes(y="np.log(y)")` works the same for pandas and polars data.
+
+- Added [](:func:`~plotnine.data.load_dataset`), which loads the included
+  datasets with pandas or polars. When pandas is not installed, the
+  datasets in [](:mod:`plotnine.data`) are polars dataframes.
+
+- The default kernel density estimates and linear smooths no longer
+  require statsmodels.
+
 - Added binned scales for position, alpha, linetype, shape, size, colour,
   and fill. Use `scale_x_binned`, `scale_y_binned`, or the corresponding
   `scale_*_binned` aesthetic scale to divide continuous data into numeric
@@ -142,6 +170,30 @@ title: Changelog
 
 ### API Changes
 
+- The methods of stats, geoms, positions, facets and coordinate systems
+  that get data now get [narwhals dataframes](https://narwhals-dev.github.io/narwhals/api-reference/dataframe/),
+  and they should return narwhals dataframes. If you have written an
+  extension that uses the pandas API on the data, use the narwhals API
+  instead, or convert with `data.to_native()` (which gives the dataframe
+  of the library of the plot data) and `narwhals.from_native()`.
+
+  - `geom.draw_legend` and `geom.legend_key_size` get the row of the
+    legend data as a dict.
+  - `PANEL` is an integer column; it was a pandas categorical.
+  - `layout.layout` is a narwhals dataframe.
+  - `I()` returns an `AsIs` object; it no longer creates a pandas
+    extension array.
+
+- Functions passed to [](:class:`~plotnine.stat_summary`) (e.g. `fun_y`)
+  get the values as a series of the library of the data, e.g. a polars
+  series for polars data. If such a function raises a `TypeError`, it gets
+  a numpy array. Functions passed as the `method` of
+  [](:class:`~plotnine.stat_smooth`) get a dataframe of the library of the
+  data.
+
+- [](:meth:`~plotnine.ggplot.layer_data`) returns a dataframe of the
+  library of the layer data.
+
 - Removed `geom.to_layer()`, `stat.to_layer()`, `annotate.to_layer()`,
   `layer.from_geom()` and `layer.from_stat()`. Use
   `layer(geom=...)` and `layer(stat=...)` directly.
@@ -187,6 +239,13 @@ title: Changelog
   instead.
 
 ### Bug Fixes
+
+- `factor(x, ordered=True)` creates an ordered categorical. The `ordered`
+  argument was ignored.
+
+- The variable type for multivariate kernel density estimates
+  (`stat_density_2d`, `stat_pointdensity`) took every discrete column to
+  be ordered.
 
 - plotnine no longer passes `inplace=True` to the pandas `DataFrame`
   methods that pandas 3.2 deprecates it for (PDEP-8), so plots no longer emit

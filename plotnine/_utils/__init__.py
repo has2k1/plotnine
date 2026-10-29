@@ -12,16 +12,24 @@ from collections.abc import Iterable, Sequence
 from contextlib import suppress
 from copy import deepcopy
 from dataclasses import field
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 from warnings import warn
 
 import mizani._colors.utils as color_utils
+import narwhals as nw
 import numpy as np
-import pandas as pd
-from pandas.core.groupby import DataFrameGroupBy
+from narwhals.dependencies import get_pandas
 
 from ..exceptions import PlotnineError, PlotnineWarning
 from ..mapping import aes
+from . import frame
+from .frame import (
+    as_numpy,
+    as_series,
+    dtype_kind,
+    is_native_series,
+    native_io,
+)
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -31,6 +39,7 @@ if TYPE_CHECKING:
 
     import numpy.typing as npt
 
+    from plotnine._utils.frame import DataFrame
     from plotnine.typing import (
         AnyArrayLike,
         DataLike,
@@ -63,7 +72,28 @@ BOX_LOCATIONS: dict[str, tuple[float, float]] = {
     "centre": (0.5, 0.5),
 }
 
-to_rgba = color_utils.to_rgba
+
+def to_rgba(colors: Any, alpha: Any) -> Any:
+    """
+    Convert colors to rgba values
+
+    Parameters
+    ----------
+    colors :
+        Color(s) to convert. They can be in a series.
+    alpha :
+        Alpha value(s). They can be in a series.
+    """
+    # mizani expects python scalars
+    if (s := as_series(colors)) is not None:
+        colors = s.to_list()
+    if (s := as_series(alpha)) is not None:
+        alpha = s.to_list()
+    elif isinstance(alpha, np.ndarray):
+        alpha = alpha.tolist()
+    elif isinstance(alpha, np.generic):
+        alpha = alpha.item()
+    return color_utils.to_rgba(colors, alpha)
 
 
 def side_artists(side: Side | PolarSide) -> tuple[str, str]:
@@ -119,7 +149,9 @@ def is_list_like(obj: Any) -> bool:
     """
     Return True if *obj* is a list, tuple, series or array
     """
-    return isinstance(obj, (list, tuple, pd.Series, np.ndarray))
+    if isinstance(obj, (list, tuple, np.ndarray, nw.Series)):
+        return True
+    return is_native_series(obj)
 
 
 def identity(*args: Any) -> Any:
@@ -157,11 +189,16 @@ def match(
     """
     # NOTE: This function gets called a lot. If it can
     # be optimised, it should.
+
+    # Missing values (None & NaN) match each other
     lookup = {}
     for i, x in enumerate(v2):
+        if x is None or x != x:
+            x = _MISSING
         if x not in lookup:
             lookup[x] = i
 
+    v1 = [_MISSING if x is None or x != x else x for x in v1]
     if incomparables:
         skip = set(incomparables) if incomparables else set()
         lst = [
@@ -170,7 +207,11 @@ def match(
         ]
     else:
         lst = [lookup[x] + start if x in lookup else nomatch for x in v1]
-    return np.array(lst)
+    return np.array(lst, dtype=np.int64)
+
+
+# A key for the missing values
+_MISSING = object()
 
 
 def multitype_sort(arr: AnyArrayLike) -> list[Any]:
@@ -258,15 +299,16 @@ def _margins(
     return pretty
 
 
+@native_io
 def add_margins(
-    df: pd.DataFrame,
+    df: DataFrame,
     vars: tuple[Sequence[str], Sequence[str]],
     margins: bool | Sequence[str] = True,
-) -> pd.DataFrame:
+) -> DataFrame:
     """
     Add margins to a data frame.
 
-    All margining variables will be converted to factors.
+    All margining variables will be converted to categoricals.
 
     Parameters
     ----------
@@ -285,35 +327,39 @@ def add_margins(
     if not margin_vars:
         return df
 
-    # create margin dataframes
-    margin_dfs = [df]
-    for vlst in margin_vars[1:]:
-        dfx = df.copy()
-        for v in vlst:
-            dfx[v] = "(all)"
-        margin_dfs.append(dfx)
-
-    merged = pd.concat(margin_dfs, axis=0)
-    merged = merged.reset_index(drop=True)
-
     # All margin columns become categoricals. The margin indicator
     # (all) needs to be added as the last level of the categories.
+    impl = df.implementation
     categories = {}
     for v in itertools.chain(*vars):
-        col = df[v]
-        if not isinstance(df[v], pd.Categorical):
-            col = pd.Categorical(df[v])
-        categories[v] = col.categories
+        if v not in df.columns:
+            continue
+        categories[v] = frame.levels(df[v])
         if "(all)" not in categories[v]:
-            categories[v] = categories[v].insert(len(categories[v]), "(all)")
+            categories[v].append("(all)")
 
-    for v in merged.columns.intersection(list(categories.keys())):
-        merged[v] = merged[v].astype(pd.CategoricalDtype(categories[v]))
+    df = df.with_columns(
+        frame.categorical(df[v], cats, name=v, backend=impl)
+        for v, cats in categories.items()
+    )
 
-    return merged
+    # create margin dataframes
+    n = len(df)
+    margin_dfs = [df]
+    for vlst in margin_vars[1:]:
+        dfx = df.with_columns(
+            frame.categorical(
+                ["(all)"] * n, categories[v], name=v, backend=impl
+            )
+            for v in vlst
+        )
+        margin_dfs.append(dfx)
+
+    return frame.concat(margin_dfs)
 
 
-def ninteraction(df: pd.DataFrame, drop: bool = False) -> list[int]:
+@native_io
+def ninteraction(df: DataFrame, drop: bool = False) -> list[int]:
     """
     Compute a unique numeric id for each unique row in
     a data frame. The ids start at 1 -- in the spirit
@@ -345,19 +391,13 @@ def ninteraction(df: pd.DataFrame, drop: bool = False) -> list[int]:
         return _id_var(df[df.columns[0]], drop)
 
     # Calculate individual ids
-    ids = df.apply(_id_var, axis=0, drop=drop)
-    ids = ids.reindex(columns=list(reversed(ids.columns)))
+    ids = [np.asarray(_id_var(df[c], drop)) for c in reversed(df.columns)]
 
     # Calculate dimensions
-    def len_unique(x):
-        return len(np.unique(x))
-
-    ndistinct = ids.apply(len_unique, axis=0).to_numpy()
-
-    combs = np.array(np.hstack([1, np.cumprod(ndistinct[:-1])]))
-    mat = np.array(ids)
-    _res = (mat - 1) @ combs.T + 1
-    res: list[int] = np.array(_res).flatten().tolist()
+    ndistinct = np.array([len(np.unique(x)) for x in ids])
+    combs = np.hstack([1, np.cumprod(ndistinct[:-1])])
+    mat = np.column_stack(ids)
+    res: list[int] = ((mat - 1) @ combs + 1).tolist()
 
     if drop:
         return _id_var(res, drop)
@@ -365,7 +405,7 @@ def ninteraction(df: pd.DataFrame, drop: bool = False) -> list[int]:
         return res
 
 
-def _id_var(x: AnyArrayLike, drop: bool = False) -> list[int]:
+def _id_var(x: AnyArrayLike | nw.Series[Any], drop: bool = False) -> list[int]:
     """
     Assign ids to items in x
 
@@ -388,36 +428,40 @@ def _id_var(x: AnyArrayLike, drop: bool = False) -> list[int]:
     if len(x) == 0:
         return []
 
-    if isinstance(x, pd.Series) and array_kind.categorical(x):
-        # The ids are a "re-coding" of the categorical codes/levels
+    if is_native_series(x):
+        x = nw.from_native(x, series_only=True)
+
+    if isinstance(x, nw.Series) and frame.is_categorical(x):
+        # The ids are a "re-coding" of the categorical levels
         # to meet the output requirements.
+        levels = frame.levels(x)
         if drop:
-            x = x.cat.remove_unused_categories()
+            present = set(x.drop_nulls().unique().to_list())
+            levels = [lvl for lvl in levels if lvl in present]
+        lookup = {lvl: i for i, lvl in enumerate(levels, start=1)}
 
-        codes = x.cat.codes
+        # We want our list to start at 1. Missing values get the
+        # highest id, i.e. they are ordered last.
+        highest_id = len(levels) + 1
+        return [lookup.get(v, highest_id) for v in x.to_list()]
 
-        # We want our list to start at 1.
-        # But NaNs are -1, and if we have them, we want them to have
-        # the highest code, i.e. to be ordered last.
-        ids = list(codes + 1)
-        has_nan = (codes == -1).any()
-        if has_nan:
-            # The NaNs now have an id of 0
-            highest_id = max(ids) + 1
-            ids = [highest_id if i == 0 else i for i in ids]
-    else:
-        try:
-            levels = sorted(set(x))
-        except TypeError:
-            # x probably has NANs
-            levels = multitype_sort(list(set(x)))
+    if isinstance(x, nw.Series):
+        if x.dtype.is_numeric() and not frame.is_missing(x).any():
+            _, inverse = np.unique(x.to_numpy(), return_inverse=True)
+            return (inverse + 1).tolist()
+        x = x.to_list()
 
-        ids = list(match(x, levels, start=1))
+    try:
+        levels = sorted(set(x))
+    except TypeError:
+        # x probably has NANs
+        levels = multitype_sort(list(set(x)))
 
-    return ids
+    return list(match(x, levels, start=1))
 
 
-def join_keys(x, y, by=None):
+@native_io
+def join_keys(x: DataFrame, y: DataFrame, by: Sequence[str]):
     """
     Join keys.
 
@@ -438,15 +482,9 @@ def join_keys(x, y, by=None):
         x and y dataframes would have the same key in the
         output. The key elements start at 1.
     """
-    if by is None:
-        by = slice(None, None, None)
-
-    if isinstance(by, tuple):
-        by = list(by)
-
-    joint = pd.concat([x[by], y[by]], ignore_index=True)
-    keys = ninteraction(joint, drop=True)
-    keys = np.asarray(keys)
+    by = list(by)
+    joint = frame.concat([x.select(by), y.select(by)])
+    keys = np.asarray(ninteraction(joint, drop=True))
     nx, ny = len(x), len(y)
     return {"x": keys[np.arange(nx)], "y": keys[nx + np.arange(ny)]}
 
@@ -459,16 +497,25 @@ def check_required_aesthetics(required, present, name):
         raise PlotnineError(msg.format(name, ", ".join(missing_aes)))
 
 
-def uniquecols(data):
+@native_io
+def uniquecols(data: DataFrame) -> DataFrame:
     """
     Return unique columns
 
     This is used for figuring out which columns are
     constant within a group
     """
-    bool_idx = data.apply(lambda col: len(np.unique(col)) == 1, axis=0)
-    data = data.loc[:, bool_idx].iloc[0:1, :].reset_index(drop=True)
-    return data
+
+    def is_unique(s: nw.Series[Any]) -> bool:
+        try:
+            return s.n_unique() == 1
+        except Exception:
+            # e.g. object columns with unhashable values
+            values = s.to_list()
+            return all(v == values[0] for v in values[1:])
+
+    cols = [c for c in data.columns if is_unique(data[c])]
+    return data.select(cols).head(1)
 
 
 def normalise_random_state(
@@ -560,13 +607,14 @@ def jitter(x, factor=1, amount=None, random_state=None):
     return x + random_state.uniform(-amount, amount, len(x))
 
 
+@native_io
 def remove_missing(
-    data: pd.DataFrame,
+    data: DataFrame,
     na_rm: bool = False,
     vars: Sequence[str] | None = None,
     name: str = "",
     finite: bool = False,
-) -> pd.DataFrame:
+) -> DataFrame:
     """
     Convenience function to remove missing values from a dataframe
 
@@ -585,35 +633,46 @@ def remove_missing(
     n = len(data)
 
     if vars is None:
-        vars = data.columns.to_list()
+        vars = data.columns
     else:
-        vars = data.columns.intersection(list(vars)).to_list()
+        _vars = set(vars)
+        vars = [c for c in data.columns if c in _vars]
 
     if finite:
-        lst = [np.inf, -np.inf]
-        to_replace = {v: lst for v in vars}
-        data.replace(to_replace, np.nan, inplace=True)
         txt = "non-finite"
+        is_ok = frame.is_finite
     else:
         txt = "missing"
 
-    data = data.dropna(subset=vars)
-    data = data.reset_index(drop=True)
+        def is_ok(s):
+            return ~frame.is_missing(s)
+
+    if not n or not vars:
+        return data
+
+    keep = None
+    for v in vars:
+        ok = is_ok(data[v])
+        keep = ok if keep is None else (keep & ok)
+
+    if keep is not None and not keep.all():
+        data = data.filter(keep)
+
     if len(data) < n and not na_rm:
         msg = "{} : Removed {} rows containing {} values."
         warn(
-            msg.format(name, n - len(data), txt), PlotnineWarning, stacklevel=3
+            msg.format(name, n - len(data), txt), PlotnineWarning, stacklevel=4
         )
     return data
 
 
 def groupby_apply(
-    df: pd.DataFrame,
+    df: DataFrame,
     cols: str | list[str],
-    func: Callable[..., pd.DataFrame],
+    func: Callable[..., DataFrame],
     *args: Any,
     **kwargs: Any,
-) -> pd.DataFrame:
+) -> DataFrame:
     """
     Groupby cols and call the function fn on each grouped dataframe.
 
@@ -627,61 +686,16 @@ def groupby_apply(
         positional parameters to pass to func
     **kwargs : dict
         keyword parameter to pass to func
-
-    This is meant to avoid pandas df.groupby('col').apply(fn, *args),
-    as it calls fn twice on the first dataframe. If the nested code also
-    does the same thing, it can be very expensive
     """
-    if df.empty:
-        return df.copy()
+    data, was_native = frame._to_nw(df)
+    if not was_native:
+        return frame.group_apply(data, cols, func, *args, **kwargs)
 
-    try:
-        axis = kwargs.pop("axis")
-    except KeyError:
-        axis = 0
+    # The function expects native dataframes
+    def _func(gdf, *args, **kwargs):
+        return frame.to_frame(func(gdf.to_native(), *args, **kwargs))
 
-    lst = []
-    for _, d in df.groupby(cols, observed=True):
-        # function fn should be free to modify dataframe d, therefore
-        # do not mark d as a slice of df i.e no SettingWithCopyWarning
-        lst.append(func(d, *args, **kwargs))
-    return pd.concat(lst, axis=axis, ignore_index=True)
-
-
-def pivot_apply(df, column, index, func, *args, **kwargs):
-    """
-    Apply a function to each group of a column
-
-    The function is kind of equivalent to R's *tapply*.
-
-    Parameters
-    ----------
-    df : dataframe
-        Dataframe to be pivoted
-    column : str
-        Column to apply function to.
-    index : str
-        Column that will be grouped on (and whose unique values
-        will make up the index of the returned dataframe)
-    func : callable
-        Function to apply to each column group. It *should* return
-        a single value.
-    *args : tuple
-        Arguments to `func`
-    **kwargs : dict
-        Keyword arguments to `func`
-
-    Returns
-    -------
-    out : dataframe
-        Dataframe with index `index` and column `column` of
-        computed/aggregate values .
-    """
-
-    def _func(x):
-        return func(x, *args, **kwargs)
-
-    return df.pivot_table(column, index, aggfunc=_func)[column]
+    return frame.group_apply(data, cols, _func, *args, **kwargs).to_native()
 
 
 def make_line_segments(
@@ -737,7 +751,7 @@ def get_valid_kwargs(func, potential_kwargs):
     return kwargs
 
 
-def copy_missing_columns(df, ref_df):
+def copy_missing_columns(df: DataFrame, ref_df: DataFrame) -> DataFrame:
     """
     Copy missing columns from ref_df to df
 
@@ -756,9 +770,15 @@ def copy_missing_columns(df, ref_df):
         Dataframe to which columns will be added
     ref_df : dataframe
         Dataframe from which columns will be copied
+
+    Returns
+    -------
+    :
+        df with the added columns
     """
-    cols = ref_df.columns.difference(df.columns)
-    _loc = ref_df.columns.get_loc
+    cols = [c for c in ref_df.columns if c not in df.columns]
+    if not cols:
+        return df
 
     l1, l2 = len(df), len(ref_df)
     if l1 >= l2 and l1 % l2 == 0:
@@ -766,8 +786,12 @@ def copy_missing_columns(df, ref_df):
     else:
         idx = np.repeat(0, l1)
 
-    for col in cols:
-        df[col] = ref_df.iloc[idx, _loc(col)].to_numpy()
+    copied = frame.convert(
+        frame.take(ref_df.select(cols), idx), df.implementation
+    )
+    if not df.columns:
+        return copied
+    return nw.concat([df, copied], how="horizontal")
 
 
 def data_mapping_as_kwargs(args, kwargs):
@@ -817,9 +841,9 @@ def data_mapping_as_kwargs(args, kwargs):
 
 def ungroup(data: DataLike) -> DataLike:
     """Return an ungrouped DataFrame, or pass the original data back."""
-
-    if isinstance(data, DataFrameGroupBy):
-        return data.obj  # pyright: ignore[reportReturnType]
+    _pd = get_pandas()
+    if _pd is not None and isinstance(data, _pd.core.groupby.DataFrameGroupBy):
+        return cast("Any", data).obj
 
     return data
 
@@ -836,14 +860,14 @@ def order_as_data_mapping(
 
     Parameter
     ---------
-    arg1 : pd.DataFrame | aes
+    arg1 : DataFrame | aes
         Dataframe or aes Mapping
-    arg2 : pd.DataFrame | aes
+    arg2 : DataFrame | aes
         Dataframe or aes Mapping
 
     Returns
     -------
-    data : pd.DataFrame | callable
+    data : DataFrame | callable
     mapping : aes
     """
     # Valid types for the values are:
@@ -896,10 +920,11 @@ def is_data_like(obj: Any) -> TypeGuard[DataLike]:
         Whether obj could represent data as expected by
         ggplot(), geom() or stat().
     """
-    return (
-        isinstance(obj, pd.DataFrame)
-        or callable(obj)
-        or hasattr(obj, "to_pandas")
+    if callable(obj) or frame.is_frame(obj) or hasattr(obj, "to_pandas"):
+        return True
+    _pd = get_pandas()
+    return _pd is not None and isinstance(
+        obj, _pd.core.groupby.DataFrameGroupBy
     )
 
 
@@ -942,10 +967,9 @@ def resolution(x, zero=True):
     """
     from mizani.bounds import zero_range
 
-    x = np.asarray(x)
+    x = as_numpy(x)
 
     # (unsigned) integers or an effective range of zero
-    _x = x[~pd.isna(x)]
     _x = (x.min(), x.max())
     if x.dtype.kind in ("i", "u") or zero_range(_x):
         return 1
@@ -957,7 +981,8 @@ def resolution(x, zero=True):
     return np.min(np.diff(np.sort(x)))
 
 
-def cross_join(df1: pd.DataFrame, df2: pd.DataFrame) -> pd.DataFrame:
+@native_io
+def cross_join(df1: DataFrame, df2: DataFrame) -> DataFrame:
     """
     Return a cross between df1 & df2 if each is not empty
     """
@@ -1034,7 +1059,7 @@ class array_kind:
         out : bool
             Whether array `arr` is discrete
         """
-        return arr.dtype.kind in "ObUS"
+        return dtype_kind(arr) in "ObUS"
 
     @staticmethod
     def continuous(arr):
@@ -1043,7 +1068,7 @@ class array_kind:
 
         Parameters
         ----------
-        arr : numpy.array | pandas.series
+        arr : numpy.array | series
             Must have a dtype
 
         Returns
@@ -1051,15 +1076,15 @@ class array_kind:
         out : bool
             Whether array `arr` is continuous
         """
-        return arr.dtype.kind in "ifuc"
+        return dtype_kind(arr) in "ifuc"
 
     @staticmethod
     def datetime(arr):
-        return arr.dtype.kind == "M"
+        return dtype_kind(arr) == "M"
 
     @staticmethod
     def timedelta(arr):
-        return arr.dtype.kind == "m"
+        return dtype_kind(arr) == "m"
 
     @staticmethod
     def ordinal(arr):
@@ -1068,7 +1093,7 @@ class array_kind:
 
         Parameters
         ----------
-        arr : numpy.array
+        arr : series
             Must have a dtype
 
         Returns
@@ -1076,9 +1101,8 @@ class array_kind:
         out : bool
             Whether array `arr` is an ordered categorical
         """
-        if isinstance(arr.dtype, pd.CategoricalDtype):
-            return arr.cat.ordered
-        return False
+        s = as_series(arr)
+        return s is not None and frame.is_ordinal(s)
 
     @staticmethod
     def categorical(arr):
@@ -1095,10 +1119,8 @@ class array_kind:
         bool
             Whether array `arr` is a categorical
         """
-        if not hasattr(arr, "dtype"):
-            return False
-
-        return isinstance(arr.dtype, pd.CategoricalDtype)
+        s = as_series(arr)
+        return s is not None and frame.is_categorical(s)
 
 
 def log(x, base=None):

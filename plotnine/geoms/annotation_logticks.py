@@ -4,9 +4,8 @@ import typing
 import warnings
 
 import numpy as np
-import pandas as pd
 
-from .._utils import log
+from .._utils import frame, log
 from ..coords import coord_flip
 from ..exceptions import PlotnineWarning
 from ..scales.scale_continuous import scale_continuous as ScaleContinuous
@@ -20,6 +19,7 @@ if typing.TYPE_CHECKING:
 
     from matplotlib.axes import Axes
 
+    from plotnine._utils.frame import DataFrame
     from plotnine.coords.coord import coord
     from plotnine.facets.layout import Layout
     from plotnine.iapi import panel_view
@@ -43,7 +43,7 @@ class _geom_logticks(geom_rug):
     }
     draw_legend = staticmethod(geom_path.draw_legend)
 
-    def draw_layer(self, data: pd.DataFrame, layout: Layout, coord: coord):
+    def draw_layer(self, data: DataFrame, layout: Layout, coord: coord):
         """
         Draw ticks on every panel
         """
@@ -166,7 +166,7 @@ class _geom_logticks(geom_rug):
 
     def draw_panel(
         self,
-        data: pd.DataFrame,
+        data: DataFrame,
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
@@ -192,8 +192,8 @@ class _geom_logticks(geom_rug):
             tick_positions: tuple[AnyArray, AnyArray, AnyArray],
         ):
             for position, length in zip(tick_positions, lengths):
-                data = pd.DataFrame({axis: position, **_aesthetics})
-                stroke_rugs(data, panel_params, ax, params, sides, length)
+                ticks = frame.frame_like(data, {axis: position, **_aesthetics})
+                stroke_rugs(ticks, panel_params, ax, params, sides, length)
 
         base_x, base_y = self._check_log_scale(
             params["base"], sides, panel_params

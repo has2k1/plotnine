@@ -1,3 +1,4 @@
+import narwhals as nw
 import numpy as np
 import pandas as pd
 import pytest
@@ -152,4 +153,4 @@ def test_empty_layer_data():
     p = ggplot(data, aes("x")) + stat_ecdf() + geom_freqpoly(bins=5)
     # Missing values are handled when the layers are drawn
     for lyr in p.build().layers:
-        assert lyr.geom.handle_na(lyr.data).empty
+        assert len(lyr.geom.handle_na(nw.from_native(lyr.data))) == 0

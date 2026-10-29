@@ -1,12 +1,25 @@
-from typing import cast
+from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
+import narwhals as nw
 import numpy as np
-import pandas as pd
 
-from .._utils import get_valid_kwargs, normalise_random_state, uniquecols
+from .._utils import (
+    frame,
+    get_valid_kwargs,
+    normalise_random_state,
+    uniquecols,
+)
 from ..doctools import document
 from ..exceptions import PlotnineError
-from .stat import stat
+from .stat import as_frame_of, stat
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
+    from typing import Any
+
+    from plotnine._utils.frame import DataFrame, Series
 
 
 def bootstrap_statistics(
@@ -23,20 +36,22 @@ def bootstrap_statistics(
     if random_state is None:
         random_state = np.random
 
+    a = frame.as_numpy(series)
     alpha = 1 - confidence_interval
-    size = (n_samples, len(series))
+    size = (n_samples, len(a))
     if isinstance(random_state, np.random.Generator):
-        inds = random_state.integers(0, len(series), size=size)
+        inds = random_state.integers(0, len(a), size=size)
     else:
-        inds = random_state.randint(0, len(series), size=size)
-    samples = series.to_numpy()[inds]
+        inds = random_state.randint(0, len(a), size=size)
+    samples = a[inds]
     means = np.sort(statistic(samples, axis=1))
-    return pd.DataFrame(
+    return _summary_frame(
+        series,
         {
             "ymin": means[int((alpha / 2) * n_samples)],
             "ymax": means[int((1 - alpha / 2) * n_samples)],
-            "y": [statistic(series)],
-        }
+            "y": [statistic(a)],
+        },
     )
 
 
@@ -48,7 +63,7 @@ def mean_cl_boot(
 
     Parameters
     ----------
-    series : pandas.Series
+    series : array_like
         Values
     n_samples : int, default=1000
         Number of sample to draw.
@@ -76,18 +91,18 @@ def mean_cl_normal(series, confidence_interval=0.95):
 
     Parameters
     ----------
-    series : pandas.Series
+    series : array_like
         Values
     confidence_interval : float
         Confidence interval in the range (0, 1).
     """
     import scipy.stats as stats
 
-    a = np.asarray(series)
+    a = frame.as_numpy(series)
     m = np.mean(a)
     se = stats.sem(a)
     h = se * stats.t._ppf((1 + confidence_interval) / 2, len(a) - 1)
-    return pd.DataFrame({"y": [m], "ymin": m - h, "ymax": m + h})
+    return _summary_frame(series, {"y": [m], "ymin": m - h, "ymax": m + h})
 
 
 def mean_sdl(series, mult=2):
@@ -96,14 +111,17 @@ def mean_sdl(series, mult=2):
 
     Parameters
     ----------
-    series : pandas.Series
+    series : array_like
         Values
     mult : float
         Multiplication factor.
     """
-    m = series.mean()
-    s = series.std()
-    return pd.DataFrame({"y": [m], "ymin": m - mult * s, "ymax": m + mult * s})
+    a = frame.as_numpy(series)
+    m = np.mean(a)
+    s = np.std(a, ddof=1)
+    return _summary_frame(
+        series, {"y": [m], "ymin": m - mult * s, "ymax": m + mult * s}
+    )
 
 
 def median_hilow(series, confidence_interval=0.95):
@@ -112,18 +130,20 @@ def median_hilow(series, confidence_interval=0.95):
 
     Parameters
     ----------
-    series : pandas.Series
+    series : array_like
         Values
     confidence_interval : float
         Confidence interval in the range (0, 1).
     """
+    a = frame.as_numpy(series)
     tail = (1 - confidence_interval) / 2
-    return pd.DataFrame(
+    return _summary_frame(
+        series,
         {
-            "y": [np.median(series)],
-            "ymin": np.percentile(series, 100 * tail),
-            "ymax": np.percentile(series, 100 * (1 - tail)),
-        }
+            "y": [np.median(a)],
+            "ymin": np.percentile(a, 100 * tail),
+            "ymax": np.percentile(a, 100 * (1 - tail)),
+        },
     )
 
 
@@ -133,17 +153,18 @@ def mean_se(series, mult=1):
 
     Parameters
     ----------
-    series : pandas.Series
+    series : array_like
         Values
     mult : float
         Multiplication factor.
     """
-    m = np.mean(series)
+    a = frame.as_numpy(series)
+    m = np.mean(a)
     # ddof=1: the standard error of the mean is built from the sample
     # variance. numpy defaults to ddof=0, which is the population
     # variance and understates the error by a factor of sqrt((n-1)/n).
-    se = mult * np.sqrt(np.var(series, ddof=1) / len(series))
-    return pd.DataFrame({"y": [m], "ymin": m - se, "ymax": m + se})
+    se = mult * np.sqrt(np.var(a, ddof=1) / len(a))
+    return _summary_frame(series, {"y": [m], "ymin": m - se, "ymax": m + se})
 
 
 function_dict = {
@@ -155,33 +176,51 @@ function_dict = {
 }
 
 
+def _call(fun: Callable[..., Any], y: Series, kwargs: dict[str, Any]) -> Any:
+    """
+    Call a summary function
+
+    The function gets the native series of the values, e.g. a
+    pandas series. If that raises a TypeError, which happens when a
+    numpy function like np.mean gets a polars series, the function
+    gets a numpy array.
+    """
+    try:
+        return fun(y.to_native(), **kwargs)
+    except TypeError:
+        return fun(frame.to_numpy(y), **kwargs)
+
+
 def make_summary_fun(fun_data, fun_y, fun_ymin, fun_ymax, fun_args):
     """
     Make summary function
+
+    The summary functions get the native series of the `y` values,
+    e.g. a pandas series when the data is a pandas dataframe.
     """
     if isinstance(fun_data, str):
         fun_data = function_dict[fun_data]
 
     if any([fun_y, fun_ymin, fun_ymax]):
 
-        def func(df) -> pd.DataFrame:
+        def func(df: DataFrame) -> DataFrame:
             d = {}
             if fun_y:
                 kwargs = get_valid_kwargs(fun_y, fun_args)
-                d["y"] = [fun_y(df["y"], **kwargs)]
+                d["y"] = [_call(fun_y, df["y"], kwargs)]
             if fun_ymin:
                 kwargs = get_valid_kwargs(fun_ymin, fun_args)
-                d["ymin"] = [fun_ymin(df["y"], **kwargs)]
+                d["ymin"] = [_call(fun_ymin, df["y"], kwargs)]
             if fun_ymax:
                 kwargs = get_valid_kwargs(fun_ymax, fun_args)
-                d["ymax"] = [fun_ymax(df["y"], **kwargs)]
-            return pd.DataFrame(d)
+                d["ymax"] = [_call(fun_ymax, df["y"], kwargs)]
+            return frame.frame_like(df, d)
 
     elif fun_data:
         kwargs = get_valid_kwargs(fun_data, fun_args)
 
-        def func(df) -> pd.DataFrame:
-            return fun_data(df["y"], **kwargs)
+        def func(df: DataFrame) -> DataFrame:
+            return as_frame_of(_call(fun_data, df["y"], kwargs), df)
 
     else:
         raise ValueError(f"Bad value for function fun_data={fun_data}")
@@ -316,16 +355,24 @@ class stat_summary(stat):
         # and join the pieces back together, retaining original
         # columns unaffected by the summary.
         summaries = []
-        for (group, x), df in data.groupby(["group", "x"]):
-            summary = func(df)
-            summary["x"] = x  # pyright: ignore[reportCallIssue,reportArgumentType]
-            summary["group"] = cast("int", group)
-            summary["n"] = len(df)
+        for (group, x), df in frame.group_split(data, ["group", "x"]):
+            summary = frame.assign(func(df), x=x, group=group, n=len(df))
             unique = uniquecols(df)
-            if "y" in unique:
-                unique = unique.drop("y", axis=1)
-            merged = summary.merge(unique, on=["group", "x"])
-            summaries.append(merged)
+            extra = [c for c in unique.columns if c not in summary.columns]
+            if extra:
+                unique = frame.take(unique.select(extra), [0] * len(summary))
+                summary = nw.concat([summary, unique], how="horizontal")
+            summaries.append(summary)
 
-        new_data = pd.concat(summaries, axis=0, ignore_index=True)
-        return new_data
+        return frame.concat(summaries)
+
+
+def _summary_frame(series: Any, data: dict[str, Any]) -> Any:
+    """
+    Create a summary dataframe of the same library as the series
+
+    The dataframe is native, e.g. a pandas dataframe for a pandas
+    series. For a numpy array, it is of the default library.
+    """
+    backend = frame.backend_of(series)
+    return frame.frame(data, backend=backend).to_native()

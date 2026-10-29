@@ -5,14 +5,14 @@ import types
 import typing
 from copy import copy, deepcopy
 
+import narwhals as nw
 import numpy as np
-import pandas as pd
-import pandas.api.types as pdtypes
 
 from .._mpl.axes import p9Axes
-from .._utils import cross_join, match
+from .._utils import cross_join, frame, match
+from .._utils.frame import native_io
 from ..exceptions import PlotnineError
-from ..mapping._asis import asis_columns
+from ..mapping.evaluation import eval_string
 from ..scales.scales import Scales
 from .strips import Strips
 
@@ -20,12 +20,12 @@ if typing.TYPE_CHECKING:
     from collections.abc import Sequence
     from typing import Any, Literal
 
-    import numpy.typing as npt
     from matplotlib.axes import Axes
     from matplotlib.figure import Figure
 
     from plotnine import ggplot, theme
     from plotnine._mpl.gridspec import p9GridSpec
+    from plotnine._utils.frame import DataFrame
     from plotnine.coords.coord import coord
     from plotnine.facets.labelling import CanBeStripLabellingFunc
     from plotnine.facets.layout import Layout
@@ -162,7 +162,7 @@ class facet:
         self.strips = Strips.from_facet(self)
         return gs, self.axs
 
-    def setup_data(self, data: list[pd.DataFrame]) -> list[pd.DataFrame]:
+    def setup_data(self, data: list[DataFrame]) -> list[DataFrame]:
         """
         Allow the facet to manipulate the data
 
@@ -183,7 +183,7 @@ class facet:
         """
         return data
 
-    def setup_params(self, data: list[pd.DataFrame]):
+    def setup_params(self, data: list[DataFrame]):
         """
         Create facet parameters
 
@@ -196,7 +196,7 @@ class facet:
 
     def init_scales(
         self,
-        layout: pd.DataFrame,
+        layout: DataFrame,
         x_scale: scale | None = None,
         y_scale: scale | None = None,
     ) -> types.SimpleNamespace:
@@ -212,7 +212,7 @@ class facet:
 
         return scales
 
-    def map(self, data: pd.DataFrame, layout: pd.DataFrame) -> pd.DataFrame:
+    def map(self, data: DataFrame, layout: DataFrame) -> DataFrame:
         """
         Assign a data points to panels
 
@@ -234,9 +234,9 @@ class facet:
 
     def compute_layout(
         self,
-        data: list[pd.DataFrame],
+        data: list[DataFrame],
         scales: Scales,
-    ) -> pd.DataFrame:
+    ) -> DataFrame:
         """
         Compute layout
 
@@ -250,7 +250,7 @@ class facet:
         msg = "{} should implement this method."
         raise NotImplementedError(msg.format(self.__class__.__name__))
 
-    def finish_data(self, data: pd.DataFrame, layout: Layout) -> pd.DataFrame:
+    def finish_data(self, data: DataFrame, layout: Layout) -> DataFrame:
         """
         Modify data before it is drawn out by the geom
 
@@ -278,28 +278,28 @@ class facet:
         _layout = layout.layout
         panel_scales_x = layout.panel_scales_x
         panel_scales_y = layout.panel_scales_y
+        layout_panels = _layout["PANEL"].to_list()
+        layout_scale_x = _layout["SCALE_X"].to_numpy()
+        layout_scale_y = _layout["SCALE_Y"].to_numpy()
 
         # loop over each layer, training x and y scales in turn
         for layer in layers:
             data = layer.data
-            asis = asis_columns(data)
-            match_id = match(data["PANEL"], _layout["PANEL"])
+            columns = set(frame.to_frame(data).columns)
+            asis = layer.asis
+            match_id = match(frame.as_numpy(data["PANEL"]), layout_panels)
             if panel_scales_x:
-                x_vars = list(
-                    (set(panel_scales_x[0].aesthetics) & set(data.columns))
-                    - asis
-                )
+                x_aes = set(panel_scales_x[0].aesthetics)
+                x_vars = list((x_aes & columns) - asis)
                 # the scale index for each data point
-                SCALE_X = _layout["SCALE_X"].iloc[match_id].tolist()
+                SCALE_X = layout_scale_x[match_id].tolist()
                 panel_scales_x.train(data, x_vars, SCALE_X)
 
             if panel_scales_y:
-                y_vars = list(
-                    (set(panel_scales_y[0].aesthetics) & set(data.columns))
-                    - asis
-                )
+                y_aes = set(panel_scales_y[0].aesthetics)
+                y_vars = list((y_aes & columns) - asis)
                 # the scale index for each data point
-                SCALE_Y = _layout["SCALE_Y"].iloc[match_id].tolist()
+                SCALE_Y = layout_scale_y[match_id].tolist()
                 panel_scales_y.train(data, y_vars, SCALE_Y)
 
         return self
@@ -408,12 +408,13 @@ class facet:
         return aspect_ratio
 
 
+@native_io
 def combine_vars(
-    data: list[pd.DataFrame],
+    data: list[DataFrame],
     environment: Environment,
     vars: Sequence[str],
     drop: bool = True,
-) -> pd.DataFrame:
+) -> DataFrame:
     """
     Generate all combinations of data needed for facetting
 
@@ -421,80 +422,99 @@ def combine_vars(
     for the plot. Other data frames in the list are ones that are
     added to the layers.
     """
+    data = [df for df in data if df is not None]
+    backend = data[0].implementation
     if len(vars) == 0:
-        return pd.DataFrame()
+        return frame.frame(backend=backend)
 
     # For each layer, compute the facet values
     values = [
-        eval_facet_vars(df, vars, environment) for df in data if df is not None
+        frame.convert(eval_facet_vars(df, vars, environment), backend)
+        for df in data
     ]
 
     # Form the base data frame which contains all combinations
     # of facetting variables that appear in the data
-    has_all = [x.shape[1] == len(vars) for x in values]
+    has_all = [len(x.columns) == len(vars) for x in values]
     if not any(has_all):
         raise PlotnineError(
             "At least one layer must contain all variables used for facetting"
         )
-    base = pd.concat([x for i, x in enumerate(values) if has_all[i]], axis=0)
-    base = base.drop_duplicates()
+    base = frame.concat(
+        [x.select(vars) for i, x in enumerate(values) if has_all[i]]
+    )
+    base = base.unique(maintain_order=True)
 
     if not drop:
         base = unique_combs(base)
 
     # sorts according to order of factor levels
-    base = base.sort_values(base.columns.tolist())
+    base = frame.sort(base, base.columns)
 
     # Systematically add on missing combinations
     for i, value in enumerate(values):
         if has_all[i] or len(value.columns) == 0:
             continue
-        old = base.loc[:, list(base.columns.difference(value.columns))]
-        new = value.loc[
-            :, list(base.columns.intersection(value.columns))
-        ].drop_duplicates()
+        old = base.select([c for c in base.columns if c not in value.columns])
+        new = value.select(
+            [c for c in base.columns if c in value.columns]
+        ).unique(maintain_order=True)
 
         if not drop:
             new = unique_combs(new)
 
-        base = pd.concat([base, cross_join(old, new)], ignore_index=True)
+        base = frame.concat([base, cross_join(old, new)])
 
     if len(base) == 0:
         raise PlotnineError("Faceting variables must have at least one value")
 
-    base = base.reset_index(drop=True)
     return base
 
 
-def unique_combs(df: pd.DataFrame) -> pd.DataFrame:
+def unique_combs(df: DataFrame) -> DataFrame:
     """
     Generate all possible combinations of the values in the columns
     """
 
-    def _unique(s: pd.Series[Any]) -> npt.NDArray[Any] | pd.Index:
-        if isinstance(s.dtype, pdtypes.CategoricalDtype):
-            return s.cat.categories
-        return s.unique()
+    def _unique(s: nw.Series[Any]) -> list[Any]:
+        if frame.is_categorical(s):
+            return frame.levels(s)
+        return s.unique(maintain_order=True).to_list()
 
     # List of unique values from every column
-    lst = (_unique(x) for _, x in df.items())
+    lst = [_unique(df[col]) for col in df.columns]
     rows = list(itertools.product(*lst))
-    _df = pd.DataFrame(rows, columns=df.columns)
+    impl = df.implementation
 
     # preserve the column dtypes
-    for col in df:
-        t = df[col].dtype
-        _df[col] = _df[col].astype(t)
-    return _df
+    columns = []
+    for i, col in enumerate(df.columns):
+        s = df[col]
+        values = [row[i] for row in rows]
+        if frame.is_categorical(s):
+            columns.append(
+                frame.categorical(
+                    values,
+                    frame.levels(s),
+                    ordered=frame.is_ordinal(s),
+                    name=col,
+                    backend=impl,
+                )
+            )
+        else:
+            columns.append(
+                frame.series(values, col, backend=impl, dtype=s.dtype)
+            )
+    return frame.frame({s.name: s for s in columns}, backend=impl)
 
 
-def layout_null() -> pd.DataFrame:
+def layout_null(backend: frame.Implementation) -> DataFrame:
     """
     Layout Null
     """
-    layout = pd.DataFrame(
+    return frame.frame(
         {
-            "PANEL": pd.Categorical([1]),
+            "PANEL": [1],
             "ROW": 1,
             "COL": 1,
             "SCALE_X": 1,
@@ -503,17 +523,17 @@ def layout_null() -> pd.DataFrame:
             "AXIS_Y": True,
             "AXIS_X_SEC": True,
             "AXIS_Y_SEC": True,
-        }
+        },
+        backend=backend,
     )
-    return layout
 
 
 def add_missing_facets(
-    data: pd.DataFrame,
-    layout: pd.DataFrame,
+    data: DataFrame,
+    layout: DataFrame,
     vars: Sequence[str],
-    facet_vals: pd.DataFrame,
-) -> tuple[pd.DataFrame, pd.DataFrame]:
+    facet_vals: DataFrame,
+) -> tuple[DataFrame, DataFrame]:
     """
     Add missing facets
     """
@@ -521,29 +541,33 @@ def add_missing_facets(
     # the facet variables, add the missing facet variables
     # and create new data where the points(duplicates) are
     # present in all the facets
-    missing_facets = list(set(vars) - set(facet_vals.columns.tolist()))
+    missing_facets = [v for v in vars if v not in facet_vals.columns]
     if missing_facets:
-        to_add = layout.loc[:, missing_facets].drop_duplicates()
-        to_add = to_add.reset_index(drop=True)
+        to_add = frame.convert(
+            layout.select(missing_facets).unique(maintain_order=True),
+            data.implementation,
+        )
 
         # a point for each facet, [0, 1, ..., n-1, 0, 1, ..., n-1, ...]
         data_rep = np.tile(np.arange(len(data)), len(to_add))
         # a facet for each point, [0, 0, 0, 1, 1, 1, ... n-1, n-1, n-1]
         facet_rep = np.repeat(np.arange(len(to_add)), len(data))
 
-        data = data.iloc[data_rep, :].reset_index(drop=True)
-        facet_vals = facet_vals.iloc[data_rep, :].reset_index(drop=True)
-        to_add = to_add.iloc[facet_rep, :].reset_index(drop=True)
-        facet_vals = pd.concat(
-            [facet_vals, to_add], axis=1, ignore_index=False
-        )
+        data = frame.take(data, data_rep)
+        to_add = frame.take(to_add, facet_rep)
+        if len(facet_vals.columns):
+            facet_vals = nw.concat(
+                [frame.take(facet_vals, data_rep), to_add], how="horizontal"
+            )
+        else:
+            facet_vals = to_add
 
     return data, facet_vals
 
 
 def eval_facet_vars(
-    data: pd.DataFrame, vars: Sequence[str], env: Environment
-) -> pd.DataFrame:
+    data: DataFrame, vars: Sequence[str], env: Environment
+) -> DataFrame:
     """
     Evaluate facet variables
 
@@ -568,10 +592,10 @@ def eval_facet_vars(
         return value
 
     env = env.with_outer_namespace({"I": I})
-    facet_vals = pd.DataFrame(index=data.index)
+    facet_vals = {}
 
     for name in vars:
-        if name in data:
+        if name in data.columns:
             # This is a limited solution. If a keyword is
             # part of an expression it will fail in the
             # else statement below
@@ -582,9 +606,13 @@ def eval_facet_vars(
         else:
             # Statements
             try:
-                res = env.eval(name, inner_namespace=data)
-            except NameError:
-                continue
+                res = eval_string(name, data, env, name)
+            except PlotnineError as e:
+                if isinstance(e.__cause__, NameError):
+                    continue
+                raise
         facet_vals[name] = res
 
-    return facet_vals
+    if not facet_vals:
+        return frame.frame(backend=data.implementation)
+    return frame.frame(facet_vals, backend=data.implementation, n=len(data))

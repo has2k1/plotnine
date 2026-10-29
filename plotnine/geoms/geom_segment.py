@@ -3,9 +3,14 @@ from __future__ import annotations
 import typing
 
 import numpy as np
-import pandas as pd
 
-from .._utils import SIZE_FACTOR, interleave, make_line_segments, to_rgba
+from .._utils import (
+    SIZE_FACTOR,
+    frame,
+    interleave,
+    make_line_segments,
+    to_rgba,
+)
 from ..doctools import document
 from .geom import geom
 from .geom_path import geom_path
@@ -15,6 +20,7 @@ if typing.TYPE_CHECKING:
 
     from matplotlib.axes import Axes
 
+    from plotnine._utils.frame import DataFrame
     from plotnine.coords.coord import coord
     from plotnine.iapi import panel_view
 
@@ -54,7 +60,7 @@ class geom_segment(geom):
 
     @staticmethod
     def draw_group(
-        data: pd.DataFrame,
+        data: DataFrame,
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
@@ -63,19 +69,20 @@ class geom_segment(geom):
         from matplotlib.collections import LineCollection
 
         data = coord.transform(data, panel_params)
-        linewidth = data["size"] * SIZE_FACTOR
+        linewidth = frame.to_numpy(data["size"]) * SIZE_FACTOR
         color = to_rgba(data["color"], data["alpha"])
-
-        # start point -> end point, sequence of xy points
-        # from which line segments are created
-        x = interleave(data["x"], data["xend"])
-        y = interleave(data["y"], data["yend"])
-        segments = make_line_segments(x, y, ispath=False)
+        x = frame.to_numpy(data["x"])
+        xend = frame.to_numpy(data["xend"])
+        y = frame.to_numpy(data["y"])
+        yend = frame.to_numpy(data["yend"])
+        segments = make_line_segments(
+            interleave(x, xend), interleave(y, yend), ispath=False
+        )
         coll = LineCollection(
             list(segments),
             edgecolor=color,
             linewidth=linewidth,
-            linestyle=data["linetype"][0],
+            linestyle=data["linetype"].item(0),
             capstyle=params.get("lineend"),
             zorder=params["zorder"],
             rasterized=params["raster"],
@@ -83,16 +90,22 @@ class geom_segment(geom):
         ax.add_collection(coll)
 
         if "arrow" in params and params["arrow"]:
-            adata = pd.DataFrame(index=range(len(data) * 2))
             idx = np.arange(1, len(data) + 1)
-            adata["group"] = np.hstack([idx, idx])
-            adata["x"] = np.hstack([data["x"], data["xend"]])
-            adata["y"] = np.hstack([data["y"], data["yend"]])
-            adata["linewidth"] = np.hstack([linewidth, linewidth])
-            other = ["color", "alpha", "linetype"]
-            for param in other:
-                adata[param] = np.hstack([data[param], data[param]])
+            adata = {
+                "group": np.hstack([idx, idx]),
+                "x": np.hstack([x, xend]),
+                "y": np.hstack([y, yend]),
+                "linewidth": np.hstack([linewidth, linewidth]),
+            }
+            for param in ["color", "alpha", "linetype"]:
+                values = data[param].to_list()
+                adata[param] = values + values
 
             params["arrow"].draw(
-                adata, panel_params, coord, ax, params, constant=False
+                frame.frame_like(data, adata),
+                panel_params,
+                coord,
+                ax,
+                params,
+                constant=False,
             )

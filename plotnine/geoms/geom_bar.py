@@ -2,12 +2,14 @@ from __future__ import annotations
 
 import typing
 
-from .._utils import resolution
+import numpy as np
+
+from .._utils import frame, resolution
 from ..doctools import document
 from .geom_rect import geom_rect
 
 if typing.TYPE_CHECKING:
-    import pandas as pd
+    from plotnine._utils.frame import DataFrame
 
 
 @document
@@ -44,24 +46,23 @@ class geom_bar(geom_rect):
         "width": None,
     }
 
-    def setup_data(self, data: pd.DataFrame) -> pd.DataFrame:
-        if "width" not in data:
+    def setup_data(self, data: DataFrame) -> DataFrame:
+        if "width" not in data.columns:
             if self.params["width"]:
-                data["width"] = self.params["width"]
+                width = self.params["width"]
             else:
-                data["width"] = resolution(data["x"], False) * 0.9
+                width = resolution(data["x"], False) * 0.9
+            data = frame.assign(data, width=width)
 
         just = self.params["just"]
-
-        bool_idx = data["y"] < 0
-
-        data["ymin"] = 0.0
-        data.loc[bool_idx, "ymin"] = data.loc[bool_idx, "y"]
-
-        data["ymax"] = data["y"]
-        data.loc[bool_idx, "ymax"] = 0.0
-
-        data["xmin"] = data["x"] - data["width"] * just
-        data["xmax"] = data["x"] + data["width"] * (1 - just)
-        del data["width"]
-        return data
+        x = frame.to_numpy(data["x"])
+        y = frame.to_numpy(data["y"])
+        width = frame.to_numpy(data["width"])
+        negative = y < 0
+        return frame.assign(
+            data,
+            ymin=np.where(negative, y, 0.0),
+            ymax=np.where(negative, 0.0, y),
+            xmin=x - width * just,
+            xmax=x + width * (1 - just),
+        ).drop("width")

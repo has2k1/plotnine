@@ -5,7 +5,7 @@ from warnings import warn
 
 import numpy as np
 
-from .._utils import resolution
+from .._utils import frame, resolution
 from ..coords import coord_cartesian
 from ..doctools import document
 from ..exceptions import PlotnineError, PlotnineWarning
@@ -15,10 +15,10 @@ from .geom_polygon import geom_polygon
 if typing.TYPE_CHECKING:
     from typing import Any
 
-    import pandas as pd
     from matplotlib.axes import Axes
 
     from plotnine import aes
+    from plotnine._utils.frame import DataFrame
     from plotnine.coords.coord import coord
     from plotnine.iapi import panel_view
     from plotnine.typing import DataLike
@@ -109,12 +109,14 @@ class geom_raster(geom):
 
         super().__init__(mapping, data, **kwargs)
 
-    def setup_data(self, data: pd.DataFrame) -> pd.DataFrame:
+    def setup_data(self, data: DataFrame) -> DataFrame:
         hjust = self.params["hjust"]
         vjust = self.params["vjust"]
         precision = np.sqrt(np.finfo(float).eps)
 
-        x_diff = np.diff(np.sort(data["x"].unique()))
+        x = frame.to_numpy(data["x"])
+        y = frame.to_numpy(data["y"])
+        x_diff = np.diff(np.unique(x))
         if len(x_diff) == 0:
             w = 1
         elif np.any(np.abs(np.diff(x_diff)) > precision):
@@ -127,7 +129,7 @@ class geom_raster(geom):
         else:
             w = x_diff[0]
 
-        y_diff = np.diff(np.sort(data["y"].unique()))
+        y_diff = np.diff(np.unique(y))
         if len(y_diff) == 0:
             h = 1
         elif np.any(np.abs(np.diff(y_diff)) > precision):
@@ -140,15 +142,17 @@ class geom_raster(geom):
         else:
             h = y_diff[0]
 
-        data["xmin"] = data["x"] - w * (1 - hjust)
-        data["xmax"] = data["x"] + w * hjust
-        data["ymin"] = data["y"] - h * (1 - vjust)
-        data["ymax"] = data["y"] + h * vjust
-        return data
+        return frame.assign(
+            data,
+            xmin=x - w * (1 - hjust),
+            xmax=x + w * hjust,
+            ymin=y - h * (1 - vjust),
+            ymax=y + h * vjust,
+        )
 
     def draw_panel(
         self,
-        data: pd.DataFrame,
+        data: DataFrame,
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
@@ -165,10 +169,10 @@ class geom_raster(geom):
             )
 
         data = coord.transform(data, panel_params)
-        x = data["x"].to_numpy().astype(float)
-        y = data["y"].to_numpy().astype(float)
-        facecolor = to_rgba_array(data["fill"].to_numpy())
-        facecolor[:, 3] = data["alpha"].to_numpy()
+        x = frame.to_numpy(data["x"]).astype(float)
+        y = frame.to_numpy(data["y"]).astype(float)
+        facecolor = to_rgba_array(data["fill"].to_list())
+        facecolor[:, 3] = frame.to_numpy(data["alpha"])
 
         # Convert vector of data to flat image,
         # figure out dimensions of raster on plot, and the colored

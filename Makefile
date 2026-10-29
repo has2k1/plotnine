@@ -82,6 +82,9 @@ test: clean-test
 test1: clean-test
 	$(UVRUN) pytest -n auto -p no:sugar
 
+test-polars: clean-test
+	$(UVRUN) pytest -n auto --backend polars
+
 visualize-tests:
 	$(PYTHON) tools/visualize_tests.py
 

@@ -66,7 +66,7 @@ def test_colorsteps_inherits_limit_labels_from_scale():
     guide.train(scale)
 
     npt.assert_allclose(guide.key["value"], [0, 5, 10])
-    assert guide.key["label"].tolist() == ["0", "5", "10"]
+    assert guide.key["label"].to_list() == ["0", "5", "10"]
 
 
 def test_colorsteps_labels_explicit_limit_breaks():
@@ -94,7 +94,7 @@ def test_colorsteps_warns_when_fixed_labels_do_not_include_limits():
     with pytest.warns(PlotnineWarning, match="Fixed labels"):
         guide.train(scale)
 
-    assert guide.key["label"].tolist() == ["0", "middle", "10"]
+    assert guide.key["label"].to_list() == ["0", "middle", "10"]
 
 
 def test_colorsteps_formats_fixed_labels_at_explicit_limits():
@@ -109,7 +109,7 @@ def test_colorsteps_formats_fixed_labels_at_explicit_limits():
     with pytest.warns(PlotnineWarning, match="Fixed labels"):
         guide.train(scale)
 
-    assert guide.key["label"].tolist() == ["lower", "middle", "10"]
+    assert guide.key["label"].to_list() == ["lower", "middle", "10"]
 
 
 def test_colorsteps_formats_limits_after_filtering_fixed_breaks():
@@ -124,7 +124,7 @@ def test_colorsteps_formats_limits_after_filtering_fixed_breaks():
     with pytest.warns(PlotnineWarning, match="Fixed labels"):
         guide.train(scale)
 
-    assert guide.key["label"].tolist() == ["0", "middle", "10"]
+    assert guide.key["label"].to_list() == ["0", "middle", "10"]
 
 
 @pytest.mark.parametrize("breaks", [True, lambda limits, n: [5]])
@@ -142,7 +142,7 @@ def test_colorsteps_formats_added_limits_for_generated_breaks(breaks):
     with pytest.warns(PlotnineWarning, match="Fixed labels"):
         guide.train(scale)
 
-    assert guide.key["label"].tolist() == ["0", "middle", "10"]
+    assert guide.key["label"].to_list() == ["0", "middle", "10"]
 
 
 def test_colorsteps_trains_from_interval_valued_discrete_scale():
@@ -153,7 +153,7 @@ def test_colorsteps_trains_from_interval_valued_discrete_scale():
 
     guide.train(scale)
 
-    assert guide.bar["color"].tolist() == ["red", "blue"]
+    assert guide.bar["color"].to_list() == ["red", "blue"]
     npt.assert_allclose(guide.bar["value"], [0.5, 2])
     npt.assert_allclose(guide.key["value"], [1])
 
@@ -209,7 +209,7 @@ def test_bins_trains_midpoint_keys_and_boundary_labels():
     result = guide.train(scale)
 
     assert result is guide
-    assert guide.key["shape"].tolist() == ["o", "^"]
+    assert guide.key["shape"].to_list() == ["o", "^"]
     assert guide._boundary_labels == ["5"]
     npt.assert_allclose(guide._boundary_values, [5])
 
@@ -235,7 +235,7 @@ def test_bins_trains_from_interval_valued_discrete_scale():
 
     guide.train(scale)
 
-    assert guide.key["shape"].tolist() == ["o", "s"]
+    assert guide.key["shape"].to_list() == ["o", "s"]
     assert guide._boundary_labels == ["1.0"]
 
 

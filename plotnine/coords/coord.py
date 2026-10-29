@@ -6,7 +6,7 @@ from typing import cast
 
 import numpy as np
 
-from .._utils import OPPOSITE_SIDE
+from .._utils import OPPOSITE_SIDE, frame
 from ..iapi import panel_ranges
 from ..mapping.aes import POSITION_AESTHETICS
 
@@ -15,12 +15,12 @@ if typing.TYPE_CHECKING:
     from typing import Any, Literal
 
     import numpy.typing as npt
-    import pandas as pd
     from matplotlib.axes import Axes
     from matplotlib.axis import XAxis, YAxis
 
     from plotnine import ggplot
     from plotnine._mpl.axes import p9Axes
+    from plotnine._utils.frame import DataFrame
     from plotnine.iapi import (
         labels_view,
         layout_details,
@@ -31,7 +31,6 @@ if typing.TYPE_CHECKING:
     from plotnine.typing import (
         FloatArray,
         FloatArrayLike,
-        FloatSeries,
         Side,
     )
 
@@ -172,7 +171,7 @@ class coord:
         """
         self._owner = plot
 
-    def setup_data(self, data: list[pd.DataFrame]) -> list[pd.DataFrame]:
+    def setup_data(self, data: list[DataFrame]) -> list[DataFrame]:
         """
         Allow the coordinate system to manipulate the layer data
 
@@ -188,7 +187,7 @@ class coord:
         """
         return data
 
-    def setup_params(self, data: list[pd.DataFrame]):
+    def setup_params(self, data: list[DataFrame]):
         """
         Create additional parameters
 
@@ -203,7 +202,7 @@ class coord:
         """
         self.params = {}
 
-    def setup_layout(self, layout: pd.DataFrame) -> pd.DataFrame:
+    def setup_layout(self, layout: DataFrame) -> DataFrame:
         """
         Allow the coordinate system alter the layout dataframe
 
@@ -364,8 +363,8 @@ class coord:
         return cur_labels
 
     def transform(
-        self, data: pd.DataFrame, panel_params: panel_view, munch: bool = False
-    ) -> pd.DataFrame:
+        self, data: DataFrame, panel_params: panel_view, munch: bool = False
+    ) -> DataFrame:
         """
         Transform data before it is plotted
 
@@ -423,42 +422,35 @@ class coord:
 
     def distance(
         self,
-        x: FloatSeries,
-        y: FloatSeries,
+        x: FloatArray,
+        y: FloatArray,
         panel_params: panel_view,
     ) -> npt.NDArray[Any]:
         msg = "The coordinate should implement this method."
         raise NotImplementedError(msg)
 
-    def munch(
-        self, data: pd.DataFrame, panel_params: panel_view
-    ) -> pd.DataFrame:
+    def munch(self, data: DataFrame, panel_params: panel_view) -> DataFrame:
         ranges = self.backtransform_range(panel_params)
 
-        x_neginf = np.isneginf(data["x"])
-        x_posinf = np.isposinf(data["x"])
-        y_neginf = np.isneginf(data["y"])
-        y_posinf = np.isposinf(data["y"])
-        if x_neginf.any():
-            data.loc[x_neginf, "x"] = ranges.x[0]
-        if x_posinf.any():
-            data.loc[x_posinf, "x"] = ranges.x[1]
-        if y_neginf.any():
-            data.loc[y_neginf, "y"] = ranges.y[0]
-        if y_posinf.any():
-            data.loc[y_posinf, "y"] = ranges.y[1]
+        x = frame.to_numpy(data["x"]).astype(float)
+        y = frame.to_numpy(data["y"]).astype(float)
+        x[np.isneginf(x)] = ranges.x[0]
+        x[np.isposinf(x)] = ranges.x[1]
+        y[np.isneginf(y)] = ranges.y[0]
+        y[np.isposinf(y)] = ranges.y[1]
+        data = frame.assign(data, x=x, y=y)
 
-        dist = self.distance(data["x"], data["y"], panel_params)
-        group = data["group"].to_numpy()
+        dist = self.distance(x, y, panel_params)
+        group = frame.to_numpy(data["group"])
         bool_idx = group[1:] != group[:-1]
-        if "subgroup" in data:
+        if "subgroup" in data.columns:
             # Each `subgroup` identifies a ring within one polygon group.
             # Ring boundaries are also segment boundaries; interpolating
             # between rings would draw a spurious edge.
             # Consecutive missing subgroup values belong to the same ring.
             # Compare them as equal despite `nan != nan`.
-            subgroup = data["subgroup"].to_numpy()
-            missing = data["subgroup"].isna().to_numpy()
+            subgroup = frame.to_numpy(data["subgroup"])
+            missing = frame.isna(data["subgroup"])
             bool_idx |= (subgroup[1:] != subgroup[:-1]) & ~(
                 missing[1:] & missing[:-1]
             )
@@ -487,7 +479,7 @@ def interp(start: int, end: int, n: int) -> FloatArray:
     return np.linspace(start, end, n, endpoint=False)
 
 
-def munch_data(data: pd.DataFrame, dist: FloatArray) -> pd.DataFrame:
+def munch_data(data: DataFrame, dist: FloatArray) -> DataFrame:
     """
     Subdivide path segments and interpolate their position aesthetics
     """
@@ -509,7 +501,7 @@ def munch_data(data: pd.DataFrame, dist: FloatArray) -> pd.DataFrame:
     # Append the final endpoint after interpolating each segment.
     interpolated = {}
     for col in position_columns:
-        values = data[col].to_numpy()
+        values = frame.to_numpy(data[col])
         pieces = [
             interp(start, end, n)
             for start, end, n in zip(values[:-1], values[1:], extra)
@@ -521,14 +513,11 @@ def munch_data(data: pd.DataFrame, dist: FloatArray) -> pd.DataFrame:
     # append the final observation.
     idx = np.hstack(
         [
-            np.repeat(data.index[:-1], extra),
+            np.repeat(np.arange(len(data) - 1), extra),
             len(data) - 1,
         ]
     )
 
-    munched = data.loc[idx, list(data.columns.difference(position_columns))]
-    for col, values in interpolated.items():
-        munched[col] = values
-    munched = munched.reset_index(drop=True)
-
-    return munched
+    other_columns = [c for c in data.columns if c not in POSITION_AESTHETICS]
+    munched = frame.take(data.select(other_columns), idx)
+    return frame.assign(munched, **interpolated)

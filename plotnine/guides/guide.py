@@ -8,14 +8,12 @@ from typing import TYPE_CHECKING, cast
 
 from .._utils import MARGIN_SIDE, ensure_xy_location
 from .._utils.registry import Register
-from ..mapping._asis import asis_columns
 from ..themes.theme import theme as Theme
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
     from typing import Literal, Self, TypeAlias
 
-    import pandas as pd
     from matplotlib.figure import Figure
     from matplotlib.offsetbox import PackerBase
 
@@ -35,6 +33,7 @@ if TYPE_CHECKING:
     AlignDict: TypeAlias = dict[
         Literal["ha", "va"], dict[tuple[Orientation, Side], str]
     ]
+    from plotnine._utils.frame import DataFrame
 
 
 @dataclass
@@ -75,7 +74,7 @@ class guide(ABC, metaclass=Register):
     available_aes: set[str] = field(init=False, default_factory=set)
 
     hash: str = field(init=False, repr=False)
-    key: pd.DataFrame = field(init=False, repr=False)
+    key: DataFrame = field(init=False, repr=False)
     plot_layers: Layers = field(init=False, repr=False)
     plot_mapping: aes = field(init=False, repr=False)
     guides_elements: GuidesElements = field(init=False, repr=False)
@@ -108,7 +107,7 @@ class guide(ABC, metaclass=Register):
         )
         geom_ae = l.geom.REQUIRED_AES | l.geom.DEFAULT_AES.keys()
         matched = all_ae & geom_ae & legend_ae
-        matched = list(matched - set(l.geom.aes_params) - asis_columns(l.data))
+        matched = list(matched - set(l.geom.aes_params) - l.asis)
         return matched
 
     def _bind_source(self, plot: ggplot):

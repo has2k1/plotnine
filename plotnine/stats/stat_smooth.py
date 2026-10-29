@@ -1,8 +1,8 @@
 import warnings
 
 import numpy as np
-import pandas as pd
 
+from .._utils import frame
 from ..doctools import document
 from ..exceptions import PlotnineWarning
 from .smoothers import predictdf
@@ -38,7 +38,9 @@ class stat_smooth(stat):
 
         ```python
         def my_smoother(data, xseq, params):
-            # * data - has the x and y values for the model
+            # * data - has the x and y values for the model. It is a
+            #   dataframe of the library of the plot data, e.g.
+            #   pandas (as below) or polars.
             # * xseq - x values to be predicted
             # * params - stat parameters
             #
@@ -159,15 +161,16 @@ class stat_smooth(stat):
         """
         Override to modify data before compute_layer is called
         """
-        data = data[np.isfinite(data["x"]) & np.isfinite(data["y"])]
-        return data
+        return data.filter(
+            frame.is_finite(data["x"]) & frame.is_finite(data["y"])
+        )
 
     def setup_params(self, data):
         params = self.params
         # Use loess/lowess for small datasets
         # and glm for large
         if params["method"] == "auto":
-            max_group = data["group"].value_counts().max()
+            max_group = data["group"].value_counts()["count"].max()
             if max_group < 1000:
                 try:
                     from skmisc.loess import loess  # noqa: F401
@@ -203,10 +206,11 @@ class stat_smooth(stat):
             params["environment"] = self.environment
 
     def compute_group(self, data, scales):
-        data = data.sort_values("x")
+        data = frame.sort(data, "x")
         n = self.params["n"]
 
-        x_unique = data["x"].unique()
+        x = frame.to_numpy(data["x"])
+        x_unique = np.unique(x)
 
         if len(x_unique) < 2:
             warnings.warn(
@@ -217,18 +221,18 @@ class stat_smooth(stat):
                 PlotnineWarning,
             )
             # Not enough data to fit
-            return pd.DataFrame()
+            return frame.empty_like(data)
 
-        if data["x"].dtype.kind == "i":
+        if x.dtype.kind == "i":
             if self.params["fullrange"]:
                 xseq = scales.x.dimension()
             else:
-                xseq = np.sort(x_unique)
+                xseq = x_unique
         else:
             if self.params["fullrange"]:
                 rangee = scales.x.dimension()
             else:
-                rangee = [data["x"].min(), data["x"].max()]
+                rangee = [x.min(), x.max()]
             xseq = np.linspace(rangee[0], rangee[1], n)
 
         return predictdf(data, xseq, self.params)

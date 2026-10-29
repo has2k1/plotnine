@@ -62,3 +62,30 @@ def test_asis_in_mapping():
         )
     )
     assert p == "asis_in_mapping"
+
+
+def test_asis_values():
+    import numpy as np
+
+    from plotnine.mapping._asis import AsIs
+
+    a = I([1, 2, 3])
+    assert isinstance(a, AsIs)
+    assert I(a) is a
+    assert len(a) == 3
+    assert list(a) == [1, 2, 3]
+    assert a[0] == 1
+    assert isinstance(a[1:], AsIs)
+    assert np.asarray(a).tolist() == [1, 2, 3]
+
+    # Comparisons give plain boolean arrays
+    b = I([1, 0, 3])
+    assert (a == b).tolist() == [True, False, True]
+    assert (a != b).tolist() == [False, True, False]
+    assert (a > b).tolist() == [False, True, False]
+    assert (a >= 2).tolist() == [False, True, True]
+    assert (a < 2).tolist() == [True, False, False]
+    assert (a <= 1).tolist() == [True, False, False]
+
+    # Strings can hold missing values
+    assert I(["a", "b"]).dtype == object

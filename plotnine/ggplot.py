@@ -11,6 +11,7 @@ from typing import TYPE_CHECKING, Any, cast, overload
 from warnings import warn
 
 from ._utils import (
+    frame,
     from_inches,
     get_save_format,
     is_data_like,
@@ -24,6 +25,7 @@ from ._utils.context import (
     is_closed,
     save_context,
 )
+from ._utils.frame import nominal_enums_scope
 from ._utils.ipython import (
     get_ipython,
     get_mimebundle,
@@ -46,7 +48,6 @@ from .themes.theme import theme, theme_get
 if TYPE_CHECKING:
     from typing import Protocol, Self
 
-    import pandas as pd
     from matplotlib.axes import Axes
     from matplotlib.figure import Figure
 
@@ -502,6 +503,13 @@ class ggplot:
         facets can record state such as panel-grid dimensions. These changes
         remain on the build's copies.
         """
+        with nominal_enums_scope():
+            return self._build_in_scope()
+
+    def _build_in_scope(self) -> PlotBuild:
+        """
+        Build the plot (see `build`)
+        """
         plot = deepcopy(self)
         layers, scales, layout, facet, labels = (
             plot.layers,
@@ -902,7 +910,7 @@ class ggplot:
         with save_context(self):
             sv.figure.savefig(**sv.kwargs)
 
-    def layer_data(self, i: int = 0) -> pd.DataFrame:
+    def layer_data(self, i: int = 0) -> Any:
         """
         Return the data used to draw a specific plot layer
 
@@ -913,11 +921,13 @@ class ggplot:
 
         Returns
         -------
-        pd.DataFrame
+        :
             Data used by the specified layer after all transformations,
             statistics, and position adjustments have been applied.
+            It is a dataframe of the same library (e.g. pandas or
+            polars) as the data of the layer.
         """
-        return self.build().layers.data[i]
+        return frame.to_frame(self.build().layers[i].data).to_native()
 
 
 ggsave = ggplot.save

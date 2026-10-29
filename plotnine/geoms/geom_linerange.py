@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import typing
 
+import narwhals as nw
+
 from ..doctools import document
 from .geom import geom
 from .geom_path import geom_path
@@ -10,9 +12,9 @@ from .geom_segment import geom_segment
 if typing.TYPE_CHECKING:
     from typing import Any
 
-    import pandas as pd
     from matplotlib.axes import Axes
 
+    from plotnine._utils.frame import DataFrame
     from plotnine.coords.coord import coord
     from plotnine.iapi import panel_view
 
@@ -41,11 +43,13 @@ class geom_linerange(geom):
 
     @staticmethod
     def draw_group(
-        data: pd.DataFrame,
+        data: DataFrame,
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
         params: dict[str, Any],
     ):
-        data = data.assign(xend=data["x"], y=data["ymin"], yend=data["ymax"])
+        data = data.with_columns(
+            xend=nw.col("x"), y=nw.col("ymin"), yend=nw.col("ymax")
+        )
         geom_segment.draw_group(data, panel_params, coord, ax, params)

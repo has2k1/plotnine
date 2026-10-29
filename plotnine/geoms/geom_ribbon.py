@@ -2,7 +2,9 @@ from __future__ import annotations
 
 import typing
 
-from .._utils import SIZE_FACTOR, to_rgba
+import narwhals as nw
+
+from .._utils import SIZE_FACTOR, frame, to_rgba
 from ..doctools import document
 from ..exceptions import PlotnineError
 from .geom import geom
@@ -12,9 +14,9 @@ from .geom_polygon import geom_polygon
 if typing.TYPE_CHECKING:
     from typing import Any
 
-    import pandas as pd
     from matplotlib.axes import Axes
 
+    from plotnine._utils.frame import DataFrame
     from plotnine.coords.coord import coord
     from plotnine.iapi import panel_view
     from plotnine.typing import ColorsLike
@@ -70,20 +72,19 @@ class geom_ribbon(geom):
     DEFAULT_PARAMS = {"outline_type": "both"}
     draw_legend = staticmethod(geom_polygon.draw_legend)
 
-    def handle_na(self, data: pd.DataFrame) -> pd.DataFrame:
+    def handle_na(self, data: DataFrame) -> DataFrame:
         return data
 
-    def setup_data(self, data: pd.DataFrame) -> pd.DataFrame:
-        # Coordinate munching requires `x` and `y` for every outline type.
-        if "xmax" in data and "x" not in data:
-            data["x"] = data["xmax"]
-        if "ymax" in data and "y" not in data:
-            data["y"] = data["ymax"]
+    def setup_data(self, data: DataFrame) -> DataFrame:
+        if "xmax" in data.columns and "x" not in data.columns:
+            data = data.with_columns(x=nw.col("xmax"))
+        if "ymax" in data.columns and "y" not in data.columns:
+            data = data.with_columns(y=nw.col("ymax"))
         return data
 
     @staticmethod
     def draw_group(
-        data: pd.DataFrame,
+        data: DataFrame,
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
@@ -91,46 +92,52 @@ class geom_ribbon(geom):
     ):
         _x = "x" if coord.preserves_dimensions else "y"
         data = coord.transform(data, panel_params, munch=True)
-        data = data.sort_values(by=["group", _x], kind="mergesort")
-        units = ["alpha", "color", "fill", "linetype", "size"]
+        data = frame.sort(data, ["group", _x])
 
-        if len(data[units].drop_duplicates()) > 1:
+        units = ["alpha", "color", "fill", "linetype", "size"]
+        if len(frame.unique_rows(data, units)) > 1:
             msg = "Aesthetics cannot vary within a ribbon."
             raise PlotnineError(msg)
 
-        for _, udata in data.groupby(units, dropna=False):
-            udata = udata.reset_index(drop=True)
-            geom_ribbon.draw_unit(udata, panel_params, coord, ax, params)
+        if len(data):
+            geom_ribbon.draw_unit(data, panel_params, coord, ax, params)
 
     @staticmethod
     def draw_unit(
-        data: pd.DataFrame,
+        data: DataFrame,
         panel_params: panel_view,
         coord: coord,
         ax: Axes,
         params: dict[str, Any],
     ):
-        linewidth = data["size"].iloc[0] * SIZE_FACTOR
+        linewidth = data["size"].item(0) * SIZE_FACTOR
         fill = to_rgba(data["fill"], data["alpha"])
 
-        if data["color"].isna().all():
+        if frame.isna(data["color"]).all():
             color: ColorsLike = "none"
         else:
-            color = data["color"]
+            color = data["color"].to_list()
 
         if fill is None:
             fill = "none"
 
         if coord.preserves_dimensions:
             fill_between = ax.fill_between
-            _x, _min, _max = data["x"], data["ymin"], data["ymax"]
+            _x, _min, _max = (
+                frame.to_numpy(data[c]) for c in ("x", "ymin", "ymax")
+            )
         else:
             fill_between = ax.fill_betweenx
-            _x, _min, _max = data["y"], data["xmin"], data["xmax"]
+            _x, _min, _max = (
+                frame.to_numpy(data[c]) for c in ("y", "xmin", "xmax")
+            )
 
         # We only change this defaults for fill_between when necessary
-        where = data.get("where", None)
-        interpolate = not (where is None or where.all())
+        if "where" in data.columns:
+            where = frame.to_numpy(data["where"])
+            interpolate = not where.all()
+        else:
+            where, interpolate = None, False
 
         if params["outline_type"] != "full":
             linewidth = 0
@@ -145,18 +152,18 @@ class geom_ribbon(geom):
             facecolor=fill,
             edgecolor=color,
             linewidth=linewidth,
-            linestyle=data["linetype"].iloc[0],
+            linestyle=data["linetype"].item(0),
             zorder=params["zorder"],
             rasterized=params["raster"],
         )
 
         # Alpha does not affect the outlines
-        data["alpha"] = 1
+        data = data.with_columns(alpha=nw.lit(1))
         geom_ribbon._draw_outline(data, coord, ax, params)
 
     @staticmethod
     def _draw_outline(
-        data: pd.DataFrame,
+        data: DataFrame,
         coord: coord,
         ax: Axes,
         params: dict[str, Any],
@@ -166,16 +173,12 @@ class geom_ribbon(geom):
         if outline_type == "full":
             return
 
-        # The data is already in panel coordinates. Where the coord swaps
-        # the dimensions, the ribbon bounds are `xmin` and `xmax`.
         bounds = "y" if coord.preserves_dimensions else "x"
 
-        # Each call receives one ribbon group, so an outline forms one path
-        # with constant aesthetics.
         if outline_type in ("lower", "both"):
-            lower = data.assign(**{bounds: data[f"{bounds}min"]})
+            lower = data.with_columns(nw.col(f"{bounds}min").alias(bounds))
             stroke_paths(lower, ax, params, constant=True)
 
         if outline_type in ("upper", "both"):
-            upper = data.assign(**{bounds: data[f"{bounds}max"]})
+            upper = data.with_columns(nw.col(f"{bounds}max").alias(bounds))
             stroke_paths(upper, ax, params, constant=True)

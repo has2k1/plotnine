@@ -1,8 +1,8 @@
 from typing import TYPE_CHECKING, cast
 
 import numpy as np
-import pandas as pd
 
+from .._utils import frame
 from ..doctools import document
 from ..mapping.evaluation import after_stat
 from .density import get_var_type, kde
@@ -70,18 +70,17 @@ class stat_pointdensity(stat):
     def compute_group(self, data, scales):
         package = self.params["package"]
         kde_params = self.params["kde_params"]
-        x = cast("FloatArray", data["x"].to_numpy())
-        y = cast("FloatArray", data["y"].to_numpy())
 
+        x = cast("FloatArray", frame.to_numpy(data["x"]))
+        y = cast("FloatArray", frame.to_numpy(data["y"]))
         var_data = np.array([x, y]).T
         density = kde(var_data, var_data, package, **kde_params)
 
-        data = pd.DataFrame(
+        return frame.frame_like(
+            data,
             {
                 "x": data["x"],
                 "y": data["y"],
                 "density": density.flatten(),
-            }
+            },
         )
-
-        return data
