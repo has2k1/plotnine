@@ -4,8 +4,6 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from typing import Optional
-
     from matplotlib.collections import LineCollection
     from matplotlib.lines import Line2D
     from matplotlib.patches import FancyBboxPatch, Rectangle
@@ -25,27 +23,27 @@ class ThemeTargets:
     the figure or the axes.
     """
 
-    axis_title_x_top: Optional[Text] = None
-    axis_title_x_bottom: Optional[Text] = None
-    axis_title_y_left: Optional[Text] = None
-    axis_title_y_right: Optional[Text] = None
-    legend_frame: Optional[Rectangle] = None
+    axis_title_x_top: Text | None = None
+    axis_title_x_bottom: Text | None = None
+    axis_title_y_left: Text | None = None
+    axis_title_y_right: Text | None = None
+    legend_frame: Rectangle | None = None
     legend_key: list[ColoredDrawingArea] = field(default_factory=list)
-    legends: Optional[legend_artists] = None
+    legends: legend_artists | None = None
     legend_text_colorbar: list[Text] = field(default_factory=list)
     legend_text_legend: list[Text] = field(default_factory=list)
-    legend_axis_line: Optional[LineCollection] = None
-    legend_ticks: Optional[LineCollection] = None
-    legend_title: Optional[Text] = None
+    legend_axis_line: LineCollection | None = None
+    legend_ticks: LineCollection | None = None
+    legend_title: Text | None = None
     panel_border: list[Rectangle] = field(default_factory=list)
-    plot_caption: Optional[Text] = None
-    plot_subtitle: Optional[Text] = None
-    plot_footer: Optional[Text] = None
-    plot_tag: Optional[Text] = None
-    plot_title: Optional[Text] = None
-    plot_background: Optional[Rectangle] = None
-    plot_footer_background: Optional[Rectangle] = None
-    plot_footer_line: Optional[Line2D] = None
+    plot_caption: Text | None = None
+    plot_subtitle: Text | None = None
+    plot_footer: Text | None = None
+    plot_tag: Text | None = None
+    plot_title: Text | None = None
+    plot_background: Rectangle | None = None
+    plot_footer_background: Rectangle | None = None
+    plot_footer_line: Line2D | None = None
     strip_background_x: list[FancyBboxPatch] = field(default_factory=list)
     strip_background_y: list[FancyBboxPatch] = field(default_factory=list)
     strip_text_x_top: list[StripText] = field(default_factory=list)

@@ -14,7 +14,8 @@ from .geom_polygon import geom_polygon
 from .geom_rect import fill_rects
 
 if typing.TYPE_CHECKING:
-    from typing import Any, Literal, Sequence
+    from collections.abc import Sequence
+    from typing import Any, Literal
 
     from matplotlib.axes import Axes
 

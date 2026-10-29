@@ -8,7 +8,8 @@ from ..iapi import labels_view, panel_ranges, panel_view
 from .coord_cartesian import coord_cartesian
 
 if TYPE_CHECKING:
-    from typing import Sequence, TypeVar
+    from collections.abc import Sequence
+    from typing import TypeVar
 
     from plotnine.scales.scale import scale
     from plotnine.typing import Side

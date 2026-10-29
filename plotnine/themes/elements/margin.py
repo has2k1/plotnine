@@ -11,7 +11,8 @@ from typing import TYPE_CHECKING
 from ...exceptions import PlotnineError
 
 if TYPE_CHECKING:
-    from typing import Callable, Literal
+    from collections.abc import Callable
+    from typing import Literal
 
     from plotnine import theme
 

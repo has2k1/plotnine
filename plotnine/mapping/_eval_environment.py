@@ -14,7 +14,8 @@ import numpy as np
 import pandas as pd
 
 if TYPE_CHECKING:
-    from typing import Any, Sequence
+    from collections.abc import Sequence
+    from typing import Any
 
 __all__ = (
     "factor",

@@ -2,8 +2,9 @@ from __future__ import annotations
 
 import decimal
 import typing
+from collections.abc import Iterable, Sequence
 from copy import copy, deepcopy
-from typing import Iterable, List, cast, overload
+from typing import cast, overload
 
 import pandas as pd
 
@@ -22,7 +23,7 @@ from .mapping.aes import (
 from .mapping.evaluation import evaluate, stage
 
 if typing.TYPE_CHECKING:
-    from typing import Any, Literal, Sequence, SupportsIndex
+    from typing import Any, Literal, SupportsIndex
 
     from plotnine import ggplot
     from plotnine.coords.coord import coord
@@ -518,7 +519,7 @@ class layer:
         labels.add_defaults(make_labels(self.stat.DEFAULT_AES))
 
 
-class Layers(List[layer]):
+class Layers(list[layer]):
     """
     List of layers
 

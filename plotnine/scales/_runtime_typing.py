@@ -5,15 +5,8 @@ out so that we can refer to them as plotnine.scales._runtime_typing for
 the documentation.
 """
 
-from typing import (
-    TYPE_CHECKING,
-    Callable,
-    Literal,
-    Sequence,
-    Type,
-    TypeAlias,
-    TypeVar,
-)
+from collections.abc import Callable, Sequence
+from typing import TYPE_CHECKING, Literal, TypeAlias, TypeVar
 
 from mizani.transforms import trans
 
@@ -60,7 +53,7 @@ ScaleLabelsUser: TypeAlias = (
     | dict[str, str]
 )
 
-TransUser: TypeAlias = trans | str | Type[trans] | None
+TransUser: TypeAlias = trans | str | type[trans] | None
 
 SecAxisUser: TypeAlias = "sec_axis | None"
 

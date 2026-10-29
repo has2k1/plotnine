@@ -8,7 +8,7 @@ from matplotlib.animation import ArtistAnimation
 from .exceptions import PlotnineError
 
 if typing.TYPE_CHECKING:
-    from typing import Iterable
+    from collections.abc import Iterable
 
     from matplotlib.artist import Artist
     from matplotlib.axes import Axes

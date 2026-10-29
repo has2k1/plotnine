@@ -5,7 +5,8 @@ import typing
 from mizani.scale import scale_continuous, scale_discrete
 
 if typing.TYPE_CHECKING:
-    from typing import Any, Sequence
+    from collections.abc import Sequence
+    from typing import Any
 
     from plotnine.typing import AnyArrayLike, FloatArrayLike
 

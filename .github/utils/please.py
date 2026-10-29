@@ -1,7 +1,8 @@
 import os
 import sys
+from collections.abc import Callable
 from pathlib import Path
-from typing import Callable, TypeAlias
+from typing import TypeAlias
 
 from _repo import Git
 

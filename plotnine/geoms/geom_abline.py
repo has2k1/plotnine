@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import typing
-from typing import Sized
+from collections.abc import Sized
 from warnings import warn
 
 import numpy as np

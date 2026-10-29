@@ -7,7 +7,7 @@ from .exceptions import PlotnineWarning
 
 if typing.TYPE_CHECKING:
     import pathlib
-    from typing import Any, Optional
+    from typing import Any
 
     import matplotlib.figure
 
@@ -47,7 +47,7 @@ class watermark:
         filename: str | pathlib.Path,
         xo: int = 0,
         yo: int = 0,
-        alpha: Optional[float] = None,
+        alpha: float | None = None,
         **kwargs: Any,
     ):
         self.filename = filename

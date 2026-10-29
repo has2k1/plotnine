@@ -19,8 +19,6 @@ from .binning import (
 from .stat import stat
 
 if typing.TYPE_CHECKING:
-    from typing import Optional
-
     from plotnine.typing import FloatArrayLike
 
 
@@ -250,7 +248,7 @@ def densitybin(
     weight: FloatArrayLike | None,
     binwidth: float | None,
     bins: int = 30,
-    rangee: Optional[tuple[float, float]] = None,
+    rangee: tuple[float, float] | None = None,
 ):
     """
     Do density binning

@@ -12,12 +12,12 @@ from ..mapping._asis import asis_columns
 from ..themes.theme import theme as Theme
 
 if TYPE_CHECKING:
-    from typing import Literal, Optional, Sequence, TypeAlias
+    from collections.abc import Sequence
+    from typing import Literal, Self, TypeAlias
 
     import pandas as pd
     from matplotlib.figure import Figure
     from matplotlib.offsetbox import PackerBase
-    from typing_extensions import Self
 
     from plotnine import aes, ggplot, guides
     from plotnine.guides.guides import LegendOwner
@@ -47,7 +47,7 @@ class guide(ABC, metaclass=Register):
     At the moment not all parameters have been fully implemented.
     """
 
-    title: Optional[str] = None
+    title: str | None = None
     """
     Title of the guide. Default is the name of the aesthetic or the
     name specified using [](`~plotnine.components.labels.lab`)
@@ -56,10 +56,10 @@ class guide(ABC, metaclass=Register):
     theme: Theme = field(default_factory=Theme)
     """A theme to style the guide. If `None`, the plots theme is used."""
 
-    position: Optional[LegendPosition] = None
+    position: LegendPosition | None = None
     """Where to place the guide relative to the panels."""
 
-    direction: Optional[Orientation] = None
+    direction: Orientation | None = None
     """
     Direction of the guide. The default is depends on
     [](`~plotnine.themes.themeable.legend_position`).
@@ -193,9 +193,7 @@ class guide(ABC, metaclass=Register):
         """
         return len(self.key)
 
-    def train(
-        self, scale: scale, aesthetic: Optional[str] = None
-    ) -> Self | None:
+    def train(self, scale: scale, aesthetic: str | None = None) -> Self | None:
         """
         Create the key for the guide
 
@@ -214,7 +212,7 @@ class guide(ABC, metaclass=Register):
         """
         raise NotImplementedError
 
-    def create_geoms(self) -> Optional[Self]:
+    def create_geoms(self) -> Self | None:
         """
         Create layers of geoms for the guide
 

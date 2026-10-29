@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING
 from plotnine import element_rect, ggplot, theme, theme_void
 
 if TYPE_CHECKING:
-    from typing_extensions import Self
+    from typing import Self
 
     from plotnine.ggplot import PlotAddable
 

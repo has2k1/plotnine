@@ -19,7 +19,8 @@ from .facet import (
 from .strips import Strips, strip
 
 if typing.TYPE_CHECKING:
-    from typing import Literal, Optional, Sequence
+    from collections.abc import Sequence
+    from typing import Literal
 
     from matplotlib.axes import Axes
 
@@ -72,10 +73,10 @@ class facet_wrap(facet):
 
     def __init__(
         self,
-        facets: Optional[str | Sequence[str]] = None,
+        facets: str | Sequence[str] | None = None,
         *,
-        nrow: Optional[int] = None,
-        ncol: Optional[int] = None,
+        nrow: int | None = None,
+        ncol: int | None = None,
         scales: Literal["fixed", "free", "free_x", "free_y"] = "fixed",
         shrink: bool = True,
         labeller: Literal[
@@ -219,7 +220,7 @@ class facet_wrap(facet):
 
 
 def check_dimensions(
-    nrow: Optional[int], ncol: Optional[int]
+    nrow: int | None, ncol: int | None
 ) -> tuple[int | None, int | None]:
     """
     Verify dimensions of the facet
@@ -247,7 +248,7 @@ def check_dimensions(
     return nrow, ncol
 
 
-def parse_wrap_facets(facets: Optional[str | Sequence[str]]) -> Sequence[str]:
+def parse_wrap_facets(facets: str | Sequence[str] | None) -> Sequence[str]:
     """
     Return list of facetting variables
     """
@@ -294,7 +295,7 @@ def parse_wrap_facets_old(facets: str | Sequence[str]) -> Sequence[str]:
 
 
 def wrap_dims(
-    n: int, nrow: Optional[int] = None, ncol: Optional[int] = None
+    n: int, nrow: int | None = None, ncol: int | None = None
 ) -> tuple[int, int]:
     """
     Wrap dimensions

@@ -3,10 +3,8 @@ from __future__ import annotations
 from dataclasses import InitVar, dataclass
 from typing import (
     TYPE_CHECKING,
-    Callable,
     Generic,
     Literal,
-    Sequence,
     TypeVar,
     overload,
 )
@@ -14,7 +12,7 @@ from typing import (
 import numpy as np
 
 if TYPE_CHECKING:
-    from collections.abc import Iterator
+    from collections.abc import Callable, Iterator, Sequence
 
     from plotnine.typing import Side
 

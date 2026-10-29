@@ -12,7 +12,7 @@ from ..exceptions import PlotnineError
 from .position import position
 
 if typing.TYPE_CHECKING:
-    from typing import Literal, Optional
+    from typing import Literal
 
 
 class position_dodge(position):
@@ -34,7 +34,7 @@ class position_dodge(position):
 
     def __init__(
         self,
-        width: Optional[float] = None,
+        width: float | None = None,
         preserve: Literal["total", "single"] = "total",
     ):
         self.params = {

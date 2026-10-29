@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-from collections.abc import Mapping
+from collections.abc import Mapping, Sequence
 from dataclasses import KW_ONLY, InitVar, dataclass
-from typing import Any, Sequence
+from typing import Any
 from warnings import warn
 
 from plotnine.scales._runtime_typing import OptionalLegend

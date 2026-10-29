@@ -15,7 +15,8 @@ from .geom_path import geom_path
 from .geom_rug import geom_rug, stroke_rugs
 
 if typing.TYPE_CHECKING:
-    from typing import Any, Literal, Optional, Sequence
+    from collections.abc import Sequence
+    from typing import Any, Literal
 
     from matplotlib.axes import Axes
 
@@ -54,7 +55,7 @@ class _geom_logticks(geom_rug):
 
     @staticmethod
     def _check_log_scale(
-        base: Optional[float],
+        base: float | None,
         sides: str,
         panel_params: panel_view,
     ) -> tuple[float, float]:
@@ -79,7 +80,7 @@ class _geom_logticks(geom_rug):
             The bases (base_x, base_y) to use when generating the ticks.
         """
 
-        def get_base(sc, ubase: Optional[float]) -> float:
+        def get_base(sc, ubase: float | None) -> float:
             ae = sc.aesthetics[0]
 
             if not isinstance(sc, ScaleContinuous) or not sc.is_log_scale:

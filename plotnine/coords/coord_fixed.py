@@ -5,8 +5,6 @@ import typing
 from .coord_cartesian import coord_cartesian
 
 if typing.TYPE_CHECKING:
-    from typing import Optional
-
     from plotnine.iapi import panel_view
 
 
@@ -46,8 +44,8 @@ class coord_fixed(coord_cartesian):
     def __init__(
         self,
         ratio: float = 1,
-        xlim: Optional[tuple[float, float]] = None,
-        ylim: Optional[tuple[float, float]] = None,
+        xlim: tuple[float, float] | None = None,
+        ylim: tuple[float, float] | None = None,
         expand: bool = True,
     ):
         super().__init__(xlim=xlim, ylim=ylim, expand=expand)

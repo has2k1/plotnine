@@ -1,12 +1,12 @@
 from __future__ import annotations
 
+from collections.abc import Sequence
 from contextlib import suppress
 from dataclasses import dataclass
 from typing import (
     Any,
     Generic,
     Literal,
-    Sequence,
     TypeAlias,
     TypeVar,
 )

@@ -10,7 +10,7 @@ from packaging.version import Version
 from ..session import set_last_plot
 
 if TYPE_CHECKING:
-    from typing_extensions import Self
+    from typing import Self
 
     from plotnine import ggplot
     from plotnine._mpl.figure import p9Figure

@@ -11,11 +11,10 @@ from .targets import ThemeTargets
 from .themeable import Themeables, themeable
 
 if typing.TYPE_CHECKING:
-    from typing import Type
+    from typing import Self
 
     from matplotlib.axes import Axes
     from matplotlib.figure import Figure
-    from typing_extensions import Self
 
     from plotnine import ggplot
     from plotnine.composition import Compose
@@ -646,7 +645,7 @@ def theme_get() -> theme:
     return _theme or theme_gray()
 
 
-def theme_set(new: theme | Type[theme]) -> theme:
+def theme_set(new: theme | type[theme]) -> theme:
     """
     Change the current(default) theme
 

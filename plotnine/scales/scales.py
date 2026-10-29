@@ -3,7 +3,7 @@ from __future__ import annotations
 import itertools
 import typing
 from contextlib import suppress
-from typing import List, cast
+from typing import cast
 from warnings import warn
 
 import numpy as np
@@ -30,7 +30,7 @@ which will replace the existing scale.
 """
 
 
-class Scales(List[scale]):
+class Scales(list[scale]):
     """
     List of scales
 

@@ -23,11 +23,11 @@ from ..guides.guides import guides
 from ..options import get_option
 
 if TYPE_CHECKING:
+    from collections.abc import Iterator, Sequence
     from pathlib import Path
-    from typing import Iterator, Sequence
+    from typing import Self
 
     from matplotlib.figure import Figure
-    from typing_extensions import Self
 
     from plotnine._mpl.figure import p9Figure
     from plotnine._mpl.gridspec import p9GridSpec
