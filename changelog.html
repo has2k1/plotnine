@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Changelog – plotnine 999.post1+gafa9da107</title>
+<title>Changelog – plotnine 999.post1+gb46268b5d</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -122,7 +122,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">plotnine 999.post1+gafa9da107</span>
+    <span class="navbar-title">plotnine 999.post1+gb46268b5d</span>
     </a>
   </div>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
@@ -424,7 +424,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="bug-fixes" class="level3">
 <h3 class="anchored" data-anchor-id="bug-fixes">Bug Fixes</h3>
 <ul>
-<li><p>plotnine no longer passes <code>inplace=True</code> to the pandas <code>DataFrame</code> methods that pandas 3.2 deprecates it for (PDEP-8), so plots no longer emit <code>Pandas4Warning</code>.</p></li>
 <li><p>SVG colourbars now use overlapping rectangles to prevent misplaced gradients in some SVG viewers. This applies to compositions and insets without changing the colourbar mode used for other output formats.</p></li>
 <li><p><a href="./reference/scale_size_datetime.html#plotnine.scale_size_datetime"><code>scale_size_datetime</code></a> now honours its <code>range</code> argument. Previously it was ignored and mapping data raised an error.</p></li>
 <li><p><a href="./reference/scale_size_datetime.html#plotnine.scale_size_datetime"><code>scale_size_datetime</code></a> now honours its <code>date_breaks</code>, <code>date_labels</code> and <code>date_minor_breaks</code> arguments, which it previously ignored.</p></li>
