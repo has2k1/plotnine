@@ -381,7 +381,7 @@ def frame(
         cols.append(series(value, name, backend=backend))
 
     if not cols:
-        return nw.from_dict({}, backend=backend)
+        return nw.from_dict({}, backend=backend)  # pyright: ignore[reportArgumentType]
     # Adding columns to a frame is safer than nw.from_dict, which
     # cannot handle object columns in polars
     return cols[0].to_frame().with_columns(*cols[1:])

@@ -68,7 +68,9 @@ class stat_contour(stat):
     def setup_params(self, data):
         # Use one surface range for the full layer so facet panels share
         # comparable contour heights.
-        self.params["z_range"] = min_max(data["z"], na_rm=True, finite=True)
+        self.params["z_range"] = min_max(
+            frame.to_numpy(data["z"]), na_rm=True, finite=True
+        )
 
     def setup_data(self, data):
         return drop_duplicate_xy(data)

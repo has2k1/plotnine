@@ -249,7 +249,7 @@ class scale_position_continuous(scale_position, scale_continuous[None]):
             return x
         if limits is None:
             limits = self.final_limits
-        scaled = self.oob(frame.as_numpy(x), limits)  # type: ignore
+        scaled = self.oob(frame.as_numpy(x), limits)
         if (missing := frame.isna(scaled)).any():
             scaled = scaled.astype(float)
             scaled[missing] = self.na_value
