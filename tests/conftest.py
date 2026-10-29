@@ -59,6 +59,11 @@ def pytest_addoption(parser):
 def pytest_configure(config):
     global BACKEND
     BACKEND = config.getoption("--backend") or BACKEND
+    config.addinivalue_line(
+        "markers",
+        "pandas_only: the test uses features that only pandas has, "
+        "e.g. the index",
+    )
     if BACKEND == "polars":
         _use_polars_data()
 
@@ -83,7 +88,8 @@ def pytest_collection_modifyitems(config, items):
     Mark the tests that are known to fail with polars
 
     They are marked as strict xfails, so that the list has to be
-    updated when a test starts passing.
+    updated when a test starts passing. The tests that use features
+    that only pandas has are skipped.
     """
     import pytest
 
@@ -91,8 +97,11 @@ def pytest_collection_modifyitems(config, items):
         return
 
     known = _read_known_failures()
+    skip = pytest.mark.skip(reason="The test uses features only pandas has")
     for item in items:
-        if item.nodeid in known:
+        if item.get_closest_marker("pandas_only"):
+            item.add_marker(skip)
+        elif item.nodeid in known:
             item.add_marker(
                 pytest.mark.xfail(reason="Known polars failure", strict=True)
             )
