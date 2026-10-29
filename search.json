@@ -270,7 +270,7 @@
     "href": "reference/ylab.html#parameters",
     "title": " plotnine.ylab",
     "section": "Parameters",
-    "text": "Parameters\n\n\nname\n\ny aesthetic label i.e. y-axis label"
+    "text": "Parameters\n\n\nlabel : str\n\ny aesthetic label i.e. y-axis label"
   },
   {
     "objectID": "reference/xlab.html",
@@ -284,7 +284,7 @@
     "href": "reference/xlab.html#parameters",
     "title": " plotnine.xlab",
     "section": "Parameters",
-    "text": "Parameters\n\n\nname\n\nx aesthetic label (x-axis)"
+    "text": "Parameters\n\n\nlabel : str\n\nx aesthetic label (x-axis)"
   },
   {
     "objectID": "reference/typing.html",
