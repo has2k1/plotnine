@@ -12,7 +12,8 @@ from ..scales.scale_continuous import scale_continuous
 from .stat import stat
 
 if typing.TYPE_CHECKING:
-    from typing import Any, Callable
+    from collections.abc import Callable
+    from typing import Any
 
     from plotnine.typing import FloatArrayLike
 
@@ -35,7 +36,7 @@ class stat_function(stat):
         `x` limits for the range. The default depends on
         the `x` aesthetic. There is not an `x` aesthetic
         then the `xlim` must be provided.
-    args : Optional[tuple[Any] | dict[str, Any]], default=None
+    args : tuple[Any] | dict[str, Any] | None, default=None
         Arguments to pass to `fun`.
 
     See Also

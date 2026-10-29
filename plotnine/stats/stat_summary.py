@@ -16,7 +16,8 @@ from ..exceptions import PlotnineError
 from .stat import as_frame_of, stat
 
 if TYPE_CHECKING:
-    from typing import Any, Callable
+    from collections.abc import Callable
+    from typing import Any
 
     from plotnine._utils.frame import DataFrame, Series
 

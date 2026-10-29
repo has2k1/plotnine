@@ -14,7 +14,7 @@ from .position import position
 ROW_ID = "__plotnine_row_id__"
 
 if typing.TYPE_CHECKING:
-    from typing import Literal, Optional
+    from typing import Literal
 
     from plotnine._utils.frame import DataFrame
 
@@ -38,7 +38,7 @@ class position_dodge(position):
 
     def __init__(
         self,
-        width: Optional[float] = None,
+        width: float | None = None,
         preserve: Literal["total", "single"] = "total",
     ):
         self.params = {

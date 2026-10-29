@@ -5,8 +5,8 @@
 #    1. failing test result images
 #    2. result images without baseline images
 
+from collections.abc import Generator
 from pathlib import Path
-from typing import Generator
 
 baseline = Path("tests/baseline_images/")
 result = Path("tests/result_images/")

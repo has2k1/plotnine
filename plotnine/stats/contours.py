@@ -14,7 +14,8 @@ from .._utils import frame
 from ..exceptions import PlotnineError, PlotnineWarning
 
 if TYPE_CHECKING:
-    from typing import Any, Callable
+    from collections.abc import Callable
+    from typing import Any
 
     from contourpy import ContourGenerator
 

@@ -17,7 +17,8 @@ import numpy as np
 from .._utils import frame
 
 if TYPE_CHECKING:
-    from typing import Any, Sequence
+    from collections.abc import Sequence
+    from typing import Any
 
 __all__ = (
     "factor",

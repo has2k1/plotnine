@@ -26,8 +26,8 @@ from .elements import element_blank
 from .elements.element_base import element_base
 
 if TYPE_CHECKING:
-    from collections.abc import Mapping
-    from typing import Any, Optional, Sequence, Type
+    from collections.abc import Mapping, Sequence
+    from typing import Any
 
     from matplotlib.artist import Artist
     from matplotlib.axes import Axes
@@ -140,7 +140,7 @@ class themeable(metaclass=RegistryHierarchyMeta):
         """
         msg = f"There no themeable element called: {name}"
         try:
-            klass: Type[themeable] = themeable._registry[name]
+            klass: type[themeable] = themeable._registry[name]
         except KeyError as e:
             raise PlotnineError(msg) from e
 
@@ -521,7 +521,7 @@ class MixinSequenceOfValues(themeable):
     """
 
     def set(
-        self, artists: Sequence[Artist], props: Optional[dict[str, Any]] = None
+        self, artists: Sequence[Artist], props: dict[str, Any] | None = None
     ):
         if props is None:
             props = self.properties

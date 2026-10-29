@@ -9,7 +9,7 @@ if TYPE_CHECKING:
     from ..typing import DisplayMetadata, FigureFormat, MimeBundle
 
 
-def get_ipython() -> "None | InteractiveShell":
+def get_ipython() -> InteractiveShell | None:
     """
     Return running IPython instance or None
     """

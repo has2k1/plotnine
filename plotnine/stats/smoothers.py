@@ -1,8 +1,9 @@
 from __future__ import annotations
 
 import warnings
+from collections.abc import Callable
 from contextlib import suppress
-from typing import TYPE_CHECKING, Any, Callable, cast
+from typing import TYPE_CHECKING, Any, cast
 
 import numpy as np
 
@@ -12,6 +13,8 @@ from ._ols import add_constant, fit_least_squares
 from .stat import as_frame_of
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
+
     import statsmodels.api as sm
 
     from plotnine._utils.frame import DataFrame

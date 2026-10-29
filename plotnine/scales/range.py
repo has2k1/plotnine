@@ -8,7 +8,8 @@ from mizani.scale import scale_continuous
 from .._utils import frame, multitype_sort
 
 if typing.TYPE_CHECKING:
-    from typing import Any, Sequence
+    from collections.abc import Sequence
+    from typing import Any
 
     from plotnine.typing import AnyArrayLike, FloatArrayLike
 

@@ -15,7 +15,7 @@ from ..exceptions import PlotnineError, PlotnineWarning
 from ..mapping.aes import X_AESTHETICS, Y_AESTHETICS
 
 if typing.TYPE_CHECKING:
-    from typing import Any, Optional
+    from typing import Any
 
     from plotnine._utils.frame import DataFrame
     from plotnine.facets.layout import Layout
@@ -101,8 +101,8 @@ class position(ABC, metaclass=Register):
     @native_io
     def transform_position(
         data: DataFrame,
-        trans_x: Optional[TransformCol] = None,
-        trans_y: Optional[TransformCol] = None,
+        trans_x: TransformCol | None = None,
+        trans_y: TransformCol | None = None,
     ) -> DataFrame:
         """
         Transform all the variables that map onto the x and y scales.

@@ -1,20 +1,19 @@
 from __future__ import annotations
 
+from collections.abc import Callable, Sequence
 from typing import (
     TYPE_CHECKING,
     Any,
-    Callable,
     Literal,
     NotRequired,
     Protocol,
-    Sequence,
+    TypeAlias,
     TypedDict,
     TypeVar,
 )
 
 import numpy as np
 from numpy.typing import NDArray
-from typing_extensions import TypeAlias  # noqa: TCH002
 
 if TYPE_CHECKING:
     import pandas as pd

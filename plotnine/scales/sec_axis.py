@@ -14,7 +14,7 @@ from ._runtime_typing import (  # noqa: TCH001
 )
 
 if TYPE_CHECKING:
-    from typing import Callable, Sequence
+    from collections.abc import Callable, Sequence
 
     from plotnine.iapi import scale_position_view
     from plotnine.scales.scale_continuous import scale_continuous

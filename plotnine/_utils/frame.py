@@ -25,7 +25,8 @@ import numpy as np
 from narwhals.dependencies import get_pandas, is_pandas_like_dataframe
 
 if TYPE_CHECKING:
-    from typing import Any, Callable, Iterator
+    from collections.abc import Callable, Iterator
+    from typing import Any
 
     from narwhals.typing import IntoDType
 

@@ -23,12 +23,8 @@ from ..utils import (
 )
 
 if TYPE_CHECKING:
-    from typing import (
-        Any,
-        Iterator,
-        Literal,
-        TypeAlias,
-    )
+    from collections.abc import Iterator
+    from typing import Any, Literal, TypeAlias
 
     from matplotlib.axes import Axes
     from matplotlib.axis import Axis, Tick

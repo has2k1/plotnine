@@ -17,7 +17,8 @@ from ..scales.scales import Scales
 from .strips import Strips
 
 if typing.TYPE_CHECKING:
-    from typing import Any, Literal, Optional, Sequence
+    from collections.abc import Sequence
+    from typing import Any, Literal
 
     from matplotlib.axes import Axes
     from matplotlib.figure import Figure
@@ -144,8 +145,14 @@ class facet:
         self.layout = plot.built.layout
         self.figure = plot.figure
 
-        if hasattr(plot, "axs"):
-            gs, self.axs = plot._sub_gridspec, plot.axs
+        if plot._figure_state.axs is not None:
+            # Axes already laid out (e.g. an animation frame adopting
+            # the first plot's panels); reuse them.
+            assert plot._figure_state.sub_gridspec is not None
+            gs, self.axs = (
+                plot._figure_state.sub_gridspec,
+                plot._figure_state.axs,
+            )
         else:
             gs, self.axs = self._make_axes()
 
@@ -190,8 +197,8 @@ class facet:
     def init_scales(
         self,
         layout: DataFrame,
-        x_scale: Optional[scale] = None,
-        y_scale: Optional[scale] = None,
+        x_scale: scale | None = None,
+        y_scale: scale | None = None,
     ) -> types.SimpleNamespace:
         scales = types.SimpleNamespace()
 
@@ -383,7 +390,7 @@ class facet:
         axs = axs[:num_panels]
         return gs, list(axs)
 
-    def _aspect_ratio(self) -> Optional[float]:
+    def _aspect_ratio(self) -> float | None:
         """
         Return the aspect_ratio
         """

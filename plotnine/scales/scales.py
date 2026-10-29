@@ -3,7 +3,7 @@ from __future__ import annotations
 import itertools
 import typing
 from contextlib import suppress
-from typing import List, cast
+from typing import cast
 from warnings import warn
 
 import narwhals as nw
@@ -17,7 +17,8 @@ from ..mapping.aes import aes_to_scale
 from .scale import scale
 
 if typing.TYPE_CHECKING:
-    from typing import Any, Sequence
+    from collections.abc import Sequence
+    from typing import Any
 
     from plotnine._utils.frame import DataFrame
     from plotnine.scales.scale_xy import ScaleX, ScaleY
@@ -31,7 +32,7 @@ which will replace the existing scale.
 """
 
 
-class Scales(List[scale]):
+class Scales(list[scale]):
     """
     List of scales
 

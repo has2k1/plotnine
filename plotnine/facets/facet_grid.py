@@ -25,7 +25,8 @@ from .facet import (
 from .strips import Strips, strip
 
 if typing.TYPE_CHECKING:
-    from typing import Literal, Optional, Sequence
+    from collections.abc import Sequence
+    from typing import Literal
 
     from matplotlib.axes import Axes
 
@@ -91,8 +92,8 @@ class facet_grid(facet):
 
     def __init__(
         self,
-        rows: Optional[str | Sequence[str]] = None,
-        cols: Optional[str | Sequence[str]] = None,
+        rows: str | Sequence[str] | None = None,
+        cols: str | Sequence[str] | None = None,
         *,
         margins: bool | Sequence[str] = False,
         scales: Literal["fixed", "free", "free_x", "free_y"] = "fixed",
@@ -293,8 +294,8 @@ class facet_grid(facet):
 
 
 def parse_grid_rows_cols(
-    rows: Optional[str | Sequence[str]] = None,
-    cols: Optional[str | Sequence[str]] = None,
+    rows: str | Sequence[str] | None = None,
+    cols: str | Sequence[str] | None = None,
 ) -> tuple[list[str], list[str]]:
     """
     Return the rows & cols that make up the grid

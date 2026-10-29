@@ -10,8 +10,6 @@ from .position import position
 from .position_dodge import position_dodge
 
 if typing.TYPE_CHECKING:
-    from typing import Optional
-
     from plotnine.typing import RandomStateLike
 
 
@@ -43,10 +41,10 @@ class position_jitterdodge(position):
 
     def __init__(
         self,
-        jitter_width: Optional[float] = None,
+        jitter_width: float | None = None,
         jitter_height: float = 0,
         dodge_width: float = 0.75,
-        random_state: Optional[RandomStateLike] = None,
+        random_state: RandomStateLike | None = None,
     ):
         self.params = {
             "jitter_width": jitter_width,

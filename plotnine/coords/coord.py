@@ -11,7 +11,8 @@ from ..iapi import panel_ranges
 from ..mapping.aes import POSITION_AESTHETICS
 
 if typing.TYPE_CHECKING:
-    from typing import Any, Literal, Sequence
+    from collections.abc import Sequence
+    from typing import Any, Literal
 
     import numpy.typing as npt
     from matplotlib.axes import Axes

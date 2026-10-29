@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import KW_ONLY, InitVar, dataclass, field
-from typing import Literal, Sequence
+from typing import TYPE_CHECKING, Literal
 from warnings import warn
 
 from plotnine.scales._runtime_typing import (
@@ -16,6 +16,9 @@ from .scale_binned import binned_pal, scale_binned
 from .scale_continuous import scale_continuous
 from .scale_datetime import scale_datetime
 from .scale_discrete import scale_discrete
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 
 @dataclass

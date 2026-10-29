@@ -7,8 +7,6 @@ from .._utils import jitter, normalise_random_state, resolution
 from .position import position
 
 if typing.TYPE_CHECKING:
-    from typing import Optional
-
     from plotnine.typing import (
         FloatArray,
         FloatArrayLike,
@@ -37,9 +35,9 @@ class position_jitter(position):
 
     def __init__(
         self,
-        width: Optional[float] = None,
-        height: Optional[float] = None,
-        random_state: Optional[RandomStateLike] = None,
+        width: float | None = None,
+        height: float | None = None,
+        random_state: RandomStateLike | None = None,
     ):
         self.params = {
             "width": width,

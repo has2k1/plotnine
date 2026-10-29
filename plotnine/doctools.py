@@ -8,7 +8,8 @@ from textwrap import dedent, indent
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from typing import Any, Sequence, Type, TypeVar
+    from collections.abc import Sequence
+    from typing import Any, TypeVar
 
     from plotnine.geoms.geom import geom
     from plotnine.stats.stat import stat
@@ -524,7 +525,7 @@ DOC_FUNCTIONS = {
 }
 
 
-def document(cls: Type[T]) -> Type[T]:
+def document(cls: type[T]) -> type[T]:
     """
     Document a plotnine class
 

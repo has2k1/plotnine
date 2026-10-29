@@ -13,7 +13,7 @@ from ..positions.position import transform_position
 from .coord import coord, dist_euclidean
 
 if TYPE_CHECKING:
-    from typing import Literal, Optional
+    from typing import Literal
 
     from mizani.transforms import trans
 
@@ -53,8 +53,8 @@ class coord_trans(coord):
         self,
         x: str | trans = "identity",
         y: str | trans = "identity",
-        xlim: Optional[tuple[float, float]] = None,
-        ylim: Optional[tuple[float, float]] = None,
+        xlim: tuple[float, float] | None = None,
+        ylim: tuple[float, float] | None = None,
         expand: bool = True,
     ):
         from mizani.transforms import gettrans

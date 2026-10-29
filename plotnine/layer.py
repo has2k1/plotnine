@@ -2,9 +2,10 @@ from __future__ import annotations
 
 import decimal
 import typing
+from collections.abc import Iterable
 from contextlib import suppress
 from copy import deepcopy
-from typing import Iterable, List, cast, overload
+from typing import cast, overload
 
 import narwhals as nw
 import numpy as np
@@ -25,7 +26,8 @@ from .mapping.aes import (
 from .mapping.evaluation import evaluate_aesthetics, stage
 
 if typing.TYPE_CHECKING:
-    from typing import Any, Callable, Literal, Sequence, SupportsIndex
+    from collections.abc import Callable, Sequence
+    from typing import Any, Literal, SupportsIndex
 
     from plotnine import ggplot
     from plotnine._utils.frame import DataFrame, Implementation
@@ -571,7 +573,7 @@ class layer:
         return result.select(order)
 
 
-class Layers(List[layer]):
+class Layers(list[layer]):
     """
     List of layers
 

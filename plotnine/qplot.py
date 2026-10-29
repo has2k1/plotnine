@@ -20,7 +20,8 @@ from .scales import lims, scale_x_log10, scale_y_log10
 from .themes import theme
 
 if typing.TYPE_CHECKING:
-    from typing import Any, Iterable, Literal, Optional, Sequence
+    from collections.abc import Iterable, Sequence
+    from typing import Any, Literal
 
     from plotnine.typing import DataLike
 
@@ -28,19 +29,19 @@ __all__ = ("qplot",)
 
 
 def qplot(
-    x: Optional[str | Iterable[Any] | range] = None,
-    y: Optional[str | Iterable[Any] | range] = None,
-    data: Optional[DataLike] = None,
+    x: str | Iterable[Any] | range | None = None,
+    y: str | Iterable[Any] | range | None = None,
+    data: DataLike | None = None,
     facets: str = "",
     margins: bool | Sequence[str] = False,
     geom: str | Sequence[str] = "auto",
-    xlim: Optional[tuple[float, float]] = None,
-    ylim: Optional[tuple[float, float]] = None,
-    log: Optional[Literal["x", "y", "xy"]] = None,
-    main: Optional[str] = None,
-    xlab: Optional[str] = None,
-    ylab: Optional[str] = None,
-    asp: Optional[float] = None,
+    xlim: tuple[float, float] | None = None,
+    ylim: tuple[float, float] | None = None,
+    log: Literal["x", "y", "xy"] | None = None,
+    main: str | None = None,
+    xlab: str | None = None,
+    ylab: str | None = None,
+    asp: float | None = None,
     **kwargs: Any,
 ) -> ggplot:
     """

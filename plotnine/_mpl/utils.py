@@ -10,7 +10,8 @@ from plotnine._utils import ha_as_float, va_as_float
 from .transforms import ZEROS_BBOX
 
 if TYPE_CHECKING:
-    from typing import Literal, Sequence
+    from collections.abc import Sequence
+    from typing import Literal
 
     from matplotlib.artist import Artist
     from matplotlib.axes import Axes

@@ -11,7 +11,8 @@ from ..positions import position_nudge
 from .geom import geom
 
 if TYPE_CHECKING:
-    from typing import Any, Sequence
+    from collections.abc import Sequence
+    from typing import Any
 
     import narwhals as nw
     from matplotlib.axes import Axes
