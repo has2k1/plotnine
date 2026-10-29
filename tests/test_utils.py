@@ -11,12 +11,41 @@ from plotnine._utils import (
     add_margins,
     join_keys,
     match,
+    multitype_sort,
     ninteraction,
     pivot_apply,
     remove_missing,
     uniquecols,
 )
 from plotnine.data import mtcars
+
+
+def test_multitype_sort():
+    # https://github.com/has2k1/plotnine/issues/950
+    pentagon = (5, 0, 60)
+    star = (5, 1, 60)
+    house = ((-2, -3), (-2, -1), (0, 0), (2, -1), (2, -3), (-2, -3))
+
+    # Elements of the same type that are not comparable with each
+    # other do not raise; they are ordered by their representation
+    result = multitype_sort([pentagon, star, house])
+    assert result == sorted([pentagon, star, house], key=repr)
+
+    # Elements of different types are still sorted within their
+    # type groups
+    result = multitype_sort([3, house, "a", 1, pentagon, "b"])
+    assert result == [1, 3, house, pentagon, "a", "b"]
+
+
+def test_ninteraction_unorderable_elements():
+    # https://github.com/has2k1/plotnine/issues/950
+    pentagon = (5, 0, 60)
+    house = ((-2, -3), (-2, -1), (0, 0), (2, -1), (2, -3), (-2, -3))
+    data = pd.DataFrame({"shape": [pentagon, house, pentagon, house]})
+
+    # Both are tuples, but only house is sortable before pentagon
+    # (by representation), so it gets the smaller id
+    assert ninteraction(data) == [2, 1, 2, 1]
 
 
 def test__margins():
