@@ -145,8 +145,14 @@ class facet:
         self.layout = plot.built.layout
         self.figure = plot.figure
 
-        if hasattr(plot, "axs"):
-            gs, self.axs = plot._sub_gridspec, plot.axs
+        if plot._figure_state.axs is not None:
+            # Axes already laid out (e.g. an animation frame adopting
+            # the first plot's panels); reuse them.
+            assert plot._figure_state.sub_gridspec is not None
+            gs, self.axs = (
+                plot._figure_state.sub_gridspec,
+                plot._figure_state.axs,
+            )
         else:
             gs, self.axs = self._make_axes()
 

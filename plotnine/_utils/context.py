@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from copy import copy, deepcopy
-from dataclasses import dataclass
+from copy import deepcopy
+from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 import pandas as pd
@@ -10,7 +10,10 @@ from packaging.version import Version
 from ..session import set_last_plot
 
 if TYPE_CHECKING:
+    from contextlib import AbstractContextManager
     from typing import Self
+
+    from matplotlib.axes import Axes
 
     from plotnine import ggplot
     from plotnine._mpl.figure import p9Figure
@@ -20,134 +23,183 @@ if TYPE_CHECKING:
 PANDAS_LT_3 = Version(pd.__version__) < Version("3.0")
 
 
-def reopen(fig):
-    """
-    Reopen an MPL figure that has been closed with plt.close
-
-    When drawing compositions, plot_composition_context will nest
-    plot_context. In this case, plot_context may close an MPL figure
-    that belongs to composition. A closed figure cannot be shown with
-    plt.show, so for compositions compose.show (if called) will do nothing.
-    """
-    from matplotlib._pylab_helpers import Gcf
-
-    Gcf.set_active(fig.canvas.manager)
-
-
 @dataclass
-class plot_context:
+class draw_context:
     """
-    Context within which the plot is built
+    Context within which a plot or composition is built
 
     Parameters
     ----------
-    plot :
-        ggplot object to be built within the context.
+    obj :
+        ggplot or composition object to be built within the context.
     show :
         Whether to show the plot.
     """
 
-    plot: ggplot
+    obj: ggplot | Compose
     show: bool = False
+    _pd_context: AbstractContextManager[object] | None = field(
+        default=None, init=False, repr=False
+    )
 
     def __post_init__(self):
         import matplotlib as mpl
 
-        # Contexts
-        self.rc_context = mpl.rc_context(self.plot.theme.rcParams)
+        # rc_context nests. A composition enters its rcParams, then each plot
+        # in it enters and exits its own, so a plot's value, such as a dpi
+        # that differs from the composition's, applies only while that plot
+        # draws. The composition owns the figure, so its dpi is the one in
+        # effect when the figure is created.
+        self._rc_context = mpl.rc_context(self.obj.theme.rcParams)
         if PANDAS_LT_3:
-            self.pd_option_context = pd.option_context(
+            self._pd_context = pd.option_context(
                 "mode.copy_on_write",
                 True,
             )
 
     def __enter__(self) -> Self:
         """
-        Enclose in matplolib & pandas environments
+        Enclose in matplotlib & pandas environments
         """
 
-        self._last_plot = deepcopy(self.plot)
-        self.rc_context.__enter__()
-        if PANDAS_LT_3:
-            self.pd_option_context.__enter__()
+        self._last_plot = deepcopy(self.obj)
+        self._rc_context.__enter__()
+        if self._pd_context is not None:
+            self._pd_context.__enter__()
 
         return self
 
     def __exit__(self, exc_type, exc_value, exc_traceback):
         """
         Exit matplotlib & pandas environments
+
+        Close the figure on exit only when the object owns it. A child
+        drawing into a figure handed down by a parent composition or
+        host plot leaves closing to the figure's owner.
         """
         import matplotlib.pyplot as plt
 
+        # The figure may not exist if the draw raised during setup.
+        figure = getattr(self.obj, "figure", None)
+
         if exc_type is None:
             if self.show:
+                if figure is not None and is_closed(figure):
+                    reopen(figure)
                 plt.show()
-            else:
-                plt.close(self.plot.figure)
+            elif figure is not None and figure._owner is self.obj:
+                plt.close(figure)
             set_last_plot(self._last_plot)
-        else:
+        elif figure is not None:
             # There is an exception, close any figure
-            if hasattr(self.plot, "figure"):
-                plt.close(self.plot.figure)
+            plt.close(figure)
 
-        self.rc_context.__exit__(exc_type, exc_value, exc_traceback)
-        if PANDAS_LT_3:
-            self.pd_option_context.__exit__(exc_type, exc_value, exc_traceback)
+        self._rc_context.__exit__(exc_type, exc_value, exc_traceback)
+        if self._pd_context is not None:
+            self._pd_context.__exit__(exc_type, exc_value, exc_traceback)
 
 
 @dataclass
-class plot_composition_context:
+class save_context:
     """
-    Context within which a plot composition is built
+    Context within which a drawn figure is saved
+
+    Saving happens after the draw's own context has exited, so the
+    object's theme rcParams (fonts, dpi, ...) must be re-applied for
+    `savefig` to render the file the same way the figure was drawn.
 
     Parameters
     ----------
-    cmp :
-        composition object to be built within the context.
-    show :
-        Whether to show the plot.
+    obj :
+        ggplot or composition whose theme rcParams to apply.
     """
 
-    cmp: Compose
-    show: bool
+    obj: ggplot | Compose
 
     def __post_init__(self):
         import matplotlib as mpl
 
-        # The dpi is needed when the figure is created, either as
-        # a parameter to plt.figure() or an rcParam.
-        # https://github.com/matplotlib/matplotlib/issues/24644
-        # When drawing the Composition, the dpi themeable is infective
-        # because it sets the rcParam after this figure is created.
-        self._rc_context = mpl.rc_context(
-            {"figure.dpi": self.cmp.theme.getp("dpi")}
-        )
+        self._rc_context = mpl.rc_context(self.obj.theme.rcParams)
 
     def __enter__(self) -> Self:
         """
-        Enclose in matplolib & pandas environments
+        Enclose in the matplotlib environment
         """
-        self._last_plot = copy(self.cmp)
         self._rc_context.__enter__()
         return self
 
     def __exit__(self, exc_type, exc_value, exc_traceback):
-        import matplotlib.pyplot as plt
-
-        if exc_type is None:
-            if self.show:
-                if is_closed(self.cmp.figure):
-                    reopen(self.cmp.figure)
-                plt.show()
-            else:
-                plt.close(self.cmp.figure)
-            set_last_plot(self._last_plot)
-        else:
-            # There is an exception, close any figure
-            if hasattr(self.cmp, "figure"):
-                plt.close(self.cmp.figure)
-
+        """
+        Exit the matplotlib environment
+        """
         self._rc_context.__exit__(exc_type, exc_value, exc_traceback)
+
+
+@dataclass
+class _FigureState:
+    """
+    Figure of a plot or composition, with the gridspecs and axes on it
+
+    Every field belongs to one figure. A plot or composition given a new
+    figure replaces the whole object, so no gridspec or axes from the
+    previous figure survive, and a copy of the plot or composition starts
+    without one.
+    """
+
+    figure: p9Figure
+    """
+    Figure the plot or composition draws into
+    """
+
+    gridspec: p9GridSpec | None = None
+    """
+    Gridspec (1x1) that contains the whole plot or composition
+
+    `None` while an object given only a figure, such as an inset, has yet
+    to lay out its own.
+    """
+
+    sub_gridspec: p9GridSpec | None = None
+    """
+    Gridspec (nxn) that contains a plot's facet panels or a composition's
+    items
+
+    `None` until they are laid out.
+
+     -------------------------
+    |  title                  |<----- .gridspec
+    |  subtitle               |
+    |                         |
+    |   -------------         |
+    |  |      |      |<-------+------ .sub_gridspec
+    |  |      |      |        |
+    |  |      |      | legend |
+    |   -------------         |
+    |                         |
+    |                 caption |
+    |-------------------------|
+    |          footer         |
+     -------------------------
+    """
+
+    axs: list[Axes] | None = None
+    """
+    Panel axes
+
+    `None` until the panels are laid out, and always `None` for a
+    composition, whose panels belong to its plots.
+    """
+
+
+def reopen(fig):
+    """
+    Reopen a matplotlib figure closed with `plt.close`
+
+    A closed figure cannot be shown with `plt.show` until it is reopened.
+    """
+    from matplotlib._pylab_helpers import Gcf
+
+    Gcf.set_active(fig.canvas.manager)
 
 
 def is_closed(fig) -> bool:
@@ -167,8 +219,9 @@ def assign_figure(
     """
     Assign a figure to a plot or composition
 
-    Close the object's current figure when the object owns it. Clear axes and
-    sub-gridspec state associated with the previous figure.
+    Close the object's current figure when the object owns it. Replace the
+    object's figure state so nothing bound to the previous figure survives
+    the handover.
 
     Parameters
     ----------
@@ -183,16 +236,10 @@ def assign_figure(
     import matplotlib.pyplot as plt
 
     if (
-        hasattr(obj, "figure")
-        and obj.figure._owner is obj
-        and not is_closed(obj.figure)
+        hasattr(obj, "_figure_state")
+        and obj._figure_state.figure._owner is obj
+        and not is_closed(obj._figure_state.figure)
     ):
-        plt.close(obj.figure)
+        plt.close(obj._figure_state.figure)
 
-    obj.figure = figure
-    if gridspec is not None:
-        obj._gridspec = gridspec
-
-    if hasattr(obj, "axs"):
-        delattr(obj, "axs")
-        delattr(obj, "_sub_gridspec")
+    obj._figure_state = _FigureState(figure, gridspec)

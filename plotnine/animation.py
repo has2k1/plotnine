@@ -225,14 +225,18 @@ class PlotnineAnimation(ArtistAnimation):
 
         This methods draws plots from the 2nd onwards
         """
-        from ._utils.context import plot_context
+        from ._utils.context import _FigureState, draw_context
 
         plot = deepcopy(plot)
-        plot.figure = first_plot.figure
-        plot.axs = first_plot.axs
-        plot._gridspec = first_plot._sub_gridspec
-        plot._sub_gridspec = first_plot._sub_gridspec
-        with plot_context(plot):
+        # Adopt the first frame's figure and its already-laid-out
+        # panels; this frame draws additional artists onto them.
+        plot._figure_state = _FigureState(
+            first_plot.figure,
+            gridspec=first_plot._sub_gridspec,
+            sub_gridspec=first_plot._sub_gridspec,
+            axs=first_plot.axs,
+        )
+        with draw_context(plot):
             plot._build()
             _ = plot.built.facet.setup(plot)
             plot._draw_layers()
