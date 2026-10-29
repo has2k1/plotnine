@@ -1,7 +1,7 @@
 import pandas as pd
 import pytest
 
-from plotnine import aes, geom_dotplot, ggplot
+from plotnine import aes, geom_dotplot, ggplot, stage, stat_bindot
 
 data = pd.DataFrame({"x": [1, 2, 2, 3, 3, 3, 4, 4, 4, 4]})
 
@@ -46,6 +46,63 @@ def test_stackdir_centerwhole():
     p = ggplot(data, aes("x")) + geom_dotplot(bins=15, stackdir="centerwhole")
 
     assert p == "stackdir_centerwhole"
+
+
+def test_binaxis_y_binpositions_all():
+    # The y values are not sorted, stat_bindot sorts them before
+    # assigning the bins found across all the groups. The counts
+    # must remain with the right group and bin center.
+    data = pd.DataFrame(
+        {
+            "g": list("abababbaba"),
+            "y": [4, 1, 3, 2, 4, 3, 4, 2, 3, 4],
+        }
+    )
+    # Keep the bin centers in y instead of the default count
+    p = ggplot(data, aes("g", stage("y", after_stat="y"))) + stat_bindot(
+        binaxis="y",
+        binpositions="all",
+        binwidth=1,
+        geom="point",
+    )
+    ldata = p.layer_data()
+    result = {
+        (group, y): count
+        for group, y, count in ldata[["group", "y", "count"]].itertuples(
+            index=False
+        )
+    }
+
+    assert result == {
+        (1, 2): 1,
+        (1, 3): 1,
+        (1, 4): 3,
+        (2, 1): 1,
+        (2, 2): 1,
+        (2, 3): 2,
+        (2, 4): 1,
+    }
+
+
+def test_drop():
+    # Points with zero weight create empty bins
+    data = pd.DataFrame(
+        {
+            "x": [4, 1, 3, 2, 4, 3, 4, 2, 3, 4],
+            "w": [1, 0, 1, 0, 1, 1, 1, 0, 1, 1],
+        }
+    )
+    p = ggplot(data, aes("x", weight="w"))
+    kwargs = {"binwidth": 1, "geom": "point"}
+
+    ldata = (p + stat_bindot(drop=False, **kwargs)).layer_data()
+    assert list(ldata["x"]) == [1, 2, 3, 4]
+    assert list(ldata["count"]) == [0, 0, 3, 4]
+
+    ldata = (p + stat_bindot(drop=True, **kwargs)).layer_data()
+    assert list(ldata["x"]) == [3, 4]
+    assert list(ldata["count"]) == [3, 4]
+    assert list(ldata["ncount"]) == [0.75, 1]
 
 
 class TestGrouping:

@@ -60,7 +60,7 @@ class geom_rect(geom):
             # consecutive rectangles into a spurious spike.
             data["group"] = np.repeat(np.arange(len(data) // 4), 4)
             for _, gdata in data.groupby("group"):
-                gdata.reset_index(inplace=True, drop=True)
+                gdata = gdata.reset_index(drop=True)
                 geom_polygon.draw_group(
                     gdata, panel_params, coord, ax, self.params
                 )
