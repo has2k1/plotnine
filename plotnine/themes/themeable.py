@@ -12,7 +12,7 @@ that covers text also has to cover axis.title.
 from __future__ import annotations
 
 from contextlib import suppress
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Literal
 from warnings import warn
 
 import numpy as np
@@ -26,6 +26,7 @@ from .elements import element_blank
 from .elements.element_base import element_base
 
 if TYPE_CHECKING:
+    from _collections_abc import dict_items, dict_values
     from collections.abc import Mapping, Sequence
     from typing import Any
 
@@ -107,7 +108,11 @@ class themeable(metaclass=RegistryHierarchyMeta):
     [](`~plotnine.themes.theme.theme`) keyword arguments.
     """
 
-    def __init__(self, theme_element: element_base | str | float):
+    theme_element: element_base | str | float | tuple[float, float]
+
+    def __init__(
+        self, theme_element: element_base | str | float | tuple[float, float]
+    ):
         self.theme_element = theme_element
         if isinstance(theme_element, element_base):
             self._properties: dict[str, Any] = theme_element.properties
@@ -159,7 +164,7 @@ class themeable(metaclass=RegistryHierarchyMeta):
         """
         return isinstance(self.theme_element, element_blank)
 
-    def merge(self, other: themeable):
+    def merge(self, other: themeable) -> None:
         """
         Merge properties of other into self
 
@@ -202,7 +207,7 @@ class themeable(metaclass=RegistryHierarchyMeta):
         return {}
 
     @property
-    def properties(self):
+    def properties(self) -> dict[str, Any]:
         """
         Return the properties of the themeable
         """
@@ -217,7 +222,7 @@ class themeable(metaclass=RegistryHierarchyMeta):
             d.pop(k, None)
         return d
 
-    def apply(self, theme: theme):
+    def apply(self, theme: theme) -> None:
         """
         Called by the theme to apply the themeable
 
@@ -231,7 +236,7 @@ class themeable(metaclass=RegistryHierarchyMeta):
         for ax in theme.axs:
             do_ax(ax)
 
-    def apply_ax(self, ax: Axes):
+    def apply_ax(self, ax: Axes) -> None:
         """
         Called after a chart has been plotted.
 
@@ -248,17 +253,17 @@ class themeable(metaclass=RegistryHierarchyMeta):
         ax : matplotlib.axes.Axes
         """
 
-    def apply_figure(self, figure: Figure, targets: ThemeTargets):
+    def apply_figure(self, figure: Figure, targets: ThemeTargets) -> None:
         """
         Apply theme to the figure
         """
 
-    def blank_ax(self, ax: Axes):
+    def blank_ax(self, ax: Axes) -> None:
         """
         Blank out theme elements
         """
 
-    def blank_figure(self, figure: Figure, targets: ThemeTargets):
+    def blank_figure(self, figure: Figure, targets: ThemeTargets) -> None:
         """
         Blank out elements on the figure
         """
@@ -271,7 +276,7 @@ class Themeables(dict[str, themeable]):
     The key is the name of the class.
     """
 
-    def update(self, other: Themeables, **kwargs):  # type: ignore
+    def update(self, other: Themeables, **kwargs: Any) -> None:  # pyright: ignore[reportIncompatibleMethodOverride]
         """
         Update themeables with those from `other`
 
@@ -337,7 +342,7 @@ class Themeables(dict[str, themeable]):
                 )
 
     @property
-    def _dict(self):
+    def _dict(self) -> dict[str, themeable]:
         """
         Themeables in reverse based on the inheritance hierarchy.
 
@@ -356,7 +361,7 @@ class Themeables(dict[str, themeable]):
                     result[name] = self[name]
         return result
 
-    def setup(self, theme: theme):
+    def setup(self, theme: theme) -> None:
         """
         Setup themeables for theming
         """
@@ -365,13 +370,13 @@ class Themeables(dict[str, themeable]):
             if isinstance(th.theme_element, element_base):
                 th.theme_element.setup(theme, name)
 
-    def items(self):
+    def items(self) -> dict_items[str, themeable]:
         """
         List of (name, themeable) in reverse based on the inheritance.
         """
         return self._dict.items()
 
-    def values(self):
+    def values(self) -> dict_values[str, themeable]:
         """
         List of themeables in reverse based on the inheritance hierarchy.
         """
@@ -431,7 +436,7 @@ class Themeables(dict[str, themeable]):
             ha = lookup[ha]
         return ha
 
-    def get_va(self, name) -> float:
+    def get_va(self, name: str) -> float:
         """
         Get the vertical alignment of themeable as a float
 
@@ -522,7 +527,7 @@ class MixinSequenceOfValues(themeable):
 
     def set(
         self, artists: Sequence[Artist], props: dict[str, Any] | None = None
-    ):
+    ) -> None:
         if props is None:
             props = self.properties
 
@@ -593,13 +598,13 @@ class axis_title_x_bottom(themeable):
     theme_element : element_text
     """
 
-    def apply_figure(self, figure: Figure, targets: ThemeTargets):
+    def apply_figure(self, figure: Figure, targets: ThemeTargets) -> None:
         super().apply_figure(figure, targets)
         if text := targets.axis_title_x_bottom:
             # ha can be a float and is handled by the layout manager
             text.set(**self._get_properties(omit=("margin", "ha")))
 
-    def blank_figure(self, figure: Figure, targets: ThemeTargets):
+    def blank_figure(self, figure: Figure, targets: ThemeTargets) -> None:
         super().blank_figure(figure, targets)
         if text := targets.axis_title_x_bottom:
             text.set_visible(False)
@@ -614,12 +619,12 @@ class axis_title_x_top(themeable):
     theme_element : element_text
     """
 
-    def apply_figure(self, figure: Figure, targets: ThemeTargets):
+    def apply_figure(self, figure: Figure, targets: ThemeTargets) -> None:
         super().apply_figure(figure, targets)
         if text := targets.axis_title_x_top:
             text.set(**self._get_properties(omit=("margin", "ha")))
 
-    def blank_figure(self, figure: Figure, targets: ThemeTargets):
+    def blank_figure(self, figure: Figure, targets: ThemeTargets) -> None:
         super().blank_figure(figure, targets)
         if text := targets.axis_title_x_top:
             text.set_visible(False)
@@ -644,13 +649,13 @@ class axis_title_y_left(themeable):
     theme_element : element_text
     """
 
-    def apply_figure(self, figure: Figure, targets: ThemeTargets):
+    def apply_figure(self, figure: Figure, targets: ThemeTargets) -> None:
         super().apply_figure(figure, targets)
         if text := targets.axis_title_y_left:
             # va can be a float and is handled by the layout manager
             text.set(**self._get_properties(omit=("margin", "va")))
 
-    def blank_figure(self, figure: Figure, targets: ThemeTargets):
+    def blank_figure(self, figure: Figure, targets: ThemeTargets) -> None:
         super().blank_figure(figure, targets)
         if text := targets.axis_title_y_left:
             text.set_visible(False)
@@ -665,12 +670,12 @@ class axis_title_y_right(themeable):
     theme_element : element_text
     """
 
-    def apply_figure(self, figure: Figure, targets: ThemeTargets):
+    def apply_figure(self, figure: Figure, targets: ThemeTargets) -> None:
         super().apply_figure(figure, targets)
         if text := targets.axis_title_y_right:
             text.set(**self._get_properties(omit=("margin", "va")))
 
-    def blank_figure(self, figure: Figure, targets: ThemeTargets):
+    def blank_figure(self, figure: Figure, targets: ThemeTargets) -> None:
         super().blank_figure(figure, targets)
         if text := targets.axis_title_y_right:
             text.set_visible(False)
@@ -705,12 +710,12 @@ class legend_title(themeable):
     theme_element : element_text
     """
 
-    def apply_figure(self, figure: Figure, targets: ThemeTargets):
+    def apply_figure(self, figure: Figure, targets: ThemeTargets) -> None:
         super().apply_figure(figure, targets)
         if text := targets.legend_title:
             text.set(**self._get_properties(omit=("margin", "ha", "va")))
 
-    def blank_figure(self, figure: Figure, targets: ThemeTargets):
+    def blank_figure(self, figure: Figure, targets: ThemeTargets) -> None:
         super().blank_figure(figure, targets)
         if text := targets.legend_title:
             text.set_visible(False)
@@ -731,7 +736,7 @@ class legend_text_legend(MixinSequenceOfValues):
     effect when the text at the top or the bottom.
     """
 
-    def apply_figure(self, figure: Figure, targets: ThemeTargets):
+    def apply_figure(self, figure: Figure, targets: ThemeTargets) -> None:
         super().apply_figure(figure, targets)
         if texts := targets.legend_text_legend:
             self.set(
@@ -739,7 +744,7 @@ class legend_text_legend(MixinSequenceOfValues):
                 self._get_properties(omit=("margin", "ha", "va")),
             )
 
-    def blank_figure(self, figure: Figure, targets: ThemeTargets):
+    def blank_figure(self, figure: Figure, targets: ThemeTargets) -> None:
         super().blank_figure(figure, targets)
         if texts := targets.legend_text_legend:
             for text in texts:
@@ -761,7 +766,7 @@ class legend_text_colorbar(MixinSequenceOfValues):
     effect when the text at the top or the bottom.
     """
 
-    def apply_figure(self, figure: Figure, targets: ThemeTargets):
+    def apply_figure(self, figure: Figure, targets: ThemeTargets) -> None:
         super().apply_figure(figure, targets)
         if texts := targets.legend_text_colorbar:
             self.set(
@@ -769,7 +774,7 @@ class legend_text_colorbar(MixinSequenceOfValues):
                 self._get_properties(omit=("margin", "ha", "va")),
             )
 
-    def blank_figure(self, figure: Figure, targets: ThemeTargets):
+    def blank_figure(self, figure: Figure, targets: ThemeTargets) -> None:
         super().blank_figure(figure, targets)
         if texts := targets.legend_text_colorbar:
             for text in texts:
@@ -808,13 +813,13 @@ class plot_title(themeable):
     the center or with different alignments.
     """
 
-    def apply_figure(self, figure: Figure, targets: ThemeTargets):
+    def apply_figure(self, figure: Figure, targets: ThemeTargets) -> None:
         super().apply_figure(figure, targets)
         if text := targets.plot_title:
             # ha can be a float and is handled by the layout manager
             text.set(**self._get_properties(omit=("margin", "ha")))
 
-    def blank_figure(self, figure: Figure, targets: ThemeTargets):
+    def blank_figure(self, figure: Figure, targets: ThemeTargets) -> None:
         super().blank_figure(figure, targets)
         if text := targets.plot_title:
             text.set_visible(False)
@@ -836,12 +841,12 @@ class plot_subtitle(themeable):
     alignment are set.
     """
 
-    def apply_figure(self, figure: Figure, targets: ThemeTargets):
+    def apply_figure(self, figure: Figure, targets: ThemeTargets) -> None:
         super().apply_figure(figure, targets)
         if text := targets.plot_subtitle:
             text.set(**self._get_properties(omit=("margin",)))
 
-    def blank_figure(self, figure: Figure, targets: ThemeTargets):
+    def blank_figure(self, figure: Figure, targets: ThemeTargets) -> None:
         super().blank_figure(figure, targets)
         if text := targets.plot_subtitle:
             text.set_visible(False)
@@ -856,12 +861,12 @@ class plot_caption(themeable):
     theme_element : element_text
     """
 
-    def apply_figure(self, figure: Figure, targets: ThemeTargets):
+    def apply_figure(self, figure: Figure, targets: ThemeTargets) -> None:
         super().apply_figure(figure, targets)
         if text := targets.plot_caption:
             text.set(**self._get_properties(omit=("margin",)))
 
-    def blank_figure(self, figure: Figure, targets: ThemeTargets):
+    def blank_figure(self, figure: Figure, targets: ThemeTargets) -> None:
         super().blank_figure(figure, targets)
         if text := targets.plot_caption:
             text.set_visible(False)
@@ -876,12 +881,12 @@ class plot_footer(themeable):
     theme_element : element_text
     """
 
-    def apply_figure(self, figure: Figure, targets: ThemeTargets):
+    def apply_figure(self, figure: Figure, targets: ThemeTargets) -> None:
         super().apply_figure(figure, targets)
         if text := targets.plot_footer:
             text.set(**self._get_properties(omit=("margin",)))
 
-    def blank_figure(self, figure: Figure, targets: ThemeTargets):
+    def blank_figure(self, figure: Figure, targets: ThemeTargets) -> None:
         super().blank_figure(figure, targets)
         if text := targets.plot_footer:
             text.set_visible(False)
@@ -906,7 +911,7 @@ class plot_tag(themeable):
     other tags in a composition.
     """
 
-    def apply_figure(self, figure: Figure, targets: ThemeTargets):
+    def apply_figure(self, figure: Figure, targets: ThemeTargets) -> None:
         super().apply_figure(figure, targets)
         props = self._get_properties(omit=("margin",))
 
@@ -919,7 +924,7 @@ class plot_tag(themeable):
         if text := targets.plot_tag:
             text.set(**props)
 
-    def blank_figure(self, figure: Figure, targets: ThemeTargets):
+    def blank_figure(self, figure: Figure, targets: ThemeTargets) -> None:
         super().blank_figure(figure, targets)
         if text := targets.plot_tag:
             text.set_visible(False)
@@ -1001,12 +1006,12 @@ class strip_text_x_top(MixinSequenceOfValues):
     theme_element : element_text
     """
 
-    def apply_figure(self, figure: Figure, targets: ThemeTargets):
+    def apply_figure(self, figure: Figure, targets: ThemeTargets) -> None:
         super().apply_figure(figure, targets)
         if texts := targets.strip_text_x_top:
             self.set(texts, self._get_properties(omit=("margin", "ha", "va")))
 
-    def blank_figure(self, figure: Figure, targets: ThemeTargets):
+    def blank_figure(self, figure: Figure, targets: ThemeTargets) -> None:
         super().blank_figure(figure, targets)
         if texts := targets.strip_text_x_top:
             for text in texts:
@@ -1022,12 +1027,12 @@ class strip_text_x_bottom(MixinSequenceOfValues):
     theme_element : element_text
     """
 
-    def apply_figure(self, figure: Figure, targets: ThemeTargets):
+    def apply_figure(self, figure: Figure, targets: ThemeTargets) -> None:
         super().apply_figure(figure, targets)
         if texts := targets.strip_text_x_bottom:
             self.set(texts, self._get_properties(omit=("margin", "ha", "va")))
 
-    def blank_figure(self, figure: Figure, targets: ThemeTargets):
+    def blank_figure(self, figure: Figure, targets: ThemeTargets) -> None:
         super().blank_figure(figure, targets)
         if texts := targets.strip_text_x_bottom:
             for text in texts:
@@ -1053,12 +1058,12 @@ class strip_text_y_left(MixinSequenceOfValues):
     theme_element : element_text
     """
 
-    def apply_figure(self, figure: Figure, targets: ThemeTargets):
+    def apply_figure(self, figure: Figure, targets: ThemeTargets) -> None:
         super().apply_figure(figure, targets)
         if texts := targets.strip_text_y_left:
             self.set(texts, self._get_properties(omit=("margin", "ha", "va")))
 
-    def blank_figure(self, figure: Figure, targets: ThemeTargets):
+    def blank_figure(self, figure: Figure, targets: ThemeTargets) -> None:
         super().blank_figure(figure, targets)
         if texts := targets.strip_text_y_left:
             for text in texts:
@@ -1074,12 +1079,12 @@ class strip_text_y_right(MixinSequenceOfValues):
     theme_element : element_text
     """
 
-    def apply_figure(self, figure: Figure, targets: ThemeTargets):
+    def apply_figure(self, figure: Figure, targets: ThemeTargets) -> None:
         super().apply_figure(figure, targets)
         if texts := targets.strip_text_y_right:
             self.set(texts, self._get_properties(omit=("margin", "ha", "va")))
 
-    def blank_figure(self, figure: Figure, targets: ThemeTargets):
+    def blank_figure(self, figure: Figure, targets: ThemeTargets) -> None:
         super().blank_figure(figure, targets)
         if texts := targets.strip_text_y_right:
             for text in texts:
@@ -1133,7 +1138,7 @@ class axis_text_x_bottom(MixinSequenceOfValues):
     theme_element : element_text
     """
 
-    def apply_ax(self, ax: Axes):
+    def apply_ax(self, ax: Axes) -> None:
         super().apply_ax(ax)
         if (axis := axis_at(ax, "bottom")) is None:
             return
@@ -1141,7 +1146,7 @@ class axis_text_x_bottom(MixinSequenceOfValues):
         self.set(labels, self._get_properties(omit=("margin", "va")))
         _set_axis_text_margin(self, ax, "bottom")
 
-    def blank_ax(self, ax: Axes):
+    def blank_ax(self, ax: Axes) -> None:
         super().blank_ax(ax)
         if (axis := axis_at(ax, "bottom")) is None:
             return
@@ -1158,7 +1163,7 @@ class axis_text_x_top(MixinSequenceOfValues):
     theme_element : element_text
     """
 
-    def apply_ax(self, ax: Axes):
+    def apply_ax(self, ax: Axes) -> None:
         super().apply_ax(ax)
         if (axis := axis_at(ax, "top")) is None:
             return
@@ -1166,7 +1171,7 @@ class axis_text_x_top(MixinSequenceOfValues):
         self.set(labels, self._get_properties(omit=("margin", "va")))
         _set_axis_text_margin(self, ax, "top")
 
-    def blank_ax(self, ax: Axes):
+    def blank_ax(self, ax: Axes) -> None:
         super().blank_ax(ax)
         if (axis := axis_at(ax, "top")) is None:
             return
@@ -1183,7 +1188,7 @@ class axis_text_theta_outside(MixinSequenceOfValues):
     theme_element : element_text
     """
 
-    def apply_ax(self, ax: Axes):
+    def apply_ax(self, ax: Axes) -> None:
         super().apply_ax(ax)
         if (axis := axis_at(ax, "theta_outside")) is None:
             return
@@ -1191,7 +1196,7 @@ class axis_text_theta_outside(MixinSequenceOfValues):
         self.set(labels, self._get_properties(omit=("margin", "ha", "va")))
         _set_axis_text_margin(self, ax, "theta_outside")
 
-    def blank_ax(self, ax: Axes):
+    def blank_ax(self, ax: Axes) -> None:
         super().blank_ax(ax)
         if (axis := axis_at(ax, "theta_outside")) is None:
             return
@@ -1208,7 +1213,7 @@ class axis_text_theta_inside(MixinSequenceOfValues):
     theme_element : element_text
     """
 
-    def apply_ax(self, ax: Axes):
+    def apply_ax(self, ax: Axes) -> None:
         super().apply_ax(ax)
         if (axis := axis_at(ax, "theta_inside")) is None:
             return
@@ -1216,7 +1221,7 @@ class axis_text_theta_inside(MixinSequenceOfValues):
         self.set(labels, self._get_properties(omit=("margin", "ha", "va")))
         _set_axis_text_margin(self, ax, "theta_inside")
 
-    def blank_ax(self, ax: Axes):
+    def blank_ax(self, ax: Axes) -> None:
         super().blank_ax(ax)
         if (axis := axis_at(ax, "theta_inside")) is None:
             return
@@ -1253,7 +1258,7 @@ class axis_text_y_left(MixinSequenceOfValues):
     theme_element : element_text
     """
 
-    def apply_ax(self, ax: Axes):
+    def apply_ax(self, ax: Axes) -> None:
         super().apply_ax(ax)
         if (axis := axis_at(ax, "left")) is None:
             return
@@ -1261,7 +1266,7 @@ class axis_text_y_left(MixinSequenceOfValues):
         self.set(labels, self._get_properties(omit=("margin", "ha")))
         _set_axis_text_margin(self, ax, "left")
 
-    def blank_ax(self, ax: Axes):
+    def blank_ax(self, ax: Axes) -> None:
         super().blank_ax(ax)
         if (axis := axis_at(ax, "left")) is None:
             return
@@ -1278,7 +1283,7 @@ class axis_text_y_right(MixinSequenceOfValues):
     theme_element : element_text
     """
 
-    def apply_ax(self, ax: Axes):
+    def apply_ax(self, ax: Axes) -> None:
         super().apply_ax(ax)
         if (axis := axis_at(ax, "right")) is None:
             return
@@ -1286,7 +1291,7 @@ class axis_text_y_right(MixinSequenceOfValues):
         self.set(labels, self._get_properties(omit=("margin", "ha")))
         _set_axis_text_margin(self, ax, "right")
 
-    def blank_ax(self, ax: Axes):
+    def blank_ax(self, ax: Axes) -> None:
         super().blank_ax(ax)
         if (axis := axis_at(ax, "right")) is None:
             return
@@ -1303,7 +1308,7 @@ class axis_text_r_start(MixinSequenceOfValues):
     theme_element : element_text
     """
 
-    def apply_ax(self, ax: Axes):
+    def apply_ax(self, ax: Axes) -> None:
         super().apply_ax(ax)
         if (axis := axis_at(ax, "r_start")) is None:
             return
@@ -1311,7 +1316,7 @@ class axis_text_r_start(MixinSequenceOfValues):
         self.set(labels, self._get_properties(omit=("margin", "ha")))
         _set_axis_text_margin(self, ax, "r_start")
 
-    def blank_ax(self, ax: Axes):
+    def blank_ax(self, ax: Axes) -> None:
         super().blank_ax(ax)
         if (axis := axis_at(ax, "r_start")) is None:
             return
@@ -1328,7 +1333,7 @@ class axis_text_r_end(MixinSequenceOfValues):
     theme_element : element_text
     """
 
-    def apply_ax(self, ax: Axes):
+    def apply_ax(self, ax: Axes) -> None:
         super().apply_ax(ax)
         if (axis := axis_at(ax, "r_end")) is None:
             return
@@ -1336,7 +1341,7 @@ class axis_text_r_end(MixinSequenceOfValues):
         self.set(labels, self._get_properties(omit=("margin", "ha")))
         _set_axis_text_margin(self, ax, "r_end")
 
-    def blank_ax(self, ax: Axes):
+    def blank_ax(self, ax: Axes) -> None:
         super().blank_ax(ax)
         if (axis := axis_at(ax, "r_end")) is None:
             return
@@ -1384,7 +1389,7 @@ class text(axis_text, legend_text, strip_text, title):
     """
 
     @property
-    def rcParams(self):
+    def rcParams(self) -> dict[RcKeyType, Any]:
         rcParams = super().rcParams
 
         family = self.properties.get("family")
@@ -1473,11 +1478,11 @@ class axis_line_x_bottom(themeable):
     x-axis line on the bottom
     """
 
-    def apply_ax(self, ax: Axes):
+    def apply_ax(self, ax: Axes) -> None:
         super().apply_ax(ax)
         _style_axis_line(self, ax, "bottom")
 
-    def blank_ax(self, ax: Axes):
+    def blank_ax(self, ax: Axes) -> None:
         super().blank_ax(ax)
         if "bottom" in ax.spines:
             ax.spines["bottom"].set_visible(False)
@@ -1488,11 +1493,11 @@ class axis_line_x_top(themeable):
     x-axis line on the top
     """
 
-    def apply_ax(self, ax: Axes):
+    def apply_ax(self, ax: Axes) -> None:
         super().apply_ax(ax)
         _style_axis_line(self, ax, "top")
 
-    def blank_ax(self, ax: Axes):
+    def blank_ax(self, ax: Axes) -> None:
         super().blank_ax(ax)
         if "top" in ax.spines:
             ax.spines["top"].set_visible(False)
@@ -1503,13 +1508,13 @@ class axis_line_theta_inside(themeable):
     theta-axis line on the inner boundary
     """
 
-    def apply_ax(self, ax: Axes):
+    def apply_ax(self, ax: Axes) -> None:
         super().apply_ax(ax)
         if axis_at(ax, "theta_inside") is None:
             return
         _style_polar_axis_line(self, ax, "inner")
 
-    def blank_ax(self, ax: Axes):
+    def blank_ax(self, ax: Axes) -> None:
         super().blank_ax(ax)
         _blank_polar_axis_line(ax, "inner")
 
@@ -1519,13 +1524,13 @@ class axis_line_theta_outside(themeable):
     theta-axis line on the outer boundary
     """
 
-    def apply_ax(self, ax: Axes):
+    def apply_ax(self, ax: Axes) -> None:
         super().apply_ax(ax)
         if axis_at(ax, "theta_outside") is None:
             return
         _style_polar_axis_line(self, ax, "polar")
 
-    def blank_ax(self, ax: Axes):
+    def blank_ax(self, ax: Axes) -> None:
         super().blank_ax(ax)
         _blank_polar_axis_line(ax, "polar")
 
@@ -1555,11 +1560,11 @@ class axis_line_y_left(themeable):
     y-axis line on the left
     """
 
-    def apply_ax(self, ax: Axes):
+    def apply_ax(self, ax: Axes) -> None:
         super().apply_ax(ax)
         _style_axis_line(self, ax, "left")
 
-    def blank_ax(self, ax: Axes):
+    def blank_ax(self, ax: Axes) -> None:
         super().blank_ax(ax)
         if "left" in ax.spines:
             ax.spines["left"].set_visible(False)
@@ -1570,11 +1575,11 @@ class axis_line_y_right(themeable):
     y-axis line on the right
     """
 
-    def apply_ax(self, ax: Axes):
+    def apply_ax(self, ax: Axes) -> None:
         super().apply_ax(ax)
         _style_axis_line(self, ax, "right")
 
-    def blank_ax(self, ax: Axes):
+    def blank_ax(self, ax: Axes) -> None:
         super().blank_ax(ax)
         if "right" in ax.spines:
             ax.spines["right"].set_visible(False)
@@ -1585,13 +1590,13 @@ class axis_line_r_start(themeable):
     r-axis line at the start angle
     """
 
-    def apply_ax(self, ax: Axes):
+    def apply_ax(self, ax: Axes) -> None:
         super().apply_ax(ax)
         if axis_at(ax, "r_start") is None:
             return
         _style_polar_axis_line(self, ax, "start")
 
-    def blank_ax(self, ax: Axes):
+    def blank_ax(self, ax: Axes) -> None:
         super().blank_ax(ax)
         _blank_polar_axis_line(ax, "start")
 
@@ -1601,13 +1606,13 @@ class axis_line_r_end(themeable):
     r-axis line at the end angle
     """
 
-    def apply_ax(self, ax: Axes):
+    def apply_ax(self, ax: Axes) -> None:
         super().apply_ax(ax)
         if axis_at(ax, "r_end") is None:
             return
         _style_polar_axis_line(self, ax, "end")
 
-    def blank_ax(self, ax: Axes):
+    def blank_ax(self, ax: Axes) -> None:
         super().blank_ax(ax)
         _blank_polar_axis_line(ax, "end")
 
@@ -1693,11 +1698,11 @@ class axis_ticks_minor_x_bottom(MixinSequenceOfValues):
     x-axis minor tick lines on the bottom
     """
 
-    def apply_ax(self, ax: Axes):
+    def apply_ax(self, ax: Axes) -> None:
         super().apply_ax(ax)
         _style_axis_ticks(self, ax, "minor", "bottom")
 
-    def blank_ax(self, ax: Axes):
+    def blank_ax(self, ax: Axes) -> None:
         super().blank_ax(ax)
         _blank_axis_ticks(ax, "minor", "bottom")
 
@@ -1707,11 +1712,11 @@ class axis_ticks_minor_x_top(MixinSequenceOfValues):
     x-axis minor tick lines on the top
     """
 
-    def apply_ax(self, ax: Axes):
+    def apply_ax(self, ax: Axes) -> None:
         super().apply_ax(ax)
         _style_axis_ticks(self, ax, "minor", "top")
 
-    def blank_ax(self, ax: Axes):
+    def blank_ax(self, ax: Axes) -> None:
         super().blank_ax(ax)
         _blank_axis_ticks(ax, "minor", "top")
 
@@ -1721,11 +1726,11 @@ class axis_ticks_minor_theta_outside(MixinSequenceOfValues):
     theta-axis minor tick lines at the outer (rim) boundary
     """
 
-    def apply_ax(self, ax: Axes):
+    def apply_ax(self, ax: Axes) -> None:
         super().apply_ax(ax)
         _style_axis_ticks(self, ax, "minor", "theta_outside")
 
-    def blank_ax(self, ax: Axes):
+    def blank_ax(self, ax: Axes) -> None:
         super().blank_ax(ax)
         _blank_axis_ticks(ax, "minor", "theta_outside")
 
@@ -1735,11 +1740,11 @@ class axis_ticks_minor_theta_inside(MixinSequenceOfValues):
     theta-axis minor tick lines at the inner (donut-hole) boundary
     """
 
-    def apply_ax(self, ax: Axes):
+    def apply_ax(self, ax: Axes) -> None:
         super().apply_ax(ax)
         _style_axis_ticks(self, ax, "minor", "theta_inside")
 
-    def blank_ax(self, ax: Axes):
+    def blank_ax(self, ax: Axes) -> None:
         super().blank_ax(ax)
         _blank_axis_ticks(ax, "minor", "theta_inside")
 
@@ -1773,11 +1778,11 @@ class axis_ticks_minor_y_left(MixinSequenceOfValues):
     y-axis minor tick lines on the left
     """
 
-    def apply_ax(self, ax: Axes):
+    def apply_ax(self, ax: Axes) -> None:
         super().apply_ax(ax)
         _style_axis_ticks(self, ax, "minor", "left")
 
-    def blank_ax(self, ax: Axes):
+    def blank_ax(self, ax: Axes) -> None:
         super().blank_ax(ax)
         _blank_axis_ticks(ax, "minor", "left")
 
@@ -1787,11 +1792,11 @@ class axis_ticks_minor_y_right(MixinSequenceOfValues):
     y-axis minor tick lines on the right
     """
 
-    def apply_ax(self, ax: Axes):
+    def apply_ax(self, ax: Axes) -> None:
         super().apply_ax(ax)
         _style_axis_ticks(self, ax, "minor", "right")
 
-    def blank_ax(self, ax: Axes):
+    def blank_ax(self, ax: Axes) -> None:
         super().blank_ax(ax)
         _blank_axis_ticks(ax, "minor", "right")
 
@@ -1801,11 +1806,11 @@ class axis_ticks_minor_r_start(MixinSequenceOfValues):
     r-axis minor tick lines at the start-angle spoke
     """
 
-    def apply_ax(self, ax: Axes):
+    def apply_ax(self, ax: Axes) -> None:
         super().apply_ax(ax)
         _style_axis_ticks(self, ax, "minor", "r_start")
 
-    def blank_ax(self, ax: Axes):
+    def blank_ax(self, ax: Axes) -> None:
         super().blank_ax(ax)
         _blank_axis_ticks(ax, "minor", "r_start")
 
@@ -1815,11 +1820,11 @@ class axis_ticks_minor_r_end(MixinSequenceOfValues):
     r-axis minor tick lines at the end-angle spoke
     """
 
-    def apply_ax(self, ax: Axes):
+    def apply_ax(self, ax: Axes) -> None:
         super().apply_ax(ax)
         _style_axis_ticks(self, ax, "minor", "r_end")
 
-    def blank_ax(self, ax: Axes):
+    def blank_ax(self, ax: Axes) -> None:
         super().blank_ax(ax)
         _blank_axis_ticks(ax, "minor", "r_end")
 
@@ -1851,11 +1856,11 @@ class axis_ticks_major_x_bottom(MixinSequenceOfValues):
     x-axis major tick lines on the bottom
     """
 
-    def apply_ax(self, ax: Axes):
+    def apply_ax(self, ax: Axes) -> None:
         super().apply_ax(ax)
         _style_axis_ticks(self, ax, "major", "bottom")
 
-    def blank_ax(self, ax: Axes):
+    def blank_ax(self, ax: Axes) -> None:
         super().blank_ax(ax)
         _blank_axis_ticks(ax, "major", "bottom")
 
@@ -1865,11 +1870,11 @@ class axis_ticks_major_x_top(MixinSequenceOfValues):
     x-axis major tick lines on the top
     """
 
-    def apply_ax(self, ax: Axes):
+    def apply_ax(self, ax: Axes) -> None:
         super().apply_ax(ax)
         _style_axis_ticks(self, ax, "major", "top")
 
-    def blank_ax(self, ax: Axes):
+    def blank_ax(self, ax: Axes) -> None:
         super().blank_ax(ax)
         _blank_axis_ticks(ax, "major", "top")
 
@@ -1879,11 +1884,11 @@ class axis_ticks_major_theta_outside(MixinSequenceOfValues):
     theta-axis major tick lines at the outer (rim) boundary
     """
 
-    def apply_ax(self, ax: Axes):
+    def apply_ax(self, ax: Axes) -> None:
         super().apply_ax(ax)
         _style_axis_ticks(self, ax, "major", "theta_outside")
 
-    def blank_ax(self, ax: Axes):
+    def blank_ax(self, ax: Axes) -> None:
         super().blank_ax(ax)
         _blank_axis_ticks(ax, "major", "theta_outside")
 
@@ -1893,11 +1898,11 @@ class axis_ticks_major_theta_inside(MixinSequenceOfValues):
     theta-axis major tick lines at the inner (donut-hole) boundary
     """
 
-    def apply_ax(self, ax: Axes):
+    def apply_ax(self, ax: Axes) -> None:
         super().apply_ax(ax)
         _style_axis_ticks(self, ax, "major", "theta_inside")
 
-    def blank_ax(self, ax: Axes):
+    def blank_ax(self, ax: Axes) -> None:
         super().blank_ax(ax)
         _blank_axis_ticks(ax, "major", "theta_inside")
 
@@ -1931,11 +1936,11 @@ class axis_ticks_major_y_left(MixinSequenceOfValues):
     y-axis major tick lines on the left
     """
 
-    def apply_ax(self, ax: Axes):
+    def apply_ax(self, ax: Axes) -> None:
         super().apply_ax(ax)
         _style_axis_ticks(self, ax, "major", "left")
 
-    def blank_ax(self, ax: Axes):
+    def blank_ax(self, ax: Axes) -> None:
         super().blank_ax(ax)
         _blank_axis_ticks(ax, "major", "left")
 
@@ -1945,11 +1950,11 @@ class axis_ticks_major_y_right(MixinSequenceOfValues):
     y-axis major tick lines on the right
     """
 
-    def apply_ax(self, ax: Axes):
+    def apply_ax(self, ax: Axes) -> None:
         super().apply_ax(ax)
         _style_axis_ticks(self, ax, "major", "right")
 
-    def blank_ax(self, ax: Axes):
+    def blank_ax(self, ax: Axes) -> None:
         super().blank_ax(ax)
         _blank_axis_ticks(ax, "major", "right")
 
@@ -1959,11 +1964,11 @@ class axis_ticks_major_r_start(MixinSequenceOfValues):
     r-axis major tick lines at the start-angle spoke
     """
 
-    def apply_ax(self, ax: Axes):
+    def apply_ax(self, ax: Axes) -> None:
         super().apply_ax(ax)
         _style_axis_ticks(self, ax, "major", "r_start")
 
-    def blank_ax(self, ax: Axes):
+    def blank_ax(self, ax: Axes) -> None:
         super().blank_ax(ax)
         _blank_axis_ticks(ax, "major", "r_start")
 
@@ -1973,11 +1978,11 @@ class axis_ticks_major_r_end(MixinSequenceOfValues):
     r-axis major tick lines at the end-angle spoke
     """
 
-    def apply_ax(self, ax: Axes):
+    def apply_ax(self, ax: Axes) -> None:
         super().apply_ax(ax)
         _style_axis_ticks(self, ax, "major", "r_end")
 
-    def blank_ax(self, ax: Axes):
+    def blank_ax(self, ax: Axes) -> None:
         super().blank_ax(ax)
         _blank_axis_ticks(ax, "major", "r_end")
 
@@ -2063,12 +2068,12 @@ class legend_ticks(themeable):
     theme_element : element_line
     """
 
-    def apply_figure(self, figure: Figure, targets: ThemeTargets):
+    def apply_figure(self, figure: Figure, targets: ThemeTargets) -> None:
         super().apply_figure(figure, targets)
         if coll := targets.legend_ticks:
             coll.set(**self._get_properties(omit=("solid_capstyle",)))
 
-    def blank_figure(self, figure: Figure, targets: ThemeTargets):
+    def blank_figure(self, figure: Figure, targets: ThemeTargets) -> None:
         super().blank_figure(figure, targets)
         if coll := targets.legend_ticks:
             coll.set_visible(False)
@@ -2097,11 +2102,11 @@ class panel_grid_major_x(themeable):
     theme_element : element_line
     """
 
-    def apply_ax(self, ax: Axes):
+    def apply_ax(self, ax: Axes) -> None:
         super().apply_ax(ax)
         ax.xaxis.grid(which="major", **blend_alpha(self.properties))
 
-    def blank_ax(self, ax: Axes):
+    def blank_ax(self, ax: Axes) -> None:
         super().blank_ax(ax)
         ax.grid(False, which="major", axis="x")
 
@@ -2115,11 +2120,11 @@ class panel_grid_major_y(themeable):
     theme_element : element_line
     """
 
-    def apply_ax(self, ax: Axes):
+    def apply_ax(self, ax: Axes) -> None:
         super().apply_ax(ax)
         ax.yaxis.grid(which="major", **blend_alpha(self.properties))
 
-    def blank_ax(self, ax: Axes):
+    def blank_ax(self, ax: Axes) -> None:
         super().blank_ax(ax)
         ax.grid(False, which="major", axis="y")
 
@@ -2133,11 +2138,11 @@ class panel_grid_minor_x(themeable):
     theme_element : element_line
     """
 
-    def apply_ax(self, ax: Axes):
+    def apply_ax(self, ax: Axes) -> None:
         super().apply_ax(ax)
         ax.xaxis.grid(which="minor", **self.properties)
 
-    def blank_ax(self, ax: Axes):
+    def blank_ax(self, ax: Axes) -> None:
         super().blank_ax(ax)
         ax.grid(False, which="minor", axis="x")
 
@@ -2151,11 +2156,11 @@ class panel_grid_minor_y(themeable):
     theme_element : element_line
     """
 
-    def apply_ax(self, ax: Axes):
+    def apply_ax(self, ax: Axes) -> None:
         super().apply_ax(ax)
         ax.yaxis.grid(which="minor", **self.properties)
 
-    def blank_ax(self, ax: Axes):
+    def blank_ax(self, ax: Axes) -> None:
         super().blank_ax(ax)
         ax.grid(False, which="minor", axis="y")
 
@@ -2199,12 +2204,12 @@ class plot_footer_line(themeable):
     theme_element : element_line
     """
 
-    def apply_figure(self, figure: Figure, targets: ThemeTargets):
+    def apply_figure(self, figure: Figure, targets: ThemeTargets) -> None:
         super().apply_figure(figure, targets)
         if targets.plot_footer_line:
             targets.plot_footer_line.set(**self.properties)
 
-    def blank_figure(self, figure: Figure, targets: ThemeTargets):
+    def blank_figure(self, figure: Figure, targets: ThemeTargets) -> None:
         super().blank_figure(figure, targets)
         if targets.plot_footer_line:
             targets.plot_footer_line.set_visible(False)
@@ -2222,7 +2227,7 @@ class line(
     """
 
     @property
-    def rcParams(self):
+    def rcParams(self) -> dict[RcKeyType, Any]:
         rcParams = super().rcParams
         color = self.properties.get("color")
         linewidth = self.properties.get("linewidth")
@@ -2260,7 +2265,7 @@ class legend_key(MixinSequenceOfValues):
     theme_element : element_rect
     """
 
-    def apply_figure(self, figure: Figure, targets: ThemeTargets):
+    def apply_figure(self, figure: Figure, targets: ThemeTargets) -> None:
         super().apply_figure(figure, targets)
         properties = self.properties
         edgecolor = properties.get("edgecolor", None)
@@ -2275,7 +2280,7 @@ class legend_key(MixinSequenceOfValues):
         rects = [da.patch for da in targets.legend_key]
         self.set(rects, properties)
 
-    def blank_figure(self, figure: Figure, targets: ThemeTargets):
+    def blank_figure(self, figure: Figure, targets: ThemeTargets) -> None:
         super().blank_figure(figure, targets)
         for da in targets.legend_key:
             da.patch.set_visible(False)
@@ -2290,12 +2295,12 @@ class legend_frame(themeable):
     theme_element : element_rect
     """
 
-    def apply_figure(self, figure: Figure, targets: ThemeTargets):
+    def apply_figure(self, figure: Figure, targets: ThemeTargets) -> None:
         super().apply_figure(figure, targets)
         if rect := targets.legend_frame:
             rect.set(**self._get_properties(omit=("facecolor",)))
 
-    def blank_figure(self, figure: Figure, targets: ThemeTargets):
+    def blank_figure(self, figure: Figure, targets: ThemeTargets) -> None:
         super().blank_figure(figure, targets)
         if rect := targets.legend_frame:
             rect.set_visible(False)
@@ -2310,7 +2315,7 @@ class legend_background(themeable):
     theme_element : element_rect
     """
 
-    def apply_figure(self, figure: Figure, targets: ThemeTargets):
+    def apply_figure(self, figure: Figure, targets: ThemeTargets) -> None:
         super().apply_figure(figure, targets)
         # anchored offset box
         if legends := targets.legends:
@@ -2328,7 +2333,7 @@ class legend_background(themeable):
                     if not aob.pad:
                         aob.pad = 0.2
 
-    def blank_figure(self, figure: Figure, targets: ThemeTargets):
+    def blank_figure(self, figure: Figure, targets: ThemeTargets) -> None:
         super().blank_figure(figure, targets)
         if legends := targets.legends:
             for aob in legends.boxes:
@@ -2360,17 +2365,17 @@ class panel_background(legend_key):
     theme_element : element_rect
     """
 
-    def apply_figure(self, figure: Figure, targets: ThemeTargets):
+    def apply_figure(self, figure: Figure, targets: ThemeTargets) -> None:
         super().apply_figure(figure, targets)
 
-    def apply_ax(self, ax: Axes):
+    def apply_ax(self, ax: Axes) -> None:
         super().apply_ax(ax)
         d = blend_alpha(self.properties, "facecolor")
         d["edgecolor"] = "none"
         d["linewidth"] = 0
         ax.patch.set(**d)
 
-    def blank_ax(self, ax: Axes):
+    def blank_ax(self, ax: Axes) -> None:
         super().blank_ax(ax)
         ax.patch.set_visible(False)
 
@@ -2384,7 +2389,7 @@ class panel_border(MixinSequenceOfValues):
     theme_element : element_rect
     """
 
-    def apply_figure(self, figure: Figure, targets: ThemeTargets):
+    def apply_figure(self, figure: Figure, targets: ThemeTargets) -> None:
         super().apply_figure(figure, targets)
         if not (rects := targets.panel_border):
             return
@@ -2397,7 +2402,7 @@ class panel_border(MixinSequenceOfValues):
 
         self.set(rects, d)
 
-    def blank_figure(self, figure: Figure, targets: ThemeTargets):
+    def blank_figure(self, figure: Figure, targets: ThemeTargets) -> None:
         super().blank_figure(figure, targets)
         for rect in targets.panel_border:
             rect.set_visible(False)
@@ -2412,12 +2417,12 @@ class plot_background(themeable):
     theme_element : element_rect
     """
 
-    def apply_figure(self, figure: Figure, targets: ThemeTargets):
+    def apply_figure(self, figure: Figure, targets: ThemeTargets) -> None:
         super().apply_figure(figure, targets)
         if targets.plot_background:
             targets.plot_background.set(**self.properties)
 
-    def blank_figure(self, figure: Figure, targets: ThemeTargets):
+    def blank_figure(self, figure: Figure, targets: ThemeTargets) -> None:
         super().blank_figure(figure, targets)
         if targets.plot_background:
             targets.plot_background.set_visible(False)
@@ -2436,7 +2441,7 @@ class plot_footer_background(themeable):
     theme_element : element_rect
     """
 
-    def apply_figure(self, figure: Figure, targets: ThemeTargets):
+    def apply_figure(self, figure: Figure, targets: ThemeTargets) -> None:
         super().apply_figure(figure, targets)
         if targets.plot_footer_background:
             props = self.properties
@@ -2444,7 +2449,7 @@ class plot_footer_background(themeable):
             props["edgecolor"] = "none"
             targets.plot_footer_background.set(**props)
 
-    def blank_figure(self, figure: Figure, targets: ThemeTargets):
+    def blank_figure(self, figure: Figure, targets: ThemeTargets) -> None:
         super().blank_figure(figure, targets)
         if targets.plot_footer_background:
             targets.plot_footer_background.set_visible(False)
@@ -2459,12 +2464,12 @@ class strip_background_x(MixinSequenceOfValues):
     theme_element : element_rect
     """
 
-    def apply_figure(self, figure: Figure, targets: ThemeTargets):
+    def apply_figure(self, figure: Figure, targets: ThemeTargets) -> None:
         super().apply_figure(figure, targets)
         if bboxes := targets.strip_background_x:
             self.set(bboxes)
 
-    def blank_figure(self, figure: Figure, targets: ThemeTargets):
+    def blank_figure(self, figure: Figure, targets: ThemeTargets) -> None:
         super().blank_figure(figure, targets)
         for rect in targets.strip_background_x:
             rect.set_visible(False)
@@ -2479,12 +2484,12 @@ class strip_background_y(MixinSequenceOfValues):
     theme_element : element_rect
     """
 
-    def apply_figure(self, figure: Figure, targets: ThemeTargets):
+    def apply_figure(self, figure: Figure, targets: ThemeTargets) -> None:
         super().apply_figure(figure, targets)
         if bboxes := targets.strip_background_y:
             self.set(bboxes)
 
-    def blank_figure(self, figure: Figure, targets: ThemeTargets):
+    def blank_figure(self, figure: Figure, targets: ThemeTargets) -> None:
         super().blank_figure(figure, targets)
         for rect in targets.strip_background_y:
             rect.set_visible(False)
@@ -2533,7 +2538,7 @@ class axis_ticks_length_major_x(themeable):
         creates ticks that span both in and out of the panel.
     """
 
-    def apply_ax(self, ax: Axes):
+    def apply_ax(self, ax: Axes) -> None:
         super().apply_ax(ax)
         if isinstance(ax, PolarAxes):
             return
@@ -2576,7 +2581,7 @@ class axis_ticks_length_major_y(themeable):
         creates ticks that span both in and out of the panel.
     """
 
-    def apply_ax(self, ax: Axes):
+    def apply_ax(self, ax: Axes) -> None:
         super().apply_ax(ax)
         if isinstance(ax, PolarAxes):
             return
@@ -2623,7 +2628,7 @@ class axis_ticks_length_major_theta(themeable):
         creates ticks that span both in and out of the panel.
     """
 
-    def apply_ax(self, ax: Axes):
+    def apply_ax(self, ax: Axes) -> None:
         super().apply_ax(ax)
         value: float | complex = self.properties["value"]
         if isinstance(value, (float, int)):
@@ -2653,7 +2658,7 @@ class axis_ticks_length_major_r(themeable):
         creates ticks that span both in and out of the panel.
     """
 
-    def apply_ax(self, ax: Axes):
+    def apply_ax(self, ax: Axes) -> None:
         super().apply_ax(ax)
         value: float | complex = self.properties["value"]
         if isinstance(value, (float, int)):
@@ -2697,7 +2702,7 @@ class axis_ticks_length_minor_x(themeable):
         creates ticks that span both in and out of the panel.
     """
 
-    def apply_ax(self, ax: Axes):
+    def apply_ax(self, ax: Axes) -> None:
         super().apply_ax(ax)
         if isinstance(ax, PolarAxes):
             return
@@ -2728,7 +2733,7 @@ class axis_ticks_length_minor_y(themeable):
         creates ticks that span both in and out of the panel.
     """
 
-    def apply_ax(self, ax: Axes):
+    def apply_ax(self, ax: Axes) -> None:
         super().apply_ax(ax)
         if isinstance(ax, PolarAxes):
             return
@@ -2763,7 +2768,7 @@ class axis_ticks_length_minor_theta(themeable):
         creates ticks that span both in and out of the panel.
     """
 
-    def apply_ax(self, ax: Axes):
+    def apply_ax(self, ax: Axes) -> None:
         super().apply_ax(ax)
         value: float | complex = self.properties["value"]
         if isinstance(value, (float, int)):
@@ -2793,7 +2798,7 @@ class axis_ticks_length_minor_r(themeable):
         creates ticks that span both in and out of the panel.
     """
 
-    def apply_ax(self, ax: Axes):
+    def apply_ax(self, ax: Axes) -> None:
         super().apply_ax(ax)
         value: float | complex = self.properties["value"]
         if isinstance(value, (float, int)):
@@ -2957,7 +2962,7 @@ class panel_ontop(themeable):
         Default is False.
     """
 
-    def apply_ax(self, ax: Axes):
+    def apply_ax(self, ax: Axes) -> None:
         super().apply_ax(ax)
         ax.set_axisbelow(not self.properties["value"])
 
@@ -2991,7 +2996,7 @@ class dpi(themeable):
     # https://github.com/matplotlib/matplotlib/issues/24644
 
     @property
-    def rcParams(self):
+    def rcParams(self) -> dict[RcKeyType, Any]:
         rcParams = super().rcParams
         rcParams["figure.dpi"] = self.properties["value"]
         return rcParams
@@ -3033,7 +3038,7 @@ class figure_size(themeable):
         (width, height) in inches
     """
 
-    def apply_figure(self, figure: Figure, targets: ThemeTargets):
+    def apply_figure(self, figure: Figure, targets: ThemeTargets) -> None:
         figure.set_size_inches(self.properties["value"])
 
 
@@ -3481,7 +3486,7 @@ class svg_usefonts(themeable):
     """
 
     @property
-    def rcParams(self):
+    def rcParams(self) -> dict[RcKeyType, Any]:
         rcParams = super().rcParams
 
         rcParams["svg.fonttype"] = (
@@ -3494,7 +3499,7 @@ class svg_usefonts(themeable):
 
 
 class subplots_adjust(themeable):
-    def apply_figure(self, figure: Figure, targets: ThemeTargets):
+    def apply_figure(self, figure: Figure, targets: ThemeTargets) -> None:
         warn(
             "You no longer need to use subplots_adjust to make space for "
             "the legend or text around the panels. This parameter will be "
@@ -3540,7 +3545,7 @@ class axis_ticks_direction_x(themeable):
         `out` for ticks outside the panel.
     """
 
-    def __init__(self, theme_element):
+    def __init__(self, theme_element: Literal["in", "out"]):
         msg = (
             f"Themeable '{self.__class__.__name__}' is deprecated and"
             "will be removed in a future version. "
@@ -3550,7 +3555,7 @@ class axis_ticks_direction_x(themeable):
         warn(msg, FutureWarning, stacklevel=1)
         super().__init__(theme_element)
 
-    def apply_ax(self, ax: Axes):
+    def apply_ax(self, ax: Axes) -> None:
         super().apply_ax(ax)
         ax.xaxis.set_tick_params(
             which="major", tickdir=self.properties["value"]
@@ -3568,7 +3573,7 @@ class axis_ticks_direction_y(themeable):
         `out` for ticks outside the panel.
     """
 
-    def __init__(self, theme_element):
+    def __init__(self, theme_element: Literal["in", "out"]):
         msg = (
             f"Themeable '{self.__class__.__name__}' is deprecated and"
             "will be removed in a future version. "
@@ -3578,7 +3583,7 @@ class axis_ticks_direction_y(themeable):
         warn(msg, FutureWarning, stacklevel=1)
         super().__init__(theme_element)
 
-    def apply_ax(self, ax: Axes):
+    def apply_ax(self, ax: Axes) -> None:
         super().apply_ax(ax)
         ax.yaxis.set_tick_params(
             which="major", tickdir=self.properties["value"]
@@ -3607,7 +3612,7 @@ class axis_ticks_pad_major_x(themeable):
         Value in points.
     """
 
-    def apply_ax(self, ax: Axes):
+    def apply_ax(self, ax: Axes) -> None:
         super().apply_ax(ax)
         val = self.properties["value"]
 
@@ -3640,7 +3645,7 @@ class axis_ticks_pad_major_y(themeable):
     is zero.
     """
 
-    def apply_ax(self, ax: Axes):
+    def apply_ax(self, ax: Axes) -> None:
         super().apply_ax(ax)
         val = self.properties["value"]
 
@@ -3689,7 +3694,7 @@ class axis_ticks_pad_minor_x(themeable):
     [](`~plotnine.theme.themeables.axis_ticks_length_minor_x`) is zero.
     """
 
-    def apply_ax(self, ax: Axes):
+    def apply_ax(self, ax: Axes) -> None:
         super().apply_ax(ax)
         val = self.properties["value"]
 
@@ -3721,7 +3726,7 @@ class axis_ticks_pad_minor_y(themeable):
     is zero.
     """
 
-    def apply_ax(self, ax: Axes):
+    def apply_ax(self, ax: Axes) -> None:
         super().apply_ax(ax)
         val = self.properties["value"]
 
@@ -3770,7 +3775,7 @@ class axis_ticks_pad(axis_ticks_pad_major, axis_ticks_pad_minor):
     [](`~plotnine.theme.themeables.axis_ticks_length`) is zero.
     """
 
-    def __init__(self, theme_element):
+    def __init__(self, theme_element: float):
         x = theme_element
         msg = (
             f"Themeable '{self.__class__.__name__}' is deprecated and"
