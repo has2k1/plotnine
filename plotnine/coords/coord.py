@@ -528,6 +528,6 @@ def munch_data(data: pd.DataFrame, dist: FloatArray) -> pd.DataFrame:
     munched = data.loc[idx, list(data.columns.difference(position_columns))]
     for col, values in interpolated.items():
         munched[col] = values
-    munched.reset_index(drop=True, inplace=True)
+    munched = munched.reset_index(drop=True)
 
     return munched

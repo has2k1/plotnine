@@ -216,7 +216,7 @@ class facet_grid(facet):
         )
         layout = pd.concat([layout, base], axis=1)
         layout = layout.sort_values("PANEL")
-        layout.reset_index(drop=True, inplace=True)
+        layout = layout.reset_index(drop=True)
 
         # Relax constraints, if necessary
         layout["SCALE_X"] = layout["COL"] if self.free["x"] else 1
@@ -274,7 +274,7 @@ class facet_grid(facet):
             ordered=True,
         )
 
-        data.reset_index(drop=True, inplace=True)
+        data = data.reset_index(drop=True)
         return data
 
     def make_strips(self, layout_info: layout_details, ax: Axes) -> Strips:

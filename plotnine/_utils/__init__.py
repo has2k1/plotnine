@@ -294,7 +294,7 @@ def add_margins(
         margin_dfs.append(dfx)
 
     merged = pd.concat(margin_dfs, axis=0)
-    merged.reset_index(drop=True, inplace=True)
+    merged = merged.reset_index(drop=True)
 
     # All margin columns become categoricals. The margin indicator
     # (all) needs to be added as the last level of the categories.
@@ -598,7 +598,7 @@ def remove_missing(
         txt = "missing"
 
     data = data.dropna(subset=vars)
-    data.reset_index(drop=True, inplace=True)
+    data = data.reset_index(drop=True)
     if len(data) < n and not na_rm:
         msg = "{} : Removed {} rows containing {} values."
         warn(

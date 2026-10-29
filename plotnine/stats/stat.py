@@ -347,7 +347,7 @@ class stat(ABC, metaclass=Register):
         stats = []
         for _, old in data.groupby("group"):
             new = self.compute_group(old, scales)
-            new.reset_index(drop=True, inplace=True)
+            new = new.reset_index(drop=True)
             stats.append(restore_constant_columns(new, old))
 
         stats = pd.concat(stats, axis=0, ignore_index=True)
