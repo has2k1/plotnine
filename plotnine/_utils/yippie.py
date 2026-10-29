@@ -2,6 +2,8 @@
 Functions/class to quickly create plots for development and testing
 """
 
+from typing import TYPE_CHECKING
+
 import pandas as pd
 
 from plotnine import (
@@ -19,6 +21,9 @@ from plotnine import (
     labs,
     theme,
 )
+
+if TYPE_CHECKING:
+    from plotnine._mpl.layout_manager._plot_layout_items import TagPosition
 
 __all__ = ("geom", "legend", "plot", "rotate", "tag")
 
@@ -125,7 +130,7 @@ class _Rotate:
         return theme(**{name: element_text(angle=angle)})  # pyright: ignore[reportArgumentType]
 
 
-def tag(s, position="topleft"):
+def tag(s, position: "TagPosition" = "topleft"):
     """
     Create a tag at a position
     """

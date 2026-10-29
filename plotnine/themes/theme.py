@@ -3,7 +3,7 @@ from __future__ import annotations
 import typing
 from copy import copy, deepcopy
 from functools import cached_property
-from typing import overload
+from typing import Any, Literal, overload
 
 from ..exceptions import PlotnineError
 from ..options import get_option, set_option
@@ -11,16 +11,47 @@ from .targets import ThemeTargets
 from .themeable import Themeables, themeable
 
 if typing.TYPE_CHECKING:
-    from typing import Self
+    from collections.abc import Callable, Sequence
+    from typing import Protocol, Self, TypeAlias
 
+    from matplotlib import RcParams
     from matplotlib.axes import Axes
     from matplotlib.figure import Figure
 
     from plotnine import ggplot
+    from plotnine._mpl.layout_manager._plot_layout_items import (
+        TagLocation,
+        TagPosition,
+    )
     from plotnine.composition import Compose
     from plotnine.guides.guide import guide
+    from plotnine.typing import (
+        HorizontalJustification,
+        Justification,
+        LegendPosition,
+        Orientation,
+        Side,
+        VerticalJustification,
+    )
 
-    from .elements import margin
+    from .elements import (
+        element_blank,
+        element_line,
+        element_rect,
+        element_text,
+        margin,
+    )
+
+    _Text: TypeAlias = element_text | element_blank
+    _Line: TypeAlias = element_line | element_blank
+    _Rect: TypeAlias = element_rect | element_blank
+    _PanelOrPlot: TypeAlias = Literal["panel", "plot"]
+
+    # callable type representing `Themeables.getp`
+    class _GetPCallable(Protocol):
+        def __call__(
+            self, /, key: str | tuple[str, str], default: Any = None
+        ) -> Any: ...
 
 
 # All complete themes are initiated with these rcparams. They
@@ -108,182 +139,193 @@ class theme:
     targets: ThemeTargets
     _is_retina = False
 
+    themeables: Themeables
+
     def __init__(
         self,
-        complete=False,
-        # Generate themeables keyword parameters with
-        #
-        #  python -c "
-        #  from plotnine.themes.themeable import themeable
-        #  for name in themeable.registry():
-        #      print(f'        {name}=None,')
-        #  "
-        axis_title_x_bottom=None,
-        axis_title_x_top=None,
-        axis_title_x=None,
-        axis_title_y_left=None,
-        axis_title_y_right=None,
-        axis_title_y=None,
-        axis_title=None,
-        legend_title=None,
-        legend_text_legend=None,
-        legend_text_colorbar=None,
-        legend_text=None,
-        plot_title=None,
-        plot_subtitle=None,
-        plot_caption=None,
-        plot_footer=None,
-        plot_tag=None,
-        plot_title_position=None,
-        plot_caption_position=None,
-        plot_footer_position=None,
-        plot_tag_location=None,
-        plot_tag_position=None,
-        strip_text_x_top=None,
-        strip_text_x_bottom=None,
-        strip_text_x=None,
-        strip_text_y_left=None,
-        strip_text_y_right=None,
-        strip_text_y=None,
-        strip_text=None,
-        title=None,
-        axis_text_x_bottom=None,
-        axis_text_x_top=None,
-        axis_text_theta_outside=None,
-        axis_text_theta_inside=None,
-        axis_text_theta=None,
-        axis_text_x=None,
-        axis_text_y_left=None,
-        axis_text_y_right=None,
-        axis_text_r_start=None,
-        axis_text_r_end=None,
-        axis_text_r=None,
-        axis_text_y=None,
-        axis_text=None,
-        text=None,
-        axis_line_x_bottom=None,
-        axis_line_x_top=None,
-        axis_line_theta_inside=None,
-        axis_line_theta_outside=None,
-        axis_line_theta=None,
-        axis_line_x=None,
-        axis_line_y_left=None,
-        axis_line_y_right=None,
-        axis_line_r_start=None,
-        axis_line_r_end=None,
-        axis_line_r=None,
-        axis_line_y=None,
-        axis_line=None,
-        axis_ticks_minor_x_bottom=None,
-        axis_ticks_minor_x_top=None,
-        axis_ticks_minor_theta_outside=None,
-        axis_ticks_minor_theta_inside=None,
-        axis_ticks_minor_theta=None,
-        axis_ticks_minor_x=None,
-        axis_ticks_minor_y_left=None,
-        axis_ticks_minor_y_right=None,
-        axis_ticks_minor_r_start=None,
-        axis_ticks_minor_r_end=None,
-        axis_ticks_minor_r=None,
-        axis_ticks_minor_y=None,
-        axis_ticks_major_x_bottom=None,
-        axis_ticks_major_x_top=None,
-        axis_ticks_major_theta_outside=None,
-        axis_ticks_major_theta_inside=None,
-        axis_ticks_major_theta=None,
-        axis_ticks_major_x=None,
-        axis_ticks_major_y_left=None,
-        axis_ticks_major_y_right=None,
-        axis_ticks_major_r_start=None,
-        axis_ticks_major_r_end=None,
-        axis_ticks_major_r=None,
-        axis_ticks_major_y=None,
-        axis_ticks_major=None,
-        axis_ticks_minor=None,
-        axis_ticks_x=None,
-        axis_ticks_y=None,
-        axis_ticks=None,
-        legend_ticks=None,
-        legend_axis_line=None,
-        panel_grid_major_x=None,
-        panel_grid_major_y=None,
-        panel_grid_minor_x=None,
-        panel_grid_minor_y=None,
-        panel_grid_major=None,
-        panel_grid_minor=None,
-        panel_grid=None,
-        plot_footer_line=None,
-        line=None,
-        legend_key=None,
-        legend_frame=None,
-        legend_background=None,
-        legend_box_background=None,
-        panel_background=None,
-        panel_border=None,
-        plot_background=None,
-        plot_footer_background=None,
-        strip_background_x=None,
-        strip_background_y=None,
-        strip_background=None,
-        rect=None,
-        axis_ticks_length_major_x=None,
-        axis_ticks_length_major_y=None,
-        axis_ticks_length_major_theta=None,
-        axis_ticks_length_major_r=None,
-        axis_ticks_length_major=None,
-        axis_ticks_length_minor_x=None,
-        axis_ticks_length_minor_y=None,
-        axis_ticks_length_minor_theta=None,
-        axis_ticks_length_minor_r=None,
-        axis_ticks_length_minor=None,
-        axis_ticks_length=None,
-        panel_spacing_x=None,
-        panel_spacing_y=None,
-        panel_spacing=None,
-        plot_margin_left=None,
-        plot_margin_right=None,
-        plot_margin_top=None,
-        plot_margin_bottom=None,
-        plot_margin=None,
-        panel_ontop=None,
-        aspect_ratio=None,
-        dpi=None,
+        complete: bool = False,
+        # Generated with `tools/_generate_theme_params.py`
+        axis_title_x_bottom: _Text | None = None,
+        axis_title_x_top: _Text | None = None,
+        axis_title_x: _Text | None = None,
+        axis_title_y_left: _Text | None = None,
+        axis_title_y_right: _Text | None = None,
+        axis_title_y: _Text | None = None,
+        axis_title: _Text | None = None,
+        legend_title: _Text | None = None,
+        legend_text_legend: _Text | None = None,
+        legend_text_colorbar: _Text | None = None,
+        legend_text: _Text | None = None,
+        plot_title: _Text | None = None,
+        plot_subtitle: _Text | None = None,
+        plot_caption: _Text | None = None,
+        plot_footer: _Text | None = None,
+        plot_tag: _Text | None = None,
+        plot_title_position: _PanelOrPlot | None = None,
+        plot_caption_position: _PanelOrPlot | None = None,
+        plot_footer_position: _PanelOrPlot | None = None,
+        plot_tag_location: TagLocation | None = None,
+        plot_tag_position: TagPosition | None = None,
+        strip_text_x_top: _Text | None = None,
+        strip_text_x_bottom: _Text | None = None,
+        strip_text_x: _Text | None = None,
+        strip_text_y_left: _Text | None = None,
+        strip_text_y_right: _Text | None = None,
+        strip_text_y: _Text | None = None,
+        strip_text: _Text | None = None,
+        title: _Text | None = None,
+        axis_text_x_bottom: _Text | None = None,
+        axis_text_x_top: _Text | None = None,
+        axis_text_theta_outside: _Text | None = None,
+        axis_text_theta_inside: _Text | None = None,
+        axis_text_theta: _Text | None = None,
+        axis_text_x: _Text | None = None,
+        axis_text_y_left: _Text | None = None,
+        axis_text_y_right: _Text | None = None,
+        axis_text_r_start: _Text | None = None,
+        axis_text_r_end: _Text | None = None,
+        axis_text_r: _Text | None = None,
+        axis_text_y: _Text | None = None,
+        axis_text: _Text | None = None,
+        text: _Text | None = None,
+        axis_line_x_bottom: _Line | None = None,
+        axis_line_x_top: _Line | None = None,
+        axis_line_theta_inside: _Line | None = None,
+        axis_line_theta_outside: _Line | None = None,
+        axis_line_theta: _Line | None = None,
+        axis_line_x: _Line | None = None,
+        axis_line_y_left: _Line | None = None,
+        axis_line_y_right: _Line | None = None,
+        axis_line_r_start: _Line | None = None,
+        axis_line_r_end: _Line | None = None,
+        axis_line_r: _Line | None = None,
+        axis_line_y: _Line | None = None,
+        axis_line: _Line | None = None,
+        axis_ticks_minor_x_bottom: _Line | None = None,
+        axis_ticks_minor_x_top: _Line | None = None,
+        axis_ticks_minor_theta_outside: _Line | None = None,
+        axis_ticks_minor_theta_inside: _Line | None = None,
+        axis_ticks_minor_theta: _Line | None = None,
+        axis_ticks_minor_x: _Line | None = None,
+        axis_ticks_minor_y_left: _Line | None = None,
+        axis_ticks_minor_y_right: _Line | None = None,
+        axis_ticks_minor_r_start: _Line | None = None,
+        axis_ticks_minor_r_end: _Line | None = None,
+        axis_ticks_minor_r: _Line | None = None,
+        axis_ticks_minor_y: _Line | None = None,
+        axis_ticks_major_x_bottom: _Line | None = None,
+        axis_ticks_major_x_top: _Line | None = None,
+        axis_ticks_major_theta_outside: _Line | None = None,
+        axis_ticks_major_theta_inside: _Line | None = None,
+        axis_ticks_major_theta: _Line | None = None,
+        axis_ticks_major_x: _Line | None = None,
+        axis_ticks_major_y_left: _Line | None = None,
+        axis_ticks_major_y_right: _Line | None = None,
+        axis_ticks_major_r_start: _Line | None = None,
+        axis_ticks_major_r_end: _Line | None = None,
+        axis_ticks_major_r: _Line | None = None,
+        axis_ticks_major_y: _Line | None = None,
+        axis_ticks_major: _Line | None = None,
+        axis_ticks_minor: _Line | None = None,
+        axis_ticks_x: _Line | None = None,
+        axis_ticks_y: _Line | None = None,
+        axis_ticks: _Line | None = None,
+        legend_ticks: _Line | None = None,
+        legend_axis_line: _Line | None = None,
+        panel_grid_major_x: _Line | None = None,
+        panel_grid_major_y: _Line | None = None,
+        panel_grid_minor_x: _Line | None = None,
+        panel_grid_minor_y: _Line | None = None,
+        panel_grid_major: _Line | None = None,
+        panel_grid_minor: _Line | None = None,
+        panel_grid: _Line | None = None,
+        plot_footer_line: _Line | None = None,
+        line: _Line | None = None,
+        legend_key: _Rect | None = None,
+        legend_frame: _Rect | None = None,
+        legend_background: _Rect | None = None,
+        legend_box_background: _Rect | None = None,
+        panel_background: _Rect | None = None,
+        panel_border: _Rect | None = None,
+        plot_background: _Rect | None = None,
+        plot_footer_background: _Rect | None = None,
+        strip_background_x: _Rect | None = None,
+        strip_background_y: _Rect | None = None,
+        strip_background: _Rect | None = None,
+        rect: _Rect | None = None,
+        axis_ticks_length_major_x: complex | None = None,
+        axis_ticks_length_major_y: complex | None = None,
+        axis_ticks_length_major_theta: complex | None = None,
+        axis_ticks_length_major_r: complex | None = None,
+        axis_ticks_length_major: float | None = None,
+        axis_ticks_length_minor_x: complex | None = None,
+        axis_ticks_length_minor_y: complex | None = None,
+        axis_ticks_length_minor_theta: complex | None = None,
+        axis_ticks_length_minor_r: complex | None = None,
+        axis_ticks_length_minor: complex | None = None,
+        axis_ticks_length: complex | None = None,
+        panel_spacing_x: float | None = None,
+        panel_spacing_y: float | None = None,
+        panel_spacing: float | None = None,
+        plot_margin_left: float | None = None,
+        plot_margin_right: float | None = None,
+        plot_margin_top: float | None = None,
+        plot_margin_bottom: float | None = None,
+        plot_margin: float | None = None,
+        panel_ontop: bool | None = None,
+        aspect_ratio: float | None = None,
+        dpi: float | None = None,
         figure_format: str | None = None,
-        figure_size=None,
-        legend_box=None,
-        legend_box_margin=None,
-        legend_box_just=None,
-        legend_justification_right=None,
-        legend_justification_left=None,
-        legend_justification_top=None,
-        legend_justification_bottom=None,
-        legend_justification_inside=None,
-        legend_justification=None,
-        legend_direction=None,
-        legend_key_width=None,
-        legend_key_height=None,
-        legend_key_size=None,
-        legend_ticks_length=None,
-        legend_margin=None,
-        legend_box_spacing=None,
-        legend_spacing=None,
-        legend_position_inside=None,
-        legend_position=None,
-        legend_title_position=None,
-        legend_text_position=None,
-        legend_key_spacing_x=None,
-        legend_key_spacing_y=None,
-        legend_key_spacing=None,
-        strip_align_x=None,
-        strip_align_y=None,
-        strip_align=None,
-        strip_switch_pad_x=None,
-        strip_switch_pad_y=None,
-        strip_switch_pad=None,
-        strip_placement=None,
-        svg_usefonts=None,
-        **kwargs,
-    ):
+        figure_size: tuple[float, float] | None = None,
+        legend_box: Orientation | None = None,
+        legend_box_margin: int | None = None,
+        legend_box_just: Justification | Literal["baseline"] | None = None,
+        legend_justification_right: (
+            VerticalJustification | float | None
+        ) = None,
+        legend_justification_left: VerticalJustification | float | None = None,
+        legend_justification_top: (
+            HorizontalJustification | float | None
+        ) = None,
+        legend_justification_bottom: (
+            HorizontalJustification | float | None
+        ) = None,
+        legend_justification_inside: (
+            Justification | float | tuple[float, float] | None
+        ) = None,
+        legend_justification: (
+            Justification | float | tuple[float, float] | None
+        ) = None,
+        legend_direction: Orientation | None = None,
+        legend_key_width: float | None = None,
+        legend_key_height: float | None = None,
+        legend_key_size: float | None = None,
+        legend_ticks_length: float | None = None,
+        legend_margin: float | None = None,
+        legend_box_spacing: float | None = None,
+        legend_spacing: float | None = None,
+        legend_position_inside: tuple[float, float] | None = None,
+        legend_position: LegendPosition | Literal["none"] | None = None,
+        legend_title_position: Side | None = None,
+        legend_text_position: (
+            Side
+            | Literal["top-bottom", "bottom-top", "left-right", "right-left"]
+            | Sequence[Side]
+            | None
+        ) = None,
+        legend_key_spacing_x: int | None = None,
+        legend_key_spacing_y: int | None = None,
+        legend_key_spacing: int | None = None,
+        strip_align_x: float | None = None,
+        strip_align_y: float | None = None,
+        strip_align: float | None = None,
+        strip_switch_pad_x: float | None = None,
+        strip_switch_pad_y: float | None = None,
+        strip_switch_pad: float | None = None,
+        strip_placement: Literal["inside", "outside"] | None = None,
+        svg_usefonts: bool | None = None,
+        **kwargs: Any,
+    ) -> None:
         import matplotlib as mpl
 
         self.themeables = Themeables()
@@ -322,14 +364,14 @@ class theme:
         )
 
     @cached_property
-    def T(self):
+    def T(self) -> Themeables:
         """
         Convenient access to the themeables
         """
         return self.themeables
 
     @cached_property
-    def getp(self):
+    def getp(self) -> _GetPCallable:
         """
         Convenient access into the properties of the themeables
         """
@@ -342,14 +384,14 @@ class theme:
         return self.themeables.getp((name, "margin"))
 
     @cached_property
-    def get_ha(self):
+    def get_ha(self) -> Callable[[str], float]:
         return self.themeables.get_ha
 
     @cached_property
-    def get_va(self):
+    def get_va(self) -> Callable[[str], float]:
         return self.themeables.get_va
 
-    def apply(self):
+    def apply(self) -> None:
         """
         Apply this theme, then apply additional modifications in order.
 
@@ -429,7 +471,7 @@ class theme:
         return None, None
 
     @property
-    def rcParams(self):
+    def rcParams(self) -> RcParams:
         """
         Return rcParams dict for this theme.
 
@@ -667,7 +709,7 @@ def theme_set(new: theme | type[theme]) -> theme:
     return out
 
 
-def theme_update(**kwargs: themeable):
+def theme_update(**kwargs: themeable) -> None:
     """
     Modify elements of the current theme
 
