@@ -4,7 +4,8 @@ from dataclasses import fields
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from typing import Any, Iterable
+    from collections.abc import Iterable
+    from typing import Any
 
 
 def non_none_init_items(obj) -> Iterable[tuple[str, Any]]:

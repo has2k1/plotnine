@@ -1,14 +1,14 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, List
+from typing import TYPE_CHECKING
 
 from ..iapi import strip_label_details
 
 if TYPE_CHECKING:
-    from typing import Sequence
+    from collections.abc import Sequence
+    from typing import Self
 
     from matplotlib.axes import Axes
-    from typing_extensions import Self
 
     from plotnine import theme
     from plotnine.facets.facet import facet
@@ -74,7 +74,7 @@ class strip:
         getattr(targets, f"strip_text_{g}_{position}").append(text)
 
 
-class Strips(List[strip]):
+class Strips(list[strip]):
     """
     List of strips for a plot
     """

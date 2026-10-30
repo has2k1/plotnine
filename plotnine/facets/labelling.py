@@ -6,7 +6,8 @@ from typing import TYPE_CHECKING
 from ..exceptions import PlotnineError
 
 if TYPE_CHECKING:
-    from typing import Callable, Literal, Optional, TypeAlias
+    from collections.abc import Callable
+    from typing import Literal, TypeAlias
 
     from ..iapi import strip_label_details
 
@@ -127,7 +128,7 @@ LABELLERS: dict[StripLabellingFuncNames, StripLabellingFunc] = {
 
 
 def as_labeller(
-    x: Optional[CanBeStripLabellingFunc] = None,
+    x: CanBeStripLabellingFunc | None = None,
     default: CanBeStripLabellingFunc = label_value,
     multi_line: bool = True,
 ) -> labeller:
@@ -186,8 +187,8 @@ class labeller:
 
     def __init__(
         self,
-        rows: Optional[CanBeStripLabellingFunc] = None,
-        cols: Optional[CanBeStripLabellingFunc] = None,
+        rows: CanBeStripLabellingFunc | None = None,
+        cols: CanBeStripLabellingFunc | None = None,
         multi_line: bool = True,
         default: CanBeStripLabellingFunc = "label_value",
         **kwargs: Callable[[str], str],
@@ -233,7 +234,7 @@ class labeller:
 
 
 def _as_strip_labelling_func(
-    fobj: Optional[CanBeStripLabellingFunc],
+    fobj: CanBeStripLabellingFunc | None,
     default: CanBeStripLabellingFunc = "label_value",
 ) -> StripLabellingFunc:
     """

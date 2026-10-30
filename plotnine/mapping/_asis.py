@@ -15,7 +15,8 @@ from pandas.api.extensions import (
 )
 
 if TYPE_CHECKING:
-    from typing import Any, Iterable, Sequence
+    from collections.abc import Iterable, Sequence
+    from typing import Any
 
     from numpy import _DTypeKind as DtypeKind
     from pandas._typing import TakeIndexer

@@ -11,7 +11,8 @@ from ..iapi import panel_ranges
 from ..mapping.aes import POSITION_AESTHETICS
 
 if typing.TYPE_CHECKING:
-    from typing import Any, Literal, Sequence
+    from collections.abc import Sequence
+    from typing import Any, Literal
 
     import numpy.typing as npt
     import pandas as pd
@@ -528,6 +529,6 @@ def munch_data(data: pd.DataFrame, dist: FloatArray) -> pd.DataFrame:
     munched = data.loc[idx, list(data.columns.difference(position_columns))]
     for col, values in interpolated.items():
         munched[col] = values
-    munched.reset_index(drop=True, inplace=True)
+    munched = munched.reset_index(drop=True)
 
     return munched

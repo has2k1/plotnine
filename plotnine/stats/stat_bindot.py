@@ -19,8 +19,6 @@ from .binning import (
 from .stat import stat
 
 if typing.TYPE_CHECKING:
-    from typing import Optional
-
     from plotnine.typing import FloatArrayLike
 
 
@@ -137,9 +135,9 @@ class stat_bindot(stat):
                     bins=params["bins"],
                 )
                 data = data.sort_values("x")
-                data.reset_index(inplace=True, drop=True)
+                data = data.reset_index(drop=True)
                 newdata = newdata.sort_values("x")
-                newdata.reset_index(inplace=True, drop=True)
+                newdata = newdata.reset_index(drop=True)
             elif binaxis == "y":
                 newdata = densitybin(
                     x=data["y"],
@@ -148,9 +146,9 @@ class stat_bindot(stat):
                     bins=params["bins"],
                 )
                 data = data.sort_values("y")
-                data.reset_index(inplace=True, drop=True)
+                data = data.reset_index(drop=True)
                 newdata = newdata.sort_values("x")
-                newdata.reset_index(inplace=True, drop=True)
+                newdata = newdata.reset_index(drop=True)
             else:
                 raise ValueError(f"Unknown value {binaxis=}")
 
@@ -197,9 +195,7 @@ class stat_bindot(stat):
                 values, breaks, weight, pad=False, closed=closed
             )
             # for consistency
-            data.rename(
-                columns={"width": "binwidth", "x": "bincenter"}, inplace=True
-            )
+            data = data.rename(columns={"width": "binwidth", "x": "bincenter"})
         elif params["method"] == "dotdensity":
             # If bin centers are found by group instead of by all,
             # find the bin centers (If binpositions=="all", then
@@ -231,7 +227,7 @@ class stat_bindot(stat):
                 data["ncount"] = data["count"] / data["count"].abs().max()
                 if params["drop"]:
                     data = data[data["count"] > 0]
-                    data.reset_index(inplace=True, drop=True)
+                    data = data.reset_index(drop=True)
 
         if params["binaxis"] == "x":
             data["x"] = data.pop("bincenter")
@@ -252,7 +248,7 @@ def densitybin(
     weight: FloatArrayLike | None,
     binwidth: float | None,
     bins: int = 30,
-    rangee: Optional[tuple[float, float]] = None,
+    rangee: tuple[float, float] | None = None,
 ):
     """
     Do density binning

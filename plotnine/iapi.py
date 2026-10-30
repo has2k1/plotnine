@@ -13,7 +13,8 @@ from dataclasses import dataclass, field, fields
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from typing import Any, Iterator, Literal, Optional, Sequence
+    from collections.abc import Iterator, Sequence
+    from typing import Any, Literal
 
     from matplotlib.figure import Figure
 
@@ -40,7 +41,7 @@ class scale_view:
 
     scale: scale
     aesthetics: Sequence[ScaledAestheticsName]
-    name: Optional[str]
+    name: str | None
     # Trained limits of the scale
     limits: tuple[float, float] | Sequence[str]
     # Physical size of scale, including expansions
@@ -60,7 +61,7 @@ class sec_axis_view:
     breaks: Sequence[float]
     labels: Sequence[str]
     # Title of the secondary axis; None means the primary axis title
-    name: Optional[str]
+    name: str | None
     # The side opposite the primary axis (cartesian), or the polar spoke
     # a secondary radial axis occupies
     position: Side | PolarSide
@@ -73,7 +74,7 @@ class scale_position_view(scale_view):
     """
 
     position: Side
-    sec: Optional[sec_axis_view] = None
+    sec: sec_axis_view | None = None
 
 
 @dataclass
@@ -92,21 +93,21 @@ class labels_view:
     Scale labels (incl. caption, title, footer) for the plot
     """
 
-    x: Optional[str] = None
-    y: Optional[str] = None
-    alpha: Optional[str] = None
-    color: Optional[str] = None
-    colour: Optional[str] = None
-    fill: Optional[str] = None
-    linetype: Optional[str] = None
-    shape: Optional[str] = None
-    size: Optional[str] = None
-    stroke: Optional[str] = None
-    title: Optional[str] = None
-    subtitle: Optional[str] = None
-    caption: Optional[str] = None
-    footer: Optional[str] = None
-    tag: Optional[str] = None
+    x: str | None = None
+    y: str | None = None
+    alpha: str | None = None
+    color: str | None = None
+    colour: str | None = None
+    fill: str | None = None
+    linetype: str | None = None
+    shape: str | None = None
+    size: str | None = None
+    stroke: str | None = None
+    title: str | None = None
+    subtitle: str | None = None
+    caption: str | None = None
+    footer: str | None = None
+    tag: str | None = None
 
     def update(self, other: labels_view):
         """
@@ -124,7 +125,7 @@ class labels_view:
             if cur_value is None:
                 setattr(self, name, value)
 
-    def iterfields(self) -> Iterator[tuple[str, Optional[str]]]:
+    def iterfields(self) -> Iterator[tuple[str, str | None]]:
         """
         Return an iterator of all (field, value) pairs
         """
@@ -336,7 +337,7 @@ class legend_justifications_view:
     right: float = 0.5
     top: float = 0.5
     bottom: float = 0.5
-    inside: Optional[tuple[float, float]] = None
+    inside: tuple[float, float] | None = None
 
 
 @dataclass
@@ -366,10 +367,10 @@ class legend_artists:
     Legend artists that are drawn on the figure
     """
 
-    left: Optional[outside_legend] = None
-    right: Optional[outside_legend] = None
-    top: Optional[outside_legend] = None
-    bottom: Optional[outside_legend] = None
+    left: outside_legend | None = None
+    right: outside_legend | None = None
+    top: outside_legend | None = None
+    bottom: outside_legend | None = None
     inside: list[inside_legend] = field(default_factory=list)
 
     @property

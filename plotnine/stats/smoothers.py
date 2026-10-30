@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import warnings
 from contextlib import suppress
-from typing import TYPE_CHECKING, Callable, cast
+from typing import TYPE_CHECKING, cast
 
 import numpy as np
 import pandas as pd
@@ -11,6 +11,8 @@ from .._utils import get_valid_kwargs
 from ..exceptions import PlotnineError, PlotnineWarning
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
+
     import statsmodels.api as sm
 
     from plotnine.typing import FloatArray
@@ -415,7 +417,7 @@ def mavg(data, xseq, params) -> pd.DataFrame:
     stderr = rolling.std()[window:]
     x = data["x"][window:]
     data = pd.DataFrame({"x": x, "y": y})
-    data.reset_index(inplace=True, drop=True)
+    data = data.reset_index(drop=True)
 
     if params["se"]:
         dof = n - window  # Original - Used

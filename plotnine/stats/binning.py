@@ -9,7 +9,7 @@ from ..exceptions import PlotnineError
 from ..scales.scale_discrete import scale_discrete
 
 if typing.TYPE_CHECKING:
-    from typing import Literal, Optional
+    from typing import Literal
 
     from plotnine.typing import FloatArray, FloatArrayLike
 
@@ -45,8 +45,8 @@ def freedman_diaconis_bins(a):
 def breaks_from_binwidth(
     x_range: tuple[float, float],
     binwidth: float,
-    center: Optional[float] = None,
-    boundary: Optional[float] = None,
+    center: float | None = None,
+    boundary: float | None = None,
 ) -> FloatArray:
     """
     Calculate breaks given binwidth
@@ -95,8 +95,8 @@ def breaks_from_binwidth(
 def breaks_from_bins(
     x_range: tuple[float, float],
     bins: int = 30,
-    center: Optional[float] = None,
-    boundary: Optional[float] = None,
+    center: float | None = None,
+    boundary: float | None = None,
 ) -> FloatArray:
     """
     Calculate breaks given binwidth
@@ -132,7 +132,7 @@ def breaks_from_bins(
 def assign_bins(
     x,
     breaks: FloatArrayLike,
-    weight: Optional[FloatArrayLike] = None,
+    weight: FloatArrayLike | None = None,
     pad: bool = False,
     closed: Literal["right", "left"] = "right",
 ):

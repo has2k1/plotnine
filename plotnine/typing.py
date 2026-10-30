@@ -1,12 +1,12 @@
 from __future__ import annotations
 
+from collections.abc import Callable, Sequence
 from typing import (
     Any,
-    Callable,
     Literal,
     NotRequired,
     Protocol,
-    Sequence,
+    TypeAlias,
     TypedDict,
     TypeVar,
 )
@@ -14,7 +14,6 @@ from typing import (
 import numpy as np
 import pandas as pd
 from numpy.typing import NDArray
-from typing_extensions import TypeAlias  # noqa: TCH002
 
 
 class DataFrameConvertible(Protocol):

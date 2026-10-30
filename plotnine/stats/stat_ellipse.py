@@ -11,7 +11,7 @@ from ..exceptions import PlotnineWarning
 from .stat import stat
 
 if TYPE_CHECKING:
-    from typing import Any, Optional
+    from typing import Any
 
     from plotnine.typing import FloatArray, FloatArrayLike
 
@@ -105,7 +105,7 @@ class stat_ellipse(stat):
 
 def cov_trob(
     x,
-    wt: Optional[FloatArrayLike] = None,
+    wt: FloatArrayLike | None = None,
     cor=False,
     center: FloatArrayLike | bool = True,
     nu=5,

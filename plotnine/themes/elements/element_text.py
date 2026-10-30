@@ -13,7 +13,8 @@ from .element_base import element_base
 from .margin import margin as Margin
 
 if TYPE_CHECKING:
-    from typing import Any, Literal, Sequence
+    from collections.abc import Sequence
+    from typing import Any, Literal
 
     from plotnine import theme
 

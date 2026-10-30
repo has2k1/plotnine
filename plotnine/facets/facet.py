@@ -17,7 +17,8 @@ from ..scales.scales import Scales
 from .strips import Strips
 
 if typing.TYPE_CHECKING:
-    from typing import Any, Literal, Optional, Sequence
+    from collections.abc import Sequence
+    from typing import Any, Literal
 
     import numpy.typing as npt
     from matplotlib.axes import Axes
@@ -144,8 +145,14 @@ class facet:
         self.layout = plot.built.layout
         self.figure = plot.figure
 
-        if hasattr(plot, "axs"):
-            gs, self.axs = plot._sub_gridspec, plot.axs
+        if plot._figure_state.axs is not None:
+            # Axes already laid out (e.g. an animation frame adopting
+            # the first plot's panels); reuse them.
+            assert plot._figure_state.sub_gridspec is not None
+            gs, self.axs = (
+                plot._figure_state.sub_gridspec,
+                plot._figure_state.axs,
+            )
         else:
             gs, self.axs = self._make_axes()
 
@@ -190,8 +197,8 @@ class facet:
     def init_scales(
         self,
         layout: pd.DataFrame,
-        x_scale: Optional[scale] = None,
-        y_scale: Optional[scale] = None,
+        x_scale: scale | None = None,
+        y_scale: scale | None = None,
     ) -> types.SimpleNamespace:
         scales = types.SimpleNamespace()
 
@@ -383,7 +390,7 @@ class facet:
         axs = axs[:num_panels]
         return gs, list(axs)
 
-    def _aspect_ratio(self) -> Optional[float]:
+    def _aspect_ratio(self) -> float | None:
         """
         Return the aspect_ratio
         """
@@ -517,7 +524,7 @@ def add_missing_facets(
     missing_facets = list(set(vars) - set(facet_vals.columns.tolist()))
     if missing_facets:
         to_add = layout.loc[:, missing_facets].drop_duplicates()
-        to_add.reset_index(drop=True, inplace=True)
+        to_add = to_add.reset_index(drop=True)
 
         # a point for each facet, [0, 1, ..., n-1, 0, 1, ..., n-1, ...]
         data_rep = np.tile(np.arange(len(data)), len(to_add))

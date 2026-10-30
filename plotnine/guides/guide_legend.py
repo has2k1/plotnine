@@ -19,7 +19,8 @@ from ..mapping.aes import rename_aesthetics
 from .guide import GuideElements, guide
 
 if TYPE_CHECKING:
-    from typing import Any, Sequence
+    from collections.abc import Sequence
+    from typing import Any
 
     from matplotlib.artist import Artist
     from matplotlib.offsetbox import PackerBase

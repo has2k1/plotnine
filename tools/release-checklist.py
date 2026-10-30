@@ -6,7 +6,10 @@ import shlex
 import sys
 from pathlib import Path
 from subprocess import PIPE, Popen
-from typing import Literal, Optional, Sequence, TypeAlias
+from typing import TYPE_CHECKING, Literal, TypeAlias
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 TPL_FILENAME = "release-checklist-tpl.md"
 THIS_DIR = Path(__file__).parent
@@ -29,7 +32,7 @@ DESCRIBE_PATTERN = re.compile(
 )
 
 
-def run(cmd: str | Sequence[str], input: Optional[str] = None) -> str:
+def run(cmd: str | Sequence[str], input: str | None = None) -> str:
     """
     Run command
     """
@@ -65,7 +68,7 @@ def copy_to_clipboard(s: str):
         clipboard.copy(s)  # type: ignore
 
 
-def get_previous_version(s: Optional[str] = None) -> str:
+def get_previous_version(s: str | None = None) -> str:
     """
     Get previous version
 

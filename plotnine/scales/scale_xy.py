@@ -24,7 +24,8 @@ from .scale_datetime import scale_datetime
 from .scale_discrete import scale_discrete
 
 if TYPE_CHECKING:
-    from typing import Literal, Sequence, TypeAlias
+    from collections.abc import Sequence
+    from typing import Literal, TypeAlias
 
     from mizani.transforms import trans
 

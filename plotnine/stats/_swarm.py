@@ -8,7 +8,7 @@ for `stat_sina` and `stat_beeswarm`.
 from __future__ import annotations
 
 import math
-from typing import TYPE_CHECKING, Any, Callable, cast
+from typing import TYPE_CHECKING, Any, cast
 
 import numpy as np
 import pandas as pd
@@ -25,6 +25,8 @@ from .binning import breaks_from_bins, breaks_from_binwidth
 from .stat_density import compute_density
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
+
     from plotnine.iapi import pos_scales
     from plotnine.typing import FloatArray, IntArray
 

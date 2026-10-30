@@ -192,7 +192,7 @@ class geom_violin(geom):
                 # Each quantile segment is defined by 2 points and
                 # they all get similar aesthetics
                 aes_df = df.drop(["x", "y", "group"], axis=1)
-                aes_df.reset_index(inplace=True)
+                aes_df = aes_df.reset_index()
                 idx = [0] * 2 * len(quantiles)
                 aes_df = aes_df.iloc[idx, :].reset_index(drop=True)
                 segment_df = pd.concat(

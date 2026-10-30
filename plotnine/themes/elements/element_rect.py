@@ -9,7 +9,8 @@ from typing import TYPE_CHECKING
 from .element_base import element_base
 
 if TYPE_CHECKING:
-    from typing import Any, Optional, Sequence
+    from collections.abc import Sequence
+    from typing import Any
 
 
 class element_rect(element_base):
@@ -37,23 +38,26 @@ class element_rect(element_base):
 
     def __init__(
         self,
-        fill: Optional[
+        fill: (
             str
             | tuple[float, float, float]
             | tuple[float, float, float, float]
-        ] = None,
-        color: Optional[
+            | None
+        ) = None,
+        color: (
             str
             | tuple[float, float, float]
             | tuple[float, float, float, float]
-        ] = None,
-        size: Optional[float] = None,
-        linetype: Optional[str | Sequence[int]] = None,
-        colour: Optional[
+            | None
+        ) = None,
+        size: float | None = None,
+        linetype: str | Sequence[int] | None = None,
+        colour: (
             str
             | tuple[float, float, float]
             | tuple[float, float, float, float]
-        ] = None,
+            | None
+        ) = None,
         **kwargs: Any,
     ):
         super().__init__()

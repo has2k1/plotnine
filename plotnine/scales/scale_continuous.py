@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from contextlib import suppress
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Sequence, cast
+from typing import TYPE_CHECKING, cast
 from warnings import warn
 
 import numpy as np
@@ -26,7 +26,7 @@ from .range import RangeContinuous
 from .scale import scale
 
 if TYPE_CHECKING:
-    from typing import Optional
+    from collections.abc import Sequence
 
     from mizani.transforms import trans
     from mizani.typing import PCensor, PRescale
@@ -318,8 +318,8 @@ class scale_continuous(
 
     def view(
         self,
-        limits: Optional[CoordRange] = None,
-        range: Optional[CoordRange] = None,
+        limits: CoordRange | None = None,
+        range: CoordRange | None = None,
     ) -> scale_view:
         """
         Information about the trained scale
@@ -390,7 +390,7 @@ class scale_continuous(
         return identity_pal()(x)
 
     def map(
-        self, x: FloatArrayLike, limits: Optional[tuple[float, float]] = None
+        self, x: FloatArrayLike, limits: tuple[float, float] | None = None
     ) -> FloatArrayLike:
         if limits is None:
             limits = self.final_limits
@@ -408,7 +408,7 @@ class scale_continuous(
         return scaled
 
     def get_breaks(
-        self, limits: Optional[tuple[float, float]] = None
+        self, limits: tuple[float, float] | None = None
     ) -> Sequence[float]:
         """
         Generate breaks for the axis or legend
@@ -454,7 +454,7 @@ class scale_continuous(
         return breaks
 
     def get_bounded_breaks(
-        self, limits: Optional[tuple[float, float]] = None
+        self, limits: tuple[float, float] | None = None
     ) -> Sequence[float]:
         """
         Return Breaks that are within limits
@@ -468,7 +468,7 @@ class scale_continuous(
     def get_minor_breaks(
         self,
         major: Sequence[float],
-        limits: Optional[tuple[float, float]] = None,
+        limits: tuple[float, float] | None = None,
     ) -> Sequence[float]:
         """
         Return minor breaks
@@ -499,7 +499,7 @@ class scale_continuous(
         return minor_breaks
 
     def get_labels(
-        self, breaks: Optional[Sequence[float]] = None
+        self, breaks: Sequence[float] | None = None
     ) -> Sequence[str]:
         """
         Generate labels for the axis or legend

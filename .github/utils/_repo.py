@@ -5,7 +5,10 @@ import os
 import re
 import shlex
 from subprocess import PIPE, Popen
-from typing import Literal, Sequence, TypeAlias
+from typing import TYPE_CHECKING, Literal, TypeAlias
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 ReleaseType: TypeAlias = Literal[
     "alpha",

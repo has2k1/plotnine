@@ -2,17 +2,20 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from itertools import cycle
-from typing import TYPE_CHECKING, Literal, Sequence
+from typing import TYPE_CHECKING, Literal
 
 from ..composition._types import ComposeAddable
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
+    from typing import TypeAlias
+
     from plotnine.typing import Side
 
     from ._compose import Compose
 
-    GuidesMode = Literal["collect", "keep"]
-    AxisMode = Literal["collect", "collect_x", "collect_y", "keep"]
+    GuidesMode: TypeAlias = Literal["collect", "keep"]
+    AxisMode: TypeAlias = Literal["collect", "collect_x", "collect_y", "keep"]
 
 
 @dataclass(kw_only=True)

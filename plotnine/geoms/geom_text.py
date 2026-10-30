@@ -13,7 +13,8 @@ from ..positions import position_nudge
 from .geom import geom
 
 if TYPE_CHECKING:
-    from typing import Any, Sequence
+    from collections.abc import Sequence
+    from typing import Any
 
     import pandas as pd
     from matplotlib.axes import Axes
@@ -232,14 +233,13 @@ class geom_text(geom):
         # by ax.text
         ae_names = list(set(geom_text.DEFAULT_AES) | geom_text.REQUIRED_AES)
         plot_data = data[ae_names]
-        plot_data.rename(
+        plot_data = plot_data.rename(
             {
                 "label": "s",
                 "angle": "rotation",
                 "lineheight": "linespacing",
             },
             axis=1,
-            inplace=True,
         )
         plot_data["color"] = color  # pyright: ignore[reportCallIssue,reportArgumentType]
         plot_data["zorder"] = zorder

@@ -124,7 +124,7 @@ class xlab(labs):
 
     Parameters
     ----------
-    name :
+    label :
         x aesthetic label (x-axis)
     """
 
@@ -138,7 +138,7 @@ class ylab(labs):
 
     Parameters
     ----------
-    name :
+    label :
         y aesthetic label i.e. y-axis label
     """
 

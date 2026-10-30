@@ -1,11 +1,13 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Sequence, TypeVar
+from typing import TYPE_CHECKING, TypeVar
 
 from plotnine._mpl.layout_manager._grid import DesignGrid
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
+
     from matplotlib.gridspec import SubplotSpec
 
     from plotnine._mpl.gridspec import p9GridSpec

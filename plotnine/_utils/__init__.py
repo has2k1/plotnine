@@ -24,12 +24,12 @@ from ..exceptions import PlotnineError, PlotnineWarning
 from ..mapping import aes
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
     from io import BytesIO
     from pathlib import Path
-    from typing import Any, Callable, Literal, TypeVar
+    from typing import Any, Literal, TypeGuard, TypeVar
 
     import numpy.typing as npt
-    from typing_extensions import TypeGuard
 
     from plotnine.typing import (
         AnyArrayLike,
@@ -294,7 +294,7 @@ def add_margins(
         margin_dfs.append(dfx)
 
     merged = pd.concat(margin_dfs, axis=0)
-    merged.reset_index(drop=True, inplace=True)
+    merged = merged.reset_index(drop=True)
 
     # All margin columns become categoricals. The margin indicator
     # (all) needs to be added as the last level of the categories.
@@ -598,7 +598,7 @@ def remove_missing(
         txt = "missing"
 
     data = data.dropna(subset=vars)
-    data.reset_index(drop=True, inplace=True)
+    data = data.reset_index(drop=True)
     if len(data) < n and not na_rm:
         msg = "{} : Removed {} rows containing {} values."
         warn(

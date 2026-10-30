@@ -13,7 +13,8 @@ from ..exceptions import PlotnineWarning
 from .geom import geom
 
 if TYPE_CHECKING:
-    from typing import Any, Literal, Sequence
+    from collections.abc import Sequence
+    from typing import Any, Literal
 
     import numpy.typing as npt
     import pandas as pd
@@ -90,7 +91,7 @@ class geom_path(geom):
         # return data
         n1 = len(data)
         data = data.loc[bool_idx]
-        data.reset_index(drop=True, inplace=True)
+        data = data.reset_index(drop=True)
         n2 = len(data)
 
         if n2 != n1 and not self.params["na_rm"]:
@@ -126,7 +127,7 @@ class geom_path(geom):
 
         # dataframe mergesort is stable, we rely on that here
         data = data.sort_values("group", kind="mergesort")
-        data.reset_index(drop=True, inplace=True)
+        data = data.reset_index(drop=True)
 
         # When the parameters of the path are not constant
         # with in the group, then the lines that make the paths
@@ -143,7 +144,7 @@ class geom_path(geom):
             self.draw_group(data, panel_params, coord, ax, self.params)
         else:
             for _, gdata in data.groupby("group"):
-                gdata.reset_index(inplace=True, drop=True)
+                gdata = gdata.reset_index(drop=True)
                 self.draw_group(gdata, panel_params, coord, ax, self.params)
 
     @staticmethod
