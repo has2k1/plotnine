@@ -9,6 +9,7 @@ from .density import get_var_type, kde
 from .stat import stat
 
 if TYPE_CHECKING:
+    from plotnine.iapi import pos_scales
     from plotnine.typing import FloatArray
 
 
@@ -54,7 +55,7 @@ class stat_pointdensity(stat):
     }
     CREATES = {"density"}
 
-    def setup_params(self, data):
+    def setup_params(self, data: pd.DataFrame) -> None:
         params = self.params
         if params["kde_params"] is None:
             params["kde_params"] = {}
@@ -67,7 +68,9 @@ class stat_pointdensity(stat):
                 y_type = get_var_type(data["y"])
                 kde_params["var_type"] = f"{x_type}{y_type}"
 
-    def compute_group(self, data, scales):
+    def compute_group(
+        self, data: pd.DataFrame, scales: "pos_scales"
+    ) -> pd.DataFrame:
         package = self.params["package"]
         kde_params = self.params["kde_params"]
         x = cast("FloatArray", data["x"].to_numpy())
