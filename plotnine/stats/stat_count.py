@@ -1,3 +1,7 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 import numpy as np
 import pandas as pd
 
@@ -6,6 +10,9 @@ from ..doctools import document
 from ..exceptions import PlotnineError
 from ..mapping.evaluation import after_stat
 from .stat import stat
+
+if TYPE_CHECKING:
+    from plotnine.iapi import pos_scales
 
 
 @document
@@ -49,11 +56,13 @@ class stat_count(stat):
     CREATES = {"count", "prop"}
     DROPPED_AES = ["weight"]
 
-    def setup_params(self, data):
+    def setup_params(self, data: pd.DataFrame) -> None:
         if self.params["width"] is None:
             self.params["width"] = resolution(data["x"], False) * 0.9
 
-    def compute_group(self, data, scales):
+    def compute_group(
+        self, data: pd.DataFrame, scales: pos_scales
+    ) -> pd.DataFrame:
         x = data["x"]
         if ("y" in data) or ("y" in self.params):
             msg = "stat_count() must not be used with a y aesthetic"
