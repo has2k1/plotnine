@@ -90,6 +90,7 @@ typing = [
     "pyright==1.1.414",
     "ipython",
     "pandas-stubs",
+    "scipy-stubs",
 ]
 
 [project.urls]
@@ -187,7 +188,7 @@ ignore = []
 # (e.g. my_module.DEBUG) are also supported.
 defineConstant = { DEBUG = true }
 
-# typeCheckingMode = "strict"
+typeCheckingMode = "standard"
 useLibraryCodeForTypes = true
 reportUnnecessaryTypeIgnoreComment = true
 

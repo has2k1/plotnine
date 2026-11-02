@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from mizani.utils import min_max
 
 from ..doctools import document
@@ -12,6 +14,12 @@ from .contours import (
     xyz_to_grid,
 )
 from .stat import stat
+
+if TYPE_CHECKING:
+    import pandas as pd
+
+    from plotnine.iapi import pos_scales
+    from plotnine.typing import FloatArray
 
 
 @document
@@ -64,15 +72,17 @@ class stat_contour(stat):
     CREATES = {"level", "nlevel", "piece"}
     DROPPED_AES = ["z", "weight"]
 
-    def setup_params(self, data):
+    def setup_params(self, data: pd.DataFrame) -> None:
         # Use one surface range for the full layer so facet panels share
         # comparable contour heights.
         self.params["z_range"] = min_max(data["z"], na_rm=True, finite=True)
 
-    def setup_data(self, data):
+    def setup_data(self, data: pd.DataFrame) -> pd.DataFrame:
         return drop_duplicate_xy(data)
 
-    def compute_group(self, data, scales):
+    def compute_group(
+        self, data: pd.DataFrame, scales: pos_scales
+    ) -> pd.DataFrame:
         params = self.params
         breaks = contour_breaks(
             params["z_range"],
@@ -93,7 +103,14 @@ class stat_contour(stat):
         res["x"], res["y"] = rotate_xy(res["x"], res["y"], angle)
         return res
 
-    def compute_contours(self, x, y, Z, breaks, group):
+    def compute_contours(
+        self,
+        x: FloatArray,
+        y: FloatArray,
+        Z: FloatArray,
+        breaks: FloatArray,
+        group: object,
+    ) -> pd.DataFrame:
         """
         Trace one contour line at every break on an axis-aligned grid
 

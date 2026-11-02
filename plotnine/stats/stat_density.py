@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from contextlib import suppress
-from typing import TYPE_CHECKING, cast
+from typing import TYPE_CHECKING, Any, cast
 from warnings import warn
 
 import numpy as np
@@ -13,6 +13,9 @@ from ..mapping.evaluation import after_stat
 from .stat import stat
 
 if TYPE_CHECKING:
+    from collections.abc import Mapping
+
+    from plotnine.iapi import pos_scales
     from plotnine.typing import FloatArray, FloatArrayLike
 
 
@@ -125,7 +128,7 @@ class stat_density(stat):
     CREATES = {"density", "count", "scaled", "n"}
     DROPPED_AES = ["weight"]
 
-    def setup_params(self, data):
+    def setup_params(self, data: pd.DataFrame) -> None:
         params = self.params
         lookup = {
             "biweight": "biw",
@@ -148,7 +151,9 @@ class stat_density(stat):
             )
             raise PlotnineError(msg)
 
-    def compute_group(self, data, scales):
+    def compute_group(
+        self, data: pd.DataFrame, scales: pos_scales
+    ) -> pd.DataFrame:
         weight = data.get("weight")
 
         if self.params["trim"]:
@@ -159,7 +164,12 @@ class stat_density(stat):
         return compute_density(data["x"], weight, range_x, self.params)
 
 
-def compute_density(x, weight, range, params):
+def compute_density(
+    x: FloatArrayLike,
+    weight: FloatArrayLike | None,
+    range: tuple[float, float],
+    params: Mapping[str, Any],
+) -> pd.DataFrame:
     """
     Compute density
     """
@@ -295,7 +305,7 @@ def nrd0(x: FloatArrayLike) -> float:
         )
 
     std: float = np.std(x, ddof=1)
-    std_estimate: float = iqr(x) / 1.349
+    std_estimate = iqr(x) / 1.349
     low_std = min(std, std_estimate)
     if low_std == 0:
         low_std = std_estimate or np.abs(np.asarray(x)[0]) or 1

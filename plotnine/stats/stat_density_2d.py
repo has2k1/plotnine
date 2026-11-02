@@ -15,6 +15,8 @@ from .density import get_var_type, kde
 from .stat import restore_constant_columns, stat
 
 if TYPE_CHECKING:
+    from plotnine.facets.layout import Layout
+    from plotnine.iapi import pos_scales
     from plotnine.typing import FloatArray, FloatArrayLike
 
 # Do not restore columns created during density estimation after
@@ -103,7 +105,7 @@ class stat_density_2d(stat):
     CREATES = {"y", "density", "ndensity", "count", "n"}
     DROPPED_AES = ["density", "ndensity", "count"]
 
-    def setup_params(self, data):
+    def setup_params(self, data: pd.DataFrame) -> None:
         params = self.params
 
         if params["levels"] is not None:
@@ -145,7 +147,9 @@ class stat_density_2d(stat):
                 y_type = get_var_type(data["y"])
                 kde_params["var_type"] = f"{x_type}{y_type}"
 
-    def compute_group(self, data, scales):
+    def compute_group(
+        self, data: pd.DataFrame, scales: pos_scales
+    ) -> pd.DataFrame:
         params = self.params
         package = params["package"]
         kde_params = params["kde_params"]
@@ -179,7 +183,9 @@ class stat_density_2d(stat):
             }
         )
 
-    def compute_layer(self, data, layout):
+    def compute_layer(
+        self, data: pd.DataFrame, layout: Layout
+    ) -> pd.DataFrame:
         # Estimate every density before selecting breaks so the complete
         # layer, including all facet panels, shares contour heights.
         params = self.params
@@ -214,7 +220,14 @@ class stat_density_2d(stat):
             res, data.drop(columns=list(_DENSITY_PHASE_COLUMNS))
         )
 
-    def compute_contours(self, x, y, Z, breaks, group):
+    def compute_contours(
+        self,
+        x: FloatArray,
+        y: FloatArray,
+        Z: FloatArray,
+        breaks: FloatArray,
+        group: object,
+    ) -> pd.DataFrame:
         """
         Trace one contour line at every break on an axis-aligned grid
         """

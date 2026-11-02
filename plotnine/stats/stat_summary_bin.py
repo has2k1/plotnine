@@ -13,6 +13,7 @@ from .stat import stat
 from .stat_summary import make_summary_fun
 
 if TYPE_CHECKING:
+    from plotnine.iapi import pos_scales
     from plotnine.typing import IntArray
 
 
@@ -105,7 +106,7 @@ class stat_summary_bin(stat):
     }
     CREATES = {"bin", "width", "ymin", "ymax"}
 
-    def setup_params(self, data):
+    def setup_params(self, data: pd.DataFrame) -> None:
         keys = ("fun_data", "fun_y", "fun_ymin", "fun_ymax")
         if not any(self.params[k] for k in keys):
             warn(
@@ -125,7 +126,9 @@ class stat_summary_bin(stat):
                 self.params["random_state"]
             )
 
-    def compute_group(self, data, scales):
+    def compute_group(
+        self, data: pd.DataFrame, scales: "pos_scales"
+    ) -> pd.DataFrame:
         bins = self.params["bins"]
         breaks = self.params["breaks"]
         binwidth = self.params["binwidth"]

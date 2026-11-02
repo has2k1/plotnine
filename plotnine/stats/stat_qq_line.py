@@ -9,6 +9,7 @@ from .stat import stat
 from .stat_qq import theoretical_qq
 
 if TYPE_CHECKING:
+    from plotnine.iapi import pos_scales
     from plotnine.typing import FloatArray
 
 
@@ -64,13 +65,15 @@ class stat_qq_line(stat):
     CREATES = {"x", "y"}
     DROPPED_AES = ["sample"]
 
-    def setup_params(self, data):
+    def setup_params(self, data: pd.DataFrame) -> None:
         if len(self.params["line_p"]) != 2:
             raise PlotnineError(
                 "Cannot fit line quantiles. 'line_p' must be of length 2"
             )
 
-    def compute_group(self, data, scales):
+    def compute_group(
+        self, data: pd.DataFrame, scales: "pos_scales"
+    ) -> pd.DataFrame:
         from .distributions import get_continuous_distribution
 
         line_p = self.params["line_p"]

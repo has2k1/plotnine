@@ -18,7 +18,7 @@ discrete = {k for k in dir(stats) if hasattr(getattr(stats, k), "pmf")}
 univariate = continuous | discrete
 
 
-def get(name):
+def get(name: str) -> stats.rv_continuous | stats.rv_discrete:
     """
     Get any scipy.stats distribution of a given name
     """
@@ -29,7 +29,7 @@ def get(name):
         raise PlotnineError(msg) from e
 
 
-def get_continuous_distribution(name):
+def get_continuous_distribution(name: str) -> stats.rv_continuous:
     """
     Get continuous scipy.stats distribution of a given name
     """
@@ -40,7 +40,7 @@ def get_continuous_distribution(name):
     return getattr(stats, name)
 
 
-def get_univariate(name):
+def get_univariate(name: str) -> stats.rv_continuous | stats.rv_discrete:
     """
     Get univariate scipy.stats distribution of a given name
     """

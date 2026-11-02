@@ -13,6 +13,7 @@ from .stat import stat
 if TYPE_CHECKING:
     from typing import Any
 
+    from plotnine.iapi import pos_scales
     from plotnine.typing import FloatArray, FloatArrayLike
 
 
@@ -52,7 +53,9 @@ class stat_ellipse(stat):
     }
     DROPPED_AES = ["weight"]
 
-    def compute_group(self, data, scales):
+    def compute_group(
+        self, data: pd.DataFrame, scales: pos_scales
+    ) -> pd.DataFrame:
         import scipy.stats as stats
         from scipy import linalg
 
@@ -104,14 +107,14 @@ class stat_ellipse(stat):
 
 
 def cov_trob(
-    x,
+    x: FloatArray,
     wt: FloatArrayLike | None = None,
-    cor=False,
+    cor: bool = False,
     center: FloatArrayLike | bool = True,
-    nu=5,
-    maxit=25,
-    tol=0.01,
-):
+    nu: float = 5,
+    maxit: int = 25,
+    tol: float = 0.01,
+) -> dict[str, Any]:
     """
     Covariance Estimation for Multivariate t Distribution
 
@@ -138,7 +141,7 @@ def cov_trob(
         about which the covariance is to be taken.
         If `center=False`, no centering is done; if
         `center=True` the MLE of the location vector is used.
-    nu : int
+    nu : float
         'degrees of freedom' for the multivariate t distribution.
         Must exceed 2 (so that the covariance matrix is finite).
     maxit : int

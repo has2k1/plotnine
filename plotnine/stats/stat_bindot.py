@@ -19,6 +19,7 @@ from .binning import (
 from .stat import stat
 
 if typing.TYPE_CHECKING:
+    from plotnine.iapi import pos_scales
     from plotnine.typing import FloatArrayLike
 
 
@@ -103,7 +104,7 @@ class stat_bindot(stat):
     CREATES = {"width", "count", "density", "ncount", "ndensity"}
     DROPPED_AES = ["weight", "bin", "bincenter"]
 
-    def setup_params(self, data):
+    def setup_params(self, data: pd.DataFrame) -> None:
         params = self.params
 
         if (
@@ -119,7 +120,9 @@ class stat_bindot(stat):
                 PlotnineWarning,
             )
 
-    def compute_panel(self, data, scales):
+    def compute_panel(
+        self, data: pd.DataFrame, scales: pos_scales
+    ) -> pd.DataFrame:
         params = self.params
         if (
             params["method"] == "dotdensity"
@@ -158,7 +161,9 @@ class stat_bindot(stat):
             data["bincenter"] = newdata["bincenter"]
         return super().compute_panel(data, scales)
 
-    def compute_group(self, data, scales):
+    def compute_group(
+        self, data: pd.DataFrame, scales: pos_scales
+    ) -> pd.DataFrame:
         params = self.params
         # Check that weights are whole numbers
         # (for dots, weights must be whole)
@@ -244,12 +249,12 @@ class stat_bindot(stat):
 
 
 def densitybin(
-    x,
+    x: FloatArrayLike,
     weight: FloatArrayLike | None,
     binwidth: float | None,
-    bins: int = 30,
+    bins: int | None = 30,
     rangee: tuple[float, float] | None = None,
-):
+) -> pd.DataFrame:
     """
     Do density binning
 
@@ -272,18 +277,18 @@ def densitybin(
     -------
     data : DataFrame
     """
+    x = np.asarray(x)
     if all(pd.isna(x)):
         return pd.DataFrame()
 
     weight = np.ones(len(x)) if weight is None else np.array(list(weight))
     weight[np.isnan(weight)] = 0
 
-    if rangee is None:
-        rangee = np.min(x), np.max(x)
+    rangee_x = (np.min(x), np.max(x)) if rangee is None else rangee
     if bins is None:
         bins = 30
     if binwidth is None:
-        binwidth = np.ptp(rangee) / bins
+        binwidth = np.ptp(rangee_x) / bins
 
     # Sort weight and x, by x
     order = np.argsort(x)

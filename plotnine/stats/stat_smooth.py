@@ -1,4 +1,5 @@
 import warnings
+from typing import TYPE_CHECKING
 
 import numpy as np
 import pandas as pd
@@ -7,6 +8,9 @@ from ..doctools import document
 from ..exceptions import PlotnineWarning
 from .smoothers import predictdf
 from .stat import stat
+
+if TYPE_CHECKING:
+    from plotnine.iapi import pos_scales
 
 
 @document
@@ -155,14 +159,14 @@ class stat_smooth(stat):
     CREATES = {"se", "ymin", "ymax"}
     DROPPED_AES = ["weight"]
 
-    def setup_data(self, data):
+    def setup_data(self, data: pd.DataFrame) -> pd.DataFrame:
         """
         Override to modify data before compute_layer is called
         """
         data = data[np.isfinite(data["x"]) & np.isfinite(data["y"])]
         return data
 
-    def setup_params(self, data):
+    def setup_params(self, data: pd.DataFrame) -> None:
         params = self.params
         # Use loess/lowess for small datasets
         # and glm for large
@@ -202,7 +206,9 @@ class stat_smooth(stat):
                 )
             params["environment"] = self.environment
 
-    def compute_group(self, data, scales):
+    def compute_group(
+        self, data: pd.DataFrame, scales: "pos_scales"
+    ) -> pd.DataFrame:
         data = data.sort_values("x")
         n = self.params["n"]
 

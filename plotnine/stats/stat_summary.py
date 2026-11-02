@@ -1,4 +1,6 @@
-from typing import cast
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Any, cast
 
 import numpy as np
 import pandas as pd
@@ -8,27 +10,30 @@ from ..doctools import document
 from ..exceptions import PlotnineError
 from .stat import stat
 
+if TYPE_CHECKING:
+    from collections.abc import Callable, Mapping
+
+    from plotnine.iapi import pos_scales
+    from plotnine.typing import RandomGenerator
+
 
 def bootstrap_statistics(
-    series,
-    statistic,
-    n_samples=1000,
-    confidence_interval=0.95,
-    random_state=None,
-):
+    series: pd.Series,
+    statistic: Callable[..., Any],
+    n_samples: int = 1000,
+    confidence_interval: float = 0.95,
+    random_state: RandomGenerator | None = None,
+) -> pd.DataFrame:
     """
     Default parameters taken from
     R's Hmisc smean.cl.boot
     """
-    if random_state is None:
-        random_state = np.random
-
     alpha = 1 - confidence_interval
     size = (n_samples, len(series))
     if isinstance(random_state, np.random.Generator):
         inds = random_state.integers(0, len(series), size=size)
     else:
-        inds = random_state.randint(0, len(series), size=size)
+        inds = (random_state or np.random).randint(0, len(series), size=size)
     samples = series.to_numpy()[inds]
     means = np.sort(statistic(samples, axis=1))
     return pd.DataFrame(
@@ -41,8 +46,11 @@ def bootstrap_statistics(
 
 
 def mean_cl_boot(
-    series, n_samples=1000, confidence_interval=0.95, random_state=None
-):
+    series: pd.Series,
+    n_samples: int = 1000,
+    confidence_interval: float = 0.95,
+    random_state: RandomGenerator | None = None,
+) -> pd.DataFrame:
     """
     Bootstrapped mean with confidence interval
 
@@ -68,7 +76,9 @@ def mean_cl_boot(
     )
 
 
-def mean_cl_normal(series, confidence_interval=0.95):
+def mean_cl_normal(
+    series: pd.Series, confidence_interval: float = 0.95
+) -> pd.DataFrame:
     """
     Mean with confidence interval assuming normal distribution
 
@@ -90,7 +100,7 @@ def mean_cl_normal(series, confidence_interval=0.95):
     return pd.DataFrame({"y": [m], "ymin": m - h, "ymax": m + h})
 
 
-def mean_sdl(series, mult=2):
+def mean_sdl(series: pd.Series, mult: float = 2) -> pd.DataFrame:
     """
     Mean +/- a constant times the standard deviation
 
@@ -106,7 +116,9 @@ def mean_sdl(series, mult=2):
     return pd.DataFrame({"y": [m], "ymin": m - mult * s, "ymax": m + mult * s})
 
 
-def median_hilow(series, confidence_interval=0.95):
+def median_hilow(
+    series: pd.Series, confidence_interval: float = 0.95
+) -> pd.DataFrame:
     """
     Median and a selected pair of outer quantiles having equal tail areas
 
@@ -127,7 +139,7 @@ def median_hilow(series, confidence_interval=0.95):
     )
 
 
-def mean_se(series, mult=1):
+def mean_se(series: pd.Series, mult: float = 1) -> pd.DataFrame:
     """
     Calculate mean and standard errors on either side
 
@@ -146,7 +158,7 @@ def mean_se(series, mult=1):
     return pd.DataFrame({"y": [m], "ymin": m - se, "ymax": m + se})
 
 
-function_dict = {
+function_dict: dict[str, Callable[..., pd.DataFrame]] = {
     "mean_cl_boot": mean_cl_boot,
     "mean_cl_normal": mean_cl_normal,
     "mean_sdl": mean_sdl,
@@ -155,7 +167,13 @@ function_dict = {
 }
 
 
-def make_summary_fun(fun_data, fun_y, fun_ymin, fun_ymax, fun_args):
+def make_summary_fun(
+    fun_data: str | Callable[..., pd.DataFrame] | None,
+    fun_y: Callable[..., Any] | None,
+    fun_ymin: Callable[..., Any] | None,
+    fun_ymax: Callable[..., Any] | None,
+    fun_args: Mapping[str, Any],
+) -> Callable[[pd.DataFrame], pd.DataFrame]:
     """
     Make summary function
     """
@@ -164,8 +182,8 @@ def make_summary_fun(fun_data, fun_y, fun_ymin, fun_ymax, fun_args):
 
     if any([fun_y, fun_ymin, fun_ymax]):
 
-        def func(df) -> pd.DataFrame:
-            d = {}
+        def func(df: pd.DataFrame) -> pd.DataFrame:
+            d: dict[str, list[Any]] = {}
             if fun_y:
                 kwargs = get_valid_kwargs(fun_y, fun_args)
                 d["y"] = [fun_y(df["y"], **kwargs)]
@@ -180,7 +198,7 @@ def make_summary_fun(fun_data, fun_y, fun_ymin, fun_ymax, fun_args):
     elif fun_data:
         kwargs = get_valid_kwargs(fun_data, fun_args)
 
-        def func(df) -> pd.DataFrame:
+        def func(df: pd.DataFrame) -> pd.DataFrame:
             return fun_data(df["y"], **kwargs)
 
     else:
@@ -287,7 +305,7 @@ class stat_summary(stat):
     }
     CREATES = {"ymin", "ymax", "n"}
 
-    def setup_params(self, data):
+    def setup_params(self, data: pd.DataFrame) -> None:
         keys = ("fun_data", "fun_y", "fun_ymin", "fun_ymax")
         if not any(self.params[k] for k in keys):
             raise PlotnineError("No summary function")
@@ -303,7 +321,9 @@ class stat_summary(stat):
                 self.params["random_state"]
             )
 
-    def compute_panel(self, data, scales):
+    def compute_panel(
+        self, data: pd.DataFrame, scales: pos_scales
+    ) -> pd.DataFrame:
         func = make_summary_fun(
             self.params["fun_data"],
             self.params["fun_y"],

@@ -1,8 +1,15 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 import numpy as np
 import pandas as pd
 
 from ..doctools import document
 from .stat import stat
+
+if TYPE_CHECKING:
+    from plotnine.iapi import pos_scales
 
 
 @document
@@ -46,7 +53,9 @@ class stat_hull(stat):
     DEFAULT_PARAMS = {"geom": "path", "qhull_options": None}
     CREATES = {"area"}
 
-    def compute_group(self, data, scales):
+    def compute_group(
+        self, data: pd.DataFrame, scales: pos_scales
+    ) -> pd.DataFrame:
         from scipy.spatial import ConvexHull
 
         hull = ConvexHull(

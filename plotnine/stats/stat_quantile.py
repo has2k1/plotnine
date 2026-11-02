@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Any
 from warnings import warn
 
 import pandas as pd
@@ -5,6 +8,11 @@ import pandas as pd
 from ..doctools import document
 from ..exceptions import PlotnineWarning
 from .stat import stat
+
+if TYPE_CHECKING:
+    from collections.abc import Mapping
+
+    from plotnine.iapi import pos_scales
 
 
 # method_args are any of the keyword args (other than q) for
@@ -57,7 +65,7 @@ class stat_quantile(stat):
     CREATES = {"quantile", "group"}
     DROPPED_AES = ["weight"]
 
-    def setup_params(self, data):
+    def setup_params(self, data: pd.DataFrame) -> None:
         params = self.params
         if params["formula"] is None:
             params["formula"] = "y ~ x"
@@ -70,14 +78,18 @@ class stat_quantile(stat):
         except TypeError:
             params["quantiles"] = (params["quantiles"],)
 
-    def compute_group(self, data, scales):
+    def compute_group(
+        self, data: pd.DataFrame, scales: pos_scales
+    ) -> pd.DataFrame:
         res = [
             quant_pred(q, data, self.params) for q in self.params["quantiles"]
         ]
         return pd.concat(res, axis=0, ignore_index=True)
 
 
-def quant_pred(q, data, params):
+def quant_pred(
+    q: float, data: pd.DataFrame, params: Mapping[str, Any]
+) -> pd.DataFrame:
     """
     Quantile precitions
     """
