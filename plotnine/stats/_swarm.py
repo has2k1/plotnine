@@ -143,7 +143,7 @@ def estimate_group_density(
             dens["x"],
             dens["density"],
             bounds_error=False,
-            fill_value="extrapolate",  # pyright: ignore
+            fill_value="extrapolate",
         )
         data["density"] = densf(y)
         data["scaled"] = data["density"] / dens["density"].max()

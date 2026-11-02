@@ -295,7 +295,7 @@ def nrd0(x: FloatArrayLike) -> float:
         )
 
     std: float = np.std(x, ddof=1)
-    std_estimate: float = iqr(x) / 1.349
+    std_estimate = iqr(x) / 1.349
     low_std = min(std, std_estimate)
     if low_std == 0:
         low_std = std_estimate or np.abs(np.asarray(x)[0]) or 1
