@@ -1,4 +1,7 @@
+from __future__ import annotations
+
 from contextlib import suppress
+from typing import TYPE_CHECKING
 
 import numpy as np
 import pandas as pd
@@ -7,6 +10,9 @@ from ..doctools import document
 from ..exceptions import PlotnineError
 from .stat import stat
 from .stat_density import compute_density, stat_density
+
+if TYPE_CHECKING:
+    from plotnine.iapi import pos_scales
 
 
 @document
@@ -103,12 +109,12 @@ class stat_ydensity(stat):
     CREATES = {"width", "violinwidth"}
     DROPPED_AES = ["weight"]
 
-    def setup_data(self, data):
+    def setup_data(self, data: pd.DataFrame) -> pd.DataFrame:
         if "x" not in data:
             data["x"] = 0
         return data
 
-    def setup_params(self, data):
+    def setup_params(self, data: pd.DataFrame) -> None:
         params = self.params
 
         valid_scale = ("area", "count", "width")
@@ -141,7 +147,9 @@ class stat_ydensity(stat):
         for key in missing_params:
             params[key] = stat_density.DEFAULT_PARAMS[key]
 
-    def compute_panel(self, data, scales):
+    def compute_panel(
+        self, data: pd.DataFrame, scales: pos_scales
+    ) -> pd.DataFrame:
         params = self.params
         data = super().compute_panel(data, scales)
 
@@ -165,7 +173,9 @@ class stat_ydensity(stat):
 
         return data
 
-    def compute_group(self, data, scales):
+    def compute_group(
+        self, data: pd.DataFrame, scales: pos_scales
+    ) -> pd.DataFrame:
         n = len(data)
         if n == 0:
             return pd.DataFrame()
