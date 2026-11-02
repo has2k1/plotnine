@@ -1,9 +1,19 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Any
+
 import numpy as np
 import pandas as pd
 
 from .._utils import resolution
 from ..doctools import document
 from .stat import stat
+
+if TYPE_CHECKING:
+    import numpy.typing as npt
+
+    from plotnine.iapi import pos_scales
+    from plotnine.typing import FloatArrayLike
 
 
 @document
@@ -82,17 +92,19 @@ class stat_boxplot(stat):
     }
     DROPPED_AES: list[str] = ["x", "y", "weight"]
 
-    def setup_data(self, data):
+    def setup_data(self, data: pd.DataFrame) -> pd.DataFrame:
         if "x" not in data:
             data["x"] = 0
         return data
 
-    def setup_params(self, data):
+    def setup_params(self, data: pd.DataFrame) -> None:
         if self.params["width"] is None:
             x = data.get("x", 0)
             self.params["width"] = resolution(x, False) * 0.75
 
-    def compute_group(self, data, scales):
+    def compute_group(
+        self, data: pd.DataFrame, scales: pos_scales
+    ) -> pd.DataFrame:
         n = len(data)
         y = data["y"].to_numpy()
         if "weight" in data:
@@ -132,7 +144,9 @@ class stat_boxplot(stat):
         return pd.DataFrame(d)
 
 
-def weighted_percentile(a, q, weights=None):
+def weighted_percentile(
+    a: FloatArrayLike, q: FloatArrayLike, weights: FloatArrayLike | None = None
+) -> npt.NDArray[np.float64]:
     """
     Compute the weighted q-th percentile of data
 
@@ -152,6 +166,7 @@ def weighted_percentile(a, q, weights=None):
     if weights is None:
         weights = np.ones(len(a))
 
+    a = np.asanyarray(a)
     weights = np.asarray(weights)
     q = np.asarray(q)
 
@@ -166,7 +181,9 @@ def weighted_percentile(a, q, weights=None):
     return pcts
 
 
-def weighted_boxplot_stats(x, weights=None, whis=1.5):
+def weighted_boxplot_stats(
+    x: FloatArrayLike, weights: FloatArrayLike | None = None, whis: float = 1.5
+) -> dict[str, Any]:
     """
     Calculate weighted boxplot plot statistics
 
@@ -193,6 +210,7 @@ def weighted_boxplot_stats(x, weights=None, whis=1.5):
     is the use of a weighted percentile calculation and then using linear
     interpolation to map weight percentiles back to data.
     """
+    x = np.asanyarray(x)
     if weights is None:
         q1, med, q3 = np.percentile(x, (25, 50, 75))
         n = len(x)
