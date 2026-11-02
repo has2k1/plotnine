@@ -1,9 +1,16 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from ..doctools import document
 from ..mapping.evaluation import after_stat
 from .contours import contour_bands
 from .stat_contour import stat_contour
+
+if TYPE_CHECKING:
+    import pandas as pd
+
+    from plotnine.typing import FloatArray
 
 
 @document
@@ -62,7 +69,14 @@ class stat_contour_filled(stat_contour):
         "subgroup",
     }
 
-    def compute_contours(self, x, y, Z, breaks, group):
+    def compute_contours(
+        self,
+        x: FloatArray,
+        y: FloatArray,
+        Z: FloatArray,
+        breaks: FloatArray,
+        group: object,
+    ) -> pd.DataFrame:
         """
         Trace each band between neighbouring breaks on an axis-aligned grid
         """
