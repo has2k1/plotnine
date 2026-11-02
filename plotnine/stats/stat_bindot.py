@@ -277,6 +277,7 @@ def densitybin(
     -------
     data : DataFrame
     """
+    x = np.asarray(x)
     if all(pd.isna(x)):
         return pd.DataFrame()
 
