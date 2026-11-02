@@ -13,6 +13,7 @@ from .stat import stat
 if TYPE_CHECKING:
     from typing import Any
 
+    from plotnine.iapi import pos_scales
     from plotnine.typing import FloatArray, FloatArrayLike
 
 
@@ -73,7 +74,9 @@ class stat_qq(stat):
         "alpha_beta": (3 / 8, 3 / 8),
     }
 
-    def compute_group(self, data, scales):
+    def compute_group(
+        self, data: pd.DataFrame, scales: pos_scales
+    ) -> pd.DataFrame:
         sample = cast("FloatArray", data["sample"].sort_values().to_numpy())
         theoretical = theoretical_qq(
             sample,
@@ -110,4 +113,7 @@ def theoretical_qq(
         )
 
     cdist = get_continuous_distribution(distribution)
-    return cdist.ppf(np.asarray(quantiles), **distribution_params)
+    return cast(
+        "FloatArray",
+        cdist.ppf(np.asarray(quantiles), **distribution_params),
+    )
