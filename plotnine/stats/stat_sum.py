@@ -1,8 +1,17 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from .._utils import groupby_apply
 from ..doctools import document
 from ..mapping.aes import ALL_AESTHETICS
 from ..mapping.evaluation import after_stat
 from .stat import stat
+
+if TYPE_CHECKING:
+    import pandas as pd
+
+    from plotnine.iapi import pos_scales
 
 
 @document
@@ -39,7 +48,9 @@ class stat_sum(stat):
     DEFAULT_AES = {"size": after_stat("n"), "weight": 1}
     CREATES = {"n", "prop"}
 
-    def compute_panel(self, data, scales):
+    def compute_panel(
+        self, data: pd.DataFrame, scales: pos_scales
+    ) -> pd.DataFrame:
         if "weight" not in data:
             data["weight"] = 1
 
