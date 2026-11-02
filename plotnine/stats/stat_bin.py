@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
 from warnings import warn
 
 import numpy as np
@@ -12,6 +15,11 @@ from .binning import (
     freedman_diaconis_bins,
 )
 from .stat import stat
+
+if TYPE_CHECKING:
+    import pandas as pd
+
+    from plotnine.iapi import pos_scales
 
 
 @document
@@ -89,7 +97,7 @@ class stat_bin(stat):
     CREATES = {"width", "count", "density", "ncount", "ndensity", "ngroup"}
     DROPPED_AES = ["weight"]
 
-    def setup_params(self, data):
+    def setup_params(self, data: pd.DataFrame) -> None:
         params = self.params
 
         if "y" in data or "y" in params:
@@ -111,7 +119,9 @@ class stat_bin(stat):
             )
             warn(msg.format(params["bins"]), PlotnineWarning)
 
-    def compute_group(self, data, scales):
+    def compute_group(
+        self, data: pd.DataFrame, scales: pos_scales
+    ) -> pd.DataFrame:
         params = self.params
         if params["breaks"] is not None:
             breaks = np.asarray(params["breaks"])
