@@ -313,6 +313,13 @@ title: Changelog
   ggplot2. It used the `scipy.stats.mstats.mquantiles` defaults, which placed
   the line differently, most visibly for small samples.
 
+- The default `bw="nrd0"` bandwidth of [](:class:`~plotnine.geom_density`),
+  [](:class:`~plotnine.geom_violin`), [](:class:`~plotnine.geom_sina`) and
+  [](:class:`~plotnine.geom_beeswarm`) now falls back to the standard deviation
+  when the interquartile range of a group is 0, as R's `bw.nrd0` does, e.g.
+  when most of the values are 0. It fell back to the first value of the group,
+  or 1, so the curve depended on the order of the rows.
+
 ### Enhancements
 
 - The `factor` function available when evaluating expressions in

@@ -5,6 +5,7 @@ import scipy.stats as stats
 
 from plotnine import aes, geom_density, ggplot, lims, stat_function
 from plotnine.exceptions import PlotnineWarning
+from plotnine.stats.stat_density import nrd0
 
 n = 6  # Some even number greater than 2
 
@@ -59,6 +60,18 @@ def test_few_datapoints():
         + lims(x=(0, 4))
     )
     assert p == "few_datapoints"
+
+
+def test_nrd0_uses_sd_when_iqr_is_zero():
+    # As in R's bw.nrd0, the sd is used when the IQR is 0
+    x = np.array([0, 0, 0, 0, 0, 0, 0, 0, 5, 10])
+    bw = 0.9 * np.std(x, ddof=1) * len(x) ** -0.2
+    assert nrd0(x) == pytest.approx(bw)
+    assert nrd0(x[::-1]) == pytest.approx(bw)
+
+    # When all the values are equal, the sd is 0 too
+    assert nrd0(np.array([2, 2])) == pytest.approx(0.9 * 2 * 2**-0.2)
+    assert nrd0(np.array([0, 0])) == pytest.approx(0.9 * 2**-0.2)
 
 
 def test_bounds():
