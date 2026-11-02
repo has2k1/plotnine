@@ -122,6 +122,9 @@ class stat(ABC, metaclass=Register):
     # built.
     environment: Environment
 
+    params: dict[str, Any]
+    aes_params: dict[str, Any]
+
     def __init__(
         self,
         mapping: aes | None = None,
@@ -207,7 +210,7 @@ class stat(ABC, metaclass=Register):
 
         return data
 
-    def setup_params(self, data: pd.DataFrame):
+    def setup_params(self, data: pd.DataFrame) -> None:
         """
         Override this to verify and/or adjust parameters
 
@@ -316,7 +319,9 @@ class stat(ABC, metaclass=Register):
 
         return groupby_apply(data, "PANEL", fn)
 
-    def compute_panel(self, data: pd.DataFrame, scales: pos_scales):
+    def compute_panel(
+        self, data: pd.DataFrame, scales: pos_scales
+    ) -> pd.DataFrame:
         """
         Calculate the statistics for all the groups
 
