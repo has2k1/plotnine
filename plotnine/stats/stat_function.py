@@ -14,7 +14,9 @@ from .stat import stat
 if typing.TYPE_CHECKING:
     from collections.abc import Callable
 
-    from plotnine.typing import FloatArrayLike
+    from plotnine.iapi import pos_scales
+    from plotnine.mapping import aes
+    from plotnine.typing import DataLike, FloatArrayLike
 
 
 @document
@@ -66,7 +68,12 @@ class stat_function(stat):
     DEFAULT_AES = {"y": after_stat("fx")}
     CREATES = {"fx"}
 
-    def __init__(self, mapping=None, data=None, **kwargs):
+    def __init__(
+        self,
+        mapping: aes | None = None,
+        data: DataLike | None = None,
+        **kwargs: object,
+    ) -> None:
         if data is None:
 
             def _data_func(data: pd.DataFrame) -> pd.DataFrame:
@@ -78,14 +85,16 @@ class stat_function(stat):
 
         super().__init__(mapping, data, **kwargs)
 
-    def setup_params(self, data):
+    def setup_params(self, data: pd.DataFrame) -> None:
         if not callable(self.params["fun"]):
             raise PlotnineError(
                 "stat_function requires parameter 'fun' to be "
                 "a function or any other callable object"
             )
 
-    def compute_group(self, data, scales):
+    def compute_group(
+        self, data: pd.DataFrame, scales: pos_scales
+    ) -> pd.DataFrame:
         old_fun: Callable[..., FloatArrayLike] = self.params["fun"]
         n = self.params["n"]
         args = self.params["args"]
