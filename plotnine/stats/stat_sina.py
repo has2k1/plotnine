@@ -1,3 +1,7 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 import numpy as np
 
 from .._utils import jitter
@@ -11,6 +15,11 @@ from ._swarm import (
     swarm_widths,
 )
 from .stat import stat
+
+if TYPE_CHECKING:
+    import pandas as pd
+
+    from plotnine.iapi import pos_scales
 
 
 @document
@@ -107,13 +116,15 @@ class stat_sina(stat):
     }
     CREATES = {"scaled"}
 
-    def setup_data(self, data):
+    def setup_data(self, data: pd.DataFrame) -> pd.DataFrame:
         return check_x_is_discrete(data)
 
-    def setup_params(self, data):
+    def setup_params(self, data: pd.DataFrame) -> None:
         setup_swarm_params(self.params, data)
 
-    def compute_panel(self, data, scales):
+    def compute_panel(
+        self, data: pd.DataFrame, scales: pos_scales
+    ) -> pd.DataFrame:
         params = self.params
         maxwidth = params["maxwidth"]
         data = super().compute_panel(data, scales)
@@ -139,10 +150,12 @@ class stat_sina(stat):
 
         return data
 
-    def compute_group(self, data, scales):
+    def compute_group(
+        self, data: pd.DataFrame, scales: pos_scales
+    ) -> pd.DataFrame:
         return estimate_group_density(
             data, scales, self.params, few_rows_density=0
         )
 
-    def finish_layer(self, data):
+    def finish_layer(self, data: pd.DataFrame) -> pd.DataFrame:
         return finish_swarm_layer(data, self.params["style"])
