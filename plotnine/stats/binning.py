@@ -11,7 +11,10 @@ from ..scales.scale_discrete import scale_discrete
 if typing.TYPE_CHECKING:
     from typing import Literal
 
-    from plotnine.typing import FloatArray, FloatArrayLike
+    import numpy.typing as npt
+
+    from plotnine.scales.scale import scale
+    from plotnine.typing import FloatArray, FloatArrayLike, FloatSeries
 
 
 __all__ = (
@@ -23,7 +26,7 @@ __all__ = (
 )
 
 
-def freedman_diaconis_bins(a):
+def freedman_diaconis_bins(a: npt.ArrayLike) -> int:
     """
     Calculate number of hist bins using Freedman-Diaconis rule.
     """
@@ -130,12 +133,12 @@ def breaks_from_bins(
 
 
 def assign_bins(
-    x,
+    x: FloatArrayLike,
     breaks: FloatArrayLike,
     weight: FloatArrayLike | None = None,
     pad: bool = False,
     closed: Literal["right", "left"] = "right",
-):
+) -> pd.DataFrame:
     """
     Assign value in x to bins demacated by the break points
 
@@ -170,15 +173,16 @@ def assign_bins(
         weight = np.array(list(weight))
         weight[np.isnan(weight)] = 0
 
+    breaks = np.asarray(breaks, dtype=np.float64)
     bin_idx = pd.cut(
         x,
-        bins=breaks,  # type: ignore
+        bins=pd.Index(breaks),
         labels=False,
         right=right,
         include_lowest=True,
     )
     bin_widths = np.diff(breaks)
-    bin_x = (breaks[:-1] + breaks[1:]) * 0.5  # type: ignore
+    bin_x = (breaks[:-1] + breaks[1:]) * 0.5
 
     # Create a dataframe with two columns:
     #   - the bins to which each x is assigned
@@ -209,7 +213,13 @@ def assign_bins(
     return result_dataframe(bin_count, bin_x, bin_widths)
 
 
-def result_dataframe(count, x, width, xmin=None, xmax=None):
+def result_dataframe(
+    count: FloatArrayLike,
+    x: FloatArrayLike,
+    width: FloatArray | FloatSeries,
+    xmin: FloatArray | FloatSeries | None = None,
+    xmax: FloatArray | FloatSeries | None = None,
+) -> pd.DataFrame:
     """
     Create a dataframe to hold bin information
     """
@@ -241,7 +251,12 @@ def result_dataframe(count, x, width, xmin=None, xmax=None):
 
 
 def fuzzybreaks(
-    scale, breaks=None, boundary=None, binwidth=None, bins=30, right=True
+    scale: scale,
+    breaks: FloatArrayLike | None = None,
+    boundary: float | None = None,
+    binwidth: float | None = None,
+    bins: int = 30,
+    right: bool = True,
 ) -> FloatArray:
     """
     Compute fuzzy breaks
@@ -279,17 +294,17 @@ def fuzzybreaks(
     # of one level, and should show up centered over
     # their tick marks. All other parameters are ignored.
     if isinstance(scale, scale_discrete):
-        breaks = scale.get_breaks()
-        return -0.5 + np.arange(1, len(breaks) + 2)
+        scale_breaks = scale.get_breaks()
+        return -0.5 + np.arange(1, len(scale_breaks) + 2)
     else:
         if breaks is not None:
             breaks = scale.transform(breaks)
 
     if breaks is not None:
-        return breaks
+        return np.asarray(breaks)
 
     recompute_bins = binwidth is not None
-    srange = scale.final_limits
+    srange: tuple[float, float] = scale.final_limits
 
     if binwidth is None or np.isnan(binwidth):
         binwidth = (srange[1] - srange[0]) / bins
@@ -303,7 +318,9 @@ def fuzzybreaks(
     # To minimise precision errors, we do not pass the boundary and
     # binwidth into np.arange as params. The resulting breaks
     # can then be adjusted to the next floating point number.
-    breaks = np.arange(boundary, srange[1] + binwidth, binwidth)
+    breaks = np.arange(
+        boundary, srange[1] + binwidth, binwidth, dtype=np.float64
+    )
     return _adjust_breaks(breaks, right)
 
 
