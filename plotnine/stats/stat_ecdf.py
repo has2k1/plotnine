@@ -1,9 +1,16 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 import numpy as np
 import pandas as pd
 
 from ..doctools import document
 from ..mapping.evaluation import after_stat
 from .stat import stat
+
+if TYPE_CHECKING:
+    from plotnine.iapi import pos_scales
 
 
 @document
@@ -45,7 +52,9 @@ class stat_ecdf(stat):
     CREATES = {"ecdf"}
     DROPPED_AES = ["weight"]
 
-    def compute_group(self, data, scales):
+    def compute_group(
+        self, data: pd.DataFrame, scales: pos_scales
+    ) -> pd.DataFrame:
         from statsmodels.distributions.empirical_distribution import ECDF
 
         n, pad = self.params["n"], self.params["pad"]
