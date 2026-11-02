@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import warnings
 from contextlib import suppress
-from typing import TYPE_CHECKING, cast
+from typing import TYPE_CHECKING, Any, Literal, cast
 
 import numpy as np
 import pandas as pd
@@ -11,14 +11,23 @@ from .._utils import get_valid_kwargs
 from ..exceptions import PlotnineError, PlotnineWarning
 
 if TYPE_CHECKING:
-    from collections.abc import Callable
+    from collections.abc import Callable, Mapping
 
+    import numpy.typing as npt
     import statsmodels.api as sm
+    from statsmodels.regression.linear_model import RegressionResultsWrapper
 
-    from plotnine.typing import FloatArray
+    from plotnine.typing import (
+        FloatArray,
+        FloatArrayLike,
+        FloatSeries,
+        IntArray,
+    )
 
 
-def predictdf(data, xseq, params) -> pd.DataFrame:
+def predictdf(
+    data: pd.DataFrame, xseq: FloatArrayLike | IntArray, params: dict[str, Any]
+) -> pd.DataFrame:
     """
     Make prediction on the data
 
@@ -57,7 +66,9 @@ def predictdf(data, xseq, params) -> pd.DataFrame:
     return method(data, xseq, params)
 
 
-def lm(data, xseq, params) -> pd.DataFrame:
+def lm(
+    data: pd.DataFrame, xseq: FloatArrayLike | IntArray, params: dict[str, Any]
+) -> pd.DataFrame:
     """
     Fit OLS / WLS if data has weight
     """
@@ -81,7 +92,7 @@ def lm(data, xseq, params) -> pd.DataFrame:
         init_kwargs, fit_kwargs = separate_method_kwargs(
             params["method_args"], sm.WLS, sm.WLS.fit
         )
-        model = sm.WLS(data["y"], X, weights=data["weight"], **init_kwargs)
+        model = sm.WLS(data["y"], X, weights=data["weight"], **init_kwargs)  # pyright: ignore[reportArgumentType]
 
     results = model.fit(**fit_kwargs)
     data = pd.DataFrame({"x": xseq})
@@ -97,7 +108,9 @@ def lm(data, xseq, params) -> pd.DataFrame:
     return data
 
 
-def lm_formula(data, xseq, params) -> pd.DataFrame:
+def lm_formula(
+    data: pd.DataFrame, xseq: FloatArrayLike | IntArray, params: dict[str, Any]
+) -> pd.DataFrame:
     """
     Fit OLS / WLS using a formula
     """
@@ -141,7 +154,9 @@ def lm_formula(data, xseq, params) -> pd.DataFrame:
     return data
 
 
-def rlm(data, xseq, params) -> pd.DataFrame:
+def rlm(
+    data: pd.DataFrame, xseq: FloatArrayLike | IntArray, params: dict[str, Any]
+) -> pd.DataFrame:
     """
     Fit RLM
     """
@@ -171,7 +186,9 @@ def rlm(data, xseq, params) -> pd.DataFrame:
     return data
 
 
-def rlm_formula(data, xseq, params) -> pd.DataFrame:
+def rlm_formula(
+    data: pd.DataFrame, xseq: FloatArrayLike | IntArray, params: dict[str, Any]
+) -> pd.DataFrame:
     """
     Fit RLM using a formula
     """
@@ -197,7 +214,9 @@ def rlm_formula(data, xseq, params) -> pd.DataFrame:
     return data
 
 
-def gls(data, xseq, params) -> pd.DataFrame:
+def gls(
+    data: pd.DataFrame, xseq: FloatArrayLike | IntArray, params: dict[str, Any]
+) -> pd.DataFrame:
     """
     Fit GLS
     """
@@ -228,7 +247,9 @@ def gls(data, xseq, params) -> pd.DataFrame:
     return data
 
 
-def gls_formula(data, xseq, params):
+def gls_formula(
+    data: pd.DataFrame, xseq: FloatArrayLike | IntArray, params: dict[str, Any]
+) -> pd.DataFrame:
     """
     Fit GLL using a formula
     """
@@ -259,7 +280,9 @@ def gls_formula(data, xseq, params):
     return data
 
 
-def glm(data, xseq, params) -> pd.DataFrame:
+def glm(
+    data: pd.DataFrame, xseq: FloatArrayLike | IntArray, params: dict[str, Any]
+) -> pd.DataFrame:
     """
     Fit GLM
     """
@@ -293,7 +316,9 @@ def glm(data, xseq, params) -> pd.DataFrame:
     return data
 
 
-def glm_formula(data, xseq, params):
+def glm_formula(
+    data: pd.DataFrame, xseq: FloatArrayLike | IntArray, params: dict[str, Any]
+) -> pd.DataFrame:
     """
     Fit with GLM formula
     """
@@ -322,7 +347,9 @@ def glm_formula(data, xseq, params):
     return data
 
 
-def lowess(data, xseq, params) -> pd.DataFrame:
+def lowess(
+    data: pd.DataFrame, xseq: FloatArrayLike | IntArray, params: dict[str, Any]
+) -> pd.DataFrame:
     """
     Lowess fitting
     """
@@ -352,7 +379,9 @@ def lowess(data, xseq, params) -> pd.DataFrame:
     return data
 
 
-def loess(data, xseq, params) -> pd.DataFrame:
+def loess(
+    data: pd.DataFrame, xseq: FloatArrayLike | IntArray, params: dict[str, Any]
+) -> pd.DataFrame:
     """
     Loess smoothing
     """
@@ -403,7 +432,9 @@ def loess(data, xseq, params) -> pd.DataFrame:
     return data
 
 
-def mavg(data, xseq, params) -> pd.DataFrame:
+def mavg(
+    data: pd.DataFrame, xseq: FloatArrayLike | IntArray, params: dict[str, Any]
+) -> pd.DataFrame:
     """
     Fit moving average
     """
@@ -427,7 +458,9 @@ def mavg(data, xseq, params) -> pd.DataFrame:
     return data
 
 
-def gpr(data, xseq, params):
+def gpr(
+    data: pd.DataFrame, xseq: FloatArrayLike | IntArray, params: dict[str, Any]
+) -> pd.DataFrame:
     """
     Fit gaussian process
     """
@@ -460,7 +493,7 @@ def gpr(data, xseq, params):
         data["y"] = y
         data["se"] = cast("FloatArray", stderr)
         data["ymin"], data["ymax"] = tdist_ci(
-            y, n - 1, stderr, params["level"]
+            y, n - 1, cast("FloatArray", stderr), params["level"]
         )
     else:
         data["y"] = cast(
@@ -470,7 +503,12 @@ def gpr(data, xseq, params):
     return data
 
 
-def tdist_ci(x, dof, stderr, level):
+def tdist_ci(
+    x: FloatArray | FloatSeries,
+    dof: float | None,
+    stderr: FloatArray | FloatSeries,
+    level: float,
+) -> tuple[FloatArray | FloatSeries, FloatArray | FloatSeries]:
     """
     Confidence Intervals using the t-distribution
     """
@@ -487,8 +525,14 @@ def tdist_ci(x, dof, stderr, level):
 # Override wls_prediction_std from statsmodels to calculate the confidence
 # interval instead of only the prediction interval
 def wls_prediction_std(
-    res, exog=None, weights=None, alpha=0.05, interval="confidence"
-):
+    res: RegressionResultsWrapper,
+    exog: FloatArray | FloatSeries | None = None,
+    weights: FloatArrayLike | float | None = None,
+    alpha: float = 0.05,
+    interval: Literal["confidence", "prediction"] = "confidence",
+) -> tuple[
+    npt.NDArray[np.float64], npt.NDArray[np.float64], npt.NDArray[np.float64]
+]:
     """
     Calculate standard deviation and confidence interval
 
@@ -540,7 +584,7 @@ def wls_prediction_std(
 
     covb = res.cov_params()
     if exog is None:
-        exog = res.model.exog
+        exog = cast("FloatArray", res.model.exog)
         predicted = res.fittedvalues
         if weights is None:
             weights = res.model.weights
@@ -574,7 +618,11 @@ def wls_prediction_std(
     return predstd, interval_l, interval_u
 
 
-def separate_method_kwargs(method_args, init_method, fit_method):
+def separate_method_kwargs(
+    method_args: Mapping[str, Any],
+    init_method: Callable[..., Any],
+    fit_method: Callable[..., Any],
+) -> tuple[dict[str, Any], dict[str, Any]]:
     """
     Categorise kwargs passed to the stat
 
