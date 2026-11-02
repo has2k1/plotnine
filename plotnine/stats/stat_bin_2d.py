@@ -1,5 +1,8 @@
+from __future__ import annotations
+
 import itertools
 import types
+from typing import TYPE_CHECKING, Any
 
 import numpy as np
 import pandas as pd
@@ -9,6 +12,9 @@ from ..doctools import document
 from ..mapping.evaluation import after_stat
 from .binning import fuzzybreaks
 from .stat import stat
+
+if TYPE_CHECKING:
+    from plotnine.iapi import pos_scales
 
 
 @document
@@ -68,13 +74,15 @@ class stat_bin_2d(stat):
     CREATES = {"xmin", "xmax", "ymin", "ymax", "count", "density"}
     DROPPED_AES = ["weight"]
 
-    def setup_params(self, data):
+    def setup_params(self, data: pd.DataFrame) -> None:
         params = self.params
         params["bins"] = dual_param(params["bins"])
         params["breaks"] = dual_param(params["breaks"])
         params["binwidth"] = dual_param(params["binwidth"])
 
-    def compute_group(self, data, scales):
+    def compute_group(
+        self, data: pd.DataFrame, scales: pos_scales
+    ) -> pd.DataFrame:
         bins = self.params["bins"]
         breaks = self.params["breaks"]
         binwidth = self.params["binwidth"]
@@ -167,7 +175,7 @@ class stat_bin_2d(stat):
 stat_bin2d = stat_bin_2d
 
 
-def dual_param(value):
+def dual_param(value: Any) -> types.SimpleNamespace:
     """
     Return duplicate of parameter value
 
