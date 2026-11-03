@@ -3,7 +3,7 @@ title: Changelog
 ---
 
 ## v0.15.9
-(not-yet-released)
+(2026-11-03)
 
 ### Bug Fixes
 
