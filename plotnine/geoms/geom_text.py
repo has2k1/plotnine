@@ -69,6 +69,9 @@ class geom_text(geom):
         See
         [](https://matplotlib.org/tutorials/advanced/patheffects_guide.html)
         documentation for more details.
+    rotation_mode : str, default="default"
+        How rotated text is aligned. Use "anchor" to align before rotation,
+        or "default" to align after rotation.
 
     See Also
     --------
@@ -151,6 +154,7 @@ class geom_text(geom):
         "adjust_text": None,
         "format_string": None,
         "path_effects": None,
+        "rotation_mode": "default",
     }
 
     def __init__(
@@ -245,6 +249,7 @@ class geom_text(geom):
         plot_data["zorder"] = zorder
         plot_data["rasterized"] = params["raster"]
         plot_data["clip_on"] = True
+        plot_data["rotation_mode"] = params["rotation_mode"]
 
         # 'boxstyle' indicates geom_label so we need an MPL bbox
         draw_label = "boxstyle" in params
