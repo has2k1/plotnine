@@ -34,7 +34,19 @@ class scale_linetype(scale_discrete[OptionalLegend]):
         from mizani.palettes import manual_pal
 
         super().__post_init__()
-        self.palette = manual_pal(LINETYPES)
+        base_palette = manual_pal(LINETYPES)
+
+        def palette(n: int):
+            if n > len(LINETYPES):
+                msg = (
+                    "The default linetype scale supports at most "
+                    f"{len(LINETYPES)} categories, but {n} were requested. "
+                    "Use scale_linetype_manual() for more line patterns."
+                )
+                raise PlotnineError(msg)
+            return base_palette(n)
+
+        self.palette = palette
 
 
 @dataclass

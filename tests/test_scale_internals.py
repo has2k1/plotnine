@@ -218,10 +218,12 @@ def test_linetype_palettes():
     assert len(items) == N
     assert all(isinstance(x, str) for x in items)
 
-    with pytest.warns(UserWarning):
-        # More values than palette has
-        items = s.palette(N + 5)
-        assert all(isinstance(x, str) for x in items[:N])
+    # Exceeding the default linetype capacity is an error rather than
+    # returning unusable line patterns that fail later during rendering.
+    with pytest.raises(
+        PlotnineError, match="at most 4 categories.*9 were requested"
+    ):
+        s.palette(N + 5)
 
     with pytest.raises(PlotnineError):
         s = scale_linetype_continuous()
