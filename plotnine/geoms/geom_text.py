@@ -69,9 +69,14 @@ class geom_text(geom):
         See
         [](https://matplotlib.org/tutorials/advanced/patheffects_guide.html)
         documentation for more details.
-    rotation_mode : str, default="default"
-        How rotated text is aligned. Use "anchor" to align before rotation,
-        or "default" to align after rotation.
+    rotation_mode : Literal["default", "anchor", "xtick", "ytick"], \
+        default="default"
+        How rotated text is aligned. If `None`{.py} or `"default"`{.py},
+        first rotate the text then align the bounding box of the rotated text.
+        If `"anchor"`{.py}, first align the unrotated text then rotate the
+        text around the point of alignment.
+        `"xtick"`{.py} and `"ytick"`{.py} adjust the horizontal and vertical
+        alignment so that the text visually points toward its anchor point.
 
     See Also
     --------
