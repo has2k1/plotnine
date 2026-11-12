@@ -174,7 +174,8 @@ def test_text_rotation_mode():
         + scale_x_continuous(limits=(0.5, 2.5))
     )
     assert p == "text_rotation_mode"
-    
+
+
 def test_label_rotation_mode():
     p = (
         ggplot(data, aes(x="x", y="y", label="label"))
