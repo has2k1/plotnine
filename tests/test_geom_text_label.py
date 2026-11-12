@@ -11,6 +11,7 @@ from plotnine import (
     geom_text,
     ggplot,
     scale_size_continuous,
+    scale_x_continuous,
     scale_y_continuous,
 )
 from plotnine.data import mtcars
@@ -150,3 +151,49 @@ def test_format_missing_values():
     )
     with pytest.warns(PlotnineWarning):
         assert p == "format_missing_values"
+
+
+def test_text_rotation_mode():
+    p = (
+        ggplot(data, aes(x="x", y="y", label="label"))
+        + geom_point()
+        + geom_text(
+            aes(angle="angle"),
+            ha="left",
+            va="center",
+            rotation_mode="default",
+        )
+        + geom_point(aes(x="x+1"))
+        + geom_text(
+            aes(x="x+1", angle="angle"),
+            ha="left",
+            va="center",
+            rotation_mode="anchor",
+        )
+        + scale_y_continuous(limits=(-0.5, n))
+        + scale_x_continuous(limits=(0.5, 2.5))
+    )
+    assert p == "text_rotation_mode"
+
+
+def test_label_rotation_mode():
+    p = (
+        ggplot(data, aes(x="x", y="y", label="label"))
+        + geom_point()
+        + geom_label(
+            aes(angle="angle"),
+            ha="left",
+            va="center",
+            rotation_mode="default",
+        )
+        + geom_point(aes(x="x+1"))
+        + geom_label(
+            aes(x="x+1", angle="angle"),
+            ha="left",
+            va="center",
+            rotation_mode="anchor",
+        )
+        + scale_y_continuous(limits=(-0.5, n))
+        + scale_x_continuous(limits=(0.5, 2.5))
+    )
+    assert p == "label_rotation_mode"

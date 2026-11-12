@@ -48,7 +48,7 @@ class geom_text(geom):
         Horizontal adjustment to apply to the text
     nudge_y : float, default=0
         Vertical adjustment to apply to the text
-    adjust_text: dict, default=None
+    adjust_text : dict, default=None
         Parameters to [](`~adjustText.adjust_text`) will repel
         overlapping texts. This parameter takes priority of over
         `nudge_x` and `nudge_y`.
@@ -69,6 +69,14 @@ class geom_text(geom):
         See
         [](https://matplotlib.org/tutorials/advanced/patheffects_guide.html)
         documentation for more details.
+    rotation_mode : Literal["default", "anchor", "xtick", "ytick"], \
+        default="default"
+        How rotated text is aligned. If `None`{.py} or `"default"`{.py},
+        first rotate the text then align the bounding box of the rotated text.
+        If `"anchor"`{.py}, first align the unrotated text then rotate the
+        text around the point of alignment.
+        `"xtick"`{.py} and `"ytick"`{.py} adjust the horizontal and vertical
+        alignment so that the text visually points toward its anchor point.
 
     See Also
     --------
@@ -151,6 +159,7 @@ class geom_text(geom):
         "adjust_text": None,
         "format_string": None,
         "path_effects": None,
+        "rotation_mode": "default",
     }
 
     def __init__(
@@ -245,6 +254,7 @@ class geom_text(geom):
         plot_data["zorder"] = zorder
         plot_data["rasterized"] = params["raster"]
         plot_data["clip_on"] = True
+        plot_data["rotation_mode"] = params["rotation_mode"]
 
         # 'boxstyle' indicates geom_label so we need an MPL bbox
         draw_label = "boxstyle" in params
