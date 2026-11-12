@@ -48,7 +48,7 @@ class geom_text(geom):
         Horizontal adjustment to apply to the text
     nudge_y : float, default=0
         Vertical adjustment to apply to the text
-    adjust_text: dict, default=None
+    adjust_text : dict, default=None
         Parameters to [](`~adjustText.adjust_text`) will repel
         overlapping texts. This parameter takes priority of over
         `nudge_x` and `nudge_y`.
