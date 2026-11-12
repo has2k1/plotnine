@@ -11,8 +11,8 @@ from plotnine import (
     geom_text,
     ggplot,
     scale_size_continuous,
-    scale_y_continuous,
     scale_x_continuous,
+    scale_y_continuous,
 )
 from plotnine.data import mtcars
 from plotnine.exceptions import PlotnineWarning
