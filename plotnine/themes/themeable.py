@@ -495,7 +495,7 @@ class Themeables(dict[str, themeable]):
 
         Parameters
         ----------
-        names : str
+        name : str
             Themeable, in order of most specific to most
             general.
         """

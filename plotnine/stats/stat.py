@@ -256,8 +256,6 @@ class stat(ABC, metaclass=Register):
         ----------
         data :
             Data for the layer
-        params :
-            Parameters
 
         Returns
         -------
@@ -337,9 +335,6 @@ class stat(ABC, metaclass=Register):
             ```python
             range_x = scales.x.dimension()
             ```
-        params :
-            The parameters for the stat. It includes default
-            values if user did not set a particular parameter.
         """
         if not len(data):
             return type(data)()
@@ -383,8 +378,6 @@ class stat(ABC, metaclass=Register):
             ```python
             range_x = scales.x.dimension()
             ```
-        params :
-            Parameters
         """
         msg = "{} should implement this method."
         raise NotImplementedError(msg.format(self.__class__.__name__))
