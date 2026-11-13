@@ -286,10 +286,6 @@ class geom(ABC, metaclass=Register):
             built
         coord :
             Type of coordinate axes
-        params :
-            Combined *geom* and *stat* parameters. Also
-            includes the stacking order of the layer in
-            the plot (*zorder*)
         """
         for pid, pdata in data.groupby("PANEL", observed=True):
             if len(pdata) == 0:
@@ -332,9 +328,6 @@ class geom(ABC, metaclass=Register):
             Coordinate (e.g. coord_cartesian) system of the geom.
         ax :
             Axes on which to plot.
-        params :
-            Combined parameters for the geom and stat. Also
-            includes the `zorder`.
         """
         for _, gdata in data.groupby("group"):
             gdata = gdata.reset_index(drop=True)

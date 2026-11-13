@@ -182,7 +182,7 @@ def multitype_sort(arr: AnyArrayLike) -> list[Any]:
 
     Parameters
     ----------
-    a : array_like
+    arr : array_like
         Array of items to be sorted
 
     Returns
@@ -572,7 +572,7 @@ def remove_missing(
 
     Parameters
     ----------
-    df : dataframe
+    data : dataframe
     na_rm : bool
         If False remove all non-complete rows with and show warning.
     vars : list-like
