@@ -16,15 +16,14 @@ class Wrap(Compose):
         composition + composition
 
     Typically, you will use this class through the `+` operator.
+    To set the number of rows or columns, add a
+    [](`~plotnine.composition.plot_layout`) e.g.
+    `p1 + p2 + p3 + plot_layout(nrow=2)`.
 
     Parameters
     ----------
     items:
         The objects to be arranged (composed)
-    nrow:
-        Number of rows in the composition
-    ncol:
-        Number of cols in the composition
 
     See Also
     --------
