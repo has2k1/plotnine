@@ -182,11 +182,11 @@ def dict_to_table(header: tuple[str, str], contents: dict[str, str]) -> str:
     --------
     >>> d = {"alpha": 1, "color": "blue", "fill": None}
     >>> print(dict_to_table(("Aesthetic", "Default Value"), d))
-    Aesthetic  Default Value
-    ---------  -------------
-    alpha      `1`
-    color      `'blue'`
-    fill       `None`
+     Aesthetic    Default Value
+    -----------  ---------------
+    alpha        `1`{.py}
+    color        `'blue'`{.py}
+    fill         `None`{.py}
     """
     rows = [
         (name, value if value == "" else f"`{value!r}`{{.py}}")
@@ -330,7 +330,7 @@ def param_spec(line: str) -> str | None:
     Examples
     --------
     >>> param_spec('line : str')
-    breaks
+    'line'
     >>> param_spec("    A line in the parameter section.")
     """
     m = PARAM_PATTERN.match(line)
@@ -407,11 +407,13 @@ def default_class_name(s: str | type | object) -> str:
 
     Examples
     --------
-    >>> qualified_name('stat_bin')
+    >>> default_class_name('stat_bin')
     'stat_bin'
-    >>> qualified_name(stat_bin)
+    >>> class stat_bin:
+    ...     pass
+    >>> default_class_name(stat_bin)
     'stat_bin'
-    >>> qualified_name(stat_bin())
+    >>> default_class_name(stat_bin())
     'stat_bin'
     """
     if isinstance(s, str):
