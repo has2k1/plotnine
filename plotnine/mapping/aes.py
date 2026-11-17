@@ -413,19 +413,19 @@ def strip_stat(value):
         Aesthetic value with the dots removed.
 
     >>> strip_stat("stat(density + stat(count))")
-    density + count
+    'density + count'
 
     >>> strip_stat("stat(density) + 5")
-    density + 5
+    'density + 5'
 
     >>> strip_stat("5 + stat(func(density))")
-    5 + func(density)
+    '5 + func(density)'
 
     >>> strip_stat("stat(func(density) + var1)")
-    func(density) + var1
+    'func(density) + var1'
 
     >>> strip_stat("stat + var1")
-    stat + var1
+    'stat + var1'
 
     >>> strip_stat(4)
     4
