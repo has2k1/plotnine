@@ -1138,7 +1138,13 @@ class axis_text_x_bottom(MixinSequenceOfValues):
         if (axis := axis_at(ax, "bottom")) is None:
             return
         labels = [t.label1 for t in axis.get_major_ticks()]
-        self.set(labels, self._get_properties(omit=("margin", "va")))
+        properties = self._get_properties(omit=("margin", "va"))
+        if (
+            self._properties.get("rotation_mode") == "anchor"
+            and self._properties.get("va") is not None
+        ):
+            properties["va"] = self._properties["va"]
+        self.set(labels, properties)
         _set_axis_text_margin(self, ax, "bottom")
 
     def blank_ax(self, ax: Axes):
@@ -1163,7 +1169,13 @@ class axis_text_x_top(MixinSequenceOfValues):
         if (axis := axis_at(ax, "top")) is None:
             return
         labels = [t.label2 for t in axis.get_major_ticks()]
-        self.set(labels, self._get_properties(omit=("margin", "va")))
+        properties = self._get_properties(omit=("margin", "va"))
+        if (
+            self._properties.get("rotation_mode") == "anchor"
+            and self._properties.get("va") is not None
+        ):
+            properties["va"] = self._properties["va"]
+        self.set(labels, properties)
         _set_axis_text_margin(self, ax, "top")
 
     def blank_ax(self, ax: Axes):
