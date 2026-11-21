@@ -448,3 +448,23 @@ def test_axis_text_justification():
     )
 
     assert p == "axis_text_justification"
+
+
+def test_rotated_axis_text_preserves_anchor_alignment():
+    data = pd.DataFrame({"x": ["aaaaa", "bbbbb", "ccccc"], "y": [1, 1, 1]})
+    p = (
+        ggplot(data, aes(x="x", y="y"))
+        + geom_point()
+        + theme(
+            axis_text_x=element_text(
+                rotation=45,
+                ha="right",
+                va="center",
+                rotation_mode="anchor",
+            )
+        )
+    )
+
+    labels = p.draw().axes[0].get_xticklabels()
+    assert all(label.get_rotation_mode() == "anchor" for label in labels)
+    assert all(label.get_verticalalignment() == "center" for label in labels)
