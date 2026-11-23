@@ -70,6 +70,17 @@ class geom_text(geom):
         [](https://matplotlib.org/tutorials/advanced/patheffects_guide.html)
         documentation for more details.
 
+        ```python
+        import matplotlib.patheffects as path_effects
+
+        geom_text(
+            path_effects=[
+                path_effects.Stroke(linewidth=3, foreground="white"),
+                path_effects.Normal(),
+            ]
+        )
+        ```
+
     See Also
     --------
     plotnine.geom_label
