@@ -414,6 +414,30 @@ def test_discrete_xy_scale_drop_limits():
         assert p == "discrete_xy_scale_drop_limits"
 
 
+def test_discrete_xy_scale_map_values_outside_limits():
+    s = scale_x_discrete(limits=list("abcdef"))
+    s.train(pd.Series(list("abcdef")))
+
+    out = s.map(pd.Series(["c", "z"]))
+    assert out[0] == 3
+    assert np.isnan(out[1])
+
+    out = s.map(pd.Series(["z"]))
+    assert np.isnan(out[0])
+
+
+def test_discrete_xy_scale_values_outside_limits_in_a_small_layer():
+    data = pd.DataFrame({"x": list("abcdef"), "y": range(6)})
+    extra = pd.DataFrame({"x": ["z"], "y": [1]})
+    p = (
+        ggplot(data, aes("x", "y"))
+        + geom_point()
+        + geom_point(data=extra)
+        + scale_x_discrete(limits=list("abcdef"))
+    )
+    assert np.isnan(p.build().layers[1].data["x"]).all()
+
+
 def test_setting_limits_transformed():
     lst = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
