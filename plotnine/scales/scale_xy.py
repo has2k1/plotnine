@@ -120,20 +120,13 @@ class scale_position_discrete(scale_position, scale_discrete[None]):
         if limits is None:
             limits = self.final_limits
         if array_kind.discrete(x):
-            # TODO: Rewrite without using numpy
-            seq = np.arange(1, len(limits) + 1)
-            idx = np.asarray(match(x, limits, nomatch=len(x)))
+            idx = np.asarray(match(x, limits))
             if not len(idx):
                 return []
-            try:
-                seq = seq[idx]
-            except IndexError:
-                # Deal with missing data
-                # - Insert NaN where there is no match
-                seq = np.hstack((seq.astype(float), np.nan))
-                idx = np.clip(idx, 0, len(seq) - 1)
-                seq = seq[idx]
-            return list(seq)
+            # Values that are not in the limits have no position
+            if (idx < 0).any():
+                return list(np.where(idx < 0, np.nan, idx + 1.0))
+            return list(idx + 1)
         return list(x)
 
     @property

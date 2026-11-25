@@ -188,6 +188,11 @@ title: Changelog
 
 ### Bug Fixes
 
+- A discrete position scale no longer plots a value that is not in its
+  `limits` at the position of another category when the layer has fewer rows
+  than the scale has limits. Such values are now treated as missing, as they
+  already were in larger layers.
+
 - plotnine no longer passes `inplace=True` to the pandas `DataFrame`
   methods that pandas 3.2 deprecates it for (PDEP-8), so plots no longer emit
   `Pandas4Warning`.
