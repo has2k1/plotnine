@@ -308,9 +308,11 @@ class Layout:
         lst = []
         nrow = self.layout["ROW"].max()
         ncol = self.layout["COL"].max()
-        for pidx, row in self.layout.iterrows():
+        # DataFrame.iterrows is deprecated in pandas 3.2
+        records = self.layout.to_dict("records")
+        for pidx, row in zip(self.layout.index, records):
             ld = layout_details(
-                panel_index=pidx,  # type: ignore
+                panel_index=pidx,
                 nrow=nrow,
                 ncol=ncol,
                 variables={name: row[name] for name in vcols},
