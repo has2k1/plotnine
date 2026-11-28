@@ -4,6 +4,9 @@ import typing
 from warnings import warn
 
 import numpy as np
+from matplotlib.artist import allow_rasterization
+from matplotlib.collections import PatchCollection
+from matplotlib.patches import Ellipse
 
 from .._utils import groupby_apply, resolution, to_rgba
 from ..doctools import document
@@ -22,6 +25,50 @@ if typing.TYPE_CHECKING:
     from plotnine.iapi import panel_view
     from plotnine.layer import layer
     from plotnine.typing import FloatSeries
+
+
+class _DotplotCollection(PatchCollection):
+    def __init__(
+        self,
+        ax: Axes,
+        positions: np.ndarray,
+        size: float,
+        stack_offsets: np.ndarray,
+        binaxis: str,
+        range_ratio: float,
+        **kwargs: Any,
+    ):
+        self._positions = positions
+        self._size = size
+        self._stack_offsets = stack_offsets
+        self._binaxis = binaxis
+        self._aspect = ax.bbox.width / ax.bbox.height * range_ratio
+        super().__init__(self._make_dots(self._aspect), **kwargs)
+
+    def _make_dots(self, aspect: float) -> list[Ellipse]:
+        x, y = self._positions.T
+        size = self._size
+        if self._binaxis == "x":
+            width, height = size, size * aspect
+            y = y + height * self._stack_offsets
+        elif self._binaxis == "y":
+            width, height = size / aspect, size
+            x = x + width * self._stack_offsets
+        else:
+            raise ValueError(f"Invalid valid value binaxis={self._binaxis}")
+
+        return [Ellipse(xy, width, height) for xy in zip(x, y)]
+
+    @allow_rasterization
+    def draw(self, renderer):
+        # Layout, resizing and zooming can all change the display scales.
+        if self.axes is not None:
+            affine = self.axes.transData.get_affine().get_matrix()
+            aspect = abs(affine[0, 0] / affine[1, 1])
+            if aspect != self._aspect:
+                self.set_paths(self._make_dots(aspect))
+                self._aspect = aspect
+        super().draw(renderer)
 
 
 @document
@@ -186,42 +233,20 @@ class geom_dotplot(geom):
         ax: Axes,
         params: dict[str, Any],
     ):
-        from matplotlib.collections import PatchCollection
-        from matplotlib.patches import Ellipse
-
         data = coord.transform(data, panel_params)
         fill = to_rgba(data["fill"], data["alpha"])
         color = to_rgba(data["color"], data["alpha"])
         ranges = coord.range(panel_params)
-
-        # For perfect circles the width/height of the circle(ellipse)
-        # should factor in the dimensions of axes
-        bbox = ax.get_window_extent().transformed(
-            ax.figure.dpi_scale_trans.inverted()
-        )
-        ax_width, ax_height = bbox.width, bbox.height
-
-        factor = (ax_width / ax_height) * np.ptp(ranges.y) / np.ptp(ranges.x)
         size = data["binwidth"].iloc[0] * params["dotsize"]
         offsets = data["stackpos"] * params["stackratio"]
 
-        binaxis = params["stat_params"]["binaxis"]
-        if binaxis == "x":
-            width, height = size, size * factor
-            xpos, ypos = data["x"], data["y"] + height * offsets
-        elif binaxis == "y":
-            width, height = size / factor, size
-            xpos, ypos = data["x"] + width * offsets, data["y"]
-        else:
-            raise ValueError(f"Invalid valid value binaxis={binaxis}")
-
-        circles = []
-        for xy in zip(xpos, ypos):
-            patch = Ellipse(xy, width=width, height=height)
-            circles.append(patch)
-
-        coll = PatchCollection(
-            circles,
+        coll = _DotplotCollection(
+            ax,
+            data[["x", "y"]].to_numpy(),
+            size,
+            offsets.to_numpy(),
+            params["stat_params"]["binaxis"],
+            np.ptp(ranges.y) / np.ptp(ranges.x),
             edgecolors=color,
             facecolors=fill,
             rasterized=params["raster"],
