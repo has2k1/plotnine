@@ -1,5 +1,8 @@
+import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
 import pytest
+from matplotlib.backends.backend_agg import FigureCanvasAgg
 
 from plotnine import aes, geom_dotplot, ggplot, stage, stat_bindot
 
@@ -28,6 +31,53 @@ def test_binaxis_y():
     p = ggplot(data, aes("x", "x")) + geom_dotplot(bins=15, binaxis="y")
 
     assert p == "binaxis_y"
+
+
+@pytest.mark.parametrize("binaxis", ["x", "y"])
+def test_dots_stay_circular_after_layout_and_resize(binaxis):
+    binwidth = 0.25
+    stackratio = 0.75
+    mapping = aes("x") if binaxis == "x" else aes("x", "x")
+    p = ggplot(data, mapping) + geom_dotplot(
+        binaxis=binaxis, binwidth=binwidth, stackratio=stackratio
+    )
+    fig = p.draw()
+    canvas = FigureCanvasAgg(fig)
+    try:
+        ax = fig.axes[0]
+        dots = ax.collections[0]
+        along = 0 if binaxis == "x" else 1
+        across = 1 - along
+        for figsize, xlim in [
+            ((8, 3), None),
+            ((4, 6), None),
+            ((4, 6), (0, 8)),
+        ]:
+            fig.set_size_inches(*figsize)
+            if xlim is not None:
+                ax.set_xlim(*xlim)
+            canvas.draw()
+            transform = dots.get_transform()
+            boxes = [path.get_extents(transform) for path in dots.get_paths()]
+            coordinates = np.zeros((2, 2))
+            coordinates[1, along] = binwidth
+            binned = ax.transData.transform(coordinates)
+            diameter = abs(binned[1, along] - binned[0, along])
+            np.testing.assert_allclose(
+                [(box.width, box.height) for box in boxes],
+                np.full((len(data), 2), diameter),
+            )
+            centers = np.array(
+                [
+                    [(box.x0 + box.x1) / 2, (box.y0 + box.y1) / 2]
+                    for box in boxes
+                ]
+            )
+            last_bin = np.isclose(centers[:, along], centers[:, along].max())
+            spacing = np.diff(np.sort(centers[last_bin, across]))
+            np.testing.assert_allclose(spacing, [diameter * stackratio] * 3)
+    finally:
+        plt.close(fig)
 
 
 def test_stackdir_down():
